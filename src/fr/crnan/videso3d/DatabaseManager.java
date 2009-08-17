@@ -227,7 +227,7 @@ public class DatabaseManager{
 	private void addDatabase(String name, Type type, String date){
 		try {
 			Statement st = this.selectDB(Type.Databases, "databases").createStatement();
-			st.executeUpdate("UPDATE databases SET selected = 'false' WHERE selected = 'true' and type = '"+type.toString()+"'");
+			st.executeUpdate("UPDATE databases SET selected = 0 WHERE selected = 1 and type = '"+type.toString()+"'");
 			st.close();
 			String insert = "insert into databases (name, type, date, selected) values (?, ?, ?, ?)";
 			PreparedStatement insertDatabase = this.selectDB(Type.Databases, "databases").prepareStatement(insert);
@@ -420,7 +420,8 @@ public class DatabaseManager{
 				"sect8 varchar(3), " +
 				"limit8 int, " +
 				"sect9 varchar(3), " +
-		"limit9 int)");st.executeUpdate("create table centres (id integer primary key autoincrement," +
+		"limit9 int)");
+		st.executeUpdate("create table centres (id integer primary key autoincrement," +
 				"name varchar(4), " +
 				"identite varchar(20)," +
 				"numero int," +
@@ -598,8 +599,8 @@ public class DatabaseManager{
 	 */
 	public void selectDatabase(Integer id, Type type) throws SQLException {
 		Statement st = this.selectDB(Type.Databases, "databases").createStatement();
-		st.executeUpdate("update databases set selected = 'false' where type = '"+type.toString()+"'");
-		st.executeUpdate("update databases set selected = 'true' where id ='"+id+"'");
+		st.executeUpdate("update databases set selected = 0 where type = '"+type.toString()+"'");
+		st.executeUpdate("update databases set selected = 1 where id ='"+id+"'");
 		ResultSet result = st.executeQuery("select name from databases where id ='"+id+"'");
 		result.next();
 		this.selectDB(type, result.getString(1));
@@ -616,7 +617,7 @@ public class DatabaseManager{
 	 */
 	public Statement getCurrent(Type type) throws SQLException{
 		Statement st = this.selectDB(Type.Databases, "databases").createStatement();
-		ResultSet result = st.executeQuery("select name from databases where selected = 'true' and type = '"+type.toString()+"'");;
+		ResultSet result = st.executeQuery("select name from databases where selected = 1 and type = '"+type.toString()+"'");;
 		if(result.next()) {
 			String connectionName = result.getString(1) ;
 			return this.selectDB(type, connectionName).createStatement();
@@ -635,7 +636,7 @@ public class DatabaseManager{
 	public String getCurrentName(Type type) throws SQLException{
 		Statement st = this.selectDB(Type.Databases, "databases").createStatement();
 		String name = null;
-		ResultSet rs = st.executeQuery("select name from databases where selected = 'true' and type = '"+type+"'");
+		ResultSet rs = st.executeQuery("select name from databases where selected = 1 and type = '"+type+"'");
 		while(rs.next()){
 			name = rs.getString(1);
 		}

@@ -16,20 +16,12 @@
 
 package fr.crnan.videso3d.edimap;
 
+import gov.nasa.worldwind.render.SurfaceQuad;
+
 import java.util.HashMap;
 import java.util.List;
 
-import com.trolltech.qt.core.QPointF;
-import com.trolltech.qt.core.QRectF;
-import com.trolltech.qt.core.QSizeF;
-import com.trolltech.qt.core.Qt;
-import com.trolltech.qt.gui.QBrush;
-import com.trolltech.qt.gui.QGraphicsItemInterface;
-import com.trolltech.qt.gui.QGraphicsRectItem;
-import com.trolltech.qt.gui.QGraphicsSceneHoverEvent;
-import com.trolltech.qt.gui.QPen;
-
-public class RectangleEdimap extends QGraphicsRectItem {
+public class RectangleEdimap extends SurfaceQuad {
 
 	private String name;
 	

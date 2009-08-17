@@ -15,11 +15,11 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import gov.nasa.worldwind.render.SurfaceEllipse;
+
 import java.util.HashMap;
 import java.util.List;
 
-import com.trolltech.qt.gui.QGraphicsEllipseItem;
-import com.trolltech.qt.gui.QGraphicsItemInterface;
 /**
  * Construit une ellipse à partir de l'entité EllipseEntity.
  * Ne prend pas en compte l'entité "construction", ni l'azimuth.
@@ -27,7 +27,7 @@ import com.trolltech.qt.gui.QGraphicsItemInterface;
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class EllipseEdimap extends QGraphicsEllipseItem {
+public class EllipseEdimap extends SurfaceEllipse {
 
 	private double dx = 0.0;
 	private double dy = 0.0;
