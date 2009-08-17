@@ -13,6 +13,7 @@ import java.util.Arrays;
 
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.pays.Pays;
+import fr.crnan.videso3d.stip.Stip;
 import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.Configuration;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
@@ -38,46 +39,56 @@ public class Videso3D {
 	            AirspaceLayer routeLayer = new AirspaceLayer();
 	            routeLayer.setName("Routes");
 	            wwd.getModel().getLayers().add(routeLayer);
-//	            
-	            db = new DatabaseManager();
 	            
-	        	Pays pays = new Pays("/home/datas/Projets/Videso/Datas", db);
-	
-	        	pays.addPropertyChangeListener(new PropertyChangeListener() {
-					
-					@Override
-					public void propertyChange(PropertyChangeEvent evt) {
-						if("progress".equals(evt.getPropertyName())){
-							System.out.println(evt.getNewValue());
-						} else if("file".equals(evt.getPropertyName())){
-							System.out.println(evt.getNewValue());
-						}
-						
-					}
-				});
-	        	
-	        	pays.execute();
-				
-	            /*---------------*/
-//	            try {
-//					db = new DatabaseManager();
-//					Route3D R10 = new Route3D(Route3D.Type.FIR);
-//					Statement st = db.getCurrentStip();
-//					ResultSet rs = st.executeQuery("select * from routebalise, balises where route ='R10' and routebalise.balise = balises.name and appartient = 'true'");
-//					LatLon[] loc = new LatLon[20];
-//					int i = 0;
-//					while(rs.next()){
-//						loc[i] = LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"));
-//						i++;
+//	            db = new DatabaseManager();
+//	            
+//	        	Pays pays = new Pays("V:\\SPYCKERELLE\\Dev\\Projets\\ViDESO\\Datas", db);
+//	        	 pays.addPropertyChangeListener(new PropertyChangeListener() {
+//						
+//						@Override
+//						public void propertyChange(PropertyChangeEvent evt) {
+//							if("progress".equals(evt.getPropertyName())){
+//								System.out.println("Pays "+evt.getNewValue());
+//							} else if("file".equals(evt.getPropertyName())){
+//								System.out.println("Pays "+evt.getNewValue());
+//							}	
+//						}
+//					});
+//	            Stip stip = new Stip("V:\\SPYCKERELLE\\Dev\\Projets\\ViDESO\\Datas\\091202_v7", db);
+//	            stip.addPropertyChangeListener(new PropertyChangeListener() {
+//					
+//					@Override
+//					public void propertyChange(PropertyChangeEvent evt) {
+//						if("progress".equals(evt.getPropertyName())){
+//							System.out.println("Stip "+evt.getNewValue());
+//						} else if("file".equals(evt.getPropertyName())){
+//							System.out.println("Stip "+evt.getNewValue());
+//						}	
 //					}
-//					R10.setLocations(Arrays.asList(loc));
-//					routeLayer.addAirspace(R10);	
-//					rs.close();
-//					st.close();
-//				} catch (SQLException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
+//				});
+//       	
+//	            pays.execute();
+//	        	stip.execute();
+				
+	            /*-------- TEST -------*/
+	            try {
+					db = new DatabaseManager();
+					Route3D R10 = new Route3D(Route3D.Type.FIR);
+					Statement st = db.getCurrentStip();
+					ResultSet rs = st.executeQuery("select * from routebalise, balises where route ='R10' and routebalise.balise = balises.name and appartient = 1");
+					LatLon[] loc = new LatLon[20];
+					int i = 0;
+					while(rs.next()){
+						loc[i] = LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"));
+						i++;
+					}
+					R10.setLocations(Arrays.asList(loc));
+					routeLayer.addAirspace(R10);	
+					rs.close();
+					st.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 	           
 	            
 	        }

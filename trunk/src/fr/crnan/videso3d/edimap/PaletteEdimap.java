@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +29,7 @@ import com.trolltech.qt.gui.QColor;
  */
 public class PaletteEdimap {
 
-	private HashMap<String, QColor> palette = new HashMap<String, QColor>();
+	private HashMap<String, Color> palette = new HashMap<String, Color>();
 	/**
 	 * Construit la palette à partir de l'entité palette
 	 * @param palette Entity
