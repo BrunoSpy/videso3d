@@ -1,19 +1,73 @@
-%%This is a very basic article template.
-%%There is just one section and two subsections.
-\documentclass{article}
+\documentclass[a4paper, titlepage]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage[frenchb]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[dvips,pdftex]{graphicx}
+\usepackage{geometry}
+\geometry{a4paper,twoside,left=3cm,right=3cm,marginparwidth=1.2cm,marginparsep=3mm,top=3cm,bottom=3cm}
+
+\title{
+\vspace{1cm} 
+\rule{\textwidth}{1mm}
+\vspace{1mm}\\
+\begin{tabular}{p{0cm} c}
+   & {\Huge {\bf Videso3D}} \\
+   & \\
+   & {\huge Visualisation 3D} \\
+   & {\huge des Données d'Exploitation} \\
+   & {\huge des Systèmes Opérationnels}
+ \end{tabular}\\
+\rule{\textwidth}{1mm}
+\vspace{2cm}\\
+\begin{tabular}{p{0cm} c}
+	&{\huge Manuel du développpeur}\\
+   &{\large Version 0.1}
+ \end{tabular}
+\vspace{2cm}\\
+ \begin{tabular}{p{0cm} c}
+    & {\large CRNA Nord} \\
+    & {\large  \today}
+ \end{tabular}\\
+\vspace{1cm}
+}
+
+
+
+\author{
+Bruno \textsc{Spyckerelle}\\
+Jonathan \textsc{Colson}}
+
+\date{}
 
 \begin{document}
 
+\maketitle
+\tableofcontents
+\newpage
 
-\section{Title}
+\section{A propos de ViDESO}
+Videso3D est développé avec les technologies suivantes :
+\begin{itemize}
+ \item Java 6 ;
+ \item Nasa WorldWind.
+\end{itemize}
+\par
 
-\subsection{Subtitle}
 
-Plain text.
+Ce manuel décrit comment configurer un environnement de développement Eclipse
+et comment remonter les modifications aux auteurs de Videso3D.
 
-\subsection{Another subtitle}
+\section{Installer Qt Jambi}
 
-More plain text.
+\section{Configurer Eclipse}
+\subsection{Subversive}
+\subsection{Texlipse}
 
+\section{Télécharger les sources de Videso3D}
+
+\section{Suivi des tâches : Mantis}
 
 \end{document}

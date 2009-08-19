@@ -32,13 +32,11 @@ public class EllipseEdimap extends SurfaceEllipse {
 	private double dx = 0.0;
 	private double dy = 0.0;
 	
-	public EllipseEdimap(QGraphicsItemInterface parent,
-			  Entity ellipse,
+	public EllipseEdimap(Entity ellipse,
 			  HashMap<String, PointEdimap> pointsRef, 
 			  PaletteEdimap palette,
 			  HashMap<String, Entity> idAtc){
 		
-		this.setParentItem(parent);
 		
 		Entity geometry = ellipse.getEntity("geometry");
 		List<Entity> axes = geometry.getValues("distance");
