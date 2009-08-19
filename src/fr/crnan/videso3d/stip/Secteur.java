@@ -13,126 +13,138 @@
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 package fr.crnan.videso3d.stip;
 
+import fr.crnan.videso3d.pays.Pays;
+import gov.nasa.worldwind.geom.LatLon;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 /**
- * Représente une ligne du fichier SECT
+ * Secteur de contrôle
  * @author Bruno Spyckerelle
  * @version 0.1
- *
  */
 public class Secteur {
+
+	/**
+	 * Connection vers la base de données
+	 */
+	private Statement st;
+	/**
+	 * Connection vers une base de données PAYS
+	 */
+	private Statement pays;
+	
 	/**
 	 * Nom du secteur
 	 */
-	private String nom;
-	
-	/**
-	 * Nom du centre auquel appartient le secteur
-	 */
-	private String centre;
-	
-	/**
-	 * Espace du secteur : F ou U
-	 */
-	private String espace;
-	
+	private String name;
 	/**
 	 * Numéro du secteur
 	 */
 	private Integer numero;
 	
 	/**
-	 * Limite inférieure de la tranche : premier niveau de vol du secteur
+	 * Crée un secteur
+	 * @param name Nom du secteur
 	 */
-	private Integer flinf;
+	public Secteur(String name, Integer id, Statement st){
+		this.name = name;
+		this.setConnection(st);
+		if(!secteurExists()){
+			throw new NoSuchElementException("Secteur "+name+" inconnu.");
+		} else {
+			this.numero = id;
+		}
+	}
 	
 	/**
-	 * Limite supérieure de la tranche : dernier niveau de vol du secteur
+	 * Vérifie si le nom du secteur existe dans la base de données
+	 * @return Boolean True si le secteur existe dans la base de données
 	 */
-	private Integer flsup;
+	private boolean secteurExists() {
+		Boolean r = false;
+		try {
+			ResultSet result = st.executeQuery("select nom from secteurs where nom = '"+this.name+"'");
+			r = result.next();
+			result.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return r;
+	}
+
+	/**
+	 *  Met en place une connection vers une base de données Stip
+	 * @param conn Connection vers une base de données Stip
+	 */
+	public void setConnection(Statement st){
+		this.st = st;
+	}
+	/**
+	 * Met en place une connection vers une base de données de type PAYS
+	 * Nécessaire pour créer les contours d'un secteur
+	 * @param conn Connection vers une base de données PAYS
+	 */
+	public void setConnectionPays(Statement st){
+		this.pays = st;
+	}
 	
 	/**
-	 * Mode S
+	 * Retourne la liste des points formant le contour du secteur au niveau spécifié
+	 * Nécessite une base PAYS
+	 * @return {@link Iterable} Liste des coordonnées du contour
 	 */
-	private Boolean modeS;
-
-	
-	public Secteur(String line) {
-		this.setNom(line.substring(0,3).trim());
-		this.setCentre(line.substring(4,8).trim());
-		this.setEspace(line.substring(11,12));
-		this.setNumero(new Integer(line.substring(12,16)));
-		this.setFlinf(new Integer(line.substring(40,44)));
-		this.setFlsup(new Integer(line.substring(44,48)));
-		this.setModeS(line.substring(49,50));
+	public Iterable<? extends LatLon> getContour(int flsup){
+		List<LatLon> loc = new LinkedList<LatLon>();
+		try {
+			ResultSet rs = this.st.executeQuery("select refcontour, pointref, latitude, longitude from cartepoint, poinsect where cartepoint.pointref = poinsect.ref and sectnum ='"+ numero +"' and flsup = '"+ flsup +"'");
+			String pointFrontiere = "";
+			String refContour = "";
+			String firstPoint = "";
+			while(rs.next()){
+				//on enregistre la référence du premier point
+				if(rs.isFirst()){
+					firstPoint = rs.getString("pointref");
+				}
+				if(rs.getString("pointref").startsWith("F")){//point frontière
+					if(refContour.isEmpty()){
+						if(!(rs.getString("refcontour")).isEmpty()){//point frontière avec contour
+							//initilisation, on attend la deuxième ligne pour dessiner
+							refContour = rs.getString("refcontour");
+							pointFrontiere = rs.getString("pointref");
+						}
+					} else {
+						if((rs.getString("refcontour")).isEmpty()){//point frontière sans contour
+							loc.addAll(Pays.getContour(refContour, pointFrontiere, rs.getString("pointref"), this.pays));
+							refContour = "";
+							pointFrontiere = "";
+						} else { //point frontiere avec contour : tracé du sous contour précédent jusqu'au point frontière suivant
+							loc.addAll(Pays.getContour(refContour, pointFrontiere, rs.getString("pointref"), this.pays));
+							refContour = rs.getString("refcontour");
+							pointFrontiere = rs.getString("pointref");
+						}
+					}
+				} else {//point normal
+					loc.add(LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
+				}
+				
+			}
+			//cas particulier du dernier point, si c'est un point frontière avec contour
+			if(!refContour.isEmpty()){	
+				loc.addAll(Pays.getContour(refContour, pointFrontiere, firstPoint, this.pays));
+			}
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return loc;
 	}
-	
-//	public Secteur(QSqlRecord record) {
-//		this.record = record;
-//		this.setNumero(((Long) record.value("numero")).intValue()); 
-//	}
-	
-	public String getNom() {
-		return nom;
-	}
-
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
-
-	public String getCentre() {
-		return centre;
-	}
-
-	public void setCentre(String centre) {
-		this.centre = centre;
-	}
-
-	public String getEspace() {
-		return espace;
-	}
-
-	public void setEspace(String espace) {
-		this.espace = espace;
-	}
-
-	public Integer getNumero() {
-		return numero;
-	}
-
-	public void setNumero(Integer numero) {
-		this.numero = numero;
-	}
-
-	public Integer getFlinf() {
-		return flinf;
-	}
-
-	public void setFlinf(Integer flinf) {
-		this.flinf = flinf;
-	}
-
-	public Integer getFlsup() {
-		return flsup;
-	}
-
-	public void setFlsup(Integer flsup) {
-		this.flsup = flsup;
-	}
-
-	public Boolean getModeS() {
-		return modeS;
-	}
-
-	public void setModeS(Boolean modeS) {
-		this.modeS = modeS;
-	}
-
-	public void setModeS(String modeS){
-		this.modeS = modeS.equalsIgnoreCase("s");
-	}
-	
-	
 }

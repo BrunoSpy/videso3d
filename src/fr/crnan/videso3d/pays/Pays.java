@@ -22,14 +22,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileParser;
-import fr.crnan.videso3d.Latitude;
-import fr.crnan.videso3d.Longitude;
-import fr.crnan.videso3d.Point;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import gov.nasa.worldwind.geom.LatLon;
 /**
  * Lecteur des fichiers STIP relatifs aux contours des pays.
  * Ces fichiers nécessitent un traitement spécial car ils ne sont pas distribués avec les autres fichiers CA lors d'une livraison par le CESNAC.
@@ -252,88 +256,92 @@ public class Pays extends FileParser {
 
 	/**
 	 * Renvoit la portion de contour comprise entre point1 et point2.\n
-	 * La liste des points est ordonnée de faÃ§on à ce que point1 soit le premier point du sous-contour.
+	 * La liste des points est ordonnée de façon à ce que point1 soit le premier point du sous-contour.
 	 * @param contour String Nom du contour
 	 * @param point1 String Référence du premier point
 	 * @param point2 String Référence du deuxième point
-	 * @param db DatabaseManager
-	 * @return QPolygonF Polyligne représentant le sous-contour
+	 * @param st Statement Statement sur une base de données Pays 
+	 * @return List<LatLon> Liste de points Lat/Lon représentant le sous-contour
 	 */
-//	public static QPolygonF getContour(String contour, String point1, String point2, DatabaseManager db) {
-//		QPolygonF polygon = new QPolygonF();
-//		Integer pointF1 = new Integer(point1.substring(1));
-//		Integer pointF2 = new Integer(point2.substring(1));
-//		try {
-//			QSqlQuery query = new QSqlQuery(db.getCurrent("PAYS"));
-//			query.exec("select refcontour, refpoint, latitude, longitude from contpays, poinpays where poinpays.ref = contpays.refpoint and contpays.refcontour = '" + contour + "'");
-//			//on enregistre d'abord les positions des points dans les résultats car la liste des points d'un contour
-//			//n'est pas classée selon le nom des points mais dans le sens de parcours trigo ...
-//			boolean point1Found = false;
-//			boolean point2Found = false;
-//			int point1R = 0; //position du point1 dans la table des résultats
-//			int point2R = 0;
-//			while(query.next() && (!point1Found  || !point2Found)) {
-//				Integer point = new Integer(((String)query.value(1)).substring(1));
-//				if(pointF1.compareTo(point) == 0 && !point1Found ) {
-//					point1Found = true;
-//					point1R = query.at();
-//				}
-//				if(pointF2.compareTo(point) == 0 && !point2Found ) {
-//					point2Found = true;
-//					point2R = query.at();
-//				}
-//			}
-//			//puis on parcours le contour toujours en commenÃ§ant par le premier point fourni
-//			//jusqu'au deuxième point fourni, en remontant ou redescendant les résultats selon le cas
-//			query.seek(point1R);
-//			if(point1R < point2R){
-//				for(int i=point1R; i<= point2R; i++){
-//					QPointF coor = new Point(new Latitude((String)query.record().value("latitude")).toDecimal(),
-//							new Longitude((String)query.record().value("longitude").toString()).toDecimal(),
-//							Point.Type.Stéréographique).coordonneesCautra();
-//					polygon.add(coor.x()*64, coor.y()*-64);
-//					query.next();
-//				}
-//
-//			} else {
-//				for(int i=point1R; i>= point2R; i--){
-//					QPointF coor = new Point(new Latitude((String)query.record().value("latitude")).toDecimal(),
-//							new Longitude((String)query.record().value("longitude").toString()).toDecimal(),
-//							Point.Type.Stéréographique).coordonneesCautra();
-//					polygon.add(coor.x()*64, coor.y()*-64);
-//					query.previous();
-//				}
-//			}
-//		} catch (DatabaseError e) {
-//			e.printStackTrace();
-//		}
-//		return polygon;
-//	}
+	public static List<LatLon> getContour(String contour, String point1, String point2, Statement st) {
+		List<LatLon> polygon = new LinkedList<LatLon>();
+		Integer pointF1 = new Integer(point1.substring(1));
+		Integer pointF2 = new Integer(point2.substring(1));
+		try {
+			ResultSet rs = st.executeQuery("select refcontour, refpoint, latitude, longitude from contpays, poinpays where poinpays.ref = contpays.refpoint and contpays.refcontour = '" + contour + "'");
+			//on enregistre d'abord les resultats dans une liste car le driver SQlite est pourri et ne permet pas de faire des mouvements de curseur ...
+			ArrayList<String> refs = new ArrayList<String>();
+			ArrayList<Double> latitudes = new ArrayList<Double>();
+			ArrayList<Double> longitudes = new ArrayList<Double>();
+			int i = 0;
+			while(rs.next()){
+				refs.add(i, rs.getString(2));
+				latitudes.add(i, rs.getDouble(3));
+				longitudes.add(i, rs.getDouble(4));
+				i++;
+			}
+			rs.close();
+			boolean point1Found = false;
+			boolean point2Found = false;
+			int point1R = 0; //position du point1 dans la table des résultats
+			int point2R = 0;
+
+			i = 0;
+			while(i<refs.size() && (!point1Found  || !point2Found)) {		
+				Integer point = new Integer(refs.get(i).substring(1));
+				if(pointF1.compareTo(point) == 0 && !point1Found ) {
+					point1Found = true;
+					point1R = i;
+				}
+				if(pointF2.compareTo(point) == 0 && !point2Found ) {
+					point2Found = true;
+					point2R = i;
+				}
+				i++;
+			}
+			//puis on parcours le contour toujours en commençant par le premier point fourni
+			//jusqu'au deuxième point fourni, en remontant ou redescendant les résultats selon le cas
+			if(point1R < point2R){
+				for(int j=point1R; j<= point2R; j++){
+					polygon.add(LatLon.fromDegrees(latitudes.get(j), longitudes.get(j)));
+				}
+
+			} else {
+				for(int j=point1R; j>= point2R; j--){
+					polygon.add(LatLon.fromDegrees(latitudes.get(j), longitudes.get(j)));
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return polygon;
+	}
 	/**
 	 * Renvoit la fin du contour à partir de point1
 	 * @param contour String Nom du contour
 	 * @param point1 String Référence du premier point
-	 * @param db DatabaseManager
-	 * @return QPolygonF Polyligne représentant le sous-contour
+	 * @param st Statement
+	 * @return List<LatLon> Liste de points représentant le sous-contour
 	 */
-//	public static QPolygonF getContour(String contour, String point1, DatabaseManager db) {
-//		QPolygonF polygon = new QPolygonF();
-//		Integer pointF1 = new Integer(point1.substring(1));
-//		try {
-//			QSqlQuery query = new QSqlQuery(db.getCurrent("PAYS"));
-//			query.exec("select refcontour, refpoint, latitude, longitude from contpays, poinpays where poinpays.ref = contpays.refpoint and contpays.refcontour = '" + contour + "'");
-//			while(query.next()) {
-//				Integer point = new Integer(((String)query.value(1)).substring(1));
-//				if(point>= pointF1){
+	public static List<LatLon> getContour(String contour, String point1, Statement st) {
+		List<LatLon> polygon = new LinkedList<LatLon>();
+		Integer pointF1 = new Integer(point1.substring(1));
+		try {
+			ResultSet rs = st.executeQuery("select refcontour, refpoint, latitude, longitude from contpays, poinpays where poinpays.ref = contpays.refpoint and contpays.refcontour = '" + contour + "'");
+			while(rs.next()) {
+				Integer point = new Integer((rs.getString(2)).substring(1));
+				if(point>= pointF1){
 //					QPointF coor = new Point(new Latitude((String)query.record().value("latitude")).toDecimal(),
 //							new Longitude((String)query.record().value("longitude").toString()).toDecimal(),
 //							Point.Type.Stéréographique).coordonneesCautra();
 //					polygon.add(coor.x()*64, coor.y()*-64);
-//				}
-//			}
-//		} catch (DatabaseError e) {
-//			e.printStackTrace();
-//		}
-//		return polygon;
-//	}
+					polygon.add(LatLon.fromDegrees(rs.getDouble(3), rs.getDouble(4)));
+				}
+			}
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return polygon;
+	}
 }

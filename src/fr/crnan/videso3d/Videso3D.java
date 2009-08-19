@@ -11,8 +11,11 @@ import java.sql.Statement;
 import java.util.Arrays;
 
 
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphics.Route3D;
+import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.pays.Pays;
+import fr.crnan.videso3d.stip.Secteur;
 import fr.crnan.videso3d.stip.Stip;
 import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.Configuration;
@@ -42,7 +45,7 @@ public class Videso3D {
 	            
 //	            db = new DatabaseManager();
 //	            
-//	        	Pays pays = new Pays("V:\\SPYCKERELLE\\Dev\\Projets\\ViDESO\\Datas", db);
+//	        	Pays pays = new Pays("/home/datas/Projets/Videso3D/datas", db);
 //	        	 pays.addPropertyChangeListener(new PropertyChangeListener() {
 //						
 //						@Override
@@ -54,7 +57,7 @@ public class Videso3D {
 //							}	
 //						}
 //					});
-//	            Stip stip = new Stip("V:\\SPYCKERELLE\\Dev\\Projets\\ViDESO\\Datas\\091202_v7", db);
+//	            Stip stip = new Stip("/home/datas/Projets/Videso3D/datas/091202_v7", db);
 //	            stip.addPropertyChangeListener(new PropertyChangeListener() {
 //					
 //					@Override
@@ -84,6 +87,13 @@ public class Videso3D {
 					}
 					R10.setLocations(Arrays.asList(loc));
 					routeLayer.addAirspace(R10);	
+					
+					Secteur3D AP3D = new Secteur3D("AP", 265, 315);
+					Secteur AP = new Secteur("AP", 318, db.getCurrentStip());
+					AP.setConnectionPays(db.getCurrent(Type.PAYS));
+					AP3D.setLocations(AP.getContour(315));
+					routeLayer.addAirspace(AP3D);
+					
 					rs.close();
 					st.close();
 				} catch (SQLException e) {
