@@ -337,7 +337,7 @@ public class Stip extends FileParser{
 				String line = in.readLine();
 				if(!line.startsWith("FORMAT") && (line.length()>20)){
 					if(!line.substring(4, 8).equalsIgnoreCase("SCAG") && !line.substring(20, 43).equalsIgnoreCase("* SECTEUR NON UTILISE *")){
-						Secteur secteur = new Secteur(line);
+						SecteurLigne secteur = new SecteurLigne(line);
 						try {
 							this.insertSecteur(secteur);
 						} catch (SQLException e) {
@@ -358,7 +358,7 @@ public class Stip extends FileParser{
 	 * @param secteur une ligne du fichier SECT
 	 * @throws SQLException 
 	 */
-	private void insertSecteur(Secteur secteur) throws SQLException {
+	private void insertSecteur(SecteurLigne secteur) throws SQLException {
 		PreparedStatement insert = this.conn.prepareStatement("insert into secteurs (nom, centre, espace, numero, flinf, flsup, modes) " +
 		"values (?, ?, ?, ?, ?, ?, ?)");
 		insert.setString(1, secteur.getNom());
