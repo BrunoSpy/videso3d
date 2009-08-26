@@ -1,3 +1,19 @@
+/*
+ * This file is part of ViDESO.
+ * ViDESO is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ViDESO is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package fr.crnan.videso3d;
 
 import java.beans.PropertyChangeEvent;
@@ -12,16 +28,20 @@ import java.util.Arrays;
 
 
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.layers.TextLayer;
 import fr.crnan.videso3d.pays.Pays;
 import fr.crnan.videso3d.stip.Secteur;
 import fr.crnan.videso3d.stip.Stip;
 import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.Configuration;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
+import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.AirspaceLayer;
+import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 
 
 
@@ -93,6 +113,19 @@ public class Videso3D {
 					AP.setConnectionPays(db.getCurrent(Type.PAYS));
 					AP3D.setLocations(AP.getContour(315));
 					routeLayer.addAirspace(AP3D);
+					
+					//GeographicTextRenderer textRenderer = new GeographicTextRenderer();
+					SurfaceShapeLayer surfaceLayer = new SurfaceShapeLayer();
+					TextLayer textLayer = new TextLayer();
+					wwd.getModel().getLayers().add(surfaceLayer);
+					wwd.getModel().getLayers().add(textLayer);
+					
+					st = db.getCurrentStip();
+					rs = st.executeQuery("select * from balises");
+					while(rs.next()){
+						Balise2D balise = new Balise2D(rs.getString("name"), LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
+						balise.addToLayer(surfaceLayer, textLayer);
+					}
 					
 					rs.close();
 					st.close();
