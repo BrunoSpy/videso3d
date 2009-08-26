@@ -16,143 +16,38 @@
 
 package fr.crnan.videso3d;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
+import fr.crnan.videso3d.ihm.MainWindow;
 
-
-import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.graphics.Balise2D;
-import fr.crnan.videso3d.graphics.Route3D;
-import fr.crnan.videso3d.graphics.Secteur3D;
-import fr.crnan.videso3d.layers.TextLayer;
-import fr.crnan.videso3d.pays.Pays;
-import fr.crnan.videso3d.stip.Secteur;
-import fr.crnan.videso3d.stip.Stip;
-import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.Configuration;
-import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
-import gov.nasa.worldwind.geom.Angle;
-import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.layers.AirspaceLayer;
-import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 
-
-
+/**
+ * Version 0.1 :</br>
+ * <ul>
+ * <li>Affichage basique d'un secteur Stip</li>
+ * <li>Affichage basique d'une route Stip</li>
+ * <li>Affichage basique d'une balise Stip</li>
+ * </ul>
+ * @author Bruno Spyckerelle
+ * @version 0.1
+ */
 public class Videso3D {
 	
-	 private static class AppFrame extends javax.swing.JFrame
-	    {
-		 private DatabaseManager db;
-	        public AppFrame()
-	        {
-	            WorldWindowGLCanvas wwd = new WorldWindowGLCanvas();
-	            wwd.setPreferredSize(new java.awt.Dimension(1000, 800));
-	            this.getContentPane().add(wwd, java.awt.BorderLayout.CENTER);
-	            this.pack();
+	public static void main(String[] args)
+	{
+		if (Configuration.isMacOS())
+		{
+			System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Videso 3D");
+		}
 
-	            wwd.setModel(new BasicModel());
-	            
-	            AirspaceLayer routeLayer = new AirspaceLayer();
-	            routeLayer.setName("Routes");
-	            wwd.getModel().getLayers().add(routeLayer);
-	            
-//	            db = new DatabaseManager();
-//	            
-//	        	Pays pays = new Pays("/home/datas/Projets/Videso3D/datas", db);
-//	        	 pays.addPropertyChangeListener(new PropertyChangeListener() {
-//						
-//						@Override
-//						public void propertyChange(PropertyChangeEvent evt) {
-//							if("progress".equals(evt.getPropertyName())){
-//								System.out.println("Pays "+evt.getNewValue());
-//							} else if("file".equals(evt.getPropertyName())){
-//								System.out.println("Pays "+evt.getNewValue());
-//							}	
-//						}
-//					});
-//	            Stip stip = new Stip("/home/datas/Projets/Videso3D/datas/091202_v7", db);
-//	            stip.addPropertyChangeListener(new PropertyChangeListener() {
-//					
-//					@Override
-//					public void propertyChange(PropertyChangeEvent evt) {
-//						if("progress".equals(evt.getPropertyName())){
-//							System.out.println("Stip "+evt.getNewValue());
-//						} else if("file".equals(evt.getPropertyName())){
-//							System.out.println("Stip "+evt.getNewValue());
-//						}	
-//					}
-//				});
-//       	
-//	            pays.execute();
-//	        	stip.execute();
-				
-	            /*-------- TEST -------*/
-	            try {
-					db = new DatabaseManager();
-					Route3D R10 = new Route3D(Route3D.Type.FIR);
-					Statement st = db.getCurrentStip();
-					ResultSet rs = st.executeQuery("select * from routebalise, balises where route ='R10' and routebalise.balise = balises.name and appartient = 1");
-					LatLon[] loc = new LatLon[20];
-					int i = 0;
-					while(rs.next()){
-						loc[i] = LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"));
-						i++;
-					}
-					R10.setLocations(Arrays.asList(loc));
-					routeLayer.addAirspace(R10);	
-					
-					Secteur3D AP3D = new Secteur3D("AP", 265, 315);
-					Secteur AP = new Secteur("AP", 318, db.getCurrentStip());
-					AP.setConnectionPays(db.getCurrent(Type.PAYS));
-					AP3D.setLocations(AP.getContour(315));
-					routeLayer.addAirspace(AP3D);
-					
-					//GeographicTextRenderer textRenderer = new GeographicTextRenderer();
-					SurfaceShapeLayer surfaceLayer = new SurfaceShapeLayer();
-					TextLayer textLayer = new TextLayer();
-					wwd.getModel().getLayers().add(surfaceLayer);
-					wwd.getModel().getLayers().add(textLayer);
-					
-					st = db.getCurrentStip();
-					rs = st.executeQuery("select * from balises");
-					while(rs.next()){
-						Balise2D balise = new Balise2D(rs.getString("name"), LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
-						balise.addToLayer(surfaceLayer, textLayer);
-					}
-					
-					rs.close();
-					st.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-	           
-	            
-	        }
-	    }
+		java.awt.EventQueue.invokeLater(new Runnable()
+		{
+			public void run()
+			{
+				// Create an AppFrame and immediately make it visible. As per Swing convention, this
+				// is done within an invokeLater call so that it executes on an AWT thread.
+				new MainWindow(new DatabaseManager()).setVisible(true);
+			}
+		});
+	}
 
-	    public static void main(String[] args)
-	    {
-	        if (Configuration.isMacOS())
-	        {
-	            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Hello World Wind");
-	        }
-
-	        java.awt.EventQueue.invokeLater(new Runnable()
-	        {
-	            public void run()
-	            {
-	                // Create an AppFrame and immediately make it visible. As per Swing convention, this
-	                // is done within an invokeLater call so that it executes on an AWT thread.
-	                new AppFrame().setVisible(true);
-	            }
-	        });
-	    }
-	
 }

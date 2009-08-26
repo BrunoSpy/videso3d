@@ -25,7 +25,7 @@ import gov.nasa.worldwind.render.GeographicText;
 import gov.nasa.worldwind.render.GeographicTextRenderer;
 import gov.nasa.worldwind.util.Logging;
 /**
- * 
+ * Layer support pour des objets de type {@link GeographicText}
  * @author Bruno Spyckerelle
  * @version 0.1 
  */
@@ -39,6 +39,11 @@ public class TextLayer extends AbstractLayer {
 		
 	}
 	
+	/**
+	 * Adds the specified <code>text</code> to this layer's internal collection.
+	 * @param text {@link GeographicText} to add
+	 * @throws IllegalArgumentException If <code>text</code> is null.
+	 */
 	public void addGeographicText(GeographicText text){
 		if (text == null){
             String msg = "nullValue.GeographicTextIsNull";
