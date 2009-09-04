@@ -18,11 +18,6 @@ package fr.crnan.videso3d.edimap;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import com.trolltech.qt.core.QRectF;
-import com.trolltech.qt.gui.QGraphicsItem;
-import com.trolltech.qt.gui.QPainter;
-import com.trolltech.qt.gui.QStyleOptionGraphicsItem;
-import com.trolltech.qt.gui.QWidget;
 
 /**
  * Carte Edimap

@@ -43,17 +43,21 @@ public class Balise2D {
 	private SurfaceCircle circle;
 	
 	/**
-	 * 
-	 * @param name
-	 * @param position
+	 * Crée une balise 2D
+	 * @param name Nom de la balise
+	 * @param position {@link LatLon} Position de la balise
 	 */
 	public Balise2D(String name, LatLon position){
-		this.circle = new SurfaceCircle(position, 5000);
+		this.circle = new SurfaceCircle(position, 1000);
 
 		this.name = new UserFacingText(name, new Position(position, 100.0));
 		
 	}
-	
+	/**
+	 * Ajoute la balise aux calques
+	 * @param layer {@link SurfaceShapeLayer} Calque pour le dessin
+	 * @param textLayer {@link TextLayer} Calque pour le nom de la balise
+	 */
 	public void addToLayer(SurfaceShapeLayer layer, TextLayer textLayer){
 		//layer.addRenderable(circle);
 		textLayer.addGeographicText(name);
