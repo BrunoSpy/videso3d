@@ -28,6 +28,7 @@ import javax.swing.UIManager;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
@@ -38,6 +39,9 @@ import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.SurfaceShapeLayer;
+import gov.nasa.worldwind.util.Logging;
+import gov.nasa.worldwind.view.orbit.BasicOrbitView;
+import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
@@ -63,7 +67,20 @@ public class MainWindow extends JFrame {
 		this.pack();
 
 		wwd.setModel(new BasicModel());
-
+		
+		//Cautra
+		EarthFlatCautra globe = new EarthFlatCautra();
+//		globe.setProjection(globe.PROJECTION_MERCATOR);
+		wwd.getModel().setGlobe(globe);
+        // Switch to flat view and update with current position
+        BasicOrbitView orbitView = (BasicOrbitView)wwd.getView();
+        FlatOrbitView flatOrbitView = new FlatOrbitView();
+        flatOrbitView.setCenterPosition(orbitView.getCenterPosition());
+        flatOrbitView.setZoom(orbitView.getZoom( ));
+        flatOrbitView.setHeading(orbitView.getHeading());
+        flatOrbitView.setPitch(orbitView.getPitch());
+        wwd.setView(flatOrbitView);
+        
 		AirspaceLayer routeLayer = new AirspaceLayer();
 		routeLayer.setName("Routes");
 		wwd.getModel().getLayers().add(routeLayer);
@@ -119,18 +136,18 @@ public class MainWindow extends JFrame {
 			AP3D.setLocations(AP.getContour(315));
 			routeLayer.addAirspace(AP3D);
 
-			//GeographicTextRenderer textRenderer = new GeographicTextRenderer();
-			SurfaceShapeLayer surfaceLayer = new SurfaceShapeLayer();
-			TextLayer textLayer = new TextLayer();
-			wwd.getModel().getLayers().add(surfaceLayer);
-			wwd.getModel().getLayers().add(textLayer);
-
-			st = db.getCurrentStip();
-			rs = st.executeQuery("select * from balises");
-			while(rs.next()){
-				Balise2D balise = new Balise2D(rs.getString("name"), LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
-				balise.addToLayer(surfaceLayer, textLayer);
-			}
+//			SurfaceShapeLayer surfaceLayer = new SurfaceShapeLayer();
+//			surfaceLayer.setMaxActiveAltitude(500000);
+//			TextLayer textLayer = new TextLayer();
+//			wwd.getModel().getLayers().add(surfaceLayer);
+//			wwd.getModel().getLayers().add(textLayer);
+//
+//			st = db.getCurrentStip();
+//			rs = st.executeQuery("select * from balises");
+//			while(rs.next()){
+//				Balise2D balise = new Balise2D(rs.getString("name"), LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
+//				balise.addToLayer(surfaceLayer, textLayer);
+//			}
 
 			rs.close();
 			st.close();
@@ -147,7 +164,6 @@ public class MainWindow extends JFrame {
 			if ("Nimbus".equals(laf.getName())) {
 				try {
 					UIManager.setLookAndFeel(laf.getClassName());
-					System.out.println("Nimbus found. Applying style.");
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

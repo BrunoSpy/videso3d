@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import com.trolltech.qt.gui.QColor;
 
 /**
  * Palette de couleurs

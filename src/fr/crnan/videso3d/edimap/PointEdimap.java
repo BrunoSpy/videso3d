@@ -15,7 +15,6 @@
  */
 package fr.crnan.videso3d.edimap;
 
-import com.trolltech.qt.core.QPointF;
 /**
  * Point Edimap : coordonnées dans le repère CAUTRA
  * Abscisse en 64e de NM
@@ -23,7 +22,7 @@ import com.trolltech.qt.core.QPointF;
  * @author Bruno Spyckerelle
  * @version 0.2
  */
-public class PointEdimap extends QPointF{
+public class PointEdimap extends QPointF {
 	/**
 	 * Nom du point
 	 */
