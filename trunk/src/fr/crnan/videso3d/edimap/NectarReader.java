@@ -18,10 +18,6 @@ package fr.crnan.videso3d.edimap;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
-import com.trolltech.qt.QSignalEmitter;
-import com.trolltech.qt.core.QFile;
-import com.trolltech.qt.core.QIODevice;
-import com.trolltech.qt.core.QTextStream;
 
 /**
  * Lit un fichier Nectar et fournit des méthodes permettant l'accès à l'ensemble d'entités correspondant.

@@ -111,6 +111,7 @@ public class Entity extends Couple<String, Object>{
 	 * @param keyword Nom de l'entité
 	 * @return Entity Entité recherchée. Vide si l'entité n'existe pas.
 	 */
+	@SuppressWarnings("unchecked")
 	public Entity getEntity(String keyword){
 		if(this.getSecond().getClass().equals(new String().getClass())){
 			//sans objet : l'entité est une entité simple
@@ -163,6 +164,7 @@ public class Entity extends Couple<String, Object>{
 	 * TODO ajouter des tabulations
 	 */
 	@SuppressWarnings("unchecked")
+	@Override
 	public String toString(){
 		String result = new String();
 		result = "("+this.getKeyword();

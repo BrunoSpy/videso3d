@@ -18,8 +18,6 @@ package fr.crnan.videso3d.edimap;
 import java.util.HashMap;
 import java.util.List;
 
-import com.trolltech.qt.gui.QGraphicsItemInterface;
-import com.trolltech.qt.gui.QGraphicsTextItem;
 /**
  * Construit un objet graphique de type Text à partir d'une entité TextEntity
  * @author Bruno Spyckerelle
