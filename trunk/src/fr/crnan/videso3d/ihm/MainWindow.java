@@ -24,6 +24,8 @@ import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JSeparator;
 import javax.swing.UIManager;
 
 import fr.crnan.videso3d.DatabaseManager;
@@ -32,6 +34,7 @@ import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.layers.BaliseMarkerLayer;
 import fr.crnan.videso3d.layers.TextLayer;
 import fr.crnan.videso3d.stip.Secteur;
 import gov.nasa.worldwind.BasicModel;
@@ -54,32 +57,33 @@ public class MainWindow extends JFrame {
 	public MainWindow(DatabaseManager db){
 		
 		this.db = db;
-		
+		//Style Nimbus
 		this.setNimbus();
 		this.build();
-		
+		this.setJMenuBar(this.createMenuBar());
+		this.pack();
 	}
 	
 	private void build(){
 		WorldWindowGLCanvas wwd = new WorldWindowGLCanvas();
 		wwd.setPreferredSize(new java.awt.Dimension(1000, 800));
 		this.getContentPane().add(wwd, java.awt.BorderLayout.CENTER);
-		this.pack();
+		//this.pack();
 
 		wwd.setModel(new BasicModel());
 		
-		//Cautra
-		EarthFlatCautra globe = new EarthFlatCautra();
-//		globe.setProjection(globe.PROJECTION_MERCATOR);
-		wwd.getModel().setGlobe(globe);
-        // Switch to flat view and update with current position
-        BasicOrbitView orbitView = (BasicOrbitView)wwd.getView();
-        FlatOrbitView flatOrbitView = new FlatOrbitView();
-        flatOrbitView.setCenterPosition(orbitView.getCenterPosition());
-        flatOrbitView.setZoom(orbitView.getZoom( ));
-        flatOrbitView.setHeading(orbitView.getHeading());
-        flatOrbitView.setPitch(orbitView.getPitch());
-        wwd.setView(flatOrbitView);
+////		Cautra
+//		EarthFlatCautra globe = new EarthFlatCautra();
+//		globe.setProjection(globe.PROJECTION_CAUTRA);
+//		wwd.getModel().setGlobe(globe);
+////         Switch to flat view and update with current position
+//        BasicOrbitView orbitView = (BasicOrbitView)wwd.getView();
+//        FlatOrbitView flatOrbitView = new FlatOrbitView();
+//        flatOrbitView.setCenterPosition(orbitView.getCenterPosition());
+//        flatOrbitView.setZoom(orbitView.getZoom( ));
+//        flatOrbitView.setHeading(orbitView.getHeading());
+//        flatOrbitView.setPitch(orbitView.getPitch());
+//        wwd.setView(flatOrbitView);
         
 		AirspaceLayer routeLayer = new AirspaceLayer();
 		routeLayer.setName("Routes");
@@ -136,24 +140,47 @@ public class MainWindow extends JFrame {
 			AP3D.setLocations(AP.getContour(315));
 			routeLayer.addAirspace(AP3D);
 
-//			SurfaceShapeLayer surfaceLayer = new SurfaceShapeLayer();
-//			surfaceLayer.setMaxActiveAltitude(500000);
-//			TextLayer textLayer = new TextLayer();
-//			wwd.getModel().getLayers().add(surfaceLayer);
-//			wwd.getModel().getLayers().add(textLayer);
-//
-//			st = db.getCurrentStip();
-//			rs = st.executeQuery("select * from balises");
-//			while(rs.next()){
-//				Balise2D balise = new Balise2D(rs.getString("name"), LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
-//				balise.addToLayer(surfaceLayer, textLayer);
-//			}
+			BaliseMarkerLayer baliseMarker = new BaliseMarkerLayer();
+			//baliseMarker.setMaxActiveAltitude(500000);
+			baliseMarker.setKeepSeparated(false);
+			baliseMarker.setElevation(0);
+			baliseMarker.setOverrideMarkerElevation(true);
+			
+			SurfaceShapeLayer surfaceLayer = new SurfaceShapeLayer();
+			surfaceLayer.setMaxActiveAltitude(500000);
+			TextLayer textLayer = new TextLayer();
+					
 
+			st = db.getCurrentStip();
+			rs = st.executeQuery("select * from balises where publicated = 1");
+			while(rs.next()){
+				Balise2D balise = new Balise2D(rs.getString("name"), LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
+				balise.addToLayer(baliseMarker, textLayer);
+			}
+						
+			wwd.getModel().getLayers().add(textLayer);
+			wwd.getModel().getLayers().add(baliseMarker);
 			rs.close();
 			st.close();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Barre de menu de l'application
+	 * @return Barre de menu
+	 */
+	private JMenuBar createMenuBar(){
+		JMenu file = new JMenu("Fichier");
+		file.add(new JMenuItem("Ajouter une base de données"));
+		file.add(new JSeparator());
+		file.add(new JMenuItem("Quitter"));
+		
+		JMenuBar menuBar = new JMenuBar();
+		menuBar.add(file);
+		return menuBar;
 	}
 	
 	/**
