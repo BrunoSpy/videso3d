@@ -16,14 +16,15 @@
 
 package fr.crnan.videso3d.graphics;
 
+import fr.crnan.videso3d.layers.BaliseMarkerLayer;
 import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 
-import gov.nasa.worldwind.layers.SurfaceShapeLayer;
-
-import gov.nasa.worldwind.render.SurfaceCircle;
 import gov.nasa.worldwind.render.UserFacingText;
+import gov.nasa.worldwind.render.markers.BasicMarker;
+import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
+import gov.nasa.worldwind.render.markers.Marker;
 
 /**
  * Balise 2D projetée sur le terrain
@@ -40,26 +41,28 @@ public class Balise2D {
 	/**
 	 * Cercle centré sur la position de la balise
 	 */
-	private SurfaceCircle circle;
-	
+	private Marker marker;
 	/**
 	 * Crée une balise 2D
 	 * @param name Nom de la balise
 	 * @param position {@link LatLon} Position de la balise
 	 */
 	public Balise2D(String name, LatLon position){
-		this.circle = new SurfaceCircle(position, 1000);
-
 		this.name = new UserFacingText(name, new Position(position, 100.0));
+		
+		BasicMarkerAttributes attrs = new BasicMarkerAttributes();
+		attrs.setMarkerPixels(3);
+		
+		this.marker = new BasicMarker(new Position(position, 0), attrs);
 		
 	}
 	/**
 	 * Ajoute la balise aux calques
-	 * @param layer {@link SurfaceShapeLayer} Calque pour le dessin
+	 * @param layer {@link BaliseMarkerLayer} Calque pour le dessin
 	 * @param textLayer {@link TextLayer} Calque pour le nom de la balise
 	 */
-	public void addToLayer(SurfaceShapeLayer layer, TextLayer textLayer){
-		//layer.addRenderable(circle);
+	public void addToLayer(BaliseMarkerLayer layer, TextLayer textLayer){
+		layer.addMarker(marker);
 		textLayer.addGeographicText(name);
 		
 	}
