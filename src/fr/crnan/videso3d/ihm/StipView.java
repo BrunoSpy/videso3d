@@ -16,14 +16,47 @@
 
 package fr.crnan.videso3d.ihm;
 
-import javax.swing.JScrollPane;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JPanel;
 /**
  * Sélecteur d'objets Stip
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class StipView extends JScrollPane {
+public class StipView extends JPanel {
 
+	private JPanel routes = new JPanel();
+	
+	private JPanel balises = new JPanel();
+	
+	private JPanel secteurs = new JPanel();
+	
+	public StipView(){
+		
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		
+		routes.setBorder(BorderFactory.createTitledBorder("Routes"));
+		balises.setBorder(BorderFactory.createTitledBorder("Balises"));
+		secteurs.setBorder(BorderFactory.createTitledBorder("Secteurs"));
+		
+		this.add(routes);
+		this.add(balises);
+		this.add(secteurs);
+		
+	}
+
+	public JPanel getRoutes() {
+		return routes;
+	}
+
+	public JPanel getBalises() {
+		return balises;
+	}
+
+	public JPanel getSecteurs() {
+		return secteurs;
+	}
 	
 	
 }
