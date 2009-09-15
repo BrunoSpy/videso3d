@@ -62,11 +62,122 @@ et comment remonter les modifications aux auteurs de Videso3D.
 
 
 \section{Configurer Eclipse}
+\subsection{Installer Eclipse}
+Eclipse est disponible sur http://www.eclipse.org/downloads
+
+Il faut télécharger la version \emph{IDE for Java Developers}.
+
+Pour installer Eclipse, il suffit de décompresser l'archive à l'endroit
+souhaité.
 \subsection{Subversive}
+Une fois Eclipse téléchargé et installé, il faut configurer le module
+Subversive, qui permettra de récupérer les sources de Videso3D et d'envoyer ses
+modifications.
+
+\vspace{\baselineskip}
+
+Pour installer Subversive :
+\begin{itemize}
+  \item lancer Eclipse et aller dans Help->Install New Softwares\ldots
+  \item Choisir \emph{Work with: --All Available Sites--}
+  \item Cocher \emph{Subversive SVN Team Provider} dans Collaboration
+  \item Cliquer sur Next, accepter les licenses et finir.
+\end{itemize} 
+
+\vspace{\baselineskip}
+
+Il faut ensuite ajouter un connecteur :
+\begin{itemize}
+  \item Il faut d'abord ajouter le site suivant dans \emph{Install New
+  Softwares} http://community.polarion.com/projects/subversive/download/eclipse/2.0/galileo-site/
+  \item Dans \emph{Subversive SVN Connectors}, choisir \emph{SVNKit 1.3.0}
+  \item Cliquer sur Next, accepter les licenses et finir.
+\end{itemize}
+
+\vspace{\baselineskip}
+Eclipse est prêt à créer un nouveau projet à partir des sources de Videso3D.
+
 \subsection{Texlipse}
+Afin de pouvoir modifier la documentation avec Eclipse, il faut aussi ajouter
+le module Texlipse.
+
 
 \section{Récupérer les sources de Videso3D avec Eclipse}
+Cette section décrit comment créer un nouveau projet dans Eclipse à partir des
+sources de Videso3D.
+
+\subsection{Créer un nouveau projet Videso3D}
+
+Créer un nouveau projet :
+\begin{itemize}
+  \item Aller dans File->New->Project\ldots
+  \item Choisir SVN->Project from SVN
+\end{itemize}
+
+\vspace{\baselineskip}
+Configurer l'accès svn:
+\begin{itemize}
+  \item Dans URL, mettre \emph{svn://soulflyb.homeftp.net/Videso3D}
+  \item Cliquer sur Browse pour vérifier que tout marche. Le cas échéant, une
+  arborescence du type branches, tags, trunk devrait apparaitre.
+  \item (Facultatif) Remplir les données d'authentification pour avoir un
+  accés en écriture sur le projet.
+  \item A l'étape \emph{Select Resource}, parcourir l'arborescence et choisir
+  le répertoir \emph{trunk}, laisser la révision sur HEAD.
+  \item A l'étape \emph{Check Out As}, choisir \emph{Check out as a project
+  configured using the New Project Wizard}
+  \item Cliquer sur Finish et choisir Java->Java Project
+  \item Mettre Videso3D comme \emph{Project name} et cliquer sur Finish.
+\end{itemize}
+
+\subsection{Configurer le projet}
+Une fois le projet récupéré, il faut le configurer afin qu'il compile
+correctement :
+\begin{itemize}
+  \item Aller dans Project->Properties
+  \item Puis aller dans Java Build Path->Libraries
+  \item Cliquer sur Add Jars
+  \item Ajouter depuis lib les jars suivants : gluegen-rt.jar, jogl.jar,
+  sqlitejdbc-v056.jar, worldwind.jar et swingx-1.0.jar
+  \item Dans jogl.jar, configurer \emph{Native library location} à
+  \emph{Videso3D/lib} (Workspace, puis choisir lib)
+  \item Enfin, dans Resource, mettre \emph{Text file encoding} sur Other->UTF-8
+\end{itemize}
+
+\subsection{Lancer Videso3D}
+Pour lancer Videso3D, ouvrir le fichier fr.crnan.videso3d.Videso3D.java et
+lancer en tant que Java Application (clic sur la flèche verte).
+
+\subsection{Organisation des sources}
+Les sources de Videso3D sont organisées selon l'arborescence suivante :
+\begin{itemize}
+  \item \emph{datas} : Contient un jeu de données à des fins de test. 
+ 		\begin{itemize}
+           \item \emph{091202\_v7}
+           \item \emph{CA120209}
+           \item \emph{Carto\_du\_09\_04\_2009}
+        \end{itemize}
+  \item \emph{doc} : Contient la documentation relative à Videso3D
+  		\begin{itemize}
+           \item \emph{api} : la javadoc
+           \item \emph{dev} : le manuel du développeur
+           \item \emph{import} : les différents manuels concernant l'import de
+           fichiers
+           \item \emph{mut} : le manuel utilisateur
+        \end{itemize} 
+  \item \emph{lib} : les bibliothèques utilisées par Videso3D (notamment
+  WorldWind)
+  \item \emph{src} : les sources de Videso3D
+\end{itemize}
 
 \section{Suivi des tâches : Mantis}
+
+Le suivi des tâches en cours est disponible à l'adresse suivante :
+http://soulflyb.homeftp.net/mantisbt
+
+\section{Visualiser les sources de Videso3D}
+Il est possible de parcourir les sources de Videso3D sans pour autant installer
+Eclipse. Il suffit pour cela de se rendre sur http://soulflyb.homeftp.net/websvn
+
 
 \end{document}
