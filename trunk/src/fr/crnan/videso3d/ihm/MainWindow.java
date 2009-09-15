@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.ihm;
 
+import java.awt.BorderLayout;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,6 +27,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
+import javax.swing.JSplitPane;
 import javax.swing.UIManager;
 
 import fr.crnan.videso3d.DatabaseManager;
@@ -38,6 +40,7 @@ import fr.crnan.videso3d.layers.BaliseMarkerLayer;
 import fr.crnan.videso3d.layers.TextLayer;
 import fr.crnan.videso3d.stip.Secteur;
 import gov.nasa.worldwind.BasicModel;
+import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.AirspaceLayer;
@@ -54,21 +57,43 @@ public class MainWindow extends JFrame {
 
 	private DatabaseManager db;
 	
+	private WorldWindowGLCanvas wwd;
+	
 	public MainWindow(DatabaseManager db){
 		
 		this.db = db;
 		//Style Nimbus
 		this.setNimbus();
-		this.build();
+		
+		
+		//WorldWind
+		this.addWwd();
+		
+		//Titre de la fenêtre
+		this.setTitle("Videso 3D");
+		
+		//Fermeture de l'application
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		//Menu
 		this.setJMenuBar(this.createMenuBar());
+		
+		//Layout
+		this.setLayout(new BorderLayout());
+		
+		//Explorateur de données
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new DataExplorer(), wwd);
+		splitPane.setOneTouchExpandable(true);
+		splitPane.setContinuousLayout(true);
+		this.getContentPane().add(splitPane, BorderLayout.CENTER);
+		
 		this.pack();
 	}
 	
-	private void build(){
-		WorldWindowGLCanvas wwd = new WorldWindowGLCanvas();
+	private void addWwd(){
+		this.wwd = new WorldWindowGLCanvas();
 		wwd.setPreferredSize(new java.awt.Dimension(1000, 800));
-		this.getContentPane().add(wwd, java.awt.BorderLayout.CENTER);
-		//this.pack();
+		//this.getContentPane().add(wwd, java.awt.BorderLayout.CENTER);
 
 		wwd.setModel(new BasicModel());
 		
@@ -184,7 +209,8 @@ public class MainWindow extends JFrame {
 	}
 	
 	/**
-	 * Utilise le L&F Nimbus au lieu du L&F Metal
+	 * Utilise le L&F Nimbus au lieu du L&F Metal</br>
+	 * Nécessite Java 6 Update 10
 	 */
 	private void setNimbus(){				
 		for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels() ){
