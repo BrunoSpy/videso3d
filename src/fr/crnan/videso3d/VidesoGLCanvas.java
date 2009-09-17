@@ -102,7 +102,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public Layer getBalisesPubMarkers(){
