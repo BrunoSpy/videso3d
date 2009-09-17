@@ -29,7 +29,6 @@ import fr.crnan.videso3d.VidesoGLCanvas;
  */
 public class StipViewListener {
 
-
 	/**
 	 * Listener de la checkbox AWY
 	 * @author Bruno Spyckerelle
@@ -105,6 +104,9 @@ public class StipViewListener {
 	public StipViewListener(VidesoGLCanvas wwd){
 		this.wwd = wwd;
 	}
+	
+	/*-----------Getters-------------*/
+	
 	public RouteAwyListener getRouteAwyListener(){
 		return routesAwy;
 	}
