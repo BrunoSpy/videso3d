@@ -16,38 +16,29 @@
 
 package fr.crnan.videso3d.ihm;
 
-import java.awt.BorderLayout;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
 
+import java.awt.BorderLayout;
+
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
+import javax.swing.JToolBar;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.globes.EarthFlatCautra;
-import fr.crnan.videso3d.graphics.Balise2D;
-import fr.crnan.videso3d.graphics.Route3D;
-import fr.crnan.videso3d.graphics.Secteur3D;
-import fr.crnan.videso3d.layers.BaliseMarkerLayer;
-import fr.crnan.videso3d.layers.TextLayer;
-import fr.crnan.videso3d.stip.Secteur;
+import fr.crnan.videso3d.VidesoGLCanvas;
+
 import gov.nasa.worldwind.BasicModel;
-import gov.nasa.worldwind.WorldWind;
-import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
-import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.layers.AirspaceLayer;
-import gov.nasa.worldwind.layers.SurfaceShapeLayer;
-import gov.nasa.worldwind.util.Logging;
-import gov.nasa.worldwind.view.orbit.BasicOrbitView;
-import gov.nasa.worldwind.view.orbit.FlatOrbitView;
+
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
@@ -55,9 +46,14 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
  */
 public class MainWindow extends JFrame {
 
+	/**
+	 * Gestionnaire de base de données
+	 */
 	private DatabaseManager db;
-	
-	private WorldWindowGLCanvas wwd;
+	/**
+	 * NASA WorldWind
+	 */
+	private VidesoGLCanvas wwd;
 	
 	public MainWindow(DatabaseManager db){
 		
@@ -66,8 +62,8 @@ public class MainWindow extends JFrame {
 		this.setNimbus();
 		
 		
-		//WorldWind
-		this.addWwd();
+		//Instancie WorldWind
+		this.createWwd();
 		
 		//Titre de la fenêtre
 		this.setTitle("Videso 3D");
@@ -81,8 +77,14 @@ public class MainWindow extends JFrame {
 		//Layout
 		this.setLayout(new BorderLayout());
 		
+		//Barre d'actions
+		this.add(this.createToolBar(), BorderLayout.PAGE_START);
+		
+		//Barre de statut
+		this.add(this.createStatusBar(), BorderLayout.SOUTH);
+		
 		//Explorateur de données
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new DataExplorer(), wwd);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new DataExplorer(this.db, wwd), wwd);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setContinuousLayout(true);
 		this.getContentPane().add(splitPane, BorderLayout.CENTER);
@@ -90,12 +92,26 @@ public class MainWindow extends JFrame {
 		this.pack();
 	}
 	
-	private void addWwd(){
-		this.wwd = new WorldWindowGLCanvas();
-		wwd.setPreferredSize(new java.awt.Dimension(1000, 800));
-		//this.getContentPane().add(wwd, java.awt.BorderLayout.CENTER);
+	/**
+	 * Crée et configure le canvas WorldWind
+	 */
+	private void createWwd(){
+		this.wwd = new VidesoGLCanvas();
+		wwd.setPreferredSize(new java.awt.Dimension(800, 600));
 
 		wwd.setModel(new BasicModel());
+		
+		//initialisation des objets 3D en background
+		new SwingWorker<String, Integer>(){
+			@Override
+			protected String doInBackground() throws Exception {
+				wwd.initialize(db);
+				return null;
+			}
+		}.execute();
+		
+		
+		
 		
 ////		Cautra
 //		EarthFlatCautra globe = new EarthFlatCautra();
@@ -109,93 +125,43 @@ public class MainWindow extends JFrame {
 //        flatOrbitView.setHeading(orbitView.getHeading());
 //        flatOrbitView.setPitch(orbitView.getPitch());
 //        wwd.setView(flatOrbitView);
-        
-		AirspaceLayer routeLayer = new AirspaceLayer();
-		routeLayer.setName("Routes");
-		wwd.getModel().getLayers().add(routeLayer);
+     
 
-		//	            db = new DatabaseManager();
-		//	            
-		//	        	Pays pays = new Pays("/home/datas/Projets/Videso3D/datas", db);
-		//	        	 pays.addPropertyChangeListener(new PropertyChangeListener() {
-		//						
-		//						@Override
-		//						public void propertyChange(PropertyChangeEvent evt) {
-		//							if("progress".equals(evt.getPropertyName())){
-		//								System.out.println("Pays "+evt.getNewValue());
-		//							} else if("file".equals(evt.getPropertyName())){
-		//								System.out.println("Pays "+evt.getNewValue());
-		//							}	
-		//						}
-		//					});
-		//	            Stip stip = new Stip("/home/datas/Projets/Videso3D/datas/091202_v7", db);
-		//	            stip.addPropertyChangeListener(new PropertyChangeListener() {
-		//					
-		//					@Override
-		//					public void propertyChange(PropertyChangeEvent evt) {
-		//						if("progress".equals(evt.getPropertyName())){
-		//							System.out.println("Stip "+evt.getNewValue());
-		//						} else if("file".equals(evt.getPropertyName())){
-		//							System.out.println("Stip "+evt.getNewValue());
-		//						}	
-		//					}
-		//				});
-		//       	
-		//	            pays.execute();
-		//	        	stip.execute();
+//			            db = new DatabaseManager();
+//			            
+//			        	Pays pays = new Pays("D:\\Dev\\Projets\\Videso3D\\datas", db);
+//			        	 pays.addPropertyChangeListener(new PropertyChangeListener() {
+//								
+//								@Override
+//								public void propertyChange(PropertyChangeEvent evt) {
+//									if("progress".equals(evt.getPropertyName())){
+//										System.out.println("Pays "+evt.getNewValue());
+//									} else if("file".equals(evt.getPropertyName())){
+//										System.out.println("Pays "+evt.getNewValue());
+//									}	
+//								}
+//							});
+//			            Stip stip = new Stip("D:\\Dev\\Projets\\Videso3D\\datas\\091202_v7", db);
+//			            stip.addPropertyChangeListener(new PropertyChangeListener() {
+//							
+//							@Override
+//							public void propertyChange(PropertyChangeEvent evt) {
+//								if("progress".equals(evt.getPropertyName())){
+//									System.out.println("Stip "+evt.getNewValue());
+//								} else if("file".equals(evt.getPropertyName())){
+//									System.out.println("Stip "+evt.getNewValue());
+//								}	
+//							}
+//						});
+//		       	
+//			            pays.execute();
+//			        	stip.execute();
 
-		/*-------- TEST -------*/
-		try {
-
-			Route3D R10 = new Route3D(Route3D.Type.FIR);
-			Statement st = db.getCurrentStip();
-			ResultSet rs = st.executeQuery("select * from routebalise, balises where route ='R10' and routebalise.balise = balises.name and appartient = 1");
-			LatLon[] loc = new LatLon[20];
-			int i = 0;
-			while(rs.next()){
-				loc[i] = LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"));
-				i++;
-			}
-			R10.setLocations(Arrays.asList(loc));
-			routeLayer.addAirspace(R10);	
-
-			Secteur3D AP3D = new Secteur3D("AP", 265, 315);
-			Secteur AP = new Secteur("AP", 318, db.getCurrentStip());
-			AP.setConnectionPays(db.getCurrent(Type.PAYS));
-			AP3D.setLocations(AP.getContour(315));
-			routeLayer.addAirspace(AP3D);
-
-			BaliseMarkerLayer baliseMarker = new BaliseMarkerLayer();
-			//baliseMarker.setMaxActiveAltitude(500000);
-			baliseMarker.setKeepSeparated(false);
-			baliseMarker.setElevation(0);
-			baliseMarker.setOverrideMarkerElevation(true);
-			
-			SurfaceShapeLayer surfaceLayer = new SurfaceShapeLayer();
-			surfaceLayer.setMaxActiveAltitude(500000);
-			TextLayer textLayer = new TextLayer();
-					
-
-			st = db.getCurrentStip();
-			rs = st.executeQuery("select * from balises where publicated = 1");
-			while(rs.next()){
-				Balise2D balise = new Balise2D(rs.getString("name"), LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
-				balise.addToLayer(baliseMarker, textLayer);
-			}
-						
-			wwd.getModel().getLayers().add(textLayer);
-			wwd.getModel().getLayers().add(baliseMarker);
-			rs.close();
-			st.close();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/**
 	 * Barre de menu de l'application
-	 * @return Barre de menu
+	 * @return {@link JMenuBar} Barre de menu
 	 */
 	private JMenuBar createMenuBar(){
 		JMenu file = new JMenu("Fichier");
@@ -206,6 +172,34 @@ public class MainWindow extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(file);
 		return menuBar;
+	}
+	
+	/**
+	 * Barre de status de l'application
+	 * @return Barre de status
+	 */
+	private JPanel createStatusBar(){
+		JPanel statusBar = new JPanel();
+		statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
+		
+		statusBar.add(new JLabel("Coord Cautra : "));
+		statusBar.add(new JLabel("Coord WGS84 :"));
+		
+		return statusBar;
+	}
+	
+	/**
+	 * Barre d'outils principale
+	 * @return {@link JToolBar}
+	 */
+	private JToolBar createToolBar(){
+		JToolBar toolbar = new JToolBar("Actions");
+		
+		toolbar.add(new JButton("Alidad"));
+		
+		toolbar.add(new JButton("Projection Cautra"));
+		
+		return toolbar;
 	}
 	
 	/**

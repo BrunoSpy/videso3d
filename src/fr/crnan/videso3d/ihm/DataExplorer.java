@@ -25,6 +25,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.border.TitledBorder;
 
+import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.VidesoGLCanvas;
+import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
+
 /**
  * Panel de configuration des objets affichés sur le globe
  * @author Bruno Spyckerelle
@@ -34,7 +38,7 @@ public class DataExplorer extends JTabbedPane {
 
 	//private JTabbedPane tabs = new JTabbedPane(JTabbedPane.LEFT);
 	
-	public DataExplorer(){
+	public DataExplorer(DatabaseManager db, VidesoGLCanvas wwd){
 		//les tabs au dessus
 		this.setTabPlacement(JTabbedPane.TOP);
 		//tabs scrollables si conteneur trop petit
@@ -44,7 +48,9 @@ public class DataExplorer extends JTabbedPane {
 		
 		this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Sélecteur de données", TitledBorder.CENTER, TitledBorder.TOP));
 		
-		this.addTab("Stip", new StipView());
+		StipView stipView = new StipView(new StipViewListener(wwd));
+		
+		this.addTab("Stip", stipView);
 		this.addTab("STR", new JScrollPane());
 		this.addTab("Stpv", new JScrollPane());
 		this.addTab("Edimap", new JScrollPane());
