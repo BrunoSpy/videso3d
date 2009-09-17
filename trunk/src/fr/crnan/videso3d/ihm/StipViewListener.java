@@ -22,7 +22,11 @@ import java.awt.event.ItemListener;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
 
-
+/**
+ * Listener du panel StipView
+ * @author Bruno Spyckerelle
+ * @version 0.1
+ */
 public class StipViewListener {
 
 
