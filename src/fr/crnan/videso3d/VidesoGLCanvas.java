@@ -31,7 +31,11 @@ import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
-
+/**
+ * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
+ * @author Bruno Spyckerelle
+ * @version 0.1
+ */
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
 
 	/**
