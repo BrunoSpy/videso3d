@@ -16,6 +16,8 @@
 
 package fr.crnan.videso3d.graphics;
 
+import java.awt.Font;
+
 import fr.crnan.videso3d.layers.BaliseMarkerLayer;
 import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.geom.LatLon;
@@ -49,9 +51,10 @@ public class Balise2D {
 	 */
 	public Balise2D(String name, LatLon position){
 		this.name = new UserFacingText(name, new Position(position, 100.0));
+		this.name.setFont(new Font("Sans Serif", Font.PLAIN, 8));
 		
 		BasicMarkerAttributes attrs = new BasicMarkerAttributes();
-		attrs.setMarkerPixels(3);
+		attrs.setMarkerPixels(2);
 		
 		this.marker = new BasicMarker(new Position(position, 0), attrs);
 		

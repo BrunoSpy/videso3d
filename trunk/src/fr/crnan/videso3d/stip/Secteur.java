@@ -18,7 +18,6 @@ package fr.crnan.videso3d.stip;
 import fr.crnan.videso3d.pays.Pays;
 import gov.nasa.worldwind.geom.LatLon;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
