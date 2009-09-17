@@ -41,6 +41,11 @@ public class Route3D extends Curtain {
 	}
 	
 	public Route3D(Type type){
+		this.setType(type);
+		this.setDefaultMaterial();
+	}
+	
+	public void setType(Type type){
 		switch (type) {
 		case FIR:
 			this.setAltitudes(0, 5943); //FL0 à FL195, en mètres
@@ -49,7 +54,6 @@ public class Route3D extends Curtain {
 			this.setAltitudes(5943,20116 ); //FL195 à FL660, en mètres
 			break;
 		}
-		this.setDefaultMaterial();
 	}
 	
 	 private void setDefaultMaterial() {
@@ -61,7 +65,7 @@ public class Route3D extends Curtain {
         this.getAttributes().setOutlineMaterial(new Material(outline));
         this.getAttributes().setOpacity(0.8);
         this.getAttributes().setOutlineOpacity(0.9);
-        this.getAttributes().setOutlineWidth(3.0);
+        this.getAttributes().setOutlineWidth(1.0);
 	}
 
 	public void setName(String name){
@@ -69,6 +73,10 @@ public class Route3D extends Curtain {
 		 this.setValue("Description", name);
 		 
 	 }
+	
+	public String getName(){
+		return this.name;
+	}
 	
 	private static Color makeBrighter(Color color)
     {
