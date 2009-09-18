@@ -27,7 +27,6 @@ import javax.swing.border.TitledBorder;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
-import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 
 /**
  * Panel de configuration des objets affichés sur le globe
@@ -47,10 +46,8 @@ public class DataExplorer extends JTabbedPane {
 		this.setPreferredSize(new Dimension(300, 0));
 		
 		this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Sélecteur de données", TitledBorder.CENTER, TitledBorder.TOP));
-		
-		StipView stipView = new StipView(new StipViewListener(wwd));
-		
-		this.addTab("Stip", stipView);
+				
+		this.addTab("Stip", new StipView(wwd, db));
 		this.addTab("STR", new JScrollPane());
 		this.addTab("Stpv", new JScrollPane());
 		this.addTab("Edimap", new JScrollPane());

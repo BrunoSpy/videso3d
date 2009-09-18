@@ -51,7 +51,7 @@ public class Balise2D {
 	 */
 	public Balise2D(String name, LatLon position){
 		this.name = new UserFacingText(name, new Position(position, 100.0));
-		this.name.setFont(new Font("Sans Serif", Font.PLAIN, 8));
+		this.name.setFont(new Font("Sans Serif", Font.PLAIN, 9));
 		
 		BasicMarkerAttributes attrs = new BasicMarkerAttributes();
 		attrs.setMarkerPixels(2);
