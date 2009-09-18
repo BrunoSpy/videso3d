@@ -18,8 +18,11 @@ package fr.crnan.videso3d.ihm;
 
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
 
 
+import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -54,7 +57,15 @@ public class MainWindow extends JFrame {
 	 * NASA WorldWind
 	 */
 	private VidesoGLCanvas wwd;
+	/**
+	 * Explorateur de données
+	 */
+	private DataExplorer dataExplorer;
 	
+	/**
+	 * 
+	 * @param db
+	 */
 	public MainWindow(DatabaseManager db){
 		
 		this.db = db;
@@ -84,7 +95,8 @@ public class MainWindow extends JFrame {
 		this.add(this.createStatusBar(), BorderLayout.SOUTH);
 		
 		//Explorateur de données
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new DataExplorer(this.db, wwd), wwd);
+		dataExplorer = new DataExplorer(this.db, wwd);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, dataExplorer, wwd);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setContinuousLayout(true);
 		this.getContentPane().add(splitPane, BorderLayout.CENTER);
@@ -165,12 +177,22 @@ public class MainWindow extends JFrame {
 	 */
 	private JMenuBar createMenuBar(){
 		JMenu file = new JMenu("Fichier");
+		
+		JMenuItem databaseManager = new JMenuItem();
 		file.add(new JMenuItem("Ajouter une base de données"));
+		
+		
 		file.add(new JSeparator());
 		file.add(new JMenuItem("Quitter"));
 		
+		JMenu affichage = new JMenu("Fenêtre");
+		
+		JMenu help = new JMenu("Aide");
+		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(file);
+		menuBar.add(affichage);
+		menuBar.add(help);
 		return menuBar;
 	}
 	

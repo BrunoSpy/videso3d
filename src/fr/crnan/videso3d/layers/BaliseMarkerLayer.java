@@ -28,6 +28,14 @@ import gov.nasa.worldwind.render.markers.Marker;
  */
 public class BaliseMarkerLayer extends MarkerLayer {
 
+	public BaliseMarkerLayer(){
+		super();
+		this.setKeepSeparated(false);
+		this.setMinActiveAltitude(0);
+		//inutile d'afficher le point avant
+		this.setMaxActiveAltitude(20e5);
+	}
+	
 	/**
 	 * Ajoute un {@link Marker} à l'ensemble existant
 	 * @param marker {@link Marker} à ajouter
