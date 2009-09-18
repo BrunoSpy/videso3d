@@ -16,19 +16,23 @@
 
 package fr.crnan.videso3d.ihm;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.util.Vector;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.ListSelectionModel;
+
+
+import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.VidesoGLCanvas;
 /**
  * Sélecteur d'objets Stip
  * @author Bruno Spyckerelle
@@ -47,115 +51,132 @@ public class StipView extends JPanel {
 	/**
 	 * Choix des secteurs à afficher
 	 */
-	private JTabbedPane secteurs = new JTabbedPane();
+	private JTabbedPane secteurs = new JTabbedPane();	
+
+	/**
+	 * Checkboxes
+	 */
+	private JCheckBox routesAwyChk;
+	private JCheckBox routesPDRChk;
+	private JCheckBox balisesNPChk;
+	private JCheckBox balisesPubChk;
+
+	private ItemCheckBoxListener itemCheckBoxListener = new ItemCheckBoxListener();
+
+	private ItemSecteurListener itemSecteurListener = new ItemSecteurListener();
 	
-	private StipViewListener listener;
 	
-	public StipView(StipViewListener listener){
-		
-		this.listener = listener;
-		
+	private DatabaseManager db;
+	private VidesoGLCanvas wwd;
+
+	public StipView(VidesoGLCanvas wwd, DatabaseManager db){
+
+		this.db = db;
+		this.wwd = wwd;
+
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		
+
 		routes.setBorder(BorderFactory.createTitledBorder("Routes"));
 		balises.setBorder(BorderFactory.createTitledBorder("Balises"));
 		secteurs.setBorder(BorderFactory.createTitledBorder("Secteurs"));
-		
+
 		this.add(this.buildRoutesPanel());
 
 		this.add(this.buildBalisesPanel());
 
 		this.add(this.buildSecteursPanel());
-		
+
 		this.add(Box.createVerticalGlue());
-		
+
 	}
 
 	private JTabbedPane buildSecteursPanel() {
-		
-		secteurs.addTab("Paris", this.buildTabSecteur("Paris"));
-		secteurs.addTab("Reims", this.buildTabSecteur("Paris"));
-		secteurs.addTab("Aix", this.buildTabSecteur("Paris"));
-		secteurs.addTab("Brest", this.buildTabSecteur("Paris"));
-		secteurs.addTab("Bordeaux", this.buildTabSecteur("Paris"));
-		secteurs.addTab("Autre", this.buildTabSecteur("Paris"));
+
+		secteurs.addTab("Paris", this.buildTabSecteur("PARI"));
+		secteurs.addTab("Reims", this.buildTabSecteur("REIM"));
+		secteurs.addTab("Aix", this.buildTabSecteur("AIX"));
+		secteurs.addTab("Brest", this.buildTabSecteur("BRST"));
+		secteurs.addTab("Bordeaux", this.buildTabSecteur("BORD"));
+		secteurs.addTab("Autre", this.buildTabSecteur("Autre"));
 		return secteurs;
 	}
 
-	private JPanel buildTabSecteur(String secteur){
+	private JPanel buildTabSecteur(String centre){
 		JPanel tab = new JPanel();
 		tab.setLayout(new BoxLayout(tab, BoxLayout.X_AXIS));
-		
-		JPanel fir = new JPanel();
-		fir.setBorder(BorderFactory.createTitledBorder("FIR"));
-		JList firList = new JList();
-		
-//		Vector<String> firData = new Vector<String>();
-//		firData.add("AP");
-//		firData.add("UK");
-//		firData.add("UZ");
-//		firList.setListData(firData);
-		fir.add(firList, BorderLayout.CENTER);
-		
-		JPanel uir = new JPanel();
-		uir.setBorder(BorderFactory.createTitledBorder("UIR"));
-		uir.add(new JList(), BorderLayout.CENTER);
-		
-		tab.add(fir);
-		tab.add(uir);
-		
+
+		tab.add(this.buildListSecteur(centre, "F"));
+		tab.add(this.buildListSecteur(centre, "U"));
+
 		return tab;
 	}
-	
+
+	private JScrollPane buildListSecteur(String centre, String type){
+		
+		JPanel list = new JPanel();
+		list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
+		JScrollPane scrollPane = new JScrollPane(list);
+		scrollPane.setBorder(BorderFactory.createTitledBorder(type.equals("F") ? "FIR" : "UIR"));
+		
+		try {
+			Statement st = this.db.getCurrentStip();
+			String centreCondition = centre.equals("Autre") ? "centre != 'REIM' and centre != 'PARI' and centre != 'AIX' and centre != 'BRST' and centre != 'BORD'" : "centre = '"+centre+"'" ;
+			ResultSet rs = st.executeQuery("select * from secteurs where "+centreCondition+" and espace ='"+type+"' order by nom");
+			while(rs.next()){
+				JCheckBox chk = new JCheckBox(rs.getString("nom"));
+				chk.addItemListener(itemSecteurListener);
+				list.add(chk);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+
+		
+
+		return scrollPane;
+	}
 	/**
 	 * Construit et renvoit le {@link JPanel} permettant l'affichage des différents types de routes
 	 * @return {@link JPanel} 
 	 */
 	private JPanel buildRoutesPanel(){
 		routes.setLayout(new BoxLayout(routes, BoxLayout.X_AXIS));
-		
-		JCheckBox routesAwyChk = new JCheckBox();
-		routesAwyChk.addItemListener(listener.getRouteAwyListener());
-		
-		JCheckBox routesPDRChk = new JCheckBox();
-		routesPDRChk.addItemListener(listener.getRoutePDRListener());
-		
-		JLabel routesAwyLbl = new JLabel("AWY");
-		JLabel routesPDRLbl = new JLabel("PDR");
-		
+
+		routesAwyChk = new JCheckBox("AWY");
+		routesAwyChk.addItemListener(this.itemCheckBoxListener);
+
+		routesPDRChk = new JCheckBox("PDR");
+		routesPDRChk.addItemListener(this.itemCheckBoxListener);
+
+
 		routes.add(Box.createHorizontalGlue());
 		routes.add(routesAwyChk);
-		routes.add(routesAwyLbl);
 		routes.add(Box.createHorizontalGlue());
 		routes.add(routesPDRChk);
-		routes.add(routesPDRLbl);
 		routes.add(Box.createHorizontalGlue());
-		
+
 		return routes;
 	}
-	
+
 	private JPanel buildBalisesPanel(){
 		balises.setLayout(new BoxLayout(balises, BoxLayout.X_AXIS));
-		
-		JCheckBox balisesNPChk = new JCheckBox();
-		balisesNPChk.addItemListener(listener.getBalisesNPListener());
-		JLabel balisesNPLbl = new JLabel("Non publiées");
-		
-		JCheckBox balisesPubChk = new JCheckBox();
-		balisesPubChk.addItemListener(listener.getBalisesPubListener());
-		JLabel balisesPubLbl = new JLabel("Publiées");
-		
+
+		balisesNPChk = new JCheckBox("Non publiées");
+		balisesNPChk.addItemListener(this.itemCheckBoxListener);
+
+		balisesPubChk = new JCheckBox("Publiées");
+		balisesPubChk.addItemListener(this.itemCheckBoxListener);
+
 		balises.add(Box.createHorizontalGlue());
 		balises.add(balisesPubChk);
-		balises.add(balisesPubLbl);
 		balises.add(Box.createHorizontalGlue());
 		balises.add(balisesNPChk);
-		balises.add(balisesNPLbl);
 		balises.add(Box.createHorizontalGlue());
-		
+
 		return balises;
 	}
-	
+
 	public JPanel getRoutes() {
 		return routes;
 	}
@@ -167,5 +188,56 @@ public class StipView extends JPanel {
 	public JTabbedPane getSecteurs() {
 		return secteurs;
 	}	
+
+	/*--------------------------------------------------*/
+	/*------------------ Listeners ---------------------*/
+	/**
+	 * Listener de la checkbox AWY
+	 * @author Bruno Spyckerelle
+	 */
+	private class ItemCheckBoxListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			Object source = e.getItemSelectable();
+			if(e.getStateChange() == ItemEvent.SELECTED ) {
+				if(source == routesAwyChk){
+					wwd.toggleLayer(wwd.getRoutesAwy(), true);
+				} else if(source == routesPDRChk) {
+					wwd.toggleLayer(wwd.getRoutesPDR(), true);
+				} else if(source == balisesPubChk){
+					wwd.toggleLayer(wwd.getBalisesPubMarkers(), true);
+					wwd.toggleLayer(wwd.getBalisesPubTexts(), true);
+				} else if(source == balisesNPChk){
+					wwd.toggleLayer(wwd.getBalisesNPMarkers(), true);
+					wwd.toggleLayer(wwd.getBalisesNPTexts(), true);
+				}
+			} else {
+				if(source == routesAwyChk) {
+					wwd.toggleLayer(wwd.getRoutesAwy(), false);	
+				} else if(source == routesPDRChk) {
+					wwd.toggleLayer(wwd.getRoutesPDR(), false);
+				} else if(source == balisesPubChk){
+					wwd.toggleLayer(wwd.getBalisesPubMarkers(), false);
+					wwd.toggleLayer(wwd.getBalisesPubTexts(), false);
+				} else if(source == balisesNPChk){
+					wwd.toggleLayer(wwd.getBalisesNPMarkers(), false);
+					wwd.toggleLayer(wwd.getBalisesNPTexts(), false);
+				}
+			}
+		}	
+	}
 	
+	private class ItemSecteurListener implements ItemListener {
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			String name = ((JCheckBox)e.getSource()).getText();
+			if(e.getStateChange() == ItemEvent.SELECTED){
+				wwd.addSecteur3D(name);
+			}
+			else {
+				wwd.removeSecteur3D(name);
+			}
+		}
+		
+	}
 }

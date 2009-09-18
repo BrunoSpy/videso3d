@@ -19,14 +19,17 @@ package fr.crnan.videso3d;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route3D;
+import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Route3D.Type;
 import fr.crnan.videso3d.layers.BaliseMarkerLayer;
 import fr.crnan.videso3d.layers.TextLayer;
+import fr.crnan.videso3d.stip.Secteur;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.AirspaceLayer;
@@ -57,15 +60,25 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 */
 	private TextLayer balisesNPTexts = new TextLayer();
 	private BaliseMarkerLayer balisesNPMarkers = new BaliseMarkerLayer();
+	/**
+	 * Layer contenant les secteurs
+	 */
+	private AirspaceLayer secteursLayer = new AirspaceLayer();
+	
+	private DatabaseManager db;
 	
 	/**
 	 * Initialise les différents objets graphiques
 	 */
 	public void initialize(DatabaseManager db){
+		this.db = db;
+		
 		this.buildRoutes(db, "F"); 
 		this.buildRoutes(db, "U");
 		this.buildBalises(db, 1);
 		this.buildBalises(db, 0);
+		
+		this.getModel().getLayers().add(secteursLayer);
 	}
 	
 	/**
@@ -116,6 +129,45 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public Layer getBalisesNPTexts(){
 		return balisesNPTexts;
 	}
+	
+	/*--------------------------------------------------------------*/
+	/*----------------- Gestion des secteurs STIP ------------------*/
+	/*--------------------------------------------------------------*/
+	
+	private HashMap<String, Secteur3D> secteurs = new HashMap<String, Secteur3D>();
+	
+	public void addSecteur3D(String name){
+		try {
+			Statement st = this.db.getCurrentStip();
+			ResultSet rs = st.executeQuery("select * from secteurs where nom ='"+name+"'");
+			while(rs.next()){
+				Secteur3D secteur3D = new Secteur3D(name, rs.getInt("flinf"), rs.getInt("flsup"));
+				Secteur secteur = new Secteur(name, rs.getInt("numero"), this.db.getCurrentStip());
+				secteur.setConnectionPays(this.db.getCurrent(DatabaseManager.Type.PAYS));
+				secteur3D.setLocations(secteur.getContour(rs.getInt("flsup")));
+				this.addToSecteursLayer(secteur3D);
+				secteurs.put(name, secteur3D);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void removeSecteur3D(String name){
+		this.removeFromSecteursLayer(secteurs.get(name));
+		secteurs.remove(name);
+	}
+	
+	public void addToSecteursLayer(Secteur3D secteur){
+		this.secteursLayer.addAirspace(secteur);
+		this.redraw();
+	}
+	
+	public void removeFromSecteursLayer(Secteur3D secteur){
+		this.secteursLayer.removeAirspace(secteur);
+		this.redraw();
+	}
+	
 	/*--------------------------------------------------------------*/
 	/*------------------ Gestion des routes STIP -------------------*/
 	/*--------------------------------------------------------------*/
