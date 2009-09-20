@@ -37,7 +37,17 @@ public class DataExplorer extends JTabbedPane {
 
 	//private JTabbedPane tabs = new JTabbedPane(JTabbedPane.LEFT);
 	
+	private StipView stipView;
+	
+	private DatabaseManager db; 
+	
+	private VidesoGLCanvas wwd;
+	
 	public DataExplorer(DatabaseManager db, VidesoGLCanvas wwd){
+		
+		this.db = db; 
+		this.wwd = wwd;
+		
 		//les tabs au dessus
 		this.setTabPlacement(JTabbedPane.TOP);
 		//tabs scrollables si conteneur trop petit
@@ -47,7 +57,8 @@ public class DataExplorer extends JTabbedPane {
 		
 		this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Sélecteur de données", TitledBorder.CENTER, TitledBorder.TOP));
 				
-		this.addTab("Stip", new StipView(wwd, db));
+		stipView = new StipView(wwd, db);
+		this.addTab("Stip", stipView);
 		this.addTab("STR", new JScrollPane());
 		this.addTab("Stpv", new JScrollPane());
 		this.addTab("Edimap", new JScrollPane());
@@ -55,6 +66,13 @@ public class DataExplorer extends JTabbedPane {
 		this.addTab("AIP", new JScrollPane());
 		
 		this.setVisible(true);
+	}
+
+	public void updateStipView() {
+		this.removeTabAt(0);
+		this.insertTab("Stip", null, new StipView(wwd, db), "Sélecteur de données Stip", 0);
+		this.setSelectedIndex(0);
+		this.wwd.buildStip();
 	}
 	
 	

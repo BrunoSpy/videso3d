@@ -27,7 +27,7 @@ import java.sql.*;
 /**
  * Gère la base de données
  * @author Bruno Spyckerelle
- * @version 0.4
+ * @version 0.4.3
  */
 public class DatabaseManager{
 
@@ -89,6 +89,11 @@ public class DatabaseManager{
 				"type varchar(20), " +
 				"date varchar(12), " +
 				"selected boolean)";
+				st.executeUpdate(create);
+				create = "create table clefs (id integer primary key autoincrement," +
+						"name varchar(32), " +
+						"type varchar(16), " +
+						"value varchar(64))";
 				st.executeUpdate(create);
 			} catch (SQLException e2) {
 				e2.printStackTrace();
@@ -192,14 +197,6 @@ public class DatabaseManager{
 		default:
 			return null;
 		}
-	}
-
-	/**
-	 * Ferme la connection et les statements
-	 * @param type Type de la base de données à fermer
-	 */
-	public void closeDB(Type type){
-		
 	}
 
 	/**
@@ -504,37 +501,37 @@ public class DatabaseManager{
 		//fermeture de la connection
 		switch (type) {
 		case STPV:
-			if (this.currentStpv.getMetaData().getURL().equals(name)) {
+			if (this.currentStpv != null && this.currentStpv.getMetaData().getURL().equals(name)) {
 				this.currentStpv.close();
 				this.currentStpv = null;
 			}
 			break;
 		case EXSA:
-			if (this.currentExsa.getMetaData().getURL().equals(name)) {
+			if (this.currentExsa != null && this.currentExsa.getMetaData().getURL().equals(name)) {
 				this.currentExsa.close();
 				this.currentExsa = null;
 			}
 			break;
 		case Edimap:
-			if (this.currentEdimap.getMetaData().getURL().equals(name)) {
+			if (this.currentEdimap != null && this.currentEdimap.getMetaData().getURL().equals(name)) {
 				this.currentEdimap.close();
 				this.currentEdimap = null;
 			}
 			break;
 		case STIP:
-			if (this.currentStip.getMetaData().getURL().equals(name)) {
+			if (this.currentStip != null && this.currentStip.getMetaData().getURL().equals(name)) {
 				this.currentStip.close();
 				this.currentStip = null;
 			}
 			break;
 		case Ods:
-			if (this.currentODS.getMetaData().getURL().equals(name)) {
+			if (this.currentODS != null && this.currentODS.getMetaData().getURL().equals(name)) {
 				this.currentODS.close();
 				this.currentODS = null;
 			}
 			break;
 		case PAYS:
-			if (this.currentPays.getMetaData().getURL().equals(name)) {
+			if (this.currentPays != null && this.currentPays.getMetaData().getURL().equals(name)) {
 				this.currentPays.close();
 				this.currentPays = null;
 			}
@@ -607,6 +604,22 @@ public class DatabaseManager{
 		result.close();
 		st.close();
 	}
+	
+	public void selectDatabase(Integer id, String type) throws SQLException {
+		if(type.equals("STIP")) {
+			this.selectDatabase(id, Type.STIP);
+		} else if(type.equals("PAYS")){
+			this.selectDatabase(id, Type.PAYS);
+		} else if(type.equals("STPV")){
+			this.selectDatabase(id, Type.STPV);
+		} else if(type.equals("EXSA")){
+			this.selectDatabase(id, Type.EXSA);
+		} else if(type.equals("Edimap")){
+			this.selectDatabase(id, Type.Edimap);
+		} else if(type.equals("Ods")){
+			this.selectDatabase(id, Type.Ods);
+		}
+	}
 
 	/**
 	 * Renvoie un {@link Statement} vers la base de données sélectionnée
@@ -616,16 +629,20 @@ public class DatabaseManager{
 	 * @throws SQLException 
 	 */
 	public Statement getCurrent(Type type) throws SQLException{
-		Statement st = this.selectDB(Type.Databases, "databases").createStatement();
-		ResultSet result = st.executeQuery("select name from databases where selected = 1 and type = '"+type.toString()+"'");;
-		if(result.next()) {
-			String connectionName = result.getString(1) ;
-			return this.selectDB(type, connectionName).createStatement();
+		if(type.equals(Type.Databases)){
+			return this.selectDB(Type.Databases, "databases").createStatement();
 		} else {
-			return null;
+			Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+			ResultSet result = st.executeQuery("select name from databases where selected = 1 and type = '"+type.toString()+"'");;
+			if(result.next()) {
+				String connectionName = result.getString(1) ;
+				return this.selectDB(type, connectionName).createStatement();
+			} else {
+				return null;
+			}
 		}
 	}
-	
+
 	/**
 	 * Renvoie le nom de la base de données sélectionnée
 	 * Renvoie null si aucune base de données n'est trouvée

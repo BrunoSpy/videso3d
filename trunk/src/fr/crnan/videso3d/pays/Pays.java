@@ -236,6 +236,7 @@ public class Pays extends FileParser {
 				e.printStackTrace();
 			}
 		}
+		firePropertyChange("done", false, true);
 	}
 	
 	/**
