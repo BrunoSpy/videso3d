@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d;
 
+import fr.crnan.videso3d.ihm.DatabaseManagerUI;
 import fr.crnan.videso3d.ihm.MainWindow;
 
 import gov.nasa.worldwind.Configuration;

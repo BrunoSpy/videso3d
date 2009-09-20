@@ -84,8 +84,8 @@ public class Stip extends FileParser{
 		}
 		return this.numberFiles;
 	}
-	
-	protected void done(){
+	@Override
+	public void done(){
 		if(this.isCancelled()){//si le parsing a été annulé, on fait le ménage
 			try {
 				this.db.deleteDatabase(name, Type.STIP);
@@ -93,6 +93,7 @@ public class Stip extends FileParser{
 				e.printStackTrace();
 			}
 		}
+		firePropertyChange("done", false, true);
 	}
 	
 	/**

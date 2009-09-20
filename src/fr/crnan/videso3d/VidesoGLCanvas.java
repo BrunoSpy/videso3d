@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.FrontieresStipLayer;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Route3D.Type;
@@ -64,6 +65,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Layer contenant les secteurs
 	 */
 	private AirspaceLayer secteursLayer = new AirspaceLayer();
+	/**
+	 * Layer pour les frontières
+	 */
+	private FrontieresStipLayer frontieres;
 	
 	private DatabaseManager db;
 	
@@ -73,12 +78,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public void initialize(DatabaseManager db){
 		this.db = db;
 		
-		this.buildRoutes(db, "F"); 
-		this.buildRoutes(db, "U");
-		this.buildBalises(db, 1);
-		this.buildBalises(db, 0);
+	//	this.toggleFrontieres(true);
 		
-		this.getModel().getLayers().add(secteursLayer);
+		this.buildStip();	
+
 	}
 	
 	/**
@@ -91,6 +94,20 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			if (layer != null) this.getModel().getLayers().add(layer);
 		} else {
 			if (layer != null) this.getModel().getLayers().remove(layer);
+		}
+	}
+	
+	/*--------------------------------------------------------------*/
+	/*----------------- Gestion des frontières ---------------------*/
+	/*--------------------------------------------------------------*/
+	private void toggleFrontieres(Boolean toggle){
+		if(toggle){
+			if(frontieres == null) frontieres = new FrontieresStipLayer();
+			this.getModel().getLayers().add(frontieres);
+			this.redraw();
+		} else {
+			this.getModel().getLayers().remove(frontieres);
+			this.redraw();
 		}
 	}
 	
@@ -135,18 +152,19 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/*--------------------------------------------------------------*/
 	
 	private HashMap<String, Secteur3D> secteurs = new HashMap<String, Secteur3D>();
-	
 	public void addSecteur3D(String name){
 		try {
 			Statement st = this.db.getCurrentStip();
-			ResultSet rs = st.executeQuery("select * from secteurs where nom ='"+name+"'");
+			ResultSet rs = st.executeQuery("select secteurs.nom, secteurs.numero, cartesect.flinf, cartesect.flsup from secteurs, cartesect where secteurs.numero = cartesect.sectnum and secteurs.nom ='"+name+"'");
+			Integer i = 0;
 			while(rs.next()){
 				Secteur3D secteur3D = new Secteur3D(name, rs.getInt("flinf"), rs.getInt("flsup"));
 				Secteur secteur = new Secteur(name, rs.getInt("numero"), this.db.getCurrentStip());
 				secteur.setConnectionPays(this.db.getCurrent(DatabaseManager.Type.PAYS));
 				secteur3D.setLocations(secteur.getContour(rs.getInt("flsup")));
 				this.addToSecteursLayer(secteur3D);
-				secteurs.put(name, secteur3D);
+				secteurs.put(name+i.toString(), secteur3D);
+				i++;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -154,8 +172,13 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	}
 	
 	public void removeSecteur3D(String name){
-		this.removeFromSecteursLayer(secteurs.get(name));
-		secteurs.remove(name);
+		Integer i = 0;
+		while(secteurs.containsKey(name+i.toString())){
+			this.removeFromSecteursLayer(secteurs.get(name+i.toString()));
+			secteurs.remove(name+i.toString());
+			i++;
+		}
+		
 	}
 	
 	public void addToSecteursLayer(Secteur3D secteur){
@@ -233,6 +256,31 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			routesPDR.setName("PDR");
 		}
 		routesPDR.addAirspace(route);
+	}
+
+	public void buildStip() {
+		//Suppression des objets3D
+		routesAwy = new AirspaceLayer();
+		routesPDR = new AirspaceLayer();
+		balisesPubTexts = new TextLayer();
+		balisesPubMarkers = new BaliseMarkerLayer();
+		balisesNPTexts = new TextLayer();
+		balisesNPMarkers = new BaliseMarkerLayer();
+		secteursLayer = new AirspaceLayer();		
+		try {
+			if(this.db.getCurrentStip() != null) {
+				//création des nuveaux objets
+				this.buildBalises(db, 0);
+				this.buildBalises(db, 1);
+				this.buildRoutes(db, "F");
+				this.buildRoutes(db, "U");
+				this.getModel().getLayers().add(secteursLayer);
+				this.secteurs = new HashMap<String, Secteur3D>();				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.redraw();
 	}
 	
 }

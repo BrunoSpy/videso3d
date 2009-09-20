@@ -19,6 +19,8 @@ package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 
@@ -33,6 +35,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
@@ -61,6 +64,11 @@ public class MainWindow extends JFrame {
 	 * Explorateur de données
 	 */
 	private DataExplorer dataExplorer;
+	
+	/**
+	 * Gestionnaire de bases de données
+	 */
+	private DatabaseManagerUI databaseUI;
 	
 	/**
 	 * 
@@ -178,12 +186,38 @@ public class MainWindow extends JFrame {
 	private JMenuBar createMenuBar(){
 		JMenu file = new JMenu("Fichier");
 		
-		JMenuItem databaseManager = new JMenuItem();
-		file.add(new JMenuItem("Ajouter une base de données"));
+		JMenuItem dbUI = new JMenuItem("Gestion des bases de données...");
+		dbUI.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				databaseUI = new DatabaseManagerUI(db);
+				databaseUI.setVisible(true);
+				databaseUI.addPropertyChangeListener("baseChanged", new PropertyChangeListener() {		
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						String type = (String)evt.getNewValue();
+						if(type.equals("STIP")){
+							dataExplorer.updateStipView();
+						} else if (type.equals("EXSA")){
+							
+						}
+					}
+				});
+			}
+		});
 		
-		
+		file.add(dbUI);
+
 		file.add(new JSeparator());
-		file.add(new JMenuItem("Quitter"));
+		
+		JMenuItem quit = new JMenuItem("Quitter");
+		quit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		file.add(quit);
 		
 		JMenu affichage = new JMenu("Fenêtre");
 		
@@ -195,6 +229,8 @@ public class MainWindow extends JFrame {
 		menuBar.add(help);
 		return menuBar;
 	}
+
+	
 	
 	/**
 	 * Barre de status de l'application
@@ -217,9 +253,9 @@ public class MainWindow extends JFrame {
 	private JToolBar createToolBar(){
 		JToolBar toolbar = new JToolBar("Actions");
 		
-		toolbar.add(new JButton("Alidad"));
+		toolbar.add(new JToggleButton("Alidad"));
 		
-		toolbar.add(new JButton("Projection Cautra"));
+		toolbar.add(new JToggleButton("Projection Cautra"));
 		
 		return toolbar;
 	}
