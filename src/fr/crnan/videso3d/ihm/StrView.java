@@ -15,7 +15,13 @@
  */
 package fr.crnan.videso3d.ihm;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+
+import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.VidesoGLCanvas;
 /**
  * 
  * @author Bruno Spyckerelle
@@ -23,4 +29,49 @@ import javax.swing.JPanel;
  */
 public class StrView extends JPanel {
 
+	/**
+	 * Choix des mosaïques à afficher
+	 */
+	private JPanel mosaiques = new JPanel();
+	/**
+	 * Filtrage capacitif
+	 */
+	private JPanel capa = new JPanel();
+	/**
+	 * Filtrage dynamique
+	 */
+	private JPanel dyn = new JPanel();
+	/**
+	 * Zone d'occultation
+	 */
+	private JPanel zocc = new JPanel();
+	/**
+	 * VVF
+	 */
+	private JPanel vvf = new JPanel();
+	
+	private DatabaseManager db;
+	private VidesoGLCanvas wwd;
+	
+	public StrView(DatabaseManager db, VidesoGLCanvas wwd){
+		this.db = db;
+		this.wwd = wwd;
+		
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		
+		mosaiques.setBorder(BorderFactory.createTitledBorder("Mosaïques"));
+		capa.setBorder(BorderFactory.createTitledBorder("Filtrage dynamique"));
+		dyn.setBorder(BorderFactory.createTitledBorder("Filtrage capacitif"));
+		zocc.setBorder(BorderFactory.createTitledBorder("Zones d'occultation"));
+		vvf.setBorder(BorderFactory.createTitledBorder("VVF"));
+
+		this.add(mosaiques);
+		this.add(capa);
+		this.add(dyn);
+		this.add(zocc);
+		this.add(vvf);
+		
+		this.add(Box.createVerticalGlue());
+		
+	}
 }

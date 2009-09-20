@@ -38,6 +38,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.ProgressMonitor;
 import javax.swing.UIManager;
 import javax.swing.table.AbstractTableModel;
 
@@ -62,6 +63,8 @@ public class DatabaseManagerUI extends JFrame {
 	private JButton add;
 	private JButton delete;
 		
+	private static ProgressMonitor progressMonitor;
+	
 	private DatabaseManager db;
 	
 	public DatabaseManagerUI(DatabaseManager db) {
@@ -165,17 +168,27 @@ public class DatabaseManagerUI extends JFrame {
      * @param title Title of the progress window
      * @param type Type of the database
      */
-    private void getDatas(FileParser fileParser, String title, final String type){
-    	fileParser.execute();
+    private void getDatas(final FileParser fileParser, String title, final String type){
+    	
+    	progressMonitor = new ProgressMonitor(this, title, "", 1, fileParser.numberFiles());
+    	progressMonitor.setMillisToDecideToPopup(1);
+    	
     	fileParser.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				if(evt.getPropertyName().equals("done")){
 					if((Boolean) evt.getNewValue()) firePropertyChange("baseChanged", "", type);
 					((DBTableModel)table.getModel()).update();
+				} else if(evt.getPropertyName().equals("progress")){
+					if(progressMonitor.isCanceled()) fileParser.cancel(true);
+					progressMonitor.setProgress((Integer)evt.getNewValue());	
+				} else if(evt.getPropertyName().equals("file")){
+					progressMonitor.setNote("Import du fichier "+(String)evt.getNewValue());
 				}
 			}
 		});
+    	
+    	fileParser.execute();
     }
 	
 	/*-------------- TableModel ----------------*/

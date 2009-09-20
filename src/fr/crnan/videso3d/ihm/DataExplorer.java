@@ -34,15 +34,15 @@ import fr.crnan.videso3d.VidesoGLCanvas;
  * @version 0.1
  */
 public class DataExplorer extends JTabbedPane {
-
-	//private JTabbedPane tabs = new JTabbedPane(JTabbedPane.LEFT);
-	
-	private StipView stipView;
 	
 	private DatabaseManager db; 
 	
 	private VidesoGLCanvas wwd;
-	
+	/**
+	 * Constructeur
+	 * @param db {@link DatabaseManager} Association avec la gestionnaire de db
+	 * @param wwd {@link VidesoGLCanvas} Association avec la vue 3D
+	 */
 	public DataExplorer(DatabaseManager db, VidesoGLCanvas wwd){
 		
 		this.db = db; 
@@ -57,9 +57,8 @@ public class DataExplorer extends JTabbedPane {
 		
 		this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Sélecteur de données", TitledBorder.CENTER, TitledBorder.TOP));
 				
-		stipView = new StipView(wwd, db);
-		this.addTab("Stip", stipView);
-		this.addTab("STR", new JScrollPane());
+		this.addTab("Stip", new StipView(wwd, db));
+		this.addTab("STR", new StrView(db, wwd));
 		this.addTab("Stpv", new JScrollPane());
 		this.addTab("Edimap", new JScrollPane());
 		this.addTab("ODS", new JScrollPane());
@@ -68,11 +67,14 @@ public class DataExplorer extends JTabbedPane {
 		this.setVisible(true);
 	}
 
+	/**
+	 * Met à jour le tab de données Stip
+	 */
 	public void updateStipView() {
+		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Stip
 		this.removeTabAt(0);
 		this.insertTab("Stip", null, new StipView(wwd, db), "Sélecteur de données Stip", 0);
 		this.setSelectedIndex(0);
-		this.wwd.buildStip();
 	}
 	
 	

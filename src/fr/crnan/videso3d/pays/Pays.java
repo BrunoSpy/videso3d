@@ -202,7 +202,7 @@ public class Pays extends FileParser {
 	}
 
 	@Override
-	protected int numberFiles() {
+	public int numberFiles() {
 		return this.numberFiles;
 	}
 

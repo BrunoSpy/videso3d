@@ -258,14 +258,33 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		routesPDR.addAirspace(route);
 	}
 
+	/**
+	 * Construit ou met à jour les objets Stip
+	 * Appelé lors de l'initialisation de la vue ou lors du changement de base de données Stip
+	 */
 	public void buildStip() {
 		//Suppression des objets3D
-		routesAwy = new AirspaceLayer();
-		routesPDR = new AirspaceLayer();
+		if(routesAwy != null) {
+			routesAwy.removeAllAirspaces();
+			this.getModel().getLayers().remove(routesAwy); 
+		} else {
+			routesAwy = new AirspaceLayer();
+		}
+		if(routesPDR != null) {
+			routesPDR.removeAllAirspaces();
+			this.getModel().getLayers().remove(routesPDR);
+		} else {
+			routesPDR = new AirspaceLayer();
+		}
+		if(balisesPubTexts != null) this.getModel().getLayers().remove(balisesPubTexts);
 		balisesPubTexts = new TextLayer();
+		if(balisesPubMarkers != null) this.getModel().getLayers().remove(balisesPubMarkers);
 		balisesPubMarkers = new BaliseMarkerLayer();
+		if(balisesNPTexts != null) this.getModel().getLayers().remove(balisesNPTexts);
 		balisesNPTexts = new TextLayer();
+		if(balisesNPMarkers != null) this.getModel().getLayers().remove(balisesNPMarkers);
 		balisesNPMarkers = new BaliseMarkerLayer();
+		if(secteursLayer != null) this.getModel().getLayers().remove(secteursLayer);
 		secteursLayer = new AirspaceLayer();		
 		try {
 			if(this.db.getCurrentStip() != null) {
