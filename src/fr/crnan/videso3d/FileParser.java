@@ -67,7 +67,7 @@ public abstract class FileParser extends SwingWorker<Integer, String>{
 	 * Donne le nombre de fichiers que le parser gère
 	 * @return int Nombre de fichiers gérés
 	 */
-	protected abstract int numberFiles();
+	public abstract int numberFiles();
 	
 	public abstract Integer doInBackground();
 

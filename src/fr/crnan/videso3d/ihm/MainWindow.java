@@ -24,9 +24,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 
-import javax.swing.Action;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -145,37 +143,6 @@ public class MainWindow extends JFrame {
 //        flatOrbitView.setHeading(orbitView.getHeading());
 //        flatOrbitView.setPitch(orbitView.getPitch());
 //        wwd.setView(flatOrbitView);
-     
-
-//			            db = new DatabaseManager();
-//			            
-//			        	Pays pays = new Pays("D:\\Dev\\Projets\\Videso3D\\datas", db);
-//			        	 pays.addPropertyChangeListener(new PropertyChangeListener() {
-//								
-//								@Override
-//								public void propertyChange(PropertyChangeEvent evt) {
-//									if("progress".equals(evt.getPropertyName())){
-//										System.out.println("Pays "+evt.getNewValue());
-//									} else if("file".equals(evt.getPropertyName())){
-//										System.out.println("Pays "+evt.getNewValue());
-//									}	
-//								}
-//							});
-//			            Stip stip = new Stip("D:\\Dev\\Projets\\Videso3D\\datas\\091202_v7", db);
-//			            stip.addPropertyChangeListener(new PropertyChangeListener() {
-//							
-//							@Override
-//							public void propertyChange(PropertyChangeEvent evt) {
-//								if("progress".equals(evt.getPropertyName())){
-//									System.out.println("Stip "+evt.getNewValue());
-//								} else if("file".equals(evt.getPropertyName())){
-//									System.out.println("Stip "+evt.getNewValue());
-//								}	
-//							}
-//						});
-//		       	
-//			            pays.execute();
-//			        	stip.execute();
 
 	}
 	
@@ -197,7 +164,10 @@ public class MainWindow extends JFrame {
 					public void propertyChange(PropertyChangeEvent evt) {
 						String type = (String)evt.getNewValue();
 						if(type.equals("STIP")){
+							//mise à jour de l'explorateur de données
 							dataExplorer.updateStipView();
+							//mise à jour de la vue 3D
+							wwd.buildStip();
 						} else if (type.equals("EXSA")){
 							
 						}
