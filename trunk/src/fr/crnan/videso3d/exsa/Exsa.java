@@ -650,7 +650,7 @@ public class Exsa extends FileParser {
 	}
 
 	@Override
-	protected int numberFiles() {
+	public int numberFiles() {
 		return 10;
 	}
 

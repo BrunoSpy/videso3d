@@ -488,7 +488,7 @@ public class Stip extends FileParser{
 	}
 
 	@Override
-	protected int numberFiles() {
+	public int numberFiles() {
 		return this.numberFiles;
 	}
 
