@@ -80,12 +80,17 @@ public class StipView extends JPanel {
 		balises.setBorder(BorderFactory.createTitledBorder("Balises"));
 		secteurs.setBorder(BorderFactory.createTitledBorder("Secteurs"));
 
-		this.add(this.buildRoutesPanel());
+		try {
+			if(this.db.getCurrentStip() != null) { //si pas de bdd, ne pas créer la vue
+				this.add(this.buildRoutesPanel());
 
-		this.add(this.buildBalisesPanel());
+				this.add(this.buildBalisesPanel());
 
-		this.add(this.buildSecteursPanel());
-
+				this.add(this.buildSecteursPanel());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		this.add(Box.createVerticalGlue());
 
 	}
@@ -226,7 +231,10 @@ public class StipView extends JPanel {
 			}
 		}	
 	}
-	
+	/**
+	 * Listener des checkbox secteurs
+	 * @author Bruno Spyckerelle
+	 */
 	private class ItemSecteurListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent e) {

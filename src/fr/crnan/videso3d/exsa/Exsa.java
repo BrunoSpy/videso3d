@@ -70,10 +70,10 @@ public class Exsa extends FileParser {
 
 	@Override
 	public Integer doInBackground(){
-		//on récupère le nom de la base de données
-		this.getName();
-		
+
 		try {
+			//on récupère le nom de la base de données
+			this.getName();
 			//on crée la connection avec bdd avec ce nom
 			this.conn = this.db.selectDB(Type.EXSA, this.name);
 			if(!this.db.databaseExists(this.name)){
@@ -84,10 +84,12 @@ public class Exsa extends FileParser {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 		return this.numberFiles();
 	}
-	
+	@Override
 	public void done(){
 		if(this.isCancelled()){
 			try {
@@ -96,15 +98,17 @@ public class Exsa extends FileParser {
 				e.printStackTrace();
 			}
 		}
+		firePropertyChange("done", false, true);
 	}
 	
 	/**
 	 * Récupère le nom de la base de données EXSA
+	 * @throws FileNotFoundException 
 	 */
-	protected void getName(){
+	protected void getName() throws FileNotFoundException{
+		Boolean nameFound = false;
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path)));
-			Boolean nameFound = false;
 			while (in.ready() || !nameFound){
 				String line = in.readLine();
 				if (line.startsWith("CARA_GENER")){
@@ -118,6 +122,7 @@ public class Exsa extends FileParser {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		if(!nameFound) throw new FileNotFoundException("Fichier EXSA non lisible ou incorrect");
 	}
 
 	/**
