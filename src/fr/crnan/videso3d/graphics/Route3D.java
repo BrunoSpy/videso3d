@@ -18,13 +18,13 @@ package fr.crnan.videso3d.graphics;
 import java.awt.Color;
 
 import gov.nasa.worldwind.render.Material;
-import gov.nasa.worldwind.render.airspaces.Curtain;
+import gov.nasa.worldwind.render.airspaces.Route;
 /**
  * Représentation 3D d'une route sous la forme d'un ruban
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class Route3D extends Curtain {
+public class Route3D extends Route {
 
 	/**
 	 * Type de la route
