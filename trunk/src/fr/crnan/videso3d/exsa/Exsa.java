@@ -89,7 +89,6 @@ public class Exsa extends FileParser {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("done ?");
 		firePropertyChange("done", false, true);
 	}
 	
