@@ -67,7 +67,7 @@ public class CentSczoc {
 
 	public void setSousCarre(String string) {
 		if(string.compareTo("##") == 0) {
-			this.sousCarre = null;
+			this.sousCarre = 0;
 		} else {
 			this.sousCarre = new Integer(string);
 		}
@@ -87,7 +87,7 @@ public class CentSczoc {
 
 	public void setPlafond(String string) {
 		if(string.compareTo("###") == 0){
-			this.plafond = null;
+			this.plafond = 660;
 		} else {
 			this.plafond = new Integer(string);
 		}
