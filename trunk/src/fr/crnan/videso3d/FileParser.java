@@ -88,9 +88,11 @@ public abstract class FileParser extends SwingWorker<Integer, String>{
 	 * @param file the file to set
 	 */
 	public void setFile(String file) {
-		String oldFile = this.file;
-		this.file = file;
-		this.firePropertyChange("file", oldFile, file);
+		if(file != this.file){
+			String oldFile = this.file;
+			this.file = file;
+			this.firePropertyChange("file", oldFile, file);
+		}
 	}
 	
 	
