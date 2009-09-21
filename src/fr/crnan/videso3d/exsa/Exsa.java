@@ -45,14 +45,8 @@ public class Exsa extends FileParser {
 	 */
 	private Connection conn;
 	
-	
-	/**
-	 * Retrieves datas from file
-	 * @param path Path to EXSA file
-	 */
-	public Exsa(String path){
-		this.path = path;
-		this.getFromFiles();
+	public Exsa() {
+		super();
 	}
 
 	/**
@@ -64,13 +58,9 @@ public class Exsa extends FileParser {
 		super(path, db);
 	}
 	
-	public Exsa() {
-		super();
-	}
 
 	@Override
 	public Integer doInBackground(){
-
 		try {
 			//on récupère le nom de la base de données
 			this.getName();
@@ -89,6 +79,7 @@ public class Exsa extends FileParser {
 		}
 		return this.numberFiles();
 	}
+	
 	@Override
 	public void done(){
 		if(this.isCancelled()){
@@ -98,6 +89,7 @@ public class Exsa extends FileParser {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("done ?");
 		firePropertyChange("done", false, true);
 	}
 	
@@ -105,7 +97,7 @@ public class Exsa extends FileParser {
 	 * Récupère le nom de la base de données EXSA
 	 * @throws FileNotFoundException 
 	 */
-	protected void getName() throws FileNotFoundException{
+	protected void getName() throws FileNotFoundException {
 		Boolean nameFound = false;
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path)));
@@ -117,6 +109,7 @@ public class Exsa extends FileParser {
 					nameFound = true;
 				}
 			}
+			in.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -130,9 +123,10 @@ public class Exsa extends FileParser {
 	 */
 	protected void getFromFiles(){
 		try {
+			String line = "";
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path)));
 			while (in.ready()){
-				String line = in.readLine();
+				line = in.readLine();
 			    if (line.startsWith("CARA_GENER")){
 			    	this.setFile("CARA_GENER");
 			    	this.setProgress(0);
