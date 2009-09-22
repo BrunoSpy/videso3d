@@ -19,7 +19,7 @@ package fr.crnan.videso3d;
 /**
  * Classe utilitaire représentant un couple ordonné de données
  * @author Bruno Spyckerelle
- * @version 1.1
+ * @version 1.2
  * @param <T>
  * @param <U>
  */
@@ -53,5 +53,7 @@ public class Couple<T,U> {
 		this.second = second;
 	}
 	
-	
+	public String toSring(){
+		return "("+this.first.toString()+", "+this.second.toString()+")";
+	}
 }
