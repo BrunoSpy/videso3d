@@ -40,8 +40,10 @@ import javax.swing.UIManager;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.layers.MosaiqueLayer;
 
 import gov.nasa.worldwind.BasicModel;
+import gov.nasa.worldwind.geom.LatLon;
 
 /**
  * Fenêtre principale
@@ -108,6 +110,8 @@ public class MainWindow extends JFrame {
 		this.getContentPane().add(splitPane, BorderLayout.CENTER);
 		
 		this.pack();
+		
+	
 	}
 	
 	/**
@@ -129,7 +133,7 @@ public class MainWindow extends JFrame {
 		}.execute();
 		
 		
-		
+		wwd.getModel().getLayers().add(new MosaiqueLayer(true, LatLon.fromDegrees(43.08444, 6.535), 22, 18, 32, MosaiqueLayer.BOTTOM_UP, MosaiqueLayer.LEFT_RIGHT, null));
 		
 ////		Cautra
 //		EarthFlatCautra globe = new EarthFlatCautra();
