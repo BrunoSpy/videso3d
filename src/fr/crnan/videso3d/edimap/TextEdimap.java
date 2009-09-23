@@ -15,6 +15,8 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import gov.nasa.worldwind.render.UserFacingText;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,11 +25,13 @@ import java.util.List;
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class TextEdimap extends QGraphicsTextItem {
+public class TextEdimap extends UserFacingText {
 	
 	double dx = 0.0;
 	
 	double dy = 0.0;
+
+	
 	/**
 	 * Constructeur
 	 * @param parent QGraphicsItemInterface Parent de l'objet texte
@@ -61,14 +65,14 @@ public class TextEdimap extends QGraphicsTextItem {
 		if(idAtcName != null) this.applyIdAtc(idAtc.get(idAtcName), palette);
 		//paramètres spécifiques
 		String priority = text.getValue("priority");
-		if(priority != null) this.setZValue(new Double(priority));
+//		if(priority != null) this.setZValue(new Double(priority));
 		String foregroundColor = text.getValue("foreground_color");
 		if(foregroundColor != null) this.setDefaultTextColor(palette.getColor(foregroundColor));
 	}
 	
 	private void applyIdAtc(Entity idAtc, PaletteEdimap palette){
 		String priority = idAtc.getValue("priority");
-		if(priority != null) this.setZValue(new Double(priority));
+	//	if(priority != null) this.setZValue(new Double(priority));
 		String foregroundColor = idAtc.getValue("foreground_color");
 		if(foregroundColor != null) this.setDefaultTextColor(palette.getColor(foregroundColor));
 
