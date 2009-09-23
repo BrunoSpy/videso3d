@@ -39,11 +39,15 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.Point;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
 
 import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.view.orbit.BasicOrbitView;
+import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 
 /**
  * Fenêtre principale
@@ -133,20 +137,20 @@ public class MainWindow extends JFrame {
 		}.execute();
 		
 		
-		wwd.getModel().getLayers().add(new MosaiqueLayer(true, LatLon.fromDegrees(43.08444, 6.535), 22, 18, 32, MosaiqueLayer.BOTTOM_UP, MosaiqueLayer.LEFT_RIGHT, null));
+		wwd.getModel().getLayers().add(new MosaiqueLayer(true, new Point(-287.4481, -223.4441, Point.Type.Cautra), 22, 18, 32, MosaiqueLayer.BOTTOM_UP, MosaiqueLayer.LEFT_RIGHT, null, false, null));
 		
-////		Cautra
-//		EarthFlatCautra globe = new EarthFlatCautra();
-//		globe.setProjection(globe.PROJECTION_CAUTRA);
-//		wwd.getModel().setGlobe(globe);
-////         Switch to flat view and update with current position
-//        BasicOrbitView orbitView = (BasicOrbitView)wwd.getView();
-//        FlatOrbitView flatOrbitView = new FlatOrbitView();
-//        flatOrbitView.setCenterPosition(orbitView.getCenterPosition());
-//        flatOrbitView.setZoom(orbitView.getZoom( ));
-//        flatOrbitView.setHeading(orbitView.getHeading());
-//        flatOrbitView.setPitch(orbitView.getPitch());
-//        wwd.setView(flatOrbitView);
+//		Cautra
+		EarthFlatCautra globe = new EarthFlatCautra();
+		globe.setProjection(globe.PROJECTION_CAUTRA);
+		wwd.getModel().setGlobe(globe);
+//         Switch to flat view and update with current position
+        BasicOrbitView orbitView = (BasicOrbitView)wwd.getView();
+        FlatOrbitView flatOrbitView = new FlatOrbitView();
+        flatOrbitView.setCenterPosition(orbitView.getCenterPosition());
+        flatOrbitView.setZoom(orbitView.getZoom( ));
+        flatOrbitView.setHeading(orbitView.getHeading());
+        flatOrbitView.setPitch(orbitView.getPitch());
+        wwd.setView(flatOrbitView);
 
 	}
 	
