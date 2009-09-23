@@ -15,25 +15,19 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.SwingWorker;
+
 /**
  * Lit un fichier Nectar et fournit des méthodes permettant l'accès à l'ensemble d'entités correspondant.
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.3
  */
-public class NectarReader extends QSignalEmitter implements Runnable{
-	
-	/**
-	 * Signal envoyé à la fin de la lecture d'un fichier
-	 */
-	public Signal0 fileRead = new Signal0();
-	/**
-	 * Envoit du pourcentage de données lues
-	 */
-	public Signal1<Integer> percentage = new Signal1<Integer>();
+public class NectarReader extends SwingWorker<Integer, String>{
 	
 	private Entity datas;
 	
@@ -57,26 +51,32 @@ public class NectarReader extends QSignalEmitter implements Runnable{
 	}
 	
  	public void setPath(String path) throws FileNotFoundException{
- 		if(QFile.exists(path)){
+ 		if(new File(path).exists()){
 			this.path = path;
 		} else {
 			throw new FileNotFoundException(path);
 		}
  	}
 	
-	public void run(){
-		QFile file = new QFile(path);
+ 	public void done(){
+ 		if(this.isCancelled()){
+ 			
+ 		}
+ 	}
+ 	
+	public Integer doInBackground(){
+		File file = new File(path);
 		if (file.open(new QIODevice.OpenMode(QIODevice.OpenModeFlag.ReadOnly,
 										 QIODevice.OpenModeFlag.Text))) {
 			QTextStream in = new QTextStream(file);
 			//on positionne le pointeur à la fin du fichier
 			in.readAll();
 			endFile = in.pos();
-			this.percentage.emit(0);
+			this.setProgress(0);
 			datas = new Entity("root",this.getEntity(in, 0, endFile));
 		}
-		this.percentage.emit(100);
-		this.fileRead.emit();
+		this.setProgress(100);
+		this.firePropertyChange("done", false, true);
 	}
 	
 	/**
@@ -157,7 +157,7 @@ public class NectarReader extends QSignalEmitter implements Runnable{
 		Integer percentCurrent = new Long(100*(pos)/endFile).intValue();
 		if(percentCurrent > percent) {
 			percent = percentCurrent;
-			this.percentage.emit(percent);
+			this.setProgress(percent);
 		}
 		return result;
 	}
@@ -169,4 +169,5 @@ public class NectarReader extends QSignalEmitter implements Runnable{
 	public Entity getEntity(){
 		return datas;
 	}
+
 }

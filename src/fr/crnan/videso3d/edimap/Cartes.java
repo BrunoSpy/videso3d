@@ -16,16 +16,13 @@
 package fr.crnan.videso3d.edimap;
 
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.trolltech.qt.sql.QSqlDatabase;
-import com.trolltech.qt.sql.QSqlQuery;
-
-import fr.crnan.videso.DatabaseError;
-import fr.crnan.videso.DatabaseManager;
-import fr.crnan.videso.FileParser;
+import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.FileParser;
 
 /**
  * Jeu de cartes Edimap
@@ -34,14 +31,6 @@ import fr.crnan.videso.FileParser;
  */
 public class Cartes extends FileParser{
 	
-	/**
-	 * Signal envoyé à la fin de la lecture d'un fichier
-	 */
-	public Signal0 fileRead = new Signal0();
-	/**
-	 * Envoit du pourcentage de données lues
-	 */
-	public Signal1<Integer> percentage = new Signal1<Integer>();
 	/**
 	 * Nombre de fichiers lus
 	 */
@@ -156,7 +145,7 @@ public class Cartes extends FileParser{
 				}
 			}
 			
-		} catch (DatabaseError e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -170,7 +159,7 @@ public class Cartes extends FileParser{
 				this.db.createEdimap(this.version, this.path);
 				this.insertCartes();
 			}
-		} catch (DatabaseError e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -182,9 +171,9 @@ public class Cartes extends FileParser{
 	}
 	
 	@Override
-	public void run() {
-		this.importingFile.emit("Import du fichier carac_jeu");
-		this.importingFileNumber.emit(0);
+	public Integer doInBackground() {
+		this.setFile("carac_jeu");
+		this.setProgress(0);
 		NectarReader cartes = new NectarReader();
 		try {
 			cartes.setPath(this.path+"/"+this.carac_jeu);
@@ -192,32 +181,33 @@ public class Cartes extends FileParser{
 			e.printStackTrace();
 		}
 		cartes.run();
-		this.importingFile.emit("Import des cartes dynamiques");
-		this.importingFileNumber.emit(1);
+		this.setFile("cartes dynamiques");
+		this.setProgress(1);
 		cartesDynamiques = (List<Entity>) cartes.getEntity().getValues("dynamique");
-		this.importingFile.emit("Import des cartes statiques");
-		this.importingFileNumber.emit(2);
+		this.setFile("cartes statiques");
+		this.setProgress(2);
 		cartesStatiques = (List<Entity>) cartes.getEntity().getValues("statique");
-		this.importingFile.emit("Import des cartes secteur");
-		this.importingFileNumber.emit(3);
+		this.setFile("cartes secteur");
+		this.setProgress(3);
 		secteurs = (List<Entity>) cartes.getEntity().getValues("secteur");
 		date = cartes.getEntity().getValue("date");
 		version = cartes.getEntity().getValue("name");
-		this.importingFile.emit("Import de la palette de couleur");
-		this.importingFileNumber.emit(4);
+		this.setFile("palette de couleur");
+		this.setProgress(4);
 		this.setPalette();
-		this.importingFile.emit("Insertion en base de données");
-		this.importingFileNumber.emit(5);
+		this.setFile("Insertion en base de données");
+		this.setProgress(5);
 		this.getFromFiles();
-		this.importingFileNumber.emit(6);
-		this.importDone.emit();
-	}
+		this.setProgress(6);
+		this.firePropertyChange("done", false, true);
+		return this.numberFiles();
+		}
 	
 	/**
 	 * Insère les données en base
 	 * @throws DatabaseError
 	 */
-	private void insertCartes() throws DatabaseError{
+	private void insertCartes() throws SQLException{
 		//insertion des cartes en base de données
 		QSqlQuery insert = new QSqlQuery(this.db.selectDB(this.version));
 		insert.prepare("insert into cartes (name, type, fichier) values " +
@@ -254,7 +244,7 @@ public class Cartes extends FileParser{
 		}
 	}
 	
-	public Carte getCarte(String name) throws DatabaseError, FileNotFoundException{
+	public Carte getCarte(String name) throws SQLException, FileNotFoundException{
 		QSqlQuery query = new QSqlQuery(this.db.selectDB("default"));
 		if(!query.exec("select * from clefs where name='path' and type='"+this.db.getCurrentName("Edimap")+"'")){
 			throw new DatabaseError(query.lastError());
@@ -328,8 +318,15 @@ public class Cartes extends FileParser{
 	}
 
 	@Override
-	protected int numberFiles() {
+	public int numberFiles() {
 		return this.numberFiles;
+	}
+
+	@Override
+	public void done() {
+		if(this.isCancelled()){
+			
+		}
 	}
 
 	

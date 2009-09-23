@@ -15,6 +15,8 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import gov.nasa.worldwind.render.SurfacePolyline;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,7 +28,7 @@ import java.util.List;
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class PolylineEdimap extends QGraphicsPolygonItem {
+public class PolylineEdimap extends SurfacePolyline {
 	
 	private String name;
 
