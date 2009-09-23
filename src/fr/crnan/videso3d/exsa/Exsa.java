@@ -416,7 +416,7 @@ public class Exsa extends FileParser {
 			RadrGener radrGener = new RadrGener(line);
 			PreparedStatement insert = this.conn.prepareStatement("insert into radrgener (name, numero, type, nommosaique, latitude, longitude, xcautra, ycautra, " +
 													"ecart, radarrelation, typerelation, typeplots, typeradar, codepays, coderadar, militaire) " +
-					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, )");
+					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
 			insert.setString(1, radrGener.getNom());
 			insert.setInt(2, radrGener.getNumero());
 			insert.setString(3, radrGener.getType());

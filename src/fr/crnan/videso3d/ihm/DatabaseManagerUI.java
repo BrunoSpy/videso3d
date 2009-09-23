@@ -181,7 +181,6 @@ public class DatabaseManagerUI extends JFrame {
 					((DBTableModel)table.getModel()).update();
 				} else if(evt.getPropertyName().equals("progress")){
 					if(progressMonitor.isCanceled()) fileParser.cancel(true);
-					System.out.println((Integer)evt.getNewValue());
 					progressMonitor.setProgress((Integer)evt.getNewValue());	
 				} else if(evt.getPropertyName().equals("file")){
 					progressMonitor.setNote("Import du fichier "+(String)evt.getNewValue());
