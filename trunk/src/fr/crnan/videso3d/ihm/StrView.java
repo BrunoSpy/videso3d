@@ -15,9 +15,17 @@
  */
 package fr.crnan.videso3d.ihm;
 
+import java.awt.GridLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import fr.crnan.videso3d.DatabaseManager;
@@ -50,10 +58,12 @@ public class StrView extends JPanel {
 	 */
 	private JPanel vvf = new JPanel();
 	
+	private ItemCheckListener itemCheckListener = new ItemCheckListener();
+	
 	private DatabaseManager db;
 	private VidesoGLCanvas wwd;
 	
-	public StrView(DatabaseManager db, VidesoGLCanvas wwd){
+	public StrView( VidesoGLCanvas wwd, DatabaseManager db){
 		this.db = db;
 		this.wwd = wwd;
 		
@@ -65,13 +75,74 @@ public class StrView extends JPanel {
 		zocc.setBorder(BorderFactory.createTitledBorder("Zones d'occultation"));
 		vvf.setBorder(BorderFactory.createTitledBorder("VVF"));
 
-		this.add(mosaiques);
-		this.add(capa);
-		this.add(dyn);
-		this.add(zocc);
-		this.add(vvf);
-		
-		this.add(Box.createVerticalGlue());
+		try {
+			if(this.db.getCurrentExsa() != null) {
+				this.add(this.buildPanel(mosaiques, "select type from centmosai"));
+				this.add(this.buildPanel(capa, "select DISTINCT abonne from ficaafniv"));
+				this.add(this.buildPanel(dyn, "select DISTINCT abonne from ficaafnic"));
+				this.add(this.buildPanel(zocc, "select name from centzocc"));
+				this.add(this.buildPanel(vvf, "select name from centflvvf"));
+
+				this.add(Box.createVerticalGlue());
+			}
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+	private JPanel buildPanel(JPanel panel, String query){
+		panel.setLayout(new GridLayout(0, 3));
+		int i = 0;
+		try {
+			Statement st = this.db.getCurrentExsa();
+			ResultSet rs = st.executeQuery(query);
+			while(rs.next()){
+				JCheckBox chk = new JCheckBox(rs.getString(1));
+				chk.addItemListener(itemCheckListener);
+				panel.add(chk);	
+				i++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return panel;
+	}
+	
+	/*---------------------------------------------------------*/
+	/*------------------- Listeners ---------------------------*/
+	/*---------------------------------------------------------*/
+	
+	private class ItemCheckListener implements ItemListener {
+
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			Object parent = ((JCheckBox)e.getSource()).getParent();
+			if(e.getStateChange() == ItemEvent.SELECTED) {
+				if(mosaiques.equals(parent)){
+					wwd.toggleLayer(wwd.getLayer("mosaique", ((JCheckBox)e.getSource()).getText()), true);
+				} else if (capa.equals(parent)){
+					wwd.toggleLayer(wwd.getLayer("capa", ((JCheckBox)e.getSource()).getText()), true);
+				} else if (dyn.equals(parent)){
+					wwd.toggleLayer(wwd.getLayer("dyn", ((JCheckBox)e.getSource()).getText()), true);
+				}else if (zocc.equals(parent)){
+					wwd.toggleLayer(wwd.getLayer("zocc", ((JCheckBox)e.getSource()).getText()), true);
+				}else if (vvf.equals(parent)){
+					wwd.toggleLayer(wwd.getLayer("vvf", ((JCheckBox)e.getSource()).getText()), true);
+				}
+			} else {
+				if(mosaiques.equals(parent)){
+					wwd.toggleLayer(wwd.getLayer("mosaique", ((JCheckBox)e.getSource()).getText()), false);
+				} else if (capa.equals(parent)){
+					wwd.toggleLayer(wwd.getLayer("capa", ((JCheckBox)e.getSource()).getText()), false);
+				} else if (dyn.equals(parent)){
+					wwd.toggleLayer(wwd.getLayer("dyn", ((JCheckBox)e.getSource()).getText()), false);
+				}else if (zocc.equals(parent)){
+					wwd.toggleLayer(wwd.getLayer("zocc", ((JCheckBox)e.getSource()).getText()), false);
+				}else if (vvf.equals(parent)){
+					wwd.toggleLayer(wwd.getLayer("vvf", ((JCheckBox)e.getSource()).getText()), false);
+				}
+			}
+		}
 		
 	}
 }

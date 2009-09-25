@@ -33,7 +33,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 /**
  * Lecteur de fichiers EXSA 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class Exsa extends FileParser {
 	/**
@@ -383,7 +383,7 @@ public class Exsa extends FileParser {
 			    	this.setProgress(8);
 			    	this.setFicaAfniv(line);
 				} else if (line.startsWith("FICA_AFNIC")) {
-					this.setFile("Import de la carte FICA_AFNIC.");
+					this.setFile("FICA_AFNIC.");
 			    	this.setProgress(9);
 			    	this.setFicaAfnic(line);
 				}/* else if (line.startsWith("FICA_CORLI")) {
@@ -545,8 +545,8 @@ public class Exsa extends FileParser {
 			insert.setInt(3, ficaAfniv.getPlancher());
 			insert.setInt(4, ficaAfniv.getPlafond());
 			insert.setBoolean(5, ficaAfniv.getElimine());
-			insert.setInt(5, ficaAfniv.getFirstCode());
-			insert.setInt(6, ficaAfniv.getLastCode());
+			insert.setInt(6, ficaAfniv.getFirstCode());
+			insert.setInt(7, ficaAfniv.getLastCode());
 			insert.executeUpdate();
 			insert.close();
 		} catch (ParseException e) {
