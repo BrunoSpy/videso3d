@@ -487,9 +487,10 @@ public class DatabaseManager{
 				"pays varchar(30), " +
 				"contour varchar(30), " +
 		"refcontour varchar(5))");
+		st.close();
 		//on référence la base de données
 		this.addDatabase(name, Type.PAYS, new SimpleDateFormat().format(new Date()));
-		st.close();
+		
 	}
 
 	/**
@@ -696,4 +697,17 @@ public class DatabaseManager{
 		return this.getCurrent(Type.Edimap);
 	}
 
+	public void closeAll(){
+			try {
+				if(currentPays != null) { currentPays.close(); currentPays = null;}
+				if(currentStip != null) { currentStip.close();currentStip= null;}
+				if(currentExsa != null) { currentExsa.close();currentExsa= null;}
+				if(currentStpv != null) { currentStpv.close();currentStpv= null;}
+				if(currentEdimap != null) { currentEdimap.close();currentEdimap= null;}
+				if(currentODS != null) { currentODS.close();currentODS = null;}
+				if(databases != null) { databases.close(); databases = null;}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+	}
 }

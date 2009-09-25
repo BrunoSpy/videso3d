@@ -22,19 +22,25 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
+import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.FrontieresStipLayer;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Route3D.Type;
 import fr.crnan.videso3d.layers.BaliseMarkerLayer;
+import fr.crnan.videso3d.layers.MosaiqueLayer;
 import fr.crnan.videso3d.layers.TextLayer;
 import fr.crnan.videso3d.stip.Secteur;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.render.BasicShapeAttributes;
+import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.ShapeAttributes;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
@@ -69,6 +75,12 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Layer pour les frontières
 	 */
 	private FrontieresStipLayer frontieres;
+	
+	/**
+	 * Liste des layers Mosaiques
+	 */
+	private HashMap<String, Layer> mosaiquesLayer = new HashMap<String, Layer>();
+	private TextLayer numbersLayer = new TextLayer();
 	
 	private DatabaseManager db;
 	
@@ -302,4 +314,153 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		this.redraw();
 	}
 	
+	/*--------------------------------------------------------------*/
+	/*------------------ Gestion des mosaiques   -------------------*/
+	/*--------------------------------------------------------------*/
+	public Layer getLayer(String type, String name){
+		if(mosaiquesLayer.containsKey(type+name)){
+			return mosaiquesLayer.get(type+name);
+		} else {
+			Boolean grille = true;
+			LatLonCautra origine = null; 
+			Integer width = 0;
+			Integer height = 0;
+			Integer size = 0; 
+			int hSens = 0; 
+			int vSens = 0;
+			int numSens = 0;
+			List<Couple<Integer, Integer>> squares = null;
+			Boolean numbers = true;
+			ShapeAttributes attr = null;
+			if(type.equals("mosaique")) {
+				try {
+					Statement st = this.db.getCurrentExsa();
+					System.out.println("name : "+name);
+					ResultSet rs = st.executeQuery("select * from centmosai where type ='"+name+"'");
+					origine = LatLonCautra.fromCautra(rs.getDouble("xcautra"), rs.getDouble("ycautra"));
+					width = rs.getInt("colonnes");
+					height = rs.getInt("lignes");
+					rs.close();
+					st.close();
+					size = 32;
+					hSens = MosaiqueLayer.BOTTOM_UP;
+					vSens = MosaiqueLayer.LEFT_RIGHT;
+					numSens = MosaiqueLayer.VERTICAL_FIRST;
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			} if (type.equals("capa")) {
+				try {
+					grille = false;
+					squares = new LinkedList<Couple<Integer,Integer>>();
+					Statement st = this.db.getCurrentExsa();
+					String typeGrille = name.equals("VISSEC") ? "ADP" : "CCR"; //TODO comment faire pour les autres centres ??
+					ResultSet rs = st.executeQuery("select * from centmosai where type ='"+typeGrille+"'");
+					origine = LatLonCautra.fromCautra(rs.getDouble("xcautra"), rs.getDouble("ycautra"));
+					width = rs.getInt("colonnes");
+					height = rs.getInt("lignes");
+					size = 32;
+					hSens = MosaiqueLayer.BOTTOM_UP;
+					vSens = MosaiqueLayer.LEFT_RIGHT;
+					numSens = MosaiqueLayer.VERTICAL_FIRST;
+					rs = st.executeQuery("select * from ficaafniv where abonne = '"+name+"'");
+					rs.next();
+					for(int i=1; i<= height*width; i++){
+						if(rs.getInt("carre") == i){
+							if(!rs.getBoolean("elimine")){
+								squares.add(new Couple<Integer, Integer>(i, 0));
+							}
+							rs.next();
+						} else {
+							squares.add(new Couple<Integer, Integer>(i, 0));
+						}
+					}
+					numbers = false;
+					attr = new BasicShapeAttributes();
+					attr.setInteriorMaterial(Material.YELLOW);
+					attr.setInteriorOpacity(0.4);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			} else if (type.equals("dyn")){
+				grille = false;
+				squares = new LinkedList<Couple<Integer,Integer>>();
+				try {
+					Statement st = this.db.getCurrentExsa();
+					ResultSet rs = st.executeQuery("select * from centmosai where type ='CCR'");
+					origine = LatLonCautra.fromCautra(rs.getDouble("xcautra"), rs.getDouble("ycautra"));
+					width = rs.getInt("colonnes");
+					height = rs.getInt("lignes");
+					size = 32;
+					hSens = MosaiqueLayer.BOTTOM_UP;
+					vSens = MosaiqueLayer.LEFT_RIGHT;
+					numSens = MosaiqueLayer.VERTICAL_FIRST;
+					numbers = false;
+					attr = new BasicShapeAttributes();
+					attr.setInteriorMaterial(Material.YELLOW);
+					attr.setInteriorOpacity(0.4);
+					grille = false;
+					rs = st.executeQuery("select * from ficaafnic where abonne = '"+name+"'");
+					while(rs.next()){
+						squares.add(new Couple<Integer, Integer>(rs.getInt("carre"), 0));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			} else if (type.equals("zocc")){
+				grille = false;
+				squares = new LinkedList<Couple<Integer,Integer>>();
+				try {
+					Statement st = this.db.getCurrentExsa();
+					ResultSet rs = st.executeQuery("select * from centmosai where type ='CCR'");
+					origine = LatLonCautra.fromCautra(rs.getDouble("xcautra"), rs.getDouble("ycautra"));
+					width = rs.getInt("colonnes");
+					height = rs.getInt("lignes");
+					size = 32;
+					hSens = MosaiqueLayer.BOTTOM_UP;
+					vSens = MosaiqueLayer.LEFT_RIGHT;
+					numSens = MosaiqueLayer.VERTICAL_FIRST;
+					numbers = false;
+					attr = new BasicShapeAttributes();
+					attr.setInteriorMaterial(Material.YELLOW);
+					attr.setInteriorOpacity(0.4);
+					grille = false;
+					rs = st.executeQuery("select * from centsczoc where zone = '"+name+"'");
+					while(rs.next()){
+						squares.add(new Couple<Integer, Integer>(rs.getInt("carre"), rs.getInt("souscarre")));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			} else if (type.equals("vvf")){
+				grille = false;
+				squares = new LinkedList<Couple<Integer,Integer>>();
+				try {
+					Statement st = this.db.getCurrentExsa();
+					ResultSet rs = st.executeQuery("select * from centmosai where type ='CCR'");
+					origine = LatLonCautra.fromCautra(rs.getDouble("xcautra"), rs.getDouble("ycautra"));
+					width = rs.getInt("colonnes");
+					height = rs.getInt("lignes");
+					size = 32;
+					hSens = MosaiqueLayer.BOTTOM_UP;
+					vSens = MosaiqueLayer.LEFT_RIGHT;
+					numSens = MosaiqueLayer.VERTICAL_FIRST;
+					numbers = false;
+					attr = new BasicShapeAttributes();
+					attr.setInteriorMaterial(Material.YELLOW);
+					attr.setInteriorOpacity(0.4);
+					grille = false;
+					rs = st.executeQuery("select * from centscvvf where vvfs LIKE '%"+name+"%'");
+					while(rs.next()){
+						squares.add(new Couple<Integer, Integer>(rs.getInt("carre"), rs.getInt("souscarre")));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			MosaiqueLayer mLayer = new MosaiqueLayer(grille, origine, width, height, size, hSens, vSens, numSens, squares, numbers, numbersLayer, attr);
+			mosaiquesLayer.put(type+name, mLayer);
+			return mLayer;
+		}
+	}
 }

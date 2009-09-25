@@ -58,7 +58,7 @@ public class DataExplorer extends JTabbedPane {
 		this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Sélecteur de données", TitledBorder.CENTER, TitledBorder.TOP));
 				
 		this.addTab("Stip", new StipView(wwd, db));
-		this.addTab("STR", new StrView(db, wwd));
+		this.addTab("STR", new StrView(wwd, db));
 		this.addTab("Stpv", new JScrollPane());
 		this.addTab("Edimap", new JScrollPane());
 		this.addTab("ODS", new JScrollPane());
@@ -71,11 +71,21 @@ public class DataExplorer extends JTabbedPane {
 	 * Met à jour le tab de données Stip
 	 */
 	public void updateStipView() {
+		int select = this.getSelectedIndex();
 		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Stip
 		this.removeTabAt(0);
 		this.insertTab("Stip", null, new StipView(wwd, db), "Sélecteur de données Stip", 0);
-		this.setSelectedIndex(0);
+		this.setSelectedIndex(select);
 	}
 	
-	
+	/**
+	 * Met à jour le tab STR
+	 */
+	public void updateStrView() {
+		int select = this.getSelectedIndex();
+		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Stip
+		this.removeTabAt(1);
+		this.insertTab("Str", null, new StrView(wwd, db), "Sélecteur de données Str", 1);
+		this.setSelectedIndex(select);
+	}
 }
