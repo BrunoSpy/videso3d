@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.globes;
 
+import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.globes.EarthFlat;
 import gov.nasa.worldwind.globes.ElevationModel;
 import gov.nasa.worldwind.terrain.BasicElevationModelFactory;
@@ -26,12 +27,9 @@ import gov.nasa.worldwind.terrain.BasicElevationModelFactory;
  */
 public class EarthFlatCautra extends FlatGlobeCautra{
 
-	public static final double WGS84_EQUATORIAL_RADIUS = 6378137.0; // ellipsoid equatorial getRadius, in meters
-    public static final double WGS84_POLAR_RADIUS = 6356752.3; // ellipsoid polar getRadius, in meters
-    public static final double WGS84_ES = 0.00669437999013; // eccentricity squared, semi-major axis
 
     public EarthFlatCautra() {
-        super(WGS84_EQUATORIAL_RADIUS, WGS84_POLAR_RADIUS, WGS84_ES, makeElevationModel());
+        super(LatLonCautra.WGS84_EQUATORIAL_RADIUS, LatLonCautra.WGS84_POLAR_RADIUS, LatLonCautra.WGS84_ES, makeElevationModel());
     }
 
     private static ElevationModel makeElevationModel()

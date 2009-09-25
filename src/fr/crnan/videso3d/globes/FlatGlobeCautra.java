@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.globes;
 
+import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.geom.Vec4;
@@ -37,13 +38,13 @@ public class FlatGlobeCautra extends FlatGlobe {
 	/**
 	 * Latitude géodésique du centre de la grille
 	 */
-	private final double l0 = 47; //en degrés
-	private final double phi0 = l0/180*Math.PI; //en radians
+//	private final double l0 = 47; //en degrés
+//	private final double phi0 = l0/180*Math.PI; //en radians
 	
 	/**
 	 * Ordonnée du pôle nord, en metres
 	 */
-	private final double yPole = 2721.66*1852;
+//	private final double yPole = 2721.66*1852;
 	
 	public FlatGlobeCautra(double equatorialRadius, double polarRadius,
 			double es, ElevationModel em) {
@@ -67,10 +68,27 @@ public class FlatGlobeCautra extends FlatGlobe {
 	protected Position cartesianToGeodetic(Vec4 cart) {
 		Position pos = null;
 		if(this.getProjection().equals(PROJECTION_CAUTRA)){
+			
+			double cosQB = (4*Math.pow(LatLonCautra.WGS84_EQUATORIAL_RADIUS/LatLonCautra.NM, 2))/(4*Math.pow(LatLonCautra.WGS84_EQUATORIAL_RADIUS/LatLonCautra.NM, 2) + Math.pow(cart.x, 2)+ Math.pow(cart.y, 2));
+			double sinQB = 1 -cosQB;
+			
+			double xa = cart.x * cosQB;
+			double ya = (LatLonCautra.WGS84_EQUATORIAL_RADIUS/LatLonCautra.NM * Math.cos(LatLonCautra.centerCautra.getLatitude().radians) - cart.y * Math.sin(LatLonCautra.centerCautra.getLatitude().radians))*cosQB - LatLonCautra.WGS84_EQUATORIAL_RADIUS/LatLonCautra.NM*sinQB*Math.cos(LatLonCautra.centerCautra.getLatitude().radians);
+			
+			double latitude = Math.atan(Math.sqrt( Math.pow(LatLonCautra.WGS84_EQUATORIAL_RADIUS/LatLonCautra.NM, 2)/(Math.pow(xa, 2)+Math.pow(ya, 2)) - 1));
+			
+			double longitude = Math.atan(xa/ya);
+			
 			pos = Position.fromRadians(
-					this.phi0+Math.atan((this.yPole-Math.sqrt(cart.x*cart.x+Math.pow(cart.y - this.yPole, 2)))/this.r0),
-					Math.atan(cart.x/(this.yPole-cart.y))*this.yPole/(this.r0*Math.cos(this.phi0)),
+					latitude,
+					longitude,
 					cart.z);
+			
+//			
+//			pos = Position.fromRadians(
+//					this.phi0+Math.atan((this.yPole-Math.sqrt(cart.x*cart.x+Math.pow(cart.y - this.yPole, 2)))/this.r0),
+//					Math.atan(cart.x/(this.yPole-cart.y))*this.yPole/(this.r0*Math.cos(this.phi0)),
+//					cart.z);
 		} else {
 			pos = super.cartesianToGeodetic(cart);
 		}
@@ -86,6 +104,7 @@ public class FlatGlobeCautra extends FlatGlobe {
 			double metersElevation) {
 		Vec4 cart = null;
 		if(this.getProjection().equals(PROJECTION_CAUTRA)){
+			
 			double phi = latitude.radians;//latitude en radians
 			double psi = longitude.radians;//longitude en radians
 			double lConforme = this.latitudeConforme(phi);//Latitude conforme du point

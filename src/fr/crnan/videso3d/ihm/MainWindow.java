@@ -20,8 +20,11 @@ package fr.crnan.videso3d.ihm;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.LinkedList;
 
 
 import javax.swing.BoxLayout;
@@ -38,9 +41,11 @@ import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
+import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Point;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
 
@@ -78,7 +83,11 @@ public class MainWindow extends JFrame {
 	 * 
 	 * @param db
 	 */
-	public MainWindow(DatabaseManager db){
+	public MainWindow(final DatabaseManager db){
+		
+//		System.out.println(LatLonCautra.fromCautra(-287.4481, -223.4441));
+//		System.out.println(LatLonCautra.fromDegrees(43.084444444444, -6.535).getCautra()[0] +" "+
+//				LatLonCautra.fromDegrees(43.084444444444, -6.535).getCautra()[1]);
 		
 		this.db = db;
 		//Style Nimbus
@@ -116,6 +125,13 @@ public class MainWindow extends JFrame {
 		this.pack();
 		
 	
+		//fermeture des connections aux bases de données avant de quitter afin de ne pas perdre les dernières transactions
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e){
+				db.closeAll();
+			}
+		});
+		
 	}
 	
 	/**
@@ -136,21 +152,24 @@ public class MainWindow extends JFrame {
 			}
 		}.execute();
 		
+//		LinkedList<Couple<Integer, Integer>> liste = new LinkedList<Couple<Integer,Integer>>();
+//		for(int i = 1; i<=300;i++){
+//			liste.add(new Couple<Integer, Integer>(i, 0));
+//		}
+//		wwd.getModel().getLayers().add(new MosaiqueLayer(true, LatLonCautra.fromCautra(-287.4481, -223.4441), 22, 18, 32, MosaiqueLayer.BOTTOM_UP, MosaiqueLayer.LEFT_RIGHT, MosaiqueLayer.VERTICAL_FIRST, liste, false, null, null));
 		
-		wwd.getModel().getLayers().add(new MosaiqueLayer(true, new Point(-287.4481, -223.4441, Point.Type.Cautra), 22, 18, 32, MosaiqueLayer.BOTTOM_UP, MosaiqueLayer.LEFT_RIGHT, null, false, null));
-		
-//		Cautra
-		EarthFlatCautra globe = new EarthFlatCautra();
-		globe.setProjection(globe.PROJECTION_CAUTRA);
-		wwd.getModel().setGlobe(globe);
-//         Switch to flat view and update with current position
-        BasicOrbitView orbitView = (BasicOrbitView)wwd.getView();
-        FlatOrbitView flatOrbitView = new FlatOrbitView();
-        flatOrbitView.setCenterPosition(orbitView.getCenterPosition());
-        flatOrbitView.setZoom(orbitView.getZoom( ));
-        flatOrbitView.setHeading(orbitView.getHeading());
-        flatOrbitView.setPitch(orbitView.getPitch());
-        wwd.setView(flatOrbitView);
+////		Cautra
+//		EarthFlatCautra globe = new EarthFlatCautra();
+//		globe.setProjection(EarthFlatCautra.PROJECTION_MERCATOR);
+//		wwd.getModel().setGlobe(globe);
+////         Switch to flat view and update with current position
+//        BasicOrbitView orbitView = (BasicOrbitView)wwd.getView();
+//        FlatOrbitView flatOrbitView = new FlatOrbitView();
+//        flatOrbitView.setCenterPosition(orbitView.getCenterPosition());
+//        flatOrbitView.setZoom(orbitView.getZoom( ));
+//        flatOrbitView.setHeading(orbitView.getHeading());
+//        flatOrbitView.setPitch(orbitView.getPitch());
+//        wwd.setView(flatOrbitView);
 
 	}
 	
@@ -177,7 +196,8 @@ public class MainWindow extends JFrame {
 							//mise à jour de la vue 3D
 							wwd.buildStip();
 						} else if (type.equals("EXSA")){
-							
+							//mise à jour de l'explorateur de données
+							dataExplorer.updateStrView();
 						}
 					}
 				});
@@ -192,6 +212,7 @@ public class MainWindow extends JFrame {
 		quit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				db.closeAll();
 				System.exit(0);
 			}
 		});
