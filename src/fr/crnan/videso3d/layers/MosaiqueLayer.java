@@ -25,17 +25,19 @@ import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.geom.LatLonCautra;
 
 import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfacePolygon;
 import gov.nasa.worldwind.render.SurfacePolyline;
+import gov.nasa.worldwind.render.UserFacingText;
 /**
  * Affiche une mosaique (STR ou STPV)</br>
  * Permet de colorier certains carrés et sous-carrés
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
-public class MosaiqueLayer extends SurfaceShapeLayer {
+public class MosaiqueLayer {
 
 	/**
 	 * La grille est dessinée de bas en haut
@@ -62,6 +64,10 @@ public class MosaiqueLayer extends SurfaceShapeLayer {
 	 */
 	public static final int HORIZONTAL_FIRST = 6;
 	
+	
+	private SurfaceShapeLayer shapeLayer = new SurfaceShapeLayer();
+	private TextLayer textLayer = new TextLayer();
+	
 	/**
 	 * Création d'une mosaïque</br>
 	 * @param grille {@link Boolean} Affichage de la grille
@@ -87,12 +93,13 @@ public class MosaiqueLayer extends SurfaceShapeLayer {
 			int numSens,
 			List<Couple<Integer, Integer>> squares,
 			Boolean numbers,
-			TextLayer textLayer,
 			ShapeAttributes attr){
 
 		int hsens = hSens == RIGHT_LEFT ? -1 : 1;
 		int vsens = vSens == TOP_DOWN ? -1 : 1;
-
+		textLayer.setMaxActiveAltitude(20e5);
+		
+		
 		if(grille){
 			//affichage des lignes
 			for(int i=0; i<= height; i++){
@@ -105,7 +112,7 @@ public class MosaiqueLayer extends SurfaceShapeLayer {
 				line.add(stop);
 				SurfacePolyline ligne = new SurfacePolyline(line);
 				ligne.setClosed(false);
-				this.addRenderable(ligne);
+				this.shapeLayer.addRenderable(ligne);
 			}
 			//affichage des colonnes
 			for(int i=0; i<= width; i++){
@@ -119,13 +126,26 @@ public class MosaiqueLayer extends SurfaceShapeLayer {
 				line.add(stop);
 				SurfacePolyline col = new SurfacePolyline(line);
 				col.setClosed(false);
-				this.addRenderable(col);
+				this.shapeLayer.addRenderable(col);
 			}
 		}
 
 		//affichage des numéros des carrés
 		if(numbers){
-			//TODO afficher les nombres
+			for(Integer i = 1; i <= width*height; i++){
+				if(i == 1 || i%10 == 0){
+					int colonne = i / height ;
+					int ligne = i % height -1;	
+					if(ligne == -1){
+						ligne = height -1;
+						colonne--;
+					}
+					
+					LatLonCautra latLon = LatLonCautra.fromCautra(origine.getCautra()[0] + (colonne * size + size/2)* hsens, origine.getCautra()[1] + (ligne * size +size/2) * vsens);
+					UserFacingText text = new UserFacingText(i.toString(), new Position(latLon, 0));
+					textLayer.addGeographicText(text);
+				}
+			}
 		}
 		
 		//coloriage des carrés
@@ -188,7 +208,7 @@ public class MosaiqueLayer extends SurfaceShapeLayer {
 			
 			SurfacePolygon polygon = new SurfacePolygon(locations);
 			if(attr != null) polygon.setAttributes(attr);
-			this.addRenderable(polygon);
+			this.shapeLayer.addRenderable(polygon);
 		} else {
 			//on ne colorie que le sous-carré
 			//un sous-carré a une taille de size/4 car un carré est toujours découpé en 16 sous-carré
@@ -207,8 +227,21 @@ public class MosaiqueLayer extends SurfaceShapeLayer {
 			
 			SurfacePolygon polygon = new SurfacePolygon(locations);
 			polygon.setAttributes(attr);
-			this.addRenderable(polygon);
+			this.shapeLayer.addRenderable(polygon);
 		}
 	}
+	/**
+	 * @return the shapeLayer
+	 */
+	public SurfaceShapeLayer getShapeLayer() {
+		return shapeLayer;
+	}
+	/**
+	 * @return the textLayer
+	 */
+	public TextLayer getTextLayer() {
+		return textLayer;
+	}
 
+	
 }
