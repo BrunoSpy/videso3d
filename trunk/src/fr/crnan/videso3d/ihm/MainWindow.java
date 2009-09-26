@@ -198,6 +198,8 @@ public class MainWindow extends JFrame {
 						} else if (type.equals("EXSA")){
 							//mise à jour de l'explorateur de données
 							dataExplorer.updateStrView();
+							//mise à jour de la vue 3D
+							wwd.removeMosaiques();
 						}
 					}
 				});

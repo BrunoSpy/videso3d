@@ -119,27 +119,27 @@ public class StrView extends JPanel {
 			Object parent = ((JCheckBox)e.getSource()).getParent();
 			if(e.getStateChange() == ItemEvent.SELECTED) {
 				if(mosaiques.equals(parent)){
-					wwd.toggleLayer(wwd.getLayer("mosaique", ((JCheckBox)e.getSource()).getText()), true);
+					wwd.toggleMosaiqueLayer("mosaique", ((JCheckBox)e.getSource()).getText(), true);
 				} else if (capa.equals(parent)){
-					wwd.toggleLayer(wwd.getLayer("capa", ((JCheckBox)e.getSource()).getText()), true);
+					wwd.toggleMosaiqueLayer("capa", ((JCheckBox)e.getSource()).getText(), true);
 				} else if (dyn.equals(parent)){
-					wwd.toggleLayer(wwd.getLayer("dyn", ((JCheckBox)e.getSource()).getText()), true);
+					wwd.toggleMosaiqueLayer("dyn", ((JCheckBox)e.getSource()).getText(), true);
 				}else if (zocc.equals(parent)){
-					wwd.toggleLayer(wwd.getLayer("zocc", ((JCheckBox)e.getSource()).getText()), true);
+					wwd.toggleMosaiqueLayer("zocc", ((JCheckBox)e.getSource()).getText(), true);
 				}else if (vvf.equals(parent)){
-					wwd.toggleLayer(wwd.getLayer("vvf", ((JCheckBox)e.getSource()).getText()), true);
+					wwd.toggleMosaiqueLayer("vvf", ((JCheckBox)e.getSource()).getText(), true);
 				}
 			} else {
 				if(mosaiques.equals(parent)){
-					wwd.toggleLayer(wwd.getLayer("mosaique", ((JCheckBox)e.getSource()).getText()), false);
+					wwd.toggleMosaiqueLayer("mosaique", ((JCheckBox)e.getSource()).getText(), false);
 				} else if (capa.equals(parent)){
-					wwd.toggleLayer(wwd.getLayer("capa", ((JCheckBox)e.getSource()).getText()), false);
+					wwd.toggleMosaiqueLayer("capa", ((JCheckBox)e.getSource()).getText(), false);
 				} else if (dyn.equals(parent)){
-					wwd.toggleLayer(wwd.getLayer("dyn", ((JCheckBox)e.getSource()).getText()), false);
+					wwd.toggleMosaiqueLayer("dyn", ((JCheckBox)e.getSource()).getText(), false);
 				}else if (zocc.equals(parent)){
-					wwd.toggleLayer(wwd.getLayer("zocc", ((JCheckBox)e.getSource()).getText()), false);
+					wwd.toggleMosaiqueLayer("zocc", ((JCheckBox)e.getSource()).getText(), false);
 				}else if (vvf.equals(parent)){
-					wwd.toggleLayer(wwd.getLayer("vvf", ((JCheckBox)e.getSource()).getText()), false);
+					wwd.toggleMosaiqueLayer("vvf", ((JCheckBox)e.getSource()).getText(), false);
 				}
 			}
 		}
