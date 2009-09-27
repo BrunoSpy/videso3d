@@ -143,7 +143,6 @@ public class Stpv extends FileParser{
 	
 	/**
 	 * Récupère le nom de la BDS
-	 * @param path
 	 */
 	private void getName(){
 		try {
