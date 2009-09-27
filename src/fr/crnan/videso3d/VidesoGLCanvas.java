@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.ProgressMonitor;
+
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.FrontieresStipLayer;
@@ -220,6 +222,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				Route3D route = new Route3D();
 				if(type.equals("F")) route.setType(Type.FIR);
 				if(type.equals("U")) route.setType(Type.UIR);
+				System.out.println("route : "+name);
 				ResultSet rs = st.executeQuery("select * from routebalise, balises where route = '"+name+"' and routebalise.balise = balises.name and appartient = 1");
 				LinkedList<LatLon> loc = new LinkedList<LatLon>();
 				while(rs.next()){
@@ -274,6 +277,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Appelé lors de l'initialisation de la vue ou lors du changement de base de données Stip
 	 */
 	public void buildStip() {
+		ProgressMonitor progress = new ProgressMonitor(null, 
+				"Mise à jour des éléments STIP", "Suppression des éléments précédents", 0, 5);
+		progress.setMillisToPopup(1);
+		progress.setProgress(0);
 		//Suppression des objets3D
 		if(routesAwy != null) {
 			routesAwy.removeAllAirspaces();
@@ -299,11 +306,20 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		secteursLayer = new AirspaceLayer();		
 		try {
 			if(this.db.getCurrentStip() != null) {
+				progress.setNote("Création des balises publiées");
+				progress.setProgress(1);
 				//création des nuveaux objets
 				this.buildBalises(db, 0);
+				progress.setNote("Création des balises non publiées");
+				progress.setProgress(2);
 				this.buildBalises(db, 1);
+				progress.setNote("Création des routes FIR");
+				progress.setProgress(3);
 				this.buildRoutes(db, "F");
+				progress.setNote("Création des routes UIR");
+				progress.setProgress(4);
 				this.buildRoutes(db, "U");
+				progress.setProgress(5);
 				this.getModel().getLayers().add(secteursLayer);
 				this.secteurs = new HashMap<String, Secteur3D>();				
 			}
