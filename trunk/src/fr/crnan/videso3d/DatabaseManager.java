@@ -499,40 +499,40 @@ public class DatabaseManager{
 	 * @throws SQLException 
 	 */
 	public void deleteDatabase(String name, Type type) throws SQLException{
-		//fermeture de la connection
+		//fermeture de la connection courante
 		switch (type) {
 		case STPV:
-			if (this.currentStpv != null && this.currentStpv.getMetaData().getURL().equals(name)) {
+			if (this.currentStpv != null && this.currentStpv.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
 				this.currentStpv.close();
 				this.currentStpv = null;
 			}
 			break;
 		case EXSA:
-			if (this.currentExsa != null && this.currentExsa.getMetaData().getURL().equals(name)) {
+			if (this.currentExsa != null && this.currentExsa.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
 				this.currentExsa.close();
 				this.currentExsa = null;
 			}
 			break;
 		case Edimap:
-			if (this.currentEdimap != null && this.currentEdimap.getMetaData().getURL().equals(name)) {
+			if (this.currentEdimap != null && this.currentEdimap.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
 				this.currentEdimap.close();
 				this.currentEdimap = null;
 			}
 			break;
 		case STIP:
-			if (this.currentStip != null && this.currentStip.getMetaData().getURL().equals(name)) {
+			if (this.currentStip != null && this.currentStip.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
 				this.currentStip.close();
 				this.currentStip = null;
 			}
 			break;
 		case Ods:
-			if (this.currentODS != null && this.currentODS.getMetaData().getURL().equals(name)) {
+			if (this.currentODS != null && this.currentODS.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
 				this.currentODS.close();
 				this.currentODS = null;
 			}
 			break;
 		case PAYS:
-			if (this.currentPays != null && this.currentPays.getMetaData().getURL().equals(name)) {
+			if (this.currentPays != null && this.currentPays.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
 				this.currentPays.close();
 				this.currentPays = null;
 			}
@@ -586,6 +586,7 @@ public class DatabaseManager{
 		}else if(type.equalsIgnoreCase("Pays")){
 			t = Type.PAYS;
 		}
+		st.close();
 		this.deleteDatabase(name, t);
 	}
 
