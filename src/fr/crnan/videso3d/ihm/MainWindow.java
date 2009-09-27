@@ -24,6 +24,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Hashtable;
 import java.util.LinkedList;
 
 
@@ -35,11 +36,14 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
@@ -189,18 +193,25 @@ public class MainWindow extends JFrame {
 				databaseUI.addPropertyChangeListener("baseChanged", new PropertyChangeListener() {		
 					@Override
 					public void propertyChange(PropertyChangeEvent evt) {
-						String type = (String)evt.getNewValue();
-						if(type.equals("STIP")){
-							//mise à jour de l'explorateur de données
-							dataExplorer.updateStipView();
-							//mise à jour de la vue 3D
-							wwd.buildStip();
-						} else if (type.equals("EXSA")){
-							//mise à jour de l'explorateur de données
-							dataExplorer.updateStrView();
-							//mise à jour de la vue 3D
-							wwd.removeMosaiques();
-						}
+						final String type = (String)evt.getNewValue();
+						//mises à jour en background
+						new SwingWorker<String, Integer>(){
+							@Override
+							protected String doInBackground() throws Exception {
+								if(type.equals("STIP")){
+									//mise à jour de la vue 3D
+									wwd.buildStip();
+									//mise à jour de l'explorateur de données
+									dataExplorer.updateStipView();
+								} else if (type.equals("EXSA")){
+									//mise à jour de l'explorateur de données
+									dataExplorer.updateStrView();
+									//mise à jour de la vue 3D
+									wwd.removeMosaiques();
+								}
+								return null;
+							}
+						}.execute();
 					}
 				});
 			}
@@ -254,9 +265,49 @@ public class MainWindow extends JFrame {
 	private JToolBar createToolBar(){
 		JToolBar toolbar = new JToolBar("Actions");
 		
-		toolbar.add(new JToggleButton("Alidad"));
+		JToggleButton alidad = new JToggleButton("Alidad");
+		//alidad.setEnabled(false);
+		toolbar.add(alidad);
+
+		JToggleButton toggle2D = new JToggleButton("2D/3D");
+		toggle2D.setEnabled(false);
+		toolbar.add(toggle2D);
+
+		toolbar.addSeparator();
 		
-		toolbar.add(new JToggleButton("Projection Cautra"));
+		JLabel label = new JLabel("Exagération verticale : ");
+		toolbar.add(label);
+
+		int MIN_VE = 1;
+		int MAX_VE = 8;
+		int curVe = (int) this.wwd.getSceneController().getVerticalExaggeration();
+		curVe = curVe < MIN_VE ? MIN_VE : (curVe > MAX_VE ? MAX_VE : curVe);
+		final JSlider slider = new JSlider(MIN_VE, MAX_VE, curVe);
+		slider.setMajorTickSpacing(1);
+		slider.setPaintTicks(true);
+		slider.setSnapToTicks(true);
+		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
+		labelTable.put(1, new JLabel("1x"));
+		labelTable.put(2, new JLabel("2x"));
+		labelTable.put(4, new JLabel("4x"));
+		labelTable.put(8, new JLabel("8x"));
+		slider.setLabelTable(labelTable);
+		slider.setPaintLabels(true);
+		toolbar.addPropertyChangeListener("orientation", new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				slider.setOrientation((Integer)evt.getNewValue());
+			}
+		});
+		slider.addChangeListener(new ChangeListener()
+		{
+			public void stateChanged(ChangeEvent e)
+			{
+				double ve = ((JSlider) e.getSource()).getValue();
+				wwd.getSceneController().setVerticalExaggeration(ve);
+			}
+		});
+		toolbar.add(slider);
 		
 		return toolbar;
 	}

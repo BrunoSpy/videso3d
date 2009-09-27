@@ -16,9 +16,9 @@
 package fr.crnan.videso3d.globes;
 
 import fr.crnan.videso3d.geom.LatLonCautra;
+import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.globes.EarthFlat;
-import gov.nasa.worldwind.globes.ElevationModel;
-import gov.nasa.worldwind.terrain.BasicElevationModelFactory;
+import gov.nasa.worldwind.globes.EllipsoidalGlobe;
 
 /**
  * Réécriture de {@link EarthFlat} pour prendre en compte {@link FlatGlobeCautra}
@@ -29,13 +29,11 @@ public class EarthFlatCautra extends FlatGlobeCautra{
 
 
     public EarthFlatCautra() {
-        super(LatLonCautra.WGS84_EQUATORIAL_RADIUS, LatLonCautra.WGS84_POLAR_RADIUS, LatLonCautra.WGS84_ES, makeElevationModel());
-    }
-
-    private static ElevationModel makeElevationModel()
-    {
-        BasicElevationModelFactory emf = new BasicElevationModelFactory();
-        return emf.createFromConfigFile("config/Earth/LegacyEarthElevationModel.xml");
+        super(LatLonCautra.WGS84_EQUATORIAL_RADIUS, 
+        		LatLonCautra.WGS84_POLAR_RADIUS, 
+        		LatLonCautra.WGS84_ES, 
+        		EllipsoidalGlobe.makeElevationModel(AVKey.EARTH_ELEVATION_MODEL_CONFIG_FILE,
+        "config/Earth/EarthMergedElevationModel.xml"));
     }
 	
 }
