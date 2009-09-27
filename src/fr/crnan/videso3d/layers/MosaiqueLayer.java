@@ -80,7 +80,6 @@ public class MosaiqueLayer {
 	 * @param numSens {@link Integer} Sens de la numérotation (VERTICAL_FIRST : utilisé par le STR, HORIZONTAL_FIRST : utilisé par le STPV
 	 * @param squares {@link List} Liste de (carré, sous-carré) à colorier. Si sous-carré == 0, on colorie tout le carré. 
 	 * @param numbers {@link Boolean} Affichage des numéros des carrés
-	 * @param textLayer {@link TextLayer} Layer recevant les numéros des carrés. Ne doit pas être <code>null</code> si numbers est <code>true</code>.
 	 * @param attr {@link ShapeAttributes} Attributs pour le coloriage des carrés.
 	 */
 	public MosaiqueLayer(Boolean grille, 
@@ -165,10 +164,10 @@ public class MosaiqueLayer {
 	 * @param width {@link Integer} Nombre de carrés de côté
 	 * @param height {@link Integer} Nombre de carrés de hauteur
 	 * @param size {@link Integer} Taille d'un carré en NM
-	 * @param hSens {@link Integer} Sens de parcours vertical
-	 * @param vSens {@link Integer} Sens de parcours horizontal
+	 * @param hsens {@link Integer} Sens de parcours vertical
+	 * @param vsens {@link Integer} Sens de parcours horizontal
 	 * @param numSens {@link Integer} Sens de la numérotation (VERTICAL_FIRST : utilisé par le STR, HORIZONTAL_FIRST : utilisé par le STPV
-	 * @param color Couleur
+	 * @param attr {@link ShapeAttributes} Attributs des carrés
 	 */
 	private void colorieCarre(LatLonCautra origine,
 			Integer carre,

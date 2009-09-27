@@ -82,7 +82,7 @@ public class Secteur {
 
 	/**
 	 *  Met en place une connection vers une base de données Stip
-	 * @param conn Connection vers une base de données Stip
+	 * @param st {@link Statement} vers une base de données Stip
 	 */
 	public void setConnection(Statement st){
 		this.st = st;
@@ -90,7 +90,7 @@ public class Secteur {
 	/**
 	 * Met en place une connection vers une base de données de type PAYS
 	 * Nécessaire pour créer les contours d'un secteur
-	 * @param conn Connection vers une base de données PAYS
+	 * @param st {@link Statement} vers une base de données PAYS
 	 */
 	public void setConnectionPays(Statement st){
 		this.pays = st;
