@@ -28,7 +28,7 @@ import javax.swing.ProgressMonitor;
 
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.Balise2D;
-import fr.crnan.videso3d.graphics.FrontieresStipLayer;
+import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Route3D.Type;
@@ -222,7 +222,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				Route3D route = new Route3D();
 				if(type.equals("F")) route.setType(Type.FIR);
 				if(type.equals("U")) route.setType(Type.UIR);
-				System.out.println("route : "+name);
 				ResultSet rs = st.executeQuery("select * from routebalise, balises where route = '"+name+"' and routebalise.balise = balises.name and appartient = 1");
 				LinkedList<LatLon> loc = new LinkedList<LatLon>();
 				while(rs.next()){

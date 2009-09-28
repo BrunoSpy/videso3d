@@ -35,6 +35,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
@@ -44,6 +45,8 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import com.jidesoft.swing.JideSplitButton;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
@@ -266,11 +269,24 @@ public class MainWindow extends JFrame {
 		JToolBar toolbar = new JToolBar("Actions");
 		
 		JToggleButton alidad = new JToggleButton("Alidad");
-		//alidad.setEnabled(false);
+		alidad.setEnabled(false);
 		toolbar.add(alidad);
 
-		JToggleButton toggle2D = new JToggleButton("2D/3D");
-		toggle2D.setEnabled(false);
+		JideSplitButton toggle2D = new JideSplitButton("2D/3D");
+		toggle2D.setAlwaysDropdown(true);
+		
+		JMenuItem globe = new JMenuItem("3D");
+		toggle2D.add(globe);
+		
+		JMenuItem cautra = new JMenuItem("Cautra (exp.)");
+		toggle2D.add(cautra);
+		
+		JMenuItem mercator = new JMenuItem("Mercator");
+		toggle2D.add(mercator);
+		
+		JMenuItem latlon = new JMenuItem("Lat-Lon");
+		toggle2D.add(latlon);
+		
 		toolbar.add(toggle2D);
 
 		toolbar.addSeparator();
@@ -307,7 +323,7 @@ public class MainWindow extends JFrame {
 				wwd.getSceneController().setVerticalExaggeration(ve);
 			}
 		});
-		toolbar.add(slider);
+		toolbar.add(slider);		
 		
 		return toolbar;
 	}
