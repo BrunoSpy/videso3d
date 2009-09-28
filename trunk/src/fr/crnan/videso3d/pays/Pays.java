@@ -39,7 +39,7 @@ import gov.nasa.worldwind.geom.LatLon;
  * Ces fichiers nécessitent un traitement spécial car ils ne sont pas distribués avec les autres fichiers CA lors d'une livraison par le CESNAC.
  * Il s'agit des fichiers PAYS, CONTPAYS, et POINPAYS
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2.1
  */
 public class Pays extends FileParser {
 
@@ -53,8 +53,6 @@ public class Pays extends FileParser {
 	 * = PAYS + Version CA
 	 */
 	private String name;
-
-	private boolean cancel;
 
 	/**
 	 * Connection à la base de données correspondante
@@ -90,7 +88,7 @@ public class Pays extends FileParser {
 	private void setPoinPays(String path) {
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-			while (in.ready() && !cancel){
+			while (in.ready()){
 				String line = in.readLine();
 				if(line.startsWith("PTP")){
 					PoinPays point = new PoinPays(line); 
@@ -128,7 +126,7 @@ public class Pays extends FileParser {
 		try {
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			String contName = new String();
-			while (in.ready() && !cancel){
+			while (in.ready()){
 				String line = in.readLine();
 				if(line.startsWith("CTR")){
 					contName = line.substring(4,9).trim();
@@ -167,7 +165,7 @@ public class Pays extends FileParser {
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			String pays = new String();
 			String contName = new String();
-			while (in.ready() && !cancel){
+			while (in.ready()){
 				String line = in.readLine();
 				if(line.startsWith("PAY")){
 					pays = line.substring(4, 34).trim();
@@ -204,10 +202,6 @@ public class Pays extends FileParser {
 	@Override
 	public int numberFiles() {
 		return this.numberFiles;
-	}
-
-	public void cancel(){
-		this.cancel = true;
 	}
 	
 	@Override

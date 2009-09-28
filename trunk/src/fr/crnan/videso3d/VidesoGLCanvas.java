@@ -27,6 +27,8 @@ import java.util.List;
 import javax.swing.ProgressMonitor;
 
 import fr.crnan.videso3d.geom.LatLonCautra;
+import fr.crnan.videso3d.globes.EarthFlatCautra;
+import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.graphics.Route3D;
@@ -38,16 +40,24 @@ import fr.crnan.videso3d.layers.TextLayer;
 import fr.crnan.videso3d.stip.Secteur;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.globes.Earth;
+import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.layers.LayerList;
+import gov.nasa.worldwind.layers.SkyColorLayer;
+import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
+import gov.nasa.worldwind.view.orbit.BasicOrbitView;
+import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.3
  */
+@SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
 
 	/**
@@ -78,6 +88,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 */
 	private FrontieresStipLayer frontieres;
 	
+	private FlatGlobeCautra flatGlobe;
+	private Globe roundGlobe;
+	private String projection;
+	
 	/**
 	 * Liste des layers Mosaiques
 	 */
@@ -92,7 +106,18 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		this.db = db;
 		
 	//	this.toggleFrontieres(true);
-				
+		
+		
+		if (isFlatGlobe())
+		{
+			this.flatGlobe = (FlatGlobeCautra)this.getModel().getGlobe();
+			this.roundGlobe = new Earth();
+		}
+		else
+		{
+			this.flatGlobe = new EarthFlatCautra();
+			this.roundGlobe = this.getModel().getGlobe();
+		}
 		this.buildStip();	
 
 	}
@@ -111,8 +136,78 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	}
 	
 	/*--------------------------------------------------------------*/
+	/*----------------- Gestion des projections --------------------*/
+	/*--------------------------------------------------------------*/
+	
+	public void setProjection(String projection){
+		this.projection = projection;
+		if(flatGlobe != null) this.flatGlobe.setProjection(projection);
+		if(isFlatGlobe()) this.redraw();
+	}
+	
+    public boolean isFlatGlobe()
+    {
+        return this.getModel().getGlobe() instanceof FlatGlobeCautra;
+    }
+	
+    private String getProjection(){
+    	return projection;
+    }
+    
+    public void enableFlatGlobe(boolean flat)
+    {
+        if(isFlatGlobe() == flat)
+            return;
+
+        if(!flat)
+        {
+            // Switch to round globe
+            this.getModel().setGlobe(roundGlobe) ;
+            // Switch to orbit view and update with current position
+            FlatOrbitView flatOrbitView = (FlatOrbitView)this.getView();
+            BasicOrbitView orbitView = new BasicOrbitView();
+            orbitView.setCenterPosition(flatOrbitView.getCenterPosition());
+            orbitView.setZoom(flatOrbitView.getZoom( ));
+            orbitView.setHeading(flatOrbitView.getHeading());
+            orbitView.setPitch(flatOrbitView.getPitch());
+            this.setView(orbitView);
+            // Change sky layer
+            LayerList layers = this.getModel().getLayers();
+            for(int i = 0; i < layers.size(); i++)
+            {
+                if(layers.get(i) instanceof SkyColorLayer)
+                    layers.set(i, new SkyGradientLayer());
+            }
+        }
+        else
+        {
+            // Switch to flat globe
+            this.getModel().setGlobe(flatGlobe);
+            flatGlobe.setProjection(this.getProjection());
+            // Switch to flat view and update with current position
+            BasicOrbitView orbitView = (BasicOrbitView)this.getView();
+            FlatOrbitView flatOrbitView = new FlatOrbitView();
+            flatOrbitView.setCenterPosition(orbitView.getCenterPosition());
+            flatOrbitView.setZoom(orbitView.getZoom( ));
+            flatOrbitView.setHeading(orbitView.getHeading());
+            flatOrbitView.setPitch(orbitView.getPitch());
+            this.setView(flatOrbitView);
+            // Change sky layer
+            LayerList layers = this.getModel().getLayers();
+            for(int i = 0; i < layers.size(); i++)
+            {
+                if(layers.get(i) instanceof SkyGradientLayer)
+                    layers.set(i, new SkyColorLayer());
+            }
+        }
+        
+        this.redraw();
+    }
+    
+	/*--------------------------------------------------------------*/
 	/*----------------- Gestion des frontières ---------------------*/
 	/*--------------------------------------------------------------*/
+	@SuppressWarnings("unused")
 	private void toggleFrontieres(Boolean toggle){
 		if(toggle){
 			if(frontieres == null) frontieres = new FrontieresStipLayer();

@@ -20,22 +20,22 @@ package fr.crnan.videso3d.ihm;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Hashtable;
-import java.util.LinkedList;
 
-
-import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
@@ -46,26 +46,19 @@ import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import com.jidesoft.swing.JideSplitButton;
-
-import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.Point;
 import fr.crnan.videso3d.VidesoGLCanvas;
-import fr.crnan.videso3d.geom.LatLonCautra;
-import fr.crnan.videso3d.globes.EarthFlatCautra;
-import fr.crnan.videso3d.layers.MosaiqueLayer;
+import fr.crnan.videso3d.globes.FlatGlobeCautra;
 
 import gov.nasa.worldwind.BasicModel;
-import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.view.orbit.BasicOrbitView;
-import gov.nasa.worldwind.view.orbit.FlatOrbitView;
+import gov.nasa.worldwind.util.StatusBar;
 
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.3
  */
+@SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 
 	/**
@@ -158,26 +151,6 @@ public class MainWindow extends JFrame {
 				return null;
 			}
 		}.execute();
-		
-//		LinkedList<Couple<Integer, Integer>> liste = new LinkedList<Couple<Integer,Integer>>();
-//		for(int i = 1; i<=300;i++){
-//			liste.add(new Couple<Integer, Integer>(i, 0));
-//		}
-//		wwd.getModel().getLayers().add(new MosaiqueLayer(true, LatLonCautra.fromCautra(-287.4481, -223.4441), 22, 18, 32, MosaiqueLayer.BOTTOM_UP, MosaiqueLayer.LEFT_RIGHT, MosaiqueLayer.VERTICAL_FIRST, liste, false, null, null));
-		
-////		Cautra
-//		EarthFlatCautra globe = new EarthFlatCautra();
-//		globe.setProjection(EarthFlatCautra.PROJECTION_MERCATOR);
-//		wwd.getModel().setGlobe(globe);
-////         Switch to flat view and update with current position
-//        BasicOrbitView orbitView = (BasicOrbitView)wwd.getView();
-//        FlatOrbitView flatOrbitView = new FlatOrbitView();
-//        flatOrbitView.setCenterPosition(orbitView.getCenterPosition());
-//        flatOrbitView.setZoom(orbitView.getZoom( ));
-//        flatOrbitView.setHeading(orbitView.getHeading());
-//        flatOrbitView.setPitch(orbitView.getPitch());
-//        wwd.setView(flatOrbitView);
-
 	}
 	
 	/**
@@ -252,12 +225,8 @@ public class MainWindow extends JFrame {
 	 * @return Barre de status
 	 */
 	private JPanel createStatusBar(){
-		JPanel statusBar = new JPanel();
-		statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
-		
-		statusBar.add(new JLabel("Coord Cautra : "));
-		statusBar.add(new JLabel("Coord WGS84 :"));
-		
+		StatusBar statusBar = new StatusBar();
+		statusBar.setEventSource(wwd);
 		return statusBar;
 	}
 	
@@ -272,23 +241,82 @@ public class MainWindow extends JFrame {
 		alidad.setEnabled(false);
 		toolbar.add(alidad);
 
-		JideSplitButton toggle2D = new JideSplitButton("2D/3D");
-		toggle2D.setAlwaysDropdown(true);
+		DropDownToggleButton toggle2D = new DropDownToggleButton();
+		toggle2D.setText("2D/3D");
 		
-		JMenuItem globe = new JMenuItem("3D");
-		toggle2D.add(globe);
+		final ButtonGroup projections = new ButtonGroup();
 		
-		JMenuItem cautra = new JMenuItem("Cautra (exp.)");
-		toggle2D.add(cautra);
+		JRadioButtonMenuItem cautra = new JRadioButtonMenuItem("Cautra (exp.)");
+		cautra.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					wwd.setProjection(FlatGlobeCautra.PROJECTION_CAUTRA);
+				}
+			}
+		});
+		projections.add(cautra);
 		
-		JMenuItem mercator = new JMenuItem("Mercator");
-		toggle2D.add(mercator);
+		JRadioButtonMenuItem mercator = new JRadioButtonMenuItem("Mercator");
+		mercator.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					wwd.setProjection(FlatGlobeCautra.PROJECTION_MERCATOR);
+				}
+			}
+		});
+		mercator.setSelected(true);
+		projections.add(mercator);
 		
-		JMenuItem latlon = new JMenuItem("Lat-Lon");
-		toggle2D.add(latlon);
+		JRadioButtonMenuItem latlon = new JRadioButtonMenuItem("Lat-Lon");
+		latlon.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					wwd.setProjection(FlatGlobeCautra.PROJECTION_LAT_LON);
+				}
+			}
+		});
+		projections.add(latlon);
 		
-		toolbar.add(toggle2D);
+		JRadioButtonMenuItem sin = new JRadioButtonMenuItem("Sin.");
+		sin.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					wwd.setProjection(FlatGlobeCautra.PROJECTION_SINUSOIDAL);
+				}
+			}
+		});
+		projections.add(sin);
+		
+		JRadioButtonMenuItem modSin = new JRadioButtonMenuItem("Mod. Sin.");
+		modSin.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					wwd.setProjection(FlatGlobeCautra.PROJECTION_MODIFIED_SINUSOIDAL);
+				}
+			}
+		});
+		projections.add(modSin);
+		
+		toggle2D.getPopupMenu().add(cautra);
+		toggle2D.getPopupMenu().add(mercator);
+		toggle2D.getPopupMenu().add(latlon);
+		toggle2D.getPopupMenu().add(sin);
+		toggle2D.getPopupMenu().add(modSin);
 
+		toggle2D.addToToolBar(toolbar);
+
+		toggle2D.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				wwd.enableFlatGlobe(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+		
 		toolbar.addSeparator();
 		
 		JLabel label = new JLabel("Exagération verticale : ");

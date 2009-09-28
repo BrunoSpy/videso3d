@@ -1,24 +1,39 @@
 package fr.crnan.videso3d.ihm;
 
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
-
-public abstract class DropDownToggleButton extends JButton implements ChangeListener, PopupMenuListener, ActionListener, PropertyChangeListener{ 
+/**
+ * Toggle Button with Drop down menu.
+ * @author  santhosh kumar - santhosh@in.fiorano.com
+ * @author Bruno Spyckerelle
+ * @version 0.1
+ */
+public class DropDownToggleButton extends JToggleButton implements ChangeListener, PopupMenuListener, ActionListener, PropertyChangeListener{ 
 	
 	private final JToggleButton mainButton = this; 
-	private final JButton arrowButton = new JButton(new ImageIcon(getClass().getResource("dropdown.gif"))); 
+	private final JButton arrowButton = new JButton(new ImageIcon(getClass().getResource("/resources/arrow-down.png"))); 
 
+	private final JPopupMenu popupMenu = new JPopupMenu();
+	
 	private boolean popupVisible = false; 
 
 	public DropDownToggleButton(){ 
 		mainButton.getModel().addChangeListener(this); 
+		
 		arrowButton.getModel().addChangeListener(this); 
 		arrowButton.addActionListener(this); 
 		arrowButton.setMargin(new Insets(3, 0, 3, 0)); 
@@ -80,9 +95,11 @@ public abstract class DropDownToggleButton extends JButton implements ChangeList
 
 	/*------------------------------[ Other Methods ]---------------------------------------------------*/ 
 
-	protected abstract JPopupMenu getPopupMenu(); 
+	protected JPopupMenu getPopupMenu(){
+		return popupMenu;
+	}
 
-	public JButton addToToolBar(JToolBar toolbar){ 
+	public JToggleButton addToToolBar(JToolBar toolbar){ 
 		toolbar.add(mainButton); 
 		toolbar.add(arrowButton); 
 		return mainButton; 
