@@ -14,25 +14,14 @@
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package fr.crnan.videso3d.graphics;
+package fr.crnan.videso3d.layers;
 
 import java.awt.Color;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
-import java.util.Map.Entry;
-
-import gov.nasa.worldwind.avlist.AVList;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.SurfaceShapeLayer;
-import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
-import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfacePolygon;
-import gov.nasa.worldwind.util.RestorableSupport;
-import gov.nasa.worldwind.util.RestorableSupport.StateObject;
 /**
  * Layer contenant le contour de certains pays européens selon le définition des frotières fournie par SATIN
  * @author Bruno Spyckerelle
@@ -671,8 +660,6 @@ public class FrontieresStipLayer extends SurfaceShapeLayer {
 		SurfacePolygon france = new SurfacePolygon();
 		france.setLocations(makeLatLon(FRANCE));
 		france.getAttributes().setInteriorMaterial(new Material(Color.YELLOW));
-		
-		
 		this.addRenderable(france);
 	}
 	
