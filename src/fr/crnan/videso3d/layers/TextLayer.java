@@ -27,7 +27,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Layer support pour des objets de type {@link GeographicText}
  * @author Bruno Spyckerelle
- * @version 0.1 
+ * @version 0.1.1
  */
 public class TextLayer extends AbstractLayer {
 
@@ -38,7 +38,13 @@ public class TextLayer extends AbstractLayer {
 	public TextLayer() {
 		
 	}
-	
+	/**
+	 * @param string Nom du layer
+	 */
+	public TextLayer(String string) {
+		this.setName(string);
+	}
+
 	/**
 	 * Adds the specified <code>text</code> to this layer's internal collection.
 	 * @param text {@link GeographicText} to add

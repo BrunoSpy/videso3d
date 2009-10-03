@@ -18,11 +18,8 @@ package fr.crnan.videso3d.ihm;
 
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.InputMethodListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
@@ -61,6 +58,8 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 
 import gov.nasa.worldwind.BasicModel;
+import gov.nasa.worldwind.event.RenderingEvent;
+import gov.nasa.worldwind.event.RenderingListener;
 import gov.nasa.worldwind.util.StatusBar;
 
 /**
@@ -148,7 +147,7 @@ public class MainWindow extends JFrame {
 		wwd.setPreferredSize(new java.awt.Dimension(800, 600));
 
 		wwd.setModel(new BasicModel());
-		
+				
 		//initialisation des objets 3D en background
 		new SwingWorker<String, Integer>(){
 			@Override
