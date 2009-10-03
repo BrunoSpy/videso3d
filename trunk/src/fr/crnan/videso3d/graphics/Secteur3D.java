@@ -18,12 +18,14 @@ package fr.crnan.videso3d.graphics;
 
 import java.awt.Color;
 
+import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Polygon;
 /**
  * Représentation 3D d'un secteur de contrôle
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class Secteur3D extends Polygon {
 
@@ -31,6 +33,9 @@ public class Secteur3D extends Polygon {
 	 * Nom du secteur
 	 */
 	private String name;
+	
+	private GlobeAnnotation annotation;
+	
 	/**
 	 * Crée un secteur 3D
 	 * @param name Nom du secteur
@@ -41,6 +46,8 @@ public class Secteur3D extends Polygon {
 		this.setName(name);
 		this.setNiveaux(plancher, plafond);
 		this.setDefaultMaterial();
+		
+		this.annotation = new GlobeAnnotation("Secteur "+name+"\nPlancher : FL"+plancher+", plafond : FL"+plafond, Position.ZERO);
 	}
 
 	public void setNiveaux(Integer plancher, Integer plafond){
@@ -50,6 +57,11 @@ public class Secteur3D extends Polygon {
 	private void setName(String name) {
 		this.name = name;
 		this.setValue("description", "Secteur "+name);
+	}
+	
+	public GlobeAnnotation getAnnotation(Position pos){
+		annotation.setPosition(pos);
+		return annotation;
 	}
 	
 	/*---------- Pour tests -----------*/

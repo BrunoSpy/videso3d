@@ -45,16 +45,16 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.layers.AirspaceLayer;
+import gov.nasa.worldwind.layers.AnnotationLayer;
 import gov.nasa.worldwind.layers.LatLonGraticuleLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
+import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
-import gov.nasa.worldwind.render.airspaces.Airspace;
-import gov.nasa.worldwind.render.airspaces.PolyArc;
 import gov.nasa.worldwind.util.measure.MeasureTool;
 import gov.nasa.worldwind.util.measure.MeasureToolController;
 import gov.nasa.worldwind.view.orbit.BasicOrbitView;
@@ -90,8 +90,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Layer contenant les secteurs
 	 */
 	private AirspaceLayer secteursLayer = new AirspaceLayer();
-	
-	
+	/**
+	 * Layer contenant les annotations
+	 */
+	private AnnotationLayer annotationLayer;
 	/**
 	 * Layer pour les frontières
 	 */
@@ -120,6 +122,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public void initialize(DatabaseManager db){
 		this.db = db;
 		
+		this.addSelectListener(new AirspaceListener(this));
+		
 	//	this.toggleFrontieres(true);
 		
 		this.getModel().getLayers().add(new LatLonGraticuleLayer());
@@ -136,6 +140,14 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 		this.buildStip();	
 
+	}
+	
+	public AnnotationLayer getAnnotationLayer(){
+		if(annotationLayer == null){
+			annotationLayer = new AnnotationLayer();
+			this.getModel().getLayers().add(annotationLayer);
+		}
+		return annotationLayer;
 	}
 	
 	/**
