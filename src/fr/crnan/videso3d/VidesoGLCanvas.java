@@ -41,7 +41,9 @@ import fr.crnan.videso3d.layers.MosaiqueLayer;
 import fr.crnan.videso3d.layers.TextLayer;
 import fr.crnan.videso3d.stip.Secteur;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
+import gov.nasa.worldwind.examples.util.LayerManagerLayer;
 import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.layers.AirspaceLayer;
@@ -51,7 +53,6 @@ import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
-import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
@@ -79,12 +80,12 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Layers pour les balises publiées
 	 */
-	private TextLayer balisesPubTexts = new TextLayer();
+	private TextLayer balisesPubTexts = new TextLayer("Balises publiées");
 	private BaliseMarkerLayer balisesPubMarkers = new BaliseMarkerLayer();
 	/**
 	 * Layers pour les balises non publiées
 	 */
-	private TextLayer balisesNPTexts = new TextLayer();
+	private TextLayer balisesNPTexts = new TextLayer("Balises non publiées");
 	private BaliseMarkerLayer balisesNPMarkers = new BaliseMarkerLayer();
 	/**
 	 * Layer contenant les secteurs
@@ -126,6 +127,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		
 	//	this.toggleFrontieres(true);
 		
+		//on screen layer manager
+		LayerManagerLayer layerManager = new LayerManagerLayer(this);
+		layerManager.setEnabled(false); //réduit par défaut
+		this.getModel().getLayers().add(layerManager);
+		
 		this.getModel().getLayers().add(new LatLonGraticuleLayer());
 		
 		if (isFlatGlobe())
@@ -138,8 +144,12 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			this.flatGlobe = new EarthFlatCautra();
 			this.roundGlobe = this.getModel().getGlobe();
 		}
+		
 		this.buildStip();	
 
+		//position de départ centrée sur la France
+		this.getView().goTo(Position.fromDegrees(47, 0, 2500e3), 25e5);
+		
 	}
 	
 	public AnnotationLayer getAnnotationLayer(){
