@@ -19,21 +19,24 @@ package fr.crnan.videso3d.geom;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 /**
- * Ajout du support de la projection Cautra dans {@link LatLon}
+ * Ajout du support de la projection Cautra dans {@link LatLon}<br />
+ * La projection Cautra est une projection stéréographique polaire.<br />
+ * Les explications des formules sont dans le répertoire doc/import
  * @author Bruno Spyckerelle
- *
+ * @version 0.2
  */
 public class LatLonCautra extends LatLon {
 
 	public static final double WGS84_EQUATORIAL_RADIUS = 6378137.0; // ellipsoid equatorial getRadius, in meters
-    public static final double WGS84_POLAR_RADIUS = 6356752.3; // ellipsoid polar getRadius, in meters
+    public static final double WGS84_POLAR_RADIUS = 6356752.314; // ellipsoid polar getRadius, in meters
     public static final double WGS84_ES = 0.00669437999014; // eccentricity squared, semi-major axis
     public static final double WGS84_E = 0.081819190842622; //eccentricity	
     public static final double NM = 1852;//NM en m
 	
     private static final double L0 = 0.8169557248772987; //latitude conforme au point d'origine, en radians
     private static final double R0 = 6366757.037688594; //rayon de la sphère conforme au point d'origine, en mètres
-  //  private static final double yPole = 2721.66; //ordonnée du pole nord, en NM
+    private static final double y0 = -5040511.788585899; //ordonnée de P0 dans le plan tangent, en mètres
+    
 	/**
 	 * Abscisse Cautra
 	 */
@@ -86,28 +89,52 @@ public class LatLonCautra extends LatLon {
 	 * @param y Ordonnée cautra en NM
 	 * @return a new {@link LatLon}
 	 */
-//	public static LatLonCautra fromCautra(double x, double y){
-//		double latitude = centerCautra.getLatitude().radians+Math.atan((yPole-Math.sqrt(x*x+Math.pow(y - yPole, 2)))/(R0/NM));;
-//		double longitude = Math.atan(x/(yPole-y))*yPole/((R0/NM)*Math.cos(centerCautra.getLatitude().radians));
-//
-//		return LatLonCautra.fromDegrees(Math.toDegrees(latitude), Math.toDegrees(longitude));
-//	}
-	public static LatLonCautra fromCautra(double x, double y){
+	public static LatLonCautra fromCautra(double x, double y){		
+		double[] latlon = toStereo(x*NM, y*NM);
 		
-		double cosQB = (4*Math.pow(WGS84_EQUATORIAL_RADIUS/NM, 2))/(4*Math.pow(WGS84_EQUATORIAL_RADIUS/NM, 2) + Math.pow(x, 2)+ Math.pow(y, 2));
-		double sinQB = 1 -cosQB;
-		
-		double xa = x * cosQB;
-		double ya = (WGS84_EQUATORIAL_RADIUS/NM * Math.cos(centerCautra.getLatitude().radians) - y * Math.sin(centerCautra.getLatitude().radians))*cosQB - WGS84_EQUATORIAL_RADIUS/NM*sinQB*Math.cos(centerCautra.getLatitude().radians);
-		
-		double latitude = Math.atan(Math.sqrt( Math.pow(WGS84_EQUATORIAL_RADIUS/NM, 2)/(Math.pow(xa, 2)+Math.pow(ya, 2)) - 1));
-		
-		double longitude = Math.atan(xa/ya);
-		
-		return LatLonCautra.fromRadians(latitude, longitude);
+		return LatLonCautra.fromRadians(latlon[0], latlon[1]);
 	}
-	/*-----------------------------------------------------*/
 	
+	
+	/*-----------------------------------------------------*/
+	/*---------- Transformation inverse quasi-exacte ------*/
+	/*-----------------------------------------------------*/
+	/**
+	 * Projection inverse quasi-exacte
+	 * @param x abscisse cautra en mètres
+	 * @param y ordonnée cautra en mètres
+	 */
+	public static double[] toStereo(double x, double y){
+		double[] latlon = {0, 0};
+		
+		//changement de plan stéréo
+		double a = 4*Math.pow(R0, 2)-y0*y;
+		double b = y0*x;
+		double c = 4*Math.pow(R0, 2)*x;
+		double d = 4*Math.pow(R0, 2)*(y+y0);
+		double u = (a*c+b*d)/(Math.pow(a, 2)+Math.pow(b, 2));
+		double v = (a*d-b*c)/(Math.pow(a, 2)+Math.pow(b, 2));
+		
+		//latitude géodésique
+		double l = Math.PI/2-2*Math.atan(Math.sqrt(Math.pow(u, 2)+Math.pow(v, 2))/(2*R0));
+		latlon[0] = 2*Math.atan(Math.pow((1+WGS84_E*Math.sin(l))/(1-WGS84_E*Math.sin(l)), WGS84_E/2)*Math.tan(Math.PI/4+l/2))-Math.PI/2;
+		
+		//longitude géodésique
+		if(v < 0){
+			latlon[1] = -Math.atan(u/v);
+		} else if ( v >= 0 && u > 0) {
+			latlon[1] = Math.PI/2 + Math.atan(v/u);
+		} else if ( v >= 0 && u < 0) {
+			latlon[1] = -Math.PI/2 + Math.atan(v/u);
+		}
+		
+		return latlon;
+	}
+	
+	/*-----------------------------------------------------*/
+	/*----------- Projection stéréographique polaire ------*/
+	/*-----------------------------------------------------*/
+
 	/**
 	 * Latitude conforme en un point
 	 * @param latitude géodésique en radians

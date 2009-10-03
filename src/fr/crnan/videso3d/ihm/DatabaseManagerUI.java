@@ -52,6 +52,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.exsa.Exsa;
 import fr.crnan.videso3d.pays.Pays;
 import fr.crnan.videso3d.stip.Stip;
+import fr.crnan.videso3d.stpv.Stpv;
 
 /**
  * Interface de gestion des base de données
@@ -140,8 +141,8 @@ public class DatabaseManagerUI extends JFrame {
 			Stip stip = new Stip(file.getAbsolutePath(), this.db);
 			this.getDatas(stip, "Import des données STIP", "STIP");
 		} else if(files.contains(new File(file.getAbsolutePath()+"/LIEU"))) {//une méthode comme une autre pour vérifier que le dossier est une dossier de données STPV
-//			Stpv stpv = new Stpv(file.absolutePath(),this.db);
-//			this.getDatas(stpv, "Import des données STPV");
+			Stpv stpv = new Stpv(file.getAbsolutePath(),this.db);
+			this.getDatas(stpv, "Import des données STPV", "STPV");
 		} else if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))
 				|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))
 				|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) {
