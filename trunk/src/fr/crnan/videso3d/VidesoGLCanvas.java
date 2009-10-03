@@ -16,6 +16,8 @@
 
 package fr.crnan.videso3d;
 
+import java.awt.Component;
+import java.awt.Cursor;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -43,6 +45,7 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.layers.AirspaceLayer;
+import gov.nasa.worldwind.layers.LatLonGraticuleLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.layers.SkyColorLayer;
@@ -50,6 +53,10 @@ import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
+import gov.nasa.worldwind.render.airspaces.Airspace;
+import gov.nasa.worldwind.render.airspaces.PolyArc;
+import gov.nasa.worldwind.util.measure.MeasureTool;
+import gov.nasa.worldwind.util.measure.MeasureToolController;
 import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
@@ -83,14 +90,22 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Layer contenant les secteurs
 	 */
 	private AirspaceLayer secteursLayer = new AirspaceLayer();
+	
+	
 	/**
 	 * Layer pour les frontières
 	 */
 	private FrontieresStipLayer frontieres;
-	
+	/**
+	 * Projection 2D
+	 */
 	private FlatGlobeCautra flatGlobe;
 	private Globe roundGlobe;
 	private String projection;
+	/**
+	 * Outil de mesure (alidade)
+	 */
+	private MeasureTool measureTool;
 	
 	/**
 	 * Liste des layers Mosaiques
@@ -107,6 +122,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		
 	//	this.toggleFrontieres(true);
 		
+		this.getModel().getLayers().add(new LatLonGraticuleLayer());
 		
 		if (isFlatGlobe())
 		{
@@ -132,6 +148,30 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			if (layer != null) this.getModel().getLayers().add(layer);
 		} else {
 			if (layer != null) this.getModel().getLayers().remove(layer);
+		}
+	}
+	
+	/*--------------------------------------------------------------*/
+	/*---------------------- Outil de mesure -----------------------*/
+	/*--------------------------------------------------------------*/
+	public MeasureTool getMeasureTool(){
+		if(measureTool == null){
+			measureTool = new MeasureTool(this);
+			measureTool.setController(new MeasureToolController());
+			measureTool.setMeasureShape(MeasureTool.SHAPE_LINE);
+			measureTool.setFollowTerrain(true);
+			measureTool.setShowAnnotation(true);
+		}
+		return measureTool;
+	}
+	
+	public void switchMeasureTool(Boolean bool){
+		this.getMeasureTool().setArmed(bool);
+		//Changement du curseur
+		((Component) this).setCursor(!measureTool.isArmed() ? Cursor.getDefaultCursor()
+                : Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+		if(!bool){
+			this.getMeasureTool().clear();
 		}
 	}
 	
@@ -426,6 +466,13 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/*--------------------------------------------------------------*/
 	/*------------------ Gestion des mosaiques   -------------------*/
 	/*--------------------------------------------------------------*/
+
+	/**
+	 * Ajoute/enlève une mosaique
+	 * @param type Type de la mosaique
+	 * @param name Nom de la mosaique
+	 * @param toggle Affiche si vrai
+	 */
 	public void toggleMosaiqueLayer(String type, String name, Boolean toggle){
 		if(mosaiquesLayer.containsKey(type+name)){
 			MosaiqueLayer mos = mosaiquesLayer.get(type+name);
@@ -569,6 +616,21 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
+				} else if (type.equals("stpv")){
+					try {
+						Statement st = this.db.getCurrentStpv();
+						ResultSet rs = st.executeQuery("select * from mosaique where type ='"+name+"'");
+						origine = LatLonCautra.fromCautra(rs.getDouble("xcautra")-512, rs.getDouble("ycautra")-512);
+						System.out.println(origine);
+						width = rs.getInt("nombre");
+						height = rs.getInt("nombre");
+						size = rs.getInt("carre");
+						hSens = MosaiqueLayer.BOTTOM_UP;
+						vSens = MosaiqueLayer.LEFT_RIGHT;
+						numSens = MosaiqueLayer.HORIZONTAL_FIRST;
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 				}
 				MosaiqueLayer mLayer = new MosaiqueLayer(grille, origine, width, height, size, hSens, vSens, numSens, squares, numbers, attr);
 				mosaiquesLayer.put(type+name, mLayer);
@@ -588,5 +650,14 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			this.toggleLayer(mos.getTextLayer(), false);
 		}
 		mosaiquesLayer.clear();
+	}
+
+	
+	/**
+	 * Centre la vue et met en valeur un objet
+	 * @param text Nom de l'objet à afficher
+	 */
+	public void hightlight(String text) {
+		
 	}
 }
