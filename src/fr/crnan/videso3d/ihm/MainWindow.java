@@ -345,7 +345,7 @@ public class MainWindow extends JFrame {
 		curVe = curVe < MIN_VE ? MIN_VE : (curVe > MAX_VE ? MAX_VE : curVe);
 		final JSlider slider = new JSlider(MIN_VE, MAX_VE, curVe);
 		slider.setMajorTickSpacing(1);
-		slider.setPaintTicks(true);
+		slider.setPaintTicks(false);
 		slider.setSnapToTicks(true);
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
 		labelTable.put(1, new JLabel("1x"));

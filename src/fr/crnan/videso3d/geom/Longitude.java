@@ -14,7 +14,8 @@
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package fr.crnan.videso3d;
+package fr.crnan.videso3d.geom;
+
 
 /**
  * Représentation d'une longitude

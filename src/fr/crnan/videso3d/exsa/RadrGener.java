@@ -17,8 +17,8 @@ package fr.crnan.videso3d.exsa;
 
 import java.text.ParseException;
 
-import fr.crnan.videso3d.Latitude;
-import fr.crnan.videso3d.Longitude;
+import fr.crnan.videso3d.geom.Latitude;
+import fr.crnan.videso3d.geom.Longitude;
 
 /**
  * Ligne RADR_GENER
