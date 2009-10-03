@@ -146,7 +146,7 @@ public class Stpv extends FileParser{
 	 */
 	private void getName(){
 		try {
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path+"/RESULTAT")));
 			Boolean nameFound = false;
 			while (in.ready() || !nameFound){
 				String line = in.readLine();

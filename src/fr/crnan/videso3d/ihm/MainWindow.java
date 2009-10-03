@@ -18,15 +18,22 @@ package fr.crnan.videso3d.ihm;
 
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Hashtable;
+import java.util.LinkedList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
@@ -39,12 +46,15 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -84,10 +94,6 @@ public class MainWindow extends JFrame {
 	 * @param db
 	 */
 	public MainWindow(final DatabaseManager db){
-		
-//		System.out.println(LatLonCautra.fromCautra(-287.4481, -223.4441));
-//		System.out.println(LatLonCautra.fromDegrees(43.084444444444, -6.535).getCautra()[0] +" "+
-//				LatLonCautra.fromDegrees(43.084444444444, -6.535).getCautra()[1]);
 		
 		this.db = db;
 		//Style Nimbus
@@ -184,6 +190,9 @@ public class MainWindow extends JFrame {
 									dataExplorer.updateStrView();
 									//mise à jour de la vue 3D
 									wwd.removeMosaiques();
+								} else if(type.equals("STPV")){
+									dataExplorer.updateStpvView();
+									wwd.removeMosaiques();
 								}
 								return null;
 							}
@@ -237,10 +246,18 @@ public class MainWindow extends JFrame {
 	private JToolBar createToolBar(){
 		JToolBar toolbar = new JToolBar("Actions");
 		
-		JToggleButton alidad = new JToggleButton("Alidad");
-		alidad.setEnabled(false);
+		//Alidade
+		final JToggleButton alidad = new JToggleButton("Alidade");
+		alidad.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				wwd.switchMeasureTool(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+		
 		toolbar.add(alidad);
 
+		//Projections 
 		DropDownToggleButton toggle2D = new DropDownToggleButton();
 		toggle2D.setText("2D/3D");
 		
@@ -352,6 +369,35 @@ public class MainWindow extends JFrame {
 			}
 		});
 		toolbar.add(slider);		
+		
+		//recherche avec autocomplétion
+		toolbar.addSeparator();
+		toolbar.add(new JLabel("Recherche : "));
+		
+		JTextField search = new JTextField(10);
+		search.setToolTipText("Rechercher un élément Stip affiché");
+		LinkedList<String> results = new LinkedList<String>();
+		try {
+			Statement st = this.db.getCurrentStip();
+			ResultSet rs = st.executeQuery("select name from balises UNION select name from routes");
+			while(rs.next()){
+				results.add(rs.getString(1));
+			}
+			
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		AutoCompleteDecorator.decorate(search, results, true);
+		
+		search.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				wwd.hightlight(((JTextField)e.getSource()).getText());
+			}
+		});
+		
+		toolbar.add(search);
 		
 		return toolbar;
 	}

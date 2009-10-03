@@ -31,7 +31,7 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 /**
  * Panel de configuration des objets affichés sur le globe
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.3
  */
 public class DataExplorer extends JTabbedPane {
 	
@@ -59,7 +59,7 @@ public class DataExplorer extends JTabbedPane {
 				
 		this.addTab("Stip", new StipView(wwd, db));
 		this.addTab("STR", new StrView(wwd, db));
-		this.addTab("Stpv", new JScrollPane());
+		this.addTab("Stpv", new StpvView(wwd, db));
 		this.addTab("Edimap", new JScrollPane());
 		this.addTab("ODS", new JScrollPane());
 		this.addTab("AIP", new JScrollPane());
@@ -86,6 +86,17 @@ public class DataExplorer extends JTabbedPane {
 		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Stip
 		this.removeTabAt(1);
 		this.insertTab("Str", null, new StrView(wwd, db), "Sélecteur de données Str", 1);
+		this.setSelectedIndex(select);
+	}
+	
+	/**
+	 * Met à jour le tab STPV
+	 */
+	public void updateStpvView() {
+		int select = this.getSelectedIndex();
+		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Stip
+		this.removeTabAt(2);
+		this.insertTab("Stpv", null, new StpvView(wwd, db), "Sélecteur de données Stpv", 2);
 		this.setSelectedIndex(select);
 	}
 }

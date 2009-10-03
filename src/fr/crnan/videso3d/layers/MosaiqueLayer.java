@@ -133,13 +133,23 @@ public class MosaiqueLayer {
 		if(numbers){
 			for(Integer i = 1; i <= width*height; i++){
 				if(i == 1 || i%10 == 0){
-					int colonne = i / height ;
-					int ligne = i % height -1;	
-					if(ligne == -1){
-						ligne = height -1;
-						colonne--;
+					int colonne = 0;
+					int ligne = 0;
+					if(numSens == VERTICAL_FIRST) {
+						colonne = i / height ;
+						ligne = i % height -1;	
+						if(ligne == -1){
+							ligne = height -1;
+							colonne--;
+						}
+					} else {
+						colonne = i % width -1 ;
+						ligne = i / width;	
+						if(colonne == -1){
+							colonne = width -1;
+							ligne--;
+						}
 					}
-					
 					LatLonCautra latLon = LatLonCautra.fromCautra(origine.getCautra()[0] + (colonne * size + size/2)* hsens, origine.getCautra()[1] + (ligne * size +size/2) * vsens);
 					UserFacingText text = new UserFacingText(i.toString(), new Position(latLon, 0));
 					textLayer.addGeographicText(text);
