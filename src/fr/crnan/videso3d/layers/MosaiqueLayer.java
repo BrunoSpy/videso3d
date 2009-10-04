@@ -66,7 +66,7 @@ public class MosaiqueLayer {
 	
 	
 	private SurfaceShapeLayer shapeLayer = new SurfaceShapeLayer();
-	private TextLayer textLayer = new TextLayer();
+	private TextLayer textLayer = new TextLayer("Numéros des mosaïques");
 	
 	/**
 	 * Création d'une mosaïque</br>
