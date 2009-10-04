@@ -378,7 +378,7 @@ public class MainWindow extends JFrame {
 		LinkedList<String> results = new LinkedList<String>();
 		try {
 			Statement st = this.db.getCurrentStip();
-			ResultSet rs = st.executeQuery("select name from balises UNION select name from routes");
+			ResultSet rs = st.executeQuery("select name from balises UNION select name from routes UNION select nom from secteurs");
 			while(rs.next()){
 				results.add(rs.getString(1));
 			}
@@ -386,7 +386,7 @@ public class MainWindow extends JFrame {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		AutoCompleteDecorator.decorate(search, results, true);
+		AutoCompleteDecorator.decorate(search, results, false);
 		
 		search.addActionListener(new ActionListener() {
 			

@@ -25,7 +25,7 @@ import gov.nasa.worldwind.render.airspaces.Polygon;
 /**
  * Représentation 3D d'un secteur de contrôle
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class Secteur3D extends Polygon {
 
@@ -57,6 +57,10 @@ public class Secteur3D extends Polygon {
 	private void setName(String name) {
 		this.name = name;
 		this.setValue("description", "Secteur "+name);
+	}
+	
+	public String getName(){
+		return this.name;
 	}
 	
 	public GlobeAnnotation getAnnotation(Position pos){

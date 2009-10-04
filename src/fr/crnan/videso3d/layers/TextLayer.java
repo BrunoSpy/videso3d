@@ -27,7 +27,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Layer support pour des objets de type {@link GeographicText}
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class TextLayer extends AbstractLayer {
 
@@ -35,9 +35,6 @@ public class TextLayer extends AbstractLayer {
 	private GeographicTextRenderer textRenderer = new GeographicTextRenderer();
 	
 	
-	public TextLayer() {
-		
-	}
 	/**
 	 * @param string Nom du layer
 	 */
@@ -80,6 +77,10 @@ public class TextLayer extends AbstractLayer {
 		this.geographicTexts.remove(text);
 	}
 	
+	public void removeAllGeographicTexts() {
+		this.geographicTexts.clear();
+	}
+	
 	public Iterable<GeographicText> getActiveGeographicTexts(){
 		return this.geographicTexts;
 	}
@@ -89,5 +90,7 @@ public class TextLayer extends AbstractLayer {
 	protected void doRender(DrawContext dc) {
 		this.textRenderer.render(dc, getActiveGeographicTexts());
 	}
+
+	
 
 }

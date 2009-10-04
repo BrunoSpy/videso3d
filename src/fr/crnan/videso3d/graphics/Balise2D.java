@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.graphics;
 
+import java.awt.Color;
 import java.awt.Font;
 
 import fr.crnan.videso3d.layers.BaliseMarkerLayer;
@@ -23,6 +24,7 @@ import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 
+import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.UserFacingText;
 import gov.nasa.worldwind.render.markers.BasicMarker;
 import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
@@ -31,27 +33,24 @@ import gov.nasa.worldwind.render.markers.Marker;
 /**
  * Balise 2D projetée sur le terrain
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
-public class Balise2D {
-
-	/**
-	 * Nom de la balise
-	 */
-	private UserFacingText name;
+public class Balise2D extends UserFacingText {
 	
 	/**
 	 * Cercle centré sur la position de la balise
 	 */
 	private Marker marker;
+	
+	
 	/**
 	 * Crée une balise 2D
 	 * @param name Nom de la balise
 	 * @param position {@link LatLon} Position de la balise
 	 */
-	public Balise2D(String name, LatLon position){
-		this.name = new UserFacingText(name, new Position(position, 100.0));
-		this.name.setFont(new Font("Sans Serif", Font.PLAIN, 9));
+	public Balise2D(CharSequence name, Position position){
+		super(name, position);
+		this.setFont(new Font("Sans Serif", Font.PLAIN, 9));
 		
 		BasicMarkerAttributes attrs = new BasicMarkerAttributes();
 		attrs.setMarkerPixels(2);
@@ -66,7 +65,21 @@ public class Balise2D {
 	 */
 	public void addToLayer(BaliseMarkerLayer layer, TextLayer textLayer){
 		layer.addMarker(marker);
-		textLayer.addGeographicText(name);
+		textLayer.addGeographicText(this);
 		
 	}
+	/**
+	 * Met en valeur la balise
+	 * @param bool
+	 */
+	public void highlight(Boolean bool){
+		if(bool) {
+			this.marker.getAttributes().setMaterial(Material.YELLOW);
+			this.setColor(Color.YELLOW);
+		} else {
+			this.marker.getAttributes().setMaterial(Material.WHITE);
+			this.setColor(Color.WHITE);
+		}
+	}
+	
 }
