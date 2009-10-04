@@ -56,6 +56,9 @@ import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
+import gov.nasa.worldwind.render.airspaces.Airspace;
+import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
+import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.util.measure.MeasureTool;
 import gov.nasa.worldwind.util.measure.MeasureToolController;
 import gov.nasa.worldwind.view.orbit.BasicOrbitView;
@@ -91,6 +94,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Layer contenant les secteurs
 	 */
 	private AirspaceLayer secteursLayer = new AirspaceLayer();
+	{secteursLayer.setName("Secteurs");}
 	/**
 	 * Layer contenant les annotations
 	 */
@@ -109,11 +113,20 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Outil de mesure (alidade)
 	 */
 	private MeasureTool measureTool;
-	
 	/**
 	 * Liste des layers Mosaiques
 	 */
 	private HashMap<String, MosaiqueLayer> mosaiquesLayer = new HashMap<String, MosaiqueLayer>();
+	/**
+	 * Liste des objets affichés
+	 */
+	private HashMap<String, Airspace> airspaces = new HashMap<String, Airspace>();
+	private HashMap<String, Balise2D> balises = new HashMap<String, Balise2D>();
+	private Object highlight;
+	private Object lastAttrs;
+	private Layer lastLayer;
+	private AirspaceLayer selectedAirspaces = new AirspaceLayer();
+	
 	
 	private DatabaseManager db;
 	
@@ -127,12 +140,24 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		
 	//	this.toggleFrontieres(true);
 		
+
+		//Latitudes et longitudes
+		Layer latlon = new LatLonGraticuleLayer();
+		latlon.setEnabled(false);
+		this.getModel().getLayers().add(latlon);
+				
 		//on screen layer manager
 		LayerManagerLayer layerManager = new LayerManagerLayer(this);
 		layerManager.setEnabled(false); //réduit par défaut
 		this.getModel().getLayers().add(layerManager);
 		
-		this.getModel().getLayers().add(new LatLonGraticuleLayer());
+		//layer d'accueil des objets séléctionnés
+		this.getModel().getLayers().add(selectedAirspaces);
+		
+		this.toggleLayer(balisesNPMarkers, false);
+		this.toggleLayer(balisesNPTexts, false);
+		this.toggleLayer(balisesPubMarkers, false);
+		this.toggleLayer(balisesPubTexts, false);
 		
 		if (isFlatGlobe())
 		{
@@ -146,7 +171,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 		
 		this.buildStip();	
-
+		
 		//position de départ centrée sur la France
 		this.getView().goTo(Position.fromDegrees(47, 0, 2500e3), 25e5);
 		
@@ -161,21 +186,24 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	}
 	
 	/**
-	 * Affiche ou non un Layer
+	 * Affiche ou non un Layer<br />
+	 * Ajouter le {@link Layer} aux layers du modèle si il n'en fait pas partie
 	 * @param layer {@link Layer} à afficher/enlever
 	 * @param state {@link Boolean}
 	 */
 	public void toggleLayer(Layer layer, Boolean state){
-		if(state){
-			if (layer != null) this.getModel().getLayers().add(layer);
-		} else {
-			if (layer != null) this.getModel().getLayers().remove(layer);
+		if (layer != null) {
+			if(!this.getModel().getLayers().contains(layer)){
+				this.getModel().getLayers().add(layer);
+			}
+			layer.setEnabled(state);
 		}
 	}
 	
 	/*--------------------------------------------------------------*/
 	/*---------------------- Outil de mesure -----------------------*/
 	/*--------------------------------------------------------------*/
+	
 	public MeasureTool getMeasureTool(){
 		if(measureTool == null){
 			measureTool = new MeasureTool(this);
@@ -212,10 +240,16 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
         return this.getModel().getGlobe() instanceof FlatGlobeCautra;
     }
 	
-    private String getProjection(){
+    public String getProjection(){
     	return projection;
     }
-    
+    /**
+     * Active la vue 2D
+     * @param flat
+     */
+    /**
+     * @param flat
+     */
     public void enableFlatGlobe(boolean flat)
     {
         if(isFlatGlobe() == flat)
@@ -285,23 +319,25 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/*----------------- Gestion des balises STIP -------------------*/
 	/*--------------------------------------------------------------*/
 	private void buildBalises(DatabaseManager db, int publicated){
-	
 		try {
 			Statement st = db.getCurrentStip();
 			ResultSet rs = st.executeQuery("select * from balises where publicated = " + publicated);
 			while(rs.next()){
-				Balise2D balise = new Balise2D(rs.getString("name"), LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
+				Balise2D balise = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0));
 				if(publicated == 1){
 					balise.addToLayer(balisesPubMarkers, balisesPubTexts);
 				} else {
 					balise.addToLayer(balisesNPMarkers, balisesNPTexts);
 				}
+				//lien nominal
+				this.balises.put(rs.getString("name"), balise);
 			}
 			
 			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 	}
 	
 	public Layer getBalisesPubMarkers(){
@@ -322,6 +358,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/*--------------------------------------------------------------*/
 	
 	private HashMap<String, Secteur3D> secteurs = new HashMap<String, Secteur3D>();
+	/**
+	 * Ajoute tous les {@link Secteur3D} formant le secteur <code>name</code>
+	 * @param name Nom du secteur à ajouter
+	 */
 	public void addSecteur3D(String name){
 		try {
 			Statement st = this.db.getCurrentStip();
@@ -340,7 +380,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * Enlève tous les {@link Secteur3D} formant le secteur <code>name</code>
+	 * @param name Nom du secteur à supprimer
+	 */
 	public void removeSecteur3D(String name){
 		Integer i = 0;
 		while(secteurs.containsKey(name+i.toString())){
@@ -349,6 +392,18 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			i++;
 		}
 		
+	}
+	/**
+	 * Change les attributs de tous les {@link Secteur3D} formant le secteur <code>name</code>
+	 * @param name Nom du secteur à modifier
+	 * @param attrs Attributs
+	 */
+	public void setAttributesToSecteur(String name, AirspaceAttributes attrs){
+		Integer i = 0;
+		while(secteurs.containsKey(name+i.toString())){
+			secteurs.get(name+i.toString()).setAttributes(attrs);
+			i++;
+		}
 	}
 	
 	public void addToSecteursLayer(Secteur3D secteur){
@@ -388,6 +443,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				route.setName(name);
 				if(type.equals("F")) this.addToRoutesAwy(route);
 				if(type.equals("U")) this.addToRoutesPDR(route);
+				//lien nominal
+				this.airspaces.put(name, route);
 			}
 			st.close();
 		} catch (SQLException e) {
@@ -440,26 +497,43 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		//Suppression des objets3D
 		if(routesAwy != null) {
 			routesAwy.removeAllAirspaces();
-			this.getModel().getLayers().remove(routesAwy); 
 		} else {
 			routesAwy = new AirspaceLayer();
+			routesAwy.setName("AWY");
+			routesAwy.setEnabled(false);
 		}
 		if(routesPDR != null) {
 			routesPDR.removeAllAirspaces();
 			this.getModel().getLayers().remove(routesPDR);
 		} else {
 			routesPDR = new AirspaceLayer();
+			routesPDR.setName("PDR");
+			routesPDR.setEnabled(false);
 		}
-		if(balisesPubTexts != null) this.getModel().getLayers().remove(balisesPubTexts);
-		balisesPubTexts = new TextLayer();
-		if(balisesPubMarkers != null) this.getModel().getLayers().remove(balisesPubMarkers);
-		balisesPubMarkers = new BaliseMarkerLayer();
-		if(balisesNPTexts != null) this.getModel().getLayers().remove(balisesNPTexts);
-		balisesNPTexts = new TextLayer();
-		if(balisesNPMarkers != null) this.getModel().getLayers().remove(balisesNPMarkers);
-		balisesNPMarkers = new BaliseMarkerLayer();
-		if(secteursLayer != null) this.getModel().getLayers().remove(secteursLayer);
-		secteursLayer = new AirspaceLayer();		
+		if(balisesPubTexts != null) {
+			this.toggleLayer(balisesPubTexts, false);
+			balisesPubTexts.removeAllGeographicTexts();
+		}
+		if(balisesPubMarkers != null) {
+			this.toggleLayer(balisesPubMarkers, false);
+			balisesPubMarkers = new BaliseMarkerLayer();
+		}
+		if(balisesNPTexts != null) {
+			this.toggleLayer(balisesNPTexts, false);
+			balisesNPTexts.removeAllGeographicTexts();
+		}
+		if(balisesNPMarkers != null) {
+			this.toggleLayer(balisesNPMarkers, false);
+			balisesNPMarkers = new BaliseMarkerLayer();
+		}
+		if(secteursLayer != null) {
+			secteursLayer.removeAllAirspaces();
+			this.toggleLayer(secteursLayer, true);
+		} else {
+			secteursLayer = new AirspaceLayer();
+			secteursLayer.setName("Secteurs");
+			this.toggleLayer(secteursLayer, true);
+		}
 		try {
 			if(this.db.getCurrentStip() != null) {
 				progress.setNote("Création des balises publiées");
@@ -476,7 +550,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				progress.setProgress(4);
 				this.buildRoutes(db, "U");
 				progress.setProgress(5);
-				this.getModel().getLayers().add(secteursLayer);
+				this.toggleLayer(secteursLayer, true);
 				this.secteurs = new HashMap<String, Secteur3D>();				
 			}
 		} catch (SQLException e) {
@@ -643,7 +717,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 						Statement st = this.db.getCurrentStpv();
 						ResultSet rs = st.executeQuery("select * from mosaique where type ='"+name+"'");
 						origine = LatLonCautra.fromCautra(rs.getDouble("xcautra")-512, rs.getDouble("ycautra")-512);
-						System.out.println(origine);
 						width = rs.getInt("nombre");
 						height = rs.getInt("nombre");
 						size = rs.getInt("carre");
@@ -680,6 +753,100 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * @param text Nom de l'objet à afficher
 	 */
 	public void hightlight(String text) {
-		
+		if(text == null){
+			if(highlight != null) {
+				if((highlight instanceof Route3D) && lastAttrs != null){
+					((Airspace)highlight).setAttributes((AirspaceAttributes) lastAttrs);
+					selectedAirspaces.removeAllAirspaces();
+				} else if (highlight instanceof String){ //cas des secteurs
+					this.setAttributesToSecteur(text, (AirspaceAttributes) lastAttrs);
+					this.removeSecteur3D(text);
+				} else if(highlight instanceof Balise2D){
+					((Balise2D) highlight).highlight(false);
+					if(lastLayer != null) this.toggleLayer(lastLayer, false);
+					lastLayer = null;
+				}
+				lastAttrs = null;
+				highlight = null;
+			}
+		} else {
+			try {
+				Statement st = this.db.getCurrentStip();
+				//on recherche le type
+				ResultSet rs = st.executeQuery("select * from routes where routes.name = '"+text+"'");
+				if(rs.next()){
+					Route3D airspace = (Route3D) airspaces.get(text);
+					this.unHighlightPrevious(airspace);
+					lastAttrs = airspace.getAttributes();
+					AirspaceAttributes attrs = new BasicAirspaceAttributes((AirspaceAttributes) lastAttrs);
+					attrs.setMaterial(Material.YELLOW);
+					attrs.setOutlineMaterial(Material.YELLOW);
+					attrs.setOutlineWidth(2.0);
+					airspace.setAttributes(attrs);
+					highlight = airspace;
+					if((rs.getString("espace").equals("F") && !routesAwy.isEnabled()) || 
+							(rs.getString("espace").equals("U") && !routesPDR.isEnabled() )) {
+						selectedAirspaces.addAirspace((Airspace) highlight);
+					} 
+					this.getView().goTo(airspace.getReferencePosition(), 1e6);
+					return;
+				}
+				rs = st.executeQuery("select * from secteurs where nom = '"+text+"'");
+				if(rs.next()){
+					if(!secteurs.containsKey(text+0)){
+						this.addSecteur3D(text);
+					}
+					this.unHighlightPrevious(text);
+					Secteur3D airspace = secteurs.get(text+0);
+					lastAttrs = airspace.getAttributes();
+					AirspaceAttributes attrs = new BasicAirspaceAttributes((AirspaceAttributes) lastAttrs);
+					attrs.setOutlineMaterial(Material.YELLOW);
+					this.setAttributesToSecteur(text, attrs);
+					highlight = text;
+					this.getView().goTo(airspace.getReferencePosition(), 1e6);
+					return;
+				}
+				rs = st.executeQuery("select * from balises where name = '"+text+"'");
+				if(rs.next()){
+					Balise2D airspace = (Balise2D) balises.get(text);
+					airspace.highlight(true);
+					this.unHighlightPrevious(airspace);
+					highlight = airspace;
+					if (rs.getInt("publicated") == 1 && !balisesPubTexts.isEnabled()) {
+						lastLayer = balisesPubTexts;
+						this.toggleLayer(balisesPubTexts, true);
+					}
+					if (rs.getInt("publicated") == 0 && !balisesNPTexts.isEnabled() ) {
+						lastLayer = balisesNPTexts;
+						this.toggleLayer(balisesNPTexts, true);
+					} 
+					this.getView().goTo(airspace.getPosition(), 5e5);
+					return;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void unHighlightPrevious(Object previous){
+		if(highlight != null){
+			if(highlight == previous) {
+				return;
+			} else if (highlight instanceof Route3D){
+				((Route3D)highlight).setAttributes((AirspaceAttributes) lastAttrs);
+				highlight = null;
+				selectedAirspaces.removeAllAirspaces();
+			} else if(highlight instanceof String){
+				this.setAttributesToSecteur((String) highlight, (AirspaceAttributes) lastAttrs);
+				this.removeSecteur3D((String) highlight);
+				highlight = null;
+			} else if(highlight instanceof Balise2D){
+				((Balise2D)highlight).highlight(false);
+				if(lastLayer != null) this.toggleLayer(lastLayer, false);
+				highlight = null;
+				lastLayer = null;
+			}
+		}
 	}
 }
