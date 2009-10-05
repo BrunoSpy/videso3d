@@ -26,11 +26,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
@@ -50,8 +53,10 @@ import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.xml.sax.SAXException;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -59,6 +64,13 @@ import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
+import gov.nasa.worldwind.formats.gpx.GpxReader;
+import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.layers.AirspaceLayer;
+import gov.nasa.worldwind.render.airspaces.Route;
+import gov.nasa.worldwind.tracks.Track;
+import gov.nasa.worldwind.tracks.TrackPoint;
+import gov.nasa.worldwind.tracks.TrackSegment;
 
 /**
  * Fenêtre principale
@@ -134,6 +146,41 @@ public class MainWindow extends JFrame {
 				db.closeAll();
 			}
 		});
+		
+		//Test fichier .gpx
+//		AirspaceLayer trxkLayer = new AirspaceLayer();
+//		wwd.getModel().getLayers().add(trxkLayer);
+//		try {
+//			GpxReader gpxReader = new GpxReader();
+//			gpxReader.readFile("/home/datas/Projets/Videso3D/datas/elvira.gpx");
+//			Iterator<Track> iterator = gpxReader.getTracks().iterator();
+//			while(iterator.hasNext()){
+//				Track track = iterator.next();
+//				Route route = new Route();
+//				Iterator<TrackSegment> segments = track.getSegments().iterator();
+//				while(segments.hasNext()){
+//					Iterator<TrackPoint> points = segments.next().getPoints().iterator();
+//					TrackPoint start = null; 
+//					while(points.hasNext()){
+//						TrackPoint point = points.next();
+//						if(start != null) {
+//							route.addLeg(LatLon.fromDegrees(start.getLatitude(), start.getLongitude()),
+//									LatLon.fromDegrees(point.getLatitude(), point.getLongitude()),
+//									point.getElevation()-500, point.getElevation()+500,
+//									10, 10);
+//						}
+//						start = point;
+//					}
+//				}
+//				trxkLayer.addAirspace(route);
+//			}
+//		} catch (ParserConfigurationException e1) {
+//			e1.printStackTrace();
+//		} catch (SAXException e1) {
+//			e1.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		
 	}
 	
