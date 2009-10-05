@@ -40,6 +40,7 @@ import fr.crnan.videso3d.layers.BaliseMarkerLayer;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
 import fr.crnan.videso3d.layers.TextLayer;
 import fr.crnan.videso3d.stip.Secteur;
+import fr.crnan.videso3d.util.measure.VidesoMeasureTool;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.examples.util.LayerManagerLayer;
 import gov.nasa.worldwind.geom.LatLon;
@@ -112,7 +113,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Outil de mesure (alidade)
 	 */
-	private MeasureTool measureTool;
+	private VidesoMeasureTool measureTool;
 	/**
 	 * Liste des layers Mosaiques
 	 */
@@ -206,7 +207,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	
 	public MeasureTool getMeasureTool(){
 		if(measureTool == null){
-			measureTool = new MeasureTool(this);
+			measureTool = new VidesoMeasureTool(this);
 			measureTool.setController(new MeasureToolController());
 			measureTool.setMeasureShape(MeasureTool.SHAPE_LINE);
 			measureTool.setFollowTerrain(true);
