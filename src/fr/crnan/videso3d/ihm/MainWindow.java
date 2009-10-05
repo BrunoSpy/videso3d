@@ -56,11 +56,9 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
+import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
-import gov.nasa.worldwind.event.RenderingEvent;
-import gov.nasa.worldwind.event.RenderingListener;
-import gov.nasa.worldwind.util.StatusBar;
 
 /**
  * Fenêtre principale
@@ -233,7 +231,7 @@ public class MainWindow extends JFrame {
 	 * @return Barre de status
 	 */
 	private JPanel createStatusBar(){
-		StatusBar statusBar = new StatusBar();
+		VidesoStatusBar statusBar = new VidesoStatusBar();
 		statusBar.setEventSource(wwd);
 		return statusBar;
 	}
