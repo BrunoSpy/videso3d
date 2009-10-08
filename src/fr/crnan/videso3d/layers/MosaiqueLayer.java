@@ -98,6 +98,7 @@ public class MosaiqueLayer {
 		int vsens = vSens == TOP_DOWN ? -1 : 1;
 		textLayer.setMaxActiveAltitude(20e5);
 		
+		shapeLayer.setPickEnabled(false);
 		
 		if(grille){
 			//affichage des lignes
