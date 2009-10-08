@@ -148,39 +148,39 @@ public class MainWindow extends JFrame {
 		});
 		
 		//Test fichier .gpx
-//		AirspaceLayer trxkLayer = new AirspaceLayer();
-//		wwd.getModel().getLayers().add(trxkLayer);
-//		try {
-//			GpxReader gpxReader = new GpxReader();
-//			gpxReader.readFile("/home/datas/Projets/Videso3D/datas/elvira.gpx");
-//			Iterator<Track> iterator = gpxReader.getTracks().iterator();
-//			while(iterator.hasNext()){
-//				Track track = iterator.next();
-//				Route route = new Route();
-//				Iterator<TrackSegment> segments = track.getSegments().iterator();
-//				while(segments.hasNext()){
-//					Iterator<TrackPoint> points = segments.next().getPoints().iterator();
-//					TrackPoint start = null; 
-//					while(points.hasNext()){
-//						TrackPoint point = points.next();
-//						if(start != null) {
-//							route.addLeg(LatLon.fromDegrees(start.getLatitude(), start.getLongitude()),
-//									LatLon.fromDegrees(point.getLatitude(), point.getLongitude()),
-//									point.getElevation()-500, point.getElevation()+500,
-//									10, 10);
-//						}
-//						start = point;
-//					}
-//				}
-//				trxkLayer.addAirspace(route);
-//			}
-//		} catch (ParserConfigurationException e1) {
-//			e1.printStackTrace();
-//		} catch (SAXException e1) {
-//			e1.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		AirspaceLayer trxkLayer = new AirspaceLayer();
+		wwd.getModel().getLayers().add(trxkLayer);
+		try {
+			GpxReader gpxReader = new GpxReader();
+			gpxReader.readFile("/home/datas/Projets/Videso3D/datas/elvira.gpx");
+			Iterator<Track> iterator = gpxReader.getTracks().iterator();
+			while(iterator.hasNext()){
+				Track track = iterator.next();
+				Route route = new Route();
+				Iterator<TrackSegment> segments = track.getSegments().iterator();
+				while(segments.hasNext()){
+					Iterator<TrackPoint> points = segments.next().getPoints().iterator();
+					TrackPoint start = null; 
+					while(points.hasNext()){
+						TrackPoint point = points.next();
+						if(start != null) {
+							route.addLeg(LatLon.fromDegrees(start.getLatitude(), start.getLongitude()),
+									LatLon.fromDegrees(point.getLatitude(), point.getLongitude()),
+									point.getElevation()-500, point.getElevation()+500,
+									10, 10);
+						}
+						start = point;
+					}
+				}
+				trxkLayer.addAirspace(route);
+			}
+		} catch (ParserConfigurationException e1) {
+			e1.printStackTrace();
+		} catch (SAXException e1) {
+			e1.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	

@@ -304,21 +304,20 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/*--------------------------------------------------------------*/
 	/*----------------- Gestion des frontières ---------------------*/
 	/*--------------------------------------------------------------*/
-	@SuppressWarnings("unused")
-	private void toggleFrontieres(Boolean toggle){
-		if(toggle){
+	public void toggleFrontieres(Boolean toggle){
 			if(frontieres == null) frontieres = new FrontieresStipLayer();
-			this.getModel().getLayers().add(frontieres);
-			this.redraw();
-		} else {
-			this.getModel().getLayers().remove(frontieres);
-			this.redraw();
-		}
+			this.toggleLayer(frontieres, toggle);		
 	}
 	
 	/*--------------------------------------------------------------*/
 	/*----------------- Gestion des balises STIP -------------------*/
 	/*--------------------------------------------------------------*/
+	
+	/**
+	 * Construit les balises Stip
+	 * @param db Lien vers le gestionnaire de base de données
+	 * @param publicated Balises publéies ou non
+	 */
 	private void buildBalises(DatabaseManager db, int publicated){
 		try {
 			Statement st = db.getCurrentStip();
