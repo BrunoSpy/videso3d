@@ -29,6 +29,9 @@ import gov.nasa.worldwind.globes.FlatGlobe;
  */
 public class FlatGlobeCautra extends FlatGlobe {
 
+	/**
+	 * Projection CAUTRA : stéréographique polaire
+	 */
     public final static String PROJECTION_CAUTRA = "gov.nasa.worldwind.globes.projectionCautra";
 
     /**
@@ -41,6 +44,13 @@ public class FlatGlobeCautra extends FlatGlobe {
 	 */
 	private static final double y0 = -5040511.788585899; 
 	
+	/**
+	 * Globe projeté. Projection Cautra par défaut.
+	 * @param equatorialRadius equatorial radius, in meters
+	 * @param polarRadius polar radius, in meters
+	 * @param es eccentricity squared
+	 * @param em {@link ElevationModel}
+	 */
 	public FlatGlobeCautra(double equatorialRadius, double polarRadius,
 			double es, ElevationModel em) {
 		super(equatorialRadius, polarRadius, es, em);

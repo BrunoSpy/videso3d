@@ -17,13 +17,12 @@
 package fr.crnan.videso3d.ihm;
 
 
-import java.awt.Color;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 
-import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.border.TitledBorder;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -31,13 +30,16 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 /**
  * Panel de configuration des objets affichés sur le globe
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.4
  */
-public class DataExplorer extends JTabbedPane {
+public class DataExplorer extends JPanel {
 	
 	private DatabaseManager db; 
 	
 	private VidesoGLCanvas wwd;
+	
+	private JTabbedPane tabs = new JTabbedPane();
+	
 	/**
 	 * Constructeur
 	 * @param db {@link DatabaseManager} Association avec la gestionnaire de db
@@ -48,55 +50,59 @@ public class DataExplorer extends JTabbedPane {
 		this.db = db; 
 		this.wwd = wwd;
 		
-		//les tabs au dessus
-		this.setTabPlacement(JTabbedPane.TOP);
+		setLayout(new BorderLayout());
+		
+		//Title
+		JPanel titleAreaPanel = new TitledPanel("Sélecteur de données");
+		add(titleAreaPanel, BorderLayout.NORTH);
+        
+		//Tabs
+		tabs.setTabPlacement(JTabbedPane.TOP);
 		//tabs scrollables si conteneur trop petit
-		this.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+	//	tabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 		
-		this.setPreferredSize(new Dimension(300, 0));
+		tabs.setPreferredSize(new Dimension(300, 0));
+						
+		tabs.addTab("Stip", new StipView(wwd, db));
+		tabs.addTab("STR", new StrView(wwd, db));
+		tabs.addTab("Stpv", new StpvView(wwd, db));
+		tabs.addTab("Edimap", new JScrollPane());
+		tabs.addTab("ODS", new JScrollPane());
+		tabs.addTab("AIP", new JScrollPane());
 		
-		this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Sélecteur de données", TitledBorder.CENTER, TitledBorder.TOP));
-				
-		this.addTab("Stip", new StipView(wwd, db));
-		this.addTab("STR", new StrView(wwd, db));
-		this.addTab("Stpv", new StpvView(wwd, db));
-		this.addTab("Edimap", new JScrollPane());
-		this.addTab("ODS", new JScrollPane());
-		this.addTab("AIP", new JScrollPane());
-		
-		this.setVisible(true);
-	}
-
+		add(tabs, BorderLayout.CENTER);
+	}	
+	
 	/**
 	 * Met à jour le tab de données Stip
 	 */
 	public void updateStipView() {
-		int select = this.getSelectedIndex();
+		int select = tabs.getSelectedIndex();
 		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Stip
-		this.removeTabAt(0);
-		this.insertTab("Stip", null, new StipView(wwd, db), "Sélecteur de données Stip", 0);
-		this.setSelectedIndex(select);
+		tabs.removeTabAt(0);
+		tabs.insertTab("Stip", null, new StipView(wwd, db), "Sélecteur de données Stip", 0);
+		tabs.setSelectedIndex(select);
 	}
 	
 	/**
 	 * Met à jour le tab STR
 	 */
 	public void updateStrView() {
-		int select = this.getSelectedIndex();
+		int select = tabs.getSelectedIndex();
 		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Stip
-		this.removeTabAt(1);
-		this.insertTab("Str", null, new StrView(wwd, db), "Sélecteur de données Str", 1);
-		this.setSelectedIndex(select);
+		tabs.removeTabAt(1);
+		tabs.insertTab("Str", null, new StrView(wwd, db), "Sélecteur de données Str", 1);
+		tabs.setSelectedIndex(select);
 	}
 	
 	/**
 	 * Met à jour le tab STPV
 	 */
 	public void updateStpvView() {
-		int select = this.getSelectedIndex();
+		int select = tabs.getSelectedIndex();
 		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Stip
-		this.removeTabAt(2);
-		this.insertTab("Stpv", null, new StpvView(wwd, db), "Sélecteur de données Stpv", 2);
-		this.setSelectedIndex(select);
+		tabs.removeTabAt(2);
+		tabs.insertTab("Stpv", null, new StpvView(wwd, db), "Sélecteur de données Stpv", 2);
+		tabs.setSelectedIndex(select);
 	}
 }

@@ -38,6 +38,7 @@ import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Route3D.Type;
 import fr.crnan.videso3d.layers.BaliseMarkerLayer;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
+import fr.crnan.videso3d.layers.RoutesLayer;
 import fr.crnan.videso3d.layers.TextLayer;
 import fr.crnan.videso3d.stip.Secteur;
 import fr.crnan.videso3d.util.measure.VidesoMeasureTool;
@@ -67,19 +68,15 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.4
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
 
 	/**
-	 * Layer contenant les routes UIR
+	 * Layer contenant les routes
 	 */
-	private AirspaceLayer routesAwy;
-	/**
-	 * Layer contenant les routes FIR
-	 */
-	private AirspaceLayer routesPDR;
+	private RoutesLayer routes;
 	
 	/**
 	 * Layers pour les balises publiées
@@ -121,7 +118,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Liste des objets affichés
 	 */
-	private HashMap<String, Airspace> airspaces = new HashMap<String, Airspace>();
 	private HashMap<String, Balise2D> balises = new HashMap<String, Balise2D>();
 	private Object highlight;
 	private Object lastAttrs;
@@ -137,10 +133,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public void initialize(DatabaseManager db){
 		this.db = db;
 		
-		this.addSelectListener(new AirspaceListener(this));
-		
-	//	this.toggleFrontieres(true);
-		
+		this.addSelectListener(new AirspaceListener(this));		
 
 		//Latitudes et longitudes
 		Layer latlon = new LatLonGraticuleLayer();
@@ -159,6 +152,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		this.toggleLayer(balisesNPTexts, false);
 		this.toggleLayer(balisesPubMarkers, false);
 		this.toggleLayer(balisesPubTexts, false);
+		
 		
 		if (isFlatGlobe())
 		{
@@ -230,6 +224,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/*----------------- Gestion des projections --------------------*/
 	/*--------------------------------------------------------------*/
 	
+	/**
+	 * Change la projection
+	 * @param projection Nom de la projection (parmi {@link FlatGlobeCautra})
+	 */
 	public void setProjection(String projection){
 		this.projection = projection;
 		if(flatGlobe != null) this.flatGlobe.setProjection(projection);
@@ -246,9 +244,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
     }
     /**
      * Active la vue 2D
-     * @param flat
-     */
-    /**
      * @param flat
      */
     public void enableFlatGlobe(boolean flat)
@@ -304,7 +299,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/*--------------------------------------------------------------*/
 	/*----------------- Gestion des frontières ---------------------*/
 	/*--------------------------------------------------------------*/
-	public void toggleFrontieres(Boolean toggle){
+	/**
+	 * Affiche ou non le fond uni suivant les frontières Stip
+	 * @param toggle
+	 */
+    public void toggleFrontieres(Boolean toggle){
 			if(frontieres == null) frontieres = new FrontieresStipLayer();
 			this.toggleLayer(frontieres, toggle);		
 	}
@@ -441,10 +440,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				}
 				route.setLocations(loc);
 				route.setName(name);
-				if(type.equals("F")) this.addToRoutesAwy(route);
-				if(type.equals("U")) this.addToRoutesPDR(route);
-				//lien nominal
-				this.airspaces.put(name, route);
+				if(type.equals("F")) this.routes.addRouteAwy(route, name);
+				if(type.equals("U")) this.routes.addRoutePDR(route, name);
 			}
 			st.close();
 		} catch (SQLException e) {
@@ -453,38 +450,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	}
 
 
-	public AirspaceLayer getRoutesAwy() {
-		return routesAwy;
+	public RoutesLayer getRoutesLayer(){
+		return routes;
 	}
 
-	public void setRoutesAwy(AirspaceLayer routesAwy) {
-		this.routesAwy = routesAwy;
-	}
-
-	public void addToRoutesAwy(Route3D route){
-		if(routesAwy == null){
-			routesAwy = new AirspaceLayer();
-			routesAwy.setName("AWY");
-		}
-		routesAwy.addAirspace(route);
-	}
 	
-	public AirspaceLayer getRoutesPDR() {
-		return routesPDR;
-	}
-
-	public void setRoutesPDR(AirspaceLayer routesPDR) {
-		this.routesPDR = routesPDR;
-	}
-	
-	public void addToRoutesPDR(Route3D route){
-		if(routesPDR == null){
-			routesPDR = new AirspaceLayer();
-			routesPDR.setName("PDR");
-		}
-		routesPDR.addAirspace(route);
-	}
-
 	/**
 	 * Construit ou met à jour les objets Stip
 	 * Appelé lors de l'initialisation de la vue ou lors du changement de base de données Stip
@@ -495,20 +465,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		progress.setMillisToPopup(1);
 		progress.setProgress(0);
 		//Suppression des objets3D
-		if(routesAwy != null) {
-			routesAwy.removeAllAirspaces();
+		if(routes != null) {
+			routes.removeAllAirspaces();
 		} else {
-			routesAwy = new AirspaceLayer();
-			routesAwy.setName("AWY");
-			routesAwy.setEnabled(false);
-		}
-		if(routesPDR != null) {
-			routesPDR.removeAllAirspaces();
-			this.getModel().getLayers().remove(routesPDR);
-		} else {
-			routesPDR = new AirspaceLayer();
-			routesPDR.setName("PDR");
-			routesPDR.setEnabled(false);
+			routes = new RoutesLayer("Routes Stip");
+			this.toggleLayer(routes, true);
 		}
 		if(balisesPubTexts != null) {
 			this.toggleLayer(balisesPubTexts, false);
@@ -747,12 +708,14 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		mosaiquesLayer.clear();
 	}
 
-	
+	/*--------------------------------------------------------------*/
+	/*------------------ Gestion du highlight ----------------------*/
+	/*--------------------------------------------------------------*/
 	/**
 	 * Centre la vue et met en valeur un objet
 	 * @param text Nom de l'objet à afficher
 	 */
-	public void hightlight(String text) {
+	public void highlight(String text) {
 		if(text == null){
 			if(highlight != null) {
 				if((highlight instanceof Route3D) && lastAttrs != null){
@@ -775,7 +738,12 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				//on recherche le type
 				ResultSet rs = st.executeQuery("select * from routes where routes.name = '"+text+"'");
 				if(rs.next()){
-					Route3D airspace = (Route3D) airspaces.get(text);
+					Route3D airspace;
+					if(rs.getString("espace").equals("F")){
+						airspace = routes.getRouteAwy(text);
+					} else {
+						airspace = routes.getRoutePDR(text);
+					}
 					this.unHighlightPrevious(airspace);
 					lastAttrs = airspace.getAttributes();
 					AirspaceAttributes attrs = new BasicAirspaceAttributes((AirspaceAttributes) lastAttrs);
@@ -784,10 +752,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 					attrs.setOutlineWidth(2.0);
 					airspace.setAttributes(attrs);
 					highlight = airspace;
-					if((rs.getString("espace").equals("F") && !routesAwy.isEnabled()) || 
-							(rs.getString("espace").equals("U") && !routesPDR.isEnabled() )) {
-						selectedAirspaces.addAirspace((Airspace) highlight);
-					} 
+					selectedAirspaces.addAirspace((Airspace) highlight);
 					this.getView().goTo(airspace.getReferencePosition(), 1e6);
 					return;
 				}
