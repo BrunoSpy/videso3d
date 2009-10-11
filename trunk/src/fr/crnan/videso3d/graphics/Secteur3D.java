@@ -18,6 +18,7 @@ package fr.crnan.videso3d.graphics;
 
 import java.awt.Color;
 
+import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
@@ -25,7 +26,7 @@ import gov.nasa.worldwind.render.airspaces.Polygon;
 /**
  * Représentation 3D d'un secteur de contrôle
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 public class Secteur3D extends Polygon {
 
@@ -72,7 +73,7 @@ public class Secteur3D extends Polygon {
 	
 	 private void setDefaultMaterial() {
 			Color color = Color.CYAN;
-			Color outline = makeBrighter(color);
+			Color outline = Pallet.makeBrighter(color);
 			
 	        this.getAttributes().setDrawOutline(true);
 	        this.getAttributes().setMaterial(new Material(color));
@@ -82,26 +83,6 @@ public class Secteur3D extends Polygon {
 	        this.getAttributes().setOutlineWidth(3.0);
 		}
 	 
-	 private static Color makeBrighter(Color color)
-	    {
-	        float[] hsbComponents = new float[3];
-	        Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), hsbComponents);
-	        float hue = hsbComponents[0];
-	        float saturation = hsbComponents[1];
-	        float brightness = hsbComponents[2];
-
-	        saturation /= 3f;
-	        brightness *= 3f;
-
-	        if (saturation < 0f)
-	            saturation = 0f;
-
-	        if (brightness > 1f)
-	            brightness = 1f;
-
-	        int rgbInt = Color.HSBtoRGB(hue, saturation, brightness);
-	        
-	        return new Color(rgbInt);
-	    }
+	 
 }
 
