@@ -53,6 +53,7 @@ public class RoutesLayer extends AirspaceLayer {
 	 */
 	public RoutesLayer(String name){
 		this.setName(name);
+		this.setEnableAntialiasing(true);
 	}
 
 	public void addRoutePDR(Route3D route, String name){

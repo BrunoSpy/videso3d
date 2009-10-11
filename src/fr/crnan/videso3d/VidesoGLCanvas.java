@@ -41,7 +41,6 @@ import fr.crnan.videso3d.layers.MosaiqueLayer;
 import fr.crnan.videso3d.layers.RoutesLayer;
 import fr.crnan.videso3d.layers.TextLayer;
 import fr.crnan.videso3d.stip.Secteur;
-import fr.crnan.videso3d.util.measure.VidesoMeasureTool;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.examples.util.LayerManagerLayer;
 import gov.nasa.worldwind.geom.LatLon;
@@ -61,6 +60,7 @@ import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
+import gov.nasa.worldwind.util.UnitsFormat;
 import gov.nasa.worldwind.util.measure.MeasureTool;
 import gov.nasa.worldwind.util.measure.MeasureToolController;
 import gov.nasa.worldwind.view.orbit.BasicOrbitView;
@@ -110,7 +110,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Outil de mesure (alidade)
 	 */
-	private VidesoMeasureTool measureTool;
+	private MeasureTool measureTool;
 	/**
 	 * Liste des layers Mosaiques
 	 */
@@ -201,11 +201,12 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	
 	public MeasureTool getMeasureTool(){
 		if(measureTool == null){
-			measureTool = new VidesoMeasureTool(this);
+			measureTool = new MeasureTool(this);
 			measureTool.setController(new MeasureToolController());
 			measureTool.setMeasureShape(MeasureTool.SHAPE_LINE);
 			measureTool.setFollowTerrain(true);
 			measureTool.setShowAnnotation(true);
+			measureTool.setUnitsFormat(new UnitsFormat(UnitsFormat.NAUTICAL_MILES, UnitsFormat.SQUARE_KILOMETERS));
 		}
 		return measureTool;
 	}
