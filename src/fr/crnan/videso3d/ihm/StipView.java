@@ -16,6 +16,12 @@
 
 package fr.crnan.videso3d.ihm;
 
+import it.cnr.imaa.essi.lablib.gui.checkboxtree.CheckboxTree;
+import it.cnr.imaa.essi.lablib.gui.checkboxtree.DefaultCheckboxTreeCellRenderer;
+import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingEvent;
+import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingListener;
+
+import java.awt.BorderLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.ResultSet;
@@ -29,40 +35,35 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 /**
  * Sélecteur d'objets Stip
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
+@SuppressWarnings("serial")
 public class StipView extends JPanel {
 
 	/**
-	 * Choix des routes à afficher
+	 * Arbre des routes et balises
 	 */
 	private JPanel routes = new JPanel();
-	/**
-	 * Choix des balises à afficher
-	 */
+
 	private JPanel balises = new JPanel();
+	
+	private JCheckBox balisesNPChk;
+    private JCheckBox balisesPubChk;
+	
 	/**
 	 * Choix des secteurs à afficher
 	 */
 	private JTabbedPane secteurs = new JTabbedPane();	
 
-	/**
-	 * Checkboxes
-	 */
-	private JCheckBox routesAwyChk;
-	private JCheckBox routesPDRChk;
-	private JCheckBox balisesNPChk;
-	private JCheckBox balisesPubChk;
-
 	private ItemCheckBoxListener itemCheckBoxListener = new ItemCheckBoxListener();
-
+	
 	private ItemSecteurListener itemSecteurListener = new ItemSecteurListener();
 	
 	
@@ -76,15 +77,26 @@ public class StipView extends JPanel {
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		panel.setBorder(null);
+		
 		routes.setBorder(BorderFactory.createTitledBorder("Routes"));
+		panel.add(routes);
+		
 		balises.setBorder(BorderFactory.createTitledBorder("Balises"));
+		panel.add(balises);
+		
+		
 		secteurs.setBorder(BorderFactory.createTitledBorder("Secteurs"));
 
 		try {
 			if(this.db.getCurrentStip() != null) { //si pas de bdd, ne pas créer la vue
-				this.add(this.buildRoutesPanel());
-
+				this.buildTreePanel();
+				
 				this.add(this.buildBalisesPanel());
+				
+				this.add(panel);
 
 				this.add(this.buildSecteursPanel());
 			}
@@ -95,6 +107,24 @@ public class StipView extends JPanel {
 
 	}
 
+	private JPanel buildBalisesPanel(){
+        balises.setLayout(new BoxLayout(balises, BoxLayout.X_AXIS));
+
+        balisesNPChk = new JCheckBox("Non publiées");
+        balisesNPChk.addItemListener(this.itemCheckBoxListener);
+
+        balisesPubChk = new JCheckBox("Publiées");
+        balisesPubChk.addItemListener(this.itemCheckBoxListener);
+
+        balises.add(Box.createHorizontalGlue());
+        balises.add(balisesPubChk);
+        balises.add(Box.createHorizontalGlue());
+        balises.add(balisesNPChk);
+        balises.add(Box.createHorizontalGlue());
+
+        return balises;
+}
+	
 	private JTabbedPane buildSecteursPanel() {
 
 		secteurs.addTab("Paris", this.buildTabSecteur("PARI"));
@@ -121,7 +151,7 @@ public class StipView extends JPanel {
 		JPanel list = new JPanel();
 		list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
 		JScrollPane scrollPane = new JScrollPane(list);
-		scrollPane.setBorder(BorderFactory.createTitledBorder(type.equals("F") ? "FIR" : "UIR"));
+		scrollPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), type.equals("F") ? "FIR" : "UIR"));
 		
 		try {
 			Statement st = this.db.getCurrentStip();
@@ -142,95 +172,157 @@ public class StipView extends JPanel {
 		return scrollPane;
 	}
 	/**
-	 * Construit et renvoit le {@link JPanel} permettant l'affichage des différents types de routes
+	 * Construit et renvoit le {@link JPanel} permettant l'affichage des routes et balises
 	 * @return {@link JPanel} 
 	 */
-	private JPanel buildRoutesPanel(){
-		routes.setLayout(new BoxLayout(routes, BoxLayout.X_AXIS));
+	private void buildTreePanel(){
+		routes.setLayout(new BorderLayout());
+		DefaultMutableTreeNode route = new DefaultMutableTreeNode("routes");
+		DefaultMutableTreeNode awy = new DefaultMutableTreeNode("AWY");
+		this.addNodes("routes", "F", awy);
+		route.add(awy);
+		DefaultMutableTreeNode pdr = new DefaultMutableTreeNode("PDR");
+		this.addNodes("routes", "U", pdr);
+		route.add(pdr);
+		CheckboxTree routesTree = new CheckboxTree(route);
+		routesTree.setRootVisible(false);
+		routesTree.setCellRenderer(new TreeCellNimbusRenderer());
+		routesTree.setOpaque(false);
+		routesTree.addTreeCheckingListener(new StipTreeListener());
+		
+		JScrollPane scrollRouteTree = new JScrollPane(routesTree);
+		scrollRouteTree.setBorder(null);
+		
+		routes.add(scrollRouteTree);
+		
+		
+//		balises.setLayout(new BorderLayout());
+//		
+//		DefaultMutableTreeNode b = new DefaultMutableTreeNode("balises");
+//		DefaultMutableTreeNode pub = new DefaultMutableTreeNode("Publiées");
+//		this.addNodes("balises", "1", pub);
+//		b.add(pub);
+//		DefaultMutableTreeNode npub = new DefaultMutableTreeNode("Non publiées");
+//		this.addNodes("balises", "0", npub);
+//		b.add(npub);
+//		CheckboxTree balisesTree = new CheckboxTree(b);
+//		balisesTree.setRootVisible(false);
+//		balisesTree.setCellRenderer(new TreeCellNimbusRenderer());
+//		balisesTree.setOpaque(false);
+//		balisesTree.addTreeCheckingListener(new StipTreeListener());
+//		
+//		JScrollPane scrollBaliseTree = new JScrollPane(balisesTree);
+//		scrollBaliseTree.setBorder(null);
+//		
+//		balises.add(scrollBaliseTree);
+		
+		
+		
 
-		routesAwyChk = new JCheckBox("AWY");
-		routesAwyChk.addItemListener(this.itemCheckBoxListener);
-
-		routesPDRChk = new JCheckBox("PDR");
-		routesPDRChk.addItemListener(this.itemCheckBoxListener);
-
-
-		routes.add(Box.createHorizontalGlue());
-		routes.add(routesAwyChk);
-		routes.add(Box.createHorizontalGlue());
-		routes.add(routesPDRChk);
-		routes.add(Box.createHorizontalGlue());
-
-		return routes;
 	}
 
-	private JPanel buildBalisesPanel(){
-		balises.setLayout(new BoxLayout(balises, BoxLayout.X_AXIS));
-
-		balisesNPChk = new JCheckBox("Non publiées");
-		balisesNPChk.addItemListener(this.itemCheckBoxListener);
-
-		balisesPubChk = new JCheckBox("Publiées");
-		balisesPubChk.addItemListener(this.itemCheckBoxListener);
-
-		balises.add(Box.createHorizontalGlue());
-		balises.add(balisesPubChk);
-		balises.add(Box.createHorizontalGlue());
-		balises.add(balisesNPChk);
-		balises.add(Box.createHorizontalGlue());
-
-		return balises;
+	/**
+	 * Ajoute à <code>root</code> les noeuds correspondants
+	 * @param type Type des noeuds à ajouter (routes, balises)
+	 * @param classe Classe des noeuds à ajouter (FIR, UIR, Publiées, ...)
+	 * @param root Noeud recevant
+	 */
+	private void addNodes(String type, String classe, DefaultMutableTreeNode root){
+		try {
+			Statement st = this.db.getCurrentStip();
+			String where = type.equals("routes")? "espace" : "publicated";
+			ResultSet rs = st.executeQuery("select * from "+type+" where "+ where +" ='"+classe+"'");
+			while(rs.next()){
+				root.add(new DefaultMutableTreeNode(rs.getString("name")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
-
-	public JPanel getRoutes() {
-		return routes;
-	}
-
-	public JPanel getBalises() {
-		return balises;
-	}
-
+	
+	
 	public JTabbedPane getSecteurs() {
 		return secteurs;
 	}	
 
 	/*--------------------------------------------------*/
 	/*------------------ Listeners ---------------------*/
+	
 	/**
-	 * Listener de la checkbox AWY
+     * Listener de la checkbox AWY
+     * @author Bruno Spyckerelle
+     */
+    private class ItemCheckBoxListener implements ItemListener {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                    Object source = e.getItemSelectable();
+                    if(e.getStateChange() == ItemEvent.SELECTED ) {
+                            if(source == balisesPubChk){
+                                    wwd.toggleLayer(wwd.getBalisesPubMarkers(), true);
+                                    wwd.toggleLayer(wwd.getBalisesPubTexts(), true);
+                            } else if(source == balisesNPChk){
+                                    wwd.toggleLayer(wwd.getBalisesNPMarkers(), true);
+                                    wwd.toggleLayer(wwd.getBalisesNPTexts(), true);
+                            }
+                    } else {
+                            if(source == balisesPubChk){
+                                    wwd.toggleLayer(wwd.getBalisesPubMarkers(), false);
+                                    wwd.toggleLayer(wwd.getBalisesPubTexts(), false);
+                            } else if(source == balisesNPChk){
+                                    wwd.toggleLayer(wwd.getBalisesNPMarkers(), false);
+                                    wwd.toggleLayer(wwd.getBalisesNPTexts(), false);
+                            }
+                    }
+            }      
+    }
+	
+	/**
 	 * @author Bruno Spyckerelle
+	 * @version 0.1
 	 */
-	private class ItemCheckBoxListener implements ItemListener {
+	private class StipTreeListener implements TreeCheckingListener{
+
 		@Override
-		public void itemStateChanged(ItemEvent e) {
-			Object source = e.getItemSelectable();
-			if(e.getStateChange() == ItemEvent.SELECTED ) {
-				if(source == routesAwyChk){
-					wwd.toggleLayer(wwd.getRoutesAwy(), true);
-				} else if(source == routesPDRChk) {
-					wwd.toggleLayer(wwd.getRoutesPDR(), true);
-				} else if(source == balisesPubChk){
-					wwd.toggleLayer(wwd.getBalisesPubMarkers(), true);
-					wwd.toggleLayer(wwd.getBalisesPubTexts(), true);
-				} else if(source == balisesNPChk){
-					wwd.toggleLayer(wwd.getBalisesNPMarkers(), true);
-					wwd.toggleLayer(wwd.getBalisesNPTexts(), true);
+		public void valueChanged(TreeCheckingEvent e) {
+			DefaultMutableTreeNode c = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
+			String name = (String)c.getUserObject();
+			if(name.equals("routes")){
+				if(e.isCheckedPath()){
+					wwd.getRoutesLayer().displayAllRoutes();
+				} else  {
+					wwd.getRoutesLayer().hideAllRoutes();
 				}
-			} else {
-				if(source == routesAwyChk) {
-					wwd.toggleLayer(wwd.getRoutesAwy(), false);	
-				} else if(source == routesPDRChk) {
-					wwd.toggleLayer(wwd.getRoutesPDR(), false);
-				} else if(source == balisesPubChk){
-					wwd.toggleLayer(wwd.getBalisesPubMarkers(), false);
-					wwd.toggleLayer(wwd.getBalisesPubTexts(), false);
-				} else if(source == balisesNPChk){
-					wwd.toggleLayer(wwd.getBalisesNPMarkers(), false);
-					wwd.toggleLayer(wwd.getBalisesNPTexts(), false);
+			} else if (name.equals("AWY")){
+				if(e.isCheckedPath()){
+					wwd.getRoutesLayer().displayAllRoutesAwy();
+				} else  {
+					wwd.getRoutesLayer().hideAllRoutesAWY();
 				}
-			}
-		}	
+			} else if(name.equals("PDR")) {
+				if(e.isCheckedPath()){
+					wwd.getRoutesLayer().displayAllRoutesPDR();
+				} else  {
+					wwd.getRoutesLayer().hideAllRoutesPDR();
+				}
+			} else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("AWY")) {
+				if(e.isCheckedPath()){
+					wwd.getRoutesLayer().displayRouteAwy(name);
+				} else {
+					wwd.getRoutesLayer().hideRouteAwy(name);
+				}
+			} else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("PDR")) {
+				if(e.isCheckedPath()){
+					wwd.getRoutesLayer().displayRoutePDR(name);
+				} else {
+					wwd.getRoutesLayer().hideRoutePDR(name);
+				}
+			} 
+			wwd.redraw();
+		}
+		
 	}
+	
 	/**
 	 * Listener des checkbox secteurs
 	 * @author Bruno Spyckerelle
@@ -246,6 +338,21 @@ public class StipView extends JPanel {
 				wwd.removeSecteur3D(name);
 			}
 		}
+		
+	}
+	
+	/**
+	 * Classe temporaire pour corriger un bug de rendu avec le style Nimbus
+	 * @author Bruno Spyckerelle
+	 */
+	private class TreeCellNimbusRenderer extends DefaultCheckboxTreeCellRenderer {
+		
+		public TreeCellNimbusRenderer(){
+			this.setOpaque(false);
+			add(this.checkBox);
+			add(this.label);
+		}
+		
 		
 	}
 }

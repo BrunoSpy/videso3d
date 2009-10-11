@@ -33,7 +33,6 @@ import java.sql.Statement;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
@@ -149,6 +148,7 @@ public class MainWindow extends JFrame {
 		
 		//Test fichier .gpx
 		AirspaceLayer trxkLayer = new AirspaceLayer();
+		trxkLayer.setEnableAntialiasing(true);
 		wwd.getModel().getLayers().add(trxkLayer);
 		try {
 			GpxReader gpxReader = new GpxReader();
@@ -437,7 +437,7 @@ public class MainWindow extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				wwd.hightlight(((JTextField)e.getSource()).getText());
+				wwd.highlight(((JTextField)e.getSource()).getText());
 			}
 		});
 		
