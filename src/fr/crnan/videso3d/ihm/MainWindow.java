@@ -18,10 +18,13 @@ package fr.crnan.videso3d.ihm;
 
 
 import java.awt.BorderLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -35,6 +38,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -107,6 +111,7 @@ public class MainWindow extends JFrame {
 		//Style Nimbus
 		this.setNimbus();
 		
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
 		
 		//Instancie WorldWind
 		this.createWwd();
@@ -147,40 +152,40 @@ public class MainWindow extends JFrame {
 		});
 		
 		//Test fichier .gpx
-		AirspaceLayer trxkLayer = new AirspaceLayer();
-		trxkLayer.setEnableAntialiasing(true);
-		wwd.getModel().getLayers().add(trxkLayer);
-		try {
-			GpxReader gpxReader = new GpxReader();
-			gpxReader.readFile("/home/datas/Projets/Videso3D/datas/elvira.gpx");
-			Iterator<Track> iterator = gpxReader.getTracks().iterator();
-			while(iterator.hasNext()){
-				Track track = iterator.next();
-				Route route = new Route();
-				Iterator<TrackSegment> segments = track.getSegments().iterator();
-				while(segments.hasNext()){
-					Iterator<TrackPoint> points = segments.next().getPoints().iterator();
-					TrackPoint start = null; 
-					while(points.hasNext()){
-						TrackPoint point = points.next();
-						if(start != null) {
-							route.addLeg(LatLon.fromDegrees(start.getLatitude(), start.getLongitude()),
-									LatLon.fromDegrees(point.getLatitude(), point.getLongitude()),
-									point.getElevation()-500, point.getElevation()+500,
-									10, 10);
-						}
-						start = point;
-					}
-				}
-				trxkLayer.addAirspace(route);
-			}
-		} catch (ParserConfigurationException e1) {
-			e1.printStackTrace();
-		} catch (SAXException e1) {
-			e1.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		AirspaceLayer trxkLayer = new AirspaceLayer();
+//		trxkLayer.setEnableAntialiasing(true);
+//		wwd.getModel().getLayers().add(trxkLayer);
+//		try {
+//			GpxReader gpxReader = new GpxReader();
+//			gpxReader.readFile("/home/datas/Projets/Videso3D/datas/elvira.gpx");
+//			Iterator<Track> iterator = gpxReader.getTracks().iterator();
+//			while(iterator.hasNext()){
+//				Track track = iterator.next();
+//				Route route = new Route();
+//				Iterator<TrackSegment> segments = track.getSegments().iterator();
+//				while(segments.hasNext()){
+//					Iterator<TrackPoint> points = segments.next().getPoints().iterator();
+//					TrackPoint start = null; 
+//					while(points.hasNext()){
+//						TrackPoint point = points.next();
+//						if(start != null) {
+//							route.addLeg(LatLon.fromDegrees(start.getLatitude(), start.getLongitude()),
+//									LatLon.fromDegrees(point.getLatitude(), point.getLongitude()),
+//									point.getElevation()-500, point.getElevation()+500,
+//									10, 10);
+//						}
+//						start = point;
+//					}
+//				}
+//				trxkLayer.addAirspace(route);
+//			}
+//		} catch (ParserConfigurationException e1) {
+//			e1.printStackTrace();
+//		} catch (SAXException e1) {
+//			e1.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 		
 	}
 	
@@ -289,6 +294,17 @@ public class MainWindow extends JFrame {
 	 */
 	private JToolBar createToolBar(){
 		JToolBar toolbar = new JToolBar("Actions");
+		
+		//fond de la France
+		final JToggleButton fond = new JToggleButton("Fond");
+		fond.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				wwd.toggleFrontieres(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+		toolbar.add(fond);
 		
 		//Alidade
 		final JToggleButton alidad = new JToggleButton("Alidade");
@@ -416,7 +432,7 @@ public class MainWindow extends JFrame {
 		
 		//recherche avec autocomplétion
 		toolbar.addSeparator();
-		toolbar.add(new JLabel("Recherche : "));
+		toolbar.add(new JLabel(new ImageIcon(getClass().getResource("/resources/zoom-original.png"))));
 		
 		JTextField search = new JTextField(10);
 		search.setToolTipText("Rechercher un élément Stip affiché");
@@ -440,7 +456,7 @@ public class MainWindow extends JFrame {
 				wwd.highlight(((JTextField)e.getSource()).getText());
 			}
 		});
-		
+
 		toolbar.add(search);
 		
 		return toolbar;

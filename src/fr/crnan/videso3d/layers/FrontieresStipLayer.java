@@ -27,6 +27,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfacePolygon;
 /**
  * Layer contenant le contour de certains pays européens selon le définition des frontières fournie par SATIN
@@ -1148,9 +1149,13 @@ public class FrontieresStipLayer extends SurfaceShapeLayer {
 	};
 	
 	public FrontieresStipLayer(/*DatabaseManager db*/){
+		this.setName("France");
+		
 		SurfacePolygon france = new SurfacePolygon();
 		france.setLocations(makeLatLon(FRANCE));
-		france.getAttributes().setInteriorMaterial(new Material(Color.GRAY));
+		ShapeAttributes attrs = france.getAttributes();
+		attrs.setInteriorMaterial(Material.LIGHT_GRAY);
+		france.setAttributes(attrs);
 	
 		this.addRenderable(france);
 		this.setPickEnabled(false);
