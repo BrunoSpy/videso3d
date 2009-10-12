@@ -306,7 +306,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 */
     public void toggleFrontieres(Boolean toggle){
 			if(frontieres == null) frontieres = new FrontieresStipLayer();
-			this.toggleLayer(frontieres, toggle);		
+			this.toggleLayer(frontieres, toggle);
 	}
 	
 	/*--------------------------------------------------------------*/
@@ -717,14 +717,14 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * @param text Nom de l'objet à afficher
 	 */
 	public void highlight(String text) {
-		if(text == null){
+		if(text.isEmpty()){
 			if(highlight != null) {
 				if((highlight instanceof Route3D) && lastAttrs != null){
 					((Airspace)highlight).setAttributes((AirspaceAttributes) lastAttrs);
 					selectedAirspaces.removeAllAirspaces();
 				} else if (highlight instanceof String){ //cas des secteurs
-					this.setAttributesToSecteur(text, (AirspaceAttributes) lastAttrs);
-					this.removeSecteur3D(text);
+					this.setAttributesToSecteur((String) highlight, (AirspaceAttributes) lastAttrs);
+					this.removeSecteur3D((String) highlight);
 				} else if(highlight instanceof Balise2D){
 					((Balise2D) highlight).highlight(false);
 					if(lastLayer != null) this.toggleLayer(lastLayer, false);
