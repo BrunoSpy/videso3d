@@ -15,7 +15,16 @@
  */
 package fr.crnan.videso3d;
 
+import java.awt.Color;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
+import javax.swing.JColorChooser;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 
 import fr.crnan.videso3d.graphics.Secteur3D;
 import gov.nasa.worldwind.event.SelectEvent;
@@ -23,6 +32,7 @@ import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.AbstractAirspace;
+import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 
@@ -48,7 +58,7 @@ public class AirspaceListener implements SelectListener {
 	 * @see gov.nasa.worldwind.event.SelectListener#selected(gov.nasa.worldwind.event.SelectEvent)
 	 */
 	@Override
-	public void selected(SelectEvent event) {
+	public void selected(final SelectEvent event) {
 
 		if (lastHighlit != null
 				&& (event.getTopObject() == null || !event.getTopObject().equals(lastHighlit)))
@@ -77,7 +87,7 @@ public class AirspaceListener implements SelectListener {
 	                lastHighlit = (Secteur3D)o;
 	                lastAttrs = ((Secteur3D)lastHighlit).getAttributes();
 	                BasicAirspaceAttributes highliteAttrs = new BasicAirspaceAttributes((AirspaceAttributes) lastAttrs);
-	                highliteAttrs.setMaterial(Material.WHITE);
+	                highliteAttrs.setMaterial(new Material(Pallet.makeBrighter(((AirspaceAttributes)lastAttrs).getMaterial().getDiffuse())));
 	                ((AbstractAirspace) lastHighlit).setAttributes(highliteAttrs);
 	            }
 			}
@@ -95,6 +105,20 @@ public class AirspaceListener implements SelectListener {
 					this.wwd.redraw();
 				}
 			}
-		} 
+		} else if(event.getEventAction() == SelectEvent.RIGHT_CLICK){
+			final JPopupMenu menu = new JPopupMenu("Menu secteur");
+			JMenuItem colorItem = new JMenuItem("Couleur...");
+			colorItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Color color = JColorChooser.showDialog(menu, "Couleur du secteur", ((AirspaceAttributes)lastAttrs).getMaterial().getDiffuse());
+					((AirspaceAttributes)lastAttrs).setMaterial(new Material(color));
+					((AirspaceAttributes)lastAttrs).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+				}
+			});
+			menu.add(colorItem);
+			menu.add("Rechercher...");
+			menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
+		}
 	}
 }

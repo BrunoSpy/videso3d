@@ -45,6 +45,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
@@ -53,6 +54,7 @@ import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -101,6 +103,13 @@ public class MainWindow extends JFrame {
 	 */
 	private DatabaseManagerUI databaseUI;
 	
+	static {
+		// Ensure that menus and tooltips interact successfully with the WWJ window.
+		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+	}
+	
+	
 	/**
 	 * 
 	 * @param db
@@ -112,6 +121,8 @@ public class MainWindow extends JFrame {
 		this.setNimbus();
 		
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
+		
+
 		
 		//Instancie WorldWind
 		this.createWwd();
