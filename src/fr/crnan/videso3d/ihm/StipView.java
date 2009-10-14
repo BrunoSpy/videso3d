@@ -151,7 +151,7 @@ public class StipView extends JPanel {
 		JPanel list = new JPanel();
 		list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
 		JScrollPane scrollPane = new JScrollPane(list);
-		scrollPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), type.equals("F") ? "FIR" : "UIR"));
+		scrollPane.setBorder(BorderFactory.createTitledBorder(/*BorderFactory.createEmptyBorder(),*/ type.equals("F") ? "FIR" : "UIR"));
 		
 		try {
 			Statement st = this.db.getCurrentStip();
