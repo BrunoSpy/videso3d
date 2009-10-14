@@ -27,7 +27,7 @@ import java.sql.*;
 /**
  * Gère la base de données
  * @author Bruno Spyckerelle
- * @version 0.4.3
+ * @version 0.4.4
  */
 public class DatabaseManager{
 
@@ -462,6 +462,17 @@ public class DatabaseManager{
 				"balise varchar(10), " +
 				"appartient boolean, " +
 		"sens varchar(1))");
+		//table contenant les itis
+		st.executeUpdate("create table itis (id integer primary key autoincrement, " +
+				"entree varchar(5), " +
+				"sortie varchar(5), " +
+				"flinf int," +
+				"flsup int)");
+		//table mettant en relation les balises formant les itis
+		st.executeUpdate("create table balitis (id integer primary key autoincrement, " +
+				"idroute int, " +
+				"balise varchar(5), " +
+				"appartient boolean)");
 		//on référence la base de données
 		this.addDatabase(name, Type.STIP, new SimpleDateFormat().format(new Date()));
 		st.close();

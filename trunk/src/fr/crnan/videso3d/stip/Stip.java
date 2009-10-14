@@ -137,7 +137,16 @@ public class Stip extends FileParser{
 		this.setRoute(this.path + "/ROUTE");
 		this.setProgress(6);
 	}
-
+	
+	/**
+	 * Lecteur de fichier ITI
+	 * @param path
+	 */
+	private void setItis(String path){
+		
+	}
+	
+	
 	/**
 	 * Lecteur de fichier Route
 	 * @param path Chemin vers le fichier ROUTE

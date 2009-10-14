@@ -92,7 +92,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Layer contenant les secteurs
 	 */
 	private AirspaceLayer secteursLayer = new AirspaceLayer();
-	{secteursLayer.setName("Secteurs");}
+	{secteursLayer.setName("Secteurs");
+	secteursLayer.setEnableAntialiasing(true);}
 	/**
 	 * Layer contenant les annotations
 	 */
@@ -494,6 +495,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		} else {
 			secteursLayer = new AirspaceLayer();
 			secteursLayer.setName("Secteurs");
+			secteursLayer.setEnableAntialiasing(true);
 			this.toggleLayer(secteursLayer, true);
 		}
 		try {
