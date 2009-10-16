@@ -1,5 +1,6 @@
 #summary Comment installer Videso 3D
 #labels Phase-Deploy
+#sidebar ToC
 
 = Introduction =
 
