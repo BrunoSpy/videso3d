@@ -471,7 +471,6 @@ public class MainWindow extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(e.getActionCommand());
 				if(e.getActionCommand().equals("comboBoxEdited")){
 					wwd.highlight((String)((JComboBox)e.getSource()).getSelectedItem());
 				}
