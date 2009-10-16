@@ -719,7 +719,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * @param text Nom de l'objet à afficher
 	 */
 	public void highlight(String text) {
-		if(text.isEmpty()){
+		if(text.trim().isEmpty()){
 			if(highlight != null) {
 				if((highlight instanceof Route3D) && lastAttrs != null){
 					((Airspace)highlight).setAttributes((AirspaceAttributes) lastAttrs);
@@ -766,12 +766,12 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 					}
 					this.unHighlightPrevious(text);
 					Secteur3D airspace = secteurs.get(text+0);
-					lastAttrs = airspace.getAttributes();
+					lastAttrs = airspace == null ? new BasicAirspaceAttributes() : airspace.getAttributes(); //nécessaire à cause des secteurs fictifs qui n'ont pas de dessin
 					AirspaceAttributes attrs = new BasicAirspaceAttributes((AirspaceAttributes) lastAttrs);
 					attrs.setOutlineMaterial(Material.YELLOW);
 					this.setAttributesToSecteur(text, attrs);
 					highlight = text;
-					this.getView().goTo(airspace.getReferencePosition(), 1e6);
+					if(airspace != null) this.getView().goTo(airspace.getReferencePosition(), 1e6);
 					return;
 				}
 				rs = st.executeQuery("select * from balises where name = '"+text+"'");
