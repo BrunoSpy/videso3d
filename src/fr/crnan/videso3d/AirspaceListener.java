@@ -19,27 +19,25 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 import javax.swing.JColorChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.AbstractAirspace;
-import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 
 /**
  * Listener d'évènements sur les airspaces et shapes
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class AirspaceListener implements SelectListener {
 
@@ -76,16 +74,16 @@ public class AirspaceListener implements SelectListener {
 			lastToolTip = null;
 		}
 
-		if(event.getEventAction() == SelectEvent.ROLLOVER){
-			if(event.getTopObject() != null && event.getTopObject() instanceof Secteur3D) {
+		if(event.getEventAction() == SelectEvent.ROLLOVER){ //RollOver sur tous les airspaces
+			if(event.getTopObject() != null && event.getTopObject() instanceof AbstractAirspace) {
 				Object o = event.getTopObject();
 				//highlight
 				if (lastHighlit == o)
 	                return; 
 	            if (lastHighlit == null)
 	            {
-	                lastHighlit = (Secteur3D)o;
-	                lastAttrs = ((Secteur3D)lastHighlit).getAttributes();
+	                lastHighlit = (AbstractAirspace)o;
+	                lastAttrs = ((AbstractAirspace)lastHighlit).getAttributes();
 	                BasicAirspaceAttributes highliteAttrs = new BasicAirspaceAttributes((AirspaceAttributes) lastAttrs);
 	                highliteAttrs.setMaterial(new Material(Pallet.makeBrighter(((AirspaceAttributes)lastAttrs).getMaterial().getDiffuse())));
 	                ((AbstractAirspace) lastHighlit).setAttributes(highliteAttrs);
@@ -101,6 +99,18 @@ public class AirspaceListener implements SelectListener {
 					lastToolTip = o;
 					Point point = event.getPickPoint();
 					lastAnnotation = ((Secteur3D)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
+					this.wwd.getAnnotationLayer().addAnnotation(lastAnnotation);
+					this.wwd.redraw();
+				}
+			} else if (event.getTopObject() != null && event.getTopObject() instanceof Route3D){
+				Object o = event.getTopObject();
+				//popup tooltip
+				if(lastToolTip == o)
+					return;
+				if(lastToolTip == null) {
+					lastToolTip = o;
+					Point point = event.getPickPoint();
+					lastAnnotation = ((Route3D)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
 					this.wwd.getAnnotationLayer().addAnnotation(lastAnnotation);
 					this.wwd.redraw();
 				}
