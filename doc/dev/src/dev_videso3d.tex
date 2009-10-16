@@ -24,7 +24,7 @@
 \vspace{2cm}\\
 \begin{tabular}{p{0cm} c}
 	&{\huge Manuel du développpeur}\\
-   &{\large Version 0.1}
+   &{\large Version 0.2}
  \end{tabular}
 \vspace{2cm}\\
  \begin{tabular}{p{0cm} c}
@@ -52,7 +52,8 @@ Jonathan \textsc{Colson}}
 Videso3D est développé avec les technologies suivantes :
 \begin{itemize}
  \item Java 6 ;
- \item Nasa WorldWind.
+ \item Nasa WorldWind pour la représentation 3D ;
+ \item SQlite pour la base de données.
 \end{itemize}
 \par
 
@@ -117,7 +118,7 @@ Créer un nouveau projet :
 \vspace{\baselineskip}
 Configurer l'accès svn:
 \begin{itemize}
-  \item Dans URL, mettre \emph{svn://soulflyb.homeftp.net/Videso3D}
+  \item Dans URL, mettre \emph{https://videso3d.googlecode.com/svn}
   \item Cliquer sur Browse pour vérifier que tout marche. Le cas échéant, une
   arborescence du type branches, tags, trunk devrait apparaitre.
   \item (Facultatif) Remplir les données d'authentification pour avoir un
@@ -138,7 +139,8 @@ correctement :
   \item Puis aller dans Java Build Path->Libraries
   \item Cliquer sur Add Jars
   \item Ajouter depuis lib les jars suivants : gluegen-rt.jar, jogl.jar,
-  sqlitejdbc-v056.jar, worldwind.jar et swingx-1.0.jar
+  lablib-checkboxtree-3.1.jar, sqlite-jdbc-3.6.17.3.jar, worldwind.jar et
+  swingx-1.0.jar
   \item Dans jogl.jar, configurer \emph{Native library location} à
   \emph{Videso3D/lib} (Workspace, puis choisir lib)
   \item Enfin, dans Resource, mettre \emph{Text file encoding} sur Other->UTF-8
@@ -151,7 +153,8 @@ lancer en tant que Java Application (clic sur la flèche verte).
 \subsection{Organisation des sources}
 Les sources de Videso3D sont organisées selon l'arborescence suivante :
 \begin{itemize}
-  \item \emph{datas} : Contient un jeu de données à des fins de test. 
+  \item $\left[Supprim\acute{e}\right]$ \emph{datas} : Contient un jeu de
+  données à des fins de test.
  		\begin{itemize}
            \item \emph{091202\_v7}
            \item \emph{CA120209}
@@ -161,23 +164,18 @@ Les sources de Videso3D sont organisées selon l'arborescence suivante :
   		\begin{itemize}
            \item \emph{api} : la javadoc
            \item \emph{dev} : le manuel du développeur
-           \item \emph{import} : les différents manuels concernant l'import de
-           fichiers
+           \item $\left[Supprim\acute{e}\right]$ \emph{import} : les différents
+           manuels concernant l'import de fichiers
            \item \emph{mut} : le manuel utilisateur
         \end{itemize} 
   \item \emph{lib} : les bibliothèques utilisées par Videso3D (notamment
   WorldWind)
   \item \emph{src} : les sources de Videso3D
 \end{itemize}
-
-\section{Suivi des tâches : Mantis}
-
-Le suivi des tâches en cours est disponible à l'adresse suivante :
-http://soulflyb.homeftp.net/mantisbt
-
-\section{Visualiser les sources de Videso3D}
-Il est possible de parcourir les sources de Videso3D sans pour autant installer
-Eclipse. Il suffit pour cela de se rendre sur http://soulflyb.homeftp.net/websvn
-
+Les dossiers \emph{datas} et \emph{import} ont été supprimé lors du passage à
+Google Code, car leur statut n'est pas très clair.
+\section{Google Code}
+Le projet est hébergé sous Google Code à l'adresse suivante :
+\emph{http://videso3d.googlecode.com}.
 
 \end{document}

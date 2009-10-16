@@ -72,7 +72,7 @@ public abstract class FileParser extends SwingWorker<Integer, String>{
 	public abstract Integer doInBackground();
 
 	/**
-	 * Doit au moins contenir le code suivant pour prévenir les autres composantsd que l'import est terminé :</br>
+	 * Doit au moins contenir le code suivant pour prévenir les autres composants que l'import est terminé :</br>
 	 * <code>firePropertyChange("done", false, true);</code>
 	 */
 	public abstract void done();

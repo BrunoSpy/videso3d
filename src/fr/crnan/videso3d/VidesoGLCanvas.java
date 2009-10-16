@@ -169,7 +169,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		this.buildStip();	
 		
 		//position de départ centrée sur la France
-		this.getView().goTo(Position.fromDegrees(47, 0, 2500e3), 25e5);
+		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));
 		
 	}
 	
