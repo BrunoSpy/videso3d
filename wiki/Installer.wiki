@@ -1,0 +1,12 @@
+#summary Comment installer Videso 3D
+#labels Phase-Deploy
+
+= Introduction =
+
+Tout simplement.
+
+
+= Details =
+
+
+En décompressant l'archive.
