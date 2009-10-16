@@ -23,6 +23,7 @@ import java.util.List;
 import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Box;
 import gov.nasa.worldwind.render.airspaces.TrackAirspace;
@@ -41,6 +42,8 @@ public class Route3D extends TrackAirspace {
 	private List<LatLon> locations = new ArrayList<LatLon>();
 	private double width = 1.0;
 
+	private GlobeAnnotation annotation;
+	
 	/**
 	 * Type de la route
 	 */
@@ -75,6 +78,17 @@ public class Route3D extends TrackAirspace {
 		}
 	}
 
+	
+	private void createAnnotation(){
+		this.annotation = new GlobeAnnotation("Route "+this.getName(), Position.ZERO);
+	}
+	
+	public GlobeAnnotation getAnnotation(Position pos){
+		if(annotation == null) createAnnotation();
+		annotation.setPosition(pos);
+		return this.annotation;
+	}
+	
 	public void setLocations(Iterable<? extends LatLon> locations)
 	{
 		this.locations.clear();
