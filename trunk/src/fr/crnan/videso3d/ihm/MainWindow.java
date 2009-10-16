@@ -71,6 +71,7 @@ import fr.crnan.videso3d.util.VidesoStatusBar;
 import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.formats.gpx.GpxReader;
 import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.render.airspaces.Route;
 import gov.nasa.worldwind.tracks.Track;
@@ -217,6 +218,8 @@ public class MainWindow extends JFrame {
 				return null;
 			}
 		}.execute();
+		
+		
 	}
 	
 	/**
@@ -450,11 +453,12 @@ public class MainWindow extends JFrame {
 		LinkedList<String> results = new LinkedList<String>();
 		try {
 			Statement st = this.db.getCurrentStip();
+			if(st != null){
 			ResultSet rs = st.executeQuery("select name from balises UNION select name from routes UNION select nom from secteurs");
 			while(rs.next()){
 				results.add(rs.getString(1));
 			}
-			
+			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
