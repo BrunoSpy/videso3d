@@ -39,6 +39,7 @@ import java.util.LinkedList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -448,9 +449,9 @@ public class MainWindow extends JFrame {
 		toolbar.addSeparator();
 		toolbar.add(new JLabel(new ImageIcon(getClass().getResource("/resources/zoom-original.png"))));
 		
-		JTextField search = new JTextField(10);
-		search.setToolTipText("Rechercher un élément Stip affiché");
+		
 		LinkedList<String> results = new LinkedList<String>();
+		results.add(" ");//utile pour supprimer l'élément de la vue
 		try {
 			Statement st = this.db.getCurrentStip();
 			if(st != null){
@@ -462,13 +463,18 @@ public class MainWindow extends JFrame {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		AutoCompleteDecorator.decorate(search, results, false);
+		JComboBox search = new JComboBox(results.toArray());
+		search.setToolTipText("Rechercher un élément Stip affiché");
+		AutoCompleteDecorator.decorate(search);
 		
 		search.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				wwd.highlight(((JTextField)e.getSource()).getText());
+				System.out.println(e.getActionCommand());
+				if(e.getActionCommand().equals("comboBoxEdited")){
+					wwd.highlight((String)((JComboBox)e.getSource()).getSelectedItem());
+				}
 			}
 		});
 
