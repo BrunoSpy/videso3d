@@ -437,10 +437,16 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				if(type.equals("U")) route.setType(Type.UIR);
 				ResultSet rs = st.executeQuery("select * from routebalise, balises where route = '"+name+"' and routebalise.balise = balises.name and appartient = 1");
 				LinkedList<LatLon> loc = new LinkedList<LatLon>();
+				LinkedList<Integer> sens = new LinkedList<Integer>();
 				while(rs.next()){
 					loc.add(LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
+					if(rs.getString("sens").equals("+")){
+						sens.add(Route3D.LEG_FORBIDDEN);
+					} else {
+						sens.add(Route3D.LEG_AUTHORIZED);
+					}
 				}
-				route.setLocations(loc);
+				route.setLocations(loc, sens);
 				route.setName(name);
 				if(type.equals("F")) this.routes.addRouteAwy(route, name);
 				if(type.equals("U")) this.routes.addRoutePDR(route, name);
