@@ -1,5 +1,12 @@
 ﻿= Qu'est ce que Videso 3D ? =
 
+Videso 3D est logiciel de visualisation en 3D de différentes données provenant des systèmes de la navigation aérienne française.
+
+Il se destine en particulier aux différentes subdivision des services d'exploitation des CRNA.
+
+Voici un aperçu de la version 0.4.
+
+[http://videso3d.googlecode.com/svn/wiki/img/videso-0.4.png]
 
 = Pourquoi Videso 3D ? =
 
