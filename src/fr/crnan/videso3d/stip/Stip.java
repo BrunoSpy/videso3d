@@ -26,8 +26,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Timer;
+
+import org.sqlite.SQLiteJDBCLoader;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
@@ -75,6 +79,7 @@ public class Stip extends FileParser{
 		try {
 			//création de la connection à la base de données
 			this.conn = this.db.selectDB(Type.STIP, this.name);
+			this.conn.setAutoCommit(false); //fixes performance issue
 			if(!this.db.databaseExists(this.name)){
 				//création de la structure de la base de données
 				this.db.createSTIP(this.name);
@@ -91,6 +96,12 @@ public class Stip extends FileParser{
 		if(this.isCancelled()){//si le parsing a été annulé, on fait le ménage
 			try {
 				this.db.deleteDatabase(name, Type.STIP);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				this.conn.commit();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -209,8 +220,9 @@ public class Stip extends FileParser{
 			Couple<String, Boolean> balise = iterator.next();
 			insert.setString(2, balise.getFirst());
 			insert.setBoolean(3, balise.getSecond());
-			insert.executeUpdate();
+			insert.addBatch();
 		}
+		insert.executeBatch();
 		insert.close();
 	}
 	
@@ -293,8 +305,9 @@ public class Stip extends FileParser{
 			insert.setString(2, balise.getFirst());
 			insert.setBoolean(3, balise.getSecond());
 			insert.setString(4, sensTr);
-			insert.executeUpdate();
+			insert.addBatch();
 		}
+		insert.executeBatch();
 		insert.close();
 	}
 
@@ -368,21 +381,28 @@ public class Stip extends FileParser{
 	 */
 	private void setPoinSect(String path) {
 		try {
+			PreparedStatement insert = this.conn.prepareStatement("insert into poinsect (ref, latitude, longitude) " +
+		"values (?, ?, ?)");
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while (in.ready()){
 				String line = in.readLine();
 				if(line.startsWith("PTS")){
 					PoinSect point = new PoinSect(line); 
 					try {
-						this.insertPoinSect(point);
+						this.insertPoinSect(point, insert);
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
 				}
 			}
+			insert.executeBatch();
+			insert.close();
 		} catch (FileNotFoundException e1){
 			e1.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -392,14 +412,11 @@ public class Stip extends FileParser{
 	 * @param point une ligne du fichier PoinSect
 	 * @throws SQLException 
 	 */
-	private void insertPoinSect(PoinSect point) throws SQLException{
-		PreparedStatement insert = this.conn.prepareStatement("insert into poinsect (ref, latitude, longitude) " +
-		"values (?, ?, ?)");
+	private void insertPoinSect(PoinSect point, PreparedStatement insert) throws SQLException{
 		insert.setString(1, point.getReference());
 		insert.setDouble(2, point.getLatitude().toDecimal());
 		insert.setDouble(3, point.getLongitude().toDecimal());
-		insert.executeUpdate();
-		insert.close();
+		insert.addBatch();
 	}
 	
 
@@ -409,23 +426,26 @@ public class Stip extends FileParser{
 	 */
 	private void setSecteur(String path) {
 		try {
+			PreparedStatement insert = this.conn.prepareStatement("insert into secteurs (nom, centre, espace, numero, flinf, flsup, modes) " +
+		"values (?, ?, ?, ?, ?, ?, ?)");
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while (in.ready()){
 				String line = in.readLine();
 				if(!line.startsWith("FORMAT") && (line.length()>20)){
 					if(!line.substring(4, 8).equalsIgnoreCase("SCAG") && !line.substring(20, 43).equalsIgnoreCase("* SECTEUR NON UTILISE *")){
 						SecteurLigne secteur = new SecteurLigne(line);
-						try {
-							this.insertSecteur(secteur);
-						} catch (SQLException e) {
-							e.printStackTrace();
-						}
+						this.insertSecteur(secteur, insert);
 					}
 				}
 			}
+			insert.executeBatch();
+			insert.close();
 		} catch (FileNotFoundException e1){
 			e1.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -435,9 +455,7 @@ public class Stip extends FileParser{
 	 * @param secteur une ligne du fichier SECT
 	 * @throws SQLException 
 	 */
-	private void insertSecteur(SecteurLigne secteur) throws SQLException {
-		PreparedStatement insert = this.conn.prepareStatement("insert into secteurs (nom, centre, espace, numero, flinf, flsup, modes) " +
-		"values (?, ?, ?, ?, ?, ?, ?)");
+	private void insertSecteur(SecteurLigne secteur, PreparedStatement insert) throws SQLException {
 		insert.setString(1, secteur.getNom());
 		insert.setString(2, secteur.getCentre());
 		insert.setString(3, secteur.getEspace());
@@ -445,8 +463,7 @@ public class Stip extends FileParser{
 		insert.setInt(5, secteur.getFlinf());
 		insert.setInt(6, secteur.getFlsup());
 		insert.setBoolean(7, secteur.getModeS());
-		insert.executeUpdate();
-		insert.close();
+		insert.addBatch();
 	}
 
 	/**
@@ -455,15 +472,19 @@ public class Stip extends FileParser{
 	 */
 	private void setCentre(String path) {
 		try {
+			PreparedStatement insert = this.conn.prepareStatement("insert into centres (name, identite, numero, type) " +
+				"values (?, ?, ?, ?)");
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while (in.ready()){
 				String line = in.readLine();
 				//TODO gérer un peu mieux la dernière ligne
 				if(!line.startsWith("FORMAT") && (line.length()>20)){ //on gère la première et la dernière ligne
 					Centre centre = new Centre(line);
-					this.insertCentre(centre);
+					this.insertCentre(centre, insert);
 				}
 			}
+			insert.executeBatch();
+			insert.close();
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}catch (FileNotFoundException e1){
@@ -478,15 +499,13 @@ public class Stip extends FileParser{
 	 * @param centre une ligne du fichier CENTRE
 	 * @throws SQLException 
 	 */
-	private void insertCentre(Centre centre) throws SQLException {
-		PreparedStatement insert = this.conn.prepareStatement("insert into centres (name, identite, numero, type) " +
-				"values (?, ?, ?, ?)");
+	private void insertCentre(Centre centre, PreparedStatement insert) throws SQLException {
+		
 		insert.setString(1, centre.getNom());
 		insert.setString(2, centre.getIdentite());
 		insert.setInt(3, centre.getNumero());
 		insert.setString(4, centre.getType());
-		insert.executeUpdate();
-		insert.close();		
+		insert.addBatch();	
 	}
 
 	/**
@@ -495,6 +514,8 @@ public class Stip extends FileParser{
 	 */
 	private void setBalise(String path) {
 		try {
+			PreparedStatement insert = this.conn.prepareStatement("insert into balises (name, publicated, latitude, longitude, centre, definition, sccag, sect1, limit1, sect2, limit2, sect3, limit3, sect4, limit4, sect5, limit5, sect6, limit6, sect7, limit7, sect8, limit8, sect9, limit9) " +
+	       "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			Balise balise = new Balise();
 			while (in.ready()){
@@ -502,7 +523,7 @@ public class Stip extends FileParser{
 				if (line.startsWith("1")) {
 					//la balise est vide lors du premier passage
 					if(balise.getIndicatif() != null) {//alors on stocke la balise précédente
-							this.insertBalise(balise);
+							this.insertBalise(balise, insert);
 					}
 					balise = new Balise(line);
 				} else if (line.startsWith("2")) {
@@ -517,8 +538,10 @@ public class Stip extends FileParser{
 			}
 			//on n'oublie pas de stocker la dernière balise lue
 			if(balise != null) {
-				this.insertBalise(balise);
+				this.insertBalise(balise, insert);
 			}
+			insert.executeBatch();
+			insert.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}catch (FileNotFoundException e1) {
@@ -533,9 +556,7 @@ public class Stip extends FileParser{
 	 * @param balise
 	 * @throws SQLException 
 	 */
-	private void insertBalise(Balise balise) throws SQLException {
-		PreparedStatement insert = this.conn.prepareStatement("insert into balises (name, publicated, latitude, longitude, centre, definition, sccag, sect1, limit1, sect2, limit2, sect3, limit3, sect4, limit4, sect5, limit5, sect6, limit6, sect7, limit7, sect8, limit8, sect9, limit9) " +
-	       "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+	private void insertBalise(Balise balise, PreparedStatement insert) throws SQLException {
 		insert.setString(1, balise.getIndicatif());
 		insert.setBoolean(2, balise.getPublication());
 		insert.setDouble(3, balise.getLatitude().toDecimal());
@@ -559,8 +580,7 @@ public class Stip extends FileParser{
 			i++;
 			insert.setInt(i, -1);
 		}
-		insert.executeUpdate();
-		insert.close();
+		insert.addBatch();
 	}
 
 	@Override

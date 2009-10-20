@@ -66,6 +66,7 @@ public class Exsa extends FileParser {
 			this.getName();
 			//on crée la connection avec bdd avec ce nom
 			this.conn = this.db.selectDB(Type.EXSA, this.name);
+			this.conn.setAutoCommit(false);
 			if(!this.db.databaseExists(this.name)){
 				//puis la structure de la base de donnée
 				this.db.createEXSA(this.name);
@@ -85,6 +86,12 @@ public class Exsa extends FileParser {
 		if(this.isCancelled()){
 			try {
 				this.db.deleteDatabase(name, Type.EXSA);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				this.conn.commit();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

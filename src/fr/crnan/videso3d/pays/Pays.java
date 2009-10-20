@@ -87,14 +87,18 @@ public class Pays extends FileParser {
 	 */
 	private void setPoinPays(String path) {
 		try {
+			PreparedStatement insert = this.conn.prepareStatement("insert into poinpays (ref, latitude, longitude) " +
+		"values (?, ?, ?)");
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while (in.ready()){
 				String line = in.readLine();
 				if(line.startsWith("PTP")){
 					PoinPays point = new PoinPays(line); 
-					this.insertPoinPays(point);
+					this.insertPoinPays(point, insert);
 				}
 			}
+			insert.executeBatch();
+			insert.close();
 		} catch (SQLException e){
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
@@ -108,14 +112,11 @@ public class Pays extends FileParser {
 	 * @param point une ligne du fichier PoinPays
 	 * @throws SQLException 
 	 */
-	private void insertPoinPays(PoinPays point) throws SQLException{
-		PreparedStatement insert = this.conn.prepareStatement("insert into poinpays (ref, latitude, longitude) " +
-		"values (?, ?, ?)");
+	private void insertPoinPays(PoinPays point, PreparedStatement insert) throws SQLException{
 		insert.setString(1, point.getReference());
 		insert.setDouble(2, point.getLatitude().toDecimal());
 		insert.setDouble(3, point.getLongitude().toDecimal());
-		insert.executeUpdate();
-		insert.close();
+		insert.addBatch();
 	}
 
 	/**
@@ -124,6 +125,8 @@ public class Pays extends FileParser {
 	 */
 	private void setContPays(String path) {
 		try {
+			PreparedStatement insert = this.conn.prepareStatement("insert into contpays (refcontour, refpoint) " +
+		"values (?, ?)");
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			String contName = new String();
 			while (in.ready()){
@@ -131,9 +134,11 @@ public class Pays extends FileParser {
 				if(line.startsWith("CTR")){
 					contName = line.substring(4,9).trim();
 				} else if(line.startsWith("PTC")){
-						this.insertContPays(contName, line.substring(4, 10).trim());
+						this.insertContPays(contName, line.substring(4, 10).trim(), insert);
 				}
 			}
+			insert.executeBatch();
+			insert.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
@@ -148,13 +153,10 @@ public class Pays extends FileParser {
 	 * @param point Nom du point
 	 * @throws SQLException 
 	 */
-	private void insertContPays(String contName, String point) throws SQLException{
-		PreparedStatement insert = this.conn.prepareStatement("insert into contpays (refcontour, refpoint) " +
-		"values (?, ?)");
+	private void insertContPays(String contName, String point, PreparedStatement insert) throws SQLException{
 		insert.setString(1, contName);
 		insert.setString(2, point);
-		insert.executeUpdate();
-		insert.close();
+		insert.addBatch();
 	}
 	/**
 	 * Lecteur de fichier Pays
@@ -162,6 +164,8 @@ public class Pays extends FileParser {
 	 */
 	private void setPays(String path) {
 		try {
+			PreparedStatement insert = this.conn.prepareStatement("insert into pays (pays, contour, refcontour) " +
+		"values (?, ?, ?)");
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			String pays = new String();
 			String contName = new String();
@@ -171,9 +175,11 @@ public class Pays extends FileParser {
 					pays = line.substring(4, 34).trim();
 					contName = line.substring(35, 65).trim();
 				} else if(line.startsWith("CTR")){
-					this.insertPays(pays, contName, line.substring(4, 9).trim());
+					this.insertPays(pays, contName, line.substring(4, 9).trim(), insert);
 				}
 			}
+			insert.executeBatch();
+			insert.close();
 		} catch(SQLException e){
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
@@ -189,14 +195,11 @@ public class Pays extends FileParser {
 	 * @param refcontour référence du contour
 	 * @throws SQLException 
 	 */
-	private void insertPays(String pays, String contName, String refcontour) throws SQLException{
-		PreparedStatement insert = this.conn.prepareStatement("insert into pays (pays, contour, refcontour) " +
-		"values (?, ?, ?)");
+	private void insertPays(String pays, String contName, String refcontour, PreparedStatement insert) throws SQLException{
 		insert.setString(1, pays);
 		insert.setString(2, contName);
 		insert.setString(3, refcontour);
-		insert.executeUpdate();
-		insert.close();
+		insert.addBatch();
 	}
 
 	@Override
@@ -210,6 +213,7 @@ public class Pays extends FileParser {
 		this.getName();
 		try {
 			this.conn = this.db.selectDB(Type.PAYS, this.name);
+			this.conn.setAutoCommit(false);
 			if(!this.db.databaseExists(this.name)){
 				//création de la structure de la base de données
 				this.db.createPays(this.name);
@@ -226,6 +230,12 @@ public class Pays extends FileParser {
 		if(this.isCancelled()){
 			try {
 				this.db.deleteDatabase(name, Type.PAYS);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				this.conn.commit();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
