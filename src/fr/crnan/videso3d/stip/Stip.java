@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -36,14 +38,14 @@ import fr.crnan.videso3d.DatabaseManager.Type;
  * Lecteur de fichiers STIP
  * Toutes les infos concernant les fichiers SATIN sont dans le DDI Satin
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class Stip extends FileParser{
 
 	/**
 	 * Nombre de fichiers gérés
 	 */
-	private int numberFiles = 6;
+	private int numberFiles = 7;
 	
 	/**
 	 * Version des fichiers Stip
@@ -116,7 +118,6 @@ public class Stip extends FileParser{
 	}
 	
 	protected void getFromFiles() {
-
 		this.setFile("CENTRE");
 		this.setProgress(0);
 		this.setCentre(this.path + "/CENTRE");
@@ -136,6 +137,9 @@ public class Stip extends FileParser{
 		this.setFile("ROUTE");
 		this.setRoute(this.path + "/ROUTE");
 		this.setProgress(6);
+		this.setFile("ITI");
+		this.setItis(this.path + "/ITI");
+		this.setProgress(7);
 	}
 	
 	/**
@@ -143,9 +147,72 @@ public class Stip extends FileParser{
 	 * @param path
 	 */
 	private void setItis(String path){
-		
+		Iti iti = null;
+		String line = "";
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			in.readLine(); //suppression de la première ligne
+			while (in.ready()){
+				line = in.readLine();
+				//reconnaissance d'une carte 2
+				if(line.length()> 27 && line.startsWith("                       ")){
+					//enregistrement de l'iti précédent
+					iti.addBalises(line);
+				} else if (line.length() >= 35 ){
+					if(iti != null)
+						try {
+							this.insertIti(iti);
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
+					iti = new Iti(line);
+				}
+			}
+		} catch (FileNotFoundException e1){
+			//TODO faire une fenêtre d'avertissement
+			e1.printStackTrace();
+		}catch (IOException e1) {
+			e1.printStackTrace();
+		} 
+		//insertion du dernier iti créé
+		if(iti != null){
+			try {
+				this.insertIti(iti);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
+	private void insertIti(Iti iti) throws SQLException {
+		PreparedStatement insert = this.conn.prepareStatement("insert into itis (entree, sortie, flinf, flsup) " +
+				"values (?, ?, ?, ?)");
+		insert.setString(1, iti.getEntree());
+		insert.setString(2, iti.getSortie());
+		insert.setInt(3, iti.getFlinf());
+		insert.setInt(4, iti.getFlsup());
+		insert.executeUpdate();
+		insert.close();
+		Statement st = this.conn.createStatement();
+		ResultSet rs = st.executeQuery("select id from itis where entree = '" + iti.getEntree() + 
+				"' and sortie = '" + iti.getSortie() +
+				"' and flinf = '" + iti.getFlinf() + 
+				"' and flsup = '" + iti.getFlsup() +"'");
+		rs.next();
+		Integer id = rs.getInt(1);
+		st.close();
+		insert = this.conn.prepareStatement("insert into balitis (iditi, balise, appartient) " +
+		"values (?, ?, ?)");
+		Iterator<Couple<String, Boolean>> iterator = iti.getBalises().iterator();
+		insert.setInt(1, id);
+		while(iterator.hasNext()){
+			Couple<String, Boolean> balise = iterator.next();
+			insert.setString(2, balise.getFirst());
+			insert.setBoolean(3, balise.getSecond());
+			insert.executeUpdate();
+		}
+		insert.close();
+	}
 	
 	/**
 	 * Lecteur de fichier Route
