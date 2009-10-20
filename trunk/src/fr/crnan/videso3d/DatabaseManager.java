@@ -470,7 +470,7 @@ public class DatabaseManager{
 				"flsup int)");
 		//table mettant en relation les balises formant les itis
 		st.executeUpdate("create table balitis (id integer primary key autoincrement, " +
-				"idroute int, " +
+				"iditi int, " +
 				"balise varchar(5), " +
 				"appartient boolean)");
 		//on référence la base de données

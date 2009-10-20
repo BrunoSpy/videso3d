@@ -116,8 +116,17 @@ public class Iti {
 		this.flsup = flsup;
 	}
 	
+	
+	
+	/**
+	 * @return the balises
+	 */
+	public List<Couple<String, Boolean>> getBalises() {
+		return balises;
+	}
+
 	public void addBalises(String line){
-		String[] list = line.split("\\s+");
+		String[] list = line.trim().split("\\s+");
 		for(Integer i=0; i<list.length; i++ ){
 			if(list[i].endsWith("/")){
 				//balise "travers"
