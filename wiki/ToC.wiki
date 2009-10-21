@@ -1,3 +1,5 @@
 ﻿ * [Installer Installer Videso 3D]
  * [Utiliser Utiliser Videso 3D]
  * [Participer Participer à Videso 3D]
+
+<wiki:gadget url="http://www.ohloh.net/p/464657/widgets/project_users.xml" height="100"  border="0" />
