@@ -23,15 +23,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Timer;
-
-import org.sqlite.SQLiteJDBCLoader;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
@@ -49,7 +43,7 @@ public class Stip extends FileParser{
 	/**
 	 * Nombre de fichiers gérés
 	 */
-	private int numberFiles = 7;
+	private int numberFiles = 8;
 	
 	/**
 	 * Version des fichiers Stip
@@ -85,6 +79,12 @@ public class Stip extends FileParser{
 				this.db.createSTIP(this.name);
 				//parsing des fichiers et stockage en base
 				this.getFromFiles();
+				try {
+					this.conn.commit();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				this.setProgress(8);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -96,12 +96,6 @@ public class Stip extends FileParser{
 		if(this.isCancelled()){//si le parsing a été annulé, on fait le ménage
 			try {
 				this.db.deleteDatabase(name, Type.STIP);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				this.conn.commit();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -204,14 +198,7 @@ public class Stip extends FileParser{
 		insert.setInt(4, iti.getFlsup());
 		insert.executeUpdate();
 		insert.close();
-		Statement st = this.conn.createStatement();
-		ResultSet rs = st.executeQuery("select id from itis where entree = '" + iti.getEntree() + 
-				"' and sortie = '" + iti.getSortie() +
-				"' and flinf = '" + iti.getFlinf() + 
-				"' and flsup = '" + iti.getFlsup() +"'");
-		rs.next();
-		Integer id = rs.getInt(1);
-		st.close();
+		int id = insert.getGeneratedKeys().getInt(1);
 		insert = this.conn.prepareStatement("insert into balitis (iditi, balise, appartient) " +
 		"values (?, ?, ?)");
 		Iterator<Couple<String, Boolean>> iterator = iti.getBalises().iterator();
