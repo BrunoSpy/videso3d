@@ -33,7 +33,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 /**
  * Lecteur de fichiers EXSA 
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.2
  */
 public class Exsa extends FileParser {
 	/**
@@ -44,6 +44,8 @@ public class Exsa extends FileParser {
 	 * Connection à la base de données
 	 */
 	private Connection conn;
+	
+	private PreparedStatement insert;
 	
 	public Exsa() {
 		super();
@@ -72,6 +74,7 @@ public class Exsa extends FileParser {
 				this.db.createEXSA(this.name);
 				//et on remplit la bdd avec les données du fichier
 				this.getFromFiles();
+				this.conn.commit();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -86,12 +89,6 @@ public class Exsa extends FileParser {
 		if(this.isCancelled()){
 			try {
 				this.db.deleteDatabase(name, Type.EXSA);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				this.conn.commit();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -136,7 +133,10 @@ public class Exsa extends FileParser {
 			    if (line.startsWith("CARA_GENER")){
 			    	this.setFile("CARA_GENER");
 			    	this.setProgress(0);
+			    	insert = this.conn.prepareStatement("INSERT INTO caraGener (name, date, jeu, type, oasis, boa, videomap, edimap, satin, calcu, contexte) " +
+				       "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			    	this.setCaraGener(line);
+					insert.executeBatch();
 				} /*else if (line.startsWith("CARA_STRMV")) {
 					
 				} else if (line.startsWith("CARA_CALCU")) {
@@ -146,11 +146,17 @@ public class Exsa extends FileParser {
 				} */else if (line.startsWith("CENT_CENTR")) {
 			    	this.setFile("CENT_CENTR.");
 			    	this.setProgress(1);
+			    	insert = this.conn.prepareStatement("insert into centcentr (name, sl, type, str, plafondmsaw, rvsm, plancherrvsm, plafondrvsm, typedonnees, versiondonnees)" +
+					" values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					this.setCentCentr(line);
+					insert.executeBatch();
 				} else if (line.startsWith("CENT_MOSAI")) {
 			    	this.setFile("CENT_CENTR.");
 			    	this.setProgress(2);
+			    	insert = this.conn.prepareStatement("insert into centmosai (latitude, longitude, xcautra, ycautra, lignes, colonnes, type) " +
+					"values (?, ?, ?, ?, ?, ?, ?)");
 			    	this.setCentMosai(line);
+					insert.executeBatch();
 				} /*else if (line.startsWith("CENT_V_V_F")) {
 					
 				} else if (line.startsWith("CENT_Z_ARR")) {
@@ -162,7 +168,10 @@ public class Exsa extends FileParser {
 				} */else if (line.startsWith("CENT_FLVVF")) {
 					this.setFile("CENT_FLVVF.");
 			    	this.setProgress(3);
+			    	insert = this.conn.prepareStatement("insert into centflvvf (name) " +
+					"values (?)");
 			    	this.setCentFlvvf(line);
+					insert.executeBatch();
 				} /*else if (line.startsWith("CENT_STACK")) {
 					
 				} else if (line.startsWith("CENT_TMA-F")) {
@@ -170,19 +179,28 @@ public class Exsa extends FileParser {
 				}*/ else if (line.startsWith("CENT_Z_OCC")) {
 					this.setFile("CENT_Z_OCC.");
 			    	this.setProgress(4);
+			    	insert = this.conn.prepareStatement("insert into centzocc (name, espace, terrains) " +
+							"values (?, ?, ?)");
 			    	this.setCentZOcc(line);
+					insert.executeBatch();
 				} /*else if (line.startsWith("CENT_ZONES")) {
 				
 				} */else if (line.startsWith("CENT_SCVVF")) {
 					this.setFile("CENT_SCVVF.");
 			    	this.setProgress(5);
+			    	insert = this.conn.prepareStatement("insert into centscvvf (carre, souscarre, vvfs, plafonds, planchers) " +
+							"values (?, ?, ?, ?, ?)");
 			    	this.setCentScvvf(line);
+					insert.executeBatch();
 				}/* else if (line.startsWith("CENT_SCTMA")) {
 					
 				}*/ else if (line.startsWith("CENT_SCZOC")) {
 					this.setFile("CENT_SCZOC.");
 			    	this.setProgress(6);
+			    	insert = this.conn.prepareStatement("insert into centsczoc (carre, souscarre, zone, plafond) " +
+					"values (?, ?, ?, ?)");
 			    	this.setCentSczoc(line);
+					insert.executeBatch();
 				} /*else if (line.startsWith("CENT_ARVSM")) {
 					
 				} else if (line.startsWith("CENT_CRVSM")) {
@@ -234,7 +252,11 @@ public class Exsa extends FileParser {
 				}*/ else if (line.startsWith("RADR_GENER")) {
 					this.setFile("RADR_GENER.");
 			    	this.setProgress(7);
+					insert = this.conn.prepareStatement("insert into radrgener (name, numero, type, nommosaique, latitude, longitude, xcautra, ycautra, " +
+							"ecart, radarrelation, typerelation, typeplots, typeradar, codepays, coderadar, militaire) " +
+"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
 			    	this.setRadrGener(line);
+					insert.executeBatch();
 				} /*else if (line.startsWith("RADR_TECHN")) {
 					
 				} else if (line.startsWith("RADR_CALAG")) {
@@ -388,11 +410,17 @@ public class Exsa extends FileParser {
 				}*/ else if (line.startsWith("FICA_AFNIV")) {
 			    	this.setFile("FICA_AFNIV.");
 			    	this.setProgress(8);
+			    	insert = this.conn.prepareStatement("insert into ficaafniv (abonne, carre, plancher, plafond, elimine, firstcode, lastcode) " +
+							"values (?, ?, ?, ?, ?, ?, ?)");
 			    	this.setFicaAfniv(line);
+					insert.executeBatch();
 				} else if (line.startsWith("FICA_AFNIC")) {
 					this.setFile("FICA_AFNIC.");
 			    	this.setProgress(9);
+			    	insert = this.conn.prepareStatement("insert into ficaafnic (abonne, carre, plancher, plafond, firstcode, lastcode) " +
+					"values (?, ?, ?, ?, ?, ?)");
 			    	this.setFicaAfnic(line);
+					insert.executeBatch();
 				}/* else if (line.startsWith("FICA_CORLI")) {
 					
 				} else if (line.startsWith("CMON_ELIPS")) {
@@ -409,9 +437,13 @@ public class Exsa extends FileParser {
 					
 				}*/
 			}
+			insert.executeBatch();
+			insert.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		this.setProgress(this.numberFiles());
@@ -421,9 +453,6 @@ public class Exsa extends FileParser {
 	private void setRadrGener(String line) {
 		try {
 			RadrGener radrGener = new RadrGener(line);
-			PreparedStatement insert = this.conn.prepareStatement("insert into radrgener (name, numero, type, nommosaique, latitude, longitude, xcautra, ycautra, " +
-													"ecart, radarrelation, typerelation, typeplots, typeradar, codepays, coderadar, militaire) " +
-					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
 			insert.setString(1, radrGener.getNom());
 			insert.setInt(2, radrGener.getNumero());
 			insert.setString(3, radrGener.getType());
@@ -440,8 +469,7 @@ public class Exsa extends FileParser {
 			insert.setInt(14, radrGener.getCodePays());
 			insert.setInt(15, radrGener.getCodeRadar());
 			insert.setBoolean(16, radrGener.getMilitaire());
-			insert.executeUpdate();
-			insert.close();
+			insert.addBatch();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -452,15 +480,12 @@ public class Exsa extends FileParser {
 	private void setCentScvvf(String line) {
 		try {
 			CentScvvf centScvvf = new CentScvvf(line);
-			PreparedStatement insert = this.conn.prepareStatement("insert into centscvvf (carre, souscarre, vvfs, plafonds, planchers) " +
-					"values (?, ?, ?, ?, ?)");
 			insert.setInt(1, centScvvf.getCarre());
 			insert.setInt(2, centScvvf.getSousCarre());
 			insert.setString(3, centScvvf.getVvfs());
 			insert.setString(4, centScvvf.getPlafonds());
 			insert.setString(5, centScvvf.getPlanchers());
-			insert.executeUpdate();
-			insert.close();
+			insert.addBatch();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -471,11 +496,8 @@ public class Exsa extends FileParser {
 	private void setCentFlvvf(String line) {
 		try {
 			CentFlvvf centFlvvf = new CentFlvvf(line);
-			PreparedStatement insert = this.conn.prepareStatement("insert into centflvvf (name) " +
-					"values (?)");
 			insert.setString(1, centFlvvf.getName());
-			insert.executeUpdate();
-			insert.close();
+			insert.addBatch();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -486,16 +508,13 @@ public class Exsa extends FileParser {
 	private void setFicaAfnic(String line) {
 		try {
 			FicaAfnic ficaAfnic = new FicaAfnic(line);
-			PreparedStatement insert = this.conn.prepareStatement("insert into ficaafnic (abonne, carre, plancher, plafond, firstcode, lastcode) " +
-					"values (?, ?, ?, ?, ?, ?)");
 			insert.setString(1, ficaAfnic.getAbonne());
 			insert.setInt(2, ficaAfnic.getCarre());
 			insert.setInt(3, ficaAfnic.getPlancher());
 			insert.setInt(4, ficaAfnic.getPlafond());
 			insert.setInt(5, ficaAfnic.getFirstCode());
 			insert.setInt(6, ficaAfnic.getLastCode());
-			insert.executeUpdate();
-			insert.close();
+			insert.addBatch();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -506,14 +525,11 @@ public class Exsa extends FileParser {
 	private void setCentSczoc(String line) {
 		try {
 			CentSczoc centSczoc = new CentSczoc(line);
-			PreparedStatement insert = this.conn.prepareStatement("insert into centsczoc (carre, souscarre, zone, plafond) " +
-					"values (?, ?, ?, ?)");
 			insert.setInt(1, centSczoc.getCarre());
 			insert.setInt(2, centSczoc.getSousCarre());
 			insert.setString(3, centSczoc.getZone());
 			insert.setInt(4, centSczoc.getPlafond());
-			insert.executeUpdate();
-			insert.close();
+			insert.addBatch();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -524,13 +540,10 @@ public class Exsa extends FileParser {
 	private void setCentZOcc(String line) {
 		try {
 			CentZOcc centZOcc = new CentZOcc(line);
-			PreparedStatement insert = this.conn.prepareStatement("insert into centzocc (name, espace, terrains) " +
-					"values (?, ?, ?)");
 			insert.setString(1, centZOcc.getName());
 			insert.setString(2, centZOcc.getEspace());
 			insert.setString(3, centZOcc.getTerrains());
-			insert.executeUpdate();
-			insert.close();
+			insert.addBatch();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -545,8 +558,6 @@ public class Exsa extends FileParser {
 	private void setFicaAfniv(String line) {
 		try {
 			FicaAfniv ficaAfniv = new FicaAfniv(line);
-			PreparedStatement insert = this.conn.prepareStatement("insert into ficaafniv (abonne, carre, plancher, plafond, elimine, firstcode, lastcode) " +
-					"values (?, ?, ?, ?, ?, ?, ?)");
 			insert.setString(1, ficaAfniv.getAbonne());
 			insert.setInt(2, ficaAfniv.getCarré());
 			insert.setInt(3, ficaAfniv.getPlancher());
@@ -554,8 +565,7 @@ public class Exsa extends FileParser {
 			insert.setBoolean(5, ficaAfniv.getElimine());
 			insert.setInt(6, ficaAfniv.getFirstCode());
 			insert.setInt(7, ficaAfniv.getLastCode());
-			insert.executeUpdate();
-			insert.close();
+			insert.addBatch();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -570,8 +580,6 @@ public class Exsa extends FileParser {
 	private void setCentMosai(String line) {
 		try {
 			CentMosai centMosai = new CentMosai(line);
-			PreparedStatement insert = this.conn.prepareStatement("insert into centmosai (latitude, longitude, xcautra, ycautra, lignes, colonnes, type) " +
-					"values (?, ?, ?, ?, ?, ?, ?)");
 			insert.setDouble(1, centMosai.getLatitude().toDecimal());
 			insert.setDouble(2, centMosai.getLongitude().toDecimal());
 			insert.setDouble(3, centMosai.getX());
@@ -579,8 +587,7 @@ public class Exsa extends FileParser {
 			insert.setInt(5, centMosai.getLignes());
 			insert.setInt(6, centMosai.getColonnes());
 			insert.setString(7, centMosai.getType());
-			insert.executeUpdate();
-			insert.close();
+			insert.addBatch();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -598,8 +605,6 @@ public class Exsa extends FileParser {
 		try {
 			caraGener = new CaraGener(line);
 			//remplissage de la base de données
-			PreparedStatement insert = this.conn.prepareStatement("INSERT INTO caraGener (name, date, jeu, type, oasis, boa, videomap, edimap, satin, calcu, contexte) " +
-		       "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			insert.setString(1, caraGener.getName());
 			insert.setString(2, caraGener.getDate());
 			insert.setString(3, caraGener.getJeu());
@@ -611,8 +616,7 @@ public class Exsa extends FileParser {
 			insert.setString(9, caraGener.getSatin());
 			insert.setString(10, caraGener.getCalculateur());
 			insert.setString(11, caraGener.getContexte());
-			insert.executeUpdate();
-			insert.close();
+			insert.addBatch();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -628,8 +632,6 @@ public class Exsa extends FileParser {
 		CentCentr centCentr;
 		try {
 			centCentr = new CentCentr(line);
-			PreparedStatement insert = this.conn.prepareStatement("insert into centcentr (name, sl, type, str, plafondmsaw, rvsm, plancherrvsm, plafondrvsm, typedonnees, versiondonnees)" +
-					" values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			insert.setString(1, centCentr.getName());
 			insert.setInt(2, centCentr.getSl());
 			insert.setString(3, centCentr.getTypeCentre());
@@ -640,8 +642,7 @@ public class Exsa extends FileParser {
 			insert.setInt(8, centCentr.getNivPlafondRvsm());
 			insert.setString(9, centCentr.getTypeDonnees());
 			insert.setString(10, centCentr.getVersionADP());
-			insert.executeUpdate();
-			insert.close();
+			insert.addBatch();
 		} catch(ParseException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

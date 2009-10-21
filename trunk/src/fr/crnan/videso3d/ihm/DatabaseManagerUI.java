@@ -20,8 +20,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -41,7 +39,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ProgressMonitor;
-import javax.swing.UIManager;
 import javax.swing.table.AbstractTableModel;
 
 import org.jdesktop.swingx.JXTable;
@@ -57,8 +54,9 @@ import fr.crnan.videso3d.stpv.Stpv;
 /**
  * Interface de gestion des base de données
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
+@SuppressWarnings("serial")
 public class DatabaseManagerUI extends JFrame {
 
 	private JXTable table;
@@ -174,7 +172,8 @@ public class DatabaseManagerUI extends JFrame {
     private void getDatas(final FileParser fileParser, String title, final String type){
     	
     	progressMonitor = new ProgressMonitor(this, title, "", 1, fileParser.numberFiles());
-    	progressMonitor.setMillisToDecideToPopup(1);
+    	progressMonitor.setMillisToDecideToPopup(0);
+    	progressMonitor.setMillisToPopup(0);
     	
     	fileParser.addPropertyChangeListener(new PropertyChangeListener() {
 			@Override
@@ -195,7 +194,6 @@ public class DatabaseManagerUI extends JFrame {
     }
 	
 	/*-------------- TableModel ----------------*/
-	@SuppressWarnings("serial")
 	private  class DBTableModel extends AbstractTableModel {
 		
 		private String[] titles = {"Nom", "Type", "Date d'import", "Sélectionné"};
