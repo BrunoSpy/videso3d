@@ -26,11 +26,14 @@ import fr.crnan.videso3d.geom.LatLonCautra;
 
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfacePolygon;
 import gov.nasa.worldwind.render.SurfacePolyline;
 import gov.nasa.worldwind.render.UserFacingText;
+import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
+import gov.nasa.worldwind.render.airspaces.Polygon;
 /**
  * Affiche une mosaique (STR ou STPV)</br>
  * Permet de colorier certains carrés et sous-carrés
@@ -64,7 +67,7 @@ public class MosaiqueLayer {
 	 */
 	public static final int HORIZONTAL_FIRST = 6;
 	
-	
+	private AirspaceLayer airspaceLayer = new AirspaceLayer();
 	private SurfaceShapeLayer shapeLayer = new SurfaceShapeLayer();
 	private TextLayer textLayer = new TextLayer("Numéros des mosaïques");
 	
@@ -78,7 +81,8 @@ public class MosaiqueLayer {
 	 * @param hSens {@link Integer} Sens de parcours vertical
 	 * @param vSens {@link Integer} Sens de parcours horizontal
 	 * @param numSens {@link Integer} Sens de la numérotation (VERTICAL_FIRST : utilisé par le STR, HORIZONTAL_FIRST : utilisé par le STPV
-	 * @param squares {@link List} Liste de (carré, sous-carré) à colorier. Si sous-carré == 0, on colorie tout le carré. 
+	 * @param squares {@link List} Liste de (carré, sous-carré) à colorier. Si sous-carré == 0, on colorie tout le carré.
+	 * @param altitudes {@link List} Liste de (plancher, plafond) associée à la liste des carrés précédente. En mètres. 
 	 * @param numbers {@link Boolean} Affichage des numéros des carrés
 	 * @param attr {@link ShapeAttributes} Attributs pour le coloriage des carrés.
 	 */
@@ -91,8 +95,10 @@ public class MosaiqueLayer {
 			int vSens, 
 			int numSens,
 			List<Couple<Integer, Integer>> squares,
+			List<Couple<Double, Double>> altitudes,
 			Boolean numbers,
-			ShapeAttributes attr){
+			ShapeAttributes attr,
+			AirspaceAttributes airspaceAttr){
 
 		int hsens = hSens == RIGHT_LEFT ? -1 : 1;
 		int vsens = vSens == TOP_DOWN ? -1 : 1;
@@ -161,9 +167,12 @@ public class MosaiqueLayer {
 		//coloriage des carrés
 		if(squares != null){
 			Iterator<Couple<Integer, Integer>> iterator = squares.iterator();
+			Iterator<Couple<Double, Double>> alt = altitudes.iterator();
 			while(iterator.hasNext()){
 				Couple<Integer, Integer> square = iterator.next();
-				this.colorieCarre(origine, square.getFirst(), square.getSecond(), width, height, size, hsens, vsens, numSens, attr );
+				Couple<Double, Double> altitude = new Couple<Double, Double>(null, null);
+				if(alt != null) altitude = alt.next();
+				this.colorieCarre(origine, square.getFirst(), square.getSecond(), width, height, size, altitude.getFirst(), altitude.getSecond(), hsens, vsens, numSens, attr, airspaceAttr);
 			}
 		}
 	}
@@ -175,6 +184,8 @@ public class MosaiqueLayer {
 	 * @param width {@link Integer} Nombre de carrés de côté
 	 * @param height {@link Integer} Nombre de carrés de hauteur
 	 * @param size {@link Integer} Taille d'un carré en NM
+	 * 
+	 * 
 	 * @param hsens {@link Integer} Sens de parcours vertical
 	 * @param vsens {@link Integer} Sens de parcours horizontal
 	 * @param numSens {@link Integer} Sens de la numérotation (VERTICAL_FIRST : utilisé par le STR, HORIZONTAL_FIRST : utilisé par le STPV
@@ -186,9 +197,11 @@ public class MosaiqueLayer {
 			Integer width, 
 			Integer height, 
 			Integer size, 
+			Double plancher,
+			Double plafond,
 			int hsens, 
 			int vsens, 
-			int numSens, ShapeAttributes attr){
+			int numSens, ShapeAttributes attr, AirspaceAttributes airspaceAttr){
 		int colonne, ligne; //colonne et ligne du carré. Débute à 0.
 		if(numSens == VERTICAL_FIRST) {
 			colonne = carre / height;
@@ -216,9 +229,15 @@ public class MosaiqueLayer {
 			locations.add(LatLonCautra.fromCautra(origine.getCautra()[0] + (colonne * size) * hsens, origine.getCautra()[1] + (ligne * size + size)*vsens));
 
 			
-			SurfacePolygon polygon = new SurfacePolygon(locations);
-			if(attr != null) polygon.setAttributes(attr);
-			this.shapeLayer.addRenderable(polygon);
+				SurfacePolygon polygon = new SurfacePolygon(locations);
+				if(attr != null) polygon.setAttributes(attr);
+				this.shapeLayer.addRenderable(polygon);
+		
+				Polygon polyg = new Polygon(locations);
+				polyg.setAltitudes(plancher, plafond);
+				if(airspaceAttr != null) polyg.setAttributes(airspaceAttr);
+				this.airspaceLayer.addAirspace(polyg);
+			
 		} else {
 			//on ne colorie que le sous-carré
 			//un sous-carré a une taille de size/4 car un carré est toujours découpé en 16 sous-carré
@@ -234,10 +253,16 @@ public class MosaiqueLayer {
 			locations.add(LatLonCautra.fromCautra(origine.getCautra()[0] + (colonne * size + sousColonne * (size/4) + (size/4)) * hsens, origine.getCautra()[1] + (ligne * size  + sousLigne *(size/4) + size/4)*vsens));
 			locations.add(LatLonCautra.fromCautra(origine.getCautra()[0] + (colonne * size + sousColonne * (size/4)) * hsens, origine.getCautra()[1] + (ligne * size + sousLigne *(size/4) + size/4)*vsens));
 
+	
+				SurfacePolygon polygon = new SurfacePolygon(locations);
+				if(attr != null) polygon.setAttributes(attr);
+				this.shapeLayer.addRenderable(polygon);
+		
+				Polygon polyg = new Polygon(locations);
+				polyg.setAltitudes(plancher, plafond);
+				if(airspaceAttr != null) polyg.setAttributes(airspaceAttr);
+				this.airspaceLayer.addAirspace(polyg);
 			
-			SurfacePolygon polygon = new SurfacePolygon(locations);
-			polygon.setAttributes(attr);
-			this.shapeLayer.addRenderable(polygon);
 		}
 	}
 	/**
@@ -252,6 +277,11 @@ public class MosaiqueLayer {
 	public TextLayer getTextLayer() {
 		return textLayer;
 	}
-
 	
+	/**
+	 * @return the airspace layer
+	 */
+	public AirspaceLayer getAirspaceLayer(){
+		return airspaceLayer;
+	}
 }

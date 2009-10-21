@@ -189,9 +189,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 */
 	public void toggleLayer(Layer layer, Boolean state){
 		if (layer != null) {
-			if(!this.getModel().getLayers().contains(layer)){
-				this.getModel().getLayers().add(layer);
-			}
+			this.getModel().getLayers().addIfAbsent(layer);
 			layer.setEnabled(state);
 		}
 	}
@@ -538,12 +536,23 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * @param type Type de la mosaique
 	 * @param name Nom de la mosaique
 	 * @param toggle Affiche si vrai
+	 * @param flat Mosaique 2D ou 3D
 	 */
-	public void toggleMosaiqueLayer(String type, String name, Boolean toggle){
+	public void toggleMosaiqueLayer(String type, String name, Boolean toggle, Boolean flat){
 		if(mosaiquesLayer.containsKey(type+name)){
 			MosaiqueLayer mos = mosaiquesLayer.get(type+name);
-			this.toggleLayer(mos.getShapeLayer(), toggle);
+			if(!toggle){
+				this.toggleLayer(mos.getShapeLayer(), toggle);
+				this.toggleLayer(mos.getAirspaceLayer(), toggle);
+			} else {
+				if(flat){
+					this.toggleLayer(mos.getShapeLayer(), toggle);
+				} else {
+					this.toggleLayer(mos.getAirspaceLayer(), toggle);
+				}
+			}
 			this.toggleLayer(mos.getTextLayer(), toggle);
+			
 		} else {
 			if(toggle){
 				Boolean grille = true;
@@ -555,8 +564,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				int vSens = 0;
 				int numSens = 0;
 				List<Couple<Integer, Integer>> squares = null;
+				List<Couple<Double, Double>> altitudes = null;
 				Boolean numbers = true;
 				ShapeAttributes attr = null;
+				AirspaceAttributes airspaceAttr = null;
 				if(type.equals("mosaique")) {
 					try {
 						Statement st = this.db.getCurrentExsa();
@@ -577,6 +588,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 					try {
 						grille = false;
 						squares = new LinkedList<Couple<Integer,Integer>>();
+						altitudes = new LinkedList<Couple<Double,Double>>();
 						Statement st = this.db.getCurrentExsa();
 						String typeGrille = name.equals("VISSEC") ? "ADP" : "CCR"; //TODO comment faire pour les autres centres ??
 						ResultSet rs = st.executeQuery("select * from centmosai where type ='"+typeGrille+"'");
@@ -593,13 +605,18 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 							if(rs.getInt("carre") == i){
 								if(!rs.getBoolean("elimine")){
 									squares.add(new Couple<Integer, Integer>(i, 0));
+									altitudes.add(new Couple<Double, Double>(rs.getInt("plancher")*30.48, rs.getInt("plafond")*30.48));
 								}
 								rs.next();
 							} else {
 								squares.add(new Couple<Integer, Integer>(i, 0));
+								altitudes.add(new Couple<Double, Double>(-10.0, 660*30.48));
 							}
 						}
 						numbers = false;
+						airspaceAttr = new BasicAirspaceAttributes();
+						airspaceAttr.setMaterial(Material.YELLOW);
+						airspaceAttr.setOpacity(0.4);
 						attr = new BasicShapeAttributes();
 						attr.setInteriorMaterial(Material.YELLOW);
 						attr.setInteriorOpacity(0.4);
@@ -609,6 +626,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				} else if (type.equals("dyn")){
 					grille = false;
 					squares = new LinkedList<Couple<Integer,Integer>>();
+					altitudes = new LinkedList<Couple<Double,Double>>();
 					try {
 						Statement st = this.db.getCurrentExsa();
 						ResultSet rs = st.executeQuery("select * from centmosai where type ='CCR'");
@@ -623,10 +641,14 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 						attr = new BasicShapeAttributes();
 						attr.setInteriorMaterial(Material.YELLOW);
 						attr.setInteriorOpacity(0.4);
+						airspaceAttr = new BasicAirspaceAttributes();
+						airspaceAttr.setMaterial(Material.YELLOW);
+						airspaceAttr.setOpacity(0.4);
 						grille = false;
 						rs = st.executeQuery("select * from ficaafnic where abonne = '"+name+"'");
 						while(rs.next()){
 							squares.add(new Couple<Integer, Integer>(rs.getInt("carre"), 0));
+							altitudes.add(new Couple<Double, Double>(rs.getInt("plancher")*30.48, rs.getInt("plafond")*30.48));
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
@@ -634,6 +656,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				} else if (type.equals("zocc")){
 					grille = false;
 					squares = new LinkedList<Couple<Integer,Integer>>();
+					altitudes = new LinkedList<Couple<Double,Double>>();
 					try {
 						Statement st = this.db.getCurrentExsa();
 						ResultSet rs = st.executeQuery("select * from centmosai where type ='CCR'");
@@ -648,10 +671,14 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 						attr = new BasicShapeAttributes();
 						attr.setInteriorMaterial(Material.YELLOW);
 						attr.setInteriorOpacity(0.4);
+						airspaceAttr = new BasicAirspaceAttributes();
+						airspaceAttr.setMaterial(Material.YELLOW);
+						airspaceAttr.setOpacity(0.4);
 						grille = false;
 						rs = st.executeQuery("select * from centsczoc where zone = '"+name+"'");
 						while(rs.next()){
 							squares.add(new Couple<Integer, Integer>(rs.getInt("carre"), rs.getInt("souscarre")));
+							altitudes.add(new Couple<Double, Double>(0.0, rs.getInt("plafond")*30.48));
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
@@ -659,6 +686,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				} else if (type.equals("vvf")){
 					grille = false;
 					squares = new LinkedList<Couple<Integer,Integer>>();
+					altitudes = new LinkedList<Couple<Double,Double>>();
 					try {
 						Statement st = this.db.getCurrentExsa();
 						ResultSet rs = st.executeQuery("select * from centmosai where type ='CCR'");
@@ -674,10 +702,14 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 						attr.setInteriorMaterial(Material.YELLOW);
 						attr.setInteriorOpacity(0.4);
 						attr.setOutlineMaterial(Material.YELLOW);
+						airspaceAttr = new BasicAirspaceAttributes();
+						airspaceAttr.setMaterial(Material.YELLOW);
+						airspaceAttr.setOpacity(0.4);
 						grille = false;
 						rs = st.executeQuery("select * from centscvvf where vvfs LIKE '%"+name+"%'");
 						while(rs.next()){
 							squares.add(new Couple<Integer, Integer>(rs.getInt("carre"), rs.getInt("souscarre")));
+							altitudes.add(new Couple<Double, Double>(0.0, 660*30.48));//TODO gérer les VVF multiples
 						}
 					} catch (SQLException e) {
 						e.printStackTrace();
@@ -697,13 +729,27 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 						e.printStackTrace();
 					}
 				}
-				MosaiqueLayer mLayer = new MosaiqueLayer(grille, origine, width, height, size, hSens, vSens, numSens, squares, numbers, attr);
+				MosaiqueLayer mLayer = new MosaiqueLayer(grille, origine, width, height, size, hSens, vSens, numSens, squares, altitudes, numbers, attr, airspaceAttr);
 				mosaiquesLayer.put(type+name, mLayer);
-				this.toggleLayer(mLayer.getShapeLayer(), toggle);
+				this.toggleLayer(mLayer.getAirspaceLayer(), !flat);
+				this.toggleLayer(mLayer.getShapeLayer(), flat);
 				this.toggleLayer(mLayer.getTextLayer(), toggle);
 			}
 		}
 	}
+	
+	public void toggleMosaique2D(Boolean flat){
+		Iterator<MosaiqueLayer> iterator = mosaiquesLayer.values().iterator();
+		while(iterator.hasNext()){
+			MosaiqueLayer mos = iterator.next();
+			if(mos.getAirspaceLayer().isEnabled() || mos.getShapeLayer().isEnabled()){
+				this.toggleLayer(mos.getShapeLayer(), flat);
+				this.toggleLayer(mos.getAirspaceLayer(), !flat);
+			}
+			
+		}
+	}
+	
 	/**
 	 * Supprime toutes les mosaiques de la vue
 	 */
@@ -713,6 +759,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			MosaiqueLayer mos = iterator.next();
 			this.toggleLayer(mos.getShapeLayer(), false);
 			this.toggleLayer(mos.getTextLayer(), false);
+			this.toggleLayer(mos.getAirspaceLayer(), false);
 		}
 		mosaiquesLayer.clear();
 	}
