@@ -96,11 +96,11 @@ public class StpvView extends JPanel {
 			Object parent = ((JCheckBox)e.getSource()).getParent();
 			if(e.getStateChange() == ItemEvent.SELECTED) {
 				if(mosaique.equals(parent)){
-					wwd.toggleMosaiqueLayer("stpv", ((JCheckBox)e.getSource()).getText(), true);
+					wwd.toggleMosaiqueLayer("stpv", ((JCheckBox)e.getSource()).getText(), true, true);
 				} 
 			} else {
 				if(mosaique.equals(parent)){
-					wwd.toggleMosaiqueLayer("stpv", ((JCheckBox)e.getSource()).getText(), false);
+					wwd.toggleMosaiqueLayer("stpv", ((JCheckBox)e.getSource()).getText(), false, true);
 				}
 			}
 		}

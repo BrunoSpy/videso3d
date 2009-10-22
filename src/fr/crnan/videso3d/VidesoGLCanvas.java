@@ -468,7 +468,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public void buildStip() {
 		ProgressMonitor progress = new ProgressMonitor(null, 
 				"Mise à jour des éléments STIP", "Suppression des éléments précédents", 0, 5);
-		progress.setMillisToPopup(1);
+		progress.setMillisToDecideToPopup(0);
+		progress.setMillisToPopup(0);
 		progress.setProgress(0);
 		//Suppression des objets3D
 		if(routes != null) {
@@ -709,8 +710,16 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 						rs = st.executeQuery("select * from centscvvf where vvfs LIKE '%"+name+"%'");
 						while(rs.next()){
 							squares.add(new Couple<Integer, Integer>(rs.getInt("carre"), rs.getInt("souscarre")));
-							altitudes.add(new Couple<Double, Double>(0.0, 660*30.48));//TODO gérer les VVF multiples
-						}
+							//récupérer plancher plafond correspondants
+							String[] vvfs = rs.getString("vvfs").split("\\\\");
+							int numVVF = 0;
+							for(int i=0;i<vvfs.length;i++){
+								if(vvfs[i].equals(name)) numVVF = i;
+							}
+							double plancher = new Double(rs.getString("planchers").split("\\\\")[numVVF])*30.48;
+							double plafond = new Double(rs.getString("plafonds").split("\\\\")[numVVF])*30.48;
+							altitudes.add(new Couple<Double, Double>(plancher, plafond));
+							}
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
