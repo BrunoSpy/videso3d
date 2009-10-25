@@ -15,6 +15,8 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import fr.crnan.videso3d.geom.LatLonCautra;
+
 /**
  * Point Edimap : coordonnées dans le repère CAUTRA
  * Abscisse en 64e de NM
@@ -22,55 +24,21 @@ package fr.crnan.videso3d.edimap;
  * @author Bruno Spyckerelle
  * @version 0.2
  */
-public class PointEdimap extends QPointF {
-	/**
-	 * Nom du point
-	 */
-	private String name;
-	/**
-	 * Commentaire
-	 */
-	private String comment;
-	
-	public PointEdimap(){
-		super();
+public class PointEdimap extends LatLonCautra {
+
+
+	public PointEdimap(double latitude, double longitude) {
+		super(latitude, longitude);
 	}
-	
-	public PointEdimap(Entity point){
-		this.name = point.getValue("name");
-		this.comment = point.getValue("comment");
+
+	public static LatLonCautra fromEntity(Entity point){
 		String nauticalMile = point.getEntity("value").getValue("nautical_mile");
 		String[] xY = nauticalMile.split("\\s+");
-		this.setX(new Integer(xY[1]));
-		this.setY(new Integer(xY[3])*-1);
+		
+		double[] latlon = toStereo(new Integer(xY[1])/64*NM, new Integer(xY[3])/64*NM);
+		
+		return LatLonCautra.fromRadians(latlon[0], latlon[1]);
 	}
 
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @return the comment
-	 */
-	public String getComment() {
-		return comment;
-	}
-
-	/**
-	 * @param comment the comment to set
-	 */
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
 	
 }

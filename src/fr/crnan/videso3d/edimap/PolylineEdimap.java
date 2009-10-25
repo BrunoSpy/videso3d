@@ -15,6 +15,10 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import fr.crnan.videso3d.geom.LatLonCautra;
+import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.render.BasicShapeAttributes;
+import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.SurfacePolyline;
 
 import java.util.HashMap;
@@ -26,27 +30,20 @@ import java.util.List;
 /**
  * Construit une polyline à partir d'une entité Edimap
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class PolylineEdimap extends SurfacePolyline {
 	
 	private String name;
-
-	private Boolean polygon = false;
+		
+	private HashMap<String, LatLonCautra> pointsRef;
+		
+	private LinkedList<LatLon> polyligne = new LinkedList<LatLon>();
 	
-	private double width = 0.0;
-	
-	private QPen pen = new QPen();
-	
-	private HashMap<String, PointEdimap> pointsRef;
-	
-	QPolygonF polyligne = new QPolygonF();
-	
-	public PolylineEdimap(QGraphicsItemInterface parent, 
-			Entity polyline, HashMap<String, PointEdimap> pointsRef,
+	public PolylineEdimap(Entity polyline,
+			HashMap<String,	LatLonCautra> pointsRef,
 			PaletteEdimap palette,
 			HashMap<String, Entity> idAtc){
-		this.setParentItem(parent);
 		this.name = polyline.getValue("name");
 		this.pointsRef = pointsRef;
 		List<Entity> points = (LinkedList<Entity>) polyline.getEntity("geometry").getValue();
@@ -54,17 +51,21 @@ public class PolylineEdimap extends SurfacePolyline {
 		while(iterator.hasNext()){
 			this.addPoint(iterator.next());
 		}
-		this.setPolygon(polyligne);
+		this.setLocations(polyligne);
 		//on applique l'id atc
 		String idAtcName = polyline.getValue("id_atc");
 		if(idAtcName != null) this.applyIdAtc(idAtc.get(idAtcName), palette);
 		//paramètres spécifiques
 		String priority = polyline.getValue("priority");
-		if(priority != null) this.setZValue(new Double(priority));
+	//	if(priority != null) this.setZValue(new Double(priority));
 		String foregroundColor = polyline.getValue("foreground_color");
-		if(foregroundColor != null) this.setBrush(new QBrush(palette.getColor(foregroundColor)));
+		if(foregroundColor != null) {
+			BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());
+			attrs.setInteriorMaterial(new Material(palette.getColor(foregroundColor)));
+			this.setAttributes(attrs);
+		}
 		if(polyline.getValue("polygone") != null){
-			this.polygon = polyline.getValue("polygone").equalsIgnoreCase("1");
+			this.setClosed(polyline.getValue("polygone").equalsIgnoreCase("1"));
 		}
 	}
 	
@@ -72,24 +73,30 @@ public class PolylineEdimap extends SurfacePolyline {
 	 * Applique les paramètres contenus dans l'id atc
 	 */
 	private void applyIdAtc(Entity idAtc, PaletteEdimap palette) {
-		String priority = idAtc.getValue("priority");
-		if(priority != null) {
-			this.setZValue(new Double(priority));
-		}
+//		String priority = idAtc.getValue("priority");
+//		if(priority != null) {
+//			this.setZValue(new Double(priority));
+//		}
 		String foregroundColor = idAtc.getValue("foreground_color");
 		String fill = idAtc.getValue("fill_visibility");
 		if(foregroundColor != null && fill != null){
 			if(fill.equalsIgnoreCase("1")) {
-				this.setBrush(new QBrush(palette.getColor(foregroundColor)));
-				this.pen.setStyle(Qt.PenStyle.NoPen);
+				BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());
+				attrs.setInteriorMaterial(new Material(palette.getColor(foregroundColor)));
+				attrs.setDrawOutline(false);
+				this.setAttributes(attrs);
 			} else {
-				this.pen.setColor(palette.getColor(foregroundColor));
+				BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());
+				attrs.setOutlineMaterial(new Material(palette.getColor(foregroundColor)));
+				attrs.setDrawOutline(true);
+				attrs.setDrawInterior(false);
+				this.setAttributes(attrs);
 			}
 		}
-		String lineWidth = idAtc.getValue("line_width");
-		if(lineWidth != null) {
-			this.width = new Double(lineWidth);
-		}
+//		String lineWidth = idAtc.getValue("line_width");
+//		if(lineWidth != null) {
+//			this.width = new Double(lineWidth);
+//		}
 	}
 	
 	public void addPoint(Entity point){
@@ -98,26 +105,12 @@ public class PolylineEdimap extends SurfacePolyline {
 			this.polyligne.add(pointsRef.get(((String)point.getValue()).replaceAll("\"", "")));
 		} else {
 			String[] points = ((String)point.getValue()).split("\\s+");
-			this.polyligne.add(new QPointF(new Double(points[1]), new Double(points[3])*-1));
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see com.trolltech.qt.gui.QGraphicsPolygonItem#paint(com.trolltech.qt.gui.QPainter, com.trolltech.qt.gui.QStyleOptionGraphicsItem, com.trolltech.qt.gui.QWidget)
-	 */
-	@Override
-	public void paint(QPainter painter, QStyleOptionGraphicsItem option,
-			QWidget widget) {
-		this.pen.setWidthF(width/option.levelOfDetail());	
-		if(!polygon){
-			painter.setPen(this.pen);
-			painter.setBrush(this.brush());
-			painter.drawPolyline(polyligne);
-		}else{
-			painter.setPen(this.pen);
-			painter.setBrush(this.brush());
-			painter.drawPolygon(polyligne);
+			this.polyligne.add(LatLonCautra.fromCautra(new Double(points[1])/64*LatLonCautra.NM,
+					new Double(points[3])/64*LatLonCautra.NM));
 		}
 	}
 	
+	public String getName(){
+		return this.name;
+	}
 }

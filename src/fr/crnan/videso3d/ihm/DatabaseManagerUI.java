@@ -46,6 +46,7 @@ import org.jdesktop.swingx.JXTable;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.edimap.Cartes;
 import fr.crnan.videso3d.exsa.Exsa;
 import fr.crnan.videso3d.pays.Pays;
 import fr.crnan.videso3d.stip.Stip;
@@ -145,12 +146,12 @@ public class DatabaseManagerUI extends JFrame {
 				|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))
 				|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) {
 			//TODO trouver une meilleure gestion des extensions
-//			String caracJeuPath = "";
-//			if(dir.entryList().contains("carac_jeu")) caracJeuPath = "carac_jeu";
-//			if(dir.entryList().contains("carac_jeu.nct")) caracJeuPath = "carac_jeu.nct";
-//			if(dir.entryList().contains("carac_jeu.NCT")) caracJeuPath = "carac_jeu.NCT";
-//			Cartes cartes = new Cartes(file.absolutePath(),caracJeuPath,this.db);
-//			this.getDatas(cartes, "Import des données EDIMAP");
+			String caracJeuPath = "";
+			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))) caracJeuPath = "carac_jeu";
+			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))) caracJeuPath = "carac_jeu.nct";
+			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) caracJeuPath = "carac_jeu.NCT";
+			Cartes cartes = new Cartes(file.getAbsolutePath(),caracJeuPath,this.db);
+			this.getDatas(cartes, "Import des données EDIMAP", "EDIMAP");
 		} else if(files.contains(new File(file.getAbsolutePath()+"/PAYS"))) {
 			Pays pays = new Pays(file.getAbsolutePath(), this.db);
 			this.getDatas(pays, "Import des contours des pays", "PAYS");

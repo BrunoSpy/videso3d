@@ -15,6 +15,9 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import fr.crnan.videso3d.geom.LatLonCautra;
+import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.UserFacingText;
 
 import java.util.HashMap;
@@ -23,43 +26,34 @@ import java.util.List;
 /**
  * Construit un objet graphique de type Text à partir d'une entité TextEntity
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class TextEdimap extends UserFacingText {
 	
-	double dx = 0.0;
-	
-	double dy = 0.0;
-
+	private LatLon latlon;
 	
 	/**
 	 * Constructeur
-	 * @param parent QGraphicsItemInterface Parent de l'objet texte
 	 * @param text Entity TextEntity à afficher
 	 * @param pointsRef HashMap<String, PointEdimap> Ensemble des points de référence de la carte
 	 * @param palette PaletteEdimap Palette de couleur.
 	 * @param idAtc HashMap<String, Entity> Ensemble des idAtc de la carte
 	 */
-	public TextEdimap(QGraphicsItemInterface parent,
-					  Entity text,
-					  HashMap<String, PointEdimap> pointsRef, 
+	public TextEdimap(Entity text,
+					  HashMap<String, LatLonCautra> pointsRef, 
 					  PaletteEdimap palette,
 					  HashMap<String, Entity> idAtc){
-		this.setParentItem(parent);
-		this.setPlainText(text.getValue("text_content"));
+		super(text.getValue("text_content"), Position.ZERO);
 		//translation du texte
 		Entity point = ((List<Entity>) text.getEntity("geometry").getValue()).get(0);
 		if(point.getKeyword().equalsIgnoreCase("point")){
-			PointEdimap pt = pointsRef.get(((String)point.getValue()).replaceAll("\"", ""));
-			dx = pt.x();
-			dy = pt.y();
+			latlon = pointsRef.get(((String)point.getValue()).replaceAll("\"", ""));
 		} else {
 			String[] points = ((String)point.getValue()).split("\\s+");
-			dx = new Double(points[1]);
-			dy = new Double(points[3])*-1.0;
+			latlon = LatLonCautra.fromCautra(new Double(points[1])/64*LatLonCautra.NM, new Double(points[3])/64*LatLonCautra.NM);
 		}
-		this.setPos(dx, dy);
-		this.scale(10.0, 10.0);
+		this.setPosition(new Position(latlon, 100.0));
+		//this.scale(10.0, 10.0);
 		//idAtc
 		String idAtcName = text.getValue("id_atc");
 		if(idAtcName != null) this.applyIdAtc(idAtc.get(idAtcName), palette);
@@ -67,14 +61,14 @@ public class TextEdimap extends UserFacingText {
 		String priority = text.getValue("priority");
 //		if(priority != null) this.setZValue(new Double(priority));
 		String foregroundColor = text.getValue("foreground_color");
-		if(foregroundColor != null) this.setDefaultTextColor(palette.getColor(foregroundColor));
+		if(foregroundColor != null) this.setColor(palette.getColor(foregroundColor));
 	}
 	
 	private void applyIdAtc(Entity idAtc, PaletteEdimap palette){
 		String priority = idAtc.getValue("priority");
 	//	if(priority != null) this.setZValue(new Double(priority));
 		String foregroundColor = idAtc.getValue("foreground_color");
-		if(foregroundColor != null) this.setDefaultTextColor(palette.getColor(foregroundColor));
+		if(foregroundColor != null) this.setColor(palette.getColor(foregroundColor));
 
 	}	
 }

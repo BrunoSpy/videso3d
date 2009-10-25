@@ -15,11 +15,16 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.ProgressMonitorInputStream;
 import javax.swing.SwingWorker;
 
 /**
@@ -36,7 +41,7 @@ public class NectarReader extends SwingWorker<Integer, String>{
 	private int percent = 0;
 	
 	private long endFile;
-	
+		
 	public NectarReader(){
 		super();
 	}
@@ -62,104 +67,86 @@ public class NectarReader extends SwingWorker<Integer, String>{
  		if(this.isCancelled()){
  			
  		}
+ 		firePropertyChange("done", false, true);
  	}
- 	
-	public Integer doInBackground(){
-		File file = new File(path);
-		if (file.open(new QIODevice.OpenMode(QIODevice.OpenModeFlag.ReadOnly,
-										 QIODevice.OpenModeFlag.Text))) {
-			QTextStream in = new QTextStream(file);
-			//on positionne le pointeur à la fin du fichier
-			in.readAll();
-			endFile = in.pos();
-			this.setProgress(0);
-			datas = new Entity("root",this.getEntity(in, 0, endFile));
-		}
-		this.setProgress(100);
-		this.firePropertyChange("done", false, true);
-	}
+
+ 	public Integer doInBackground(){
+ 		BufferedReader in;
+ 		try {
+ 			in = new BufferedReader(new InputStreamReader(new ProgressMonitorInputStream(null, "Extraction du fichier " + this.path+" ...", new FileInputStream(this.path))));
+ 			this.setProgress(0);
+
+ 			datas = new Entity("root", this.getEntity(in));
+ 		} catch (FileNotFoundException e) {
+ 			e.printStackTrace();
+ 		}
+ 		this.setProgress(100);
+ 		return 0;
+ 	}
 	
 	/**
 	 * Parse une chaine au format Nectar et crée l'ensemble d'entités correspondant
-	 * @param stream QTextStream
-	 * @param begin début de la chaine à parser
-	 * @param end fin de la chaine à parser
+	 * @param stream {@link BufferedReader}
+	 * @param open nombre de parenthèses ouvrantes parcourues
+	 * @param close nombre de parenthèses fermantes parcourues
 	 * @return List<Entity> ensemble d'entités
 	 */
-	private List<Entity> getEntity(QTextStream stream, long begin, long end){
+	private List<Entity> getEntity(BufferedReader stream){
 		List<Entity> result = new LinkedList<Entity>();
-		//début de l'entité
-		long start = begin;
-		//fin de l'entité
-		long finish = end;
-		//position du pointeur
-		long pos = begin;
-		//compteurs de parenthèses ouvrantes et fermantes
-		int compteurO = 0;
-		int compteurF = 0;
-		
-		//on positionne le pointeur au début de la chaîne à traiter
-		stream.seek(begin);
-		while(pos<end && !stream.atEnd()){
-			compteurO = 0;
-			compteurF = 0;
-			Character car = stream.read(1).charAt(0);
-			//une entité commence toujours par une '('
-			while(compteurO == 0 && !stream.atEnd() && pos<end){
-				if(car.compareTo('(') == 0) {
-					compteurO++;
-				} else {
-					car = stream.read(1).charAt(0);
+		try {
+			while(stream.ready()){
+				Entity entity = this.getNextEntity(stream);
+				if(entity.getSecond() != null) { //gestion de la fin d'un fichier : si il ya des caractères après la dernière parenthèse, cela crée une entité vide
+					result.add(entity);
 				}
-				pos = stream.pos();
 			}
-			if(compteurO == 1){ //on a atteint la fin du fichier sans trouver de parenthèse ouvrante
-				//sauvegarde de la position de la parenthèse ouvrante
-				start = stream.pos();
-				//recherche de la parenthèse suivante
-				while( (compteurO + compteurF < 2) && !stream.atEnd()){
-					car = stream.read(1).charAt(0);
-					if(car.compareTo('(') == 0){
-						compteurO++;
-					} else if(car.compareTo(')') == 0) {
-						compteurF++;
-					}
-				}
-				//sauvegarde de la position de la deuxième parenthèse
-				pos = stream.pos();
-				if(compteurO == compteurF && compteurO == 1) {//entité simple
-					long length = pos - start;
-					stream.seek(start); //on n'enregistre pas la parenthèse ouvrante
-					String entitySimple = stream.read(length-1);//on ne garde pas la dernière parenthèse
-					String[] values = entitySimple.split("\\s+",2);
-					result.add(new Entity(values[0], values[1].trim()));
-					stream.read(1);//lecture de la dernière parenthèse
-				} else { //ensemble d'entités
-					long length = pos - start;
-					//on récupère la clef
-					stream.seek(start);
-					String key = stream.read(length-1).trim();
-					//recherche de la dernière parenthèse fermante
-					stream.seek(pos);
-					while(compteurO != compteurF && !stream.atEnd()){
-						car = stream.read(1).charAt(0);
-						if(car.compareTo('(') == 0) compteurO++;
-						if(car.compareTo(')') == 0) compteurF++;
-					}
-					finish = stream.pos();
-					result.add(new Entity(key, this.getEntity(stream, pos-1, finish)));
-					pos = finish;
-				}
-
-			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		//calcul du pourcentage de données lues
-		Integer percentCurrent = new Long(100*(pos)/endFile).intValue();
-		if(percentCurrent > percent) {
-			percent = percentCurrent;
-			this.setProgress(percent);
+
+		return result;
+	}
+	
+	private Entity getNextEntity(BufferedReader stream) throws IOException{
+		Entity result = new Entity();
+		int open = 0;
+		int closed = 0;
+		String value = "";
+		while((open != closed || open == 0) && stream.ready()){
+			stream.mark(2);
+			char current = (char)stream.read();
+			if(open == 0)  {
+				if(current == '(') {
+					open++;
+					result.setKeyword(this.getKey(stream));
+				}
+			} else {
+				//détermination du type de l'entité : si le caractère non blanc suivant la clef est une parenthèse ouvrante, c'est une entité complexe
+				if(!Character.isWhitespace(current)){
+					if(current == '(') {
+						stream.reset(); //on recule d'un caractère de façon à bien commencer par la parenthèse ouvrante
+						result.addEntity(this.getNextEntity(stream));
+					} else  if (current == ')'){
+						closed++;
+						if(!value.isEmpty()) result.setValue(value);
+					} else {
+						value += current;
+					}
+				}
+			}
 		}
 		return result;
+	}
+	
+	
+	private String getKey(BufferedReader stream) throws IOException{
+		String key = "";
+		char current = (char)stream.read();
+		while(!Character.isWhitespace(current)){
+			key += current;
+			current = (char)stream.read();
+		}
+		return key.trim();
 	}
 	
 	/**
