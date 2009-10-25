@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.render.SurfaceEllipse;
 
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class EllipseEdimap extends SurfaceEllipse {
 	private double dy = 0.0;
 	
 	public EllipseEdimap(Entity ellipse,
-			  HashMap<String, PointEdimap> pointsRef, 
+			  HashMap<String, LatLonCautra> pointsRef, 
 			  PaletteEdimap palette,
 			  HashMap<String, Entity> idAtc){
 		

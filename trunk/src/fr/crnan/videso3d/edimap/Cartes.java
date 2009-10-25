@@ -16,7 +16,11 @@
 package fr.crnan.videso3d.edimap;
 
 import java.io.FileNotFoundException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,7 +72,7 @@ public class Cartes extends FileParser{
 	 */
 	private String path;
 	
-	private boolean cancel = false;
+	private Connection conn;
 	
 	public Cartes(){
 		super();
@@ -83,6 +87,7 @@ public class Cartes extends FileParser{
 		NectarReader cartes = new NectarReader();
 		try {
 			cartes = new NectarReader(path);
+			cartes.doInBackground();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			throw e;
@@ -116,30 +121,29 @@ public class Cartes extends FileParser{
 		this.secteurs = new LinkedList<Entity>();
 		try {
 			//TODO prendre en compte la possibilité qu'il n'y ait pas de bdd Edimap
-			QSqlDatabase edimapDB = this.db.getCurrentEdimap();
+			Statement edimapDB = this.db.getCurrentEdimap();
 			if(edimapDB != null){
-				QSqlQuery query = new QSqlQuery(this.db.getCurrentEdimap());
-				query.exec("select * from cartes where type = 'dynamique'");
-				while(query.next()){
+				ResultSet rs = edimapDB.executeQuery("select * from cartes where type = 'dynamique'");
+				while(rs.next()){
 					List<Entity> values = new LinkedList<Entity>();
-					values.add(new Entity("name", query.value(1).toString()));
-					values.add(new Entity("fichierActive", query.value(3).toString()));
+					values.add(new Entity("name", rs.getString("name")));
+					values.add(new Entity("fichierActive", rs.getString("fichier")));
 					Entity carte = new Entity("dynamique", values);
 					this.cartesDynamiques.add(carte);
 				}
-				query.exec("select * from cartes where type = 'statique'");
-				while(query.next()){
+				rs = edimapDB.executeQuery("select * from cartes where type = 'statique'");
+				while(rs.next()){
 					List<Entity> values = new LinkedList<Entity>();
-					values.add(new Entity("name", query.value(1).toString()));
-					values.add(new Entity("fichier", query.value(3).toString()));
+					values.add(new Entity("name", rs.getString("name")));
+					values.add(new Entity("fichier", rs.getString("fichier")));
 					Entity carte = new Entity("statique", values);
 					this.cartesStatiques.add(carte);
 				}
-				query.exec("select * from cartes where type = 'secteur'");
-				while(query.next()){
+				rs = edimapDB.executeQuery("select * from cartes where type = 'secteur'");
+				while(rs.next()){
 					List<Entity> values = new LinkedList<Entity>();
-					values.add(new Entity("name", query.value(1).toString()));
-					values.add(new Entity("fichierSousControle", query.value(3).toString()));
+					values.add(new Entity("name", rs.getString("name")));
+					values.add(new Entity("fichierSousControle", rs.getString("fichier")));
 					Entity carte = new Entity("secteur", values);
 					this.secteurs.add(carte);
 				}
@@ -153,8 +157,8 @@ public class Cartes extends FileParser{
 
 	@Override
 	protected void getFromFiles() {
-		this.db.connectDB(this.version);
 		try {
+			this.conn = this.db.selectDB(DatabaseManager.Type.Edimap, this.version);
 			if(!this.db.databaseExists(this.version)){
 				this.db.createEdimap(this.version, this.path);
 				this.insertCartes();
@@ -162,12 +166,6 @@ public class Cartes extends FileParser{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * Pas de gestion d'annulation d'import
-	 */
-	public void cancel(){
 	}
 	
 	@Override
@@ -180,7 +178,7 @@ public class Cartes extends FileParser{
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		cartes.run();
+		cartes.doInBackground();
 		this.setFile("cartes dynamiques");
 		this.setProgress(1);
 		cartesDynamiques = (List<Entity>) cartes.getEntity().getValues("dynamique");
@@ -209,54 +207,43 @@ public class Cartes extends FileParser{
 	 */
 	private void insertCartes() throws SQLException{
 		//insertion des cartes en base de données
-		QSqlQuery insert = new QSqlQuery(this.db.selectDB(this.version));
-		insert.prepare("insert into cartes (name, type, fichier) values " +
-				"(:name, :type, :fichier)");
+		PreparedStatement insert = this.conn.prepareStatement("insert into cartes (name, type, fichier) values " +
+				"(?, ?, ?)");
 		Iterator<Entity> iterator = this.getCartesDynamiques().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			insert.bindValue(":type", "dynamique");
-			insert.bindValue(":name", carte.getValue("name"));
-			insert.bindValue("fichier", carte.getValue("fichierActive"));
-			if(!insert.exec()){
-				throw new DatabaseError(insert.lastError());
-			}
+			insert.setString(1, "dynamique");
+			insert.setString(2, carte.getValue("name"));
+			insert.setString(3, carte.getValue("fichierActive"));
+			insert.executeUpdate();
 		}
 		iterator = this.getCartesStatiques().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			insert.bindValue(":type", "statique");
-			insert.bindValue(":name", carte.getValue("name"));
-			insert.bindValue("fichier", carte.getValue("fichier"));
-			if(!insert.exec()){
-				throw new DatabaseError(insert.lastError());
-			}
+			insert.setString(1, "statique");
+			insert.setString(2, carte.getValue("name"));
+			insert.setString(3, carte.getValue("fichier"));
+			insert.executeUpdate();
 		}
 		iterator = this.getSecteurs().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			insert.bindValue(":type", "secteur");
-			insert.bindValue(":name", carte.getValue("name"));
-			insert.bindValue("fichier", carte.getValue("fichierSousControle"));
-			if(!insert.exec()){
-				throw new DatabaseError(insert.lastError());
-			}
+			insert.setString(1, "secteur");
+			insert.setString(2, carte.getValue("name"));
+			insert.setString(3, carte.getValue("fichierSousControle"));
+			insert.executeUpdate();
 		}
 	}
 	
 	public Carte getCarte(String name) throws SQLException, FileNotFoundException{
-		QSqlQuery query = new QSqlQuery(this.db.selectDB("default"));
-		if(!query.exec("select * from clefs where name='path' and type='"+this.db.getCurrentName("Edimap")+"'")){
-			throw new DatabaseError(query.lastError());
-		}
-		query.next();
-		this.path = query.value(3).toString();
-		query = new QSqlQuery(this.db.getCurrentEdimap());
-		if(!query.exec("select * from cartes where name='"+name+"'")){
-			throw new DatabaseError(query.lastError());
-		}
-		query.next();
-		String cartePath = this.path + "/"+ query.value(3).toString() + ".NCT"; //TODO gérer l'extension
+		Statement st = this.db.getCurrent(DatabaseManager.Type.Databases);
+		ResultSet rs = st.executeQuery("select * from clefs where name='path' and type='"+this.db.getCurrentName(DatabaseManager.Type.Edimap)+"'");
+		rs.next();
+		this.path = rs.getString(3);
+		st = this.db.getCurrentEdimap();
+		rs = st.executeQuery("select * from cartes where name='"+name+"'");
+		rs.next();
+		String cartePath = this.path + "/"+ rs.getString(3) + ".NCT"; //TODO gérer l'extension
 		NectarReader carte = new NectarReader();
 		try {
 			carte = new NectarReader(cartePath);
@@ -264,8 +251,9 @@ public class Cartes extends FileParser{
 			e.printStackTrace();
 			throw e;
 		}
-		carte.percentage.connect(this.percentage);
-		carte.run();
+//		this.setProgress(carte.getProgress());
+//		carte.percentage.connect(this.percentage);
+		carte.doInBackground();
 //		QThread thread = new QThread(carte);
 //		thread.run();
 		return new Carte(carte.getEntity(), this.getPalette());
@@ -276,7 +264,7 @@ public class Cartes extends FileParser{
 		NectarReader paletteFichier = new NectarReader();
 		try {
 			paletteFichier = new NectarReader(this.path+"/palette");
-			paletteFichier.run();
+			paletteFichier.doInBackground();
 			this.palette = new PaletteEdimap(paletteFichier.getEntity());
 		} catch (FileNotFoundException e) {
 			this.palette = new PaletteEdimap();

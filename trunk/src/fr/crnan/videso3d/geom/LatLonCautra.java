@@ -103,6 +103,7 @@ public class LatLonCautra extends LatLon {
 	 * Projection inverse quasi-exacte
 	 * @param x abscisse cautra en mètres
 	 * @param y ordonnée cautra en mètres
+	 * @return latitude et longitude en radians
 	 */
 	public static double[] toStereo(double x, double y){
 		double[] latlon = {0, 0};

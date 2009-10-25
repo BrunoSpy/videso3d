@@ -15,6 +15,9 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import fr.crnan.videso3d.geom.LatLonCautra;
+import gov.nasa.worldwind.layers.SurfaceShapeLayer;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -24,11 +27,11 @@ import java.util.List;
  * @author Bruno Spyckerelle
  *
  */
-public class Carte extends QGraphicsItem {
+public class Carte extends SurfaceShapeLayer {
 	/**
 	 * Ensemble des points de référence de la carte
 	 */
-	private HashMap<String,PointEdimap> pointsRef;
+	private HashMap<String,LatLonCautra> pointsRef;
 
 	/**
 	 * Ensemble des id ATC de la carte
@@ -42,11 +45,11 @@ public class Carte extends QGraphicsItem {
 		Entity map = carte.getEntity("map");
 		this.name = map.getValue("name");
 		//récupération des points de référence
-		pointsRef = new HashMap<String,PointEdimap>();
+		pointsRef = new HashMap<String,LatLonCautra>();
 		Iterator<Entity> iterator = map.getValues("ref_point").iterator();
 		while(iterator.hasNext()){
 			Entity point = iterator.next();
-			pointsRef.put(point.getValue("name"), new PointEdimap(point));
+			pointsRef.put(point.getValue("name"), PointEdimap.fromEntity((point)));
 		}
 		//récupération des id atc
 		idAtc = new HashMap<String, Entity>();
@@ -61,15 +64,15 @@ public class Carte extends QGraphicsItem {
 			Entity entity = iterator.next();
 			String type = entity.getValue("shape");
 			if(type.equalsIgnoreCase("PolylineEntity")){
-				new PolylineEdimap(this, entity, pointsRef, palette, idAtc);
+				this.addRenderable(new PolylineEdimap(entity, pointsRef, palette, idAtc));
 			} else if(type.equalsIgnoreCase("LineEntity")) {
-				new PolylineEdimap(this, entity, pointsRef, palette, idAtc);
+				this.addRenderable(new PolylineEdimap(entity, pointsRef, palette, idAtc));
 			} else if(type.equalsIgnoreCase("RectangleEntity")){
-				new RectangleEdimap(this, entity, pointsRef, palette, idAtc);
+				this.addRenderable(new RectangleEdimap(entity, pointsRef, palette, idAtc));
 			} else if(type.equalsIgnoreCase("TextEntity")){
-				new TextEdimap(this, entity, pointsRef, palette, idAtc);
+	//			this.addRenderable(new TextEdimap(entity, pointsRef, palette, idAtc);
 			} else if(type.equalsIgnoreCase("EllipseEntity")){
-				new EllipseEdimap(this, entity, pointsRef, palette, idAtc);
+	//			this.addRenderable(new EllipseEdimap(entity, pointsRef, palette, idAtc));
 			}
 		}
 //		Iterator<Entry<String, PointEdimap>> ite = pointsRef.entrySet().iterator();
@@ -78,18 +81,12 @@ public class Carte extends QGraphicsItem {
 //			System.out.println(entry.getKey() + " x : "+entry.getValue().x() +"; y : "+entry.getValue().y());
 //		}
 	}
-	
-	@Override
-	public QRectF boundingRect() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public void paint(QPainter painter, QStyleOptionGraphicsItem option,
-			QWidget widget) {
-		// TODO Auto-generated method stub
-		
-	}
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}	
 	
 }
