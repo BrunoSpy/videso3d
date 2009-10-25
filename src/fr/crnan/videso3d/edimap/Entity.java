@@ -23,7 +23,7 @@ import fr.crnan.videso3d.Couple;
 /**
  * Voir paragraphe 9.1.5 du DDI EDIMAP
  * @author Bruno Spyckerelle
- * @version 0.4
+ * @version 0.4.1
  */
 public class Entity extends Couple<String, Object>{
 	
@@ -54,6 +54,7 @@ public class Entity extends Couple<String, Object>{
 	 */
 	@SuppressWarnings("unchecked")
 	public void addEntity(Entity entity){
+		if(this.getSecond() == null) this.setSecond(new LinkedList<Entity>());
 		((List<Entity>)this.getSecond()).add(entity);
 	}
 	

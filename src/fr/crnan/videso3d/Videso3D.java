@@ -21,12 +21,6 @@ import fr.crnan.videso3d.ihm.MainWindow;
 import gov.nasa.worldwind.Configuration;
 
 /**
- * Version 0.1 :</br>
- * <ul>
- * <li>Affichage basique d'un secteur Stip</li>
- * <li>Affichage basique d'une route Stip</li>
- * <li>Affichage basique d'une balise Stip</li>
- * </ul>
  * @author Bruno Spyckerelle
  * @version 0.1
  */
