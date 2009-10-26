@@ -212,24 +212,24 @@ public class Cartes extends FileParser{
 		Iterator<Entity> iterator = this.getCartesDynamiques().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			insert.setString(1, "dynamique");
-			insert.setString(2, carte.getValue("name"));
+			insert.setString(2, "dynamique");
+			insert.setString(1, carte.getValue("name"));
 			insert.setString(3, carte.getValue("fichierActive"));
 			insert.executeUpdate();
 		}
 		iterator = this.getCartesStatiques().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			insert.setString(1, "statique");
-			insert.setString(2, carte.getValue("name"));
+			insert.setString(2, "statique");
+			insert.setString(1, carte.getValue("name"));
 			insert.setString(3, carte.getValue("fichier"));
 			insert.executeUpdate();
 		}
 		iterator = this.getSecteurs().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			insert.setString(1, "secteur");
-			insert.setString(2, carte.getValue("name"));
+			insert.setString(2, "secteur");
+			insert.setString(1, carte.getValue("name"));
 			insert.setString(3, carte.getValue("fichierSousControle"));
 			insert.executeUpdate();
 		}
@@ -238,12 +238,13 @@ public class Cartes extends FileParser{
 	public Carte getCarte(String name) throws SQLException, FileNotFoundException{
 		Statement st = this.db.getCurrent(DatabaseManager.Type.Databases);
 		ResultSet rs = st.executeQuery("select * from clefs where name='path' and type='"+this.db.getCurrentName(DatabaseManager.Type.Edimap)+"'");
-		rs.next();
-		this.path = rs.getString(3);
+		if(rs.next()){
+			this.path = rs.getString(4);
+		} 
 		st = this.db.getCurrentEdimap();
 		rs = st.executeQuery("select * from cartes where name='"+name+"'");
 		rs.next();
-		String cartePath = this.path + "/"+ rs.getString(3) + ".NCT"; //TODO gérer l'extension
+		String cartePath = this.path + "/"+ rs.getString(4) + ".NCT"; //TODO gérer l'extension
 		NectarReader carte = new NectarReader();
 		try {
 			carte = new NectarReader(cartePath);

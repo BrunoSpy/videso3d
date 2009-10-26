@@ -66,7 +66,7 @@ public class DataExplorer extends JPanel {
 		tabs.addTab("Stip", new StipView(wwd, db));
 		tabs.addTab("STR", new StrView(wwd, db));
 		tabs.addTab("Stpv", new StpvView(wwd, db));
-		tabs.addTab("Edimap", new JScrollPane());
+		tabs.addTab("Edimap", new EdimapView(wwd, db));
 		tabs.addTab("ODS", new JScrollPane());
 		tabs.addTab("AIP", new JScrollPane());
 		

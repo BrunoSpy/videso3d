@@ -34,7 +34,6 @@ public class PointEdimap extends LatLonCautra {
 	public static LatLonCautra fromEntity(Entity point){
 		String nauticalMile = point.getEntity("value").getValue("nautical_mile");
 		String[] xY = nauticalMile.split("\\s+");
-		
 		double[] latlon = toStereo(new Integer(xY[1])/64*NM, new Integer(xY[3])/64*NM);
 		
 		return LatLonCautra.fromRadians(latlon[0], latlon[1]);
