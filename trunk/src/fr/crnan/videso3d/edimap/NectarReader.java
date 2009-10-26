@@ -112,6 +112,7 @@ public class NectarReader extends SwingWorker<Integer, String>{
 		int open = 0;
 		int closed = 0;
 		String value = "";
+		Boolean first = false;
 		while((open != closed || open == 0) && stream.ready()){
 			stream.mark(2);
 			char current = (char)stream.read();
@@ -122,13 +123,26 @@ public class NectarReader extends SwingWorker<Integer, String>{
 				}
 			} else {
 				//détermination du type de l'entité : si le caractère non blanc suivant la clef est une parenthèse ouvrante, c'est une entité complexe
-				if(!Character.isWhitespace(current)){
+				if(!first){
+					if(!Character.isWhitespace(current)){
+						first = true;
+						if(current == '(') {
+							stream.reset(); //on recule d'un caractère de façon à bien commencer par la parenthèse ouvrante
+							result.addEntity(this.getNextEntity(stream));
+						} else  if (current == ')'){
+							closed++;
+							if(!value.trim().isEmpty()) result.setValue(value.trim());
+						} else {
+							value += current;
+						}
+					}
+				} else {
 					if(current == '(') {
 						stream.reset(); //on recule d'un caractère de façon à bien commencer par la parenthèse ouvrante
 						result.addEntity(this.getNextEntity(stream));
 					} else  if (current == ')'){
 						closed++;
-						if(!value.isEmpty()) result.setValue(value);
+						if(!value.trim().isEmpty()) result.setValue(value.trim());
 					} else {
 						value += current;
 					}

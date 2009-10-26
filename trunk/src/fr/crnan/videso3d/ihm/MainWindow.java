@@ -18,6 +18,7 @@ package fr.crnan.videso3d.ihm;
 
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,7 +41,9 @@ import java.util.LinkedList;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -149,11 +152,19 @@ public class MainWindow extends JFrame {
 		
 		//Explorateur de données
 		dataExplorer = new DataExplorer(this.db, wwd);
+//		JDesktopPane desktop = new JDesktopPane();
+//		JInternalFrame wwdFrame = new JInternalFrame("WorldWind", true, false, true, true);
+//		wwdFrame.setSize(500, 300);
+//		wwdFrame.add(wwd);
+//		wwdFrame.setVisible(true);
+//		desktop.add(wwdFrame);
+		
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, dataExplorer, wwd);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setContinuousLayout(true);
 		this.getContentPane().add(splitPane, BorderLayout.CENTER);
 		
+		this.setPreferredSize(new Dimension(800, 600));
 		this.pack();
 		
 	
@@ -207,7 +218,7 @@ public class MainWindow extends JFrame {
 	 */
 	private void createWwd(){
 		this.wwd = new VidesoGLCanvas();
-		wwd.setPreferredSize(new java.awt.Dimension(800, 600));
+		wwd.setPreferredSize(new java.awt.Dimension(0, 0));
 
 		wwd.setModel(new BasicModel());
 				

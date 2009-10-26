@@ -1154,7 +1154,7 @@ public class FrontieresStipLayer extends SurfaceShapeLayer {
 		SurfacePolygon france = new SurfacePolygon();
 		france.setLocations(makeLatLon(FRANCE));
 		ShapeAttributes attrs = france.getAttributes();
-		attrs.setInteriorMaterial(Material.LIGHT_GRAY);
+		attrs.setInteriorMaterial(Material.WHITE);
 		france.setAttributes(attrs);
 	
 		this.addRenderable(france);
