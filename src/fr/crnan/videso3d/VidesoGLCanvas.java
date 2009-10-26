@@ -718,8 +718,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 							}
 							double plancher = new Double(rs.getString("planchers").split("\\\\")[numVVF])*30.48;
 							double plafond = new Double(rs.getString("plafonds").split("\\\\")[numVVF])*30.48;
-							altitudes.add(new Couple<Double, Double>(plancher, plafond));
-							}
+							altitudes.add(new Couple<Double, Double>(plancher, plafond));//TODO gérer les VVF multiples
+						}
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
