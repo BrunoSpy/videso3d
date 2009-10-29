@@ -167,7 +167,7 @@ public class MainWindow extends JFrame {
 		this.setPreferredSize(new Dimension(800, 600));
 		this.pack();
 		
-	
+		
 		//fermeture des connections aux bases de données avant de quitter afin de ne pas perdre les dernières transactions
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
@@ -255,6 +255,7 @@ public class MainWindow extends JFrame {
 						new SwingWorker<String, Integer>(){
 							@Override
 							protected String doInBackground() throws Exception {
+								System.out.println(type);
 								if(type.equals("STIP")){
 									//mise à jour de la vue 3D
 									wwd.buildStip();
@@ -268,6 +269,9 @@ public class MainWindow extends JFrame {
 								} else if(type.equals("STPV")){
 									dataExplorer.updateStpvView();
 									wwd.removeMosaiques();
+								} else if(type.equals("Edimap")){
+									dataExplorer.updateEdimapView();
+									wwd.removeAllEdimapLayers();
 								}
 								return null;
 							}

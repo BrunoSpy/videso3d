@@ -16,7 +16,6 @@
 
 package fr.crnan.videso3d.ihm;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -40,7 +39,7 @@ import fr.crnan.videso3d.edimap.Entity;
 /**
  * Sélecteur de cartes edimap
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 @SuppressWarnings("serial")
 public class EdimapView extends JPanel {
@@ -114,7 +113,9 @@ public class EdimapView extends JPanel {
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			try {
-				wwd.toggleLayer(cartes.getCarte(((JCheckBox)e.getSource()).getText()), e.getStateChange() == ItemEvent.SELECTED);
+				String name = ((JCheckBox)e.getSource()).getText();
+				wwd.addEdimapLayer(cartes.getCarte(name));
+				wwd.toggleLayer(cartes.getCarte(name), e.getStateChange() == ItemEvent.SELECTED);
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			} catch (SQLException e1) {

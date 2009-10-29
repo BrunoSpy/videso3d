@@ -151,7 +151,7 @@ public class DatabaseManagerUI extends JFrame {
 			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))) caracJeuPath = "carac_jeu.nct";
 			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) caracJeuPath = "carac_jeu.NCT";
 			Cartes cartes = new Cartes(file.getAbsolutePath(),caracJeuPath,this.db);
-			this.getDatas(cartes, "Import des données EDIMAP", "EDIMAP");
+			this.getDatas(cartes, "Import des données EDIMAP", "Edimap");
 		} else if(files.contains(new File(file.getAbsolutePath()+"/PAYS"))) {
 			Pays pays = new Pays(file.getAbsolutePath(), this.db);
 			this.getDatas(pays, "Import des contours des pays", "PAYS");

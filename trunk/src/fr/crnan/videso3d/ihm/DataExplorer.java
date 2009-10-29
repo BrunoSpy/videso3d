@@ -32,6 +32,7 @@ import fr.crnan.videso3d.VidesoGLCanvas;
  * @author Bruno Spyckerelle
  * @version 0.4
  */
+@SuppressWarnings("serial")
 public class DataExplorer extends JPanel {
 	
 	private DatabaseManager db; 
@@ -89,7 +90,7 @@ public class DataExplorer extends JPanel {
 	 */
 	public void updateStrView() {
 		int select = tabs.getSelectedIndex();
-		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Stip
+		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Str
 		tabs.removeTabAt(1);
 		tabs.insertTab("Str", null, new StrView(wwd, db), "Sélecteur de données Str", 1);
 		tabs.setSelectedIndex(select);
@@ -100,9 +101,20 @@ public class DataExplorer extends JPanel {
 	 */
 	public void updateStpvView() {
 		int select = tabs.getSelectedIndex();
-		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Stip
+		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Stpv
 		tabs.removeTabAt(2);
 		tabs.insertTab("Stpv", null, new StpvView(wwd, db), "Sélecteur de données Stpv", 2);
+		tabs.setSelectedIndex(select);
+	}
+	
+	/**
+	 * Met à jour le tab Edimap
+	 */
+	public void updateEdimapView() {
+		int select = tabs.getSelectedIndex();
+		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Edimap
+		tabs.removeTabAt(3);
+		tabs.insertTab("Edimap", null, new EdimapView(wwd, db), "Sélecteur de données Edimap", 3);
 		tabs.setSelectedIndex(select);
 	}
 }
