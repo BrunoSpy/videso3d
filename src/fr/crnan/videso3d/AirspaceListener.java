@@ -24,15 +24,22 @@ import javax.swing.JColorChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.PolygonAnnotation;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.render.Annotation;
+import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.ShapeAttributes;
+import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.AbstractAirspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
+import gov.nasa.worldwind.render.markers.Marker;
 
 /**
  * Listener d'évènements sur les airspaces et shapes
@@ -63,6 +70,8 @@ public class AirspaceListener implements SelectListener {
 		{
 			if(lastHighlit instanceof AbstractAirspace) {
 				((AbstractAirspace)lastHighlit).setAttributes((AirspaceAttributes)lastAttrs);
+			} else if(lastHighlit instanceof SurfaceShape){
+				((SurfaceShape)lastHighlit).setAttributes((ShapeAttributes)lastAttrs);
 			}
 			lastHighlit = null;
 		}
@@ -70,60 +79,75 @@ public class AirspaceListener implements SelectListener {
 		if (lastToolTip != null
 				&& (event.getTopObject() == null || !event.getTopObject().equals(lastHighlit)))
 		{
-			this.wwd.getAnnotationLayer().removeAnnotation(lastAnnotation);
+			if(lastAnnotation != null) this.wwd.getAnnotationLayer().removeAnnotation(lastAnnotation);
 			lastToolTip = null;
 		}
 
-		if(event.getEventAction() == SelectEvent.ROLLOVER){ //RollOver sur tous les airspaces
-			if(event.getTopObject() != null && event.getTopObject() instanceof AbstractAirspace) {
+		if(event.getEventAction() == SelectEvent.ROLLOVER){ //Hightlight object
+			if(event.getTopObject() != null) {
 				Object o = event.getTopObject();
-				//highlight
 				if (lastHighlit == o)
-	                return; 
-	            if (lastHighlit == null)
-	            {
-	                lastHighlit = (AbstractAirspace)o;
-	                lastAttrs = ((AbstractAirspace)lastHighlit).getAttributes();
-	                BasicAirspaceAttributes highliteAttrs = new BasicAirspaceAttributes((AirspaceAttributes) lastAttrs);
-	                highliteAttrs.setMaterial(new Material(Pallet.makeBrighter(((AirspaceAttributes)lastAttrs).getMaterial().getDiffuse())));
-	                ((AbstractAirspace) lastHighlit).setAttributes(highliteAttrs);
-	            }
-			}
-		} else if(event.getEventAction() == SelectEvent.HOVER){
-			if(event.getTopObject() != null && event.getTopObject() instanceof Secteur3D){
-				Object o = event.getTopObject();
-				//popup tooltip
-				if(lastToolTip == o)
-					return;
-				if(lastToolTip == null) {
-					lastToolTip = o;
-					Point point = event.getPickPoint();
-					lastAnnotation = ((Secteur3D)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
-					this.wwd.getAnnotationLayer().addAnnotation(lastAnnotation);
-					this.wwd.redraw();
+					return; 
+				if (lastHighlit == null)
+				{
+					if(event.getTopObject() instanceof AbstractAirspace) {
+						lastHighlit = (AbstractAirspace)o;
+						lastAttrs = ((AbstractAirspace)lastHighlit).getAttributes();
+						BasicAirspaceAttributes highliteAttrs = new BasicAirspaceAttributes((AirspaceAttributes) lastAttrs);
+						highliteAttrs.setMaterial(new Material(Pallet.makeBrighter(((AirspaceAttributes)lastAttrs).getMaterial().getDiffuse())));
+						((AbstractAirspace) lastHighlit).setAttributes(highliteAttrs);
+
+					} else if (event.getTopObject() instanceof SurfaceShape) {
+						lastHighlit = (SurfaceShape)o;
+						lastAttrs = ((SurfaceShape)lastHighlit).getAttributes();
+						BasicShapeAttributes highliteAttrs = new BasicShapeAttributes((ShapeAttributes) lastAttrs);
+						highliteAttrs.setInteriorMaterial(new Material(Pallet.makeBrighter(((ShapeAttributes)lastAttrs).getInteriorMaterial().getDiffuse())));
+						((SurfaceShape) lastHighlit).setAttributes(highliteAttrs);
+					}
 				}
-			} else if (event.getTopObject() != null && event.getTopObject() instanceof Route3D){
+			}
+		} else if(event.getEventAction() == SelectEvent.HOVER){ //popup tooltip
+			if(event.getTopObject() != null){
 				Object o = event.getTopObject();
-				//popup tooltip
 				if(lastToolTip == o)
 					return;
 				if(lastToolTip == null) {
 					lastToolTip = o;
 					Point point = event.getPickPoint();
-					lastAnnotation = ((Route3D)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
-					this.wwd.getAnnotationLayer().addAnnotation(lastAnnotation);
+					if(event.getTopObject() instanceof Secteur3D){
+						lastAnnotation = ((Secteur3D)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
+					} else if (event.getTopObject() instanceof Route3D){
+						lastAnnotation = ((Route3D)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
+					} else if (event.getTopObject() instanceof Marker){
+						lastAnnotation = ((Balise2D)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
+					} else if (event.getTopObject() instanceof PolygonAnnotation) {
+						lastAnnotation = ((PolygonAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
+					} else if (event.getTopObject() instanceof SurfacePolygonAnnotation) {
+						lastAnnotation = ((SurfacePolygonAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
+					}
+					if(lastAnnotation != null) this.wwd.getAnnotationLayer().addAnnotation(lastAnnotation);
 					this.wwd.redraw();
 				}
 			}
 		} else if(event.getEventAction() == SelectEvent.RIGHT_CLICK){
-			final JPopupMenu menu = new JPopupMenu("Menu secteur");
+			final JPopupMenu menu = new JPopupMenu("Menu");
 			JMenuItem colorItem = new JMenuItem("Couleur...");
 			colorItem.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					Color color = JColorChooser.showDialog(menu, "Couleur du secteur", ((AirspaceAttributes)lastAttrs).getMaterial().getDiffuse());
-					((AirspaceAttributes)lastAttrs).setMaterial(new Material(color));
-					((AirspaceAttributes)lastAttrs).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+					if(lastAttrs instanceof AirspaceAttributes) {
+						Color color = JColorChooser.showDialog(menu, "Couleur du secteur", ((AirspaceAttributes)lastAttrs).getMaterial().getDiffuse());
+						if(color != null) {
+							((AirspaceAttributes)lastAttrs).setMaterial(new Material(color));
+							((AirspaceAttributes)lastAttrs).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+						}
+					} else if(lastAttrs instanceof ShapeAttributes) {
+						Color color = JColorChooser.showDialog(menu, "Couleur du secteur", ((ShapeAttributes)lastAttrs).getInteriorMaterial().getDiffuse());
+						if(color != null) {
+							((ShapeAttributes)lastAttrs).setInteriorMaterial(new Material(color));
+							((ShapeAttributes)lastAttrs).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+						}
+					}
 				}
 			});
 			menu.add(colorItem);
