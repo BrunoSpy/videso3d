@@ -28,19 +28,15 @@ import javax.swing.ProgressMonitorInputStream;
 import javax.swing.SwingWorker;
 
 /**
- * Lit un fichier Nectar et fournit des méthodes permettant l'accès à l'ensemble d'entités correspondant.
+ * Lit un fichier Nectar
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 public class NectarReader extends SwingWorker<Integer, String>{
 	
 	private Entity datas;
 	
 	private String path;
-	
-	private int percent = 0;
-	
-	private long endFile;
 		
 	public NectarReader(){
 		super();
@@ -64,10 +60,9 @@ public class NectarReader extends SwingWorker<Integer, String>{
  	}
 	
  	public void done(){
- 		if(this.isCancelled()){
- 			
+ 		if(!this.isCancelled()){
+ 			firePropertyChange("done", false, true);
  		}
- 		firePropertyChange("done", false, true);
  	}
 
  	public Integer doInBackground(){
@@ -75,7 +70,6 @@ public class NectarReader extends SwingWorker<Integer, String>{
  		try {
  			in = new BufferedReader(new InputStreamReader(new ProgressMonitorInputStream(null, "Extraction du fichier " + this.path+" ...", new FileInputStream(this.path))));
  			this.setProgress(0);
-
  			datas = new Entity("root", this.getEntity(in));
  		} catch (FileNotFoundException e) {
  			e.printStackTrace();
