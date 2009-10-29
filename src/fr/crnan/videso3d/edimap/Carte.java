@@ -64,7 +64,13 @@ public class Carte extends SurfaceShapeLayer {
 			Entity entity = iterator.next();
 			String type = entity.getValue("shape");
 			if(type.equalsIgnoreCase("PolylineEntity")){
-				this.addRenderable(new PolylineEdimap(entity, pointsRef, palette, idAtc));
+				String fill = (idAtc.get(entity.getValue("id_atc"))).getValue("fill_visibility");
+				if(fill != null && fill.equals("1")){ //polygone
+					this.addRenderable(new PolygonEdimap(entity, pointsRef, palette, idAtc));
+				} else { //polyligne
+					this.addRenderable(new PolylineEdimap(entity, pointsRef, palette, idAtc));
+				}
+				
 			} else if(type.equalsIgnoreCase("LineEntity")) {
 				this.addRenderable(new PolylineEdimap(entity, pointsRef, palette, idAtc));
 			} else if(type.equalsIgnoreCase("RectangleEntity")){

@@ -19,7 +19,7 @@ import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
-import gov.nasa.worldwind.render.SurfacePolyline;
+import gov.nasa.worldwind.render.SurfacePolygon;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,9 +30,9 @@ import java.util.List;
 /**
  * Construit une polyline à partir d'une entité Edimap
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
-public class PolylineEdimap extends SurfacePolyline {
+public class PolygonEdimap extends SurfacePolygon {
 	
 	private String name;
 		
@@ -41,7 +41,7 @@ public class PolylineEdimap extends SurfacePolyline {
 	private LinkedList<LatLon> polyligne = new LinkedList<LatLon>();
 	
 	@SuppressWarnings("unchecked")
-	public PolylineEdimap(Entity polyline,
+	public PolygonEdimap(Entity polyline,
 			HashMap<String,	LatLonCautra> pointsRef,
 			PaletteEdimap palette,
 			HashMap<String, Entity> idAtc){
@@ -53,6 +53,7 @@ public class PolylineEdimap extends SurfacePolyline {
 			this.addPoint(iterator.next());
 		}
 		this.setLocations(polyligne);
+				
 		//on applique l'id atc
 		String idAtcName = polyline.getValue("id_atc");
 		if(idAtcName != null) this.applyIdAtc(idAtc.get(idAtcName), palette);
@@ -63,13 +64,10 @@ public class PolylineEdimap extends SurfacePolyline {
 		String foregroundColor = polyline.getValue("foreground_color");
 		if(foregroundColor != null) {
 			BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());
-			attrs.setOutlineMaterial(new Material(palette.getColor(foregroundColor)));
+			attrs.setInteriorMaterial(new Material(palette.getColor(foregroundColor)));
 			this.setAttributes(attrs);
 		}
-		
-		if(polyline.getValue("polygone") != null){
-			this.setClosed(polyline.getValue("polygone").equalsIgnoreCase("1"));
-		}	
+
 	}
 	
 	/**
@@ -81,18 +79,11 @@ public class PolylineEdimap extends SurfacePolyline {
 //			this.setZValue(new Double(priority));
 //		}
 		String foregroundColor = idAtc.getValue("foreground_color");
-		
 		BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());
-		attrs.setDrawInterior(false);
-        attrs.setDrawOutline(true);
-        attrs.setOutlineOpacity(1);
-		attrs.setOutlineMaterial(new Material(palette.getColor(foregroundColor)));
-		
-		String lineWidth = idAtc.getValue("line_width");
-		if(lineWidth != null) {
-			attrs.setOutlineWidth(new Double(lineWidth));
-		}
-		
+		attrs.setInteriorMaterial(new Material(palette.getColor(foregroundColor)));
+		attrs.setDrawInterior(true);
+		attrs.setDrawOutline(false);
+		attrs.setInteriorOpacity(1.0);
 		this.setAttributes(attrs);
 	}
 	
@@ -101,6 +92,7 @@ public class PolylineEdimap extends SurfacePolyline {
 			//point par référence
 			this.polyligne.add(pointsRef.get(((String)point.getValue()).replaceAll("\"", "")));
 		} else {
+			
 			this.polyligne.add(PointEdimap.fromEntity(point));
 		}
 	}

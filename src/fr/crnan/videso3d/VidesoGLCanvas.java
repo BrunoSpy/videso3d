@@ -117,6 +117,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 */
 	private HashMap<String, MosaiqueLayer> mosaiquesLayer = new HashMap<String, MosaiqueLayer>();
 	/**
+	 * Liste des layers Edimap
+	 */
+	private List<Layer> edimapLayers = new LinkedList<Layer>();
+	
+	/**
 	 * Liste des objets affichés
 	 */
 	private HashMap<String, Balise2D> balises = new HashMap<String, Balise2D>();
@@ -308,6 +313,26 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			this.toggleLayer(frontieres, toggle);
 	}
 	
+	/*--------------------------------------------------------------*/
+	/*----------------- Gestion des layers Edimap ------------------*/
+	/*--------------------------------------------------------------*/
+    /**
+     * Ajoute un calque Edimap à la liste. (indispensable pour pouvoir les supprimer ensuite)
+     */
+    public void addEdimapLayer(Layer layer){
+    	edimapLayers.add(layer);
+    }
+    /**
+     * Supprime tous les layers Edimap du globe
+     */
+    public void removeAllEdimapLayers(){
+    	Iterator<Layer> layers = edimapLayers.iterator();
+    	while(layers.hasNext()){
+    		this.getModel().getLayers().remove(layers.next());
+    	}
+    	edimapLayers.clear();
+    }
+    
 	/*--------------------------------------------------------------*/
 	/*----------------- Gestion des balises STIP -------------------*/
 	/*--------------------------------------------------------------*/

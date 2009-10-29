@@ -24,17 +24,23 @@ import gov.nasa.worldwind.render.SurfaceQuad;
 
 import java.util.HashMap;
 import java.util.List;
-
+/**
+ * Rectangle
+ * @author Bruno Spyckerelle
+ * @version 0.2
+ */
 public class RectangleEdimap extends SurfaceQuad {
 
 	private String name;
 	
 	HashMap<String, LatLonCautra> pointsRef;
 	
+	@SuppressWarnings("unchecked")
 	public RectangleEdimap(Entity entity,
 						   HashMap<String, LatLonCautra> pointsRef,
 						   PaletteEdimap palette,
 						   HashMap<String, Entity> idAtc){
+		System.out.println(entity);
 		this.pointsRef = pointsRef;
 		this.name = entity.getValue("name");
 		List<Entity> points = (List<Entity>) entity.getEntity("geometry").getValue();
@@ -45,30 +51,26 @@ public class RectangleEdimap extends SurfaceQuad {
 		if(point1.getKeyword().equalsIgnoreCase("point")){
 			corner = pointsRef.get(((String)point1.getValue()).replaceAll("\"", ""));
 		} else {
-			String[] coord1 = ((String)point1.getValue()).split("\\s+");
-			corner = LatLonCautra.fromCautra(new Double(coord1[1])/64*LatLonCautra.NM,
-					new Double(coord1[3])/64*LatLonCautra.NM);
+			corner = PointEdimap.fromEntity(point1);
 		}
 		if(point2.getKeyword().equalsIgnoreCase("point")){
 			corner2 = pointsRef.get(((String)point2.getValue()).replaceAll("\"", ""));
 			//size = new QSizeF(coord2.x()-corner.x(), coord2.y()-corner.y());
 		} else {
-			String[] coord2 = ((String)point2.getValue()).split("\\s+");
-			corner2 = LatLonCautra.fromCautra(new Double(coord2[1])/64*LatLonCautra.NM,
-					new Double(coord2[3])/64*LatLonCautra.NM);
+			corner2 = PointEdimap.fromEntity(point2);
 		//	size = new QSizeF(new Double(coord2[1])-corner.x(), (new Double(coord2[3])*-1)-corner.y());
 		}
-		LatLonCautra center = LatLonCautra.fromCautra((corner2.getCautra()[0]-corner.getCautra()[0])/2,
-				(corner2.getCautra()[1]-corner.getCautra()[1])/2);
-		double size = Math.abs(corner2.getCautra()[0]-corner.getCautra()[0]);
+		LatLonCautra center = LatLonCautra.fromCautra((corner2.getCautra()[0]+corner.getCautra()[0])/2.0,
+				(corner2.getCautra()[1]+corner.getCautra()[1])/2.0);
+		double width = Math.abs(corner2.getCautra()[0]-corner.getCautra()[0])*LatLonCautra.NM;
+		double height = Math.abs(corner2.getCautra()[1]-corner.getCautra()[1])*LatLonCautra.NM;
 		this.setCenter(center);
-		this.setSize(size, size);
-		this.setHeight(0);
+		this.setSize(width, height);
 		//on applique l'id atc
 		String idAtcName = entity.getValue("id_atc");
 		if(idAtcName != null) this.applyIdAtc(idAtc.get(idAtcName), palette);
 		//si des paramètres supplémentaires sont présents, ils écrasent ceux présents dans l'id atc
-		String priority = entity.getValue("priority");
+	//	String priority = entity.getValue("priority");
 	//	if(priority != null) this.setZValue(new Double(priority));
 		String foregroundColor = entity.getValue("foreground_color");
 		if(foregroundColor != null){
@@ -82,24 +84,24 @@ public class RectangleEdimap extends SurfaceQuad {
 	 * Applique les paramètres contenus dans l'id atc
 	 */
 	private void applyIdAtc(Entity idAtc, PaletteEdimap palette) {
-		String priority = idAtc.getValue("priority");
+//		String priority = idAtc.getValue("priority");
 //		if(priority != null) this.setZValue(new Double(priority));
 		String foregroundColor = idAtc.getValue("foreground_color");
+		BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());
 		String fill = idAtc.getValue("fill_visibility");
 		if(foregroundColor != null && fill != null){
 			if(fill.equalsIgnoreCase("1")) {
-				BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());
 				attrs.setInteriorMaterial(new Material(palette.getColor(foregroundColor)));
+				attrs.setDrawInterior(true);
 				attrs.setDrawOutline(false);
-				this.setAttributes(attrs);
+				attrs.setInteriorOpacity(1.0);
 			} else {
-				BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());
 				attrs.setOutlineMaterial(new Material(palette.getColor(foregroundColor)));
 				attrs.setDrawOutline(true);
 				attrs.setDrawInterior(false);
-				this.setAttributes(attrs);
 			}
 		}
+		this.setAttributes(attrs);
 	}
 
 	

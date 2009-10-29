@@ -31,12 +31,32 @@ public class PointEdimap extends LatLonCautra {
 		super(latitude, longitude);
 	}
 
+	/**
+	 * Conversion d'un point au format :
+	 * (ref_point
+     *    (name "C10A3")
+     *    (comment "")
+     *    (value
+     *       (nautical_mile 64 5038 64 1397)
+     *    )
+     * )
+     * ou simplement :
+     *    (nautical_mile 64 5038 64 1397)
+	 * @param point
+	 * @return
+	 */
 	public static LatLonCautra fromEntity(Entity point){
-		String nauticalMile = point.getEntity("value").getValue("nautical_mile");
-		String[] xY = nauticalMile.split("\\s+");
-		double[] latlon = toStereo(new Integer(xY[1])/64*NM, new Integer(xY[3])/64*NM);
+		String[] xY;
+		if(point.getEntity("value") != null) {
+			String nauticalMile = point.getEntity("value").getValue("nautical_mile");
+			xY = nauticalMile.split("\\s+");
+		} else {
+			xY = ((String)point.getValue()).split("\\s+");
+		}
+		double[] latlon = toStereo(new Double(xY[1])/64.0*NM, new Double(xY[3])/64.0*NM);
 		
 		return LatLonCautra.fromRadians(latlon[0], latlon[1]);
+
 	}
 
 	

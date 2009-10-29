@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +32,7 @@ import fr.crnan.videso3d.FileParser;
 /**
  * Jeu de cartes Edimap
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.4
  */
 public class Cartes extends FileParser{
 	
@@ -73,6 +74,11 @@ public class Cartes extends FileParser{
 	private String path;
 	
 	private Connection conn;
+	
+	/**
+	 * Liste des cartes crées
+	 */
+	HashMap<String, Carte> cartes = new HashMap<String, Carte>();
 	
 	public Cartes(){
 		super();
@@ -123,7 +129,7 @@ public class Cartes extends FileParser{
 			//TODO prendre en compte la possibilité qu'il n'y ait pas de bdd Edimap
 			Statement edimapDB = this.db.getCurrentEdimap();
 			if(edimapDB != null){
-				ResultSet rs = edimapDB.executeQuery("select * from cartes where type = 'dynamique'");
+				ResultSet rs = edimapDB.executeQuery("select * from cartes where type = 'dynamique' order by name");
 				while(rs.next()){
 					List<Entity> values = new LinkedList<Entity>();
 					values.add(new Entity("name", rs.getString("name")));
@@ -131,7 +137,7 @@ public class Cartes extends FileParser{
 					Entity carte = new Entity("dynamique", values);
 					this.cartesDynamiques.add(carte);
 				}
-				rs = edimapDB.executeQuery("select * from cartes where type = 'statique'");
+				rs = edimapDB.executeQuery("select * from cartes where type = 'statique' order by name");
 				while(rs.next()){
 					List<Entity> values = new LinkedList<Entity>();
 					values.add(new Entity("name", rs.getString("name")));
@@ -139,7 +145,7 @@ public class Cartes extends FileParser{
 					Entity carte = new Entity("statique", values);
 					this.cartesStatiques.add(carte);
 				}
-				rs = edimapDB.executeQuery("select * from cartes where type = 'secteur'");
+				rs = edimapDB.executeQuery("select * from cartes where type = 'secteur' order by name");
 				while(rs.next()){
 					List<Entity> values = new LinkedList<Entity>();
 					values.add(new Entity("name", rs.getString("name")));
@@ -159,9 +165,15 @@ public class Cartes extends FileParser{
 	protected void getFromFiles() {
 		try {
 			this.conn = this.db.selectDB(DatabaseManager.Type.Edimap, this.version);
+			this.conn.setAutoCommit(false); //fixes performance issue
 			if(!this.db.databaseExists(this.version)){
 				this.db.createEdimap(this.version, this.path);
 				this.insertCartes();
+				try {
+					this.conn.commit();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -235,29 +247,39 @@ public class Cartes extends FileParser{
 		}
 	}
 	
+	/**
+	 * Renvoit la carte correspondante
+	 * @param name Nom de la carte
+	 * @return {@link Carte}
+	 * @throws SQLException
+	 * @throws FileNotFoundException
+	 */
 	public Carte getCarte(String name) throws SQLException, FileNotFoundException{
-		Statement st = this.db.getCurrent(DatabaseManager.Type.Databases);
-		ResultSet rs = st.executeQuery("select * from clefs where name='path' and type='"+this.db.getCurrentName(DatabaseManager.Type.Edimap)+"'");
-		if(rs.next()){
-			this.path = rs.getString(4);
-		} 
-		st = this.db.getCurrentEdimap();
-		rs = st.executeQuery("select * from cartes where name='"+name+"'");
-		rs.next();
-		String cartePath = this.path + "/"+ rs.getString(4) + ".NCT"; //TODO gérer l'extension
-		NectarReader carte = new NectarReader();
-		try {
-			carte = new NectarReader(cartePath);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			throw e;
+		if(cartes.containsKey(name)) {
+			return cartes.get(name);
+		} else {
+			Statement st = this.db.getCurrent(DatabaseManager.Type.Databases);
+			ResultSet rs = st.executeQuery("select * from clefs where name='path' and type='"+this.db.getCurrentName(DatabaseManager.Type.Edimap)+"'");
+			if(rs.next()){
+				this.path = rs.getString(4);
+			} 
+			st = this.db.getCurrentEdimap();
+			rs = st.executeQuery("select * from cartes where name='"+name+"'");
+			rs.next();
+			String cartePath = this.path + "/"+ rs.getString(4) + ".NCT"; //TODO gérer l'extension
+			NectarReader carte = new NectarReader();
+			try {
+				carte = new NectarReader(cartePath);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				throw e;
+			}
+			//		this.setProgress(carte.getProgress());
+			carte.doInBackground();
+			Carte c = new Carte(carte.getEntity(), this.getPalette());
+			cartes.put(name, c);
+			return c;
 		}
-//		this.setProgress(carte.getProgress());
-//		carte.percentage.connect(this.percentage);
-		carte.doInBackground();
-//		QThread thread = new QThread(carte);
-//		thread.run();
-		return new Carte(carte.getEntity(), this.getPalette());
 	}
 	
 	
