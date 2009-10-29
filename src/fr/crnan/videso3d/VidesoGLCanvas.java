@@ -581,6 +581,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			
 		} else {
 			if(toggle){
+				String annotationTitle = null;
 				Boolean grille = true;
 				LatLonCautra origine = null; 
 				Integer width = 0;
@@ -612,6 +613,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 					}
 				} if (type.equals("capa")) {
 					try {
+						annotationTitle = "Filtrage capacitif "+name;
 						grille = false;
 						squares = new LinkedList<Couple<Integer,Integer>>();
 						altitudes = new LinkedList<Couple<Double,Double>>();
@@ -650,6 +652,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 						e.printStackTrace();
 					}
 				} else if (type.equals("dyn")){
+					annotationTitle = "Filtrage dynamique "+name;
 					grille = false;
 					squares = new LinkedList<Couple<Integer,Integer>>();
 					altitudes = new LinkedList<Couple<Double,Double>>();
@@ -680,6 +683,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 						e.printStackTrace();
 					}
 				} else if (type.equals("zocc")){
+					annotationTitle = "Zone d'occultation "+name;
 					grille = false;
 					squares = new LinkedList<Couple<Integer,Integer>>();
 					altitudes = new LinkedList<Couple<Double,Double>>();
@@ -710,6 +714,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 						e.printStackTrace();
 					}
 				} else if (type.equals("vvf")){
+					annotationTitle = "VVF "+name;
 					grille = false;
 					squares = new LinkedList<Couple<Integer,Integer>>();
 					altitudes = new LinkedList<Couple<Double,Double>>();
@@ -763,7 +768,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 						e.printStackTrace();
 					}
 				}
-				MosaiqueLayer mLayer = new MosaiqueLayer(grille, origine, width, height, size, hSens, vSens, numSens, squares, altitudes, numbers, attr, airspaceAttr);
+				MosaiqueLayer mLayer = new MosaiqueLayer(annotationTitle, grille, origine, width, height, size, hSens, vSens, numSens, squares, altitudes, numbers, attr, airspaceAttr);
 				mosaiquesLayer.put(type+name, mLayer);
 				this.toggleLayer(mLayer.getAirspaceLayer(), !flat);
 				this.toggleLayer(mLayer.getShapeLayer(), flat);

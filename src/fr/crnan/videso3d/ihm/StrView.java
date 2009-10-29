@@ -36,7 +36,7 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 /**
  * Sélecteur de données STR
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 @SuppressWarnings("serial")
 public class StrView extends JPanel {
@@ -76,8 +76,8 @@ public class StrView extends JPanel {
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		mosaiques.setBorder(BorderFactory.createTitledBorder("Mosaïques"));
-		capa.setBorder(BorderFactory.createTitledBorder("Filtrage dynamique"));
-		dyn.setBorder(BorderFactory.createTitledBorder("Filtrage capacitif"));
+		capa.setBorder(BorderFactory.createTitledBorder("Filtrage capacitif"));
+		dyn.setBorder(BorderFactory.createTitledBorder("Filtrage dynamique"));
 		zocc.setBorder(BorderFactory.createTitledBorder("Zones d'occultation"));
 		vvf.setBorder(BorderFactory.createTitledBorder("VVF"));
 
