@@ -49,6 +49,7 @@ public class Secteur3D extends Polygon {
 		this.setDefaultMaterial();
 		
 		this.annotation = new GlobeAnnotation("Secteur "+name+"\nPlancher : FL"+plancher+", plafond : FL"+plafond, Position.ZERO);
+		this.annotation.setAlwaysOnTop(true);
 	}
 
 	public void setNiveaux(Integer plancher, Integer plafond){

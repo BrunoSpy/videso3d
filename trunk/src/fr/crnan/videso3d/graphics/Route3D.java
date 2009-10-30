@@ -81,6 +81,7 @@ public class Route3D extends TrackAirspace {
 	
 	private void createAnnotation(){
 		this.annotation = new GlobeAnnotation("Route "+this.getName(), Position.ZERO);
+		this.annotation.setAlwaysOnTop(true);
 	}
 	
 	public GlobeAnnotation getAnnotation(Position pos){
