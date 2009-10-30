@@ -22,6 +22,7 @@ public class PolygonAnnotation extends Polygon {
 	public void setAnnotation(String text){
 		if(annotation == null) {
 			annotation = new GlobeAnnotation(text, Position.ZERO);
+			annotation.setAlwaysOnTop(true);
 		} else {
 			annotation.setText(text);
 		}
