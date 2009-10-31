@@ -21,27 +21,25 @@ import java.awt.Font;
 
 import fr.crnan.videso3d.layers.BaliseMarkerLayer;
 import fr.crnan.videso3d.layers.TextLayer;
+import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.UserFacingText;
-import gov.nasa.worldwind.render.markers.BasicMarker;
 import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
-import gov.nasa.worldwind.render.markers.Marker;
 
 /**
  * Balise 2D projetée sur le terrain
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 public class Balise2D extends UserFacingText {
 	
 	/**
 	 * Cercle centré sur la position de la balise
 	 */
-	private Marker marker;
-	
+	private MarkerAnnotation marker;
 	
 	/**
 	 * Crée une balise 2D
@@ -49,15 +47,25 @@ public class Balise2D extends UserFacingText {
 	 * @param position {@link LatLon} Position de la balise
 	 */
 	public Balise2D(CharSequence name, Position position){
-		super(name, position);
+		super(name, new Position(Angle.fromDegrees(position.latitude.degrees+0.01), position.longitude, position.elevation));
 		this.setFont(new Font("Sans Serif", Font.PLAIN, 9));
 		
 		BasicMarkerAttributes attrs = new BasicMarkerAttributes();
-		attrs.setMarkerPixels(2);
-		
-		this.marker = new BasicMarker(new Position(position, 0), attrs);
-		
+		attrs.setMarkerPixels(3);
+		//attrs.setMaxMarkerSize(3000);
+		//attrs.setMinMarkerSize(700);
+		this.marker = new MarkerAnnotation(new Position(position, 0), attrs);
+		this.marker.setAnnotation("Balise "+name);	
 	}
+	
+	/**
+	 * 
+	 * @param text Texte de l'annotation
+	 */
+	public void setAnnotation(String text){
+		this.marker.setAnnotation(text);
+	}
+	
 	/**
 	 * Ajoute la balise aux calques
 	 * @param layer {@link BaliseMarkerLayer} Calque pour le dessin
