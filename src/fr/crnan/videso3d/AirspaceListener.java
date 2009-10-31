@@ -25,6 +25,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.MarkerAnnotation;
 import fr.crnan.videso3d.graphics.PolygonAnnotation;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
@@ -119,7 +120,7 @@ public class AirspaceListener implements SelectListener {
 					} else if (event.getTopObject() instanceof Route3D){
 						lastAnnotation = ((Route3D)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
 					} else if (event.getTopObject() instanceof Marker){
-						lastAnnotation = ((Balise2D)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
+						lastAnnotation = ((MarkerAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
 					} else if (event.getTopObject() instanceof PolygonAnnotation) {
 						lastAnnotation = ((PolygonAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
 					} else if (event.getTopObject() instanceof SurfacePolygonAnnotation) {
@@ -153,6 +154,8 @@ public class AirspaceListener implements SelectListener {
 			menu.add(colorItem);
 			menu.add("Rechercher...");
 			menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
+		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){
+			
 		}
 	}
 }
