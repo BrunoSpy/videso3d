@@ -500,7 +500,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 */
 	public void buildStip() {
 		ProgressMonitor progress = new ProgressMonitor(null, 
-				"Mise à jour des éléments STIP", "Suppression des éléments précédents", 0, 5);
+				"Mise à jour des éléments STIP", "Suppression des éléments précédents", 0, 6);
 		progress.setMillisToDecideToPopup(0);
 		progress.setMillisToPopup(0);
 		progress.setProgress(0);
@@ -559,6 +559,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			e.printStackTrace();
 		}
 		this.redraw();
+		progress.setProgress(6);
 	}
 
 	/*--------------------------------------------------------------*/
