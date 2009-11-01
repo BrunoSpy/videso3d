@@ -473,6 +473,38 @@ public class DatabaseManager{
 				"iditi int, " +
 				"balise varchar(5), " +
 				"appartient boolean)");
+		//table des lieux
+		st.executeUpdate("create table lieux (id integer primary key autoincrement, " +
+				"oaci varchar(4), " +
+				"type varchar(2), " +
+				"centre1 varchar(1), " +
+				"distance1 int, " +
+				"pp1 varchar(2), " +
+				"nc1 varchar(2)," +
+				"centre2 varchar(1), " +
+				"distance2 int, " +
+				"pp2 varchar(2), " +
+				"nc2 varchar(2)," +
+				"centre3 varchar(1), " +
+				"distance3 int, " +
+				"pp3 varchar(2), " +
+				"nc3 varchar(2)," +
+				"centre4 varchar(1), " +
+				"distance4 int, " +
+				"pp4 varchar(2), " +
+				"nc4 varchar(2))");
+		//table des consignes
+		st.executeUpdate("create table consignes (id integer primary key autoincrement, " +
+				"idlieu int, " +
+				"type varchar(1), " +
+				"oaci varchar(4), " +
+				"balise varchar(5), " +
+				"niveau int, " +
+				"ecart int, " +
+				"eve boolean, " +
+				"act boolean, " +
+				"mod boolean, " +
+				"base int)");
 		//on référence la base de données
 		this.addDatabase(name, Type.STIP, new SimpleDateFormat().format(new Date()));
 		st.close();

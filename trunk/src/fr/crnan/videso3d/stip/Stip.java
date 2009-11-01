@@ -36,14 +36,14 @@ import fr.crnan.videso3d.DatabaseManager.Type;
  * Lecteur de fichiers STIP
  * Toutes les infos concernant les fichiers SATIN sont dans le DDI Satin
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 public class Stip extends FileParser{
 
 	/**
 	 * Nombre de fichiers gérés
 	 */
-	private int numberFiles = 8;
+	private int numberFiles = 9;
 	
 	/**
 	 * Version des fichiers Stip
@@ -55,8 +55,6 @@ public class Stip extends FileParser{
 	 * Connection à la base de données
 	 */
 	private Connection conn;
-	
-
 
 	public Stip(){
 		super();
@@ -84,7 +82,7 @@ public class Stip extends FileParser{
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-				this.setProgress(8);
+				this.setProgress(9);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -121,7 +119,7 @@ public class Stip extends FileParser{
 		
 
 	}
-	
+	@Override
 	protected void getFromFiles() {
 		this.setFile("CENTRE");
 		this.setProgress(0);
@@ -145,8 +143,77 @@ public class Stip extends FileParser{
 		this.setFile("ITI");
 		this.setItis(this.path + "/ITI");
 		this.setProgress(7);
+		this.setFile("LIEUX");
+		this.setLieux(this.path + "/LIEUX");
+		this.setProgress(8);
 	}
 	
+	/**
+	 * Lecteur de fichier LIEUX<br />
+	 * Les cartes * ne sont pas traitées, leur signification m'étant inconnue
+	 * @param path
+	 */
+	private void setLieux(String path) {
+		Lieux lieux = null;
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			while(in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("1")){
+					if(lieux != null) this.insertLieux(lieux);
+					lieux = new Lieux(line);
+				} else if (line.startsWith("M") || line.startsWith("D") || line.startsWith("R")){
+					lieux.addCarte(line);
+				}
+			}
+			if(lieux != null) this.insertLieux(lieux);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+	}
+
+	private void insertLieux(Lieux lieux) {
+		try {
+			PreparedStatement insert = this.conn.prepareStatement("insert into lieux (oaci, type, centre1, distance1, pp1, nc1, centre2, distance2, pp2, nc2, centre3, distance3, pp3, nc3, centre4, distance4, pp4, nc4) " +
+					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			insert.setString(1, lieux.getOaci());
+			insert.setString(2, lieux.getDistanceType());
+			for(int i = 0; i< 4; i++) {
+				insert.setString(3+i, lieux.getCentre()[i].toString());
+				insert.setInt(4+i, lieux.getDistance()[i]);
+				insert.setString(5+i, lieux.getPp()[i]);
+				insert.setString(6+i, lieux.getNc()[i]);
+			}
+			insert.executeUpdate();
+			int id = insert.getGeneratedKeys().getInt(1);
+			insert = this.conn.prepareStatement("insert into consignes (idlieu, type, oaci, balise, niveau, ecart, eve, act, mod, base) " +
+					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			insert.setInt(1, id);
+			Iterator<Consigne> iterator = lieux.getConsignes().iterator();
+			while(iterator.hasNext()){
+				Consigne c = iterator.next();
+				insert.setString(2, c.getType().toString());
+				insert.setString(3, c.getOaci());
+				insert.setString(4, c.getBalise());
+				insert.setInt(5, c.getNiveau());
+				insert.setInt(6, c.getEcart());
+				insert.setBoolean(7, c.getEveil());
+				insert.setBoolean(8, c.getAct());
+				insert.setBoolean(9, c.getMod());
+				insert.setInt(10, c.getBase());
+				insert.addBatch();
+			}
+			insert.executeBatch();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Lecteur de fichier ITI
 	 * @param path
