@@ -326,6 +326,12 @@ public class DatabaseManager{
 				"codepays int, " +
 				"coderadar int, " +
 		"militaire boolean)");
+		st.executeUpdate("create table radrtechn (id integer primary key autoincrement, " +
+				"name varchar(16), " +
+				"vitesse float, " +
+				"hauteur float, " +
+				"portee int, " +
+				"deport boolean)");
 		//on ajoute le nom de la base
 		this.addDatabase(name, Type.EXSA, new SimpleDateFormat().format(new Date()));
 		st.close();

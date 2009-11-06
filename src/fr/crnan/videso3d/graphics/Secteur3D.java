@@ -28,7 +28,7 @@ import gov.nasa.worldwind.render.airspaces.Polygon;
  * @author Bruno Spyckerelle
  * @version 0.2.2
  */
-public class Secteur3D extends Polygon {
+public class Secteur3D extends Polygon implements ObjectAnnotation{
 
 	/*
 	 * Nom du secteur
@@ -63,6 +63,11 @@ public class Secteur3D extends Polygon {
 	
 	public String getName(){
 		return this.name;
+	}
+	
+	@Override
+	public void setAnnotation(String text) {
+		this.annotation.setText(text);
 	}
 	
 	public GlobeAnnotation getAnnotation(Position pos){

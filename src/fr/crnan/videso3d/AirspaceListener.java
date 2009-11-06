@@ -24,12 +24,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import fr.crnan.videso3d.graphics.Balise2D;
-import fr.crnan.videso3d.graphics.MarkerAnnotation;
-import fr.crnan.videso3d.graphics.PolygonAnnotation;
-import fr.crnan.videso3d.graphics.Route3D;
-import fr.crnan.videso3d.graphics.Secteur3D;
-import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
+import fr.crnan.videso3d.graphics.ObjectAnnotation;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.render.Annotation;
@@ -40,7 +35,6 @@ import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.AbstractAirspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
-import gov.nasa.worldwind.render.markers.Marker;
 
 /**
  * Listener d'évènements sur les airspaces et shapes
@@ -115,17 +109,9 @@ public class AirspaceListener implements SelectListener {
 				if(lastToolTip == null) {
 					lastToolTip = o;
 					Point point = event.getPickPoint();
-					if(event.getTopObject() instanceof Secteur3D){
-						lastAnnotation = ((Secteur3D)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
-					} else if (event.getTopObject() instanceof Route3D){
-						lastAnnotation = ((Route3D)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
-					} else if (event.getTopObject() instanceof Marker){
-						lastAnnotation = ((MarkerAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
-					} else if (event.getTopObject() instanceof PolygonAnnotation) {
-						lastAnnotation = ((PolygonAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
-					} else if (event.getTopObject() instanceof SurfacePolygonAnnotation) {
-						lastAnnotation = ((SurfacePolygonAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
-					}
+					if(event.getTopObject() instanceof ObjectAnnotation){
+						lastAnnotation = ((ObjectAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
+					} 
 					if(lastAnnotation != null) this.wwd.getAnnotationLayer().addAnnotation(lastAnnotation);
 					this.wwd.redraw();
 				}
@@ -147,6 +133,7 @@ public class AirspaceListener implements SelectListener {
 						if(color != null) {
 							((ShapeAttributes)lastAttrs).setInteriorMaterial(new Material(color));
 							((ShapeAttributes)lastAttrs).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+							((SurfaceShape)event.getTopObject()).setAttributes((ShapeAttributes) lastAttrs);
 						}
 					}
 				}
