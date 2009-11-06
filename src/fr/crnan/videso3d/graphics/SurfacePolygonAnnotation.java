@@ -27,7 +27,7 @@ import gov.nasa.worldwind.render.SurfacePolygon;
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class SurfacePolygonAnnotation extends SurfacePolygon {
+public class SurfacePolygonAnnotation extends SurfacePolygon implements ObjectAnnotation {
 
 	private GlobeAnnotation annotation;
 	
@@ -35,6 +35,7 @@ public class SurfacePolygonAnnotation extends SurfacePolygon {
 		super(locations);
 	}
 
+	@Override
 	public void setAnnotation(String text){
 		if(annotation == null) {
 			annotation = new GlobeAnnotation(text, Position.ZERO);
@@ -43,7 +44,7 @@ public class SurfacePolygonAnnotation extends SurfacePolygon {
 			annotation.setText(text);
 		}
 	}
-	
+	@Override
 	public GlobeAnnotation getAnnotation(Position pos){
 		annotation.setPosition(pos);
 		return annotation;

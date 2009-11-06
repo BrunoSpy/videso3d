@@ -257,9 +257,14 @@ public class Exsa extends FileParser {
 "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
 			    	this.setRadrGener(line);
 					insert.executeBatch();
-				} /*else if (line.startsWith("RADR_TECHN")) {
-					
-				} else if (line.startsWith("RADR_CALAG")) {
+				} else if (line.startsWith("RADR_TECHN")) {
+					this.setFile("RADR_TECHN");
+					this.setProgress(8);
+					insert = this.conn.prepareStatement("insert into radrtechn (name, vitesse, hauteur, portee, deport) " +
+														"values (?, ?, ?, ?, ?)");
+			    	this.setRadrTechn(line);
+					insert.executeBatch();
+				} /*else if (line.startsWith("RADR_CALAG")) {
 					
 				} else if (line.startsWith("RADR_INITL")) {
 					
@@ -409,14 +414,14 @@ public class Exsa extends FileParser {
 					
 				}*/ else if (line.startsWith("FICA_AFNIV")) {
 			    	this.setFile("FICA_AFNIV.");
-			    	this.setProgress(8);
+			    	this.setProgress(9);
 			    	insert = this.conn.prepareStatement("insert into ficaafniv (abonne, carre, plancher, plafond, elimine, firstcode, lastcode) " +
 							"values (?, ?, ?, ?, ?, ?, ?)");
 			    	this.setFicaAfniv(line);
 					insert.executeBatch();
 				} else if (line.startsWith("FICA_AFNIC")) {
 					this.setFile("FICA_AFNIC.");
-			    	this.setProgress(9);
+			    	this.setProgress(10);
 			    	insert = this.conn.prepareStatement("insert into ficaafnic (abonne, carre, plancher, plafond, firstcode, lastcode) " +
 					"values (?, ?, ?, ?, ?, ?)");
 			    	this.setFicaAfnic(line);
@@ -450,6 +455,22 @@ public class Exsa extends FileParser {
 	}
 
 	
+	private void setRadrTechn(String line) {
+		try {
+			RadrTechn radrTechn = new RadrTechn(line);
+			insert.setString(1, radrTechn.getNom());
+			insert.setDouble(2, radrTechn.getVitesse());
+			insert.setDouble(3, radrTechn.getHauteur());
+			insert.setInt(4, radrTechn.getPortee());
+			insert.setBoolean(5, radrTechn.getDeport());
+			insert.addBatch();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void setRadrGener(String line) {
 		try {
 			RadrGener radrGener = new RadrGener(line);
@@ -652,7 +673,7 @@ public class Exsa extends FileParser {
 
 	@Override
 	public int numberFiles() {
-		return 10;
+		return 11;
 	}
 
 }

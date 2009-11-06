@@ -266,6 +266,8 @@ public class MainWindow extends JFrame {
 									dataExplorer.updateStrView();
 									//mise à jour de la vue 3D
 									wwd.removeMosaiques();
+									//suppression des radars
+									wwd.removeRadars();
 								} else if(type.equals("STPV")){
 									dataExplorer.updateStpvView();
 									wwd.removeMosaiques();
