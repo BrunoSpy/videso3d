@@ -61,6 +61,10 @@ public class StrView extends JPanel {
 	 * VVF
 	 */
 	private JPanel vvf = new JPanel();
+	/**
+	 * Radars
+	 */
+	private JPanel radars = new JPanel();
 	
 	private ItemCheckListener itemCheckListener = new ItemCheckListener();
 	
@@ -69,7 +73,7 @@ public class StrView extends JPanel {
 	
 	private JRadioButton flat;
 	
-	public StrView( final VidesoGLCanvas wwd, DatabaseManager db){
+	public StrView( final VidesoGLCanvas wwd, DatabaseManager db) {
 		this.db = db;
 		this.wwd = wwd;
 		
@@ -80,7 +84,8 @@ public class StrView extends JPanel {
 		dyn.setBorder(BorderFactory.createTitledBorder("Filtrage dynamique"));
 		zocc.setBorder(BorderFactory.createTitledBorder("Zones d'occultation"));
 		vvf.setBorder(BorderFactory.createTitledBorder("VVF"));
-
+		radars.setBorder(BorderFactory.createTitledBorder("Portées radars"));
+		
 		//affichage 2D/3D
 		JLabel label = new JLabel("Style d'affichage : ");
 		flat = new JRadioButton("2D");
@@ -111,7 +116,7 @@ public class StrView extends JPanel {
 				this.add(this.buildPanel(dyn, "select DISTINCT abonne from ficaafnic"));
 				this.add(this.buildPanel(zocc, "select name from centzocc"));
 				this.add(this.buildPanel(vvf, "select name from centflvvf"));
-
+				this.add(this.buildPanel(radars, "select name from radrtechn"));
 				this.add(Box.createVerticalGlue());
 			}
 		} catch (SQLException e){
@@ -157,6 +162,8 @@ public class StrView extends JPanel {
 					wwd.toggleMosaiqueLayer("zocc", ((JCheckBox)e.getSource()).getText(), true, flat.isSelected());
 				}else if (vvf.equals(parent)){
 					wwd.toggleMosaiqueLayer("vvf", ((JCheckBox)e.getSource()).getText(), true, flat.isSelected());
+				} else if(radars.equals(parent)){
+					wwd.addRadar(((JCheckBox)e.getSource()).getText());
 				}
 			} else {
 				if(mosaiques.equals(parent)){
@@ -169,6 +176,8 @@ public class StrView extends JPanel {
 					wwd.toggleMosaiqueLayer("zocc", ((JCheckBox)e.getSource()).getText(), false, flat.isSelected());
 				}else if (vvf.equals(parent)){
 					wwd.toggleMosaiqueLayer("vvf", ((JCheckBox)e.getSource()).getText(), false, flat.isSelected());
+				} else if(radars.equals(parent)){
+					wwd.removeRadar(((JCheckBox)e.getSource()).getText());
 				}
 			}
 		}

@@ -65,14 +65,20 @@ public class DataExplorer extends JPanel {
 		tabs.setPreferredSize(new Dimension(300, 0));
 						
 		tabs.addTab("Stip", new StipView(wwd, db));
-		tabs.addTab("STR", new StrView(wwd, db));
+		tabs.addTab("STR", this.buildTab(new StrView(wwd, db)));
 		tabs.addTab("Stpv", new StpvView(wwd, db));
 		tabs.addTab("Edimap", new EdimapView(wwd, db));
-		tabs.addTab("ODS", new JScrollPane());
-		tabs.addTab("AIP", new JScrollPane());
+		//tabs.addTab("ODS", new JScrollPane());
+		//tabs.addTab("AIP", new JScrollPane());
 		
 		add(tabs, BorderLayout.CENTER);
 	}	
+	
+	private JScrollPane buildTab(JPanel panel){
+		JScrollPane pane = new JScrollPane(panel);
+		pane.setBorder(null);
+		return pane;
+	}
 	
 	/**
 	 * Met à jour le tab de données Stip
@@ -92,7 +98,7 @@ public class DataExplorer extends JPanel {
 		int select = tabs.getSelectedIndex();
 		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Str
 		tabs.removeTabAt(1);
-		tabs.insertTab("Str", null, new StrView(wwd, db), "Sélecteur de données Str", 1);
+		tabs.insertTab("Str", null, this.buildTab(new StrView(wwd, db)), "Sélecteur de données Str", 1);
 		tabs.setSelectedIndex(select);
 	}
 	

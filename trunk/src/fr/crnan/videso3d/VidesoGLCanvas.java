@@ -33,6 +33,7 @@ import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
+import fr.crnan.videso3d.graphics.Radar;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Route3D.Type;
@@ -54,9 +55,11 @@ import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
+import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
+import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
@@ -94,6 +97,15 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	private AirspaceLayer secteursLayer = new AirspaceLayer();
 	{secteursLayer.setName("Secteurs");
 	secteursLayer.setEnableAntialiasing(true);}
+	/**
+	 * Layer pour les radars
+	 */
+	private SurfaceShapeLayer radarsLayer = new SurfaceShapeLayer();
+	{radarsLayer.setName("Radars");}
+	/**
+	 * Liste des radars affichés
+	 */
+	private HashMap<String, SurfaceShape> radars = new HashMap<String, SurfaceShape>();
 	/**
 	 * Layer contenant les annotations
 	 */
@@ -158,6 +170,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		this.toggleLayer(balisesNPTexts, false);
 		this.toggleLayer(balisesPubMarkers, false);
 		this.toggleLayer(balisesPubTexts, false);
+		this.toggleLayer(radarsLayer, true);
 		
 		
 		if (isFlatGlobe())
@@ -562,6 +575,43 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		progress.setProgress(6);
 	}
 
+	/*--------------------------------------------------------------*/
+	/*------------------ Gestion des radars      -------------------*/
+	/*--------------------------------------------------------------*/
+	/**
+	 * Enlève tous les radars du globe
+	 */
+	public void removeRadars(){
+		this.radars.clear();
+		this.radarsLayer.removeAllRenderables();
+	}
+	/**
+	 * Ajoute un radar sur le globe
+	 * @param name
+	 */
+	public void addRadar(String name){
+		try {
+			Statement st = this.db.getCurrentExsa();
+			ResultSet rs = st.executeQuery("select * from radrgener, radrtechn where radrgener.name = radrtechn.name and radrgener.name ='"+name+"'");
+			if(rs.next()){
+				Radar radar = new Radar(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")), rs.getInt("portee"));
+				radarsLayer.addRenderable(radar);
+				radars.put(name, radar);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.redraw();
+	}
+	/**
+	 * Enlève un radar du globe
+	 * @param name
+	 */
+	public void removeRadar(String name){
+		radarsLayer.removeRenderable(radars.get(name));
+		radars.remove(name);
+		this.redraw();
+	}
 	/*--------------------------------------------------------------*/
 	/*------------------ Gestion des mosaiques   -------------------*/
 	/*--------------------------------------------------------------*/
