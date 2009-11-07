@@ -34,12 +34,14 @@ import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.graphics.Radar;
+import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
-import fr.crnan.videso3d.graphics.Route3D.Type;
+import fr.crnan.videso3d.graphics.Route.Type;
 import fr.crnan.videso3d.layers.BaliseMarkerLayer;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
-import fr.crnan.videso3d.layers.RoutesLayer;
+import fr.crnan.videso3d.layers.Routes3DLayer;
+import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.TextLayer;
 import fr.crnan.videso3d.stip.Secteur;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
@@ -79,8 +81,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Layer contenant les routes
 	 */
-	private RoutesLayer routes;
-	
+	private Routes3DLayer routes3D;
+	private Routes2DLayer routes2D;
 	/**
 	 * Layers pour les balises publiées
 	 */
@@ -476,9 +478,16 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			Iterator<String> iterator = routesNames.iterator();
 			while(iterator.hasNext()){
 				String name = iterator.next();
-				Route3D route = new Route3D();
-				if(type.equals("F")) route.setType(Type.FIR);
-				if(type.equals("U")) route.setType(Type.UIR);
+				Route3D route3D = new Route3D();
+				Route2D route2D = new Route2D();
+				if(type.equals("F")) {
+					route3D.setType(Type.FIR);
+					route2D.setType(Type.FIR);
+				}
+				if(type.equals("U")) {
+					route3D.setType(Type.UIR);
+					route2D.setType(Type.UIR);
+				}
 				ResultSet rs = st.executeQuery("select * from routebalise, balises where route = '"+name+"' and routebalise.balise = balises.name and appartient = 1");
 				LinkedList<LatLon> loc = new LinkedList<LatLon>();
 				LinkedList<Integer> sens = new LinkedList<Integer>();
@@ -490,10 +499,18 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 						sens.add(Route3D.LEG_AUTHORIZED);
 					}
 				}
-				route.setLocations(loc, sens);
-				route.setName(name);
-				if(type.equals("F")) this.routes.addRouteAwy(route, name);
-				if(type.equals("U")) this.routes.addRoutePDR(route, name);
+				route3D.setLocations(loc, sens);
+				route3D.setName(name);
+				route2D.setLocations(loc);
+				route2D.setName(name);
+				if(type.equals("F")){
+					this.routes3D.addRouteAwy(route3D, name);
+					this.routes2D.addRouteAwy(route2D, name);
+				}
+				if(type.equals("U")) {
+					this.routes3D.addRoutePDR(route3D, name);
+					this.routes2D.addRoutePDR(route2D, name);
+				}
 			}
 			st.close();
 		} catch (SQLException e) {
@@ -501,11 +518,13 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 	}
 
-
-	public RoutesLayer getRoutesLayer(){
-		return routes;
+	public Routes3DLayer getRoutes3DLayer(){
+		return routes3D;
 	}
 
+	public Routes2DLayer getRoutes2DLayer(){
+		return routes2D;
+	}
 	
 	/**
 	 * Construit ou met à jour les objets Stip
@@ -517,12 +536,18 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		progress.setMillisToDecideToPopup(0);
 		progress.setMillisToPopup(0);
 		progress.setProgress(0);
-		//Suppression des objets3D
-		if(routes != null) {
-			routes.removeAllAirspaces();
+		//Suppression des objets
+		if(routes3D != null) {
+			routes3D.removeAllAirspaces();
 		} else {
-			routes = new RoutesLayer("Routes Stip");
-			this.toggleLayer(routes, true);
+			routes3D = new Routes3DLayer("Routes Stip 3D");
+			this.toggleLayer(routes3D, false); //affichage en 2D par défaut
+		}
+		if(routes2D != null){
+			routes2D.removeAllRenderables();
+		} else {
+			routes2D = new Routes2DLayer("Routes Stip 2D");
+			this.toggleLayer(routes2D, true);
 		}
 		if(balisesPubTexts != null) {
 			this.toggleLayer(balisesPubTexts, false);
@@ -894,9 +919,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				if(rs.next()){
 					Route3D airspace;
 					if(rs.getString("espace").equals("F")){
-						airspace = routes.getRouteAwy(text);
+						airspace = routes3D.getRouteAwy(text);
 					} else {
-						airspace = routes.getRoutePDR(text);
+						airspace = routes3D.getRoutePDR(text);
 					}
 					this.unHighlightPrevious(airspace);
 					lastAttrs = airspace.getAttributes();
