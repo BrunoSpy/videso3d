@@ -40,6 +40,7 @@ import java.util.LinkedList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
@@ -139,7 +140,7 @@ public class MainWindow extends JFrame {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//Menu
-		this.setJMenuBar(this.createMenuBar());
+//		this.setJMenuBar(this.createMenuBar());
 		
 		//Layout
 		this.setLayout(new BorderLayout());
@@ -240,7 +241,7 @@ public class MainWindow extends JFrame {
 	 */
 	private JMenuBar createMenuBar(){
 		JMenu file = new JMenu("Fichier");
-		
+
 		JMenuItem dbUI = new JMenuItem("Gestion des bases de données...");
 		dbUI.addActionListener(new ActionListener() {
 			@Override
@@ -255,9 +256,9 @@ public class MainWindow extends JFrame {
 						new SwingWorker<String, Integer>(){
 							@Override
 							protected String doInBackground() throws Exception {
-								System.out.println(type);
 								if(type.equals("STIP")){
 									//mise à jour de la vue 3D
+									//TODO mettre à jour seulement si la base de données a changé
 									wwd.buildStip();
 									//mise à jour de l'explorateur de données
 									dataExplorer.updateStipView();
@@ -326,6 +327,52 @@ public class MainWindow extends JFrame {
 	 */
 	private JToolBar createToolBar(){
 		JToolBar toolbar = new JToolBar("Actions");
+		
+		//Ajouter données
+		JButton datas = new JButton("DB");
+		datas.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				databaseUI = new DatabaseManagerUI(db);
+				databaseUI.setVisible(true);
+				databaseUI.addPropertyChangeListener("baseChanged", new PropertyChangeListener() {		
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						final String type = (String)evt.getNewValue();
+						//mises à jour en background
+						new SwingWorker<String, Integer>(){
+							@Override
+							protected String doInBackground() throws Exception {
+								if(type.equals("STIP")){
+									//mise à jour de la vue 3D
+									//TODO mettre à jour seulement si la base de données a changé
+									wwd.buildStip();
+									//mise à jour de l'explorateur de données
+									dataExplorer.updateStipView();
+								} else if (type.equals("EXSA")){
+									//mise à jour de l'explorateur de données
+									dataExplorer.updateStrView();
+									//mise à jour de la vue 3D
+									wwd.removeMosaiques();
+									//suppression des radars
+									wwd.removeRadars();
+								} else if(type.equals("STPV")){
+									dataExplorer.updateStpvView();
+									wwd.removeMosaiques();
+								} else if(type.equals("Edimap")){
+									dataExplorer.updateEdimapView();
+									wwd.removeAllEdimapLayers();
+								}
+								return null;
+							}
+						}.execute();
+					}
+				});
+			}
+		});
+		toolbar.add(datas);
+		toolbar.addSeparator();
 		
 		//fond de la France
 		final JToggleButton fond = new JToggleButton("Fond");
