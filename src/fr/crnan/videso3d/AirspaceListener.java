@@ -97,6 +97,7 @@ public class AirspaceListener implements SelectListener {
 						lastAttrs = ((SurfaceShape)lastHighlit).getAttributes();
 						BasicShapeAttributes highliteAttrs = new BasicShapeAttributes((ShapeAttributes) lastAttrs);
 						highliteAttrs.setInteriorMaterial(new Material(Pallet.makeBrighter(((ShapeAttributes)lastAttrs).getInteriorMaterial().getDiffuse())));
+						highliteAttrs.setOutlineMaterial(new Material(Pallet.makeBrighter(((ShapeAttributes)lastAttrs).getOutlineMaterial().getDiffuse())));
 						((SurfaceShape) lastHighlit).setAttributes(highliteAttrs);
 					}
 				}
