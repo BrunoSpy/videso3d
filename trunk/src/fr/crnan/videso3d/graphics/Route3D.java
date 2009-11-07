@@ -34,7 +34,7 @@ import gov.nasa.worldwind.util.RestorableSupport;
  * @author Bruno Spyckerelle
  * @version 0.2
  */
-public class Route3D extends TrackAirspace {
+public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
 
 	public static final int LEG_FORBIDDEN = 0;
 	public static final int LEG_AUTHORIZED = 1;
@@ -44,10 +44,7 @@ public class Route3D extends TrackAirspace {
 
 	private GlobeAnnotation annotation;
 	
-	/**
-	 * Type de la route
-	 */
-	public static enum Type {FIR, UIR};
+
 	/**
 	 * Nom de la route
 	 */
@@ -78,6 +75,11 @@ public class Route3D extends TrackAirspace {
 		}
 	}
 
+	@Override
+	public void setAnnotation(String text) {
+		this.createAnnotation();
+		this.annotation.setText(text);
+	}
 	
 	private void createAnnotation(){
 		this.annotation = new GlobeAnnotation("Route "+this.getName(), Position.ZERO);

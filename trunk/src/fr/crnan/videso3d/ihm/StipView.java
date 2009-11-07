@@ -22,6 +22,7 @@ import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingEvent;
 import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingListener;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.ResultSet;
@@ -31,8 +32,11 @@ import java.sql.Statement;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -42,7 +46,7 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 /**
  * Sélecteur d'objets Stip
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 @SuppressWarnings("serial")
 public class StipView extends JPanel {
@@ -56,7 +60,7 @@ public class StipView extends JPanel {
 	
 	private JCheckBox balisesNPChk;
     private JCheckBox balisesPubChk;
-	
+	private JRadioButton flatRoutes;
 	/**
 	 * Choix des secteurs à afficher
 	 */
@@ -77,27 +81,17 @@ public class StipView extends JPanel {
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		panel.setBorder(null);
 		
-		routes.setBorder(BorderFactory.createTitledBorder("Routes"));
-		panel.add(routes);
-		
+		routes.setBorder(BorderFactory.createTitledBorder(""));
 		balises.setBorder(BorderFactory.createTitledBorder("Balises"));
-		panel.add(balises);
-		
-		
 		secteurs.setBorder(BorderFactory.createTitledBorder("Secteurs"));
 
 		try {
 			if(this.db.getCurrentStip() != null) { //si pas de bdd, ne pas créer la vue
-				this.buildTreePanel();
-				
 				this.add(this.buildBalisesPanel());
-				
-				this.add(panel);
-
+				this.buildTreePanel();
+				this.add(this.createTitleRoutes());
+				this.add(routes);
 				this.add(this.buildSecteursPanel());
 			}
 		} catch (SQLException e) {
@@ -107,7 +101,48 @@ public class StipView extends JPanel {
 
 	}
 
-	private JPanel buildBalisesPanel(){
+	/**
+	 * Titre du panel Routes.<br />
+	 * Contient un sélecteur pour choisir la méthode de représentation (2D/3D).
+	 * @return JPanel
+	 */
+	private JPanel createTitleRoutes(){
+		JPanel titleRoute = new JPanel();
+		titleRoute.setLayout(new BoxLayout(titleRoute, BoxLayout.X_AXIS));
+		titleRoute.setBorder(BorderFactory.createEmptyBorder(0, 17, 1, 3));
+		JLabel routeLabel = new JLabel("Routes");
+		routeLabel.setFont(routeLabel.getFont().deriveFont(Font.BOLD));
+		titleRoute.add(routeLabel);
+		
+		flatRoutes = new JRadioButton("2D");
+		flatRoutes.setSelected(true);
+		flatRoutes.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				Boolean state = e.getStateChange() == ItemEvent.SELECTED;
+				wwd.toggleLayer(wwd.getRoutes2DLayer(), state);
+				wwd.toggleLayer(wwd.getRoutes3DLayer(), !state);
+			}
+		});
+		JRadioButton round = new JRadioButton("3D");
+		ButtonGroup style = new ButtonGroup();
+		style.add(flatRoutes);
+		style.add(round);
+		JPanel stylePanel = new JPanel();
+		stylePanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
+		stylePanel.setLayout(new BoxLayout(stylePanel, BoxLayout.X_AXIS));
+		stylePanel.add(Box.createHorizontalGlue());
+	//	stylePanel.add(label);
+		stylePanel.add(flatRoutes);
+		stylePanel.add(round);
+	//	stylePanel.add(Box.createHorizontalGlue());
+		titleRoute.add(stylePanel);
+
+		return titleRoute;
+	}
+	
+ 	private JPanel buildBalisesPanel(){
         balises.setLayout(new BoxLayout(balises, BoxLayout.X_AXIS));
 
         balisesNPChk = new JCheckBox("Non publiées");
@@ -172,11 +207,15 @@ public class StipView extends JPanel {
 		return scrollPane;
 	}
 	/**
-	 * Construit et renvoit le {@link JPanel} permettant l'affichage des routes et balises
+	 * Construit et renvoit le {@link JPanel} permettant l'affichage des routes
 	 * @return {@link JPanel} 
 	 */
 	private void buildTreePanel(){
 		routes.setLayout(new BorderLayout());
+		
+	
+	//	routes.add(stylePanel, BorderLayout.NORTH);
+		
 		DefaultMutableTreeNode route = new DefaultMutableTreeNode("routes");
 		DefaultMutableTreeNode awy = new DefaultMutableTreeNode("AWY");
 		this.addNodes("routes", "F", awy);
@@ -193,7 +232,7 @@ public class StipView extends JPanel {
 		JScrollPane scrollRouteTree = new JScrollPane(routesTree);
 		scrollRouteTree.setBorder(null);
 		
-		routes.add(scrollRouteTree);
+		routes.add(scrollRouteTree, BorderLayout.CENTER);
 		
 		
 //		balises.setLayout(new BorderLayout());
@@ -289,33 +328,43 @@ public class StipView extends JPanel {
 			String name = (String)c.getUserObject();
 			if(name.equals("routes")){
 				if(e.isCheckedPath()){
-					wwd.getRoutesLayer().displayAllRoutes();
+					wwd.getRoutes2DLayer().displayAllRoutes();
+					wwd.getRoutes3DLayer().displayAllRoutes();
 				} else  {
-					wwd.getRoutesLayer().hideAllRoutes();
-				}
+					wwd.getRoutes2DLayer().hideAllRoutes();
+					wwd.getRoutes3DLayer().hideAllRoutes();
+}
 			} else if (name.equals("AWY")){
 				if(e.isCheckedPath()){
-					wwd.getRoutesLayer().displayAllRoutesAwy();
+					wwd.getRoutes2DLayer().displayAllRoutesAwy();
+					wwd.getRoutes3DLayer().displayAllRoutesAwy();
 				} else  {
-					wwd.getRoutesLayer().hideAllRoutesAWY();
+					wwd.getRoutes2DLayer().hideAllRoutesAWY();
+					wwd.getRoutes3DLayer().hideAllRoutesAWY();
 				}
 			} else if(name.equals("PDR")) {
 				if(e.isCheckedPath()){
-					wwd.getRoutesLayer().displayAllRoutesPDR();
+					wwd.getRoutes2DLayer().displayAllRoutesPDR();
+					wwd.getRoutes3DLayer().displayAllRoutesPDR();
 				} else  {
-					wwd.getRoutesLayer().hideAllRoutesPDR();
+					wwd.getRoutes2DLayer().hideAllRoutesPDR();
+					wwd.getRoutes3DLayer().hideAllRoutesPDR();
 				}
 			} else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("AWY")) {
 				if(e.isCheckedPath()){
-					wwd.getRoutesLayer().displayRouteAwy(name);
+					wwd.getRoutes2DLayer().displayRouteAwy(name);
+					wwd.getRoutes3DLayer().displayRouteAwy(name);
 				} else {
-					wwd.getRoutesLayer().hideRouteAwy(name);
+					wwd.getRoutes2DLayer().hideRouteAwy(name);
+					wwd.getRoutes3DLayer().hideRouteAwy(name);
 				}
 			} else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("PDR")) {
 				if(e.isCheckedPath()){
-					wwd.getRoutesLayer().displayRoutePDR(name);
+					wwd.getRoutes2DLayer().displayRoutePDR(name);
+					wwd.getRoutes3DLayer().displayRoutePDR(name);
 				} else {
-					wwd.getRoutesLayer().hideRoutePDR(name);
+					wwd.getRoutes2DLayer().hideRoutePDR(name);
+					wwd.getRoutes3DLayer().hideRoutePDR(name);
 				}
 			} 
 			wwd.redraw();

@@ -16,139 +16,41 @@
 
 package fr.crnan.videso3d.layers;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-
-import fr.crnan.videso3d.graphics.Route3D;
-import gov.nasa.worldwind.layers.AirspaceLayer;
+import fr.crnan.videso3d.graphics.Route;
 /**
  * Layer destiné à afficher les routes<br />
  * Permet d'afficher sélectivement une ou plusieurs routes, selon leur nom ou leur type
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class RoutesLayer extends AirspaceLayer {
+public interface RoutesLayer {
 
-	/**
-	 * Liste des routes PDR
-	 */
-	private HashMap<String, Route3D> pdr = new HashMap<String, Route3D>();
-	/**
-	 * Liste des AWY
-	 */
-	private HashMap<String, Route3D> awy = new HashMap<String, Route3D>();
-	/**
-	 * Liste des PDR actives
-	 */
-	private LinkedList<Route3D> pdrActives = new LinkedList<Route3D>();
-	/**
-	 * Liste des AWY actives
-	 */
-	private LinkedList<Route3D> awyActives = new LinkedList<Route3D>();
-
-	/**
-	 * Nouveau Layer
-	 * @param name Nom du layer
-	 */
-	public RoutesLayer(String name){
-		this.setName(name);
-		this.setEnableAntialiasing(true);
-	}
-
-	public void addRoutePDR(Route3D route, String name){
-		pdr.put(name, route);
-	}
+	public void addRoutePDR(Route route, String name);
 	
-	public void addRouteAwy(Route3D route, String name){
-		awy.put(name, route);
-	}
+	public void addRouteAwy(Route route, String name);
 	
-	public Route3D getRoutePDR(String name){
-		return pdr.get(name);
-	}
+	public Route getRoutePDR(String name);
 	
-	public Route3D getRouteAwy(String name){
-		return awy.get(name);
-	}
+	public Route getRouteAwy(String name);
+		
+	public void displayAllRoutes();
 	
-	@Override
-	public void removeAllAirspaces(){
-		super.removeAllAirspaces();
-		pdr.clear();
-		awy.clear();
-		pdrActives.clear();
-		awyActives.clear();
-	}
+	public void hideAllRoutes();
 	
-	public void displayAllRoutes(){
-		displayAllRoutesAwy();
-		displayAllRoutesPDR();
-	}
+	public void displayAllRoutesPDR();
 	
-	public void hideAllRoutes(){
-		super.removeAllAirspaces();
-		pdrActives.clear();
-		awyActives.clear();
-	}
+	public void displayAllRoutesAwy();
 	
-	public void displayAllRoutesPDR(){
-		Iterator<Route3D> iterator = pdr.values().iterator();
-		while(iterator.hasNext()){
-			displayRoutePDR(iterator.next());
-		}
-	}
+	public void hideAllRoutesPDR();
 	
-	public void displayAllRoutesAwy(){
-		Iterator<Route3D> iterator = awy.values().iterator();
-		while(iterator.hasNext()){
-			displayRouteAwy(iterator.next());
-		}
-	}
+	public void hideAllRoutesAWY();
+		
+	public void displayRoutePDR(String route);
 	
-	public void hideAllRoutesPDR(){
-		Iterator<Route3D> iterator = pdrActives.iterator();
-		while(iterator.hasNext()){
-			removeAirspace(iterator.next());
-		}
-		pdrActives.clear();
-	}
+	public void hideRoutePDR(String route);
 	
-	public void hideAllRoutesAWY(){
-		Iterator<Route3D> iterator = awyActives.iterator();
-		while(iterator.hasNext()){
-			removeAirspace(iterator.next());
-		}
-		awyActives.clear();
-	}
+	public void displayRouteAwy(String route);
 	
-	private void displayRoutePDR(Route3D r){
-		addAirspace(r);
-		pdrActives.add(r);
-	}
-	
-	public void displayRoutePDR(String route){
-		displayRoutePDR(pdr.get(route));
-	}
-	
-	public void hideRoutePDR(String route){
-		Route3D r = pdr.get(route);
-		removeAirspace(r);
-		pdrActives.remove(r);
-	}
-	
-	private void displayRouteAwy(Route3D r){
-		addAirspace(r);
-		awyActives.add(r);
-	}
-	
-	public void displayRouteAwy(String route){
-		displayRouteAwy(awy.get(route));
-	}
-	
-	public void hideRouteAwy(String route){
-		Route3D r = awy.get(route);
-		removeAirspace(r);
-		awyActives.remove(r);
-	}
+	public void hideRouteAwy(String route);
 }
+
