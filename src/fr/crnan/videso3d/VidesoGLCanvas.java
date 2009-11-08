@@ -38,6 +38,7 @@ import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Route.Type;
+import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.layers.BaliseMarkerLayer;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
@@ -86,13 +87,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Layers pour les balises publiées
 	 */
-	private TextLayer balisesPubTexts = new TextLayer("Balises publiées");
-	private BaliseMarkerLayer balisesPubMarkers = new BaliseMarkerLayer();
+	private BaliseLayer balisesPub = new BaliseLayer("Balises publiées");
 	/**
 	 * Layers pour les balises non publiées
 	 */
-	private TextLayer balisesNPTexts = new TextLayer("Balises non publiées");
-	private BaliseMarkerLayer balisesNPMarkers = new BaliseMarkerLayer();
+	private BaliseLayer balisesNP = new BaliseLayer("Balises non publiées");
 	/**
 	 * Layer contenant les secteurs
 	 */
@@ -168,10 +167,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		//layer d'accueil des objets séléctionnés
 		this.getModel().getLayers().add(selectedAirspaces);
 		
-		this.toggleLayer(balisesNPMarkers, false);
-		this.toggleLayer(balisesNPTexts, false);
-		this.toggleLayer(balisesPubMarkers, false);
-		this.toggleLayer(balisesPubTexts, false);
+		this.toggleLayer(balisesNP, false);
+		this.toggleLayer(balisesPub, false);
 		this.toggleLayer(radarsLayer, true);
 		
 		
@@ -372,9 +369,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				}
 				balise.setAnnotation(annotation);
 				if(publicated == 1){
-					balise.addToLayer(balisesPubMarkers, balisesPubTexts);
+					balisesPub.addBalise(balise);
 				} else {
-					balise.addToLayer(balisesNPMarkers, balisesNPTexts);
+					balisesNP.addBalise(balise);
 				}
 				//lien nominal
 				this.balises.put(rs.getString("name"), balise);
@@ -387,17 +384,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		
 	}
 	
-	public Layer getBalisesPubMarkers(){
-		return balisesPubMarkers;
+	public Layer getBalisesPubLayer(){
+		return balisesPub;
 	}
-	public Layer getBalisesPubTexts(){
-		return balisesPubTexts;
-	}
-	public Layer getBalisesNPMarkers(){
-		return balisesNPMarkers;
-	}
-	public Layer getBalisesNPTexts(){
-		return balisesNPTexts;
+	public Layer getBalisesNPLayer(){
+		return balisesNP;
 	}
 	
 	/*--------------------------------------------------------------*/
@@ -549,21 +540,13 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			routes2D = new Routes2DLayer("Routes Stip 2D");
 			this.toggleLayer(routes2D, true);
 		}
-		if(balisesPubTexts != null) {
-			this.toggleLayer(balisesPubTexts, false);
-			balisesPubTexts.removeAllGeographicTexts();
+		if(balisesPub != null) {
+			this.toggleLayer(balisesPub, false);
+			balisesPub.removeAllBalises();
 		}
-		if(balisesPubMarkers != null) {
-			this.toggleLayer(balisesPubMarkers, false);
-			balisesPubMarkers = new BaliseMarkerLayer();
-		}
-		if(balisesNPTexts != null) {
-			this.toggleLayer(balisesNPTexts, false);
-			balisesNPTexts.removeAllGeographicTexts();
-		}
-		if(balisesNPMarkers != null) {
-			this.toggleLayer(balisesNPMarkers, false);
-			balisesNPMarkers = new BaliseMarkerLayer();
+		if(balisesNP != null) {
+			this.toggleLayer(balisesNP, false);
+			balisesNP.removeAllBalises();
 		}
 		if(secteursLayer != null) {
 			secteursLayer.removeAllAirspaces();
@@ -651,18 +634,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public void toggleMosaiqueLayer(String type, String name, Boolean toggle, Boolean flat){
 		if(mosaiquesLayer.containsKey(type+name)){
 			MosaiqueLayer mos = mosaiquesLayer.get(type+name);
-			if(!toggle){
-				this.toggleLayer(mos.getShapeLayer(), toggle);
-				this.toggleLayer(mos.getAirspaceLayer(), toggle);
-			} else {
-				if(flat){
-					this.toggleLayer(mos.getShapeLayer(), toggle);
-				} else {
-					this.toggleLayer(mos.getAirspaceLayer(), toggle);
-				}
-			}
-			this.toggleLayer(mos.getTextLayer(), toggle);
-			
+			mos.set3D(!flat);
+			this.toggleLayer(mos, toggle);
 		} else {
 			if(toggle){
 				String annotationTitle = null;
@@ -854,9 +827,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				}
 				MosaiqueLayer mLayer = new MosaiqueLayer(annotationTitle, grille, origine, width, height, size, hSens, vSens, numSens, squares, altitudes, numbers, attr, airspaceAttr);
 				mosaiquesLayer.put(type+name, mLayer);
-				this.toggleLayer(mLayer.getAirspaceLayer(), !flat);
-				this.toggleLayer(mLayer.getShapeLayer(), flat);
-				this.toggleLayer(mLayer.getTextLayer(), toggle);
+				mLayer.setName("Mosaïque "+type+" "+name);
+				mLayer.set3D(!flat);
+				this.toggleLayer(mLayer, toggle);
 			}
 		}
 	}
@@ -864,12 +837,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public void toggleMosaique2D(Boolean flat){
 		Iterator<MosaiqueLayer> iterator = mosaiquesLayer.values().iterator();
 		while(iterator.hasNext()){
-			MosaiqueLayer mos = iterator.next();
-			if(mos.getAirspaceLayer().isEnabled() || mos.getShapeLayer().isEnabled()){
-				this.toggleLayer(mos.getShapeLayer(), flat);
-				this.toggleLayer(mos.getAirspaceLayer(), !flat);
-			}
-			
+			iterator.next().set3D(!flat);
 		}
 	}
 	
@@ -879,10 +847,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public void removeMosaiques(){
 		Iterator<MosaiqueLayer> iterator = mosaiquesLayer.values().iterator();
 		while(iterator.hasNext()){
-			MosaiqueLayer mos = iterator.next();
-			this.toggleLayer(mos.getShapeLayer(), false);
-			this.toggleLayer(mos.getTextLayer(), false);
-			this.toggleLayer(mos.getAirspaceLayer(), false);
+			this.toggleLayer(iterator.next(), false);
 		}
 		mosaiquesLayer.clear();
 	}
@@ -956,13 +921,13 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 					airspace.highlight(true);
 					this.unHighlightPrevious(airspace);
 					highlight = airspace;
-					if (rs.getInt("publicated") == 1 && !balisesPubTexts.isEnabled()) {
-						lastLayer = balisesPubTexts;
-						this.toggleLayer(balisesPubTexts, true);
+					if (rs.getInt("publicated") == 1 && !balisesPub.isEnabled()) {
+						lastLayer = balisesPub;
+						this.toggleLayer(balisesPub, true);
 					}
-					if (rs.getInt("publicated") == 0 && !balisesNPTexts.isEnabled() ) {
-						lastLayer = balisesNPTexts;
-						this.toggleLayer(balisesNPTexts, true);
+					if (rs.getInt("publicated") == 0 && !balisesNP.isEnabled() ) {
+						lastLayer = balisesNP;
+						this.toggleLayer(balisesNP, true);
 					} 
 					this.getView().goTo(airspace.getPosition(), 5e5);
 					return;
