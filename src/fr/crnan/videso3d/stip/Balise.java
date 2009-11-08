@@ -25,9 +25,13 @@ import fr.crnan.videso3d.geom.Longitude;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.4
  */
 public class Balise {
+	/**
+	 * Précision des coordonnées à la seconde
+	 */
+	private Boolean precision = false ;
 	/**
 	 * Indicatif de la balise
 	 */
@@ -64,14 +68,14 @@ public class Balise {
 	public Balise(){
 		super();
 	}
-
+	
 	/**
-	 * Construit l'objet balise à partir de la ligne SQL
-	 * @param record La ligne SQL
+	 * Construit une balise avec la précision souhaitée
+	 * @param precision {@link Boolean} True si précision à la seconde
 	 */
-//	public Balise(QSqlRecord record){
-//		this.record = record;
-//	}
+	public Balise(Boolean precision){
+		this.setPrecision(precision);
+	}
 	
 	/**
 	 * Construit l'objet avec la carte 1
@@ -81,6 +85,23 @@ public class Balise {
 		this.setLigne1(line);
 	}
 	
+	/**
+	 * Construit l'objet avec la carte 1
+	 * @param line
+	 * @param precision
+	 */
+	public Balise(String line, Boolean precision){
+		this.setPrecision(precision);
+		this.setLigne1(line);
+	}
+	
+	/**
+	 * Precision des coordonnées à la seconde
+	 * @param b {@link Boolean} True si précision à la seconde. False par défaut.
+	 */
+	public void setPrecision(Boolean b){
+		this.precision = b;
+	}
 	/**
 	 * Ajoute les données de la carte 1
 	 * @param line
@@ -94,14 +115,27 @@ public class Balise {
 	 * @param line Carte 2
 	 */
 	public void setLigne2(String line) {
-		this.setLatitude(new Latitude(new Integer(line.substring(8, 10)),
-									  new Integer(line.substring(10, 12))));
-		this.setLongitude(new Longitude(new Integer(line.substring(12, 14)),
-										new Integer(line.substring(14, 16)),
-										line.substring(16, 17)));
-		this.setCentre(line.substring(18, 21));
-		this.setDefinition(line.substring(22,47).trim());
-		this.setSccag(line.substring(60,63));
+		if(precision){
+			this.setLatitude(new Latitude(new Integer(line.substring(8, 10)),
+					new Integer(line.substring(10, 12)), 
+					new Integer(line.substring(12, 14))));
+			this.setLongitude(new Longitude(new Integer(line.substring(16, 18)),
+					new Integer(line.substring(18, 20)),
+					new Integer(line.substring(20, 22)),
+					line.substring(22, 23)));
+			this.setCentre(line.substring(24, 27));
+			this.setDefinition(line.substring(28,53).trim());
+			this.setSccag(line.substring(66,69));
+		} else {
+			this.setLatitude(new Latitude(new Integer(line.substring(8, 10)),
+					new Integer(line.substring(10, 12))));
+			this.setLongitude(new Longitude(new Integer(line.substring(12, 14)),
+					new Integer(line.substring(14, 16)),
+					line.substring(16, 17)));
+			this.setCentre(line.substring(18, 21));
+			this.setDefinition(line.substring(22,47).trim());
+			this.setSccag(line.substring(60,63));
+		}
 	}
 	/**
 	 * Ajoute les données de la carte 3
