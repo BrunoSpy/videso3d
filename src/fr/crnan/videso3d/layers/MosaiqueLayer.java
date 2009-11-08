@@ -38,9 +38,10 @@ import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
  * Affiche une mosaique (STR ou STPV) en 2D ou en 3D</br>
  * Permet de colorier certains carrés et sous-carrés
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.4
  */
-public class MosaiqueLayer {
+@SuppressWarnings("serial")
+public class MosaiqueLayer extends LayerSet {
 
 	/**
 	 * La grille est dessinée de bas en haut
@@ -66,11 +67,27 @@ public class MosaiqueLayer {
 	 * Mode de parcours utilisé par le STPV
 	 */
 	public static final int HORIZONTAL_FIRST = 6;
-	
+	/**
+	 * Mosaiques en 2D ou 3D.<br />
+	 * 2D par défaut.
+	 */
+	private Boolean threeD = false;
+	/**
+	 * Layer pour les mosaiques 3D
+	 */
 	private AirspaceLayer airspaceLayer = new AirspaceLayer();
+	/**
+	 * Layer pour les mosaiques 2D
+	 */
 	private SurfaceShapeLayer shapeLayer = new SurfaceShapeLayer();
+	/**
+	 * Layer pour les numéros
+	 */
 	private TextLayer textLayer = new TextLayer("Numéros des mosaïques");
-	
+	/**
+	 * Layer pour la grille
+	 */
+	private SurfaceShapeLayer grilleLayer = new SurfaceShapeLayer();
 	/**
 	 * Création d'une mosaïque</br>
 	 * @param annotationTitle {@link String} Titre des annotations des carrés
@@ -102,6 +119,10 @@ public class MosaiqueLayer {
 			ShapeAttributes attr,
 			AirspaceAttributes airspaceAttr){
 
+		this.add(textLayer);
+		this.add(shapeLayer);
+		this.add(grilleLayer);
+		
 		int hsens = hSens == RIGHT_LEFT ? -1 : 1;
 		int vsens = vSens == TOP_DOWN ? -1 : 1;
 		textLayer.setMaxActiveAltitude(20e5);
@@ -120,7 +141,7 @@ public class MosaiqueLayer {
 				line.add(stop);
 				SurfacePolyline ligne = new SurfacePolyline(line);
 				ligne.setClosed(false);
-				this.shapeLayer.addRenderable(ligne);
+				this.grilleLayer.addRenderable(ligne);
 			}
 			//affichage des colonnes
 			for(int i=0; i<= width; i++){
@@ -134,7 +155,7 @@ public class MosaiqueLayer {
 				line.add(stop);
 				SurfacePolyline col = new SurfacePolyline(line);
 				col.setClosed(false);
-				this.shapeLayer.addRenderable(col);
+				this.grilleLayer.addRenderable(col);
 			}
 		}
 
@@ -279,23 +300,21 @@ public class MosaiqueLayer {
 			
 		}
 	}
+
 	/**
-	 * @return the shapeLayer
+	 * Mosaiques en 2D ou 3D
+	 * @param b True si 3D
 	 */
-	public SurfaceShapeLayer getShapeLayer() {
-		return shapeLayer;
-	}
-	/**
-	 * @return the textLayer
-	 */
-	public TextLayer getTextLayer() {
-		return textLayer;
-	}
-	
-	/**
-	 * @return the airspace layer
-	 */
-	public AirspaceLayer getAirspaceLayer(){
-		return airspaceLayer;
+	public void set3D(Boolean b){
+		if(this.threeD != b) {
+			this.threeD = b;
+			if(b){
+				this.remove(shapeLayer);
+				this.add(airspaceLayer);
+			} else {
+				this.remove(airspaceLayer);
+				this.add(shapeLayer);
+			}
+		}
 	}
 }

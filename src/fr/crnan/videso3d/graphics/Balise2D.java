@@ -19,8 +19,6 @@ package fr.crnan.videso3d.graphics;
 import java.awt.Color;
 import java.awt.Font;
 
-import fr.crnan.videso3d.layers.BaliseMarkerLayer;
-import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -28,11 +26,13 @@ import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.UserFacingText;
 import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
+import gov.nasa.worldwind.render.markers.Marker;
 
 /**
- * Balise 2D projetée sur le terrain
+ * Balise 2D projetée sur le terrain.<br />
+ * A ajouter à un BaliseLayer pour être affichée sur le globe.
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.4
  */
 public class Balise2D extends UserFacingText {
 	
@@ -66,16 +66,14 @@ public class Balise2D extends UserFacingText {
 		this.marker.setAnnotation(text);
 	}
 	
-	/**
-	 * Ajoute la balise aux calques
-	 * @param layer {@link BaliseMarkerLayer} Calque pour le dessin
-	 * @param textLayer {@link TextLayer} Calque pour le nom de la balise
-	 */
-	public void addToLayer(BaliseMarkerLayer layer, TextLayer textLayer){
-		layer.addMarker(marker);
-		textLayer.addGeographicText(this);
-		
+	public UserFacingText getUserFacingText(){
+		return this;
 	}
+	
+	public Marker getMarker(){
+		return this.marker;
+	}
+	
 	/**
 	 * Met en valeur la balise
 	 * @param bool

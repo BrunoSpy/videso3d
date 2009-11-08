@@ -298,19 +298,15 @@ public class StipView extends JPanel {
                     Object source = e.getItemSelectable();
                     if(e.getStateChange() == ItemEvent.SELECTED ) {
                             if(source == balisesPubChk){
-                                    wwd.toggleLayer(wwd.getBalisesPubMarkers(), true);
-                                    wwd.toggleLayer(wwd.getBalisesPubTexts(), true);
+                                    wwd.toggleLayer(wwd.getBalisesPubLayer(), true);
                             } else if(source == balisesNPChk){
-                                    wwd.toggleLayer(wwd.getBalisesNPMarkers(), true);
-                                    wwd.toggleLayer(wwd.getBalisesNPTexts(), true);
+                                    wwd.toggleLayer(wwd.getBalisesNPLayer(), true);
                             }
                     } else {
                             if(source == balisesPubChk){
-                                    wwd.toggleLayer(wwd.getBalisesPubMarkers(), false);
-                                    wwd.toggleLayer(wwd.getBalisesPubTexts(), false);
+                                    wwd.toggleLayer(wwd.getBalisesPubLayer(), false);
                             } else if(source == balisesNPChk){
-                                    wwd.toggleLayer(wwd.getBalisesNPMarkers(), false);
-                                    wwd.toggleLayer(wwd.getBalisesNPTexts(), false);
+                                    wwd.toggleLayer(wwd.getBalisesNPLayer(), false);
                             }
                     }
             }      
