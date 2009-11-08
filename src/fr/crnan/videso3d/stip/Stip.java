@@ -17,6 +17,7 @@
 package fr.crnan.videso3d.stip;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -129,7 +130,7 @@ public class Stip extends FileParser{
 		this.setSecteur(this.path + "/SECT");
 		this.setProgress(2);
 		this.setFile("balise");
-		this.setBalise(this.path + "/balise");
+		this.setBalise(this.path);
 		this.setProgress(3);
 		this.setFile("POINSECT");
 		this.setPoinSect(this.path + "/POINSECT");
@@ -567,11 +568,24 @@ public class Stip extends FileParser{
 	 * @param path Chemin vers le fichier balise
 	 */
 	private void setBalise(String path) {
+		String balisePath = path;
+		Boolean precision = false;
+		if(new File(path+"/BALISEP").exists()){
+			balisePath += "/BALISEP";
+			precision = true;
+		} else if(new File(path+"/balisep").exists()){
+			balisePath += "/balisep";
+			precision = true;
+		} else if(new File(path+"/BALISE").exists()){
+			balisePath += "/BALISE";
+		} else if(new File(path+"/balise").exists()){
+			balisePath += "/balise";
+		}
 		try {
 			PreparedStatement insert = this.conn.prepareStatement("insert into balises (name, publicated, latitude, longitude, centre, definition, sccag, sect1, limit1, sect2, limit2, sect3, limit3, sect4, limit4, sect5, limit5, sect6, limit6, sect7, limit7, sect8, limit8, sect9, limit9) " +
 	       "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-			Balise balise = new Balise();
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(balisePath)));
+			Balise balise = new Balise(precision);
 			while (in.ready()){
 				String line = in.readLine();
 				if (line.startsWith("1")) {
@@ -579,7 +593,7 @@ public class Stip extends FileParser{
 					if(balise.getIndicatif() != null) {//alors on stocke la balise précédente
 							this.insertBalise(balise, insert);
 					}
-					balise = new Balise(line);
+					balise = new Balise(line, precision);
 				} else if (line.startsWith("2")) {
 					balise.setLigne2(line);
 				} else if (line.startsWith("3") && !line.startsWith("31") && !line.startsWith("32") ) {
@@ -601,6 +615,8 @@ public class Stip extends FileParser{
 		}catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e){
 			e.printStackTrace();
 		}
 	}
