@@ -18,6 +18,7 @@ package fr.crnan.videso3d.ihm;
 
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -43,6 +44,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -70,7 +72,11 @@ import org.xml.sax.SAXException;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.formats.opas.OPASReader;
+import fr.crnan.videso3d.formats.opas.OPASTrack;
+import fr.crnan.videso3d.formats.opas.OPASTrackPoint;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
+import fr.crnan.videso3d.graphics.VPolyline;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
@@ -78,6 +84,9 @@ import gov.nasa.worldwind.formats.gpx.GpxReader;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AirspaceLayer;
+import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.render.Polyline;
+import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.Route;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.tracks.TrackPoint;
@@ -175,6 +184,8 @@ public class MainWindow extends JFrame {
 				db.closeAll();
 			}
 		});
+		
+		
 		
 		//Test fichier .gpx
 //		AirspaceLayer trxkLayer = new AirspaceLayer();
@@ -328,8 +339,25 @@ public class MainWindow extends JFrame {
 	private JToolBar createToolBar(){
 		JToolBar toolbar = new JToolBar("Actions");
 		
+		//Ajouter trajectoires
+		final JButton trajectoires = new JButton(new ImageIcon(getClass().getResource("/resources/plus_traj_22.png")));
+		trajectoires.setToolTipText("Importer des trajectoires");
+		trajectoires.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				if(fileChooser.showOpenDialog(trajectoires) == JFileChooser.APPROVE_OPTION){
+					wwd.addTrajectoires(new OPASReader(fileChooser.getSelectedFile()));
+				}
+			}
+		});
+		toolbar.add(trajectoires);
+		
 		//Ajouter données
-		JButton datas = new JButton("DB");
+		JButton datas = new JButton(new ImageIcon(getClass().getResource("/resources/database_22.png")));
+		datas.setToolTipText("Ajouter/supprimer des données");
 		datas.addActionListener(new ActionListener() {
 			
 			@Override
