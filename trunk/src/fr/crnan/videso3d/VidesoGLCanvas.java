@@ -28,6 +28,9 @@ import java.util.List;
 
 import javax.swing.ProgressMonitor;
 
+import fr.crnan.videso3d.formats.opas.OPASReader;
+import fr.crnan.videso3d.formats.opas.OPASTrack;
+import fr.crnan.videso3d.formats.opas.OPASTrackPoint;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
@@ -37,6 +40,7 @@ import fr.crnan.videso3d.graphics.Radar;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.graphics.VPolyline;
 import fr.crnan.videso3d.graphics.Route.Type;
 import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.layers.BaliseMarkerLayer;
@@ -56,11 +60,13 @@ import gov.nasa.worldwind.layers.AnnotationLayer;
 import gov.nasa.worldwind.layers.LatLonGraticuleLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
+import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.Polyline;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.Airspace;
@@ -79,6 +85,10 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
 
+	/**
+	 * Layer pour les trajectoires
+	 */
+	private RenderableLayer trajLayer;
 	/**
 	 * Layer contenant les routes
 	 */
@@ -956,6 +966,32 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				highlight = null;
 				lastLayer = null;
 			}
+		}
+	}
+
+	/**
+	 * Ajoute les trajectoires au format OPAS
+	 * @param opasReader
+	 */
+	public void addTrajectoires(OPASReader opas) {
+		if(trajLayer == null) {
+			trajLayer = new RenderableLayer();
+			trajLayer.setName("Trajectoires");
+			this.toggleLayer(trajLayer, true);
+		}
+		for(OPASTrack track : opas.getTracks()){
+			VPolyline line = new VPolyline();
+			LinkedList<Position> positions = new LinkedList<Position>();
+			for(OPASTrackPoint point : track.getTrackPoints()){
+				positions.add(point.getPosition());
+			}
+			line.setPositions(positions);
+			line.setFollowVerticalExaggeration(true);
+			line.setShadedColors(true);
+			line.setMaxElevation(400*30.48);
+			line.setMinElevation(50*30.48);
+			line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
+			trajLayer.addRenderable(line);
 		}
 	}
 }
