@@ -21,8 +21,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JColorChooser;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import fr.crnan.videso3d.graphics.ObjectAnnotation;
 import gov.nasa.worldwind.event.SelectEvent;
@@ -39,7 +43,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Listener d'évènements sur les airspaces et shapes
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 public class AirspaceListener implements SelectListener {
 
@@ -47,13 +51,13 @@ public class AirspaceListener implements SelectListener {
 	private Annotation lastAnnotation;
 	private Object lastAttrs;
 	private Object lastToolTip;
-	
+
 	private VidesoGLCanvas wwd;
-	
+
 	public AirspaceListener(VidesoGLCanvas wwd){
 		this.wwd = wwd;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see gov.nasa.worldwind.event.SelectListener#selected(gov.nasa.worldwind.event.SelectEvent)
 	 */
@@ -118,32 +122,76 @@ public class AirspaceListener implements SelectListener {
 				}
 			}
 		} else if(event.getEventAction() == SelectEvent.RIGHT_CLICK){
-			final JPopupMenu menu = new JPopupMenu("Menu");
-			JMenuItem colorItem = new JMenuItem("Couleur...");
-			colorItem.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if(lastAttrs instanceof AirspaceAttributes) {
-						Color color = JColorChooser.showDialog(menu, "Couleur du secteur", ((AirspaceAttributes)lastAttrs).getMaterial().getDiffuse());
-						if(color != null) {
-							((AirspaceAttributes)lastAttrs).setMaterial(new Material(color));
-							((AirspaceAttributes)lastAttrs).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+			if(lastAttrs != null) {
+				final JPopupMenu menu = new JPopupMenu("Menu");
+				JMenuItem colorItem = new JMenuItem("Couleur...");
+				menu.add(colorItem);
+
+				JMenu opacityItem = new JMenu("Opacité ...");
+				JSlider slider = new JSlider();
+				slider.setMaximum(100);
+				slider.setMinimum(0);
+				slider.setOrientation(JSlider.VERTICAL);
+				slider.setMinorTickSpacing(10);
+				slider.setMajorTickSpacing(20);
+				slider.setPaintLabels(true);
+				slider.setPaintTicks(true);
+				opacityItem.add(slider);
+				menu.add(opacityItem);
+
+				//menu.add("Rechercher...");
+
+
+				//Ajout des listeners en fonction du type d'objet
+				if(lastAttrs instanceof AirspaceAttributes){
+					colorItem.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							Color color = JColorChooser.showDialog(menu, "Couleur du secteur", ((AirspaceAttributes)lastAttrs).getMaterial().getDiffuse());
+							if(color != null) {
+								((AirspaceAttributes)lastAttrs).setMaterial(new Material(color));
+								((AirspaceAttributes)lastAttrs).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+							}
 						}
-					} else if(lastAttrs instanceof ShapeAttributes) {
-						Color color = JColorChooser.showDialog(menu, "Couleur du secteur", ((ShapeAttributes)lastAttrs).getInteriorMaterial().getDiffuse());
-						if(color != null) {
-							((ShapeAttributes)lastAttrs).setInteriorMaterial(new Material(color));
-							((ShapeAttributes)lastAttrs).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
-							((SurfaceShape)event.getTopObject()).setAttributes((ShapeAttributes) lastAttrs);
+					});
+					slider.setValue((int)(((AirspaceAttributes)lastAttrs).getOpacity()*100.0));
+					slider.addChangeListener(new ChangeListener() {
+						@Override
+						public void stateChanged(ChangeEvent e) {
+							JSlider source = (JSlider)e.getSource();
+							((AirspaceAttributes)lastAttrs).setOpacity(source.getValue()/100.0);
+							wwd.redraw();
 						}
-					}
+					});
+				} else if(lastAttrs instanceof ShapeAttributes){
+					colorItem.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							Color color = JColorChooser.showDialog(menu, "Couleur du secteur", ((ShapeAttributes)lastAttrs).getInteriorMaterial().getDiffuse());
+							if(color != null) {
+								((ShapeAttributes)lastAttrs).setInteriorMaterial(new Material(color));
+								((ShapeAttributes)lastAttrs).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+								((SurfaceShape)event.getTopObject()).setAttributes((ShapeAttributes) lastAttrs);
+							}
+						}
+					});
+					slider.setValue((int)(((ShapeAttributes)lastAttrs).getInteriorOpacity()*100.0));
+					slider.addChangeListener(new ChangeListener() {
+						@Override
+						public void stateChanged(ChangeEvent e) {
+							JSlider source = (JSlider)e.getSource();
+							if(!source.getValueIsAdjusting()){
+								((ShapeAttributes)lastAttrs).setInteriorOpacity(source.getValue()/100.0);
+								((SurfaceShape)event.getTopObject()).setAttributes((ShapeAttributes) lastAttrs);
+								wwd.redraw();
+							}
+						}
+					});
 				}
-			});
-			menu.add(colorItem);
-			menu.add("Rechercher...");
-			menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
+				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
+			}			
 		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){
-			
+
 		}
 	}
 }
