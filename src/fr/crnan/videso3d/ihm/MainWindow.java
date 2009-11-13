@@ -18,35 +18,28 @@ package fr.crnan.videso3d.ihm;
 
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDesktopPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -57,7 +50,6 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
-import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
@@ -65,32 +57,16 @@ import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-import org.xml.sax.SAXException;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.opas.OPASReader;
-import fr.crnan.videso3d.formats.opas.OPASTrack;
-import fr.crnan.videso3d.formats.opas.OPASTrackPoint;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
-import fr.crnan.videso3d.graphics.VPolyline;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
-import gov.nasa.worldwind.formats.gpx.GpxReader;
-import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.layers.AirspaceLayer;
-import gov.nasa.worldwind.layers.RenderableLayer;
-import gov.nasa.worldwind.render.Polyline;
-import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
-import gov.nasa.worldwind.render.airspaces.Route;
-import gov.nasa.worldwind.tracks.Track;
-import gov.nasa.worldwind.tracks.TrackPoint;
-import gov.nasa.worldwind.tracks.TrackSegment;
 
 /**
  * Fenêtre principale
@@ -123,7 +99,7 @@ public class MainWindow extends JFrame {
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	}
-	
+
 	
 	/**
 	 * 
@@ -138,7 +114,6 @@ public class MainWindow extends JFrame {
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
 		
 
-		
 		//Instancie WorldWind
 		this.createWwd();
 		
@@ -184,44 +159,6 @@ public class MainWindow extends JFrame {
 				db.closeAll();
 			}
 		});
-		
-		
-		
-		//Test fichier .gpx
-//		AirspaceLayer trxkLayer = new AirspaceLayer();
-//		trxkLayer.setEnableAntialiasing(true);
-//		wwd.getModel().getLayers().add(trxkLayer);
-//		try {
-//			GpxReader gpxReader = new GpxReader();
-//			gpxReader.readFile("/home/datas/Projets/Videso3D/datas/elvira.gpx");
-//			Iterator<Track> iterator = gpxReader.getTracks().iterator();
-//			while(iterator.hasNext()){
-//				Track track = iterator.next();
-//				Route route = new Route();
-//				Iterator<TrackSegment> segments = track.getSegments().iterator();
-//				while(segments.hasNext()){
-//					Iterator<TrackPoint> points = segments.next().getPoints().iterator();
-//					TrackPoint start = null; 
-//					while(points.hasNext()){
-//						TrackPoint point = points.next();
-//						if(start != null) {
-//							route.addLeg(LatLon.fromDegrees(start.getLatitude(), start.getLongitude()),
-//									LatLon.fromDegrees(point.getLatitude(), point.getLongitude()),
-//									point.getElevation()-500, point.getElevation()+500,
-//									10, 10);
-//						}
-//						start = point;
-//					}
-//				}
-//				trxkLayer.addAirspace(route);
-//			}
-//		} catch (ParserConfigurationException e1) {
-//			e1.printStackTrace();
-//		} catch (SAXException e1) {
-//			e1.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 		
 	}
 	
