@@ -532,6 +532,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Appelé lors de l'initialisation de la vue ou lors du changement de base de données Stip
 	 */
 	public void buildStip() {
+		//TODO Séparer l'aspect calcul de l'aspect IHM
 		ProgressMonitor progress = new ProgressMonitor(null, 
 				"Mise à jour des éléments STIP", "Suppression des éléments précédents", 0, 6);
 		progress.setMillisToDecideToPopup(0);

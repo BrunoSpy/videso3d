@@ -1,9 +1,18 @@
 /*
-Copyright (C) 2001, 2006 United States Government
-as represented by the Administrator of the
-National Aeronautics and Space Administration.
-All Rights Reserved.
-*/
+ * This file is part of ViDESO.
+ * ViDESO is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ViDESO is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package fr.crnan.videso3d.graphics;
 
 import gov.nasa.worldwind.geom.*;
@@ -17,8 +26,9 @@ import java.awt.*;
 import java.util.*;
 
 /**
- * @author tag
- * @version $Id: Polyline.java 12741 2009-10-24 00:50:48Z tgaskins $
+ * Extension de Polyline de façon à prendre en compte l'exagération verticale et à changer la couleur en fonction de l'altitude.
+ * @author Bruno Spyckerelle
+ * @version 0.2
  */
 public class VPolyline extends Polyline
 {
@@ -562,7 +572,12 @@ public class VPolyline extends Polyline
         this.referenceCenterPoint = this.computeTerrainPoint(dc,
             this.referenceCenterPosition.getLatitude(), this.referenceCenterPosition.getLongitude(), this.getOffset());
     }
-
+    
+    public Position getReferencePosition()
+    {
+        return this.referenceCenterPosition;
+    }
+    
     private Vec4 computeTerrainPoint(DrawContext dc, Angle lat, Angle lon, double offset)
     {
         Vec4 p = dc.getSurfaceGeometry().getSurfacePoint(lat, lon, offset);
