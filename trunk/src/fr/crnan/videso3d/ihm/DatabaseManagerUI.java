@@ -39,6 +39,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ProgressMonitor;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.jdesktop.swingx.JXTable;
@@ -92,12 +94,24 @@ public class DatabaseManagerUI extends JFrame {
 		table.setSortable(false);//TODO à mettre à true une fois la solution de la cohérence table/model trouvée
 		table.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setColumnControlVisible(true);
+	
 		this.getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
 		
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 		
 		select = new JButton("Sélectionner");
+		select.setEnabled(false);
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if(table.getSelectedRow() != -1 && db.isSelected(((DBTableModel)table.getModel()).getId(table.getSelectedRow()))){
+					select.setEnabled(false);
+				} else { 
+					select.setEnabled(true);
+				}
+			}
+		});
 		select.addActionListener(new TableListener());
 		
 		buttons.add(select);

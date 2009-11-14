@@ -116,6 +116,9 @@ public class MainWindow extends JFrame {
 
 		this.db = db;
 
+		//Style Nimbus
+		this.setNimbus();
+		
 		//Création du splashscreen
 		splashScreen = new SplashScreen();
 		splashScreen.setVisible(true);
@@ -145,7 +148,7 @@ public class MainWindow extends JFrame {
 	private void createWwd(){
 		this.wwd = new VidesoGLCanvas();
 		wwd.setPreferredSize(new java.awt.Dimension(0, 0));
-
+		
 		wwd.setModel(new BasicModel());
 
 		wwd.addPropertyChangeListener("step", new PropertyChangeListener() {
@@ -175,8 +178,7 @@ public class MainWindow extends JFrame {
 	private void launchVideso3D(){
 		splashScreen.setStatus("Création de l'interface", 90);
 
-		//Style Nimbus
-		this.setNimbus();
+
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
 
 		//Titre de la fenêtre
