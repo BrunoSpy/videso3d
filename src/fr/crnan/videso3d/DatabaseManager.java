@@ -214,6 +214,22 @@ public class DatabaseManager{
 		return exists;
 	}
 
+	/**
+	 * Teste si la base de données <code>id</code> est sélectionnée
+	 * @param id de la base de données
+	 * @return Boolean True si la base est sélectionnée
+	 */
+	public Boolean isSelected(Integer id){
+		try {
+			Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+			ResultSet rs = st.executeQuery("select * from databases where id='"+id+"'");
+			rs.next();
+			return rs.getBoolean("selected");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 
 	/**
 	 * Ajoute une base de données dans la liste et la marque comme sélectionnée
