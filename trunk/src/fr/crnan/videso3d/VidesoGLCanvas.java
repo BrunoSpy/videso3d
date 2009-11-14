@@ -26,8 +26,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.ProgressMonitor;
-
 import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrackPoint;
@@ -43,11 +41,9 @@ import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolyline;
 import fr.crnan.videso3d.graphics.Route.Type;
 import fr.crnan.videso3d.layers.BaliseLayer;
-import fr.crnan.videso3d.layers.BaliseMarkerLayer;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
-import fr.crnan.videso3d.layers.TextLayer;
 import fr.crnan.videso3d.stip.Secteur;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.examples.util.LayerManagerLayer;
@@ -80,7 +76,7 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.4
+ * @version 0.6
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
@@ -159,7 +155,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Initialise les différents objets graphiques
 	 */
-	public void initialize(DatabaseManager db){
+	public void initialize(DatabaseManager db){		
 		this.db = db;
 		
 		this.addSelectListener(new AirspaceListener(this));		
@@ -194,7 +190,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 		
 		this.buildStip();	
-		
+			
 		//position de départ centrée sur la France
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));
 		
@@ -532,12 +528,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Appelé lors de l'initialisation de la vue ou lors du changement de base de données Stip
 	 */
 	public void buildStip() {
-		//TODO Séparer l'aspect calcul de l'aspect IHM
-		ProgressMonitor progress = new ProgressMonitor(null, 
-				"Mise à jour des éléments STIP", "Suppression des éléments précédents", 0, 6);
-		progress.setMillisToDecideToPopup(0);
-		progress.setMillisToPopup(0);
-		progress.setProgress(0);
+		firePropertyChange("step", "", "Suppression des objets 3D");
 		//Suppression des objets
 		if(routes3D != null) {
 			routes3D.removeAllAirspaces();
@@ -570,20 +561,15 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 		try {
 			if(this.db.getCurrentStip() != null) {
-				progress.setNote("Création des balises publiées");
-				progress.setProgress(1);
 				//création des nuveaux objets
+				firePropertyChange("step", "", "Création des balises publiées");
 				this.buildBalises(db, 0);
-				progress.setNote("Création des balises non publiées");
-				progress.setProgress(2);
+				firePropertyChange("step", "", "Création des balises non publiées");
 				this.buildBalises(db, 1);
-				progress.setNote("Création des routes FIR");
-				progress.setProgress(3);
+				firePropertyChange("step", "", "Création des routes FIR");
 				this.buildRoutes(db, "F");
-				progress.setNote("Création des routes UIR");
-				progress.setProgress(4);
+				firePropertyChange("step", "", "Création des routes UIR");
 				this.buildRoutes(db, "U");
-				progress.setProgress(5);
 				this.toggleLayer(secteursLayer, true);
 				this.secteurs = new HashMap<String, Secteur3D>();				
 			}
@@ -591,7 +577,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			e.printStackTrace();
 		}
 		this.redraw();
-		progress.setProgress(6);
+
 	}
 
 	/*--------------------------------------------------------------*/
@@ -994,5 +980,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
 			trajLayer.addRenderable(line);
 		}
+	}
+
+	public int getNumberInitSteps() {
+		return 5;
 	}
 }

@@ -61,6 +61,7 @@ import javax.swing.event.ChangeListener;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.SplashScreen;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
@@ -88,80 +89,56 @@ public class MainWindow extends JFrame {
 	 * Explorateur de données
 	 */
 	private DataExplorer dataExplorer;
-	
+
 	/**
 	 * Gestionnaire de bases de données
 	 */
 	private DatabaseManagerUI databaseUI;
-	
+
+	private final SplashScreen splashScreen;
+	/**
+	 * Nombre d'étapes d'initialisation pour la barre de progression
+	 */
+	private int step = 0;
+
 	static {
 		// Ensure that menus and tooltips interact successfully with the WWJ window.
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	}
 
-	
+
 	/**
 	 * 
 	 * @param db
 	 */
 	public MainWindow(final DatabaseManager db){
-		
-		this.db = db;
-		//Style Nimbus
-		this.setNimbus();
-		
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
-		
 
-		//Instancie WorldWind
-		this.createWwd();
-		
-		//Titre de la fenêtre
-		this.setTitle("Videso 3D");
-		
-		//Fermeture de l'application
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		//Menu
-//		this.setJMenuBar(this.createMenuBar());
-		
-		//Layout
-		this.setLayout(new BorderLayout());
-		
-		//Barre d'actions
-		this.add(this.createToolBar(), BorderLayout.PAGE_START);
-		
-		//Barre de statut
-		this.add(this.createStatusBar(), BorderLayout.SOUTH);
-		
-		//Explorateur de données
-		dataExplorer = new DataExplorer(this.db, wwd);
-//		JDesktopPane desktop = new JDesktopPane();
-//		JInternalFrame wwdFrame = new JInternalFrame("WorldWind", true, false, true, true);
-//		wwdFrame.setSize(500, 300);
-//		wwdFrame.add(wwd);
-//		wwdFrame.setVisible(true);
-//		desktop.add(wwdFrame);
-		
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, dataExplorer, wwd);
-		splitPane.setOneTouchExpandable(true);
-		splitPane.setContinuousLayout(true);
-		this.getContentPane().add(splitPane, BorderLayout.CENTER);
-		
-		this.setPreferredSize(new Dimension(800, 600));
-		this.pack();
-		
-		
+		this.db = db;
+
+		//Création du splashscreen
+		splashScreen = new SplashScreen();
+		splashScreen.setVisible(true);
+		splashScreen.setStatus("Création de la vue 3D", step);
+		step++;		
+		{
+			//Instancie WorldWind
+			this.createWwd();
+		}
+
+		//la suite du lancement de l'application (launch())
+		//est lancée par createWwd lorsque l'initialisation est terminée
+
+
 		//fermeture des connections aux bases de données avant de quitter afin de ne pas perdre les dernières transactions
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
 				db.closeAll();
 			}
 		});
-		
+
 	}
-	
+
 	/**
 	 * Crée et configure le canvas WorldWind
 	 */
@@ -170,7 +147,15 @@ public class MainWindow extends JFrame {
 		wwd.setPreferredSize(new java.awt.Dimension(0, 0));
 
 		wwd.setModel(new BasicModel());
-				
+
+		wwd.addPropertyChangeListener("step", new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				splashScreen.setStatus((String) evt.getNewValue(), (step*100)/(wwd.getNumberInitSteps()+3) );
+				step++;
+			}
+		});
+
 		//initialisation des objets 3D en background
 		new SwingWorker<String, Integer>(){
 			@Override
@@ -178,11 +163,62 @@ public class MainWindow extends JFrame {
 				wwd.initialize(db);
 				return null;
 			}
+			@Override
+			protected void done(){
+				//une fois terminé, on lance l'application
+				launchVideso3D();
+			}
 		}.execute();
-		
-		
 	}
-	
+
+
+	private void launchVideso3D(){
+		splashScreen.setStatus("Création de l'interface", 90);
+
+		//Style Nimbus
+		this.setNimbus();
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
+
+		//Titre de la fenêtre
+		this.setTitle("Videso 3D");
+
+		//Fermeture de l'application
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		//Menu
+		//this.setJMenuBar(this.createMenuBar());
+
+		//Layout
+		this.setLayout(new BorderLayout());
+
+		//Barre d'actions
+		this.add(this.createToolBar(), BorderLayout.PAGE_START);
+
+		//Barre de statut
+		this.add(this.createStatusBar(), BorderLayout.SOUTH);
+
+
+
+		//Explorateur de données
+		dataExplorer = new DataExplorer(this.db, wwd);
+		//		JDesktopPane desktop = new JDesktopPane();
+		//		JInternalFrame wwdFrame = new JInternalFrame("WorldWind", true, false, true, true);
+		//		wwdFrame.setSize(500, 300);
+		//		wwdFrame.add(wwd);
+		//		wwdFrame.setVisible(true);
+		//		desktop.add(wwdFrame);
+
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, dataExplorer, wwd);
+		splitPane.setOneTouchExpandable(true);
+		splitPane.setContinuousLayout(true);
+		this.getContentPane().add(splitPane, BorderLayout.CENTER);
+
+		this.setPreferredSize(new Dimension(800, 600));
+		//suppression du splashscreen et affichage de la fenêtre
+		splashScreen.dispose();
+		this.pack();
+	}
+
 	/**
 	 * Barre de menu de l'application
 	 * @return {@link JMenuBar} Barre de menu
@@ -231,11 +267,11 @@ public class MainWindow extends JFrame {
 				});
 			}
 		});
-		
+
 		file.add(dbUI);
 
 		file.add(new JSeparator());
-		
+
 		JMenuItem quit = new JMenuItem("Quitter");
 		quit.addActionListener(new ActionListener() {
 			@Override
@@ -245,11 +281,11 @@ public class MainWindow extends JFrame {
 			}
 		});
 		file.add(quit);
-		
+
 		JMenu affichage = new JMenu("Fenêtre");
-		
+
 		JMenu help = new JMenu("Aide");
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.add(file);
 		menuBar.add(affichage);
@@ -257,8 +293,8 @@ public class MainWindow extends JFrame {
 		return menuBar;
 	}
 
-	
-	
+
+
 	/**
 	 * Barre de status de l'application
 	 * @return Barre de status
@@ -268,35 +304,42 @@ public class MainWindow extends JFrame {
 		statusBar.setEventSource(wwd);
 		return statusBar;
 	}
-	
+
 	/**
 	 * Barre d'outils principale
 	 * @return {@link JToolBar}
 	 */
 	private JToolBar createToolBar(){
 		JToolBar toolbar = new JToolBar("Actions");
-		
+
 		//Ajouter trajectoires
 		final JButton trajectoires = new JButton(new ImageIcon(getClass().getResource("/resources/plus_traj_22.png")));
 		trajectoires.setToolTipText("Importer des trajectoires");
 		trajectoires.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser();
+				final JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				if(fileChooser.showOpenDialog(trajectoires) == JFileChooser.APPROVE_OPTION){
-					wwd.addTrajectoires(new OPASReader(fileChooser.getSelectedFile()));
+					new SwingWorker<String, Integer>(){
+						@Override
+						protected String doInBackground() throws Exception {
+							wwd.addTrajectoires(new OPASReader(fileChooser.getSelectedFile()));
+							return null;
+						}
+					}.execute();
+
 				}
 			}
 		});
 		toolbar.add(trajectoires);
-		
+
 		//Ajouter données
 		JButton datas = new JButton(new ImageIcon(getClass().getResource("/resources/database_22.png")));
 		datas.setToolTipText("Ajouter/supprimer des données");
 		datas.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				databaseUI = new DatabaseManagerUI(db);
@@ -310,9 +353,20 @@ public class MainWindow extends JFrame {
 							@Override
 							protected String doInBackground() throws Exception {
 								if(type.equals("STIP")){
+									final ProgressMonitor progress = new ProgressMonitor(null, 
+											"Mise à jour des éléments STIP", "Suppression des éléments précédents", 0, 6);
+									progress.setMillisToDecideToPopup(0);
+									progress.setMillisToPopup(0);
+									progress.setProgress(0);
+									wwd.addPropertyChangeListener("step", new PropertyChangeListener() {
+										@Override
+										public void propertyChange(PropertyChangeEvent evt) {
+											progress.setNote((String) evt.getNewValue());
+										}
+									});
 									//mise à jour de la vue 3D
-									//TODO mettre à jour seulement si la base de données a changé
 									wwd.buildStip();
+									progress.setNote("Chargement terminé");
 									//mise à jour de l'explorateur de données
 									dataExplorer.updateStipView();
 								} else if (type.equals("EXSA")){
@@ -338,18 +392,18 @@ public class MainWindow extends JFrame {
 		});
 		toolbar.add(datas);
 		toolbar.addSeparator();
-		
+
 		//fond de la France
 		final JToggleButton fond = new JToggleButton("Fond");
 		fond.addItemListener(new ItemListener() {
-			
+
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				wwd.toggleFrontieres(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
 		toolbar.add(fond);
-		
+
 		//Alidade
 		final JToggleButton alidad = new JToggleButton("Alidade");
 		alidad.addItemListener(new ItemListener() {
@@ -358,15 +412,15 @@ public class MainWindow extends JFrame {
 				wwd.switchMeasureTool(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
-		
+
 		toolbar.add(alidad);
 
 		//Projections 
 		DropDownToggleButton toggle2D = new DropDownToggleButton();
 		toggle2D.setText("2D/3D");
-		
+
 		final ButtonGroup projections = new ButtonGroup();
-		
+
 		JRadioButtonMenuItem cautra = new JRadioButtonMenuItem("Cautra (exp.)");
 		cautra.addItemListener(new ItemListener() {
 			@Override
@@ -377,7 +431,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 		projections.add(cautra);
-		
+
 		JRadioButtonMenuItem mercator = new JRadioButtonMenuItem("Mercator");
 		mercator.addItemListener(new ItemListener() {
 			@Override
@@ -389,7 +443,7 @@ public class MainWindow extends JFrame {
 		});
 		mercator.setSelected(true);
 		projections.add(mercator);
-		
+
 		JRadioButtonMenuItem latlon = new JRadioButtonMenuItem("Lat-Lon");
 		latlon.addItemListener(new ItemListener() {
 			@Override
@@ -400,7 +454,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 		projections.add(latlon);
-		
+
 		JRadioButtonMenuItem sin = new JRadioButtonMenuItem("Sin.");
 		sin.addItemListener(new ItemListener() {
 			@Override
@@ -411,7 +465,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 		projections.add(sin);
-		
+
 		JRadioButtonMenuItem modSin = new JRadioButtonMenuItem("Mod. Sin.");
 		modSin.addItemListener(new ItemListener() {
 			@Override
@@ -422,7 +476,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 		projections.add(modSin);
-		
+
 		toggle2D.getPopupMenu().add(cautra);
 		toggle2D.getPopupMenu().add(mercator);
 		toggle2D.getPopupMenu().add(latlon);
@@ -437,9 +491,9 @@ public class MainWindow extends JFrame {
 				wwd.enableFlatGlobe(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
-		
+
 		toolbar.addSeparator();
-		
+
 		JLabel label = new JLabel("Exagération verticale : ");
 		toolbar.add(label);
 
@@ -473,21 +527,21 @@ public class MainWindow extends JFrame {
 			}
 		});
 		toolbar.add(slider);		
-		
+
 		//recherche avec autocomplétion
 		toolbar.addSeparator();
 		toolbar.add(new JLabel(new ImageIcon(getClass().getResource("/resources/zoom-original.png"))));
-		
-		
+
+
 		LinkedList<String> results = new LinkedList<String>();
 		results.add(" ");//utile pour supprimer l'élément de la vue
 		try {
 			Statement st = this.db.getCurrentStip();
 			if(st != null){
-			ResultSet rs = st.executeQuery("select name from balises UNION select name from routes UNION select nom from secteurs");
-			while(rs.next()){
-				results.add(rs.getString(1));
-			}
+				ResultSet rs = st.executeQuery("select name from balises UNION select name from routes UNION select nom from secteurs");
+				while(rs.next()){
+					results.add(rs.getString(1));
+				}
 			}
 		} catch (SQLException e1) {
 			e1.printStackTrace();
@@ -495,9 +549,9 @@ public class MainWindow extends JFrame {
 		JComboBox search = new JComboBox(results.toArray());
 		search.setToolTipText("Rechercher un élément Stip affiché");
 		AutoCompleteDecorator.decorate(search);
-		
+
 		search.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(e.getActionCommand().equals("comboBoxEdited")){
@@ -507,10 +561,10 @@ public class MainWindow extends JFrame {
 		});
 
 		toolbar.add(search);
-		
+
 		return toolbar;
 	}
-	
+
 	/**
 	 * Utilise le L&F Nimbus au lieu du L&F Metal</br>
 	 * Nécessite Java 6 Update 10

@@ -327,8 +327,11 @@ public class DatabaseManagerUI extends JFrame {
 				int index = table.getSelectedRow();
 				try {
 					String type = (String)table.getModel().getValueAt(index, 1);
-					db.deleteDatabase((Integer)((DBTableModel)table.getModel()).getId(index));
-					firePropertyChange("baseChanged", "", type);
+					Integer id = (Integer)((DBTableModel)table.getModel()).getId(index);
+					Boolean changed = db.isSelected(id);
+					db.deleteDatabase(id);
+					//on n'envoit le changement de base que si la base supprimée était sélectionnée
+					if(changed) firePropertyChange("baseChanged", "", type);
 					((DBTableModel)table.getModel()).delete(index);
 				} catch (SQLException e1) {
 					e1.printStackTrace();
