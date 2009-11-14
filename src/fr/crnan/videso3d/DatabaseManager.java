@@ -222,9 +222,12 @@ public class DatabaseManager{
 	public Boolean isSelected(Integer id){
 		try {
 			Statement st = this.selectDB(Type.Databases, "databases").createStatement();
-			ResultSet rs = st.executeQuery("select * from databases where id='"+id+"'");
-			rs.next();
-			return rs.getBoolean("selected");
+			ResultSet rs = st.executeQuery("select * from databases where id='"+id+"' and selected = '1'");
+			if (rs.next()) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
