@@ -160,16 +160,16 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		
 		this.addSelectListener(new AirspaceListener(this));		
 
-		//Latitudes et longitudes
+//		//Latitudes et longitudes
 		Layer latlon = new LatLonGraticuleLayer();
 		latlon.setEnabled(false);
 		this.getModel().getLayers().add(latlon);
-				
-		//on screen layer manager
+//				
+//		//on screen layer manager
 		LayerManagerLayer layerManager = new LayerManagerLayer(this);
 		layerManager.setEnabled(false); //réduit par défaut
-		this.getModel().getLayers().add(layerManager);
-		
+		this.getModel().getLayers().add(0, layerManager);
+				
 		//layer d'accueil des objets séléctionnés
 		this.getModel().getLayers().add(selectedAirspaces);
 		
