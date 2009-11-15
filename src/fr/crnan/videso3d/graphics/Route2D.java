@@ -56,7 +56,25 @@ public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 		BasicShapeAttributes attrs = new BasicShapeAttributes();
 		switch (type) {
 		case FIR:
-			
+			Character c = name.charAt(0);
+			switch (c) {
+			case 'A':
+				attrs.setOutlineMaterial(Material.YELLOW);
+				break;
+			case 'G' :
+				attrs.setOutlineMaterial(Material.GREEN);
+				break;
+			case 'B' :
+				attrs.setOutlineMaterial(Material.BLUE);
+				break;
+			case 'R' :
+				attrs.setOutlineMaterial(Material.RED);
+				break;
+			case 'J' :
+				break;
+			default:
+				break;
+			}
 			break;
 		case UIR:
 			
