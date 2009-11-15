@@ -4,9 +4,9 @@ Videso 3D est logiciel de visualisation en 3D de différentes données provenant
 
 Il se destine en particulier aux différentes subdivisions des services d'exploitation des CRNA.
 
-Voici un aperçu de la version 0.4.
+Voici un aperçu de la version 0.6.
 
-[http://videso3d.googlecode.com/svn/wiki/img/videso-0.4.png]
+[http://videso3d.googlegroups.com/web/videso3d_0.6.PNG?gda=GxHGa0MAAAAz1qKKG7dTMP9xQXkyPxpGSwDbymXJtdS1mOfbWMtF3eUV9b1OSq-vx5RwLhBYIckytiJ-HdGYYcPi_09pl8N7FWLveOaWjzbYnpnkpmxcWg&gsc=8nHkmwsAAADRYQcysYBxDO5qAD-AFm7o]
 
 = Pourquoi Videso 3D ? =
 
