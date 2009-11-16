@@ -1,0 +1,110 @@
+\documentclass[a4paper, titlepage]{article}
+
+\usepackage[utf8x]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage[frenchb]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[dvips,pdftex]{graphicx}
+\usepackage{geometry}
+\geometry{a4paper,twoside,left=3cm,right=3cm,marginparwidth=1.2cm,marginparsep=3mm,top=3cm,bottom=3cm}
+
+\title{
+\vspace{1cm} 
+\rule{\textwidth}{1mm}
+\vspace{1mm}\\
+\begin{tabular}{p{0cm} c}
+   & {\Huge {\bf Videso3D}} \\
+   & \\
+   & {\huge Visualisation 3D} \\
+   & {\huge des Données d'Exploitation} \\
+   & {\huge des Systèmes Opérationnels}
+ \end{tabular}\\
+\rule{\textwidth}{1mm}
+\vspace{2cm}\\
+\begin{tabular}{p{0cm} c}
+	&{\huge Manuel Utilisateur}\\
+   &{\large Version 0.1}
+ \end{tabular}
+\vspace{2cm}\\
+ \begin{tabular}{p{0cm} c}
+    & {\large CRNA Nord} \\
+    & {\large  \today}
+ \end{tabular}\\
+\vspace{1cm}
+}
+
+
+
+\author{
+Bruno \textsc{Spyckerelle}\\
+Jonathan \textsc{Colson}}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Présentation}
+\subsection{Qu'est-ce que Videso3D ?}
+Videso3D est un logiciel de visualisation 3D des données d'exploitation des
+systèmes opérationnels.
+
+A terme, Videso3D sera capable d'afficher n'importe quelle DESO, de faire des
+recherches dans ces données et de comparer différentes versions.
+
+\subsection{Données lues par Videso3D}
+\subsubsection{Données Stip}
+\paragraph{Partitions importées \newline}
+Les partitions suivantes sont importées par Videso3D :
+\begin{itemize}
+  \item CENTRE
+  \item SECT
+  \item balise
+  \item POINSECT
+  \item ROUTSECT
+  \item ROUTE
+\end{itemize}
+\paragraph{Cas particulier des données concernant les frontières \newline}
+Les données Stip concernant les frontières des pays ne sont pas livrées par le
+CESNAC lors d'une livraison d'une bande CA. Pour cette raison, ces données sont
+fournies avec Videso3D mais traitées de la même façon que d'autres DESO.
+\newline
+Ces données apparaissent dans le gestionnaire de données en tant que données
+PAYS.
+ 
+\subsubsection{Données STR Exsa}
+Videso3D affiche les données STR suivantes :
+\begin{itemize}
+  \item les mosaïques radar;
+  \item les VVF ;
+  \item les zones d'occultation ;
+  \item les zones de filtrage capacitif ;
+  \item les zones de filtrage dynamique.
+\end{itemize}
+\subsubsection{Données Stpv}
+Pour l'instant, Videso3D n'importe aucune donnée STPV.
+\subsubsection{Données Edimap}
+Videso3D sait afficher les cartes Edimap au format Nectar.
+\section{Installation}
+Videso3D nécessite une machine virtuelle Java 6.
+
+Si Java 6 est déjà installé, il suffit de décompresser l'archive
+\emph{videso-x.x.zip} dans le répertoire voulu.
+
+\section{Configuration}
+
+
+\section{Utilisation}
+\subsection{Ajouter des données}
+Pour ajouter des données, il faut se rendre dans Fichier>Ajouter des données.
+\subsection{Sélectionner les données à afficher}
+
+\subsection{Faire une recherche}
+\subsubsection{Rechercher un item affiché sur la carte}
+\section{Questions fréquentes}
+
+\end{document}
