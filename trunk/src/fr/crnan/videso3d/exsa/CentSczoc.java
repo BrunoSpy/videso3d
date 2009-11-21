@@ -27,11 +27,11 @@ public class CentSczoc {
 	/**
 	 * Carré de la mosaïque
 	 */
-	private Integer carre;
+	private Integer carre = 0;
 	/**
 	 * Sous-carré de la mosaïque
 	 */
-	private Integer sousCarre;
+	private Integer sousCarre = 0;
 	/**
 	 * Zone d'occultation
 	 */
@@ -39,15 +39,20 @@ public class CentSczoc {
 	/**
 	 * Plafond de la zone
 	 */
-	private Integer plafond;
+	private Integer plafond = 660;
 	
-	public CentSczoc(String line) throws ParseException{
-		String[] word = line.split("\\s+");
-		if (word[0].equals("CENT_SCZOC")){
-			this.setCarre(new Integer(word[1]));
-			this.setSousCarre(word[2]);
-			this.setZone(word[3]);
-			this.setPlafond(word[4]);
+	public CentSczoc(String line, Boolean formated) throws ParseException{
+		if(!formated){
+			//suppression du ; en fin de ligne
+			line = line.substring(0, line.length() - 1);
+		}
+		String[] word = line.split(formated ? "\\s+" : ",");
+		int i = formated ? 0 : 1;
+		if (word[0].equals(formated ? "CENT_SCZOC" : "CENT.SCZOC")){
+			this.setCarre(new Integer(word[1+i]));
+			if(2+i < word.length) this.setSousCarre(word[2+i]);
+			if(3+i < word.length) this.setZone(word[3+i]);
+			if(4+i < word.length) this.setPlafond(word[4+i]);
 		} else {
 			throw new ParseException("CENT_SCZOC Parse Error at " + line, 0);
 		}
@@ -66,7 +71,7 @@ public class CentSczoc {
 	}
 
 	public void setSousCarre(String string) {
-		if(string.compareTo("##") == 0) {
+		if(string.compareTo("##") == 0 || string.isEmpty()) {
 			this.sousCarre = 0;
 		} else {
 			this.sousCarre = new Integer(string);
@@ -86,7 +91,7 @@ public class CentSczoc {
 	}
 
 	public void setPlafond(String string) {
-		if(string.compareTo("###") == 0){
+		if(string.compareTo("###") == 0 || string.isEmpty()){
 			this.plafond = 660;
 		} else {
 			this.plafond = new Integer(string);

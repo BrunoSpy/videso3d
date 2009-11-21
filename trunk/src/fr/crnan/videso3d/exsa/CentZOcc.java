@@ -20,7 +20,7 @@ import java.text.ParseException;
 /**
  * Ligne CENT_Z_OCC
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class CentZOcc {
 
@@ -37,12 +37,18 @@ public class CentZOcc {
 	 */
 	private String terrains;
 	
-	public CentZOcc(String line) throws ParseException{
-		String[] word = line.split("\\s+");
-		if (word[0].equals("CENT_Z_OCC")){
-			this.setName(word[1]);
-			this.setEspace(word[2]);
-			this.setTerrains(word[3]);
+	public CentZOcc(String line, Boolean formated) throws ParseException{
+		if(!formated){
+			//suppression du ; en fin de ligne
+			line = line.substring(0, line.length() - 1);
+		}
+		int i = formated ? 0 : 1;
+		String[] word = line.split(formated ? "\\s+" : ",");
+		int length = word.length;
+		if (word[0].equals(formated ? "CENT_Z_OCC" : "CENT.Z_OCC")){
+			this.setName(word[1+i]);
+			if(2+i<length) this.setEspace(word[2+i]);
+			if(3+i<length) this.setTerrains(word[3+i]);
 		} else {
 			throw new ParseException("CENT_Z_OCC Parse Error at " + line, 0);
 		}

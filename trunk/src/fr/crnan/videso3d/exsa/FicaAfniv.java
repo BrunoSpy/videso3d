@@ -21,7 +21,7 @@ import java.text.ParseException;
 /**
  * Représentation d'une ligne FICA_AFNIV
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class FicaAfniv {
 
@@ -49,31 +49,33 @@ public class FicaAfniv {
 	/**
 	 * Premier code de la suite
 	 */
-	private Integer firstCode;
+	private Integer firstCode = 0;
 	/**
 	 * Dernier code de la suite
 	 */
-	private Integer lastCode;
+	private Integer lastCode = 0;
 
 
-	public FicaAfniv(String line) throws ParseException{
-		String[] word = line.split("\\s+");
-		if (word[0].equals("FICA_AFNIV")){
-			this.setAbonne(word[1]);
-			this.setCarré(new Integer(word[2]));
-			this.setPlancher(new Integer(word[3]));
-			this.setPlafond(new Integer(word[4]));
-			this.setElimine(word[5]);
-			this.setFirstCode(word[6]);
-			this.setLastCode(word[7]);
+	public FicaAfniv(String line, Boolean formated) throws ParseException{
+		if(!formated){
+			//suppression du ; en fin de ligne
+			line = line.substring(0, line.length() - 1);
+		}
+		String[] word = line.split(formated ? "\\s+" : ",");
+		int length = word.length;
+		int i = formated ? 0 : 1;
+		if (word[0].equals(formated ? "FICA_AFNIV" : "FICA.AFNIV")){
+			this.setAbonne(word[1+i]);
+			this.setCarré(new Integer(word[2+i]));
+			this.setPlancher(new Integer(word[3+i]));
+			this.setPlafond(new Integer(word[4+i]));
+			this.setElimine(word[5+i]);
+			if(6+i<length) this.setFirstCode(word[6+i]);
+			if(7+i<length) this.setLastCode(word[7+i]);
 		} else {
 			throw new ParseException("FICA_AFNIV Parse Error at " + line, 0);
 		}
 	}
-
-//	public FicaAfniv(QSqlRecord record){
-//		this.record = record;
-//	}
 
 	public String getAbonne() {
 		return abonne;
@@ -120,7 +122,7 @@ public class FicaAfniv {
 	}
 
 	public void setFirstCode(String string) {
-		if(string.equalsIgnoreCase("####")){
+		if(string.equalsIgnoreCase("####") || string.isEmpty()){
 			this.firstCode = 0;
 		} else {
 			this.firstCode = new Integer(string);
@@ -132,7 +134,7 @@ public class FicaAfniv {
 	}
 
 	public void setLastCode(String string) {
-		if(string.equalsIgnoreCase("####")){
+		if(string.equalsIgnoreCase("####") || string.isEmpty()){
 			this.lastCode = 0;
 		} else {
 			this.lastCode = new Integer(string);
