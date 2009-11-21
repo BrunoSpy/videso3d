@@ -23,7 +23,7 @@ import fr.crnan.videso3d.geom.Longitude;
 /**
  * Ligne RADR_GENER
  * @author Bruno Spyckerelle
- * @version 0.0.1
+ * @version 0.1
  */
 public class RadrGener {
 
@@ -89,25 +89,30 @@ public class RadrGener {
 	 */
 	private Boolean militaire;
 	
-	public RadrGener(String line) throws ParseException{
-		String[] word = line.split("\\s+");
-		if (word[0].equals("RADR_GENER")){
-			this.setNom(word[1]);
-			this.setNumero(new Integer(word[2]));
-			this.setType(word[3]);
-			this.setNomMosaique(word[4]);
-			this.setLatitude(new Latitude(new Integer(word[5]), new Integer(word[6]), new Integer(word[7])));
-			this.setLongitude(new Longitude(new Integer(word[8]), new Integer(word[9]), new Integer(word[10]), word[11]));
-			this.setX(new Double(word[12]));
-			this.setY(new Double(word[13]));
-			this.setEcartNord(new Double(word[14]));
-			this.setRadarRelation(word[15]);
-			this.setTypeRelation(word[16]);
-			this.setTypePlots(word[17]);
-			this.setTypeRadar(word[18]);
-			this.setCodePays(new Integer(word[19]));
-			this.setCodeRadar(new Integer(word[20]));
-			this.setMilitaire(word[21]);
+	public RadrGener(String line, Boolean formated) throws ParseException{
+		if(!formated){
+			//suppression du ; en fin de ligne
+			line = line.substring(0, line.length() - 1);
+		}
+		String[] word = line.split(formated ? "\\s+" : ",");
+		int i = formated ? 0 : 1;
+		if (word[0].equals(formated ? "RADR_GENER" : "RADR.GENER")){
+			this.setNom(word[1+i]);
+			this.setNumero(new Integer(word[2+i]));
+			this.setType(word[3+i]);
+			this.setNomMosaique(word[4+i]);
+			this.setLatitude(new Latitude(new Integer(word[5+i]), new Integer(word[6+i]), new Integer(word[7+i])));
+			this.setLongitude(new Longitude(new Integer(word[8+i]), new Integer(word[9+i]), new Integer(word[10+i]), word[11+i]));
+			this.setX(new Double(word[12+i]));
+			this.setY(new Double(word[13+i]));
+			this.setEcartNord(new Double(word[14+i]));
+			this.setRadarRelation(word[15+i]);
+			this.setTypeRelation(word[16+i]);
+			this.setTypePlots(word[17+i]);
+			this.setTypeRadar(word[18+i]);
+			this.setCodePays(new Integer(word[19+i]));
+			this.setCodeRadar(new Integer(word[20+i]));
+			this.setMilitaire(word[21+i]);
 		} else {
 			throw new ParseException("RADR_GENER Parse Error at " + line, 0);
 		}

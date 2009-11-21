@@ -68,19 +68,20 @@ public class CentCentr {
 		//Constructor
 		
 		
-		public CentCentr(String line) throws ParseException {
-			String[] word = line.split("\\s+");
-			if (word[0].equals("CENT_CENTR")){
-				this.setName(word[1]);
-				this.setSl(word[2]);
-				this.setTypeCentre(word[3]);
-				this.setSic(word[4]);
-				this.setNivMsaw(word[5]);
-				this.setRvsm(word[6]);
-				this.setNivPlancherRvsm(word[7]);
-				this.setNivPlafondRvsm(word[8]);
-				this.setTypeDonnees(word[9]);
-				this.setVersionADP(word[10]);
+		public CentCentr(String line, Boolean formated) throws ParseException {
+			String[] word = line.split(formated ? "\\s+" : ",");
+			int i = formated ? 0 : 1;
+			if (word[0].equals(formated ? "CENT_CENTR" : "CENT.CENTR")){
+				this.setName(word[1+i]);
+				this.setSl(word[2+i]);
+				this.setTypeCentre(word[3+i]);
+				this.setSic(word[4+i]);
+				this.setNivMsaw(word[5+i]);
+				this.setRvsm(word[6+i]);
+				this.setNivPlancherRvsm(word[7+i]);
+				this.setNivPlafondRvsm(word[8+i]);
+				this.setTypeDonnees(word[9+i]);
+				this.setVersionADP(word[10+i]);
 			} else {
 				throw new ParseException("CENT_CENTR Parse Error at " + line, 0);
 			}
