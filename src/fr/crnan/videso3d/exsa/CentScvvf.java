@@ -47,14 +47,22 @@ public class CentScvvf {
 	private int numPlancher = 0;
 	
 	
-	public CentScvvf(String line) throws ParseException{
-		String[] word = line.split("\\s+");
-		if (word[0].equals("CENT_SCVVF")){
-			this.setCarre(new Integer(word[1]));
-			this.setSousCarre(new Integer(word[2]));
-			this.setVvfs(word[3]);
-			this.setPlafonds(word);
-			this.setPlanchers(word);
+	public CentScvvf(String line, Boolean formated) throws ParseException{
+		if(!formated){
+			//suppression du ; en fin de ligne
+			line = line.substring(0, line.length() - 1);
+		}
+		int i = formated ? 0 : 1;
+		String[] word = line.split(formated ? "\\s+" : ",");
+		int length = word.length;
+		if (word[0].equals(formated ? "CENT_SCVVF" : "CENT.SCVVF")){
+			this.setCarre(new Integer(word[1+i]));
+			this.setSousCarre(new Integer(word[2+i]));
+			if(3+i < length) {
+				this.setVvfs(word[3+i]);
+				this.setPlafonds(word, i);
+				this.setPlanchers(word, i);
+			}
 		} else {
 			throw new ParseException("CENT_SCVVF Parse Error at " + line, 0);
 		}
@@ -107,12 +115,12 @@ public class CentScvvf {
 	/**
 	 * @param plafonds the plafonds to set
 	 */
-	public void setPlafonds(String[] plafonds) {
+	public void setPlafonds(String[] plafonds, int formated) {
 		String plafond = "";
 		int numVvf = this.getVvfs().split("\\\\").length;
 		int i = 0;
 		while(plafond.split("\\\\").length < numVvf){
-			plafond += plafonds[4+i];
+			plafond += plafonds[4+formated+i];
 			i++;
 		}
 		this.numPlancher = 4+i;
@@ -127,12 +135,12 @@ public class CentScvvf {
 	/**
 	 * @param planchers the planchers to set
 	 */
-	public void setPlanchers(String[] planchers) {
+	public void setPlanchers(String[] planchers, int formated) {
 		String plancher = "";
 		int numVvf = this.getVvfs().split("\\\\").length;
 		int i=0;
 		while(plancher.split("\\\\").length < numVvf){
-			plancher += planchers[this.numPlancher+i];
+			plancher += planchers[this.numPlancher+formated+i];
 			i++;
 		}
 		this.planchers = plancher;
