@@ -21,7 +21,7 @@ import java.text.ParseException;
 /**
  * Représentation d'une ligne CENT_FLVVF
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class CentFlvvf {
 	/**
@@ -30,28 +30,25 @@ public class CentFlvvf {
 	private String name;
 
 	
-	public CentFlvvf(String line) throws ParseException{
-		String[] word = line.split("\\s+");
-		if (word[0].equals("CENT_FLVVF")){
-			this.setName(word[1]);
+	public CentFlvvf(String line, Boolean formated) throws ParseException{
+		if(!formated){
+			//suppression du ; en fin de ligne
+			line = line.substring(0, line.length() - 1);
+		}
+		String[] word = line.split(formated ? "\\s+" : ",");
+		int i = formated ? 0 : 1;
+		if (word[0].equals(formated ? "CENT_FLVVF" : "CENT.FLVVF")){
+			this.setName(word[1+i]);
 		} else {
 			throw new ParseException("CENT_FLVVF Parse Error at " + line, 0);
 		}
 	}
-	
-//	public CentFlvvf(QSqlRecord record){
-//		this.record = record;
-//	}
 
 	/**
 	 * @return the name
 	 */
 	public String getName() {
-//		if(record != null){
-//			return this.record.value("name").toString();
-//		} else {
 			return name;
-//		}
 	}
 
 	/**

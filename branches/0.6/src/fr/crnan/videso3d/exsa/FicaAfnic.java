@@ -20,7 +20,7 @@ import java.text.ParseException;
 /**
  * Représentation d'une ligne FICA_AFNIC
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class FicaAfnic {
 	/**
@@ -49,23 +49,25 @@ public class FicaAfnic {
 	private Integer lastCode;
 
 
-	public FicaAfnic(String line) throws ParseException{
-		String[] word = line.split("\\s+");
-		if (word[0].equals("FICA_AFNIC")){
-			this.setAbonne(word[1]);
-			this.setCarre(new Integer(word[2]));
-			this.setPlancher(new Integer(word[3]));
-			this.setPlafond(new Integer(word[4]));
-			this.setFirstCode(new Integer(word[5]));
-			this.setLastCode(new Integer(word[6]));
+	public FicaAfnic(String line, Boolean formated) throws ParseException{
+		if(!formated){
+			//suppression du ; en fin de ligne
+			line = line.substring(0, line.length() - 1);
+		}
+		String[] word = line.split(formated ? "\\s+" : ",");
+		int length = word.length;
+		int i = formated ? 0 : 1;
+		if (word[0].equals(formated ? "FICA_AFNIC" : "FICA.AFNIC")){
+			this.setAbonne(word[1+i]);
+			this.setCarre(new Integer(word[2+i]));
+			this.setPlancher(new Integer(word[3+i]));
+			this.setPlafond(new Integer(word[4+i]));
+			this.setFirstCode(new Integer(word[5+i]));
+			this.setLastCode(new Integer(word[6+i]));
 		} else {
 			throw new ParseException("FICA_AFNIC Parse Error at " + line, 0);
 		}
 	}
-	
-//	public FicaAfnic(QSqlRecord record){
-//		this.record = record;
-//	}
 
 	/**
 	 * @return the abonne
