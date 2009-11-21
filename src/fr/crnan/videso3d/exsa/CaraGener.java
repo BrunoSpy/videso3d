@@ -22,80 +22,83 @@ import java.text.ParseException;
 /**
  * Contains CARA_GENER datas
  * @author Bruno Spyckerelle
- * @version 0.0.1
+ * @version 0.2
  */
 public class CaraGener {
 	/**
 	 * Nom du fichier
 	 */
-	private String name;
+	private String name = "";
 	/**
 	 * Date de génération
 	 */
-	private String date;
+	private String date = "";
 	/**
 	 * Jeu de donnée
 	 */
-	private String jeu;
+	private String jeu = "";
 	/**
 	 * Type de système radar
 	 */
-	private String radar;
+	private String radar = "";
 	/**
 	 * Version OASIS
 	 */
-	private Double oasis;
+	private Double oasis = 0.0;
 	/**
 	 * Version BOA
 	 */
-	private Integer boa;
+	private Integer boa = 0;
 	/**
 	 * Nom de fichier Videomap
 	 */
-	private String videomap;
+	private String videomap = "";
 	/**
 	 * Nom de fichier Edimap
 	 */
-	private String edimap;
+	private String edimap = "";
 	/**
 	 * Nom de fichier Satin
 	 */
-	private String satin;
+	private String satin = "";
 	/**
 	 * Configuration calculateur en cours
 	 */
-	private String calculateur;
+	private String calculateur = "";
 	/**
 	 * Contexte
 	 */
-	private String contexte;
+	private String contexte = "";
 	
 	//Constructors
-	public CaraGener(String line) throws ParseException {
-		this.setFromLine(line);
+	public CaraGener(String line, Boolean formated) throws ParseException {
+		this.setFromLine(line, formated);
 	}
 	
 	/**
 	 * Extrait les données de la ligne passée en paramètre
 	 * @param line Ligne CARA_GENER
+	 * @param formated Type de fichier
 	 * @throws ParseException 
 	 * @throws ParseException 
 	 */
-	public void setFromLine(String line) throws ParseException {
+	public void setFromLine(String line, Boolean formated) throws ParseException {
 		//on découpe la ligne en mots séparés d'un ou plusieurs espaces
-		String word[] = line.split("\\s+");
-		if (word[0].equals("CARA_GENER")){
-			this.setName(word[1]);
-			this.setDate(word[2]);
-			this.setJeu(word[3]);
-			this.setRadar(word[4]);
-			this.setOasis(word[5]);
-			this.setBoa(word[6]);
-			this.setVideomap(word[7]);
-			this.setEdimap(word[8]);
-			this.setSatin(word[9]);
-			this.setCalculateur(word[10]);
-			this.setContexte(word[11]);
+		String word[] = line.split(formated ? "\\s+" : ",");
+		int length = word.length;
+		int i = formated ? 0 : 1;//les données sont décalées d'un cran en cas de fichier non formaté
+		if (word[0].equals(formated ? "CARA_GENER" : "CARA.GENER")){
+			if(1+i<length) this.setName(word[1+i]);
+			if(2+i<length) this.setDate(word[2+i]);
+			if(3+i<length) this.setJeu(word[3+i]);
+			if(4+i<length) this.setRadar(word[4+i]);
+			if(5+i<length) this.setOasis(word[5+i]);
+			if(6+i<length) this.setBoa(word[6+i]);
+			if(7+i<length) this.setVideomap(word[7+i]);
+			if(8+i<length) this.setEdimap(word[8+i]);
+			if(9+i<length) this.setSatin(word[9+i]);
+			if(10+i<length) this.setCalculateur(word[10+i]);
+			if(11+i<length) this.setContexte(word[11+i]);
 		} else {
 			throw new ParseException("CARA_GENER Parse Error at " + line, 0);
 		}
