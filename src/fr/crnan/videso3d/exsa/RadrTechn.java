@@ -48,16 +48,22 @@ public class RadrTechn {
 	/**
 	 * Ligne RADR_TECHN
 	 * @param line Ligne RADR_TECHN
+	 * @param formated 
 	 * @throws ParseException
 	 */
-	public RadrTechn(String line) throws ParseException{
-		String[] word = line.split("\\s+");
-		if (word[0].equals("RADR_TECHN")){
-			this.setNom(word[1]);
-			this.setVitesse(new Double(word[2]));
-			this.setHauteur(new Double(word[3]));
-			this.setPortee(new Integer(word[4]));
-			this.setDeport(word[5].equals("OUI"));
+	public RadrTechn(String line, Boolean formated) throws ParseException{
+		if(!formated){
+			//suppression du ; en fin de ligne
+			line = line.substring(0, line.length() - 1);
+		}
+		String[] word = line.split(formated ? "\\s+" : ",");
+		int i = formated ? 0 : 1;
+		if (word[0].equals(formated ? "RADR_TECHN" : "RADR.TECHN")){
+			this.setNom(word[1+i]);
+			this.setVitesse(new Double(word[2+i]));
+			this.setHauteur(new Double(word[3+i]));
+			this.setPortee(new Integer(word[4+i]));
+			this.setDeport(word[5+i].equals("OUI"));
 		} else {
 			throw new ParseException("RADR_TECHN Parse Error at " + line, 0);
 		}

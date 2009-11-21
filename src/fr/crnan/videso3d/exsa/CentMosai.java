@@ -22,7 +22,7 @@ import fr.crnan.videso3d.geom.Longitude;
 /**
  * Représentation d'une ligne CENT_MOSAI
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 public class CentMosai {
 	/**
@@ -55,16 +55,22 @@ public class CentMosai {
 	private String type;
 
 	
-	public CentMosai(String line) throws ParseException{
-		String[] word = line.split("\\s+");
-		if (word[0].equals("CENT_MOSAI")){
-			this.setLatitude(new Latitude(new Integer(word[1]), new Integer(word[2]), new Integer(word[3])));
-			this.setLongitude(new Longitude(new Integer(word[4]), new Integer(word[5]), new Integer(word[6]), word[7]));
-			this.setX(new Double(word[8]));
-			this.setY(new Double(word[9]));
-			this.setLignes(new Integer(word[10]));
-			this.setColonnes(new Integer(word[11]));
-			this.setType(word[12]);
+	public CentMosai(String line, Boolean formated) throws ParseException{
+		if(!formated){
+			//suppression du ; en fin de ligne
+			line = line.substring(0, line.length() - 1);
+		}
+		String[] word = line.split(formated ? "\\s+" : ",");
+		int i = formated ? 0 : 1;
+		int length = word.length;
+		if (word[0].equals(formated ? "CENT_MOSAI" : "CENT.MOSAI")){
+			this.setLatitude(new Latitude(new Integer(word[1+i]), new Integer(word[2+i]), new Integer(word[3+i])));
+			this.setLongitude(new Longitude(new Integer(word[4+i]), new Integer(word[5+i]), new Integer(word[6+i]), word[7+i]));
+			this.setX(new Double(word[8+i]));
+			this.setY(new Double(word[9+i]));
+			this.setLignes(new Integer(word[10+i]));
+			this.setColonnes(new Integer(word[11+i]));
+			if(12+i < length) this.setType(word[12+i]);
 		} else {
 			throw new ParseException("CENT_MOSAI Parse Error at " + line, 0);
 		}
