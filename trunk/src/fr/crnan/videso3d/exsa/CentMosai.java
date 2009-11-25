@@ -52,7 +52,7 @@ public class CentMosai {
 	/**
 	 * Type de la mosaïque
 	 */
-	private String type;
+	private String type = "CCR";
 
 	
 	public CentMosai(String line, Boolean formated) throws ParseException{
