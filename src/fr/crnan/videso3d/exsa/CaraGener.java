@@ -83,6 +83,10 @@ public class CaraGener {
 	 * @throws ParseException 
 	 */
 	public void setFromLine(String line, Boolean formated) throws ParseException {
+		if(!formated){
+			//suppression du ; en fin de ligne
+			line = line.substring(0, line.length() - 1);
+		}
 		//on découpe la ligne en mots séparés d'un ou plusieurs espaces
 		String word[] = line.split(formated ? "\\s+" : ",");
 		int length = word.length;

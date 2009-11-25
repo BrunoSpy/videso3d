@@ -21,7 +21,7 @@ import java.text.ParseException;
 /**
  * Contains CENT_CENTR datas
  * @author Bruno Spyckerelle
- * @version 0.0.1
+ * @version 0.2
  */
 public class CentCentr {
 		/**
@@ -69,6 +69,10 @@ public class CentCentr {
 		
 		
 		public CentCentr(String line, Boolean formated) throws ParseException {
+			if(!formated){
+				//suppression du ; en fin de ligne
+				line = line.substring(0, line.length() - 1);
+			}
 			String[] word = line.split(formated ? "\\s+" : ",");
 			int i = formated ? 0 : 1;
 			if (word[0].equals(formated ? "CENT_CENTR" : "CENT.CENTR")){
