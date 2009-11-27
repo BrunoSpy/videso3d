@@ -973,7 +973,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				positions.add(point.getPosition());
 			}
 			line.setPositions(positions);
-			line.setFollowVerticalExaggeration(true);
 			line.setShadedColors(true);
 			line.setMaxElevation(400*30.48);
 			line.setMinElevation(50*30.48);
