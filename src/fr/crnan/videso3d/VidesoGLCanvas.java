@@ -18,6 +18,7 @@ package fr.crnan.videso3d;
 
 import java.awt.Component;
 import java.awt.Cursor;
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -26,6 +27,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import fr.crnan.videso3d.formats.geo.GEOReader;
+import fr.crnan.videso3d.formats.geo.GEOTrack;
+import fr.crnan.videso3d.formats.geo.GEOTrackPoint;
 import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrackPoint;
@@ -953,6 +957,42 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				highlight = null;
 				lastLayer = null;
 			}
+		}
+	}
+
+	/**
+	 * Ajoute les trajectoires à la vue
+	 * @param file Fichier contenant les trajectoires
+	 */
+	public void addTrajectoires(File file){
+		if(OPASReader.isOpasFile(file)){
+			this.addTrajectoires(new OPASReader(file));
+		} else if(GEOReader.isGeoFile(file)){
+			this.addTrajectoires(new GEOReader(file));
+		}
+	}
+	
+	
+	
+	private void addTrajectoires(GEOReader geo) {
+		if(trajLayer == null) {
+			trajLayer = new RenderableLayer();
+			trajLayer.setName("Trajectoires");
+			this.toggleLayer(trajLayer, true);
+		}
+		for(GEOTrack track : geo.getTracks()){
+			System.out.println("nouvelle traj");
+			VPolyline line = new VPolyline();
+			LinkedList<Position> positions = new LinkedList<Position>();
+			for(GEOTrackPoint point : track.getTrackPoints()){
+				positions.add(point.getPosition());
+			}
+			line.setPositions(positions);
+			line.setShadedColors(true);
+			line.setMaxElevation(400*30.48);
+			line.setMinElevation(50*30.48);
+			line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
+			trajLayer.addRenderable(line);
 		}
 	}
 
