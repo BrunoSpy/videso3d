@@ -39,7 +39,6 @@ public class VPolyline extends Polyline
     private Extent extent;
     private double extentVerticalExaggeration = 1;
     private double verticalExaggeration = 1.0;
-    private boolean followVerticalExaggeration = false;
     private ArrayList<ArrayList<Vec4>> currentSpans;
     private Globe globe;
 
@@ -53,21 +52,6 @@ public class VPolyline extends Polyline
         if (this.currentSpans != null)
             this.currentSpans.clear();
         this.currentSpans = null;
-    }
-
-    public boolean isFollowVerticalExaggeration(){
-    	return followVerticalExaggeration;
-    }
-    
-    
-    /**
-     * Indicates whether the path should follow the vertical exaggeration.
-     * @param followVerticalExaggeration <code>true</code> to follow the vertical exaggeration, otherwise <code>false</code>.
-     */
-    public void setFollowVerticalExaggeration(boolean followVerticalExaggeration)
-    {
-        this.reset();
-        this.followVerticalExaggeration = followVerticalExaggeration;
     }
 
     /**
@@ -183,6 +167,7 @@ public class VPolyline extends Polyline
     }
 
     private long geomGenFrameTime = -Long.MAX_VALUE;
+    private double geomGenVE = 1;
 
     public void render(DrawContext dc)
     {
@@ -198,14 +183,15 @@ public class VPolyline extends Polyline
         if (this.positions.size() < 2)
             return;
 
-        // vertices potentially computed every frame to follow terrain changes
-        if (this.currentSpans == null || (this.isFollowTerrain() && this.geomGenFrameTime != dc.getFrameTimeStamp())|| (this.followVerticalExaggeration && dc.getVerticalExaggeration() != verticalExaggeration))
+     // vertices potentially computed every frame to follow terrain changes
+        if (this.currentSpans == null || (this.isFollowTerrain() && this.geomGenFrameTime != dc.getFrameTimeStamp())
+            || this.geomGenVE != dc.getVerticalExaggeration())
         {
-        	this.verticalExaggeration = dc.getVerticalExaggeration();
             // Reference center must be computed prior to computing vertices.
             this.computeReferenceCenter(dc);
             this.makeVertices(dc);
             this.geomGenFrameTime = dc.getFrameTimeStamp();
+            this.geomGenVE = dc.getVerticalExaggeration();
         }
 
         if (this.currentSpans == null || this.currentSpans.size() < 1)
@@ -438,8 +424,9 @@ public class VPolyline extends Polyline
         }
         else
         {
-            double height = (pos.getElevation() + (applyOffset ? this.getOffset() : 0))*verticalExaggeration;
-            return dc.getGlobe().computePointFromPosition(pos.getLatitude(), pos.getLongitude(), height);
+            double height = (pos.getElevation() + (applyOffset ? this.getOffset() : 0));
+            return dc.getGlobe().computePointFromPosition(pos.getLatitude(), pos.getLongitude(),
+            		height * dc.getVerticalExaggeration());
         }
     }
 
@@ -452,12 +439,12 @@ public class VPolyline extends Polyline
 
         if (this.isFollowTerrain())
         {
-            return ang.radians * (dc.getGlobe().getRadius() + this.getOffset());
+            return ang.radians * (dc.getGlobe().getRadius() + this.getOffset() * dc.getVerticalExaggeration());
         }
         else
         {
             double height = this.getOffset() + 0.5 * (posA.getElevation() + posB.getElevation());
-            return ang.radians * (dc.getGlobe().getRadius() + height);
+            return ang.radians * (dc.getGlobe().getRadius() + height * dc.getVerticalExaggeration());
         }
     }
 
