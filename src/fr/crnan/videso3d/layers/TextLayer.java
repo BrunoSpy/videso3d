@@ -56,7 +56,7 @@ public class TextLayer extends AbstractLayer {
 		this.geographicTexts.add(text);
 	}
 	
-	public void addGeographicTexts(Iterable<GeographicText> texts){
+	public void addGeographicTexts(Iterable<? extends GeographicText> texts){
 		if (texts == null)
         {
             String msg = Logging.getMessage("nullValue.IterableIsNull");
