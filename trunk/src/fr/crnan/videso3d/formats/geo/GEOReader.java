@@ -13,8 +13,9 @@
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
 */
+package fr.crnan.videso3d.formats.geo;
 
-package fr.crnan.videso3d.formats.opas;
+import gov.nasa.worldwind.util.Logging;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,24 +30,22 @@ import java.util.NoSuchElementException;
 
 import javax.swing.ProgressMonitorInputStream;
 
-import gov.nasa.worldwind.util.Logging;
-
 /**
- * Lecteur de fichier OPAS
+ * Lecteur de fichiers Elvira GEO.<br />
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class OPASReader {
+public class GEOReader {
 
-	private List<OPASTrack> tracks = new LinkedList<OPASTrack>();
+private List<GEOTrack> tracks = new LinkedList<GEOTrack>();
 	
 	private String name;
 
-	public OPASReader(){
+	public GEOReader(){
 		super();
 	}
 	
-	public OPASReader(File selectedFile) {
+	public GEOReader(File selectedFile) {
 		try {
 			this.readFile(selectedFile.getAbsolutePath());
 		} catch (IOException e) {
@@ -54,20 +53,17 @@ public class OPASReader {
 		}
 	}
 
-	/**
-	 * Détection du type de fichier
-	 * @return True si le fichier est de type OPAS
-	 */
-	public static Boolean isOpasFile(File file){
-		Boolean opas = false;
+	
+	public static Boolean isGeoFile(File file){
+		Boolean geo = false;
 		try {
 			BufferedReader in = new BufferedReader(
 					new InputStreamReader(
 					new FileInputStream(file)));
 			int count = 0; //nombre de lignes lues
-			while(in.ready() && !opas && count < 10){//on ne lit que les 10 premières lignes pour détecter le type de fichier
-				if(in.readLine().startsWith("Simulation de ")){
-					opas = true;
+			while(in.ready() && !geo && count < 10){//on ne lit que les 10 premières lignes pour détecter le type de fichier
+				if(in.readLine().startsWith("!	Version")){
+					geo = true;
 				}
 				count++;
 			}
@@ -76,7 +72,7 @@ public class OPASReader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return opas;
+		return geo;
 	}
 	
 	/**
@@ -114,33 +110,35 @@ public class OPASReader {
         BufferedReader in = new BufferedReader(
         						new InputStreamReader(
         						new ProgressMonitorInputStream(null, 
-        								"Extraction du fichier OPAS ...",
+        								"Extraction du fichier GEO ...",
         								stream)));
         
         try
         {
-        	OPASTrack track = null;
+        	GEOTrack track = null;
         	while(in.ready()){
         		sentence = in.readLine();
-
         		if (sentence != null)
         		{
-        			if(sentence.startsWith("Simulation de")){
-        				if(track != null) this.tracks.add(track);
-        				String[] words = sentence.split("\\s+");
-        				track = new OPASTrack(words[2], (words[6].split(":"))[1], (words[7].split(":"))[1], (words[8].split(":"))[1]);
-        			} else {
-        				if(!sentence.isEmpty() && track != null) track.addPoint(new OPASTrackPoint(sentence)); 
+        			if(!sentence.startsWith("!")  && !sentence.startsWith("Voie")){
+        				if(track == null || track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0){
+        					if(track != null) tracks.add(track);
+        					track = new GEOTrack(sentence);
+        				} else {
+        					track.addTrackPoint(sentence);
+        				}
         			}
         		} 
         	}
+        	if(track != null) tracks.add(track);
         }
         catch (NoSuchElementException e)
         {
         	//noinspection UnnecessaryReturnStatement
         	return;
         } catch (IOException e) {
-			// TODO Auto-generated catch block
+        	e.printStackTrace();
+		} catch (Exception e){
 			e.printStackTrace();
 		}
     }
@@ -153,7 +151,8 @@ public class OPASReader {
 		return name;
 	}
     
-	public List<OPASTrack> getTracks(){
+	public List<GEOTrack> getTracks(){
 		return tracks;
 	}
+	
 }

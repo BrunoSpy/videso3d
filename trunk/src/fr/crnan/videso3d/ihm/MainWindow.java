@@ -63,7 +63,8 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.SplashScreen;
 import fr.crnan.videso3d.VidesoGLCanvas;
-import fr.crnan.videso3d.formats.opas.OPASReader;
+import fr.crnan.videso3d.formats.geo.GEOFileFilter;
+import fr.crnan.videso3d.formats.opas.OPASFileFilter;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
@@ -219,6 +220,7 @@ public class MainWindow extends JFrame {
 		//suppression du splashscreen et affichage de la fenêtre
 		splashScreen.dispose();
 		this.pack();
+		
 	}
 
 	/**
@@ -322,12 +324,13 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fileChooser.addChoosableFileFilter(new OPASFileFilter());
+				fileChooser.addChoosableFileFilter(new GEOFileFilter());
 				if(fileChooser.showOpenDialog(trajectoires) == JFileChooser.APPROVE_OPTION){
 					new SwingWorker<String, Integer>(){
 						@Override
 						protected String doInBackground() throws Exception {
-							wwd.addTrajectoires(new OPASReader(fileChooser.getSelectedFile()));
+							wwd.addTrajectoires(fileChooser.getSelectedFile());
 							return null;
 						}
 					}.execute();
