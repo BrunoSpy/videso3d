@@ -18,7 +18,9 @@ package fr.crnan.videso3d.ihm;
 
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.sql.SQLException;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -34,93 +36,156 @@ import fr.crnan.videso3d.VidesoGLCanvas;
  */
 @SuppressWarnings("serial")
 public class DataExplorer extends JPanel {
-	
+
 	private DatabaseManager db; 
-	
+
 	private VidesoGLCanvas wwd;
-	
+
 	private JTabbedPane tabs = new JTabbedPane();
-	
+
+	private Component stip;
+	private Component exsa;
+	private Component edimap;
+	private Component stpv;
+
 	/**
 	 * Constructeur
 	 * @param db {@link DatabaseManager} Association avec la gestionnaire de db
 	 * @param wwd {@link VidesoGLCanvas} Association avec la vue 3D
 	 */
 	public DataExplorer(DatabaseManager db, VidesoGLCanvas wwd){
-		
+
 		this.db = db; 
 		this.wwd = wwd;
-		
+
 		setLayout(new BorderLayout());
-		
+
 		//Title
 		JPanel titleAreaPanel = new TitledPanel("Sélecteur de données");
 		add(titleAreaPanel, BorderLayout.NORTH);
-        
+
 		//Tabs
 		tabs.setTabPlacement(JTabbedPane.TOP);
 		//tabs scrollables si conteneur trop petit
-	//	tabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
-		
+		//	tabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
 		tabs.setPreferredSize(new Dimension(300, 0));
-						
-		tabs.addTab("Stip", new StipView(wwd, db));
-		tabs.addTab("STR", this.buildTab(new StrView(wwd, db)));
-		tabs.addTab("Stpv", new StpvView(wwd, db));
-		tabs.addTab("Edimap", new EdimapView(wwd, db));
-		//tabs.addTab("ODS", new JScrollPane());
-		//tabs.addTab("AIP", new JScrollPane());
-		
+
+		this.updateStipView();
+		this.updateEdimapView();
+		this.updateStrView();
+		this.updateStpvView();
+
 		add(tabs, BorderLayout.CENTER);
 	}	
-	
+
 	private JScrollPane buildTab(JPanel panel){
 		JScrollPane pane = new JScrollPane(panel);
 		pane.setBorder(null);
 		return pane;
 	}
-	
+
 	/**
 	 * Met à jour le tab de données Stip
 	 */
-	public void updateStipView() {
-		int select = tabs.getSelectedIndex();
-		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Stip
-		tabs.removeTabAt(0);
-		tabs.insertTab("Stip", null, new StipView(wwd, db), "Sélecteur de données Stip", 0);
-		tabs.setSelectedIndex(select);
+	public void updateStipView() {		
+		if(stip == null){
+			try {
+				if(this.db.getCurrentStip() != null){
+					stip = new StipView(wwd, db);
+					tabs.addTab("Stip", stip);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			tabs.remove(stip);
+			try {
+				if(this.db.getCurrentStip() != null){
+					stip = new StipView(wwd, db);
+					tabs.insertTab("Stip", null, stip, "Données stip", 0);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
-	
+
 	/**
 	 * Met à jour le tab STR
 	 */
 	public void updateStrView() {
-		int select = tabs.getSelectedIndex();
-		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Str
-		tabs.removeTabAt(1);
-		tabs.insertTab("Str", null, this.buildTab(new StrView(wwd, db)), "Sélecteur de données Str", 1);
-		tabs.setSelectedIndex(select);
+		if(exsa == null){
+			try {
+				if(this.db.getCurrentExsa() != null){
+					exsa = this.buildTab(new StrView(wwd, db));
+					tabs.addTab("STR", exsa);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			tabs.remove(stip);
+			try {
+				if(this.db.getCurrentExsa() != null){
+					exsa = this.buildTab(new StrView(wwd, db));
+					tabs.insertTab("STR", null, exsa, "Données STR", 1);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
-	
+
 	/**
 	 * Met à jour le tab STPV
 	 */
 	public void updateStpvView() {
-		int select = tabs.getSelectedIndex();
-		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Stpv
-		tabs.removeTabAt(2);
-		tabs.insertTab("Stpv", null, new StpvView(wwd, db), "Sélecteur de données Stpv", 2);
-		tabs.setSelectedIndex(select);
+		if(stpv == null){
+			try {
+				if(this.db.getCurrentStpv() != null){
+					stpv = new StpvView(wwd, db);
+					tabs.addTab("Stpv", stpv);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			tabs.remove(stpv);
+			try {
+				if(this.db.getCurrentStpv() != null){
+					stpv = new StpvView(wwd, db);
+					tabs.insertTab("Stpv", null, stpv, "Données stpv", 2);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
-	
+
 	/**
 	 * Met à jour le tab Edimap
 	 */
 	public void updateEdimapView() {
-		int select = tabs.getSelectedIndex();
-		//suppresion du tab, création du tab à l'emplacement précédent et sélection du tab Edimap
-		tabs.removeTabAt(3);
-		tabs.insertTab("Edimap", null, new EdimapView(wwd, db), "Sélecteur de données Edimap", 3);
-		tabs.setSelectedIndex(select);
+		if(edimap == null){
+			try {
+				if(this.db.getCurrentEdimap() != null){
+					edimap = new EdimapView(wwd, db);
+					tabs.addTab("Edimap", edimap);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			tabs.remove(edimap);
+			try {
+				if(this.db.getCurrentEdimap() != null){
+					edimap = new EdimapView(wwd, db);
+					tabs.insertTab("Edimap", null, edimap, "Données Edimap", 3);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }
