@@ -6,7 +6,7 @@ Il se destine en particulier aux différentes subdivisions des services d'exploi
 
 Voici un aperçu de la version 0.6.
 
-[http://videso3d.googlegroups.com/web/videso3d_0.6.PNG?gda=GxHGa0MAAAAz1qKKG7dTMP9xQXkyPxpGSwDbymXJtdS1mOfbWMtF3eUV9b1OSq-vx5RwLhBYIckytiJ-HdGYYcPi_09pl8N7FWLveOaWjzbYnpnkpmxcWg&gsc=8nHkmwsAAADRYQcysYBxDO5qAD-AFm7o]
+[http://videso3d.googlecode.com/svn/wiki/img/videso3d_0.6.PNG]
 
 = Pourquoi Videso 3D ? =
 
