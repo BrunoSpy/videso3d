@@ -33,13 +33,15 @@ import java.util.*;
 public class VPolyline extends Polyline
 {
 
-    private ArrayList<Position> positions;
     private Vec4 referenceCenterPoint;
     private Position referenceCenterPosition = Position.ZERO;
     private Extent extent;
     private double extentVerticalExaggeration = 1;
-    private double verticalExaggeration = 1.0;
     private ArrayList<ArrayList<Vec4>> currentSpans;
+    
+    private Boolean plain = false;
+    private ArrayList<ArrayList<Vec4>> currentCurtains;
+    
     private Globe globe;
 
     private boolean shadedColors = false;
@@ -55,6 +57,21 @@ public class VPolyline extends Polyline
     }
 
     /**
+     * Draw the polyline like a polygon from the ground ?
+     * @return
+     */
+    public Boolean isPlain(){
+    	return this.plain;
+    }
+    /**
+     * Draw the polyline like a polygon from the ground.
+     * @param plain
+     */
+    public void setPlain(Boolean plain){
+    	this.plain = plain;
+    }
+    
+    /**
      * Returns the length of the line as drawn. If the path follows the terrain, the length returned is the distance one
      * would travel if on the surface. If the path does not follow the terrain, the length returned is the distance
      * along the full length of the path at the path's elevations and current path type.
@@ -64,67 +81,6 @@ public class VPolyline extends Polyline
     public double getLength()
     {
         return this.globe != null ? this.getMeasurer().getLength(this.globe) : 0;
-    }
-
-
-    /**
-     * Specifies the path's positions.
-     *
-     * @param inPositions the path positions.
-     */
-    public void setPositions(Iterable<? extends Position> inPositions)
-    {
-        this.reset();
-        this.positions = new ArrayList<Position>();
-        this.extent = null;
-        if (inPositions != null)
-        {
-            for (Position position : inPositions)
-            {
-                this.positions.add(position);
-            }
-            this.getMeasurer().setPositions(this.positions);
-        }
-
-        if ((this.isFilled() && this.positions.size() < 3))
-        {
-            String msg = Logging.getMessage("generic.InsufficientPositions");
-            Logging.logger().severe(msg);
-            throw new IllegalArgumentException(msg);
-        }
-    }
-
-    /**
-     * Sets the paths positions as latitude and longitude values at a constant altitude.
-     *
-     * @param inPositions the latitudes and longitudes of the positions.
-     * @param elevation   the elevation to assign each position.
-     */
-    public void setPositions(Iterable<? extends LatLon> inPositions, double elevation)
-    {
-        this.reset();
-        this.positions = new ArrayList<Position>();
-        this.extent = null;
-        if (inPositions != null)
-        {
-            for (LatLon position : inPositions)
-            {
-                this.positions.add(new Position(position, elevation));
-            }
-            this.getMeasurer().setPositions(this.positions);
-        }
-
-        if (this.isFilled() && this.positions.size() < 3)
-        {
-            String msg = Logging.getMessage("generic.InsufficientPositions");
-            Logging.logger().severe(msg);
-            throw new IllegalArgumentException(msg);
-        }
-    }
-
-    public Iterable<Position> getPositions()
-    {
-        return this.positions;
     }
 
     protected Extent getExtent(DrawContext dc)
@@ -180,7 +136,7 @@ public class VPolyline extends Polyline
 
         this.globe = dc.getGlobe();
 
-        if (this.positions.size() < 2)
+        if (((ArrayList<Position>)this.getPositions()).size() < 2)
             return;
 
      // vertices potentially computed every frame to follow terrain changes
@@ -240,12 +196,12 @@ public class VPolyline extends Polyline
             }
 
             int hintAttr = GL.GL_LINE_SMOOTH_HINT;
-            if (this.isFilled())
+            if (this.isFilled() || this.isPlain())
                 hintAttr = GL.GL_POLYGON_SMOOTH_HINT;
             gl.glHint(hintAttr, this.getAntiAliasHint());
 
             int primType = GL.GL_LINE_STRIP;
-            if (this.isFilled())
+            if (this.isFilled() || this.isPlain())
                 primType = GL.GL_POLYGON;
 
             if (dc.isPickingMode())
@@ -260,6 +216,8 @@ public class VPolyline extends Polyline
             for (int i=0;i< this.currentSpans.size();i++)
             {
             	ArrayList<Vec4> span = this.currentSpans.get(i);
+            	ArrayList<Vec4> ground = this.currentCurtains.get(i);
+            	
                 if (span == null)
                     continue;
 
@@ -267,16 +225,25 @@ public class VPolyline extends Polyline
                 // overhead of batched rendering, e.g., gl.glDrawArrays, is too high because it requires copying
                 // the vertices into a DoubleBuffer, and DoubleBuffer creation and access performs relatively poorly.
                 gl.glBegin(primType);
+                Vec4 g;
+                if(isPlain()) {
+                	g = ground.get(0);
+                	gl.glVertex3d(g.x, g.y, g.z);
+                }
                 for (Vec4 p : span)
                 {
                 	if(isShadedColors()){
-                	Double k = this.positions.get(i).elevation;
+                	Double k = ((ArrayList<Position>)this.getPositions()).get(i).elevation;
                 	dc.getGL().glColor4ub((byte) (255*((k-this.getMinElevation())/(this.getMaxElevation()-this.getMinElevation()))),
                 			(byte) (255*((this.getMaxElevation()-k)/(this.getMaxElevation()-this.getMinElevation()))),
                 			(byte) 0,
                 			(byte) this.getColor().getAlpha());
                 	}
                     gl.glVertex3d(p.x, p.y, p.z);
+                }
+                if(isPlain()) {
+                	g = ground.get(ground.size()-1);
+                	gl.glVertex3d(g.x, g.y, g.z);
                 }
                 gl.glEnd();
             }
@@ -350,23 +317,37 @@ public class VPolyline extends Polyline
         else
             this.currentSpans.clear();
 
-        if (this.positions.size() < 1)
+        if(this.currentCurtains == null){
+        	this.currentCurtains = new ArrayList<ArrayList<Vec4>>();
+        } else {
+        	this.currentCurtains.clear();
+        }
+        
+        if (((ArrayList<Position>)this.getPositions()).size() < 1)
             return;
 
-        Position posA = this.positions.get(0);
+        Position posA = ((ArrayList<Position>)this.getPositions()).get(0);
+        Position posGrdA = new Position(posA.getLatLon(), 0);
         Vec4 ptA = this.computePoint(dc, posA, true);
-        for (int i = 1; i <= this.positions.size(); i++)
+        Vec4 grdA =  this.computePoint(dc, posGrdA, true);
+        for (int i = 1; i <= ((ArrayList<Position>)this.getPositions()).size(); i++)
         {
             Position posB;
-            if (i < this.positions.size())
-                posB = this.positions.get(i);
-            else if (this.isClosed())
-                posB = this.positions.get(0);
+            Position posGrdB;
+            if (i < ((ArrayList<Position>)this.getPositions()).size()){
+                posB = ((ArrayList<Position>)this.getPositions()).get(i);
+                posGrdB = new Position(posB.getLatLon(), 0);
+            }
+            else if (this.isClosed()) {
+                posB = ((ArrayList<Position>)this.getPositions()).get(0);
+                posGrdB = new Position(posB.getLatLon(), 0);
+            }
             else
                 break;
 
             Vec4 ptB = this.computePoint(dc, posB, true);
-
+            Vec4 grdB = this.computePoint(dc, posGrdB, true);
+            
             if (this.isFollowTerrain() && !this.isSegmentVisible(dc, posA, posB, ptA, ptB))
             {
                 posA = posB;
@@ -376,10 +357,15 @@ public class VPolyline extends Polyline
 
             ArrayList<Vec4> span;
             span = this.makeSegment(dc, posA, posB, ptA, ptB);
-
+            ArrayList<Vec4> ground;
+            ground = this.makeSegment(dc, posGrdA, posGrdB, grdA, grdB);
             if (span != null)
                 this.addSpan(span);
 
+            this.currentCurtains.add(ground);
+            
+            grdA = grdB;
+            posGrdA = posGrdB;
             posA = posB;
             ptA = ptB;
         }
@@ -548,13 +534,13 @@ public class VPolyline extends Polyline
 
     private void computeReferenceCenter(DrawContext dc)
     {
-        if (this.positions.size() < 1)
+        if (((ArrayList<Position>)this.getPositions()).size() < 1)
             return;
 
-        if (this.positions.size() < 3)
-            this.referenceCenterPosition = this.positions.get(0);
+        if (((ArrayList<Position>)this.getPositions()).size() < 3)
+            this.referenceCenterPosition = ((ArrayList<Position>)this.getPositions()).get(0);
         else
-            this.referenceCenterPosition = this.positions.get(this.positions.size() / 2);
+            this.referenceCenterPosition = ((ArrayList<Position>)this.getPositions()).get(((ArrayList<Position>)this.getPositions()).size() / 2);
 
         this.referenceCenterPoint = this.computeTerrainPoint(dc,
             this.referenceCenterPosition.getLatitude(), this.referenceCenterPosition.getLongitude(), this.getOffset());
@@ -601,7 +587,7 @@ public class VPolyline extends Polyline
 
         this.reset();
 
-        if (this.positions.size() < 1)
+        if (((ArrayList<Position>)this.getPositions()).size() < 1)
             return;
 
         Vec4 origRef = this.referenceCenterPoint;
@@ -611,13 +597,13 @@ public class VPolyline extends Polyline
         Vec4 axis = origRef.cross3(newRef).normalize3();
         Quaternion q = Quaternion.fromAxisAngle(distance, axis);
 
-        for (int i = 0; i < this.positions.size(); i++)
+        for (int i = 0; i < ((ArrayList<Position>)this.getPositions()).size(); i++)
         {
-            Position pos = this.positions.get(i);
+            Position pos = ((ArrayList<Position>)this.getPositions()).get(i);
             Vec4 p = this.globe.computePointFromPosition(pos);
             p = p.transformBy3(q);
             pos = this.globe.computePositionFromPoint(p);
-            this.positions.set(i, pos);
+            ((ArrayList<Position>)this.getPositions()).set(i, pos);
         }
     }
 
@@ -647,13 +633,13 @@ public class VPolyline extends Polyline
                 restorableSupport.addStateValueAsString("highlightColor", encodedColor);
         }
 
-        if (this.positions != null)
+        if (this.getPositions() != null)
         {
             // Create the base "positions" state object.
             RestorableSupport.StateObject positionsStateObj = restorableSupport.addStateObject("positions");
             if (positionsStateObj != null)
             {
-                for (Position p : this.positions)
+                for (Position p : this.getPositions())
                 {
                     // Save each position only if all parts (latitude, longitude, and elevation) can be
                     // saved. We will not save a partial iconPosition (for example, just the elevation).
