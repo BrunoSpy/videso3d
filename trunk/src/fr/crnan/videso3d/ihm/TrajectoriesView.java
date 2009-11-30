@@ -159,8 +159,8 @@ public class TrajectoriesView extends JPanel {
 
 		JPanel table = new JPanel(new BorderLayout());
 		table.setBorder(BorderFactory.createTitledBorder("Pistes affichées"));
-
 		JXTable pistes = new JXTable(new TrackTableModel());
+		pistes.setColumnControlVisible(true);
 		JScrollPane scrollPane = new JScrollPane(pistes);
 		scrollPane.setBorder(null);
 		table.add(scrollPane);

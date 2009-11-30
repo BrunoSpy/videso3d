@@ -196,5 +196,6 @@ public class DataExplorer extends JPanel {
 	 */
 	public void addTrajectoriesView(File file) {
 		tabs.addTab(file.getName(), new TrajectoriesView(wwd, file));
+		tabs.setSelectedIndex(tabs.getTabCount()-1);
 	}
 }
