@@ -19,6 +19,7 @@ package fr.crnan.videso3d.layers;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import fr.crnan.videso3d.render.AMSLGeographicTextRenderer;
 import gov.nasa.worldwind.layers.AbstractLayer;
 import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.render.GeographicText;
@@ -42,6 +43,14 @@ public class TextLayer extends AbstractLayer {
 		this.setName(string);
 	}
 
+	/**
+	 * Set texts AMSL instead of AGL
+	 * @param amsl True : text's coord are calculated AMSL
+	 */
+	public void setAMSL(Boolean amsl){
+		textRenderer = new AMSLGeographicTextRenderer();
+	}
+	
 	/**
 	 * Adds the specified <code>text</code> to this layer's internal collection.
 	 * @param text {@link GeographicText} to add

@@ -32,15 +32,15 @@ public class OPASTrack implements Track{
 	private String indicatif;
 	private String depart;
 	private String arrivee;
-	private String sid;
+	private String iaf;
 	
 	private List<OPASTrackPoint> points = new LinkedList<OPASTrackPoint>();
 	
-	public OPASTrack(String indicatif, String depart, String arrivee, String sid){
+	public OPASTrack(String indicatif, String depart, String arrivee, String iaf){
 		this.indicatif = indicatif;
 		this.depart = depart;
 		this.arrivee = arrivee;
-		this.sid = sid;
+		this.iaf = iaf;
 	}
 
 	public void addPoint(OPASTrackPoint point){
@@ -98,7 +98,7 @@ public class OPASTrack implements Track{
 	/**
 	 * @return the sid
 	 */
-	public String getSid() {
-		return sid;
+	public String getIaf() {
+		return iaf;
 	}
 }

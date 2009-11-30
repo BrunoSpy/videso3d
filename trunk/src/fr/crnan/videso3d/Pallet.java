@@ -67,6 +67,9 @@ public class Pallet {
 
         int rgbInt = Color.HSBtoRGB(hue, saturation, brightness);
         
-        return new Color(rgbInt);
+        Color newColor = new Color(rgbInt);
+        
+        
+        return new Color(newColor.getRed(), newColor.getGreen(), newColor.getBlue(), color.getAlpha());
     }
 }
