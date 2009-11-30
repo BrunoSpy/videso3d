@@ -20,6 +20,7 @@ package fr.crnan.videso3d.ihm;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.io.File;
 import java.sql.SQLException;
 
 import javax.swing.JPanel;
@@ -187,5 +188,13 @@ public class DataExplorer extends JPanel {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	/**
+	 * Ajoute un tab de sélection des trajectoires
+	 * @param file
+	 */
+	public void addTrajectoriesView(File file) {
+		tabs.addTab(file.getName(), new TrajectoriesView(wwd, file));
 	}
 }

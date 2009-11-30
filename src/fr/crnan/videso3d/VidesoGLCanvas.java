@@ -45,9 +45,12 @@ import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolyline;
 import fr.crnan.videso3d.graphics.Route.Type;
 import fr.crnan.videso3d.layers.BaliseLayer;
+import fr.crnan.videso3d.layers.GEOTracksLayer;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
+import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
+import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.Secteur;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.examples.util.LayerManagerLayer;
@@ -85,10 +88,6 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
 
-	/**
-	 * Layer pour les trajectoires
-	 */
-	private RenderableLayer trajLayer;
 	/**
 	 * Layer contenant les routes
 	 */
@@ -964,61 +963,36 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Ajoute les trajectoires à la vue
 	 * @param file Fichier contenant les trajectoires
 	 */
-	public void addTrajectoires(File file){
+	public TrajectoriesLayer addTrajectoires(File file){
 		if(OPASReader.isOpasFile(file)){
-			this.addTrajectoires(new OPASReader(file));
+			return this.addTrajectoires(new OPASReader(file));
 		} else if(GEOReader.isGeoFile(file)){
-			this.addTrajectoires(new GEOReader(file));
+			return this.addTrajectoires(new GEOReader(file));
 		}
+		return null;
 	}
 	
-	
-	
-	private void addTrajectoires(GEOReader geo) {
-		if(trajLayer == null) {
-			trajLayer = new RenderableLayer();
-			trajLayer.setName("Trajectoires");
-			this.toggleLayer(trajLayer, true);
-		}
+	private TrajectoriesLayer addTrajectoires(GEOReader geo) {
+		GEOTracksLayer trajLayer = new GEOTracksLayer();
+		this.toggleLayer(trajLayer, true);
+
 		for(GEOTrack track : geo.getTracks()){
-			System.out.println("nouvelle traj");
-			VPolyline line = new VPolyline();
-			LinkedList<Position> positions = new LinkedList<Position>();
-			for(GEOTrackPoint point : track.getTrackPoints()){
-				positions.add(point.getPosition());
-			}
-			line.setPositions(positions);
-			line.setShadedColors(true);
-			line.setMaxElevation(400*30.48);
-			line.setMinElevation(50*30.48);
-			line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
-			trajLayer.addRenderable(line);
+			trajLayer.addTrack(track);
 		}
+		return trajLayer;
 	}
 
 	/**
 	 * Ajoute les trajectoires au format OPAS
 	 * @param opasReader
 	 */
-	public void addTrajectoires(OPASReader opas) {
-		if(trajLayer == null) {
-			trajLayer = new RenderableLayer();
-			trajLayer.setName("Trajectoires");
-			this.toggleLayer(trajLayer, true);
-		}
+	public TrajectoriesLayer addTrajectoires(OPASReader opas) {
+		OPASTracksLayer trajLayer = new OPASTracksLayer();
+		this.toggleLayer(trajLayer, true);
 		for(OPASTrack track : opas.getTracks()){
-			VPolyline line = new VPolyline();
-			LinkedList<Position> positions = new LinkedList<Position>();
-			for(OPASTrackPoint point : track.getTrackPoints()){
-				positions.add(point.getPosition());
-			}
-			line.setPositions(positions);
-			line.setShadedColors(true);
-			line.setMaxElevation(400*30.48);
-			line.setMinElevation(50*30.48);
-			line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
-			trajLayer.addRenderable(line);
+			trajLayer.addTrack(track);
 		}
+		return trajLayer;
 	}
 
 	public int getNumberInitSteps() {

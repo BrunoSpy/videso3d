@@ -19,6 +19,7 @@ package fr.crnan.videso3d.graphics;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.markers.BasicMarker;
+import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
 import gov.nasa.worldwind.render.markers.MarkerAttributes;
 
 /**
@@ -32,6 +33,12 @@ public class MarkerAnnotation extends BasicMarker implements ObjectAnnotation {
 	
 	public MarkerAnnotation(Position position, MarkerAttributes attrs) {
 		super(position, attrs);
+	}
+
+	public MarkerAnnotation(String annotation, Position position,
+			BasicMarkerAttributes attrs) {
+		super(position, attrs);
+		this.setAnnotation(annotation);
 	}
 
 	@Override
