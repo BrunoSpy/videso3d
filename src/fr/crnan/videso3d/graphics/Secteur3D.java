@@ -84,9 +84,9 @@ public class Secteur3D extends Polygon implements ObjectAnnotation{
 	        this.getAttributes().setDrawOutline(true);
 	        this.getAttributes().setMaterial(new Material(color));
 	        this.getAttributes().setOutlineMaterial(new Material(outline));
-	        this.getAttributes().setOpacity(0.8);
+	        this.getAttributes().setOpacity(0.2);
 	        this.getAttributes().setOutlineOpacity(0.9);
-	        this.getAttributes().setOutlineWidth(3.0);
+	        this.getAttributes().setOutlineWidth(2.0);
 		}
 	 
 	 

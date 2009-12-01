@@ -163,14 +163,22 @@ public class MainWindow extends JFrame {
 		//initialisation des objets 3D en background
 		new SwingWorker<String, Integer>(){
 			@Override
-			protected String doInBackground() throws Exception {
-				wwd.initialize(db);
+			protected String doInBackground() {
+				try {
+					wwd.initialize(db);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				return null;
 			}
 			@Override
 			protected void done(){
 				//une fois terminé, on lance l'application
-				launchVideso3D();
+				try {
+					launchVideso3D();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}	
 			}
 		}.execute();
 	}
@@ -244,25 +252,29 @@ public class MainWindow extends JFrame {
 						new SwingWorker<String, Integer>(){
 							@Override
 							protected String doInBackground() throws Exception {
-								if(type.equals("STIP")){
-									//mise à jour de la vue 3D
-									//TODO mettre à jour seulement si la base de données a changé
-									wwd.buildStip();
-									//mise à jour de l'explorateur de données
-									dataExplorer.updateStipView();
-								} else if (type.equals("EXSA")){
-									//mise à jour de l'explorateur de données
-									dataExplorer.updateStrView();
-									//mise à jour de la vue 3D
-									wwd.removeMosaiques();
-									//suppression des radars
-									wwd.removeRadars();
-								} else if(type.equals("STPV")){
-									dataExplorer.updateStpvView();
-									wwd.removeMosaiques();
-								} else if(type.equals("Edimap")){
-									dataExplorer.updateEdimapView();
-									wwd.removeAllEdimapLayers();
+								try {
+									if(type.equals("STIP")){
+										//mise à jour de la vue 3D
+										//TODO mettre à jour seulement si la base de données a changé
+										wwd.buildStip();
+										//mise à jour de l'explorateur de données
+										dataExplorer.updateStipView();
+									} else if (type.equals("EXSA")){
+										//mise à jour de l'explorateur de données
+										dataExplorer.updateStrView();
+										//mise à jour de la vue 3D
+										wwd.removeMosaiques();
+										//suppression des radars
+										wwd.removeRadars();
+									} else if(type.equals("STPV")){
+										dataExplorer.updateStpvView();
+										wwd.removeMosaiques();
+									} else if(type.equals("Edimap")){
+										dataExplorer.updateEdimapView();
+										wwd.removeAllEdimapLayers();
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
 								}
 								return null;
 							}
@@ -330,7 +342,11 @@ public class MainWindow extends JFrame {
 					new SwingWorker<String, Integer>(){
 						@Override
 						protected String doInBackground() throws Exception {
-							wwd.addTrajectoires(fileChooser.getSelectedFile());
+							try{	
+								dataExplorer.addTrajectoriesView(fileChooser.getSelectedFile());
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 							return null;
 						}
 					}.execute();
@@ -357,36 +373,40 @@ public class MainWindow extends JFrame {
 						new SwingWorker<String, Integer>(){
 							@Override
 							protected String doInBackground() throws Exception {
-								if(type.equals("STIP")){
-									final ProgressMonitor progress = new ProgressMonitor(null, 
-											"Mise à jour des éléments STIP", "Suppression des éléments précédents", 0, 6);
-									progress.setMillisToDecideToPopup(0);
-									progress.setMillisToPopup(0);
-									progress.setProgress(0);
-									wwd.addPropertyChangeListener("step", new PropertyChangeListener() {
-										@Override
-										public void propertyChange(PropertyChangeEvent evt) {
-											progress.setNote((String) evt.getNewValue());
-										}
-									});
-									//mise à jour de la vue 3D
-									wwd.buildStip();
-									progress.setNote("Chargement terminé");
-									//mise à jour de l'explorateur de données
-									dataExplorer.updateStipView();
-								} else if (type.equals("EXSA")){
-									//mise à jour de l'explorateur de données
-									dataExplorer.updateStrView();
-									//mise à jour de la vue 3D
-									wwd.removeMosaiques();
-									//suppression des radars
-									wwd.removeRadars();
-								} else if(type.equals("STPV")){
-									dataExplorer.updateStpvView();
-									wwd.removeMosaiques();
-								} else if(type.equals("Edimap")){
-									dataExplorer.updateEdimapView();
-									wwd.removeAllEdimapLayers();
+								try{
+									if(type.equals("STIP")){
+										final ProgressMonitor progress = new ProgressMonitor(null, 
+												"Mise à jour des éléments STIP", "Suppression des éléments précédents", 0, 6);
+										progress.setMillisToDecideToPopup(0);
+										progress.setMillisToPopup(0);
+										progress.setProgress(0);
+										wwd.addPropertyChangeListener("step", new PropertyChangeListener() {
+											@Override
+											public void propertyChange(PropertyChangeEvent evt) {
+												progress.setNote((String) evt.getNewValue());
+											}
+										});
+										//mise à jour de la vue 3D
+										wwd.buildStip();
+										progress.setNote("Chargement terminé");
+										//mise à jour de l'explorateur de données
+										dataExplorer.updateStipView();
+									} else if (type.equals("EXSA")){
+										//mise à jour de l'explorateur de données
+										dataExplorer.updateStrView();
+										//mise à jour de la vue 3D
+										wwd.removeMosaiques();
+										//suppression des radars
+										wwd.removeRadars();
+									} else if(type.equals("STPV")){
+										dataExplorer.updateStpvView();
+										wwd.removeMosaiques();
+									} else if(type.equals("Edimap")){
+										dataExplorer.updateEdimapView();
+										wwd.removeAllEdimapLayers();
+									}
+								} catch (Exception e) {
+									e.printStackTrace();
 								}
 								return null;
 							}
