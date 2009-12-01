@@ -73,9 +73,9 @@ public class DataExplorer extends JPanel {
 		tabs.setPreferredSize(new Dimension(300, 0));
 
 		this.updateStipView();
-		this.updateEdimapView();
 		this.updateStrView();
 		this.updateStpvView();
+		this.updateEdimapView();
 
 		add(tabs, BorderLayout.CENTER);
 	}	
@@ -126,7 +126,7 @@ public class DataExplorer extends JPanel {
 				e.printStackTrace();
 			}
 		} else {
-			tabs.remove(stip);
+			tabs.remove(exsa);
 			try {
 				if(this.db.getCurrentExsa() != null){
 					exsa = this.buildTab(new StrView(wwd, db));

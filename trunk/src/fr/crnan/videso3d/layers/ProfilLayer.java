@@ -23,6 +23,7 @@ import gov.nasa.worldwind.layers.SurfaceShapeLayer;
  * @author Bruno Spyckerelle
  * @version 0.1
  */
+@SuppressWarnings("serial")
 public class ProfilLayer extends LayerSet {
 
 	/**
