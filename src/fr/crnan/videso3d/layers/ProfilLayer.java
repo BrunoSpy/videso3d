@@ -16,6 +16,7 @@
 package fr.crnan.videso3d.layers;
 
 import fr.crnan.videso3d.graphics.Profil3D;
+import gov.nasa.worldwind.layers.MarkerLayer;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 /**
