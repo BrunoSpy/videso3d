@@ -20,6 +20,7 @@ import java.util.LinkedList;
 
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
+import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 /**
  * 
@@ -75,6 +76,7 @@ public class Routes2DLayer extends SurfaceShapeLayer implements RoutesLayer {
 		for(Route2D route : awy.values()){
 			displayRouteAwy(route);
 		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	private void displayRouteAwy(Route2D r){
@@ -87,6 +89,7 @@ public class Routes2DLayer extends SurfaceShapeLayer implements RoutesLayer {
 		for(Route2D route : pdr.values()){
 			displayRoutePDR(route);
 		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	private void displayRoutePDR(Route2D r){
@@ -97,11 +100,13 @@ public class Routes2DLayer extends SurfaceShapeLayer implements RoutesLayer {
 	@Override
 	public void displayRouteAwy(String route) {
 		displayRouteAwy(awy.get(route));
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
 	public void displayRoutePDR(String route) {
 		displayRoutePDR(pdr.get(route));
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
@@ -120,6 +125,7 @@ public class Routes2DLayer extends SurfaceShapeLayer implements RoutesLayer {
 		awy.clear();
 		pdrActives.clear();
 		awyActives.clear();
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	@Override
@@ -127,6 +133,7 @@ public class Routes2DLayer extends SurfaceShapeLayer implements RoutesLayer {
 		super.removeAllRenderables();
 		pdrActives.clear();
 		awyActives.clear();
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
@@ -135,6 +142,7 @@ public class Routes2DLayer extends SurfaceShapeLayer implements RoutesLayer {
 			removeRenderable(route);
 		}
 		awyActives.clear();
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
@@ -143,6 +151,7 @@ public class Routes2DLayer extends SurfaceShapeLayer implements RoutesLayer {
 			removeRenderable(route);
 		}
 		pdrActives.clear();
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
@@ -152,6 +161,7 @@ public class Routes2DLayer extends SurfaceShapeLayer implements RoutesLayer {
 			removeRenderable(r);
 			awyActives.remove(r);
 		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
@@ -161,6 +171,7 @@ public class Routes2DLayer extends SurfaceShapeLayer implements RoutesLayer {
 			removeRenderable(r);
 			pdrActives.remove(r);
 		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 }

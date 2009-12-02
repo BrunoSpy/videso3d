@@ -22,6 +22,7 @@ import java.util.LinkedList;
 
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route3D;
+import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 /**
  * Layer destiné à afficher les routes<br />
@@ -84,6 +85,7 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 		awy.clear();
 		pdrActives.clear();
 		awyActives.clear();
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	public void displayAllRoutes(){
@@ -95,6 +97,7 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 		super.removeAllAirspaces();
 		pdrActives.clear();
 		awyActives.clear();
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	public void displayAllRoutesPDR(){
@@ -102,6 +105,7 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 		while(iterator.hasNext()){
 			displayRoutePDR(iterator.next());
 		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	public void displayAllRoutesAwy(){
@@ -109,6 +113,7 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 		while(iterator.hasNext()){
 			displayRouteAwy(iterator.next());
 		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	public void hideAllRoutesPDR(){
@@ -117,6 +122,7 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 			removeAirspace(iterator.next());
 		}
 		pdrActives.clear();
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	public void hideAllRoutesAWY(){
@@ -125,6 +131,7 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 			removeAirspace(iterator.next());
 		}
 		awyActives.clear();
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	private void displayRoutePDR(Route3D r){
@@ -134,12 +141,14 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 	
 	public void displayRoutePDR(String route){
 		displayRoutePDR(pdr.get(route));
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	public void hideRoutePDR(String route){
 		Route3D r = pdr.get(route);
 		removeAirspace(r);
 		pdrActives.remove(r);
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	private void displayRouteAwy(Route3D r){
@@ -149,12 +158,14 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 	
 	public void displayRouteAwy(String route){
 		displayRouteAwy(awy.get(route));
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	public void hideRouteAwy(String route){
 		Route3D r = awy.get(route);
 		removeAirspace(r);
 		awyActives.remove(r);
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 }
