@@ -363,7 +363,6 @@ public class StipView extends JPanel {
 					wwd.getRoutes3DLayer().hideRoutePDR(name);
 				}
 			} 
-			wwd.redraw();
 		}
 		
 	}
