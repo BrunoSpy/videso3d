@@ -201,7 +201,7 @@ public class DataExplorer extends JPanel {
 						}
 					});
 					tabs.addTab("Stpv", stpv);
-					tabs.setTabComponentAt(tabs.indexOfComponent(stpv), stpv);
+					tabs.setTabComponentAt(tabs.indexOfComponent(stpv), buttonTab);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
