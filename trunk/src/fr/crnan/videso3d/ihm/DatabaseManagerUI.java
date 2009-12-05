@@ -91,10 +91,9 @@ public class DatabaseManagerUI extends JFrame {
 		table = new JXTable(new DBTableModel());
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setEditable(false);
-		table.setSortable(false);//TODO à mettre à true une fois la solution de la cohérence table/model trouvée
 		table.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setColumnControlVisible(true);
-	
+		table.getColumnExt("id").setVisible(false);
 		this.getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
 		
 		JPanel buttons = new JPanel();
@@ -105,7 +104,7 @@ public class DatabaseManagerUI extends JFrame {
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if(table.getSelectedRow() != -1 && db.isSelected(((DBTableModel)table.getModel()).getId(table.getSelectedRow()))){
+				if(table.getSelectedRow() != -1 && db.isSelected(((DBTableModel)table.getModel()).getId(table.convertRowIndexToModel(table.getSelectedRow())))){
 					select.setEnabled(false);
 				} else { 
 					select.setEnabled(true);
@@ -211,13 +210,11 @@ public class DatabaseManagerUI extends JFrame {
 	/*-------------- TableModel ----------------*/
 	private  class DBTableModel extends AbstractTableModel {
 		
-		private String[] titles = {"Nom", "Type", "Date d'import", "Sélectionné"};
+		private String[] titles = {"id", "Nom", "Type", "Date d'import", "Sélectionné"};
 		
 		@SuppressWarnings("unchecked")
-		private Class[] types = new Class[] {String.class, String.class, String.class, Boolean.class};
-		
-		private Vector<Integer> id = new Vector<Integer>();
-		
+		private Class[] types = new Class[] {Integer.class, String.class, String.class, String.class, Boolean.class};
+				
 		private Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 		
 		public DBTableModel(){
@@ -226,7 +223,7 @@ public class DatabaseManagerUI extends JFrame {
 				ResultSet rs = st.executeQuery("select * from databases");
 				while(rs.next()){
 					Vector<Object> line = new Vector<Object>();
-					id.add(rs.getInt("id"));
+					line.add(rs.getInt("id"));
 					line.add(rs.getString("name"));
 					line.add(rs.getString("type"));
 					line.add(rs.getString("date"));
@@ -275,19 +272,18 @@ public class DatabaseManagerUI extends JFrame {
 		}
 
 		public void select(int rowIndex){
-			String type = (String) this.getValueAt(rowIndex, 1);
+			String type = (String) this.getValueAt(rowIndex, 2);
 			for(Vector<Object> row : data){
-				if(row.get(1).equals(type)){
-					row.set(3, false);
+				if(row.get(2).equals(type)){
+					row.set(4, false);
 				}
 			}
-			data.get(rowIndex).set(3, true);
+			data.get(rowIndex).set(4, true);
 			fireTableDataChanged();
 		}
 		
 		public void delete(int rowIndex) {
 			data.remove(rowIndex);
-			id.remove(rowIndex);
 			fireTableDataChanged();
 		}
 		/**
@@ -295,13 +291,12 @@ public class DatabaseManagerUI extends JFrame {
 		 */
 		public void update(){
 			data.removeAllElements();
-			id.removeAllElements();
 			try {
 				Statement st = db.getCurrent(Type.Databases);
 				ResultSet rs = st.executeQuery("select * from databases");
 				while(rs.next()){
 					Vector<Object> line = new Vector<Object>();
-					id.add(rs.getInt("id"));
+					line.add(rs.getInt("id"));
 					line.add(rs.getString("name"));
 					line.add(rs.getString("type"));
 					line.add(rs.getString("date"));
@@ -316,7 +311,7 @@ public class DatabaseManagerUI extends JFrame {
 		}
 		
 		public Integer getId(int rowIndex){
-			return id.get(rowIndex);
+			return (Integer) data.get(rowIndex).get(0);
 		}
 	}
 	
@@ -327,9 +322,9 @@ public class DatabaseManagerUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			Object source = e.getSource();
 			if(source == select){
-				int index = table.getSelectionModel().getAnchorSelectionIndex();
+				int index = table.convertRowIndexToModel(table.getSelectionModel().getAnchorSelectionIndex());
 				try {
-					String type = (String)table.getModel().getValueAt(index, 1);
+					String type = (String)table.getModel().getValueAt(index, 2);
 					db.selectDatabase((Integer)((DBTableModel)table.getModel()).getId(index), type);
 					//Mise à jour de la vue
 					((DBTableModel)table.getModel()).select(index);
@@ -338,9 +333,9 @@ public class DatabaseManagerUI extends JFrame {
 					e1.printStackTrace();
 				}
 			} else if (source == delete) {
-				int index = table.getSelectedRow();
+				int index = table.convertRowIndexToModel(table.getSelectionModel().getAnchorSelectionIndex());
 				try {
-					String type = (String)table.getModel().getValueAt(index, 1);
+					String type = (String)table.getModel().getValueAt(index, 2);
 					Integer id = (Integer)((DBTableModel)table.getModel()).getId(index);
 					Boolean changed = db.isSelected(id);
 					db.deleteDatabase(id);
