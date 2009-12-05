@@ -41,13 +41,9 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
@@ -228,86 +224,101 @@ public class MainWindow extends JFrame {
 		//suppression du splashscreen et affichage de la fenêtre
 		splashScreen.dispose();
 		this.pack();
-		
+				
+		//Test LPLN
+//		ProfilLayer layer = new ProfilLayer("LPLN");
+//		LPLNReader lpln = new LPLNReader(new File("/home/datas/Projets/Videso3D/datas/LPLN/48-2009.txt"), db);
+//		for(LPLNTrack track : lpln.getTracks()){
+//			LinkedList<Position> positions = new LinkedList<Position>();
+//			LinkedList<String> balises = new LinkedList<String>();
+//			LinkedList<String> annotations = new LinkedList<String>();
+//			for(LPLNTrackPoint point : track.getTrackPoints()){
+//				positions.add(point.getPosition());
+//				balises.add(point.getName());
+//				annotations.add(point.getName() + " " + point.getTime());
+//			}
+//			layer.addProfil3D(new Profil3D(balises, annotations, positions));
+//		}
+//		this.wwd.getModel().getLayers().add(layer);
 	}
 
-	/**
-	 * Barre de menu de l'application
-	 * @return {@link JMenuBar} Barre de menu
-	 */
-	private JMenuBar createMenuBar(){
-		JMenu file = new JMenu("Fichier");
-
-		JMenuItem dbUI = new JMenuItem("Gestion des bases de données...");
-		dbUI.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				databaseUI = new DatabaseManagerUI(db);
-				databaseUI.setVisible(true);
-				databaseUI.addPropertyChangeListener("baseChanged", new PropertyChangeListener() {		
-					@Override
-					public void propertyChange(PropertyChangeEvent evt) {
-						final String type = (String)evt.getNewValue();
-						//mises à jour en background
-						new SwingWorker<String, Integer>(){
-							@Override
-							protected String doInBackground() throws Exception {
-								try {
-									if(type.equals("STIP")){
-										//mise à jour de la vue 3D
-										//TODO mettre à jour seulement si la base de données a changé
-										wwd.buildStip();
-										//mise à jour de l'explorateur de données
-										dataExplorer.updateStipView();
-									} else if (type.equals("EXSA")){
-										//mise à jour de l'explorateur de données
-										dataExplorer.updateStrView();
-										//mise à jour de la vue 3D
-										wwd.removeMosaiques();
-										//suppression des radars
-										wwd.removeRadars();
-									} else if(type.equals("STPV")){
-										dataExplorer.updateStpvView();
-										wwd.removeMosaiques();
-									} else if(type.equals("Edimap")){
-										dataExplorer.updateEdimapView();
-										wwd.removeAllEdimapLayers();
-									}
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-								return null;
-							}
-						}.execute();
-					}
-				});
-			}
-		});
-
-		file.add(dbUI);
-
-		file.add(new JSeparator());
-
-		JMenuItem quit = new JMenuItem("Quitter");
-		quit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				db.closeAll();
-				System.exit(0);
-			}
-		});
-		file.add(quit);
-
-		JMenu affichage = new JMenu("Fenêtre");
-
-		JMenu help = new JMenu("Aide");
-
-		JMenuBar menuBar = new JMenuBar();
-		menuBar.add(file);
-		menuBar.add(affichage);
-		menuBar.add(help);
-		return menuBar;
-	}
+//	/**
+//	 * Barre de menu de l'application
+//	 * @return {@link JMenuBar} Barre de menu
+//	 */
+//	private JMenuBar createMenuBar(){
+//		JMenu file = new JMenu("Fichier");
+//
+//		JMenuItem dbUI = new JMenuItem("Gestion des bases de données...");
+//		dbUI.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				databaseUI = new DatabaseManagerUI(db);
+//				databaseUI.setVisible(true);
+//				databaseUI.addPropertyChangeListener("baseChanged", new PropertyChangeListener() {		
+//					@Override
+//					public void propertyChange(PropertyChangeEvent evt) {
+//						final String type = (String)evt.getNewValue();
+//						//mises à jour en background
+//						new SwingWorker<String, Integer>(){
+//							@Override
+//							protected String doInBackground() throws Exception {
+//								try {
+//									if(type.equals("STIP")){
+//										//mise à jour de la vue 3D
+//										//TODO mettre à jour seulement si la base de données a changé
+//										wwd.buildStip();
+//										//mise à jour de l'explorateur de données
+//										dataExplorer.updateStipView();
+//									} else if (type.equals("EXSA")){
+//										//mise à jour de l'explorateur de données
+//										dataExplorer.updateStrView();
+//										//mise à jour de la vue 3D
+//										wwd.removeMosaiques();
+//										//suppression des radars
+//										wwd.removeRadars();
+//									} else if(type.equals("STPV")){
+//										dataExplorer.updateStpvView();
+//										wwd.removeMosaiques();
+//									} else if(type.equals("Edimap")){
+//										dataExplorer.updateEdimapView();
+//										wwd.removeAllEdimapLayers();
+//									}
+//								} catch (Exception e) {
+//									e.printStackTrace();
+//								}
+//								return null;
+//							}
+//						}.execute();
+//					}
+//				});
+//			}
+//		});
+//
+//		file.add(dbUI);
+//
+//		file.add(new JSeparator());
+//
+//		JMenuItem quit = new JMenuItem("Quitter");
+//		quit.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				db.closeAll();
+//				System.exit(0);
+//			}
+//		});
+//		file.add(quit);
+//
+//		JMenu affichage = new JMenu("Fenêtre");
+//
+//		JMenu help = new JMenu("Aide");
+//
+//		JMenuBar menuBar = new JMenuBar();
+//		menuBar.add(file);
+//		menuBar.add(affichage);
+//		menuBar.add(help);
+//		return menuBar;
+//	}
 
 
 
@@ -339,13 +350,14 @@ public class MainWindow extends JFrame {
 				fileChooser.addChoosableFileFilter(new OPASFileFilter());
 				fileChooser.addChoosableFileFilter(new GEOFileFilter());
 				if(fileChooser.showOpenDialog(trajectoires) == JFileChooser.APPROVE_OPTION){
+
 					new SwingWorker<String, Integer>(){
 						@Override
 						protected String doInBackground() throws Exception {
-							try{	
+							try {
 								dataExplorer.addTrajectoriesView(fileChooser.getSelectedFile());
-							} catch (Exception e) {
-								e.printStackTrace();
+							} catch(Exception e1){
+								e1.printStackTrace();
 							}
 							return null;
 						}
@@ -389,6 +401,7 @@ public class MainWindow extends JFrame {
 										//mise à jour de la vue 3D
 										wwd.buildStip();
 										progress.setNote("Chargement terminé");
+										progress.setProgress(7);
 										//mise à jour de l'explorateur de données
 										dataExplorer.updateStipView();
 									} else if (type.equals("EXSA")){

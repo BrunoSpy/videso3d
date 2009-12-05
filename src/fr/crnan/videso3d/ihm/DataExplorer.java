@@ -123,6 +123,10 @@ public class DataExplorer extends JPanel {
 					int i = tabs.indexOfComponent(stip);
 					stip = new StipView(wwd, db);
 					tabs.setComponentAt(i, stip);
+				} else {
+					int i = tabs.indexOfComponent(stip);
+					stip = null;
+					tabs.removeTabAt(i);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
