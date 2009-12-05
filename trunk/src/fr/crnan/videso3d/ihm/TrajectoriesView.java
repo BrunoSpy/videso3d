@@ -50,9 +50,12 @@ public class TrajectoriesView extends JPanel {
 
 	private TrajectoriesLayer layer;
 
+	private VidesoGLCanvas wwd;
+	
 	public TrajectoriesView(final VidesoGLCanvas wwd, File file){
 		this.layer = wwd.addTrajectoires(file);
-
+		this.wwd = wwd;
+		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		JPanel filtres = new JPanel();
@@ -170,6 +173,13 @@ public class TrajectoriesView extends JPanel {
 
 	}
 
+	/**
+	 * Supprime le layer associé au sélecteur.
+	 */
+	public void delete(){
+		this.wwd.getModel().getLayers().remove(layer);
+	}
+	
 	private class TrackTableModel extends AbstractTableModel {
 
 		String[] columnNames = {"Indicatif", "Départ", "Arrivée", "IAF", "Type"};

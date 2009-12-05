@@ -692,6 +692,29 @@ public class DatabaseManager{
 	}
 
 	/**
+	 * Désélectionne la base de données sélectionnée de type <code>type</code>
+	 * @param type de la base de données
+	 */
+	public void unselectDatabase(Type type) throws SQLException{
+		Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+		ResultSet result = st.executeQuery("select * from databases where selected = 1 and type = '"+type.toString()+"'");
+		if(result.next()){
+			int id = result.getInt("id");
+			this.unselectDatabase(id);
+		}
+	}
+	
+	/**
+	 * Désélectionne une base de données
+	 * @param id de la base de données
+	 */
+	public void unselectDatabase(Integer id) throws SQLException{
+		Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+		st.executeUpdate("update databases set selected = 0 where id ='"+id+"'");
+		st.close();
+	}
+	
+	/**
 	 * Renvoie un {@link Statement} vers la base de données sélectionnée
 	 * Renvoie null si aucune base de données n'est trouvée
 	 * @param type Type de la base recherchée
@@ -703,7 +726,7 @@ public class DatabaseManager{
 			return this.selectDB(Type.Databases, "databases").createStatement();
 		} else {
 			Statement st = this.selectDB(Type.Databases, "databases").createStatement();
-			ResultSet result = st.executeQuery("select name from databases where selected = 1 and type = '"+type.toString()+"'");;
+			ResultSet result = st.executeQuery("select name from databases where selected = 1 and type = '"+type.toString()+"'");
 			if(result.next()) {
 				String connectionName = result.getString(1) ;
 				return this.selectDB(type, connectionName).createStatement();
