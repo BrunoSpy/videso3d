@@ -1,0 +1,59 @@
+#summary Comment contribuer au projet Videso 3D
+#labels Phase-Implementation
+
+= Participer au développement =
+== Configurer Eclipse ==
+=== Installer Eclipse ===
+Eclipse est disponible sur http://www.eclipse.org/downloads
+
+Il faut télécharger la version _IDE for Java Developers_.
+
+Pour installer Eclipse, il suffit de décompresser l'archive à l'endroit
+souhaité.
+=== Subversive ===
+Une fois Eclipse téléchargé et installé, il faut configurer le module Subversive, qui permettra de récupérer les sources de Videso3D et d'envoyer ses modifications.
+
+Pour installer Subversive :
+  * lancer Eclipse et aller dans Help->Install New Softwares\ldots
+  * Choisir _Work with: --All Available Sites--_
+  * Cocher _Subversive SVN Team Provider_ dans Collaboration
+  * Cliquer sur Next, accepter les licenses et finir.
+
+Il faut ensuite ajouter un connecteur :
+  * Il faut d'abord ajouter le site suivant dans _Install New Softwares_ http://community.polarion.com/projects/subversive/download/eclipse/2.0/galileo-site/
+  * Dans _Subversive SVN Connectors_, choisir _SVNKit 1.3.0_
+  * Cliquer sur Next, accepter les licenses et finir.
+
+
+Eclipse est prêt à créer un nouveau projet à partir des sources de Videso3D.
+
+=== Texlipse ===
+Afin de pouvoir modifier la documentation avec Eclipse, il faut aussi ajouter le module Texlipse.
+
+== Récupérer les sources de Videso3D avec Eclipse ==
+Cette section décrit comment créer un nouveau projet dans Eclipse à partir des sources de Videso3D.
+
+=== Créer un nouveau projet Videso3D ===
+
+Créer un nouveau projet :
+  * Aller dans File->New->Project...
+  * Choisir SVN->Project from SVN
+
+Configurer l'accès svn:
+  * Dans URL, mettre _https://videso3d.googlecode.com/svn_
+  * Cliquer sur Browse pour vérifier que tout marche. Le cas échéant, une arborescence du type branches, tags, trunk devrait apparaitre.
+  * (Facultatif) Remplir les données d'authentification pour avoir un accés en écriture sur le projet.
+  * A l'étape _Select Resource_, parcourir l'arborescence et choisir le répertoir _trunk_, laisser la révision sur HEAD.
+  * A l'étape _Check Out As_, choisir _Check out as a project configured using the New Project Wizard_
+  * Cliquer sur Finish et choisir Java->Java Project
+  * Mettre Videso3D comme _Project name_ et cliquer sur Finish.
+
+
+=== Configurer le projet ===
+Une fois le projet récupéré, il faut le configurer afin qu'il compile correctement :
+  * Aller dans Project->Properties
+  * Puis aller dans Java Build Path->Libraries
+  * Cliquer sur Add Jars
+  * Ajouter depuis lib les jars suivants : gluegen-rt.jar, jogl.jar, lablib-checkboxtree-3.1.jar, sqlite-jdbc-3.6.17.3.jar, worldwind.jar et swingx-1.0.jar
+  * Dans jogl.jar, configurer _Native library location_ à _Videso3D/lib_ (Workspace, puis choisir lib)
+  * Enfin, dans Resource, mettre _Text file encoding_ sur _Other->UTF-8_.
