@@ -20,6 +20,8 @@ package fr.crnan.videso3d.ihm;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.sql.SQLException;
 
@@ -29,6 +31,7 @@ import javax.swing.JTabbedPane;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.DatabaseManager.Type;
 
 /**
  * Panel de configuration des objets affichés sur le globe
@@ -94,17 +97,32 @@ public class DataExplorer extends JPanel {
 			try {
 				if(this.db.getCurrentStip() != null){
 					stip = new StipView(wwd, db);
-					tabs.addTab("Stip", stip);
+					tabs.add("Stip", stip);
+					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
+					buttonTab.getButton().addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							try {
+								db.unselectDatabase(Type.STIP);
+								wwd.buildStip();
+								stip = null;
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+					tabs.setTabComponentAt(tabs.indexOfComponent(stip), buttonTab);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		} else {
-			tabs.remove(stip);
 			try {
 				if(this.db.getCurrentStip() != null){
+					int i = tabs.indexOfComponent(stip);
 					stip = new StipView(wwd, db);
-					tabs.insertTab("Stip", null, stip, "Données stip", 0);
+					tabs.setComponentAt(i, stip);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -120,17 +138,32 @@ public class DataExplorer extends JPanel {
 			try {
 				if(this.db.getCurrentExsa() != null){
 					exsa = this.buildTab(new StrView(wwd, db));
+					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
+					buttonTab.getButton().addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							try {
+								db.unselectDatabase(Type.EXSA);
+								wwd.removeMosaiques();
+								exsa = null;
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
 					tabs.addTab("STR", exsa);
+					tabs.setTabComponentAt(tabs.indexOfComponent(exsa), buttonTab);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		} else {
-			tabs.remove(exsa);
 			try {
 				if(this.db.getCurrentExsa() != null){
+					int i = tabs.indexOfComponent(exsa);
 					exsa = this.buildTab(new StrView(wwd, db));
-					tabs.insertTab("STR", null, exsa, "Données STR", 1);
+					tabs.setComponentAt(i, exsa);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -146,17 +179,31 @@ public class DataExplorer extends JPanel {
 			try {
 				if(this.db.getCurrentStpv() != null){
 					stpv = new StpvView(wwd, db);
+					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
+					buttonTab.getButton().addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							try {
+								db.unselectDatabase(Type.STPV);
+								stpv = null;
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
 					tabs.addTab("Stpv", stpv);
+					tabs.setTabComponentAt(tabs.indexOfComponent(stpv), stpv);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		} else {
-			tabs.remove(stpv);
 			try {
 				if(this.db.getCurrentStpv() != null){
+					int i = tabs.indexOfComponent(stpv);
 					stpv = new StpvView(wwd, db);
-					tabs.insertTab("Stpv", null, stpv, "Données stpv", 2);
+					tabs.setComponentAt(i, stpv);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -172,17 +219,32 @@ public class DataExplorer extends JPanel {
 			try {
 				if(this.db.getCurrentEdimap() != null){
 					edimap = new EdimapView(wwd, db);
+					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
+					buttonTab.getButton().addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							try {
+								db.unselectDatabase(Type.Edimap);
+								wwd.removeAllEdimapLayers();
+								edimap = null;
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
 					tabs.addTab("Edimap", edimap);
+					tabs.setTabComponentAt(tabs.indexOfComponent(edimap), buttonTab);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		} else {
-			tabs.remove(edimap);
 			try {
 				if(this.db.getCurrentEdimap() != null){
+					int i = tabs.indexOfComponent(edimap);
 					edimap = new EdimapView(wwd, db);
-					tabs.insertTab("Edimap", null, edimap, "Données Edimap", 3);
+					tabs.setComponentAt(i, edimap);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -195,7 +257,17 @@ public class DataExplorer extends JPanel {
 	 * @param file
 	 */
 	public void addTrajectoriesView(File file) {
-		tabs.addTab(file.getName(), new TrajectoriesView(wwd, file));
+		final Component content = new TrajectoriesView(wwd, file);
+		tabs.addTab(file.getName(), content);
+		ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
+		buttonTab.getButton().addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				((TrajectoriesView)content).delete();
+			}
+		});
+		tabs.setTabComponentAt(tabs.indexOfComponent(content), buttonTab);
 		tabs.setSelectedIndex(tabs.getTabCount()-1);
 	}
 }

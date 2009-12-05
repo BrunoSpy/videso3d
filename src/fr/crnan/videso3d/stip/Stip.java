@@ -172,10 +172,7 @@ public class Stip extends FileParser{
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (Exception e){
-			e.printStackTrace();
 		}
-
 	}
 
 	private void insertLieux(Lieux lieux) {
@@ -616,9 +613,7 @@ public class Stip extends FileParser{
 			e1.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+		} 
 	}
 
 	/**
