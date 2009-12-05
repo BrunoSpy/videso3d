@@ -168,6 +168,10 @@ public class DataExplorer extends JPanel {
 					int i = tabs.indexOfComponent(exsa);
 					exsa = this.buildTab(new StrView(wwd, db));
 					tabs.setComponentAt(i, exsa);
+				} else {
+					int i = tabs.indexOfComponent(exsa);
+					exsa = null;
+					tabs.removeTabAt(i);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -208,6 +212,10 @@ public class DataExplorer extends JPanel {
 					int i = tabs.indexOfComponent(stpv);
 					stpv = new StpvView(wwd, db);
 					tabs.setComponentAt(i, stpv);
+				} else {
+					int i = tabs.indexOfComponent(stpv);
+					stpv = null;
+					tabs.removeTabAt(i);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -249,6 +257,10 @@ public class DataExplorer extends JPanel {
 					int i = tabs.indexOfComponent(edimap);
 					edimap = new EdimapView(wwd, db);
 					tabs.setComponentAt(i, edimap);
+				} else {
+					int i = tabs.indexOfComponent(edimap);
+					edimap = null;
+					tabs.removeTabAt(i);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
