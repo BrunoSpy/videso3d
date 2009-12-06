@@ -1,6 +1,20 @@
 #summary Comment installer Videso 3D
 #labels Phase-Deploy
 
+= Télécharger Videso 3D =
+
+Videso 3D est disponible sous plusieurs formes :
+ * un binaire pour windows sous forme d'archive (videso3d-win32-x.y.z.zip)
+ * un binaire pour windows sous forme d'archive avec une console de debug activée (videso3d-win32-x.y.z-debug.zip)
+ * un binaire pour linux (videso3d-linux32-x.y.z.zip).
+
+== Quelle version choisir ? ==
+
+Par défaut, prenez la dernière version sans mode debug.
+Si vous avez des bugs :
+ * sous linux, il suffit de lancer l'application en console pour avoir les message d'erreurs et ainsi pouvoir envoyer des informations complètes aux développeurs ;
+ * sous windows, il faut lancer l'application en mode debug pour avoir les messages d'erreur.
+
 = Première installation =
 
 Il suffit de décompresser l'archive à l'endroit souhaité.
