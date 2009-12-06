@@ -60,7 +60,6 @@ public class StipView extends JPanel {
 	
 	private JCheckBox balisesNPChk;
     private JCheckBox balisesPubChk;
-	private JRadioButton flatRoutes;
 	/**
 	 * Choix des secteurs à afficher
 	 */
@@ -114,7 +113,7 @@ public class StipView extends JPanel {
 		routeLabel.setFont(routeLabel.getFont().deriveFont(Font.BOLD));
 		titleRoute.add(routeLabel);
 		
-		flatRoutes = new JRadioButton("2D");
+		JRadioButton flatRoutes = new JRadioButton("2D");
 		flatRoutes.setSelected(true);
 		flatRoutes.addItemListener(new ItemListener() {
 			

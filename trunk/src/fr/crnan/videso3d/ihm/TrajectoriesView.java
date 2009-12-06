@@ -17,8 +17,11 @@ package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -26,9 +29,11 @@ import java.io.File;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
@@ -58,9 +63,12 @@ public class TrajectoriesView extends JPanel {
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+		this.add(this.createTitleSwitch());
+		
 		JPanel filtres = new JPanel();
 		filtres.setLayout(new BoxLayout(filtres, BoxLayout.Y_AXIS));
-		filtres.setBorder(BorderFactory.createTitledBorder("Filtres"));
+		filtres.setBorder(BorderFactory.createTitledBorder(""));
+		
 
 		JPanel indicatif = new JPanel();
 		indicatif.setLayout(new BoxLayout(indicatif, BoxLayout.X_AXIS));
@@ -173,6 +181,44 @@ public class TrajectoriesView extends JPanel {
 
 	}
 
+	/**
+	 * Crée la zone de titre avec un switch et/ou
+	 * @return JPanel
+	 */
+	private JPanel createTitleSwitch(){
+		JPanel titre = new JPanel();
+		titre.setLayout(new BoxLayout(titre, BoxLayout.X_AXIS));
+		titre.setBorder(BorderFactory.createEmptyBorder(0, 17, 1, 3));
+		
+		JLabel titreLabel = new JLabel("Filtres");
+		titreLabel.setFont(titreLabel.getFont().deriveFont(Font.BOLD));
+		titre.add(titreLabel);
+		
+		JRadioButton et = new JRadioButton("Et");
+		et.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				layer.setFilterDisjunctive(!(e.getStateChange() == ItemEvent.SELECTED));
+			}
+		});
+		JRadioButton ou = new JRadioButton("Ou");
+		ou.setSelected(true);
+		ButtonGroup group = new ButtonGroup();
+		group.add(et);
+		group.add(ou);
+		
+		JPanel groupPanel = new JPanel();
+		groupPanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
+		groupPanel.setLayout(new BoxLayout(groupPanel, BoxLayout.X_AXIS));
+		groupPanel.add(Box.createHorizontalGlue());
+		groupPanel.add(et);
+		groupPanel.add(ou);
+		titre.add(groupPanel);
+		
+		return titre;
+	}
+	
 	/**
 	 * Supprime le layer associé au sélecteur.
 	 */
