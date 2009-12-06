@@ -1,13 +1,13 @@
 #summary Comment installer Videso 3D
 #labels Phase-Deploy
-#sidebar ToC
 
-= Introduction =
+= Première installation =
 
-Tout simplement.
+Il suffit de décompresser l'archive à l'endroit souhaité.
 
+= Mise à jour =
 
-= Details =
-
-
-En décompressant l'archive.
+Mettre à jour l'application sans perdre ses bases de données est possible :
+ * décompressez l'archive dans un dossier à part ;
+ * dans ce dossier, aller dans le répertoire _datas_ et coupez le fichier videso3d.jar ;
+ * copiez ce fichier dans le répertoire _datas_ de votre dossier Videso 3D en cours d'utilisation.
