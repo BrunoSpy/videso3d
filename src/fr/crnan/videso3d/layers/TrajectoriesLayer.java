@@ -30,6 +30,7 @@ public abstract class TrajectoriesLayer extends RenderableLayer {
 	public static final int FIELD_INDICATIF = 4;
 	public static final int FIELD_TYPE_AVION = 5;
 	
+	private boolean disjunctive = true; //"or" by default
 	
 	public TrajectoriesLayer(){
 		super();
@@ -47,6 +48,21 @@ public abstract class TrajectoriesLayer extends RenderableLayer {
 	 */
 	public abstract void addFilter(int field, String regexp);
 
+	/**
+	 * Sets filter type.<br />
+	 * Does not apply to the current filters.
+	 * @param and If true, filters are conjonctives (= and), otherwise disjunctives (=or)
+	 */
+	public void setFilterDisjunctive(Boolean b){
+		if(isFilterDisjunctive() != b ){
+			this.disjunctive = b;
+		}
+	}
+	
+	public Boolean isFilterDisjunctive(){
+		return this.disjunctive;
+	}
+	
 	/**
 	 * Supprime les filtres.
 	 */

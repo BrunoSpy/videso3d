@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.layers;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -88,7 +89,17 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 	
 	@Override
 	public void addFilter(int field, String regexp) {
-		if(selectedTrack == null) selectedTrack = new HashSet<OPASTrack>();
+		Collection<OPASTrack> tracks;
+		if(!this.isFilterDisjunctive()){
+			if(selectedTrack == null) {
+				tracks = this.tracks;
+			} else {
+				tracks = new HashSet<OPASTrack>(this.selectedTrack);
+				this.selectedTrack.clear();
+			}
+		} else {
+			tracks = this.tracks;
+		}
 		switch (field) {
 		case FIELD_ADEST:
 			for(OPASTrack track : tracks){
@@ -127,6 +138,7 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 	}
 
 	private void addSelectedTrack(OPASTrack track) {
+		if(selectedTrack == null) selectedTrack = new HashSet<OPASTrack>();
 		this.selectedTrack.add(track);
 	}
 

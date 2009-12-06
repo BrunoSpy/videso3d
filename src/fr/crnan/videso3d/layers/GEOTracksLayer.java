@@ -16,6 +16,7 @@
 package fr.crnan.videso3d.layers;
 
 import java.awt.Color;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,6 +67,17 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 
 	@Override
 	public void addFilter(int field, String regexp) {
+		Collection<GEOTrack> tracks;
+		if(!this.isFilterDisjunctive()){
+			if(selectedTracks == null) {
+				tracks = this.tracks;
+			} else {
+				tracks = new HashSet<GEOTrack>(this.selectedTracks);
+				this.selectedTracks.clear();
+			}
+		} else {
+			tracks = this.tracks;
+		}
 		switch (field) {
 		case FIELD_ADEST:
 			for(GEOTrack track : tracks){
@@ -127,5 +139,6 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	public Object[] getSelectedTracks(){
 		return this.selectedTracks == null ? tracks.toArray() : selectedTracks.toArray();
 	}
+
 	
 }
