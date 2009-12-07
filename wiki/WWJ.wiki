@@ -1,0 +1,30 @@
+#Comment manipuler la vue 3D
+
+= Interaction directe à la souris =
+La façon la plus simple et la plus intuitive est de manipuler directement la vue avec la souris :
+
+|| * Action * || * Moyen d'interaction * ||
+|| Déplacer || Cliquer-glisser avec le bouton gauche. ||
+|| Zoom || Molette de la souris ||
+|| Faire une rotation || Cliquer-glisser avec le bouton droit, vers la gauche ou vers la droite. ||
+|| Incliner la vue || Cliquer-glisser avec le bouton droit, vers le haut ou vers le bas. ||
+
+= Commandes accessibles au clavier =
+
+|| * Action * || * Touche clavier * ||
+|| Arrêter l'animation || Barre d'espace ||
+|| Réinitialiser l'orientation || N ||
+|| Réinitialiser l'orientation et l'inclinaison || R || 
+
+= Actions accessibles via la barre d'outils =
+
+[http://videso3d.googlecode.com/svn/wiki/img/toolbar.png]
+
+La barre d'outils permet certaines actions particulières :
+
+|| * Action * || * Bouton/Champ * || 
+|| Ajouter un fond blanc sur la France || Bouton "Fond" ||
+|| Mesurer des distances || Bouton "Alidade" ||
+|| Activer une projection 2D || Bouton "2D/3D" (projection Mercator par défaut) ||
+|| Exagérer l'échelle verticale || Slider "Exagération verticale" ||
+|| Rechercher un élément Stip || Champ de recherche (centre la vue sur l'élément recherché)||

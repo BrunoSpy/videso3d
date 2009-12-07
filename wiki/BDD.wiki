@@ -1,0 +1,19 @@
+#Gérer les bases de données
+
+[http://videso3d.googlecode.com/svn/wiki/img/bdd.png]
+
+= Gestionnaire de bases de données =
+
+Le gestionnaire de base de données est accessible via le bouton [http://code.google.com/p/videso3d/source/browse/trunk/src/resources/database_22.png] de la barre d'outils.
+
+= Ajouter une base de données =
+
+Pour ajouter une nouvelle base de données, il suffit de cliquer sur "Ajouter une base ..." puis de sélectionner soit le répertoire, soit le fichier contenant les données à importer.
+Le gestionnaire reconnaitra automatiquement le type de données importées et l'ajoutera dans la liste.
+Toute nouvelle base importée est automatiquement sélectionnée.
+
+= Changer les données sélectionnées =
+
+On ne peut sélectionner qu'une seule base d'un même type à la fois.
+Pour changer de base sélectionnée, il suffit de sélectionner la ligne correspondante et de cliquer sur le bouton "Sélectionner".
+En faisant cela, tous les éléments précédemment affichés correspondants à l'ancienne base seront supprimés de la vue et le "Sélecteur de données" sera mis à jour.
