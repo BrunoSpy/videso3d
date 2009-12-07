@@ -7,6 +7,6 @@ Videso 3D permet d'afficher toutes sortes de données :
  * [STPV Données Stpv] ;
  * [Trajectoires Trajectoires].
  
-Videso 3D peut gérer plusieurs versions de ces données : une fois [AjouterBDD importées], il est possible de [ChangerBDD sélectionner] la version que l'on souhaite ensuite afficher.
+Videso 3D peut gérer plusieurs versions de ces données : une fois [BDD importées], il est possible de [BDD sélectionner] la version que l'on souhaite ensuite afficher.
 
 Enfin, la vue 3D permet de [WWJ visualiser] ces données de manière interactive.

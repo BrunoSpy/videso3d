@@ -9,12 +9,14 @@ La façon la plus simple et la plus intuitive est de manipuler directement la vu
 || Faire une rotation || Cliquer-glisser avec le bouton droit, vers la gauche ou vers la droite. ||
 || Incliner la vue || Cliquer-glisser avec le bouton droit, vers le haut ou vers le bas. ||
 
+
 = Commandes accessibles au clavier =
 
 || * Action * || * Touche clavier * ||
 || Arrêter l'animation || Barre d'espace ||
 || Réinitialiser l'orientation || N ||
 || Réinitialiser l'orientation et l'inclinaison || R || 
+
 
 = Actions accessibles via la barre d'outils =
 
