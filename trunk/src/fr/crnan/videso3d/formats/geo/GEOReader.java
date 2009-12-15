@@ -33,7 +33,7 @@ import javax.swing.ProgressMonitorInputStream;
 /**
  * Lecteur de fichiers Elvira GEO.<br />
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class GEOReader {
 
@@ -62,7 +62,7 @@ private List<GEOTrack> tracks = new LinkedList<GEOTrack>();
 					new FileInputStream(file)));
 			int count = 0; //nombre de lignes lues
 			while(in.ready() && !geo && count < 10){//on ne lit que les 10 premières lignes pour détecter le type de fichier
-				if(in.readLine().startsWith("!	Version")){
+				if(in.readLine().startsWith("!	Version") || in.readLine().startsWith("!	voie")){
 					geo = true;
 				}
 				count++;
