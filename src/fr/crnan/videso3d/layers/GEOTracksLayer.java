@@ -33,7 +33,7 @@ import gov.nasa.worldwind.tracks.TrackPoint;
 /**
  * Layer contenant des tracks Elvira GEO et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class GEOTracksLayer extends TrajectoriesLayer {
 
@@ -49,15 +49,25 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 
 	private void showTrack(GEOTrack track){
 		LinkedList<Position> positions = new LinkedList<Position>();
+		Position position = Position.ZERO;
 		for(TrackPoint point : track.getTrackPoints()){
-			positions.add(point.getPosition());
+			if(!(point.getLatitude() == position.latitude.degrees  //only add a position if different from the previous position
+					&& point.getLongitude() == position.longitude.degrees
+					&& point.getElevation() == position.elevation)) {
+				positions.add(point.getPosition());
+				position = point.getPosition();
+			}
+			
 		}
-		VPolyline line = new VPolyline();
-		line.setPlain(true);
-		line.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
-		line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
-		line.setPositions(positions);
-		this.addRenderable(line);
+		if(positions.size()>1){ //only add a line if there's enough points
+			VPolyline line = new VPolyline();
+			line.setPlain(true);
+			line.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+			line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
+			line.setPositions(positions);
+			this.addRenderable(line);
+		}
+		
 	}
 
 	@Override

@@ -22,7 +22,7 @@ import gov.nasa.worldwind.tracks.TrackPoint;
  * Point d'une trajectoire Elvira GEO.<br />
  * Voir la description du format.
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class GEOTrackPoint implements TrackPoint {
 
@@ -32,9 +32,17 @@ public class GEOTrackPoint implements TrackPoint {
 	
 	public GEOTrackPoint(String sentence){
 		String[] words = sentence.split("\t");
+		String alt = words[7];
+		String modeC = words[6];
+		Double elev = 1000.0;
+		if(alt.equals("inv")) {
+			if(!modeC.equals("inv")) elev = new Double(modeC)*30.48;
+		} else {
+			elev = new Double(alt)*0.3048;
+		}
 		this.position = new Position(Angle.fromDegrees(new Double(words[4])),
 									Angle.fromDegrees(new Double(words[5])),
-									new Double(words[7])*0.3048);
+									elev);
 		Integer time = new Double(words[3]).intValue();
 		int heure = time / 3600;
 		time -= heure * 3600;
