@@ -139,7 +139,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	@Override
 	public void update() {
 		this.removeAllRenderables();
-		for(GEOTrack track : (selectedTracks.isEmpty() ? tracks : selectedTracks)){
+		for(GEOTrack track : (selectedTracks == null ? tracks : selectedTracks)){
 			this.showTrack(track);
 		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
