@@ -81,7 +81,7 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 		if(!(track instanceof OPASTrack) ){
 			throw new ClassFormatError("OPASTrack class required");
 		} else {
-			this.addTrack(track);
+			this.addTrack((OPASTrack)track);
 		}
 	}
 
