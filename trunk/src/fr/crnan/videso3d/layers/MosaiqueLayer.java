@@ -199,7 +199,7 @@ public class MosaiqueLayer extends LayerSet {
 				if(annotationTitle != null) {
 					annotation = annotationTitle;
 					annotation += "\nCarré "+square.getFirst()+ (square.getSecond() == 0 ? "" : "\nSous carré "+square.getSecond()) ;
-					annotation += "\nPlancher : "+String.format("%3.0f", altitude.getSecond()/30.48)+"\nPlafond : "+String.format("%3.0f", altitude.getFirst()/30.48);
+					annotation += "\nPlancher : "+String.format("%3.0f", altitude.getFirst()/30.48)+"\nPlafond : "+String.format("%3.0f", altitude.getSecond()/30.48);
 				}
 				this.colorieCarre(annotation, origine, square.getFirst(), square.getSecond(), width, height, size, altitude.getFirst(), altitude.getSecond(), hsens, vsens, numSens, attr, airspaceAttr);
 			}
