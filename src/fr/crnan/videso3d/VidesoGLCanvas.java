@@ -49,7 +49,10 @@ import fr.crnan.videso3d.layers.Routes3DLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.Secteur;
+import gov.nasa.worldwind.WorldWind;
+import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
+import gov.nasa.worldwind.data.DataDescriptor;
 import gov.nasa.worldwind.examples.util.LayerManagerLayer;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -57,12 +60,15 @@ import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.AnnotationLayer;
+import gov.nasa.worldwind.layers.BasicTiledImageLayer;
 import gov.nasa.worldwind.layers.LatLonGraticuleLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.layers.SurfaceShapeLayer;
+import gov.nasa.worldwind.layers.TiledImageLayer;
+import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
@@ -167,7 +173,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		LayerManagerLayer layerManager = new LayerManagerLayer(this);
 		layerManager.setEnabled(false); //réduit par défaut
 		this.getModel().getLayers().add(0, layerManager);
-				
+						
+		//mise à jour des calques de WorldWindInstalled
+		firePropertyChange("step", "", "Ajout des layers installés");
+		this.updateWWI();
+		
 		//layer d'accueil des objets séléctionnés
 		this.getModel().getLayers().add(selectedAirspaces);
 		
@@ -188,7 +198,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 		
 		this.buildStip();	
-			
+		
 		//position de départ centrée sur la France
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));
 		
@@ -213,6 +223,82 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			this.getModel().getLayers().addIfAbsent(layer);
 			layer.setEnabled(state);
 		}
+	}
+
+	/**
+	 * Insère un layer suffisamment haut dans la liste pour être derrière les PlaceNames
+	 * @param layer
+	 */
+    public void insertBeforePlacenames(Layer layer)
+    {
+        // Insert the layer into the layer list just before the placenames.
+        int compassPosition = 0;
+        LayerList layers = this.getModel().getLayers();
+        for (Layer l : layers)
+        {
+            if (l instanceof PlaceNameLayer)
+                compassPosition = layers.indexOf(l);
+        }
+        layers.add(compassPosition, layer);
+    }
+	/**
+	 * Mets à jour les layers installés dans WorldWindInstalled
+	 */
+	public void updateWWI(){
+		//code inspired by gov.nasa.worldwind.examples.InstalledData.synchronizeLayers(Iterable<DataDescriptor> descriptors, LayerList layerList)
+		
+		File installLocation = null;
+		for (java.io.File f : WorldWind.getDataFileStore().getLocations())
+		{
+			if (WorldWind.getDataFileStore().isInstallLocation(f.getPath()))
+			{
+				installLocation = f;
+				break;
+			}
+		}
+		java.util.List<? extends DataDescriptor> descriptors =
+			WorldWind.getDataFileStore().findDataDescriptors(installLocation.getPath());		 
+		
+		java.util.List<DataDescriptor> installedDescriptors = new java.util.ArrayList<DataDescriptor>();
+        for (DataDescriptor d : descriptors)
+            installedDescriptors.add(d);
+
+        java.util.List<Layer> uninstalledLayers = new java.util.ArrayList<Layer>();
+
+        // Remove layers with DataDescriptors that are no longer installed, and remove DataDescriptors that
+        // are already installed as a layer.
+        for (Layer layer : this.getModel().getLayers())
+        {
+            Object o = layer.getValue("DataSourceDescriptor");
+            if (o != null && o instanceof DataDescriptor)
+            {
+                DataDescriptor d = (DataDescriptor) o;
+                // If the layer references an installed DataDesriptor, then we can eliminate it from the list
+                // of new DataDescriptors.
+                if (installedDescriptors.contains(d))
+                    installedDescriptors.remove(d);
+                // If the layer references a DataDescriptor that is no longer installed,
+                // then remove that layer.
+                else
+                    uninstalledLayers.add(layer);
+            }
+        }
+
+        // Remove layers for uninstalled DataDescriptors.
+        for (Layer layer : uninstalledLayers)
+            this.getModel().getLayers().remove(layer);
+
+        // Add layers for installedDataDescriptors.
+        for (DataDescriptor d : installedDescriptors) {
+        	TiledImageLayer layer = new BasicTiledImageLayer(d);
+			layer.setNetworkRetrievalEnabled(false);
+			layer.setValue("DataSourceDescriptor", d);
+			if (d.getName() != null)
+				layer.setName(d.getName());
+			this.insertBeforePlacenames(layer);
+			layer.setEnabled(false); //don't show these layers by default 
+        }
+            
 	}
 	
 	/*--------------------------------------------------------------*/
@@ -990,7 +1076,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		return trajLayer;
 	}
 
+	/**
+	 * Nombre d'étapes de l'initialisation (utile pour le splashscreen
+	 * @return int
+	 */
 	public int getNumberInitSteps() {
-		return 5;
+		return 6;
 	}
 }

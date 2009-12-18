@@ -6,6 +6,7 @@
         <!-- The read locations are searched, in the given order, when World Wind needs a data or image file. -->
         <!-- The write location selected from the writeLocations list is searched before these locations. -->
        <location  wwDir="WorldWindData" isInstall="true" isMarkWhenUsed="true"/>
+       <location  wwDir="WorldWindInstalled" isInstall="true" isMarkWhenUsed="true"/>
     </readLocations>
     <writeLocations>
        <location wwDir="WorldWindData" create="true"/>
