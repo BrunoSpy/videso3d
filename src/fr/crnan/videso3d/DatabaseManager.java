@@ -368,6 +368,28 @@ public class DatabaseManager{
 				"ycautra int, " +
 				"carre int, " +
 		"nombre int)");
+		st.executeUpdate("create table lieu20 (id integer primary key autoincrement, " +
+				"oaci varchar(4))");
+		st.executeUpdate("create table lieu26 (id integer primary key autoincrement, " +
+				"oaci varchar(4), " +
+				"balise varchar(5), " +
+				"niveau int)");
+		st.executeUpdate("create table lieu27 (id integer primary key autoincrement, " +
+				"oaci varchar(4), " +
+				"balise varchar(5), " +
+				"niveau int)");
+		st.executeUpdate("create table lieu6 (id integer primary key autoincrement, " +
+				"oaci varchar(4), " +
+				"bal1 varchar(5), " +
+				"xfl1 int, " +
+				"bal2 varchar(5), " +
+				"xfl2 int, " +
+				"bal3 varchar(5), " +
+				"xfl3 int, " +
+				"bal4 varchar(5), " +
+				"xfl4 int, " +
+				"bal5 varchar(5), " +
+				"xfl5 int)");
 		this.addDatabase(name, Type.STPV, new SimpleDateFormat().format(new Date()));
 		st.close();
 	}

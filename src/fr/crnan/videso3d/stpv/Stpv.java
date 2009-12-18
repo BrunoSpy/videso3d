@@ -18,11 +18,13 @@ package fr.crnan.videso3d.stpv;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileParser;
@@ -68,12 +70,14 @@ public class Stpv extends FileParser{
 		try {
 			//on crée la connection à la db
 			this.conn = this.db.selectDB(Type.STPV, this.name);
+			this.conn.setAutoCommit(false);
 			//si la base de données n'existe pas
 			if(!this.db.databaseExists(this.name)){
 				//puis la structure de la base de donnée
 				this.db.createSTPV(this.name);
 				//et on remplit la bdd avec les données du fichier
 				this.getFromFiles();
+				this.conn.commit();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -162,11 +166,85 @@ public class Stpv extends FileParser{
 	}
 	
 	/**
-	 * Parse le fichier LIEU
+	 * Parse le fichier LIEU<br />
+	 * Prend en compte les LIEU 20, 26, 27, 6, 8 et 91
 	 * @param path Chemin vers le fichier LIEU
 	 */
 	private void setLieu(String path) {
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			while(in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("LIEU 20")){
+					this.insertLieu20(line);
+				} else if(line.startsWith("LIEU 26") || line.startsWith("LIEU 26B")){
+					this.insertLieu26(line);
+				}  else if(line.startsWith("LIEU 27") || line.startsWith("LIEU 27B")){
+					this.insertLieu27(line);
+				} else if(line.startsWith("LIEU 6")) {
+					this.insertLieu6(line);
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
 	}
+
+	private void insertLieu6(String line) throws SQLException {
+		PreparedStatement insert = this.conn.prepareStatement("insert into lieu6 (oaci, bal1, xfl1, bal2, xfl2, bal3, xfl3, bal4, xfl4, bal5, xfl5) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		insert.setString(1, line.substring(8, 12));
+		insert.setString(2, line.substring(14, 20));
+		insert.setInt(3, new Integer(line.substring(20, 25).trim()));
+		if(line.trim().length() > 36) {
+			insert.setString(4, line.substring(26, 31));
+			insert.setInt(5, new Integer(line.substring(34, 37).trim()));
+		}
+		if(line.trim().length() > 48){
+			insert.setString(6, line.substring(38, 43));
+			insert.setInt(7, new Integer(line.substring(46, 49).trim()));
+		}
+		if(line.trim().length() > 60){
+			insert.setString(8, line.substring(50, 56));
+			insert.setInt(9, new Integer(line.substring(58, 61).trim()));
+		}
+		if(line.trim().length() > 72){
+			insert.setString(10, line.substring(62, 68));
+			insert.setInt(11, new Integer(line.substring(70, 73).trim()));
+		}
+		insert.executeUpdate();
+	}
+
+
+
+	private void insertLieu27(String line) throws SQLException {
+		PreparedStatement insert = this.conn.prepareStatement("insert into lieu27 (oaci, balise, niveau) values (?, ?, ?)");
+		insert.setString(1, line.substring(8, 12));
+		insert.setString(2, line.substring(14, 19).trim());
+		insert.setInt(3, new Integer(line.substring(20, 23).trim()));
+		insert.executeUpdate();
+	}
+
+	private void insertLieu26(String line) throws SQLException {
+		PreparedStatement insert = this.conn.prepareStatement("insert into lieu26 (oaci, balise, niveau) values (?, ?, ?)");
+		insert.setString(1, line.substring(8, 12));
+		insert.setString(2, line.substring(14, 19).trim());
+		insert.setInt(3, new Integer(line.substring(20, 23).trim()));
+		insert.executeUpdate();
+	}
+
+
+
+	private void insertLieu20(String line) throws SQLException {
+		PreparedStatement insert = this.conn.prepareStatement("insert into lieu20 (oaci) values (?)");
+		insert.setString(1, line.substring(8, 12));
+		insert.executeUpdate();
+	}
+
+
 
 	@Override
 	public int numberFiles() {
