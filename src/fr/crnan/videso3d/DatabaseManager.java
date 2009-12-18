@@ -27,10 +27,12 @@ import java.sql.*;
 /**
  * Gère la base de données
  * @author Bruno Spyckerelle
- * @version 0.4.4
+ * @version 0.5
  */
-public class DatabaseManager{
+public final class DatabaseManager{
 
+	private static DatabaseManager instance = new DatabaseManager();
+	
 	/**
 	 * Types de base de données possibles
 	 */
@@ -68,7 +70,7 @@ public class DatabaseManager{
 	 * Crée une connection avec la base de données par défaut
 	 * @throws DatabaseError 
 	 */
-	public DatabaseManager(){
+	private DatabaseManager(){ //singleton
 		//connection par défaut
 		Statement st = null;
 		try {
@@ -104,13 +106,17 @@ public class DatabaseManager{
 		} 
 	}
 
+	public DatabaseManager getInstance(){
+		return instance;
+	}
+	
 	/**
 	 * Sélectionne une base de données
 	 * @param name Nom de la base de données à sélectionner
 	 * @return {@link Connection} Connection vers la base sélectionnée
 	 * @throws SQLException 
 	 */
-	public Connection selectDB(Type type, String name) throws SQLException{
+	public static Connection selectDB(Type type, String name) throws SQLException{
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
@@ -118,82 +124,82 @@ public class DatabaseManager{
 		}
 		switch (type) {
 		case STIP:
-			if(currentStip == null) {
-				currentStip = DriverManager.getConnection("jdbc:sqlite:"+name);
+			if(instance.currentStip == null) {
+				instance.currentStip = DriverManager.getConnection("jdbc:sqlite:"+name);
 			} else {
-				if(!currentStip.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
+				if(!instance.currentStip.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
 					//changement de base de données
-					currentStip.close();
-					currentStip = DriverManager.getConnection("jdbc:sqlite:"+name);
+					instance.currentStip.close();
+					instance.currentStip = DriverManager.getConnection("jdbc:sqlite:"+name);
 				}
 			}
-			return currentStip;
+			return instance.currentStip;
 		case STPV:
-			if(currentStpv == null) {
-				currentStpv = DriverManager.getConnection("jdbc:sqlite:"+name);
+			if(instance.currentStpv == null) {
+				instance.currentStpv = DriverManager.getConnection("jdbc:sqlite:"+name);
 			} else {
-				if(!currentStpv.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
+				if(!instance.currentStpv.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
 					//changement de base de données
-					currentStpv.close();
-					currentStpv = DriverManager.getConnection("jdbc:sqlite:"+name);
+					instance.currentStpv.close();
+					instance.currentStpv = DriverManager.getConnection("jdbc:sqlite:"+name);
 				}
 			}
-			return currentStpv;
+			return instance.currentStpv;
 		case EXSA:
-			if(currentExsa == null) {
-				currentExsa = DriverManager.getConnection("jdbc:sqlite:"+name);
+			if(instance.currentExsa == null) {
+				instance.currentExsa = DriverManager.getConnection("jdbc:sqlite:"+name);
 			} else {
-				if(!currentExsa.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
+				if(!instance.currentExsa.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
 					//changement de base de données
-					currentExsa.close();
-					currentExsa = DriverManager.getConnection("jdbc:sqlite:"+name);
+					instance.currentExsa.close();
+					instance.currentExsa = DriverManager.getConnection("jdbc:sqlite:"+name);
 				}
 			}
-			return currentExsa;
+			return instance.currentExsa;
 		case Ods:
-			if(currentODS == null) {
-				currentODS = DriverManager.getConnection("jdbc:sqlite:"+name);
+			if(instance.currentODS == null) {
+				instance.currentODS = DriverManager.getConnection("jdbc:sqlite:"+name);
 			} else {
-				if(!currentODS.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
+				if(!instance.currentODS.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
 					//changement de base de données
-					currentODS.close();
-					currentODS = DriverManager.getConnection("jdbc:sqlite:"+name);
+					instance.currentODS.close();
+					instance.currentODS = DriverManager.getConnection("jdbc:sqlite:"+name);
 				}
 			}
-			return currentODS;
+			return instance.currentODS;
 		case Edimap:
-			if(currentEdimap == null) {
-				currentEdimap = DriverManager.getConnection("jdbc:sqlite:"+name);
+			if(instance.currentEdimap == null) {
+				instance.currentEdimap = DriverManager.getConnection("jdbc:sqlite:"+name);
 			} else {
-				if(!currentEdimap.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
+				if(!instance.currentEdimap.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
 					//changement de base de données
-					currentEdimap.close();
-					currentEdimap = DriverManager.getConnection("jdbc:sqlite:"+name);
+					instance.currentEdimap.close();
+					instance.currentEdimap = DriverManager.getConnection("jdbc:sqlite:"+name);
 				}
 			}
-			return currentEdimap;
+			return instance.currentEdimap;
 		case PAYS:
-			if(currentPays == null) {
-				currentPays = DriverManager.getConnection("jdbc:sqlite:"+name);
+			if(instance.currentPays == null) {
+				instance.currentPays = DriverManager.getConnection("jdbc:sqlite:"+name);
 			} else {
-				if(!currentPays.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
+				if(!instance.currentPays.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
 					//changement de base de données
-					currentPays.close();
-					currentPays = DriverManager.getConnection("jdbc:sqlite:"+name);
+					instance.currentPays.close();
+					instance.currentPays = DriverManager.getConnection("jdbc:sqlite:"+name);
 				}
 			}
-			return currentPays;
+			return instance.currentPays;
 		case Databases:
-			if(databases == null) {
-				databases = DriverManager.getConnection("jdbc:sqlite:"+name);
+			if(instance.databases == null) {
+				instance.databases = DriverManager.getConnection("jdbc:sqlite:"+name);
 			} else {
-				if(!databases.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
+				if(!instance.databases.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
 					//changement de base de données
-					databases.close();
-					databases = DriverManager.getConnection("jdbc:sqlite:"+name);
+					instance.databases.close();
+					instance.databases = DriverManager.getConnection("jdbc:sqlite:"+name);
 				}
 			}
-			return databases;
+			return instance.databases;
 		default:
 			return null;
 		}
@@ -205,9 +211,9 @@ public class DatabaseManager{
 	 * @return Boolean Vrai si la base de données existe
 	 * @throws SQLException 
 	 */
-	public Boolean databaseExists(String name) throws SQLException{
+	public static Boolean databaseExists(String name) throws SQLException{
 		Boolean exists = false;
-		Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		ResultSet result = st.executeQuery("SELECT * FROM databases WHERE name = '"+name+"'");
 		if (result.next()) exists = true;
 		st.close();
@@ -219,9 +225,9 @@ public class DatabaseManager{
 	 * @param id de la base de données
 	 * @return Boolean True si la base est sélectionnée
 	 */
-	public Boolean isSelected(Integer id){
+	public static Boolean isSelected(Integer id){
 		try {
-			Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+			Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 			ResultSet rs = st.executeQuery("select * from databases where id='"+id+"' and selected = '1'");
 			if (rs.next()) {
 				return true;
@@ -240,13 +246,13 @@ public class DatabaseManager{
 	 * @param type Type de la base de données
 	 * @param date Date associée
 	 */
-	private void addDatabase(String name, Type type, String date){
+	private static void addDatabase(String name, Type type, String date){
 		try {
-			Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+			Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 			st.executeUpdate("UPDATE databases SET selected = 0 WHERE selected = 1 and type = '"+type.toString()+"'");
 			st.close();
 			String insert = "insert into databases (name, type, date, selected) values (?, ?, ?, ?)";
-			PreparedStatement insertDatabase = this.selectDB(Type.Databases, "databases").prepareStatement(insert);
+			PreparedStatement insertDatabase = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement(insert);
 			insertDatabase.setString(1, name);
 			insertDatabase.setString(2, type.toString());
 			insertDatabase.setString(3, date);
@@ -263,8 +269,8 @@ public class DatabaseManager{
 	 * @param name Nom de la base de données recevant les tables
 	 * @throws SQLException 
 	 */
-	public void createEXSA(String name) throws SQLException{
-		Statement st = this.selectDB(Type.EXSA, name).createStatement();
+	public static void createEXSA(String name) throws SQLException{
+		Statement st = DatabaseManager.selectDB(Type.EXSA, name).createStatement();
 		st.executeUpdate("create table caragener (id integer primary key autoincrement," +
 				"name varchar(20), " +
 				"date varchar(30), " +
@@ -352,7 +358,7 @@ public class DatabaseManager{
 				"portee int, " +
 				"deport boolean)");
 		//on ajoute le nom de la base
-		this.addDatabase(name, Type.EXSA, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, Type.EXSA, new SimpleDateFormat().format(new Date()));
 		st.close();
 	}
 	/**
@@ -360,8 +366,8 @@ public class DatabaseManager{
 	 * @param name Nom de la base recevant les tables
 	 * @throws SQLException 
 	 */
-	public void createSTPV(String name) throws SQLException {
-		Statement st = this.selectDB(Type.STPV, name).createStatement();
+	public static void createSTPV(String name) throws SQLException {
+		Statement st = DatabaseManager.selectDB(Type.STPV, name).createStatement();
 		st.executeUpdate("create table mosaique (id integer primary key autoincrement, " +
 				"type varchar(2), " +
 				"xcautra int, " +
@@ -390,7 +396,7 @@ public class DatabaseManager{
 				"xfl4 int, " +
 				"bal5 varchar(5), " +
 				"xfl5 int)");
-		this.addDatabase(name, Type.STPV, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, Type.STPV, new SimpleDateFormat().format(new Date()));
 		st.close();
 	}
 
@@ -399,14 +405,14 @@ public class DatabaseManager{
 	 * @param name Nom de la base recevant les tables
 	 * @throws SQLException 
 	 */
-	public void createODS(String name) throws SQLException {
-		Statement st = this.selectDB(Type.Ods, name).createStatement();
+	public static void createODS(String name) throws SQLException {
+		Statement st = DatabaseManager.selectDB(Type.Ods, name).createStatement();
 		st.executeUpdate("create table cartesdyn (id integer primary key autoincrement," +
 				"edimap varchar(16), " +
 				"str varchar(16),  " +
 				"secteur varchar(3)" +
 		")");
-		this.addDatabase(name, Type.Ods, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, Type.Ods, new SimpleDateFormat().format(new Date()));
 		st.close();
 	}
 
@@ -415,19 +421,19 @@ public class DatabaseManager{
 	 * @param name Nom de la base recevant les tables
 	 * @throws SQLException 
 	 */
-	public void createEdimap(String name, String path) throws SQLException {
-		Statement st = this.selectDB(Type.Edimap, name).createStatement();
+	public static void createEdimap(String name, String path) throws SQLException {
+		Statement st = DatabaseManager.selectDB(Type.Edimap, name).createStatement();
 		st.executeUpdate("create table cartes (id integer primary key autoincrement," +
 				"name varchar(32), " +
 				"type varchar(16), " +
 				"fichier varchar(64)" +
 		")");
-		PreparedStatement insertClef = this.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
+		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
 		insertClef.setString(1, "path");
 		insertClef.setString(2, name);
 		insertClef.setString(3, path);
 		insertClef.executeUpdate();
-		this.addDatabase(name, Type.Edimap, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, Type.Edimap, new SimpleDateFormat().format(new Date()));
 		st.close();
 		insertClef.close();
 	}
@@ -437,8 +443,8 @@ public class DatabaseManager{
 	 * @param name Nom de la base recevant les tables
 	 * @throws SQLException 
 	 */
-	public void createSTIP(String name) throws SQLException {
-		Statement st = this.selectDB(Type.STIP, name).createStatement();
+	public static void createSTIP(String name) throws SQLException {
+		Statement st = DatabaseManager.selectDB(Type.STIP, name).createStatement();
 		st.executeUpdate("create table balises (id integer primary key autoincrement," +
 				"name varchar(5), " +
 				"publicated boolean, " +
@@ -553,7 +559,7 @@ public class DatabaseManager{
 				"mod boolean, " +
 				"base int)");
 		//on référence la base de données
-		this.addDatabase(name, Type.STIP, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, Type.STIP, new SimpleDateFormat().format(new Date()));
 		st.close();
 	}
 	/**
@@ -561,8 +567,8 @@ public class DatabaseManager{
 	 * @param name Nome de la base
 	 * @throws SQLException 
 	 */
-	public void createPays(String name) throws SQLException{
-		Statement st = this.selectDB(Type.PAYS, name).createStatement();
+	public static void createPays(String name) throws SQLException{
+		Statement st = DatabaseManager.selectDB(Type.PAYS, name).createStatement();
 		//table contenant les données du fichier POINPAYS
 		st.executeUpdate("create table poinpays (id integer primary key autoincrement, " +
 				"ref varchar(6), " +
@@ -579,7 +585,7 @@ public class DatabaseManager{
 		"refcontour varchar(5))");
 		st.close();
 		//on référence la base de données
-		this.addDatabase(name, Type.PAYS, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, Type.PAYS, new SimpleDateFormat().format(new Date()));
 		
 	}
 
@@ -588,43 +594,43 @@ public class DatabaseManager{
 	 * @param name Nom de la base
 	 * @throws SQLException 
 	 */
-	public void deleteDatabase(String name, Type type) throws SQLException{
+	public static void deleteDatabase(String name, Type type) throws SQLException{
 		//fermeture de la connection courante
 		switch (type) {
 		case STPV:
-			if (this.currentStpv != null && this.currentStpv.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
-				this.currentStpv.close();
-				this.currentStpv = null;
+			if (instance.currentStpv != null && instance.currentStpv.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
+				instance.currentStpv.close();
+				instance.currentStpv = null;
 			}
 			break;
 		case EXSA:
-			if (this.currentExsa != null && this.currentExsa.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
-				this.currentExsa.close();
-				this.currentExsa = null;
+			if (instance.currentExsa != null && instance.currentExsa.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
+				instance.currentExsa.close();
+				instance.currentExsa = null;
 			}
 			break;
 		case Edimap:
-			if (this.currentEdimap != null && this.currentEdimap.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
-				this.currentEdimap.close();
-				this.currentEdimap = null;
+			if (instance.currentEdimap != null && instance.currentEdimap.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
+				instance.currentEdimap.close();
+				instance.currentEdimap = null;
 			}
 			break;
 		case STIP:
-			if (this.currentStip != null && this.currentStip.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
-				this.currentStip.close();
-				this.currentStip = null;
+			if (instance.currentStip != null && instance.currentStip.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
+				instance.currentStip.close();
+				instance.currentStip = null;
 			}
 			break;
 		case Ods:
-			if (this.currentODS != null && this.currentODS.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
-				this.currentODS.close();
-				this.currentODS = null;
+			if (instance.currentODS != null && instance.currentODS.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
+				instance.currentODS.close();
+				instance.currentODS = null;
 			}
 			break;
 		case PAYS:
-			if (this.currentPays != null && this.currentPays.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
-				this.currentPays.close();
-				this.currentPays = null;
+			if (instance.currentPays != null && instance.currentPays.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
+				instance.currentPays.close();
+				instance.currentPays = null;
 			}
 			break;
 		default:
@@ -642,7 +648,7 @@ public class DatabaseManager{
 				e.printStackTrace();
 			}
 		}
-		Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		//on supprime l'entrée dans la db
 		st.executeUpdate("delete from databases where name = '" + name+"'");
 		//puis on supprime les clefs correspondantes
@@ -655,9 +661,9 @@ public class DatabaseManager{
 	 * @param id Id de la base
 	 * @throws SQLException 
 	 */
-	public void deleteDatabase(Integer id) throws SQLException{
+	public static void deleteDatabase(Integer id) throws SQLException{
 		//on recherche d'abord le nom correspondant
-		Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		ResultSet rs = st.executeQuery("select name, type from databases where id = " + id.toString());
 		rs.next();
 		String name = rs.getString(1);
@@ -677,7 +683,7 @@ public class DatabaseManager{
 			t = Type.PAYS;
 		}
 		st.close();
-		this.deleteDatabase(name, t);
+		DatabaseManager.deleteDatabase(name, t);
 	}
 
 	/**
@@ -686,30 +692,30 @@ public class DatabaseManager{
 	 * @param type Type de la base de données
 	 * @throws SQLException 
 	 */
-	public void selectDatabase(Integer id, Type type) throws SQLException {
-		Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+	public static void selectDatabase(Integer id, Type type) throws SQLException {
+		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		st.executeUpdate("update databases set selected = 0 where type = '"+type.toString()+"'");
 		st.executeUpdate("update databases set selected = 1 where id ='"+id+"'");
 		ResultSet result = st.executeQuery("select name from databases where id ='"+id+"'");
 		result.next();
-		this.selectDB(type, result.getString(1));
+		DatabaseManager.selectDB(type, result.getString(1));
 		result.close();
 		st.close();
 	}
 	
-	public void selectDatabase(Integer id, String type) throws SQLException {
+	public static void selectDatabase(Integer id, String type) throws SQLException {
 		if(type.equals("STIP")) {
-			this.selectDatabase(id, Type.STIP);
+			DatabaseManager.selectDatabase(id, Type.STIP);
 		} else if(type.equals("PAYS")){
-			this.selectDatabase(id, Type.PAYS);
+			DatabaseManager.selectDatabase(id, Type.PAYS);
 		} else if(type.equals("STPV")){
-			this.selectDatabase(id, Type.STPV);
+			DatabaseManager.selectDatabase(id, Type.STPV);
 		} else if(type.equals("EXSA")){
-			this.selectDatabase(id, Type.EXSA);
+			DatabaseManager.selectDatabase(id, Type.EXSA);
 		} else if(type.equals("Edimap")){
-			this.selectDatabase(id, Type.Edimap);
+			DatabaseManager.selectDatabase(id, Type.Edimap);
 		} else if(type.equals("Ods")){
-			this.selectDatabase(id, Type.Ods);
+			DatabaseManager.selectDatabase(id, Type.Ods);
 		}
 	}
 
@@ -717,12 +723,12 @@ public class DatabaseManager{
 	 * Désélectionne la base de données sélectionnée de type <code>type</code>
 	 * @param type de la base de données
 	 */
-	public void unselectDatabase(Type type) throws SQLException{
-		Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+	public static void unselectDatabase(Type type) throws SQLException{
+		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		ResultSet result = st.executeQuery("select * from databases where selected = 1 and type = '"+type.toString()+"'");
 		if(result.next()){
 			int id = result.getInt("id");
-			this.unselectDatabase(id);
+			DatabaseManager.unselectDatabase(id);
 		}
 	}
 	
@@ -730,8 +736,8 @@ public class DatabaseManager{
 	 * Désélectionne une base de données
 	 * @param id de la base de données
 	 */
-	public void unselectDatabase(Integer id) throws SQLException{
-		Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+	public static void unselectDatabase(Integer id) throws SQLException{
+		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		st.executeUpdate("update databases set selected = 0 where id ='"+id+"'");
 		st.close();
 	}
@@ -743,15 +749,15 @@ public class DatabaseManager{
 	 * @return Statement
 	 * @throws SQLException 
 	 */
-	public Statement getCurrent(Type type) throws SQLException{
+	public static Statement getCurrent(Type type) throws SQLException{
 		if(type.equals(Type.Databases)){
-			return this.selectDB(Type.Databases, "databases").createStatement();
+			return DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		} else {
-			Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+			Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 			ResultSet result = st.executeQuery("select name from databases where selected = 1 and type = '"+type.toString()+"'");
 			if(result.next()) {
 				String connectionName = result.getString(1) ;
-				return this.selectDB(type, connectionName).createStatement();
+				return DatabaseManager.selectDB(type, connectionName).createStatement();
 			} else {
 				return null;
 			}
@@ -765,8 +771,8 @@ public class DatabaseManager{
 	 * @return QSQLDatabase
 	 * @throws SQLException 
 	 */
-	public String getCurrentName(Type type) throws SQLException{
-		Statement st = this.selectDB(Type.Databases, "databases").createStatement();
+	public static String getCurrentName(Type type) throws SQLException{
+		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		String name = null;
 		ResultSet rs = st.executeQuery("select name from databases where selected = 1 and type = '"+type+"'");
 		while(rs.next()){
@@ -780,8 +786,8 @@ public class DatabaseManager{
 	 * @return {@link Statement}
 	 * @throws SQLException 
 	 */
-	public Statement getCurrentStip() throws SQLException {
-		return this.getCurrent(Type.STIP);
+	public static Statement getCurrentStip() throws SQLException {
+		return DatabaseManager.getCurrent(Type.STIP);
 	}
 
 	/**
@@ -789,8 +795,8 @@ public class DatabaseManager{
 	 * @return {@link Statement}
 	 * @throws SQLException
 	 */
-	public Statement getCurrentStpv() throws SQLException {
-		return this.getCurrent(Type.STPV);
+	public static Statement getCurrentStpv() throws SQLException {
+		return DatabaseManager.getCurrent(Type.STPV);
 	}
 
 	/**
@@ -798,8 +804,8 @@ public class DatabaseManager{
 	 * @return {@link Statement}
 	 * @throws SQLException 
 	 */
-	public Statement getCurrentExsa() throws SQLException {
-		return this.getCurrent(Type.EXSA);
+	public static Statement getCurrentExsa() throws SQLException {
+		return DatabaseManager.getCurrent(Type.EXSA);
 	}
 
 	/**
@@ -807,19 +813,21 @@ public class DatabaseManager{
 	 * @return {@link Statement}
 	 * @throws SQLException 
 	 */
-	public Statement getCurrentEdimap() throws SQLException {
-		return this.getCurrent(Type.Edimap);
+	public static Statement getCurrentEdimap() throws SQLException {
+		return DatabaseManager.getCurrent(Type.Edimap);
 	}
 
-	public void closeAll(){
+	
+	
+	public static void closeAll(){
 			try {
-				if(currentPays != null) { currentPays.close(); currentPays = null;}
-				if(currentStip != null) { currentStip.close();currentStip= null;}
-				if(currentExsa != null) { currentExsa.close();currentExsa= null;}
-				if(currentStpv != null) { currentStpv.close();currentStpv= null;}
-				if(currentEdimap != null) { currentEdimap.close();currentEdimap= null;}
-				if(currentODS != null) { currentODS.close();currentODS = null;}
-				if(databases != null) { databases.close(); databases = null;}
+				if(instance.currentPays != null) { instance.currentPays.close(); instance.currentPays = null;}
+				if(instance.currentStip != null) { instance.currentStip.close();instance.currentStip= null;}
+				if(instance.currentExsa != null) { instance.currentExsa.close();instance.currentExsa= null;}
+				if(instance.currentStpv != null) { instance.currentStpv.close();instance.currentStpv= null;}
+				if(instance.currentEdimap != null) { instance.currentEdimap.close();instance.currentEdimap= null;}
+				if(instance.currentODS != null) { instance.currentODS.close();instance.currentODS = null;}
+				if(instance.databases != null) { instance.databases.close(); instance.databases = null;}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

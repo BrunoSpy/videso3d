@@ -68,13 +68,11 @@ public class StrView extends JPanel {
 	
 	private ItemCheckListener itemCheckListener = new ItemCheckListener();
 	
-	private DatabaseManager db;
 	private VidesoGLCanvas wwd;
 	
 	private JRadioButton flat;
 	
-	public StrView( final VidesoGLCanvas wwd, DatabaseManager db) {
-		this.db = db;
+	public StrView( final VidesoGLCanvas wwd) {
 		this.wwd = wwd;
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -110,7 +108,7 @@ public class StrView extends JPanel {
 		this.add(stylePanel);
 		
 		try {
-			if(this.db.getCurrentExsa() != null) {
+			if(DatabaseManager.getCurrentExsa() != null) {
 				this.add(this.buildPanel(mosaiques, "select type from centmosai"));
 				this.add(this.buildPanel(capa, "select DISTINCT abonne from ficaafniv"));
 				this.add(this.buildPanel(dyn, "select DISTINCT abonne from ficaafnic"));
@@ -128,7 +126,7 @@ public class StrView extends JPanel {
 		panel.setLayout(new GridLayout(0, 3));
 		int i = 0;
 		try {
-			Statement st = this.db.getCurrentExsa();
+			Statement st = DatabaseManager.getCurrentExsa();
 			ResultSet rs = st.executeQuery(query);
 			while(rs.next()){
 				JCheckBox chk = new JCheckBox(rs.getString(1));

@@ -62,8 +62,8 @@ public class Exsa extends FileParser {
 	 * @param path Chemin vers le fichier
 	 * @param db Gestionnaire de bdd
 	 */
-	public Exsa(String path, DatabaseManager db) {
-		super(path, db);
+	public Exsa(String path) {
+		super(path);
 	}
 	
 
@@ -73,11 +73,11 @@ public class Exsa extends FileParser {
 			//on récupère le nom de la base de données
 			this.getName();
 			//on crée la connection avec bdd avec ce nom
-			this.conn = this.db.selectDB(Type.EXSA, this.name);
+			this.conn = DatabaseManager.selectDB(Type.EXSA, this.name);
 			this.conn.setAutoCommit(false);
-			if(!this.db.databaseExists(this.name)){
+			if(!DatabaseManager.databaseExists(this.name)){
 				//puis la structure de la base de donnée
-				this.db.createEXSA(this.name);
+				DatabaseManager.createEXSA(this.name);
 				//et on remplit la bdd avec les données du fichier
 				this.getFromFiles();
 				this.conn.commit();
@@ -94,7 +94,7 @@ public class Exsa extends FileParser {
 	public void done(){
 		if(this.isCancelled()){
 			try {
-				this.db.deleteDatabase(name, Type.EXSA);
+				DatabaseManager.deleteDatabase(name, Type.EXSA);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

@@ -41,8 +41,6 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 @SuppressWarnings("serial")
 public class DataExplorer extends JPanel {
 
-	private DatabaseManager db; 
-
 	private VidesoGLCanvas wwd;
 
 	private JTabbedPane tabs = new JTabbedPane();
@@ -57,9 +55,8 @@ public class DataExplorer extends JPanel {
 	 * @param db {@link DatabaseManager} Association avec la gestionnaire de db
 	 * @param wwd {@link VidesoGLCanvas} Association avec la vue 3D
 	 */
-	public DataExplorer(DatabaseManager db, VidesoGLCanvas wwd){
+	public DataExplorer(VidesoGLCanvas wwd){
 
-		this.db = db; 
 		this.wwd = wwd;
 
 		setLayout(new BorderLayout());
@@ -95,8 +92,8 @@ public class DataExplorer extends JPanel {
 	public void updateStipView() {		
 		if(stip == null){
 			try {
-				if(this.db.getCurrentStip() != null){
-					stip = new StipView(wwd, db);
+				if(DatabaseManager.getCurrentStip() != null){
+					stip = new StipView(wwd);
 					tabs.add("Stip", stip);
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {
@@ -104,7 +101,7 @@ public class DataExplorer extends JPanel {
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							try {
-								db.unselectDatabase(Type.STIP);
+								DatabaseManager.unselectDatabase(Type.STIP);
 								wwd.buildStip();
 								stip = null;
 							} catch (SQLException e1) {
@@ -119,9 +116,9 @@ public class DataExplorer extends JPanel {
 			}
 		} else {
 			try {
-				if(this.db.getCurrentStip() != null){
+				if(DatabaseManager.getCurrentStip() != null){
 					int i = tabs.indexOfComponent(stip);
-					stip = new StipView(wwd, db);
+					stip = new StipView(wwd);
 					tabs.setComponentAt(i, stip);
 				} else {
 					int i = tabs.indexOfComponent(stip);
@@ -140,15 +137,15 @@ public class DataExplorer extends JPanel {
 	public void updateStrView() {
 		if(exsa == null){
 			try {
-				if(this.db.getCurrentExsa() != null){
-					exsa = this.buildTab(new StrView(wwd, db));
+				if(DatabaseManager.getCurrentExsa() != null){
+					exsa = this.buildTab(new StrView(wwd));
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {
 						
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							try {
-								db.unselectDatabase(Type.EXSA);
+								DatabaseManager.unselectDatabase(Type.EXSA);
 								wwd.removeMosaiques();
 								exsa = null;
 							} catch (SQLException e1) {
@@ -164,9 +161,9 @@ public class DataExplorer extends JPanel {
 			}
 		} else {
 			try {
-				if(this.db.getCurrentExsa() != null){
+				if(DatabaseManager.getCurrentExsa() != null){
 					int i = tabs.indexOfComponent(exsa);
-					exsa = this.buildTab(new StrView(wwd, db));
+					exsa = this.buildTab(new StrView(wwd));
 					tabs.setComponentAt(i, exsa);
 				} else {
 					int i = tabs.indexOfComponent(exsa);
@@ -185,15 +182,15 @@ public class DataExplorer extends JPanel {
 	public void updateStpvView() {
 		if(stpv == null){
 			try {
-				if(this.db.getCurrentStpv() != null){
-					stpv = new StpvView(wwd, db);
+				if(DatabaseManager.getCurrentStpv() != null){
+					stpv = new StpvView(wwd);
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {
 						
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							try {
-								db.unselectDatabase(Type.STPV);
+								DatabaseManager.unselectDatabase(Type.STPV);
 								stpv = null;
 							} catch (SQLException e1) {
 								e1.printStackTrace();
@@ -208,9 +205,9 @@ public class DataExplorer extends JPanel {
 			}
 		} else {
 			try {
-				if(this.db.getCurrentStpv() != null){
+				if(DatabaseManager.getCurrentStpv() != null){
 					int i = tabs.indexOfComponent(stpv);
-					stpv = new StpvView(wwd, db);
+					stpv = new StpvView(wwd);
 					tabs.setComponentAt(i, stpv);
 				} else {
 					int i = tabs.indexOfComponent(stpv);
@@ -229,15 +226,15 @@ public class DataExplorer extends JPanel {
 	public void updateEdimapView() {
 		if(edimap == null){
 			try {
-				if(this.db.getCurrentEdimap() != null){
-					edimap = new EdimapView(wwd, db);
+				if(DatabaseManager.getCurrentEdimap() != null){
+					edimap = new EdimapView(wwd);
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {
 						
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							try {
-								db.unselectDatabase(Type.Edimap);
+								DatabaseManager.unselectDatabase(Type.Edimap);
 								wwd.removeAllEdimapLayers();
 								edimap = null;
 							} catch (SQLException e1) {
@@ -253,9 +250,9 @@ public class DataExplorer extends JPanel {
 			}
 		} else {
 			try {
-				if(this.db.getCurrentEdimap() != null){
+				if(DatabaseManager.getCurrentEdimap() != null){
 					int i = tabs.indexOfComponent(edimap);
-					edimap = new EdimapView(wwd, db);
+					edimap = new EdimapView(wwd);
 					tabs.setComponentAt(i, edimap);
 				} else {
 					int i = tabs.indexOfComponent(edimap);

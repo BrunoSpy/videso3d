@@ -61,8 +61,8 @@ public class Stip extends FileParser{
 		super();
 	}
 	
-	public Stip(String path, DatabaseManager db) {
-		super(path, db);
+	public Stip(String path) {
+		super(path);
 	}
 
 	@Override
@@ -71,11 +71,11 @@ public class Stip extends FileParser{
 		this.getName();
 		try {
 			//création de la connection à la base de données
-			this.conn = this.db.selectDB(Type.STIP, this.name);
+			this.conn = DatabaseManager.selectDB(Type.STIP, this.name);
 			this.conn.setAutoCommit(false); //fixes performance issue
-			if(!this.db.databaseExists(this.name)){
+			if(!DatabaseManager.databaseExists(this.name)){
 				//création de la structure de la base de données
-				this.db.createSTIP(this.name);
+				DatabaseManager.createSTIP(this.name);
 				//parsing des fichiers et stockage en base
 				this.getFromFiles();
 				try {
@@ -94,7 +94,7 @@ public class Stip extends FileParser{
 	public void done(){
 		if(this.isCancelled()){//si le parsing a été annulé, on fait le ménage
 			try {
-				this.db.deleteDatabase(name, Type.STIP);
+				DatabaseManager.deleteDatabase(name, Type.STIP);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

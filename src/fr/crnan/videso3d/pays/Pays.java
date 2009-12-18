@@ -63,8 +63,8 @@ public class Pays extends FileParser {
 		super();
 	}
 	
-	public Pays(String path, DatabaseManager db){
-		super(path, db);
+	public Pays(String path){
+		super(path);
 	}
 	
 	@Override
@@ -212,11 +212,11 @@ public class Pays extends FileParser {
 		//récupération du nom de la base à créer
 		this.getName();
 		try {
-			this.conn = this.db.selectDB(Type.PAYS, this.name);
+			this.conn = DatabaseManager.selectDB(Type.PAYS, this.name);
 			this.conn.setAutoCommit(false);
-			if(!this.db.databaseExists(this.name)){
+			if(!DatabaseManager.databaseExists(this.name)){
 				//création de la structure de la base de données
-				this.db.createPays(this.name);
+				DatabaseManager.createPays(this.name);
 				//parsing des fichiers et stockage en base
 				this.getFromFiles();
 			}
@@ -229,7 +229,7 @@ public class Pays extends FileParser {
 	public void done(){
 		if(this.isCancelled()){
 			try {
-				this.db.deleteDatabase(name, Type.PAYS);
+				DatabaseManager.deleteDatabase(name, Type.PAYS);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

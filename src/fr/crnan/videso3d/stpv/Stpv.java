@@ -57,10 +57,9 @@ public class Stpv extends FileParser{
 	/**
 	 * Construit la bdd à partir des fichiers dans path
 	 * @param path Chemin vers le répertoire contenant la BDS
-	 * @param db Gestionnaire de base de données
 	 */
-	public Stpv(String path, DatabaseManager db) {
-		super(path, db);
+	public Stpv(String path) {
+		super(path);
 	}
 	
 	
@@ -69,12 +68,12 @@ public class Stpv extends FileParser{
 		this.getName();
 		try {
 			//on crée la connection à la db
-			this.conn = this.db.selectDB(Type.STPV, this.name);
+			this.conn = DatabaseManager.selectDB(Type.STPV, this.name);
 			this.conn.setAutoCommit(false);
 			//si la base de données n'existe pas
-			if(!this.db.databaseExists(this.name)){
+			if(!DatabaseManager.databaseExists(this.name)){
 				//puis la structure de la base de donnée
-				this.db.createSTPV(this.name);
+				DatabaseManager.createSTPV(this.name);
 				//et on remplit la bdd avec les données du fichier
 				this.getFromFiles();
 				this.conn.commit();
@@ -89,7 +88,7 @@ public class Stpv extends FileParser{
 	public void done(){
 		if(this.isCancelled()){
 			try {
-				this.db.deleteDatabase(name, Type.STPV);
+				DatabaseManager.deleteDatabase(name, Type.STPV);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

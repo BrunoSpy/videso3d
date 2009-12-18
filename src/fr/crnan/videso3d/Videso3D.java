@@ -40,7 +40,7 @@ public class Videso3D {
 				// Create an AppFrame and immediately make it visible. As per Swing convention, this
 				// is done within an invokeLater call so that it executes on an AWT thread.
 			
-				new MainWindow(new DatabaseManager()).setVisible(true);
+				new MainWindow().setVisible(true);
 			}
 		});
 	}

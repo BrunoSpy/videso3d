@@ -36,6 +36,7 @@ import fr.crnan.videso3d.VidesoGLCanvas;
  * @author Bruno Spyckerelle
  * @version 0.1
  */
+@SuppressWarnings("serial")
 public class StpvView extends JPanel {
 
 	/**
@@ -46,17 +47,15 @@ public class StpvView extends JPanel {
 	private ItemCheckListener itemCheckListener = new ItemCheckListener();
 	
 	private VidesoGLCanvas wwd;
-	private DatabaseManager db;
 	
-	public StpvView(VidesoGLCanvas wwd, DatabaseManager db){
+	public StpvView(VidesoGLCanvas wwd){
 		this.wwd = wwd;
-		this.db = db;
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		mosaique.setBorder(BorderFactory.createTitledBorder("Mosaique"));
 		try{
-			if(this.db.getCurrentStpv() != null) {
+			if(DatabaseManager.getCurrentStpv() != null) {
 				this.add(buildPanel(mosaique, "select type from mosaique"));
 				
 				this.add(Box.createVerticalGlue());
@@ -70,7 +69,7 @@ public class StpvView extends JPanel {
 		panel.setLayout(new GridLayout(0, 3));
 		int i = 0;
 		try {
-			Statement st = this.db.getCurrentStpv();
+			Statement st = DatabaseManager.getCurrentStpv();
 			ResultSet rs = st.executeQuery(query);
 			while(rs.next()){
 				JCheckBox chk = new JCheckBox(rs.getString(1));
