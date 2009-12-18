@@ -69,11 +69,8 @@ public class DatabaseManagerUI extends JFrame {
 		
 	private static ProgressMonitor progressMonitor;
 	
-	private final DatabaseManager db;
-	
-	public DatabaseManagerUI(final DatabaseManager db) {
-		this.db = db;
-		
+	public DatabaseManagerUI() {
+
 		this.setTitle("Gestion des bases de données");
 		
 		this.setPreferredSize(new Dimension(500, 300));
@@ -104,7 +101,7 @@ public class DatabaseManagerUI extends JFrame {
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if(table.getSelectedRow() != -1 && db.isSelected(((DBTableModel)table.getModel()).getId(table.convertRowIndexToModel(table.getSelectedRow())))){
+				if(table.getSelectedRow() != -1 && DatabaseManager.isSelected(((DBTableModel)table.getModel()).getId(table.convertRowIndexToModel(table.getSelectedRow())))){
 					select.setEnabled(false);
 				} else { 
 					select.setEnabled(true);
@@ -140,7 +137,7 @@ public class DatabaseManagerUI extends JFrame {
 			String suffix = index == -1 ? "" : file.getName().substring(index);
 			if(suffix.equalsIgnoreCase(".lst") || suffix.equalsIgnoreCase(".txt")){
 				//import données EXSA
-				Exsa exsa = new Exsa(file.getAbsolutePath(), this.db);
+				Exsa exsa = new Exsa(file.getAbsolutePath());
 				this.getDatas(exsa, "Import des données EXSA", "EXSA");
 				return;
 			} else {
@@ -150,10 +147,10 @@ public class DatabaseManagerUI extends JFrame {
 		
 		List<File> files = Arrays.asList(file.listFiles());
 		if(files.contains(new File(file.getAbsolutePath()+"/LIEUX"))){//une méthode comme une autre pour vérifier que le dossier est une dossier de données STIP
-			Stip stip = new Stip(file.getAbsolutePath(), this.db);
+			Stip stip = new Stip(file.getAbsolutePath());
 			this.getDatas(stip, "Import des données STIP", "STIP");
 		} else if(files.contains(new File(file.getAbsolutePath()+"/LIEU"))) {//une méthode comme une autre pour vérifier que le dossier est une dossier de données STPV
-			Stpv stpv = new Stpv(file.getAbsolutePath(),this.db);
+			Stpv stpv = new Stpv(file.getAbsolutePath());
 			this.getDatas(stpv, "Import des données STPV", "STPV");
 		} else if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))
 				|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))
@@ -163,10 +160,10 @@ public class DatabaseManagerUI extends JFrame {
 			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))) caracJeuPath = "carac_jeu";
 			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))) caracJeuPath = "carac_jeu.nct";
 			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) caracJeuPath = "carac_jeu.NCT";
-			Cartes cartes = new Cartes(file.getAbsolutePath(),caracJeuPath,this.db);
+			Cartes cartes = new Cartes(file.getAbsolutePath(),caracJeuPath);
 			this.getDatas(cartes, "Import des données EDIMAP", "Edimap");
 		} else if(files.contains(new File(file.getAbsolutePath()+"/PAYS"))) {
-			Pays pays = new Pays(file.getAbsolutePath(), this.db);
+			Pays pays = new Pays(file.getAbsolutePath());
 			this.getDatas(pays, "Import des contours des pays", "PAYS");
 		} else if(files.contains(new File(file.getAbsolutePath()+"/CartesDynamiques.csv"))){
 //			Ods ods = new Ods(file.absolutePath(), this.db);
@@ -219,7 +216,7 @@ public class DatabaseManagerUI extends JFrame {
 		
 		public DBTableModel(){
 			try {
-				Statement st = db.getCurrent(Type.Databases);
+				Statement st = DatabaseManager.getCurrent(Type.Databases);
 				ResultSet rs = st.executeQuery("select * from databases");
 				while(rs.next()){
 					Vector<Object> line = new Vector<Object>();
@@ -292,7 +289,7 @@ public class DatabaseManagerUI extends JFrame {
 		public void update(){
 			data.removeAllElements();
 			try {
-				Statement st = db.getCurrent(Type.Databases);
+				Statement st = DatabaseManager.getCurrent(Type.Databases);
 				ResultSet rs = st.executeQuery("select * from databases");
 				while(rs.next()){
 					Vector<Object> line = new Vector<Object>();
@@ -325,7 +322,7 @@ public class DatabaseManagerUI extends JFrame {
 				int index = table.convertRowIndexToModel(table.getSelectionModel().getAnchorSelectionIndex());
 				try {
 					String type = (String)table.getModel().getValueAt(index, 2);
-					db.selectDatabase((Integer)((DBTableModel)table.getModel()).getId(index), type);
+					DatabaseManager.selectDatabase((Integer)((DBTableModel)table.getModel()).getId(index), type);
 					//Mise à jour de la vue
 					((DBTableModel)table.getModel()).select(index);
 					firePropertyChange("baseChanged", "", type);
@@ -337,8 +334,8 @@ public class DatabaseManagerUI extends JFrame {
 				try {
 					String type = (String)table.getModel().getValueAt(index, 2);
 					Integer id = (Integer)((DBTableModel)table.getModel()).getId(index);
-					Boolean changed = db.isSelected(id);
-					db.deleteDatabase(id);
+					Boolean changed = DatabaseManager.isSelected(id);
+					DatabaseManager.deleteDatabase(id);
 					//on n'envoit le changement de base que si la base supprimée était sélectionnée
 					if(changed) firePropertyChange("baseChanged", "", type);
 					((DBTableModel)table.getModel()).delete(index);

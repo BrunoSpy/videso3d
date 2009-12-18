@@ -79,10 +79,7 @@ public class Cartes extends FileParser{
 	 * Liste des cartes crées
 	 */
 	HashMap<String, Carte> cartes = new HashMap<String, Carte>();
-	
-	public Cartes(){
-		super();
-	}
+
 	
 	/**
 	 * Récupère les données du fichier carac_jeu
@@ -110,24 +107,21 @@ public class Cartes extends FileParser{
 	 * @param carac_jeu String Chemin vers le fichier carac_jeu
 	 * @param db Gestionnaire de base de données
 	 */
-	public Cartes(String absoluteDirPath, String carac_jeu, DatabaseManager db) {
+	public Cartes(String absoluteDirPath, String carac_jeu) {
 		this.path = absoluteDirPath;
-		this.db = db;
 		this.carac_jeu = carac_jeu;
 	}
 
 	/**
 	 * Récupère les données des cartes en base de données
-	 * @param db Gestionnaire de base de données
 	 */
-	public Cartes(DatabaseManager db){
-		this.db = db;
+	public Cartes(){
 		this.cartesDynamiques = new LinkedList<Entity>();
 		this.cartesStatiques = new LinkedList<Entity>();		
 		this.secteurs = new LinkedList<Entity>();
 		try {
 			//TODO prendre en compte la possibilité qu'il n'y ait pas de bdd Edimap
-			Statement edimapDB = this.db.getCurrentEdimap();
+			Statement edimapDB = DatabaseManager.getCurrentEdimap();
 			if(edimapDB != null){
 				ResultSet rs = edimapDB.executeQuery("select * from cartes where type = 'dynamique' order by name");
 				while(rs.next()){
@@ -164,10 +158,10 @@ public class Cartes extends FileParser{
 	@Override
 	protected void getFromFiles() {
 		try {
-			this.conn = this.db.selectDB(DatabaseManager.Type.Edimap, this.version);
+			this.conn = DatabaseManager.selectDB(DatabaseManager.Type.Edimap, this.version);
 			this.conn.setAutoCommit(false); //fixes performance issue
-			if(!this.db.databaseExists(this.version)){
-				this.db.createEdimap(this.version, this.path);
+			if(!DatabaseManager.databaseExists(this.version)){
+				DatabaseManager.createEdimap(this.version, this.path);
 				this.insertCartes();
 				try {
 					this.conn.commit();
@@ -258,12 +252,12 @@ public class Cartes extends FileParser{
 		if(cartes.containsKey(name)) {
 			return cartes.get(name);
 		} else {
-			Statement st = this.db.getCurrent(DatabaseManager.Type.Databases);
-			ResultSet rs = st.executeQuery("select * from clefs where name='path' and type='"+this.db.getCurrentName(DatabaseManager.Type.Edimap)+"'");
+			Statement st = DatabaseManager.getCurrent(DatabaseManager.Type.Databases);
+			ResultSet rs = st.executeQuery("select * from clefs where name='path' and type='"+DatabaseManager.getCurrentName(DatabaseManager.Type.Edimap)+"'");
 			if(rs.next()){
 				this.path = rs.getString(4);
 			} 
-			st = this.db.getCurrentEdimap();
+			st = DatabaseManager.getCurrentEdimap();
 			rs = st.executeQuery("select * from cartes where name='"+name+"'");
 			rs.next();
 			String cartePath = this.path + "/"+ rs.getString(4) + ".NCT"; //TODO gérer l'extension

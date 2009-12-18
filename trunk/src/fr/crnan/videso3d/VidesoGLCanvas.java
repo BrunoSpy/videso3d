@@ -159,8 +159,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Initialise les différents objets graphiques
 	 */
-	public void initialize(DatabaseManager db){		
-		this.db = db;
+	public void initialize(){		
 		
 		this.addSelectListener(new AirspaceListener(this));		
 

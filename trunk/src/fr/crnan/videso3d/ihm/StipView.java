@@ -69,13 +69,10 @@ public class StipView extends JPanel {
 	
 	private ItemSecteurListener itemSecteurListener = new ItemSecteurListener();
 	
-	
-	private DatabaseManager db;
 	private VidesoGLCanvas wwd;
 
-	public StipView(VidesoGLCanvas wwd, DatabaseManager db){
+	public StipView(VidesoGLCanvas wwd){
 
-		this.db = db;
 		this.wwd = wwd;
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -86,7 +83,7 @@ public class StipView extends JPanel {
 		secteurs.setBorder(BorderFactory.createTitledBorder("Secteurs"));
 
 		try {
-			if(this.db.getCurrentStip() != null) { //si pas de bdd, ne pas créer la vue
+			if(DatabaseManager.getCurrentStip() != null) { //si pas de bdd, ne pas créer la vue
 				this.add(this.buildBalisesPanel());
 				this.buildTreePanel();
 				this.add(this.createTitleRoutes());
@@ -188,7 +185,7 @@ public class StipView extends JPanel {
 		scrollPane.setBorder(BorderFactory.createTitledBorder(/*BorderFactory.createEmptyBorder(),*/ type.equals("F") ? "FIR" : "UIR"));
 		
 		try {
-			Statement st = this.db.getCurrentStip();
+			Statement st = DatabaseManager.getCurrentStip();
 			String centreCondition = centre.equals("Autre") ? "centre != 'REIM' and centre != 'PARI' and centre != 'AIX' and centre != 'BRST' and centre != 'BORD'" : "centre = '"+centre+"'" ;
 			ResultSet rs = st.executeQuery("select * from secteurs where "+centreCondition+" and espace ='"+type+"' order by nom");
 			while(rs.next()){
@@ -267,7 +264,7 @@ public class StipView extends JPanel {
 	 */
 	private void addNodes(String type, String classe, DefaultMutableTreeNode root){
 		try {
-			Statement st = this.db.getCurrentStip();
+			Statement st = DatabaseManager.getCurrentStip();
 			String where = type.equals("routes")? "espace" : "publicated";
 			ResultSet rs = st.executeQuery("select * from "+type+" where "+ where +" ='"+classe+"'");
 			while(rs.next()){

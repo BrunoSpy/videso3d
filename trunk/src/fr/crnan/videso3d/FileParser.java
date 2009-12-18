@@ -33,11 +33,6 @@ public abstract class FileParser extends SwingWorker<Integer, String>{
 	 * Liste des listeners
 	 */
 	protected final EventListenerList listeners = new EventListenerList();
-
-	/**
-	 * Gestionnaire de base de données
-	 */
-	protected DatabaseManager db;
 	
 	/**
 	 * Chemin vers les données
@@ -53,9 +48,8 @@ public abstract class FileParser extends SwingWorker<Integer, String>{
 		super();
 	}
 	
-	public FileParser(String path, DatabaseManager db){
+	public FileParser(String path){
 		this.path = path;
-		this.db = db;
 	}
 	/**
 	 * Récupère les données des différents fichiers

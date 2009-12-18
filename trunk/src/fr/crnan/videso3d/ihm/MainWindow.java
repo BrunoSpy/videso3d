@@ -75,10 +75,6 @@ import gov.nasa.worldwind.BasicModel;
 public class MainWindow extends JFrame {
 
 	/**
-	 * Gestionnaire de base de données
-	 */
-	private DatabaseManager db;
-	/**
 	 * NASA WorldWind
 	 */
 	private VidesoGLCanvas wwd;
@@ -109,9 +105,7 @@ public class MainWindow extends JFrame {
 	 * 
 	 * @param db
 	 */
-	public MainWindow(final DatabaseManager db){
-
-		this.db = db;
+	public MainWindow(){
 
 		//Style Nimbus
 		this.setNimbus();
@@ -133,7 +127,7 @@ public class MainWindow extends JFrame {
 		//fermeture des connections aux bases de données avant de quitter afin de ne pas perdre les dernières transactions
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
-				db.closeAll();
+				DatabaseManager.closeAll();
 			}
 		});
 
@@ -161,7 +155,7 @@ public class MainWindow extends JFrame {
 			@Override
 			protected String doInBackground() {
 				try {
-					wwd.initialize(db);
+					wwd.initialize();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -207,7 +201,7 @@ public class MainWindow extends JFrame {
 
 
 		//Explorateur de données
-		dataExplorer = new DataExplorer(this.db, wwd);
+		dataExplorer = new DataExplorer(wwd);
 		//		JDesktopPane desktop = new JDesktopPane();
 		//		JInternalFrame wwdFrame = new JInternalFrame("WorldWind", true, false, true, true);
 		//		wwdFrame.setSize(500, 300);
@@ -339,6 +333,20 @@ public class MainWindow extends JFrame {
 	private JToolBar createToolBar(){
 		JToolBar toolbar = new JToolBar("Actions");
 
+		//Analyse
+//		final JButton analyze = new JButton(new ImageIcon(getClass().getResource("/resources/analyze_22.png")));
+//		analyze.setToolTipText("Analyser les données Stip/Stpv");
+//		analyze.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				new AnalyzeUI().setVisible(true);
+//			}
+//		});
+//		toolbar.add(analyze);
+//		toolbar.addSeparator();
+		
+		
 		//Ajouter trajectoires
 		final JButton trajectoires = new JButton(new ImageIcon(getClass().getResource("/resources/plus_traj_22.png")));
 		trajectoires.setToolTipText("Importer des trajectoires");
@@ -375,7 +383,7 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				databaseUI = new DatabaseManagerUI(db);
+				databaseUI = new DatabaseManagerUI();
 				databaseUI.setVisible(true);
 				databaseUI.addPropertyChangeListener("baseChanged", new PropertyChangeListener() {		
 					@Override
@@ -574,7 +582,7 @@ public class MainWindow extends JFrame {
 		LinkedList<String> results = new LinkedList<String>();
 		results.add(" ");//utile pour supprimer l'élément de la vue
 		try {
-			Statement st = this.db.getCurrentStip();
+			Statement st = DatabaseManager.getCurrentStip();
 			if(st != null){
 				ResultSet rs = st.executeQuery("select name from balises UNION select name from routes UNION select nom from secteurs");
 				while(rs.next()){

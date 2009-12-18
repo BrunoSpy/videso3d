@@ -57,7 +57,6 @@ public class EdimapView extends JPanel {
 	 */
 	private JPanel secteurs = new JPanel();
 	
-	private DatabaseManager db;
 	private VidesoGLCanvas wwd;
 	
 	private Cartes cartes;
@@ -65,9 +64,8 @@ public class EdimapView extends JPanel {
 	private ItemCheckListener itemCheckListener = new ItemCheckListener();
 	
 	
-	public EdimapView(final VidesoGLCanvas wwd, DatabaseManager db){
+	public EdimapView(final VidesoGLCanvas wwd){
 		this.wwd = wwd;
-		this.db = db;
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -76,8 +74,8 @@ public class EdimapView extends JPanel {
 		secteurs.setBorder(BorderFactory.createTitledBorder("Cartes secteurs"));
 		
 		try {
-			if(this.db.getCurrentEdimap() != null) {
-				cartes = new Cartes(this.db);
+			if(DatabaseManager.getCurrentEdimap() != null) {
+				cartes = new Cartes();
 				this.add(this.buildPanel(secteurs, cartes.getSecteurs()));
 				this.add(this.buildPanel(statiques, cartes.getCartesStatiques()));
 				this.add(this.buildPanel(dynamiques, cartes.getCartesDynamiques()));
