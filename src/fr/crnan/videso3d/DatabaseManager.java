@@ -27,7 +27,7 @@ import java.sql.*;
 /**
  * Gère la base de données
  * @author Bruno Spyckerelle
- * @version 0.5
+ * @version 0.5.1
  */
 public final class DatabaseManager{
 
@@ -83,6 +83,7 @@ public final class DatabaseManager{
 			//Méthode comme une autre pour vérifier que la structure existe ... lance une exception si ce n'est pas le cas
 			String query = "select * from databases where 1";
 			st.executeQuery(query);
+			st.close();
 		}
 		catch (SQLException e){
 			try {
@@ -97,6 +98,7 @@ public final class DatabaseManager{
 						"type varchar(16), " +
 						"value varchar(64))";
 				st.executeUpdate(create);
+				st.close();
 			} catch (SQLException e2) {
 				e2.printStackTrace();
 			}
@@ -216,6 +218,7 @@ public final class DatabaseManager{
 		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		ResultSet result = st.executeQuery("SELECT * FROM databases WHERE name = '"+name+"'");
 		if (result.next()) exists = true;
+		result.close();
 		st.close();
 		return exists;
 	}
@@ -226,18 +229,19 @@ public final class DatabaseManager{
 	 * @return Boolean True si la base est sélectionnée
 	 */
 	public static Boolean isSelected(Integer id){
+		Boolean result = false;
 		try {
 			Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 			ResultSet rs = st.executeQuery("select * from databases where id='"+id+"' and selected = '1'");
 			if (rs.next()) {
-				return true;
-			} else {
-				return false;
-			}
+				result = true;
+			} 
+			rs.close();
+			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return false;
+		return result;
 	}
 
 	/**
@@ -357,9 +361,10 @@ public final class DatabaseManager{
 				"hauteur float, " +
 				"portee int, " +
 				"deport boolean)");
+		st.close();
 		//on ajoute le nom de la base
 		DatabaseManager.addDatabase(name, Type.EXSA, new SimpleDateFormat().format(new Date()));
-		st.close();
+		
 	}
 	/**
 	 * Crée la structure des tables d'une base STPV
@@ -396,8 +401,8 @@ public final class DatabaseManager{
 				"xfl4 int, " +
 				"bal5 varchar(5), " +
 				"xfl5 int)");
-		DatabaseManager.addDatabase(name, Type.STPV, new SimpleDateFormat().format(new Date()));
 		st.close();
+		DatabaseManager.addDatabase(name, Type.STPV, new SimpleDateFormat().format(new Date()));
 	}
 
 	/**
@@ -412,8 +417,8 @@ public final class DatabaseManager{
 				"str varchar(16),  " +
 				"secteur varchar(3)" +
 		")");
-		DatabaseManager.addDatabase(name, Type.Ods, new SimpleDateFormat().format(new Date()));
 		st.close();
+		DatabaseManager.addDatabase(name, Type.Ods, new SimpleDateFormat().format(new Date()));
 	}
 
 	/**
@@ -428,14 +433,14 @@ public final class DatabaseManager{
 				"type varchar(16), " +
 				"fichier varchar(64)" +
 		")");
+		st.close();
 		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
 		insertClef.setString(1, "path");
 		insertClef.setString(2, name);
 		insertClef.setString(3, path);
 		insertClef.executeUpdate();
-		DatabaseManager.addDatabase(name, Type.Edimap, new SimpleDateFormat().format(new Date()));
-		st.close();
 		insertClef.close();
+		DatabaseManager.addDatabase(name, Type.Edimap, new SimpleDateFormat().format(new Date()));
 	}
 
 	/**
@@ -558,9 +563,28 @@ public final class DatabaseManager{
 				"act boolean, " +
 				"mod boolean, " +
 				"base int)");
+		//table des trajets
+		st.executeUpdate("create table trajets (id integer primary key autoincrement, " +
+				"eclatement varchar(5), " +
+				"raccordement varchar(5), " +
+				"type varchar(2), " +
+				"fl int, " +
+				"cond1 varchar(7), " +
+				"etat1 varchar(1), " +
+				"cond2 varchar(7), " +
+				"etat2 varchar(1), " +
+				"cond3 varchar(7), " +
+				"etat3 varchar(1), " +
+				"cond4 varchar(7), " +
+				"etat4 varchar(1))");
+		//table des balises des trajets
+		st.executeUpdate("create table baltrajets (id integer primary key autoincrement, " +
+				"idtrajet int," +
+				"balise varchar(5), " +
+				"appartient boolean)");
+		st.close();
 		//on référence la base de données
 		DatabaseManager.addDatabase(name, Type.STIP, new SimpleDateFormat().format(new Date()));
-		st.close();
 	}
 	/**
 	 * Crée la structue des tables d'une base PAYS
@@ -698,9 +722,10 @@ public final class DatabaseManager{
 		st.executeUpdate("update databases set selected = 1 where id ='"+id+"'");
 		ResultSet result = st.executeQuery("select name from databases where id ='"+id+"'");
 		result.next();
-		DatabaseManager.selectDB(type, result.getString(1));
+		String name = result.getString(1);
 		result.close();
 		st.close();
+		DatabaseManager.selectDB(type, name);
 	}
 	
 	public static void selectDatabase(Integer id, String type) throws SQLException {
@@ -726,10 +751,13 @@ public final class DatabaseManager{
 	public static void unselectDatabase(Type type) throws SQLException{
 		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		ResultSet result = st.executeQuery("select * from databases where selected = 1 and type = '"+type.toString()+"'");
+		Integer id = null;
 		if(result.next()){
-			int id = result.getInt("id");
-			DatabaseManager.unselectDatabase(id);
+			id = result.getInt("id");
 		}
+		result.close();
+		st.close();
+		if(id != null) DatabaseManager.unselectDatabase(id);
 	}
 	
 	/**
@@ -755,12 +783,13 @@ public final class DatabaseManager{
 		} else {
 			Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 			ResultSet result = st.executeQuery("select name from databases where selected = 1 and type = '"+type.toString()+"'");
+			String connectionName = null;
 			if(result.next()) {
-				String connectionName = result.getString(1) ;
-				return DatabaseManager.selectDB(type, connectionName).createStatement();
-			} else {
-				return null;
-			}
+				connectionName = result.getString(1) ;
+			} 
+			result.close();
+			st.close();
+			return connectionName == null ? null : DatabaseManager.selectDB(type, connectionName).createStatement();
 		}
 	}
 
@@ -778,6 +807,8 @@ public final class DatabaseManager{
 		while(rs.next()){
 			name = rs.getString(1);
 		}
+		rs.close();
+		st.close();
 		return name;
 	}
 
