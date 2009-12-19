@@ -200,7 +200,6 @@ public class DatabaseManagerUI extends JFrame {
 				}
 			}
 		});
-    	
     	fileParser.execute();
     }
 	

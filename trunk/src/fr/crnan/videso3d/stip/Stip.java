@@ -37,14 +37,14 @@ import fr.crnan.videso3d.DatabaseManager.Type;
  * Lecteur de fichiers STIP
  * Toutes les infos concernant les fichiers SATIN sont dans le DDI Satin
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.3
  */
 public class Stip extends FileParser{
 
 	/**
 	 * Nombre de fichiers gérés
 	 */
-	private int numberFiles = 9;
+	private int numberFiles = 10;
 	
 	/**
 	 * Version des fichiers Stip
@@ -83,7 +83,7 @@ public class Stip extends FileParser{
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-				this.setProgress(9);
+				this.setProgress(this.numberFiles());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -147,8 +147,71 @@ public class Stip extends FileParser{
 		this.setFile("LIEUX");
 		this.setLieux(this.path + "/LIEUX");
 		this.setProgress(8);
+		this.setFile("TRAJET");
+		this.setTrajets(this.path+ "/TRAJET");
+		this.setProgress(9);
 	}
 	
+	/**
+	 * Lecteur de fichiers TRAJET
+	 * @param path Chemin du fichier
+	 */
+	private void setTrajets(String path) {
+		Trajet trajet = null;
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			in.readLine(); //suppression de la première ligne FORMAT
+			while(in.ready()){
+				String line = in.readLine();
+				if(line.length() > 12 && !line.substring(7, 12).trim().isEmpty()) { //carte 1
+					if(trajet != null) this.insertTrajet(trajet); //insertion du trajet en base de données
+					trajet = new Trajet(line);
+				} else { //cartes 2
+					trajet.addBalises(line);
+				}
+			}
+			if(trajet != null) this.insertTrajet(trajet);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void insertTrajet(Trajet trajet) {
+		try {
+			PreparedStatement insert = this.conn.prepareStatement("insert into trajets (eclatement, raccordement, type, fl, cond1, etat1, cond2, etat2, cond3, etat3, cond4, etat4) " +
+					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			insert.setString(1, trajet.getEclatement());
+			insert.setString(2, trajet.getRaccordement());
+			insert.setString(3, trajet.getType());
+			insert.setInt(4, trajet.getFl());
+			int i = 0;
+			for(Couple<String, String> condition : trajet.getConditions()){
+				insert.setString(5+i, condition.getFirst());
+				insert.setString(6+i, condition.getSecond());
+				i+=2;;
+			}
+			insert.executeUpdate();
+			int id = insert.getGeneratedKeys().getInt(1);
+			insert = this.conn.prepareStatement("insert into baltrajets (idtrajet, balise, appartient) " +
+					"values (?, ?, ?)");
+			insert.setInt(1, id);
+			for(Couple<String, Boolean> balise : trajet.getBalises()){
+				insert.setString(2, balise.getFirst());
+				insert.setBoolean(3, balise.getSecond());
+				insert.addBatch();
+			}
+			insert.executeBatch();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Lecteur de fichier LIEUX<br />
 	 * Les cartes * ne sont pas traitées, leur signification m'étant inconnue
