@@ -32,7 +32,6 @@ public class Trajet {
 	private List<Couple<String, Boolean>> balises = new LinkedList<Couple<String,Boolean>>();
 	
 	public Trajet(String line){
-		System.out.println(line);
 		this.setEclatement(line.substring(7, 12));
 		this.setRaccordement(line.substring(15, 20));
 		this.setType(line.substring(23, 25));

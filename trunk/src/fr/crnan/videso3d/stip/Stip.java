@@ -44,7 +44,7 @@ public class Stip extends FileParser{
 	/**
 	 * Nombre de fichiers gérés
 	 */
-	private int numberFiles = 10;
+	private int numberFiles = 11;
 	
 	/**
 	 * Version des fichiers Stip
@@ -150,8 +150,45 @@ public class Stip extends FileParser{
 		this.setFile("TRAJET");
 		this.setTrajets(this.path+ "/TRAJET");
 		this.setProgress(9);
+		this.setFile("BALINT");
+		this.setBalInt(this.path+ "/BALINT");
+		this.setProgress(10);
 	}
 	
+	/**
+	 * Lecteur de fichier BalInt
+	 * @param path Chemin vers le fichier
+	 */
+	private void setBalInt(String path){
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			in.readLine(); //suppression de la première ligne FORMAT
+			while(in.ready()){
+				String line = in.readLine();
+				if(line.length() >= 30)  
+					this.insertBalInt(new BalInt(in.readLine()));
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void insertBalInt(BalInt balInt) throws SQLException {
+		PreparedStatement insert = this.conn.prepareStatement("insert into balint (fir, uir, bal1, bal2, balise, appartient) " +
+				"values (?, ?, ?, ?, ?, ?)");
+		insert.setBoolean(1, balInt.getFir());
+		insert.setBoolean(2, balInt.getUir());
+		insert.setString(3, balInt.getBalise1());
+		insert.setString(4, balInt.getBalise2());
+		insert.setString(5, balInt.getBalise());
+		insert.setBoolean(6, balInt.getAppartient());
+		insert.executeUpdate();
+	}
+
 	/**
 	 * Lecteur de fichiers TRAJET
 	 * @param path Chemin du fichier

@@ -583,6 +583,14 @@ public final class DatabaseManager{
 				"balise varchar(5), " +
 				"appartient boolean)");
 		st.close();
+		//table des couples de balises interdits
+		st.executeUpdate("create table balint (id integer primary key autoincrement, " +
+				"uir boolean, " +
+				"fir boolean, " +
+				"bal1 varchar(5), " +
+				"bal2 varchar(5), " +
+				"balise varchar(5), " +
+				"appartient boolean)");
 		//on référence la base de données
 		DatabaseManager.addDatabase(name, Type.STIP, new SimpleDateFormat().format(new Date()));
 	}
