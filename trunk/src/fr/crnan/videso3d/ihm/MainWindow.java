@@ -119,7 +119,7 @@ public class MainWindow extends JFrame {
 			//Instancie WorldWind
 			this.createWwd();
 		}
-
+		
 		//la suite du lancement de l'application (launch())
 		//est lancée par createWwd lorsque l'initialisation est terminée
 
@@ -181,7 +181,7 @@ public class MainWindow extends JFrame {
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
 
 		//Titre de la fenêtre
-		this.setTitle("Videso 3D");
+		this.setTitle("Videso 3D (0.6.3)");
 
 		//Fermeture de l'application
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
