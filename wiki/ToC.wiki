@@ -1,8 +1,18 @@
+ * [Découvrir Découvrir Videso 3D]
+   * [Objectifs Pourquoi Videso 3D]
+   * [Utiliser Fonctionnalités de Videso 3D]
+     * [Données Visualiser les données systèmes]
+     * [AIP Visualiser des informations aéronautiques]
+     * [Analyse Analyser les données systèmes]
+     * [Trajecto Visualiser des trajectoires] 
+     * [Cartes Visualiser des cartes]
 ﻿ * [Installer Installer Videso 3D]
  * [Utiliser Utiliser Videso 3D]
    * [WWJ Manipuler la vue 3D]
    * [BDD Gérer les données]
    * [Trajectoires Ajouter et manipuler des trajectoires]
+   * [Carto Ajouter un fond de carte]
+   * [Analyser Utiliser la fenêtre d'analyse]
  * [Participer Participer à Videso 3D]
 
 <wiki:gadget url="http://www.ohloh.net/p/464657/widgets/project_users.xml" height="100"  border="0" />

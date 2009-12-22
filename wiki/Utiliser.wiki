@@ -1,12 +1,16 @@
 #summary Fonctions principales de Videso 3D
 
 Videso 3D permet d'afficher toutes sortes de données :
- * [STIP Données Stip] (routes, secteurs, balises, ...) ;
- * [STR Données STR] (mosaïques, portées radars, ...) ;
- * [ODS Données ODS] (cartes Edimap) ;
- * [STPV Données Stpv] ;
- * [Trajectoires Trajectoires].
+ * des [Données données provenant des systèmes] :
+   * Données Stip (routes, secteurs, balises, ...) ;
+   * Données STR (mosaïques, portées radars, ...) ;
+   * Données ODS (cartes Edimap) ;
+   * Données Stpv ;
+   * Données de radiocommunication ;
+ * des [AIP données d'information aéronautiques] ;
+ * des [Carto cartes] ;
+ * des [Trajecto trajectoires].
  
 Videso 3D peut gérer plusieurs versions de ces données : une fois [BDD importées], il est possible de [BDD sélectionner] la version que l'on souhaite ensuite afficher.
 
-Enfin, la vue 3D permet de [WWJ visualiser] ces données de manière interactive.
+Enfin, Videso 3D permet d'[Analyse analyser certaines de ces données] au moyen d'une [Analyser interface dédiée].

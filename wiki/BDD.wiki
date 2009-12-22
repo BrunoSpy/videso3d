@@ -1,4 +1,4 @@
-#Gérer les bases de données
+#summary Gérer les bases de données
 
 [http://videso3d.googlecode.com/svn/wiki/img/bdd.png]
 

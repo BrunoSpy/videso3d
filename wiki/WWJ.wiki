@@ -1,4 +1,4 @@
-#Comment manipuler la vue 3D
+#summary Comment manipuler la vue 3D
 
 = Interaction directe à la souris =
 La façon la plus simple et la plus intuitive est de manipuler directement la vue avec la souris :

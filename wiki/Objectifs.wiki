@@ -1,0 +1,28 @@
+= Pourquoi Videso 3D ? =
+
+Videso 3D répond à plusieurs besoins qui n'avaient pour l'instant pas (ou de manière incomplète) de solutions techniques.
+
+== Visualiser les "DESO" ==
+
+Les Données d'Exploitation des Systèmes Opérationnels sont pour l'instant visualisables en 2D, mais certaines données ne sont pas prises en compte.
+De plus, l'affichage en 3D apporte une réel plus-value pour la compréhension de l'agencement de l'espace aérien.
+
+== Visualiser les données systèmes ==
+
+Il existe plusieurs logiciels de visualisation de données systèmes (telles que les portées radar, les portées radio, ...) mais aucun ne permet une réelle mise en contexte avec d'autres données plus généralistes, et aucun ne permet un affichage en 3D.
+
+== Analyser les DESO ==
+
+Analyser les DESO demande non seulement de pouvoir les visualiser avec un contexte particulier, mais une fois cette étape franchie, il faut pouvoir les mettre en relation entre elles, effectuer des opérations de classement, filtrage, etc...
+
+== Visualiser les données d'information aéronautique ==
+
+Ces données, publiques, sont exploitées par de nombreux logiciels. L'objectif de Videso 3D est seulement de s'en servir afin de permettre de donner un contexte d'étude lors de l'affichage des autres types de données.
+
+== Visualiser des trajectoires en 3D ==
+
+Cette partie vient d'un besoin de comprendre la nature des flux dans les espaces français. Comme toujours, il existe déjà des solutions, mais la contextualisation est soit absente, soit parcellaire, et l'affichage est en 2D alors que ces données sont par nature 3D, voire 4D.
+
+== Créer des cartes 3D et 2D ==
+
+A des fins d'instruction ou de présentations, il est intéressant de pouvoir créer des cartes 2D et 3D.
