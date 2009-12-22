@@ -6,7 +6,7 @@
      * [Analyse Analyser les données systèmes]
      * [Trajecto Visualiser des trajectoires] 
      * [Cartes Visualiser des cartes]
-﻿ * [Installer Installer Videso 3D]
+ * [Installer Installer Videso 3D]
  * [Utiliser Utiliser Videso 3D]
    * [WWJ Manipuler la vue 3D]
    * [BDD Gérer les données]
