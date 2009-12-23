@@ -29,6 +29,8 @@ import java.util.List;
 
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
+import fr.crnan.videso3d.formats.lpln.LPLNReader;
+import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
 import fr.crnan.videso3d.geom.LatLonCautra;
@@ -43,6 +45,7 @@ import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Route.Type;
 import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
+import fr.crnan.videso3d.layers.LPLNTracksLayer;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
 import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
@@ -50,7 +53,6 @@ import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.Secteur;
 import gov.nasa.worldwind.WorldWind;
-import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.data.DataDescriptor;
 import gov.nasa.worldwind.examples.util.LayerManagerLayer;
@@ -152,10 +154,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	private Object lastAttrs;
 	private Layer lastLayer;
 	private AirspaceLayer selectedAirspaces = new AirspaceLayer();
-	
-	
-	private DatabaseManager db;
-	
+		
 	/**
 	 * Initialise les différents objets graphiques
 	 */
@@ -443,9 +442,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * @param db Lien vers le gestionnaire de base de données
 	 * @param publicated Balises publéies ou non
 	 */
-	private void buildBalises(DatabaseManager db, int publicated){
+	private void buildBalises(int publicated){
 		try {
-			Statement st = db.getCurrentStip();
+			Statement st = DatabaseManager.getCurrentStip();
 			ResultSet rs = st.executeQuery("select * from balises where publicated = " + publicated);
 			while(rs.next()){
 				Balise2D balise = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0));
@@ -491,13 +490,13 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 */
 	public void addSecteur3D(String name){
 		try {
-			Statement st = this.db.getCurrentStip();
+			Statement st = DatabaseManager.getCurrentStip();
 			ResultSet rs = st.executeQuery("select secteurs.nom, secteurs.numero, cartesect.flinf, cartesect.flsup from secteurs, cartesect where secteurs.numero = cartesect.sectnum and secteurs.nom ='"+name+"'");
 			Integer i = 0;
 			while(rs.next()){
 				Secteur3D secteur3D = new Secteur3D(name, rs.getInt("flinf"), rs.getInt("flsup"));
-				Secteur secteur = new Secteur(name, rs.getInt("numero"), this.db.getCurrentStip());
-				secteur.setConnectionPays(this.db.getCurrent(DatabaseManager.Type.PAYS));
+				Secteur secteur = new Secteur(name, rs.getInt("numero"), DatabaseManager.getCurrentStip());
+				secteur.setConnectionPays(DatabaseManager.getCurrent(DatabaseManager.Type.PAYS));
 				secteur3D.setLocations(secteur.getContour(rs.getInt("flsup")));
 				this.addToSecteursLayer(secteur3D);
 				secteurs.put(name+i.toString(), secteur3D);
@@ -546,9 +545,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/*--------------------------------------------------------------*/
 	/*------------------ Gestion des routes STIP -------------------*/
 	/*--------------------------------------------------------------*/
-	private void buildRoutes(DatabaseManager db, String type) {
+	private void buildRoutes(String type) {
 		try {
-			Statement st = db.getCurrentStip();
+			Statement st = DatabaseManager.getCurrentStip();
 			ResultSet routes = st.executeQuery("select name from routes where espace = '"+type+"'");
 			LinkedList<String> routesNames = new LinkedList<String>();
 			while(routes.next()){
@@ -643,16 +642,16 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			this.toggleLayer(secteursLayer, true);
 		}
 		try {
-			if(this.db.getCurrentStip() != null) {
+			if(DatabaseManager.getCurrentStip() != null) {
 				//création des nuveaux objets
 				firePropertyChange("step", "", "Création des balises publiées");
-				this.buildBalises(db, 0);
+				this.buildBalises(0);
 				firePropertyChange("step", "", "Création des balises non publiées");
-				this.buildBalises(db, 1);
+				this.buildBalises(1);
 				firePropertyChange("step", "", "Création des routes FIR");
-				this.buildRoutes(db, "F");
+				this.buildRoutes("F");
 				firePropertyChange("step", "", "Création des routes UIR");
-				this.buildRoutes(db, "U");
+				this.buildRoutes("U");
 				this.toggleLayer(secteursLayer, true);
 				this.secteurs = new HashMap<String, Secteur3D>();				
 			}
@@ -679,7 +678,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 */
 	public void addRadar(String name){
 		try {
-			Statement st = this.db.getCurrentExsa();
+			Statement st = DatabaseManager.getCurrentExsa();
 			ResultSet rs = st.executeQuery("select * from radrgener, radrtechn where radrgener.name = radrtechn.name and radrgener.name ='"+name+"'");
 			if(rs.next()){
 				Radar radar = new Radar(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")), rs.getInt("portee"));
@@ -734,7 +733,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				AirspaceAttributes airspaceAttr = null;
 				if(type.equals("mosaique")) {
 					try {
-						Statement st = this.db.getCurrentExsa();
+						Statement st = DatabaseManager.getCurrentExsa();
 						ResultSet rs = st.executeQuery("select * from centmosai where type ='"+name+"'");
 						origine = LatLonCautra.fromCautra(rs.getDouble("xcautra"), rs.getDouble("ycautra"));
 						width = rs.getInt("colonnes");
@@ -754,7 +753,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 						grille = false;
 						squares = new LinkedList<Couple<Integer,Integer>>();
 						altitudes = new LinkedList<Couple<Double,Double>>();
-						Statement st = this.db.getCurrentExsa();
+						Statement st = DatabaseManager.getCurrentExsa();
 						String typeGrille = name.equals("VISSEC") ? "ADP" : "CCR"; //TODO comment faire pour les autres centres ??
 						ResultSet rs = st.executeQuery("select * from centmosai where type ='"+typeGrille+"'");
 						origine = LatLonCautra.fromCautra(rs.getDouble("xcautra"), rs.getDouble("ycautra"));
@@ -794,7 +793,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 					squares = new LinkedList<Couple<Integer,Integer>>();
 					altitudes = new LinkedList<Couple<Double,Double>>();
 					try {
-						Statement st = this.db.getCurrentExsa();
+						Statement st = DatabaseManager.getCurrentExsa();
 						ResultSet rs = st.executeQuery("select * from centmosai where type ='CCR'");
 						origine = LatLonCautra.fromCautra(rs.getDouble("xcautra"), rs.getDouble("ycautra"));
 						width = rs.getInt("colonnes");
@@ -825,7 +824,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 					squares = new LinkedList<Couple<Integer,Integer>>();
 					altitudes = new LinkedList<Couple<Double,Double>>();
 					try {
-						Statement st = this.db.getCurrentExsa();
+						Statement st = DatabaseManager.getCurrentExsa();
 						ResultSet rs = st.executeQuery("select * from centmosai where type ='CCR'");
 						origine = LatLonCautra.fromCautra(rs.getDouble("xcautra"), rs.getDouble("ycautra"));
 						width = rs.getInt("colonnes");
@@ -856,7 +855,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 					squares = new LinkedList<Couple<Integer,Integer>>();
 					altitudes = new LinkedList<Couple<Double,Double>>();
 					try {
-						Statement st = this.db.getCurrentExsa();
+						Statement st = DatabaseManager.getCurrentExsa();
 						ResultSet rs = st.executeQuery("select * from centmosai where type ='CCR'");
 						origine = LatLonCautra.fromCautra(rs.getDouble("xcautra"), rs.getDouble("ycautra"));
 						width = rs.getInt("colonnes");
@@ -892,7 +891,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 					}
 				} else if (type.equals("stpv")){
 					try {
-						Statement st = this.db.getCurrentStpv();
+						Statement st = DatabaseManager.getCurrentStpv();
 						ResultSet rs = st.executeQuery("select * from mosaique where type ='"+name+"'");
 						origine = LatLonCautra.fromCautra(rs.getDouble("xcautra")-512, rs.getDouble("ycautra")-512);
 						width = rs.getInt("nombre");
@@ -958,7 +957,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			}
 		} else {
 			try {
-				Statement st = this.db.getCurrentStip();
+				Statement st = DatabaseManager.getCurrentStip();
 				//on recherche le type
 				ResultSet rs = st.executeQuery("select * from routes where routes.name = '"+text+"'");
 				if(rs.next()){
@@ -1048,10 +1047,26 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			return this.addTrajectoires(new OPASReader(file));
 		} else if(GEOReader.isGeoFile(file)){
 			return this.addTrajectoires(new GEOReader(file));
+		} else if(LPLNReader.isLPLNFile(file)) {
+			return this.addTrajectoires(new LPLNReader(file));
 		}
 		return null;
 	}
 	
+	private TrajectoriesLayer addTrajectoires(LPLNReader lpln){
+		LPLNTracksLayer trajLayer = new LPLNTracksLayer();
+		this.toggleLayer(trajLayer, true);
+		for(LPLNTrack track : lpln.getTracks()){
+			trajLayer.addTrack(track);
+		}
+		return trajLayer;
+	}
+	
+	/**
+	 * Ajoute les trajectoires au format Elvira GEO
+	 * @param geo
+	 * @return {@link Layer}
+	 */
 	private TrajectoriesLayer addTrajectoires(GEOReader geo) {
 		GEOTracksLayer trajLayer = new GEOTracksLayer();
 		this.toggleLayer(trajLayer, true);

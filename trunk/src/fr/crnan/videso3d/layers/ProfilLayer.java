@@ -22,7 +22,7 @@ import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 /**
  * Layer d'accueil pour des {@link Profil3D}
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 @SuppressWarnings("serial")
 public class ProfilLayer extends LayerSet {
@@ -61,4 +61,10 @@ public class ProfilLayer extends LayerSet {
 		if(profil3d.isPlain()) this.renderableLayer.addRenderable(profil3d.getCurtain());
 	}
 	
+	public void removeAll(){
+		this.shapeLayer.removeAllRenderables();
+		this.renderableLayer.removeAllRenderables();
+		this.textLayer.removeAllGeographicTexts();
+		this.markerLayer.setMarkers(null);
+	}
 }

@@ -42,6 +42,7 @@ import org.jdesktop.swingx.JXTable;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
+import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import gov.nasa.worldwind.avlist.AVKey;
@@ -289,6 +290,21 @@ public class TrajectoriesView extends JPanel {
 					return ((OPASTrack)tracks[row]).getIaf();
 				case 4:
 					return "";
+				default:
+					return "";
+				}
+			} else if(tracks[row] instanceof LPLNTrack) {
+				switch (col) {
+				case 0:
+					return ((LPLNTrack)tracks[row]).getIndicatif();
+				case 1:
+					return ((LPLNTrack)tracks[row]).getDepart();
+				case 2:
+					return ((LPLNTrack)tracks[row]).getArrivee();
+				case 3:
+					return "";
+				case 4:
+					return ((LPLNTrack)tracks[row]).getType();
 				default:
 					return "";
 				}
