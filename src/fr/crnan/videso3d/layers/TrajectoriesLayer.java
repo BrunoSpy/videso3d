@@ -15,14 +15,13 @@
  */
 package fr.crnan.videso3d.layers;
 
-import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer contenant des trajectoires et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public abstract class TrajectoriesLayer extends RenderableLayer {
+public abstract class TrajectoriesLayer extends LayerSet {
 
 	public static final int FIELD_ADEP = 1;
 	public static final int FIELD_ADEST = 2;
@@ -51,7 +50,7 @@ public abstract class TrajectoriesLayer extends RenderableLayer {
 	/**
 	 * Sets filter type.<br />
 	 * Does not apply to the current filters.
-	 * @param and If true, filters are conjonctives (= and), otherwise disjunctives (=or)
+	 * @param b If true, filters are conjonctives (= and), otherwise disjunctives (=or)
 	 */
 	public void setFilterDisjunctive(Boolean b){
 		if(isFilterDisjunctive() != b ){

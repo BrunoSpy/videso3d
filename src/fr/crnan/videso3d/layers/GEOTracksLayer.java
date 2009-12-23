@@ -27,6 +27,7 @@ import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.graphics.VPolyline;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.Polyline;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.tracks.TrackPoint;
@@ -41,6 +42,13 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	
 	private Set<GEOTrack> selectedTracks = null;
 
+	private RenderableLayer layer = new RenderableLayer();
+	
+	public GEOTracksLayer(){
+		super();
+		this.add(layer);
+	}
+	
 	private void addTrack(GEOTrack track){
 		this.tracks.add(track);
 		this.addSelectedTrack(track);
@@ -65,7 +73,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 			line.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
 			line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
 			line.setPositions(positions);
-			this.addRenderable(line);
+			this.layer.addRenderable(line);
 		}
 		
 	}
@@ -138,7 +146,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 
 	@Override
 	public void update() {
-		this.removeAllRenderables();
+		this.layer.removeAllRenderables();
 		for(GEOTrack track : (selectedTracks == null ? tracks : selectedTracks)){
 			this.showTrack(track);
 		}

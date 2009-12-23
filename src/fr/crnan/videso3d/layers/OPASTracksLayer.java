@@ -25,6 +25,7 @@ import fr.crnan.videso3d.formats.opas.OPASTrack;
 import fr.crnan.videso3d.graphics.VPolyline;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.Polyline;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.tracks.TrackPoint;
@@ -39,8 +40,11 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 	
 	private Set<OPASTrack> selectedTrack = null;
 	
+	private RenderableLayer layer = new RenderableLayer();
+	
 	public OPASTracksLayer() {
 		super();
+		this.add(layer);
 	}
 
 	public void addTrack(OPASTrack track) {
@@ -55,7 +59,7 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 	 * Warning : très consommateur de ressources car recalcule toutes les trajectoires
 	 */
 	public void update(){
-		this.removeAllRenderables();
+		this.layer.removeAllRenderables();
 		for(OPASTrack track : (selectedTrack == null ? tracks : selectedTrack)){
 			this.showTrack(track);
 		}
@@ -73,7 +77,7 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 		line.setMinElevation(50*30.48);
 		line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
 		line.setPositions(positions);
-		this.addRenderable(line);
+		this.layer.addRenderable(line);
 	}
 	
 	@Override
