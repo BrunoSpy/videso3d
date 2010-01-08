@@ -71,14 +71,17 @@ public class AirspaceListener implements SelectListener {
 				((AbstractAirspace)lastHighlit).setAttributes((AirspaceAttributes)lastAttrs);
 			} else if(lastHighlit instanceof SurfaceShape){
 				((SurfaceShape)lastHighlit).setAttributes((ShapeAttributes)lastAttrs);
-			}
+			} 
 			lastHighlit = null;
 		}
 
 		if (lastToolTip != null
 				&& (event.getTopObject() == null || !event.getTopObject().equals(lastHighlit)))
 		{
-			if(lastAnnotation != null) this.wwd.getAnnotationLayer().removeAnnotation(lastAnnotation);
+			if(lastAnnotation != null) {
+				this.wwd.getAnnotationLayer().removeAnnotation(lastAnnotation);
+				lastAnnotation = null;
+			}
 			lastToolTip = null;
 		}
 
@@ -190,8 +193,8 @@ public class AirspaceListener implements SelectListener {
 				}
 				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 			}			
-		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){
+		} /*else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){
 
-		}
+		}*/
 	}
 }
