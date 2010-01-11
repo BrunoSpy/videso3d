@@ -42,11 +42,14 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	
 	private Set<GEOTrack> selectedTracks = null;
 
+	private Set<GEOTrack> highlightedTracks = new HashSet<GEOTrack>();
+	
 	private RenderableLayer layer = new RenderableLayer();
 	
 	public GEOTracksLayer(){
 		super();
 		this.add(layer);
+		this.setPickEnabled(true);
 	}
 	
 	private void addTrack(GEOTrack track){
@@ -70,7 +73,11 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		if(positions.size()>1){ //only add a line if there's enough points
 			VPolyline line = new VPolyline();
 			line.setPlain(true);
-			line.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+			if(highlightedTracks.contains(track)){
+				line.setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 0.4f)));
+			} else {
+				line.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+			}
 			line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
 			line.setPositions(positions);
 			this.layer.addRenderable(line);
@@ -154,9 +161,18 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	}
 
 	@Override
-	public Object[] getSelectedTracks(){
-		return this.selectedTracks == null ? tracks.toArray() : selectedTracks.toArray();
+	public Collection<GEOTrack> getSelectedTracks(){
+		return this.selectedTracks == null ? tracks : selectedTracks;
 	}
 
+	@Override
+	public void highlightTrack(Track track){
+		this.highlightedTracks.add((GEOTrack) track);
+	}
+
+	@Override
+	public void removeHighlightedTracks() {
+		this.highlightedTracks.clear();
+	}
 	
 }
