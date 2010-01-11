@@ -15,11 +15,13 @@
  */
 package fr.crnan.videso3d.layers;
 
+import java.util.Collection;
+
 import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer contenant des trajectoires et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public abstract class TrajectoriesLayer extends LayerSet {
 
@@ -68,9 +70,19 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	public abstract void removeFilter();
 
 	/**
+	 * Met en valeur un track
+	 * @param track 
+	 */
+	public abstract void highlightTrack(Track track);
+	/**
+	 * Supprime le highlight des tracks
+	 */
+	public abstract void removeHighlightedTracks();
+	
+	/**
 	 * Met à jour les trajectoires affichées
 	 */
 	public abstract void update();
 	
-	public abstract Object[] getSelectedTracks();
+	public abstract Collection<? extends Track> getSelectedTracks();
 }

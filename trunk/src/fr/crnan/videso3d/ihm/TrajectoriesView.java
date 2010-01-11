@@ -25,6 +25,7 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.Collection;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -36,6 +37,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.jdesktop.swingx.JXTable;
@@ -46,10 +49,11 @@ import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import gov.nasa.worldwind.avlist.AVKey;
+import gov.nasa.worldwind.tracks.Track;
 /**
  * Panel de sélection des trajectoires affichées
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 @SuppressWarnings("serial")
 public class TrajectoriesView extends JPanel {
@@ -171,7 +175,21 @@ public class TrajectoriesView extends JPanel {
 
 		JPanel table = new JPanel(new BorderLayout());
 		table.setBorder(BorderFactory.createTitledBorder("Pistes affichées"));
-		JXTable pistes = new JXTable(new TrackTableModel());
+		final JXTable pistes = new JXTable(new TrackTableModel());
+		//listener pour le highlight des lignes sélectionnées
+		pistes.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if(!e.getValueIsAdjusting()){
+					layer.removeHighlightedTracks();
+					for(int i : pistes.getSelectedRows()){
+						layer.highlightTrack((Track)((TrackTableModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(i)));
+					}
+					layer.update();
+				}
+			}
+		});
 		pistes.setColumnControlVisible(true);
 		JScrollPane scrollPane = new JScrollPane(pistes);
 		scrollPane.setBorder(null);
@@ -233,16 +251,26 @@ public class TrajectoriesView extends JPanel {
 
 		Object[] tracks;
 
+		Collection<? extends Track> tracksCollection;
+		
 		public TrackTableModel(){
 			super();
-			tracks = layer.getSelectedTracks();
+			tracks = layer.getSelectedTracks().toArray();
+			tracksCollection = layer.getSelectedTracks();
 			layer.addPropertyChangeListener(AVKey.LAYER, new PropertyChangeListener() {
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
-					tracks = layer.getSelectedTracks();
-					fireTableDataChanged();
+					if(!tracksCollection.equals(layer.getSelectedTracks())){
+						tracks = layer.getSelectedTracks().toArray();
+						tracksCollection = layer.getSelectedTracks();
+						fireTableDataChanged();
+					}
 				}
 			});
+		}
+		
+		public Object getTrackAt(int row){
+			return tracks[row];
 		}
 		
 		@Override

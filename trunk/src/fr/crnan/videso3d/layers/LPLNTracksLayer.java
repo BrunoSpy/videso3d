@@ -123,8 +123,8 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	}
 
 	@Override
-	public Object[] getSelectedTracks() {
-		return this.selectedTracks == null ? tracks.toArray() : selectedTracks.toArray();
+	public Collection<LPLNTrack> getSelectedTracks() {
+		return this.selectedTracks == null ? tracks : selectedTracks;
 	}
 
 	@Override
@@ -145,6 +145,18 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	private void addSelectedTrack(LPLNTrack track) {
 		if(selectedTracks == null) this.selectedTracks = new HashSet<LPLNTrack>();
 		this.selectedTracks.add(track);
+	}
+
+	@Override
+	public void highlightTrack(Track track) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeHighlightedTracks() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

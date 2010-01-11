@@ -152,7 +152,19 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 	}
 
 	@Override
-	public Object[] getSelectedTracks(){
-		return this.selectedTrack == null ? tracks.toArray() : selectedTrack.toArray();
+	public Collection<OPASTrack> getSelectedTracks(){
+		return this.selectedTrack == null ? tracks : selectedTrack;
+	}
+
+	@Override
+	public void highlightTrack(Track track) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeHighlightedTracks() {
+		// TODO Auto-generated method stub
+		
 	}
 }
