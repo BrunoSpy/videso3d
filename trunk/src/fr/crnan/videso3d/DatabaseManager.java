@@ -107,10 +107,6 @@ public final class DatabaseManager{
 			e.printStackTrace();
 		} 
 	}
-
-	public DatabaseManager getInstance(){
-		return instance;
-	}
 	
 	/**
 	 * Sélectionne une base de données
@@ -401,6 +397,24 @@ public final class DatabaseManager{
 				"xfl4 int, " +
 				"bal5 varchar(5), " +
 				"xfl5 int)");
+		st.executeUpdate("create table lieu8 (id integer primary key autoincrement, " +
+				"depart varchar(4), " +
+				"arrivee varchar(4), " +
+				"fl int)");
+		st.executeUpdate("create table lieu91 (id integer primary key autoincrement, " +
+				"oaci varchar(4), " +
+				"indicateur varchar(3), " +
+				"secteur_donnant varchar(2), " +
+				"secteur_recevant varchar(2), " +
+				"bal1 varchar(5), " +
+				"bal2 varchar(5), " +
+				"piste varchar(3), " +
+				"avion varchar(3), " +
+				"tfl int, " +
+				"terrain1 varchar(4), " +
+				"conf1 varchar(3), " +
+				"terrain2 varchar(4), " +
+				"conf2 varchar(3))");
 		st.close();
 		DatabaseManager.addDatabase(name, Type.STPV, new SimpleDateFormat().format(new Date()));
 	}
