@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -33,7 +34,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 /**
  * Lecteur de BDS Stpv
  * @author Bruno Spyckerelle
- * @version 0.0.2
+ * @version 0.1
  */
 public class Stpv extends FileParser{
 
@@ -182,6 +183,12 @@ public class Stpv extends FileParser{
 					this.insertLieu27(line);
 				} else if(line.startsWith("LIEU 6")) {
 					this.insertLieu6(line);
+				} else if (line.startsWith("LIEU 8")) {
+					this.insertLieu8(line);
+				} else if(line.startsWith("LIEU 91") && !line.startsWith("LIEU 91S")) {
+					this.insertLieu91(line);
+				} else if(line.startsWith("LIEU 91S")){
+					this.addLieu91S(line);
 				}
 			}
 		} catch (FileNotFoundException e) {
@@ -190,8 +197,58 @@ public class Stpv extends FileParser{
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+
+	private void addLieu91S(String line) throws SQLException {
+		Statement st = this.conn.createStatement();
+		ResultSet rs = st.executeQuery("select max(id) from lieu91"); //le lieu 91 auquel se rapporte ce lieu 91s est forcément le dernier lieu91 enregistré
+		int id = rs.getInt(1);
+		String terrain1 = line.substring(14, 18);
+		String conf1 = line.substring(20, 21);
+		String terrain2 = "";
+		String conf2 = "";
+		if(line.length()>34){
+			terrain2 = line.substring(26, 30).trim();
+			conf2 = line.substring(32, 33).trim();
+		}
+		st.executeUpdate("update lieu91 set terrain1 ='"+terrain1+"', " +
+				"conf1 = '"+conf1+"', " +
+				"terrain2 = '"+terrain2+"', " +
+				"conf2 = '"+conf2+"' " +
+				"where id='"+id+"'");
+	}
+
+
+
+	private void insertLieu91(String line) throws SQLException {
+		PreparedStatement insert = this.conn.prepareStatement("insert into lieu91 (oaci, indicateur, secteur_donnant, secteur_recevant, bal1, bal2, piste, avion, tfl) " +
+				"values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		insert.setString(1, line.substring(8, 12).trim());
+		insert.setString(2, line.substring(14, 17));
+		insert.setString(3, line.substring(20, 22).trim());
+		insert.setString(4, line.substring(26, 28).trim());
+		insert.setString(5, line.substring(32, 37).trim());
+		insert.setString(6, line.substring(38, 43).trim());
+		insert.setString(7, line.substring(44, 47).trim());
+		insert.setString(8, line.substring(50, 55).trim());
+		insert.setInt(9, new Integer(line.substring(58, 61).trim()));
+		insert.executeUpdate();
+	}
+
+
+
+	private void insertLieu8(String line) throws SQLException {
+		PreparedStatement insert = this.conn.prepareStatement("insert into lieu8 (depart, arrivee, fl) values (?, ?, ?)");
+		insert.setString(1, line.substring(8, 12));
+		insert.setString(2, line.substring(14, 18));
+		insert.setInt(3, new Integer(line.substring(22, 25)));
+		insert.executeUpdate();
+	}
+
+
 
 	private void insertLieu6(String line) throws SQLException {
 		PreparedStatement insert = this.conn.prepareStatement("insert into lieu6 (oaci, bal1, xfl1, bal2, xfl2, bal3, xfl3, bal4, xfl4, bal5, xfl5) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
