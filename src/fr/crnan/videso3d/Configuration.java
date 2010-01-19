@@ -71,9 +71,11 @@ public final class Configuration {
 	 * Met en place le proxy si besoin
 	 */
 	public static void initializeProxy(){
-		gov.nasa.worldwind.Configuration.setValue(AVKey.URL_PROXY_HOST, getProperty(NETWORK_PROXY_HOST, ""));
-		gov.nasa.worldwind.Configuration.setValue(AVKey.URL_PROXY_PORT, getProperty(NETWORK_PROXY_PORT, ""));
-		gov.nasa.worldwind.Configuration.setValue(AVKey.URL_PROXY_TYPE, "Proxy.Type.Http");
+		if(!getProperty(NETWORK_PROXY_HOST, "").isEmpty()){
+			gov.nasa.worldwind.Configuration.setValue(AVKey.URL_PROXY_HOST, getProperty(NETWORK_PROXY_HOST, ""));
+			gov.nasa.worldwind.Configuration.setValue(AVKey.URL_PROXY_PORT, getProperty(NETWORK_PROXY_PORT, ""));
+			gov.nasa.worldwind.Configuration.setValue(AVKey.URL_PROXY_TYPE, "Proxy.Type.Http");
+		}
 	}
 	
 	/**
