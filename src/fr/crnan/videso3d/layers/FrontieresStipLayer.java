@@ -17,13 +17,16 @@
 package fr.crnan.videso3d.layers;
 
 import java.awt.Color;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.Configuration;
+import fr.crnan.videso3d.Pallet;
+import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 import gov.nasa.worldwind.render.Material;
@@ -1148,13 +1151,24 @@ public class FrontieresStipLayer extends SurfaceShapeLayer {
 		43.4, -1.7697222222222222
 	};
 	
-	public FrontieresStipLayer(/*DatabaseManager db*/){
+	public FrontieresStipLayer(){
 		this.setName("France");
 		
-		SurfacePolygon france = new SurfacePolygon();
+		final SurfacePolygon france = new SurfacePolygon();
 		france.setLocations(makeLatLon(FRANCE));
-		ShapeAttributes attrs = france.getAttributes();
-		attrs.setInteriorMaterial(Material.WHITE);
+		final ShapeAttributes attrs = france.getAttributes();
+		attrs.setInteriorMaterial(new Material(Pallet.getColorFondPays()));
+		Configuration.addPropertyChangeListener(new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if(evt.getPropertyName().equals(Configuration.COLOR_FOND_PAYS)){
+					attrs.setInteriorMaterial(new Material(Pallet.getColorFondPays()));
+					france.setAttributes(attrs);
+					firePropertyChange(AVKey.LAYER, null, this);
+				}
+			}
+		});
 		france.setAttributes(attrs);
 	
 		this.addRenderable(france);

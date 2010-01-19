@@ -160,6 +160,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 */
 	public void initialize(){		
 		
+		//Proxy
+		Configuration.initializeProxy();
+		
 		this.addSelectListener(new AirspaceListener(this));		
 
 //		//Latitudes et longitudes

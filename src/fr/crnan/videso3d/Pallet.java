@@ -20,10 +20,56 @@ import java.awt.Color;
 /**
  * Gestion des couleurs
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class Pallet {
 
+	/**
+	 * Couleurs par défaut
+	 */
+	private static String FOND_PAYS = "#FFFFFF"; //blanc
+	private static String BALISE_MARKER = "#FFFFFF";
+	private static String BALISE_TEXT = "#FFFFFF";
+		
+	public static Color getColorFondPays(){
+		return Color.decode(Configuration.getProperty(Configuration.COLOR_FOND_PAYS, FOND_PAYS));
+	}
+	
+	public static Color getColorBaliseMarker(){
+		return Color.decode(Configuration.getProperty(Configuration.COLOR_BALISE_MARKER, BALISE_MARKER));
+	}
+	
+	public static Color getColorBaliseText(){
+		return Color.decode(Configuration.getProperty(Configuration.COLOR_BALISE_TEXTE, BALISE_TEXT));
+	}
+	/**
+	 * Change la couleur du fond pays
+	 */
+	public static void setColorFondPays(Color color){
+		if(color == null) return;
+		Configuration.setProperty(Configuration.COLOR_FOND_PAYS, Pallet.toHexString(color));
+	}
+	
+	public static void setColorBaliseMarker(Color color) {
+		if(color == null) return;
+		Configuration.setProperty(Configuration.COLOR_BALISE_MARKER, Pallet.toHexString(color));
+	}
+	
+
+	public static void setColorBaliseTexte(Color color) {
+		if(color == null) return;
+		Configuration.setProperty(Configuration.COLOR_BALISE_TEXTE, Pallet.toHexString(color));
+	}
+	
+	/**
+	 * Renvoie la chaine de caractère hexadécimale correspondant à la couleur <code>color</code>
+	 * @param color
+	 * @return Représentation hexadécimale de <code>color</code>
+	 */
+	public static String toHexString(Color color){
+		return String.format( "#%02X%02X%02X", color.getRed(), color.getGreen(), color.getBlue() );
+	}
+	
 	/**
      * Derives a color by adding the specified offsets to the base color's 
      * hue, saturation, and brightness values.   The resulting hue, saturation,
@@ -72,4 +118,7 @@ public class Pallet {
         
         return new Color(newColor.getRed(), newColor.getGreen(), newColor.getBlue(), color.getAlpha());
     }
+
+
+
 }
