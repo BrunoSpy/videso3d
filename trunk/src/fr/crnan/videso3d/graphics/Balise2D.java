@@ -18,7 +18,11 @@ package fr.crnan.videso3d.graphics;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
+import fr.crnan.videso3d.Configuration;
+import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -49,13 +53,26 @@ public class Balise2D extends UserFacingText {
 	public Balise2D(CharSequence name, Position position){
 		super(name, new Position(Angle.fromDegrees(position.latitude.degrees+0.01), position.longitude, position.elevation));
 		this.setFont(new Font("Sans Serif", Font.PLAIN, 9));
+		this.setColor(Pallet.getColorBaliseText());
 		
 		BasicMarkerAttributes attrs = new BasicMarkerAttributes();
 		attrs.setMarkerPixels(3);
+		attrs.setMaterial(new Material(Pallet.getColorBaliseMarker()));
 		//attrs.setMaxMarkerSize(3000);
 		//attrs.setMinMarkerSize(700);
 		this.marker = new MarkerAnnotation(new Position(position, 0), attrs);
 		this.marker.setAnnotation("Balise "+name);	
+		Configuration.addPropertyChangeListener(new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if(evt.getPropertyName().equals(Configuration.COLOR_BALISE_MARKER)){
+					marker.getAttributes().setMaterial(new Material(Pallet.getColorBaliseMarker()));
+				} else if(evt.getPropertyName().equals(Configuration.COLOR_BALISE_TEXTE)){
+					setColor(Pallet.getColorBaliseText());
+				}
+			}
+		});
 	}
 	
 	/**

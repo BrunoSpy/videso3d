@@ -16,17 +16,20 @@
 
 package fr.crnan.videso3d;
 
+import javax.swing.UIManager;
+
+import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.MainWindow;
 
 import gov.nasa.worldwind.Configuration;
 
 /**
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class Videso3D {
 	
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
 		if (Configuration.isMacOS())
 		{
@@ -37,10 +40,23 @@ public class Videso3D {
 		{
 			public void run()
 			{
-				// Create an AppFrame and immediately make it visible. As per Swing convention, this
-				// is done within an invokeLater call so that it executes on an AWT thread.
-			
-				new MainWindow().setVisible(true);
+				 //Installs Nimbus Look&Feel (requires Java 6 update 10)
+				for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels() ){
+					if ("Nimbus".equals(laf.getName())) {
+						try {
+							UIManager.setLookAndFeel(laf.getClassName());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+					}
+				}
+				
+			//	if(args.length > 0 && args[0].equals("analyze")) { 
+			//		new AnalyzeUI().setVisible(true);
+			//	} else {
+					new MainWindow();
+			//	}
 			}
 		});
 	}

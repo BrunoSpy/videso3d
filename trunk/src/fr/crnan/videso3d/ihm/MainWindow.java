@@ -50,7 +50,6 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -60,6 +59,7 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.SplashScreen;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.geo.GEOFileFilter;
+import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
 import fr.crnan.videso3d.formats.opas.OPASFileFilter;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.util.VidesoStatusBar;
@@ -100,16 +100,8 @@ public class MainWindow extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	}
 
-
-	/**
-	 * 
-	 * @param db
-	 */
 	public MainWindow(){
-
-		//Style Nimbus
-		this.setNimbus();
-		
+							
 		//Création du splashscreen
 		splashScreen = new SplashScreen();
 		splashScreen.setVisible(true);
@@ -149,7 +141,7 @@ public class MainWindow extends JFrame {
 				step++;
 			}
 		});
-
+		
 		//initialisation des objets 3D en background
 		new SwingWorker<String, Integer>(){
 			@Override
@@ -218,22 +210,7 @@ public class MainWindow extends JFrame {
 		//suppression du splashscreen et affichage de la fenêtre
 		splashScreen.dispose();
 		this.pack();
-				
-		//Test LPLN
-//		ProfilLayer layer = new ProfilLayer("LPLN");
-//		LPLNReader lpln = new LPLNReader(new File("/home/datas/Projets/Videso3D/datas/LPLN/48-2009.txt"), db);
-//		for(LPLNTrack track : lpln.getTracks()){
-//			LinkedList<Position> positions = new LinkedList<Position>();
-//			LinkedList<String> balises = new LinkedList<String>();
-//			LinkedList<String> annotations = new LinkedList<String>();
-//			for(LPLNTrackPoint point : track.getTrackPoints()){
-//				positions.add(point.getPosition());
-//				balises.add(point.getName());
-//				annotations.add(point.getName() + " " + point.getTime());
-//			}
-//			layer.addProfil3D(new Profil3D(balises, annotations, positions));
-//		}
-//		this.wwd.getModel().getLayers().add(layer);
+		this.setVisible(true);
 	}
 
 //	/**
@@ -333,6 +310,18 @@ public class MainWindow extends JFrame {
 	private JToolBar createToolBar(){
 		JToolBar toolbar = new JToolBar("Actions");
 
+		//Configuration
+		final JButton config = new JButton(new ImageIcon(getClass().getResource("/resources/configure.png")));
+		config.setToolTipText("Configurer les paramètres généraux de l'application");
+		config.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new ConfigurationUI().setVisible(true);
+			}
+		});
+		toolbar.add(config);
+		
 		//Analyse
 //		final JButton analyze = new JButton(new ImageIcon(getClass().getResource("/resources/analyze_22.png")));
 //		analyze.setToolTipText("Analyser les données Stip/Stpv");
@@ -357,6 +346,7 @@ public class MainWindow extends JFrame {
 				final JFileChooser fileChooser = new JFileChooser();
 				fileChooser.addChoosableFileFilter(new OPASFileFilter());
 				fileChooser.addChoosableFileFilter(new GEOFileFilter());
+				fileChooser.addChoosableFileFilter(new LPLNFileFilter());
 				if(fileChooser.showOpenDialog(trajectoires) == JFileChooser.APPROVE_OPTION){
 
 					new SwingWorker<String, Integer>(){
@@ -611,20 +601,4 @@ public class MainWindow extends JFrame {
 		return toolbar;
 	}
 
-	/**
-	 * Utilise le L&F Nimbus au lieu du L&F Metal</br>
-	 * Nécessite Java 6 Update 10
-	 */
-	private void setNimbus(){				
-		for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels() ){
-			if ("Nimbus".equals(laf.getName())) {
-				try {
-					UIManager.setLookAndFeel(laf.getClassName());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-			}
-		}
-	}
 }
