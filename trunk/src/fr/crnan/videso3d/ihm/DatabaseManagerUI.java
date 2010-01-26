@@ -22,13 +22,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -57,7 +66,7 @@ import fr.crnan.videso3d.stpv.Stpv;
 /**
  * Interface de gestion des base de données
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.2
  */
 @SuppressWarnings("serial")
 public class DatabaseManagerUI extends JFrame {
@@ -68,6 +77,11 @@ public class DatabaseManagerUI extends JFrame {
 	private JButton delete;
 		
 	private static ProgressMonitor progressMonitor;
+	
+	/**
+	 * Fichiers temporaires
+	 */
+	private List<File> files = null;
 	
 	public DatabaseManagerUI() {
 
@@ -119,7 +133,18 @@ public class DatabaseManagerUI extends JFrame {
 				JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 				if(fileChooser.showOpenDialog(add) == JFileChooser.APPROVE_OPTION){
-					addDatabase(fileChooser.getSelectedFile());
+					File file = fileChooser.getSelectedFile();
+					int index = file.getName().lastIndexOf(".");
+					String suffix = index == -1 ? "" : file.getName().substring(index);
+					if(suffix.equalsIgnoreCase(".zip")){
+						//unzip files
+						files = unzip(file);
+						//add datas
+						addDatabase(files.get(0).getAbsoluteFile());
+						//la suppression des fichiers est faite lorsque le parser a terminé
+					} else {
+						addDatabase(file);
+					}
 				}
 			}
 		});
@@ -129,6 +154,38 @@ public class DatabaseManagerUI extends JFrame {
 		delete.addActionListener(new TableListener());
 		buttons.add(delete);
 		this.getContentPane().add(buttons, BorderLayout.SOUTH);
+	}
+	
+	/**
+	 * Unzip file and return the list of unzipped files
+	 * @param file File to unzip
+	 * @return List of unzipped files
+	 */
+	private List<File> unzip(File file){
+		List<File> files = new LinkedList<File>();
+		byte[] data = new byte[2048];
+		try {
+			BufferedOutputStream dest = null;
+			ZipInputStream zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(file)));
+			
+			ZipEntry entree;
+			int count;
+			while((entree = zip.getNextEntry()) != null){
+				files.add(new File(entree.getName()));
+				dest = new BufferedOutputStream(new FileOutputStream(entree.getName()), 2048);
+				while((count = zip.read(data, 0, 2048)) != -1){
+					dest.write(data, 0, count);
+				}
+				dest.flush();
+				dest.close();
+			}
+			zip.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return files;
 	}
 	
 	private void addDatabase(File file){
@@ -192,8 +249,22 @@ public class DatabaseManagerUI extends JFrame {
 				if(evt.getPropertyName().equals("done")){
 					if((Boolean) evt.getNewValue()) firePropertyChange("baseChanged", "", type);
 					((DBTableModel)table.getModel()).update();
+					//suppression des fichiers temporaires si besoin
+					if(files != null){
+						for(File f: files){
+							f.delete();
+						}
+					}
 				} else if(evt.getPropertyName().equals("progress")){
-					if(progressMonitor.isCanceled()) fileParser.cancel(true);
+					if(progressMonitor.isCanceled()) {
+						fileParser.cancel(true);
+						//suppression des fichiers temporaires si besoin
+						if(files != null){
+							for(File f: files){
+								f.delete();
+							}
+						}
+					}
 					progressMonitor.setProgress((Integer)evt.getNewValue());	
 				} else if(evt.getPropertyName().equals("file")){
 					progressMonitor.setNote("Import du fichier "+(String)evt.getNewValue());
