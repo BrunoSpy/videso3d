@@ -22,22 +22,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -54,7 +45,9 @@ import javax.swing.table.AbstractTableModel;
 
 import org.jdesktop.swingx.JXTable;
 
+import eu.medsea.mimeutil.MimeUtil;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.edimap.Cartes;
@@ -77,11 +70,6 @@ public class DatabaseManagerUI extends JFrame {
 	private JButton delete;
 		
 	private static ProgressMonitor progressMonitor;
-	
-	/**
-	 * Fichiers temporaires
-	 */
-	private List<File> files = null;
 	
 	public DatabaseManagerUI() {
 
@@ -123,28 +111,37 @@ public class DatabaseManagerUI extends JFrame {
 			}
 		});
 		select.addActionListener(new TableListener());
-		
+
 		buttons.add(select);
 		buttons.add(Box.createHorizontalGlue());
 		add = new JButton("Ajouter une base...");
 		add.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-				if(fileChooser.showOpenDialog(add) == JFileChooser.APPROVE_OPTION){
-					File file = fileChooser.getSelectedFile();
-					int index = file.getName().lastIndexOf(".");
-					String suffix = index == -1 ? "" : file.getName().substring(index);
-					if(suffix.equalsIgnoreCase(".zip")){
-						//unzip files
-						files = unzip(file);
-						//add datas
-						addDatabase(files.get(0).getAbsoluteFile());
-						//la suppression des fichiers est faite lorsque le parser a terminé
-					} else {
-						addDatabase(file);
+				try {
+					JFileChooser fileChooser = new JFileChooser();
+					fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+					if(fileChooser.showOpenDialog(add) == JFileChooser.APPROVE_OPTION){
+						MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
+						File file = fileChooser.getSelectedFile();
+						if(MimeUtil.getMimeTypes(file).contains("application/zip")){
+							//add datas
+							addDatabase(FileManager.unzip(file).get(0).getAbsoluteFile());
+							//la suppression des fichiers est faite lorsque le parser a terminé
+						} else if(MimeUtil.getMimeTypes(file).contains("application/x-gzip")){
+							File tarFile = FileManager.gunzip(file);
+							if(MimeUtil.getMimeTypes(tarFile).contains("application/x-tar")){
+								addDatabase(FileManager.untar(tarFile).get(0).getAbsoluteFile());
+							} else {
+								//if ungzipped file is not a tar file, try to add datas
+								addDatabase(tarFile);
+							}
+						} else {
+							addDatabase(file);
+						}
 					}
+				} catch(Exception e1){
+					e1.printStackTrace();
 				}
 			}
 		});
@@ -156,37 +153,7 @@ public class DatabaseManagerUI extends JFrame {
 		this.getContentPane().add(buttons, BorderLayout.SOUTH);
 	}
 	
-	/**
-	 * Unzip file and return the list of unzipped files
-	 * @param file File to unzip
-	 * @return List of unzipped files
-	 */
-	private List<File> unzip(File file){
-		List<File> files = new LinkedList<File>();
-		byte[] data = new byte[2048];
-		try {
-			BufferedOutputStream dest = null;
-			ZipInputStream zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(file)));
-			
-			ZipEntry entree;
-			int count;
-			while((entree = zip.getNextEntry()) != null){
-				files.add(new File(entree.getName()));
-				dest = new BufferedOutputStream(new FileOutputStream(entree.getName()), 2048);
-				while((count = zip.read(data, 0, 2048)) != -1){
-					dest.write(data, 0, count);
-				}
-				dest.flush();
-				dest.close();
-			}
-			zip.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return files;
-	}
+	
 	
 	private void addDatabase(File file){
 		if(file.isFile()){
@@ -250,20 +217,12 @@ public class DatabaseManagerUI extends JFrame {
 					if((Boolean) evt.getNewValue()) firePropertyChange("baseChanged", "", type);
 					((DBTableModel)table.getModel()).update();
 					//suppression des fichiers temporaires si besoin
-					if(files != null){
-						for(File f: files){
-							f.delete();
-						}
-					}
+					FileManager.removeTempFiles();
 				} else if(evt.getPropertyName().equals("progress")){
 					if(progressMonitor.isCanceled()) {
 						fileParser.cancel(true);
 						//suppression des fichiers temporaires si besoin
-						if(files != null){
-							for(File f: files){
-								f.delete();
-							}
-						}
+						FileManager.removeTempFiles();
 					}
 					progressMonitor.setProgress((Integer)evt.getNewValue());	
 				} else if(evt.getPropertyName().equals("file")){
