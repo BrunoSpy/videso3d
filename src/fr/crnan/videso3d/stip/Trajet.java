@@ -32,8 +32,8 @@ public class Trajet {
 	private List<Couple<String, Boolean>> balises = new LinkedList<Couple<String,Boolean>>();
 	
 	public Trajet(String line){
-		this.setEclatement(line.substring(7, 12));
-		this.setRaccordement(line.substring(15, 20));
+		this.setEclatement(line.substring(7, 12).trim());
+		this.setRaccordement(line.substring(15, 20).trim());
 		this.setType(line.substring(23, 25));
 		if(!line.substring(31, 34).trim().isEmpty()) {
 			this.setFl(new Integer(line.substring(31, 34).trim()));
