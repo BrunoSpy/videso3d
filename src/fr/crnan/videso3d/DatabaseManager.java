@@ -36,7 +36,7 @@ public final class DatabaseManager{
 	/**
 	 * Types de base de données possibles
 	 */
-	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, Databases};
+	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, RadioCov, Databases};
 	/**
 	 * Base des frontières Pays
 	 */
@@ -61,6 +61,10 @@ public final class DatabaseManager{
 	 * Base ODS sélectionnée
 	 */
 	private Connection currentODS;
+	/**
+	 * Base couvertures radios s�lectionn�e
+	 */
+	private Connection currentRadioCov;	
 	/**
 	 * Connection par défaut
 	 */
@@ -187,6 +191,17 @@ public final class DatabaseManager{
 				}
 			}
 			return instance.currentPays;
+		case RadioCov:
+			if(instance.currentRadioCov == null) {
+				instance.currentRadioCov = DriverManager.getConnection("jdbc:sqlite:"+name);
+			} else {
+				if(!instance.currentRadioCov.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
+					//changement de base de données
+					instance.currentRadioCov.close();
+					instance.currentRadioCov = DriverManager.getConnection("jdbc:sqlite:"+name);
+				}
+			}
+			return instance.currentRadioCov;		
 		case Databases:
 			if(instance.databases == null) {
 				instance.databases = DriverManager.getConnection("jdbc:sqlite:"+name);
@@ -636,7 +651,30 @@ public final class DatabaseManager{
 	}
 
 	/**
-	 * Supprimer une base de données
+	 * Cree la structure des tables d'une base Couvertures Radios
+	 * @param name Nom de la base recevant les tables
+	 * @throws SQLException 
+	 */
+	public static void createRadioCov(String name, String path) throws SQLException {
+		Statement st = DatabaseManager.selectDB(Type.RadioCov, name).createStatement();
+		st.executeUpdate("create table cartes (id integer primary key autoincrement," +
+				"name varchar(32), " +
+				"type varchar(16), " +
+				"fichier varchar(64)" +
+		")");
+		st.close();
+		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
+		insertClef.setString(1, "path");
+		insertClef.setString(2, name);
+		insertClef.setString(3, path);
+		insertClef.executeUpdate();
+		insertClef.close();
+		DatabaseManager.addDatabase(name, Type.RadioCov, new SimpleDateFormat().format(new Date()));
+	}
+	
+	
+	/**
+	 * Supprimer une base de donnees
 	 * @param name Nom de la base
 	 * @throws SQLException 
 	 */
@@ -679,6 +717,12 @@ public final class DatabaseManager{
 				instance.currentPays = null;
 			}
 			break;
+		case RadioCov:
+			if (instance.currentRadioCov != null && instance.currentRadioCov.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
+				instance.currentRadioCov.close();
+				instance.currentRadioCov = null;
+			}
+			break;	
 		default:
 			break;
 		}
@@ -727,6 +771,8 @@ public final class DatabaseManager{
 			t = Type.Ods;
 		}else if(type.equalsIgnoreCase("Pays")){
 			t = Type.PAYS;
+		}else if(type.equalsIgnoreCase("RadioCov")){
+			t = Type.RadioCov;
 		}
 		st.close();
 		DatabaseManager.deleteDatabase(name, t);
@@ -763,7 +809,9 @@ public final class DatabaseManager{
 			DatabaseManager.selectDatabase(id, Type.Edimap);
 		} else if(type.equals("Ods")){
 			DatabaseManager.selectDatabase(id, Type.Ods);
-		}
+		} else if(type.equals("RadioCov")){
+			DatabaseManager.selectDatabase(id, Type.RadioCov);
+		}	
 	}
 
 	/**
@@ -870,6 +918,14 @@ public final class DatabaseManager{
 		return DatabaseManager.getCurrent(Type.Edimap);
 	}
 
+	/**
+	 * Renvoit une connection vers la base de donnees des couvertures radios selectionnee
+	 * @return {@link Statement}
+	 * @throws SQLException 
+	 */
+	public static Statement getCurrentRadioCov() throws SQLException {
+		return DatabaseManager.getCurrent(Type.RadioCov);
+	}
 	
 	
 	public static void closeAll(){
@@ -880,6 +936,7 @@ public final class DatabaseManager{
 				if(instance.currentStpv != null) { instance.currentStpv.close();instance.currentStpv= null;}
 				if(instance.currentEdimap != null) { instance.currentEdimap.close();instance.currentEdimap= null;}
 				if(instance.currentODS != null) { instance.currentODS.close();instance.currentODS = null;}
+				if(instance.currentRadioCov != null) { instance.currentRadioCov.close();instance.currentRadioCov = null;}
 				if(instance.databases != null) { instance.databases.close(); instance.databases = null;}
 			} catch (SQLException e) {
 				e.printStackTrace();
