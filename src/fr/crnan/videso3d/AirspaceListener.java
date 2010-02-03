@@ -74,12 +74,6 @@ public class AirspaceListener implements SelectListener {
 	@Override
 	public void selected(final SelectEvent event) {
 		
-		if(event.getTopObject() != null){
-			System.out.println(event.getEventAction() +" "+event.getTopObject().getClass());
-		} else {
-			System.out.println(event.getEventAction() +" "+"Objet nul");
-		}
-		
 		//suppression de la surbrillance
 		if (lastHighlit != null
 				&& (event.getTopObject() == null || !event.getTopObject().equals(lastHighlit)))
@@ -141,7 +135,7 @@ public class AirspaceListener implements SelectListener {
 					lastToolTip = o;
 					Point point = event.getPickPoint();
 					if(event.getTopObject() instanceof ObjectAnnotation){
-						lastAnnotation = ((ObjectAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5));
+						lastAnnotation = ((ObjectAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5)); //décalage de 5 pixels pour éviter le clignotement
 					} 
 					if(lastAnnotation != null) this.wwd.getAnnotationLayer().addAnnotation(lastAnnotation);
 					this.wwd.redraw();
