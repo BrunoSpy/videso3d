@@ -40,7 +40,6 @@ public class RectangleEdimap extends SurfaceQuad {
 						   HashMap<String, LatLonCautra> pointsRef,
 						   PaletteEdimap palette,
 						   HashMap<String, Entity> idAtc){
-		System.out.println(entity);
 		this.pointsRef = pointsRef;
 		this.name = entity.getValue("name");
 		List<Entity> points = (List<Entity>) entity.getEntity("geometry").getValue();
@@ -55,10 +54,8 @@ public class RectangleEdimap extends SurfaceQuad {
 		}
 		if(point2.getKeyword().equalsIgnoreCase("point")){
 			corner2 = pointsRef.get(((String)point2.getValue()).replaceAll("\"", ""));
-			//size = new QSizeF(coord2.x()-corner.x(), coord2.y()-corner.y());
 		} else {
 			corner2 = PointEdimap.fromEntity(point2);
-		//	size = new QSizeF(new Double(coord2[1])-corner.x(), (new Double(coord2[3])*-1)-corner.y());
 		}
 		LatLonCautra center = LatLonCautra.fromCautra((corner2.getCautra()[0]+corner.getCautra()[0])/2.0,
 				(corner2.getCautra()[1]+corner.getCautra()[1])/2.0);
@@ -89,7 +86,7 @@ public class RectangleEdimap extends SurfaceQuad {
 		String foregroundColor = idAtc.getValue("foreground_color");
 		BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());
 		String fill = idAtc.getValue("fill_visibility");
-		if(foregroundColor != null && fill != null){
+		if(foregroundColor != null && fill != null && palette.getColor(foregroundColor) != null){
 			if(fill.equalsIgnoreCase("1")) {
 				attrs.setInteriorMaterial(new Material(palette.getColor(foregroundColor)));
 				attrs.setDrawInterior(true);
