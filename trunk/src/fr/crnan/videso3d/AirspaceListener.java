@@ -33,6 +33,7 @@ import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
+import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfaceShape;
@@ -47,9 +48,18 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
  */
 public class AirspaceListener implements SelectListener {
 
+	/**
+	 * Dernier objet mis en surbrillance
+	 */
 	private Object lastHighlit;
+	/**
+	 * Dernière annotation affichée
+	 */
 	private Annotation lastAnnotation;
 	private Object lastAttrs;
+	/**
+	 * Dernier objet pour lequel on a affiché un tooltip
+	 */
 	private Object lastToolTip;
 
 	private VidesoGLCanvas wwd;
@@ -63,7 +73,14 @@ public class AirspaceListener implements SelectListener {
 	 */
 	@Override
 	public void selected(final SelectEvent event) {
-
+		
+		if(event.getTopObject() != null){
+			System.out.println(event.getEventAction() +" "+event.getTopObject().getClass());
+		} else {
+			System.out.println(event.getEventAction() +" "+"Objet nul");
+		}
+		
+		//suppression de la surbrillance
 		if (lastHighlit != null
 				&& (event.getTopObject() == null || !event.getTopObject().equals(lastHighlit)))
 		{
@@ -75,8 +92,11 @@ public class AirspaceListener implements SelectListener {
 			lastHighlit = null;
 		}
 
-		if (lastToolTip != null
-				&& (event.getTopObject() == null || !event.getTopObject().equals(lastHighlit)))
+		//suppression tooltip on rollover
+		if (lastToolTip != null										//un tooltip doit préalablement exister
+				&& (event.getTopObject() == null  					//l'objet survolé doit exister
+					|| !event.getTopObject().equals(lastToolTip))) 	//l'objet survolé doit être différent du précédent
+						
 		{
 			if(lastAnnotation != null) {
 				this.wwd.getAnnotationLayer().removeAnnotation(lastAnnotation);
@@ -106,6 +126,9 @@ public class AirspaceListener implements SelectListener {
 						highliteAttrs.setInteriorMaterial(new Material(Pallet.makeBrighter(((ShapeAttributes)lastAttrs).getInteriorMaterial().getDiffuse())));
 						highliteAttrs.setOutlineMaterial(new Material(Pallet.makeBrighter(((ShapeAttributes)lastAttrs).getOutlineMaterial().getDiffuse())));
 						((SurfaceShape) lastHighlit).setAttributes(highliteAttrs);
+					} else {
+						lastHighlit = null;
+						lastAttrs = null;
 					}
 				}
 			}
@@ -118,7 +141,7 @@ public class AirspaceListener implements SelectListener {
 					lastToolTip = o;
 					Point point = event.getPickPoint();
 					if(event.getTopObject() instanceof ObjectAnnotation){
-						lastAnnotation = ((ObjectAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y));
+						lastAnnotation = ((ObjectAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5));
 					} 
 					if(lastAnnotation != null) this.wwd.getAnnotationLayer().addAnnotation(lastAnnotation);
 					this.wwd.redraw();
@@ -193,8 +216,20 @@ public class AirspaceListener implements SelectListener {
 				}
 				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 			}			
-		} /*else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){
+		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){
 
-		}*/
+		} else if (event.getEventAction() == SelectEvent.LEFT_CLICK){
+			if(event.getTopObject() != null){ 
+				Object o = event.getTopObject();
+				if(o instanceof ObjectAnnotation){ //affichage du tooltip
+					Point point = event.getPickPoint();
+					this.wwd.getAnnotationLayer().addAnnotation(((ObjectAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5)));
+					this.wwd.redraw();
+				} else if (o instanceof GlobeAnnotation){ //suppression de l'annotation
+					this.wwd.getAnnotationLayer().removeAnnotation((GlobeAnnotation)o);
+					this.wwd.redraw();
+				}
+			}
+		}
 	}
 }
