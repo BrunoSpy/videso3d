@@ -32,14 +32,14 @@ import fr.crnan.videso3d.FileParser;
 /**
  * Jeu de cartes Edimap
  * @author Bruno Spyckerelle
- * @version 0.4
+ * @version 0.5
  */
-public class Cartes extends FileParser{
+public class Cartes extends FileParser {
 	
 	/**
 	 * Nombre de fichiers lus
 	 */
-	private int numberFiles = 6;
+	private int numberFiles = 7;
 	/**
 	 * Ensemble des cartes dynamiques
 	 */
@@ -49,9 +49,13 @@ public class Cartes extends FileParser{
 	 */
 	private List<Entity> cartesStatiques;
 	/**
-	 * Enemble des cartes secteurs
+	 * Ensemble des cartes secteurs
 	 */
 	private List<Entity> secteurs;
+	/**
+	 * Ensemble des volumes
+	 */
+	private List<Entity> volumes;
 	/**
 	 * Date de génération du jeu de cartes
 	 */
@@ -98,6 +102,7 @@ public class Cartes extends FileParser{
 		cartesDynamiques = (List<Entity>) cartes.getEntity().getValues("dynamique");
 		cartesStatiques = (List<Entity>) cartes.getEntity().getValues("statique");
 		secteurs = (List<Entity>) cartes.getEntity().getValues("secteur");
+		volumes = (List<Entity>) cartes.getEntity().getValues("volumeInteret");
 		date = cartes.getEntity().getValue("date");
 		version = cartes.getEntity().getValue("name");
 	}
@@ -119,6 +124,7 @@ public class Cartes extends FileParser{
 		this.cartesDynamiques = new LinkedList<Entity>();
 		this.cartesStatiques = new LinkedList<Entity>();		
 		this.secteurs = new LinkedList<Entity>();
+		this.volumes = new LinkedList<Entity>();
 		try {
 			//TODO prendre en compte la possibilité qu'il n'y ait pas de bdd Edimap
 			Statement edimapDB = DatabaseManager.getCurrentEdimap();
@@ -146,6 +152,14 @@ public class Cartes extends FileParser{
 					values.add(new Entity("fichierSousControle", rs.getString("fichier")));
 					Entity carte = new Entity("secteur", values);
 					this.secteurs.add(carte);
+				}
+				rs = edimapDB.executeQuery("select * from cartes where type = 'volume' order by name");
+				while(rs.next()){
+					List<Entity> values = new LinkedList<Entity>();
+					values.add(new Entity("name", rs.getString("name")));
+					values.add(new Entity("fichier", rs.getString("fichier")));
+					Entity carte = new Entity("volumeInteret", values);
+					this.volumes.add(carte);
 				}
 			}
 			
@@ -194,15 +208,18 @@ public class Cartes extends FileParser{
 		this.setFile("cartes secteur");
 		this.setProgress(3);
 		secteurs = (List<Entity>) cartes.getEntity().getValues("secteur");
+		this.setFile("cartes volumes");
+		this.setProgress(4);
+		volumes = (List<Entity>) cartes.getEntity().getValues("volumeInteret");
 		date = cartes.getEntity().getValue("date");
 		version = cartes.getEntity().getValue("name");
 		this.setFile("palette de couleur");
-		this.setProgress(4);
+		this.setProgress(5);
 		this.setPalette();
 		this.setFile("Insertion en base de données");
-		this.setProgress(5);
-		this.getFromFiles();
 		this.setProgress(6);
+		this.getFromFiles();
+		this.setProgress(7);
 		this.firePropertyChange("done", false, true);
 		return this.numberFiles();
 		}
@@ -239,6 +256,14 @@ public class Cartes extends FileParser{
 			insert.setString(3, carte.getValue("fichierSousControle"));
 			insert.executeUpdate();
 		}
+		iterator = this.getVolumes().iterator();
+		while(iterator.hasNext()){
+			Entity carte = iterator.next();
+			insert.setString(2, "volume");
+			insert.setString(1, carte.getValue("name"));
+			insert.setString(3, carte.getValue("fichier"));
+			insert.executeUpdate();
+		}
 	}
 	
 	/**
@@ -248,9 +273,9 @@ public class Cartes extends FileParser{
 	 * @throws SQLException
 	 * @throws FileNotFoundException
 	 */
-	public Carte getCarte(String name) throws SQLException, FileNotFoundException{
-		if(cartes.containsKey(name)) {
-			return cartes.get(name);
+	public Carte getCarte(String name, String type) throws SQLException, FileNotFoundException{
+		if(cartes.containsKey(name+type)) {
+			return cartes.get(name+type);
 		} else {
 			Statement st = DatabaseManager.getCurrent(DatabaseManager.Type.Databases);
 			ResultSet rs = st.executeQuery("select * from clefs where name='path' and type='"+DatabaseManager.getCurrentName(DatabaseManager.Type.Edimap)+"'");
@@ -258,7 +283,7 @@ public class Cartes extends FileParser{
 				this.path = rs.getString(4);
 			} 
 			st = DatabaseManager.getCurrentEdimap();
-			rs = st.executeQuery("select * from cartes where name='"+name+"'");
+			rs = st.executeQuery("select * from cartes where name='"+name+"' and type='"+type+"'");
 			rs.next();
 			String cartePath = this.path + "/"+ rs.getString(4) + ".NCT"; //TODO gérer l'extension
 			NectarReader carte = new NectarReader();
@@ -271,7 +296,7 @@ public class Cartes extends FileParser{
 			//		this.setProgress(carte.getProgress());
 			carte.doInBackground();
 			Carte c = new Carte(carte.getEntity(), this.getPalette());
-			cartes.put(name, c);
+			cartes.put(name+type, c);
 			return c;
 		}
 	}
@@ -314,6 +339,10 @@ public class Cartes extends FileParser{
 		return secteurs;
 	}
 
+	public List<Entity> getVolumes() {
+		return volumes;
+	}
+	
 	public String getDate() {
 		return date;
 	}

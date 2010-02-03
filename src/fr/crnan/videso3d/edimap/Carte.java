@@ -16,6 +16,8 @@
 package fr.crnan.videso3d.edimap;
 
 import fr.crnan.videso3d.geom.LatLonCautra;
+import fr.crnan.videso3d.layers.LayerSet;
+import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 
 import java.util.HashMap;
@@ -25,9 +27,9 @@ import java.util.List;
 /**
  * Carte Edimap
  * @author Bruno Spyckerelle
- *
+ * @version 0.2
  */
-public class Carte extends SurfaceShapeLayer {
+public class Carte extends LayerSet {
 	/**
 	 * Ensemble des points de référence de la carte
 	 */
@@ -41,7 +43,16 @@ public class Carte extends SurfaceShapeLayer {
 	
 	private String name;
 	
+	/**
+	 * Layers
+	 */
+	private SurfaceShapeLayer surfaceLayer = new SurfaceShapeLayer();
+	private AirspaceLayer airspaceLayer = new AirspaceLayer();
+	
 	public Carte(Entity carte, PaletteEdimap palette){
+		this.add(surfaceLayer);
+		this.add(airspaceLayer);
+		
 		Entity map = carte.getEntity("map");
 		this.name = map.getValue("name");
 		//récupération des points de référence
@@ -66,19 +77,21 @@ public class Carte extends SurfaceShapeLayer {
 			if(type.equalsIgnoreCase("PolylineEntity")){
 				String fill = (idAtc.get(entity.getValue("id_atc"))).getValue("fill_visibility");
 				if(fill != null && fill.equals("1")){ //polygone
-					this.addRenderable(new PolygonEdimap(entity, pointsRef, palette, idAtc));
+					this.surfaceLayer.addRenderable(new PolygonEdimap(entity, pointsRef, palette, idAtc));
 				} else { //polyligne
-					this.addRenderable(new PolylineEdimap(entity, pointsRef, palette, idAtc));
+					this.surfaceLayer.addRenderable(new PolylineEdimap(entity, pointsRef, palette, idAtc));
 				}
 				
 			} else if(type.equalsIgnoreCase("LineEntity")) {
-				this.addRenderable(new PolylineEdimap(entity, pointsRef, palette, idAtc));
+				this.surfaceLayer.addRenderable(new PolylineEdimap(entity, pointsRef, palette, idAtc));
 			} else if(type.equalsIgnoreCase("RectangleEntity")){
-				this.addRenderable(new RectangleEdimap(entity, pointsRef, palette, idAtc));
+				this.surfaceLayer.addRenderable(new RectangleEdimap(entity, pointsRef, palette, idAtc));
 			} else if(type.equalsIgnoreCase("TextEntity")){
 	//			this.addRenderable(new TextEdimap(entity, pointsRef, palette, idAtc);
 			} else if(type.equalsIgnoreCase("EllipseEntity")){
 	//			this.addRenderable(new EllipseEdimap(entity, pointsRef, palette, idAtc));
+			} else if(type.equalsIgnoreCase("MosaiqueEntity")) {
+				this.airspaceLayer.addAirspaces(new MosaiqueEntity(entity, pointsRef));
 			}
 		}
 //		Iterator<Entry<String, PointEdimap>> ite = pointsRef.entrySet().iterator();

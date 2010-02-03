@@ -39,7 +39,7 @@ import fr.crnan.videso3d.edimap.Entity;
 /**
  * Sélecteur de cartes edimap
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.2
  */
 @SuppressWarnings("serial")
 public class EdimapView extends JPanel {
@@ -56,6 +56,10 @@ public class EdimapView extends JPanel {
 	 * Cartes secteurs
 	 */
 	private JPanel secteurs = new JPanel();
+	/**
+	 * Cartes volumes
+	 */
+	private JPanel volumes = new JPanel();
 	
 	private VidesoGLCanvas wwd;
 	
@@ -72,11 +76,12 @@ public class EdimapView extends JPanel {
 		statiques.setBorder(BorderFactory.createTitledBorder("Cartes statiques"));
 		dynamiques.setBorder(BorderFactory.createTitledBorder("Cartes dynamiques"));
 		secteurs.setBorder(BorderFactory.createTitledBorder("Cartes secteurs"));
-		
+		volumes.setBorder(BorderFactory.createTitledBorder("Cartes volumes"));
 		try {
 			if(DatabaseManager.getCurrentEdimap() != null) {
 				cartes = new Cartes();
 				this.add(this.buildPanel(secteurs, cartes.getSecteurs()));
+				this.add(this.buildPanel(volumes, cartes.getVolumes()));
 				this.add(this.buildPanel(statiques, cartes.getCartesStatiques()));
 				this.add(this.buildPanel(dynamiques, cartes.getCartesDynamiques()));
 				this.add(Box.createVerticalGlue());
@@ -112,8 +117,18 @@ public class EdimapView extends JPanel {
 		public void itemStateChanged(ItemEvent e) {
 			try {
 				String name = ((JCheckBox)e.getSource()).getText();
-				wwd.addEdimapLayer(cartes.getCarte(name));
-				wwd.toggleLayer(cartes.getCarte(name), e.getStateChange() == ItemEvent.SELECTED);
+				String type = "";
+				if(dynamiques.isAncestorOf((Component) e.getSource())){
+					type = "dynamique";
+				} else if (statiques.isAncestorOf((Component) e.getSource())){
+					type = "statique";
+				} else if (secteurs.isAncestorOf((Component) e.getSource())){
+					type = "secteur";
+				} else if (volumes.isAncestorOf((Component) e.getSource())){
+					type = "volume";
+				} 
+				wwd.addEdimapLayer(cartes.getCarte(name, type));
+				wwd.toggleLayer(cartes.getCarte(name, type), e.getStateChange() == ItemEvent.SELECTED);
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			} catch (SQLException e1) {
