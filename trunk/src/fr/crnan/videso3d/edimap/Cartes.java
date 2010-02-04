@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,7 +36,7 @@ import fr.crnan.videso3d.FileParser;
  * @version 0.5
  */
 public class Cartes extends FileParser {
-	
+
 	/**
 	 * Nombre de fichiers lus
 	 */
@@ -76,15 +77,15 @@ public class Cartes extends FileParser {
 	 * Chemin vers le répertoire contenant les cartes
 	 */
 	private String path;
-	
+
 	private Connection conn;
-	
+
 	/**
 	 * Liste des cartes crées
 	 */
 	HashMap<String, Carte> cartes = new HashMap<String, Carte>();
 
-	
+
 	/**
 	 * Récupère les données du fichier carac_jeu
 	 * @param path String Chemin vers le fichier carac_jeu
@@ -162,12 +163,12 @@ public class Cartes extends FileParser {
 					this.volumes.add(carte);
 				}
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 
 	@Override
 	protected void getFromFiles() {
@@ -187,7 +188,7 @@ public class Cartes extends FileParser {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public Integer doInBackground() {
 		this.setFile("carac_jeu");
@@ -222,8 +223,8 @@ public class Cartes extends FileParser {
 		this.setProgress(7);
 		this.firePropertyChange("done", false, true);
 		return this.numberFiles();
-		}
-	
+	}
+
 	/**
 	 * Insère les données en base
 	 * @throws DatabaseError
@@ -231,41 +232,49 @@ public class Cartes extends FileParser {
 	private void insertCartes() throws SQLException{
 		//insertion des cartes en base de données
 		PreparedStatement insert = this.conn.prepareStatement("insert into cartes (name, type, fichier) values " +
-				"(?, ?, ?)");
+		"(?, ?, ?)");
 		Iterator<Entity> iterator = this.getCartesDynamiques().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			insert.setString(2, "dynamique");
-			insert.setString(1, carte.getValue("name"));
-			insert.setString(3, carte.getValue("fichierActive"));
-			insert.executeUpdate();
+			if(new File(this.path+"/"+carte.getValue("fichierActive")+ ".NCT").exists()){
+				insert.setString(2, "dynamique");
+				insert.setString(1, carte.getValue("name"));
+				insert.setString(3, carte.getValue("fichierActive"));
+				insert.executeUpdate();
+			}
 		}
 		iterator = this.getCartesStatiques().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			insert.setString(2, "statique");
-			insert.setString(1, carte.getValue("name"));
-			insert.setString(3, carte.getValue("fichier"));
-			insert.executeUpdate();
+			if(new File(this.path+"/"+carte.getValue("fichier")+ ".NCT").exists()){
+				insert.setString(2, "statique");
+				insert.setString(1, carte.getValue("name"));
+				insert.setString(3, carte.getValue("fichier"));
+				insert.executeUpdate();
+			}
 		}
 		iterator = this.getSecteurs().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			insert.setString(2, "secteur");
-			insert.setString(1, carte.getValue("name"));
-			insert.setString(3, carte.getValue("fichierSousControle"));
-			insert.executeUpdate();
+			if(new File(this.path+"/"+carte.getValue("fichierSousControle")+ ".NCT").exists()){
+				insert.setString(2, "secteur");
+				insert.setString(1, carte.getValue("name"));
+				insert.setString(3, carte.getValue("fichierSousControle"));
+				insert.executeUpdate();
+			}
 		}
 		iterator = this.getVolumes().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			insert.setString(2, "volume");
-			insert.setString(1, carte.getValue("name"));
-			insert.setString(3, carte.getValue("fichier"));
-			insert.executeUpdate();
+			if(new File(this.path+"/"+carte.getValue("fichier")+ ".NCT").exists()){//le fichier carac_jeu peut contenir des cartes qui ne sont pas présentes dans le dossier
+				insert.setString(2, "volume");
+				insert.setString(1, carte.getValue("name"));
+				insert.setString(3, carte.getValue("fichier"));
+				insert.executeUpdate();
+			}
 		}
 	}
-	
+
 	/**
 	 * Renvoit la carte correspondante
 	 * @param name Nom de la carte
@@ -300,8 +309,8 @@ public class Cartes extends FileParser {
 			return c;
 		}
 	}
-	
-	
+
+
 	private void setPalette(){
 		NectarReader paletteFichier = new NectarReader();
 		try {
@@ -312,9 +321,9 @@ public class Cartes extends FileParser {
 			this.palette = new PaletteEdimap();
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Palette de couleurs
 	 * @return PaletteEdimap
@@ -342,7 +351,7 @@ public class Cartes extends FileParser {
 	public List<Entity> getVolumes() {
 		return volumes;
 	}
-	
+
 	public String getDate() {
 		return date;
 	}
@@ -359,9 +368,9 @@ public class Cartes extends FileParser {
 	@Override
 	public void done() {
 		if(this.isCancelled()){
-			
+
 		}
 	}
 
-	
+
 }
