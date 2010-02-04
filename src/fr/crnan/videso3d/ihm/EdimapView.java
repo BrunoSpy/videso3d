@@ -81,7 +81,7 @@ public class EdimapView extends JPanel {
 			if(DatabaseManager.getCurrentEdimap() != null) {
 				cartes = new Cartes();
 				this.add(this.buildPanel(secteurs, cartes.getSecteurs()));
-				this.add(this.buildPanel(volumes, cartes.getVolumes()));
+				if(!cartes.getVolumes().isEmpty()) this.add(this.buildPanel(volumes, cartes.getVolumes()));
 				this.add(this.buildPanel(statiques, cartes.getCartesStatiques()));
 				this.add(this.buildPanel(dynamiques, cartes.getCartesDynamiques()));
 				this.add(Box.createVerticalGlue());
