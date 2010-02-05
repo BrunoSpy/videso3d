@@ -24,10 +24,10 @@ import gov.nasa.worldwind.Configuration;
 
 /**
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class Videso3D {
-	
+
 	public static void main(final String[] args)
 	{
 		if (Configuration.isMacOS())
@@ -35,11 +35,12 @@ public class Videso3D {
 			System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Videso 3D");
 		}
 
-		java.awt.EventQueue.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				 //Installs Nimbus Look&Feel (requires Java 6 update 10)
+		// prevents flashing during window resizing
+		System.setProperty("sun.awt.noerasebackground", "true"); 
+
+		java.awt.EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				//Installs Nimbus Look&Feel (requires Java 6 update 10)
 				for (UIManager.LookAndFeelInfo laf : UIManager.getInstalledLookAndFeels() ){
 					if ("Nimbus".equals(laf.getName())) {
 						try {
@@ -50,12 +51,13 @@ public class Videso3D {
 
 					}
 				}
-				
-			//	if(args.length > 0 && args[0].equals("analyze")) { 
-			//		new AnalyzeUI().setVisible(true);
-			//	} else {
+
+
+				//if(args.length > 0 && args[0].equals("analyze")) { 
+				//	new AnalyzeUI().setVisible(true);
+				//} else {
 					new MainWindow();
-			//	}
+				//}
 			}
 		});
 	}
