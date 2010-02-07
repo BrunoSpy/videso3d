@@ -1,0 +1,4 @@
+#!/bin/sh
+echo "Lancement de Videso 3D"
+cd $(dirname $0)/datas
+java -Djava.library.path=. -jar videso3d-linux32.jar
