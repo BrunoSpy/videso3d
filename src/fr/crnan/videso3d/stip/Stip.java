@@ -24,9 +24,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
@@ -44,7 +48,7 @@ public class Stip extends FileParser{
 	/**
 	 * Nombre de fichiers gérés
 	 */
-	private int numberFiles = 11;
+	private int numberFiles = 12;
 	
 	/**
 	 * Version des fichiers Stip
@@ -78,6 +82,10 @@ public class Stip extends FileParser{
 				DatabaseManager.createSTIP(this.name);
 				//parsing des fichiers et stockage en base
 				this.getFromFiles();
+				//table d'association traj->iti
+				this.setProgress(11);
+				this.setFile("TRAJITI"); 
+			//	this.insertTrajIti(); //Table d'association trajet->iti, pas forcément utile et long à générer
 				try {
 					this.conn.commit();
 				} catch (SQLException e) {
@@ -90,6 +98,7 @@ public class Stip extends FileParser{
 		}
 		return this.numberFiles;
 	}
+
 	@Override
 	public void done(){
 		if(this.isCancelled()){//si le parsing a été annulé, on fait le ménage
@@ -166,7 +175,7 @@ public class Stip extends FileParser{
 			while(in.ready()){
 				String line = in.readLine();
 				if(line.length() >= 30)  
-					this.insertBalInt(new BalInt(in.readLine()));
+					this.insertBalInt(new BalInt(line));
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -748,6 +757,42 @@ public class Stip extends FileParser{
 		insert.addBatch();
 	}
 
+	@SuppressWarnings("unused")
+	private void insertTrajIti() throws SQLException {
+		Statement st = this.conn.createStatement();
+		ResultSet rs = st.executeQuery("select id, eclatement, raccordement from trajets");
+		LinkedList<ArrayList<Object>> trajets = new LinkedList<ArrayList<Object>>();
+		while(rs.next()){
+			ArrayList<Object> trajet = new ArrayList<Object>();
+			trajet.add(rs.getInt(1));
+			trajet.add(rs.getString(2));
+			trajet.add(rs.getString(3));
+			trajets.add(trajet);
+		}
+		List<Couple<Integer, Integer>> table = new LinkedList<Couple<Integer,Integer>>();
+		for(ArrayList<Object> trajet : trajets){
+			System.out.println("Test nouveau trajet"+trajet.get(0));
+			String eclatement = (String) trajet.get(1);
+			String raccordement = (String) trajet.get(2);
+			//tous les itis ayant les deux balises qui se succèdent dans le bon ordre
+			rs = st.executeQuery("SELECT *,COUNT(*) as count, sum(balitis.id) as total from itis, balitis "+
+								"WHERE itis.id = balitis.iditi and (balitis.balise='"+eclatement+"'  or balitis.balise = '"+raccordement+"') "+
+								"GROUP BY iditi HAVING count = 2 and total = 2*balitis.id -1 and balise = '"+raccordement+"'");
+			while(rs.next()) 
+				table.add(new Couple<Integer, Integer>((Integer) trajet.get(0), rs.getInt(1)));
+		}
+		st.close();
+		//enregistrement
+		PreparedStatement insert = this.conn.prepareStatement("insert into trajiti (idtraj, iditi) values (?, ?)");
+		for(Couple<Integer, Integer> c : table){
+			insert.setInt(1, c.getFirst());
+			insert.setInt(2, c.getSecond());
+			insert.addBatch();
+		}
+		insert.executeBatch();
+		insert.close();
+	}
+	
 	@Override
 	public int numberFiles() {
 		return this.numberFiles;

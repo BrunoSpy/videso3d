@@ -340,17 +340,17 @@ public class MainWindow extends JFrame {
 		toolbar.add(config);
 		
 		//Analyse
-//		final JButton analyze = new JButton(new ImageIcon(getClass().getResource("/resources/analyze_22.png")));
-//		analyze.setToolTipText("Analyser les données Stip/Stpv");
-//		analyze.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				new AnalyzeUI().setVisible(true);
-//			}
-//		});
-//		toolbar.add(analyze);
-//		toolbar.addSeparator();
+		final JButton analyze = new JButton(new ImageIcon(getClass().getResource("/resources/analyze_22.png")));
+		analyze.setToolTipText("Analyser les données Stip/Stpv");
+		analyze.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new AnalyzeUI().setVisible(true);
+			}
+		});
+		toolbar.add(analyze);
+		toolbar.addSeparator();
 		
 		
 		//Ajouter trajectoires
