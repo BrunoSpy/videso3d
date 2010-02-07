@@ -55,6 +55,7 @@ import javax.swing.event.ChangeListener;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
+import fr.crnan.videso3d.AirspaceListener;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.SplashScreen;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -201,16 +202,32 @@ public class MainWindow extends JFrame {
 		//		wwdFrame.setVisible(true);
 		//		desktop.add(wwdFrame);
 
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, dataExplorer, wwd);
+		JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, dataExplorer, wwd);
+		mainPane.setOneTouchExpandable(true);
+		mainPane.setBorder(null);
+		mainPane.setPreferredSize(new Dimension(600, 0));
+		
+		ContextPanel context = new ContextPanel();
+		wwd.addSelectListener(context);
+		wwd.addSelectListener(new AirspaceListener(wwd, context));
+		context.setMinimumSize(new Dimension(0,0)); //taille mini à 0 pour permettre la fermeture du panneau avec setDividerLocation
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, mainPane, context);
 		splitPane.setOneTouchExpandable(true);
-		splitPane.setContinuousLayout(true);
+		splitPane.setResizeWeight(1.0);
+		
+		
+		
 		this.getContentPane().add(splitPane, BorderLayout.CENTER);
 
-		this.setPreferredSize(new Dimension(800, 600));
 		//suppression du splashscreen et affichage de la fenêtre
 		splashScreen.dispose();
 		this.pack();
+		//FullScreen
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setVisible(true);
+		
+		//ferme le panneau d'informations, doit être fait après l'affichage de la fenêtre
+		splitPane.setDividerLocation(1.0);
 	}
 
 //	/**

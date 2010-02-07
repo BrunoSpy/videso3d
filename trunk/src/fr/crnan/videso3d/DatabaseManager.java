@@ -27,7 +27,7 @@ import java.sql.*;
 /**
  * Gère la base de données
  * @author Bruno Spyckerelle
- * @version 0.5.1
+ * @version 0.6
  */
 public final class DatabaseManager{
 
@@ -62,7 +62,7 @@ public final class DatabaseManager{
 	 */
 	private Connection currentODS;
 	/**
-	 * Base couvertures radios s�lectionn�e
+	 * Base couvertures radios sélectionnée
 	 */
 	private Connection currentRadioCov;	
 	/**
@@ -620,6 +620,10 @@ public final class DatabaseManager{
 				"bal2 varchar(5), " +
 				"balise varchar(5), " +
 				"appartient boolean)");
+		//table d'association trajets -> itis
+		st.executeUpdate("create table trajiti (id integer primary key autoincrement, " +
+				"idtraj int, " +
+				"iditi int)");
 		//on référence la base de données
 		DatabaseManager.addDatabase(name, Type.STIP, new SimpleDateFormat().format(new Date()));
 	}

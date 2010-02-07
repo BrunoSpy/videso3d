@@ -33,6 +33,8 @@ import javax.swing.border.EmptyBorder;
 @SuppressWarnings("serial")
 public class TitledPanel extends JPanel {
 
+	private  JLabel titleLabel = new JLabel();
+	
 	public TitledPanel(String title) {
 		this.setLayout(new BorderLayout());
 		//TODO Utiliser la palette
@@ -45,12 +47,15 @@ public class TitledPanel extends JPanel {
         titlePanel.setLayout(new BorderLayout());
         titlePanel.setBorder(new CompoundBorder(
                 new ChiselBorder(), new EmptyBorder(6,8,6,0)));
-        JLabel demoListLabel = new JLabel(title);
-        demoListLabel.setFont(demoListLabel.getFont().deriveFont(Font.BOLD));
-        demoListLabel.setOpaque(false);
-        demoListLabel.setHorizontalAlignment(JLabel.LEADING);
-        titlePanel.add(demoListLabel, BorderLayout.CENTER);
+        titleLabel.setText(title);
+        titleLabel.setFont(titleLabel.getFont().deriveFont(Font.BOLD));
+        titleLabel.setOpaque(false);
+        titleLabel.setHorizontalAlignment(JLabel.LEADING);
+        titlePanel.add(titleLabel, BorderLayout.CENTER);
         this.add(titlePanel, BorderLayout.NORTH);
 	}
 	
+	public void setTitle(String title){
+		titleLabel.setText(title);
+	}
 }

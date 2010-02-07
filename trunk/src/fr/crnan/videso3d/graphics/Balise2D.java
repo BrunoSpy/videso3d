@@ -36,14 +36,13 @@ import gov.nasa.worldwind.render.markers.Marker;
  * Balise 2D projetée sur le terrain.<br />
  * A ajouter à un BaliseLayer pour être affichée sur le globe.
  * @author Bruno Spyckerelle
- * @version 0.4
+ * @version 0.5
  */
-public class Balise2D extends UserFacingText {
+public class Balise2D extends MarkerAnnotation {
+		
+	private UserFacingText text;
 	
-	/**
-	 * Cercle centré sur la position de la balise
-	 */
-	private MarkerAnnotation marker;
+	private String name;
 	
 	/**
 	 * Crée une balise 2D
@@ -51,44 +50,39 @@ public class Balise2D extends UserFacingText {
 	 * @param position {@link LatLon} Position de la balise
 	 */
 	public Balise2D(CharSequence name, Position position){
-		super(name, new Position(Angle.fromDegrees(position.latitude.degrees+0.01), position.longitude, position.elevation));
-		this.setFont(new Font("Sans Serif", Font.PLAIN, 9));
-		this.setColor(Pallet.getColorBaliseText());
+		super(position, new BasicMarkerAttributes());
+		this.name = (String) name;
+		this.getAttributes().setMarkerPixels(3);
+		this.getAttributes().setMaterial(new Material(Pallet.getColorBaliseMarker()));
+		this.setAnnotation("Balise "+name);
 		
-		BasicMarkerAttributes attrs = new BasicMarkerAttributes();
-		attrs.setMarkerPixels(3);
-		attrs.setMaterial(new Material(Pallet.getColorBaliseMarker()));
+		this.text = new UserFacingText(name, new Position(Angle.fromDegrees(position.latitude.degrees+0.01), position.longitude, position.elevation));
+		this.text.setFont(new Font("Sans Serif", Font.PLAIN, 9));
+		this.text.setColor(Pallet.getColorBaliseText());
+		
+
 		//attrs.setMaxMarkerSize(3000);
 		//attrs.setMinMarkerSize(700);
-		this.marker = new MarkerAnnotation(new Position(position, 0), attrs);
-		this.marker.setAnnotation("Balise "+name);	
+
 		Configuration.addPropertyChangeListener(new PropertyChangeListener() {
 			
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				if(evt.getPropertyName().equals(Configuration.COLOR_BALISE_MARKER)){
-					marker.getAttributes().setMaterial(new Material(Pallet.getColorBaliseMarker()));
+					getAttributes().setMaterial(new Material(Pallet.getColorBaliseMarker()));
 				} else if(evt.getPropertyName().equals(Configuration.COLOR_BALISE_TEXTE)){
-					setColor(Pallet.getColorBaliseText());
+					text.setColor(Pallet.getColorBaliseText());
 				}
 			}
 		});
 	}
 	
-	/**
-	 * 
-	 * @param text Texte de l'annotation
-	 */
-	public void setAnnotation(String text){
-		this.marker.setAnnotation(text);
-	}
-	
 	public UserFacingText getUserFacingText(){
-		return this;
+		return this.text;
 	}
 	
 	public Marker getMarker(){
-		return this.marker;
+		return this;
 	}
 	
 	/**
@@ -97,12 +91,16 @@ public class Balise2D extends UserFacingText {
 	 */
 	public void highlight(Boolean bool){
 		if(bool) {
-			this.marker.getAttributes().setMaterial(Material.YELLOW);
-			this.setColor(Color.YELLOW);
+			this.getAttributes().setMaterial(Material.YELLOW);
+			this.text.setColor(Color.YELLOW);
 		} else {
-			this.marker.getAttributes().setMaterial(Material.WHITE);
-			this.setColor(Color.WHITE);
+			this.getAttributes().setMaterial(Material.WHITE);
+			this.text.setColor(Color.WHITE);
 		}
+	}
+
+	public String getName() {
+		return this.name;
 	}
 	
 }

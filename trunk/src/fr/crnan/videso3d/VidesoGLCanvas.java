@@ -162,8 +162,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		
 		//Proxy
 		Configuration.initializeProxy();
-		
-		this.addSelectListener(new AirspaceListener(this));		
 
 //		//Latitudes et longitudes
 		Layer latlon = new LatLonGraticuleLayer();
@@ -470,6 +468,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			
 			st.close();
 		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		

@@ -28,7 +28,10 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.ObjectAnnotation;
+import fr.crnan.videso3d.ihm.ContextPanel;
+import gov.nasa.worldwind.awt.AWTInputHandler;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.render.Annotation;
@@ -40,6 +43,8 @@ import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.AbstractAirspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
+import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
+import gov.nasa.worldwind.render.markers.MarkerAttributes;
 
 /**
  * Listener d'évènements sur les airspaces et shapes
@@ -62,10 +67,13 @@ public class AirspaceListener implements SelectListener {
 	 */
 	private Object lastToolTip;
 
-	private VidesoGLCanvas wwd;
+	final private VidesoGLCanvas wwd;
 
-	public AirspaceListener(VidesoGLCanvas wwd){
+	final private ContextPanel context;
+	
+	public AirspaceListener(VidesoGLCanvas wwd, ContextPanel context){
 		this.wwd = wwd;
+		this.context = context;
 	}
 
 	/* (non-Javadoc)
@@ -82,7 +90,9 @@ public class AirspaceListener implements SelectListener {
 				((AbstractAirspace)lastHighlit).setAttributes((AirspaceAttributes)lastAttrs);
 			} else if(lastHighlit instanceof SurfaceShape){
 				((SurfaceShape)lastHighlit).setAttributes((ShapeAttributes)lastAttrs);
-			} 
+			} else if(lastHighlit instanceof Balise2D){
+				((Balise2D)lastHighlit).setAttributes((MarkerAttributes) lastAttrs);
+			}
 			lastHighlit = null;
 		}
 
@@ -120,6 +130,12 @@ public class AirspaceListener implements SelectListener {
 						highliteAttrs.setInteriorMaterial(new Material(Pallet.makeBrighter(((ShapeAttributes)lastAttrs).getInteriorMaterial().getDiffuse())));
 						highliteAttrs.setOutlineMaterial(new Material(Pallet.makeBrighter(((ShapeAttributes)lastAttrs).getOutlineMaterial().getDiffuse())));
 						((SurfaceShape) lastHighlit).setAttributes(highliteAttrs);
+					} else if(event.getTopObject() instanceof Balise2D) {
+						lastHighlit = (Balise2D)o;
+						lastAttrs = ((Balise2D)lastHighlit).getAttributes();
+						BasicMarkerAttributes  highliteAttrs = new BasicMarkerAttributes((BasicMarkerAttributes) lastAttrs);
+						highliteAttrs.setMaterial(new Material(Pallet.makeBrighter(((MarkerAttributes)lastAttrs).getMaterial().getDiffuse())));
+						((Balise2D)lastHighlit).setAttributes(highliteAttrs);
 					} else {
 						lastHighlit = null;
 						lastAttrs = null;
@@ -159,7 +175,8 @@ public class AirspaceListener implements SelectListener {
 				opacityItem.add(slider);
 				menu.add(opacityItem);
 
-				//menu.add("Rechercher...");
+				JMenuItem contextItem = new JMenuItem("Informations...");				
+				menu.add(contextItem);
 
 
 				//Ajout des listeners en fonction du type d'objet
@@ -207,11 +224,21 @@ public class AirspaceListener implements SelectListener {
 							}
 						}
 					});
+				} else if(lastAttrs instanceof MarkerAttributes){
+					contextItem.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							context.showBalise(((Balise2D)event.getTopObject()).getName());
+							context.open();
+						}
+					});
 				}
+				
 				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 			}			
 		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){
-
+			
 		} else if (event.getEventAction() == SelectEvent.LEFT_CLICK){
 			if(event.getTopObject() != null){ 
 				Object o = event.getTopObject();
