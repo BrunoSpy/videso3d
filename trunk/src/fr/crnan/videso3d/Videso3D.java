@@ -18,6 +18,7 @@ package fr.crnan.videso3d;
 
 import javax.swing.UIManager;
 
+import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.MainWindow;
 
 import gov.nasa.worldwind.Configuration;
