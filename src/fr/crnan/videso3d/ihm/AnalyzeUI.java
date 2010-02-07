@@ -37,6 +37,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
@@ -51,6 +53,7 @@ import com.mxgraph.view.mxGraph;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.graphs.GraphStyle;
 import fr.crnan.videso3d.graphs.Iti;
+import fr.crnan.videso3d.graphs.ResultPanel;
 /**
  * Fenêtre d'analyse des données Stip et Stpv
  * @author Bruno Spyckerelle
@@ -59,9 +62,8 @@ import fr.crnan.videso3d.graphs.Iti;
 public class AnalyzeUI extends JFrame {
 
 	private JTabbedPane tabPane = new JTabbedPane();
-	mxGraph graph = new mxGraph();
-	mxCell group = null;
-	mxStackLayout stack = null;
+
+	private ContextPanel context = new ContextPanel();
 	
 	public AnalyzeUI(){
 		super();
@@ -70,11 +72,6 @@ public class AnalyzeUI extends JFrame {
 		this.add(this.createToolbar(), BorderLayout.PAGE_START);
 
 		this.add(this.createStatusBar(), BorderLayout.PAGE_END);
-
-
-		//panel d'infos contextuelles
-		ContextPanel context = new ContextPanel(graph);
-		graph.getSelectionModel().addListener(mxEvent.CHANGE, context);
 
 		JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, context, tabPane);
 		splitpane.setOneTouchExpandable(true);
@@ -89,8 +86,14 @@ public class AnalyzeUI extends JFrame {
 
 
 
-	private JScrollPane createResultPanel(){
+	private ResultPanel createResultPanel(String type, String search){
 
+		mxGraph graph = new mxGraph();
+		mxCell group = null;
+		mxStackLayout stack = null;
+		
+		graph.getSelectionModel().addListener(mxEvent.CHANGE, context);
+		
 		graph.setCellsCloneable(false);
 		graph.setCellsEditable(false);
 		graph.setCellsResizable(false);
@@ -101,16 +104,24 @@ public class AnalyzeUI extends JFrame {
 		
 		Set<Object> groups = new HashSet<Object>();
 		((mxCell)group).setConnectable(false);
-
-		for(int i = 1; i< 15; i++){
-			mxCell iti = (mxCell)Iti.addIti(graph, group, i);
-			groups.add(iti);
-			graph.addListener(mxEvent.CELLS_FOLDED, new CellFoldedListener(iti));
-		}
-		
-		graph.updateGroupBounds(groups.toArray(), graph.getGridSize());
-
 		stack = new mxStackLayout(graph, false);
+		
+		if(type.equals("iti")){
+			try {
+				Statement st = DatabaseManager.getCurrentStip();
+				ResultSet rs = st.executeQuery("select iditi from balitis where balise='"+search+"'");
+				while(rs.next()){
+					mxCell iti = (mxCell)Iti.addIti(graph, group, rs.getInt(1));
+					groups.add(iti);
+					graph.addListener(mxEvent.CELLS_FOLDED, new CellFoldedListener(iti, stack, graph, group));
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			
+		}
+		graph.updateGroupBounds(groups.toArray(), graph.getGridSize());
 
 		stack.execute(group);
 
@@ -118,7 +129,7 @@ public class AnalyzeUI extends JFrame {
 
 		mxGraphComponent graphComponent = new mxGraphComponent(graph);
 		graphComponent.setBorder(null);
-		JScrollPane result = new JScrollPane(graphComponent);
+		ResultPanel result = new ResultPanel(graphComponent);
 		result.setBorder(null);
 		return result;
 	}
@@ -131,7 +142,7 @@ public class AnalyzeUI extends JFrame {
 
 		String[] types = {"balise", "iti"};
 
-		JComboBox type = new JComboBox(types);
+		final JComboBox type = new JComboBox(types);
 
 		toolbar.add(type);
 
@@ -150,7 +161,7 @@ public class AnalyzeUI extends JFrame {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		JComboBox search = new JComboBox(results.toArray());
+		final JComboBox search = new JComboBox(results.toArray());
 		search.setToolTipText("Rechercher un élément Stip affiché");
 		search.setEditable(true);
 		AutoCompleteDecorator.decorate(search);
@@ -162,8 +173,19 @@ public class AnalyzeUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Component content = createResultPanel();
-				tabPane.addTab("Recherche", content);
+				String t = type.getSelectedItem().toString();
+				String s = search.getSelectedItem().toString();
+				ResultPanel content = createResultPanel(t, s);
+				context.setGraph(content.getGraph());
+				tabPane.addTab(t+" "+s, content);
+				tabPane.addChangeListener(new ChangeListener() {
+					
+					@Override
+					public void stateChanged(ChangeEvent arg0) {
+						context.setGraph(((ResultPanel)tabPane.getSelectedComponent()).getGraph());
+					}
+				});
+				
 				ButtonTabComponent buttonTab = new ButtonTabComponent(tabPane);
 				tabPane.setTabComponentAt(tabPane.indexOfComponent(content), buttonTab);
 			}
@@ -194,9 +216,18 @@ public class AnalyzeUI extends JFrame {
 
 		private mxCell cell;
 
-		public CellFoldedListener(mxCell cell){
+		private mxGraph graph;
+		
+		private mxStackLayout stack;
+
+		private mxCell group;
+		
+		public CellFoldedListener(mxCell cell, mxStackLayout stack, mxGraph graph, mxCell group){
 			super();
 			this.cell = cell;
+			this.graph = graph;
+			this.stack = stack;
+			this.group = group;
 		}
 
 		@Override

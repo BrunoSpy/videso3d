@@ -19,23 +19,15 @@ package fr.crnan.videso3d.ihm;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Panel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
-import javax.swing.UIManager;
-import javax.swing.plaf.ColorUIResource;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxEventObject;
@@ -47,7 +39,6 @@ import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.geom.Latitude;
 import fr.crnan.videso3d.geom.Longitude;
 import fr.crnan.videso3d.graphics.Balise2D;
-import fr.crnan.videso3d.graphics.MarkerAnnotation;
 import fr.crnan.videso3d.graphs.CellContent;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
@@ -81,6 +72,10 @@ public class ContextPanel extends JPanel implements mxIEventListener, SelectList
 
 	}
 	
+	public void setGraph(mxGraph graph){
+		this.graph = graph;
+	}
+	
 	/**
 	 * Ouvre le panneau si le parent est un {@link JSplitPane}
 	 */
@@ -98,7 +93,10 @@ public class ContextPanel extends JPanel implements mxIEventListener, SelectList
 	public void invoke(Object sender, mxEventObject evt) {
 		mxCell cell = (mxCell) graph.getSelectionCell();
 		if(cell.getValue() instanceof CellContent){
-			
+			CellContent content = (CellContent) cell.getValue();
+			if(content.getType().equals(CellContent.TYPE_BALISE)){
+				this.showBalise(((CellContent)cell.getValue()).getName());
+			}
 		}
 	}
 
