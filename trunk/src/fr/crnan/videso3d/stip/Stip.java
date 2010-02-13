@@ -12,7 +12,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 
 package fr.crnan.videso3d.stip;
 
@@ -28,6 +28,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,7 +50,7 @@ public class Stip extends FileParser{
 	 * Nombre de fichiers gérés
 	 */
 	private int numberFiles = 12;
-	
+
 	/**
 	 * Version des fichiers Stip
 	 * = Version CA + Livraison
@@ -61,10 +62,15 @@ public class Stip extends FileParser{
 	 */
 	private Connection conn;
 
+	/**
+	 * Table des balises, nécessaire pour accélerer l'import afin de ne pas faire des reqêtes à chaque insertion de balise
+	 */
+	private HashMap<String, Integer> balises = new HashMap<String, Integer>();
+	
 	public Stip(){
 		super();
 	}
-	
+
 	public Stip(String path) {
 		super(path);
 	}
@@ -84,8 +90,10 @@ public class Stip extends FileParser{
 				this.getFromFiles();
 				//table d'association traj->iti
 				this.setProgress(11);
-				this.setFile("TRAJITI"); 
-			//	this.insertTrajIti(); //Table d'association trajet->iti, pas forcément utile et long à générer
+				this.setFile("COUPLES ITI");
+				this.insertCoupleBalItis();
+
+				//	this.insertTrajIti(); //Table d'association trajet->iti, pas forcément utile et long à générer
 				try {
 					this.conn.commit();
 				} catch (SQLException e) {
@@ -94,6 +102,8 @@ public class Stip extends FileParser{
 				this.setProgress(this.numberFiles());
 			}
 		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e){
 			e.printStackTrace();
 		}
 		return this.numberFiles;
@@ -110,7 +120,7 @@ public class Stip extends FileParser{
 		}
 		firePropertyChange("done", false, true);
 	}
-	
+
 	/**
 	 * Forge le nom de la base de données
 	 * = date_CA.date_livraison
@@ -126,7 +136,7 @@ public class Stip extends FileParser{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 
 	}
 	@Override
@@ -163,7 +173,7 @@ public class Stip extends FileParser{
 		this.setBalInt(this.path+ "/BALINT");
 		this.setProgress(10);
 	}
-	
+
 	/**
 	 * Lecteur de fichier BalInt
 	 * @param path Chemin vers le fichier
@@ -185,10 +195,10 @@ public class Stip extends FileParser{
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void insertBalInt(BalInt balInt) throws SQLException {
 		PreparedStatement insert = this.conn.prepareStatement("insert into balint (fir, uir, bal1, bal2, balise, appartient) " +
-				"values (?, ?, ?, ?, ?, ?)");
+		"values (?, ?, ?, ?, ?, ?)");
 		insert.setBoolean(1, balInt.getFir());
 		insert.setBoolean(2, balInt.getUir());
 		insert.setString(3, balInt.getBalise1());
@@ -212,7 +222,7 @@ public class Stip extends FileParser{
 				if(line.length() > 12 && !line.substring(7, 12).trim().isEmpty()) { //carte 1
 					if(trajet != null) this.insertTrajet(trajet); //insertion du trajet en base de données
 					trajet = new Trajet(line);
-				} else { //cartes 2
+				} else if(line.length()>30) { //cartes 2
 					trajet.addBalises(line);
 				}
 			}
@@ -228,26 +238,29 @@ public class Stip extends FileParser{
 
 	private void insertTrajet(Trajet trajet) {
 		try {
-			PreparedStatement insert = this.conn.prepareStatement("insert into trajets (eclatement, raccordement, type, fl, cond1, etat1, cond2, etat2, cond3, etat3, cond4, etat4) " +
-					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			PreparedStatement insert = this.conn.prepareStatement("insert into trajets (eclatement, eclatement_id, raccordement, raccordement_id, type, fl, cond1, etat1, cond2, etat2, cond3, etat3, cond4, etat4) " +
+			"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			insert.setString(1, trajet.getEclatement());
-			insert.setString(2, trajet.getRaccordement());
-			insert.setString(3, trajet.getType());
-			insert.setInt(4, trajet.getFl());
+			insert.setInt(2, balises.get(trajet.getEclatement()));
+			insert.setString(3, trajet.getRaccordement());
+			insert.setInt(4, balises.get(trajet.getRaccordement()));
+			insert.setString(5, trajet.getType());
+			insert.setInt(6, trajet.getFl());
 			int i = 0;
 			for(Couple<String, String> condition : trajet.getConditions()){
-				insert.setString(5+i, condition.getFirst());
-				insert.setString(6+i, condition.getSecond());
+				insert.setString(7+i, condition.getFirst());
+				insert.setString(8+i, condition.getSecond());
 				i+=2;;
 			}
 			insert.executeUpdate();
 			int id = insert.getGeneratedKeys().getInt(1);
-			insert = this.conn.prepareStatement("insert into baltrajets (idtrajet, balise, appartient) " +
-					"values (?, ?, ?)");
+			insert = this.conn.prepareStatement("insert into baltrajets (idtrajet, balise, balid, appartient) " +
+			"values (?, ?, ?, ?)");
 			insert.setInt(1, id);
 			for(Couple<String, Boolean> balise : trajet.getBalises()){
 				insert.setString(2, balise.getFirst());
-				insert.setBoolean(3, balise.getSecond());
+				insert.setInt(3, balises.get(balise.getFirst()));
+				insert.setBoolean(4, balise.getSecond());
 				insert.addBatch();
 			}
 			insert.executeBatch();
@@ -287,7 +300,7 @@ public class Stip extends FileParser{
 	private void insertLieux(Lieux lieux) {
 		try {
 			PreparedStatement insert = this.conn.prepareStatement("insert into lieux (oaci, type, centre1, distance1, pp1, nc1, centre2, distance2, pp2, nc2, centre3, distance3, pp3, nc3, centre4, distance4, pp4, nc4) " +
-					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			insert.setString(1, lieux.getOaci());
 			insert.setString(2, lieux.getDistanceType());
 			for(int i = 0; i< 4; i++) {
@@ -299,7 +312,7 @@ public class Stip extends FileParser{
 			insert.executeUpdate();
 			int id = insert.getGeneratedKeys().getInt(1);
 			insert = this.conn.prepareStatement("insert into consignes (idlieu, type, oaci, balise, niveau, ecart, eve, act, mod, base) " +
-					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			insert.setInt(1, id);
 			Iterator<Consigne> iterator = lieux.getConsignes().iterator();
 			while(iterator.hasNext()){
@@ -344,7 +357,7 @@ public class Stip extends FileParser{
 						} catch (SQLException e) {
 							e.printStackTrace();
 						}
-					iti = new Iti(line);
+						iti = new Iti(line);
 				}
 			}
 		} catch (FileNotFoundException e1){
@@ -362,10 +375,10 @@ public class Stip extends FileParser{
 			}
 		}
 	}
-	
+
 	private void insertIti(Iti iti) throws SQLException {
 		PreparedStatement insert = this.conn.prepareStatement("insert into itis (entree, sortie, flinf, flsup) " +
-				"values (?, ?, ?, ?)");
+		"values (?, ?, ?, ?)");
 		insert.setString(1, iti.getEntree());
 		insert.setString(2, iti.getSortie());
 		insert.setInt(3, iti.getFlinf());
@@ -373,20 +386,23 @@ public class Stip extends FileParser{
 		insert.executeUpdate();
 		insert.close();
 		int id = insert.getGeneratedKeys().getInt(1);
-		insert = this.conn.prepareStatement("insert into balitis (iditi, balise, appartient) " +
-		"values (?, ?, ?)");
+		insert = this.conn.prepareStatement("insert into balitis (iditi, balid, balise, appartient) " +
+		"values (?, ?, ?, ?)");
 		Iterator<Couple<String, Boolean>> iterator = iti.getBalises().iterator();
 		insert.setInt(1, id);
+		Statement st = this.conn.createStatement();
 		while(iterator.hasNext()){
 			Couple<String, Boolean> balise = iterator.next();
-			insert.setString(2, balise.getFirst());
-			insert.setBoolean(3, balise.getSecond());
+			insert.setInt(2, balises.get(balise.getFirst()));
+			insert.setString(3, balise.getFirst());
+			insert.setBoolean(4, balise.getSecond());
 			insert.addBatch();
 		}
 		insert.executeBatch();
 		insert.close();
+		st.close();
 	}
-	
+
 	/**
 	 * Lecteur de fichier Route
 	 * @param path Chemin vers le fichier ROUTE
@@ -441,7 +457,7 @@ public class Stip extends FileParser{
 	 */
 	private void insertRoute(Route route) throws SQLException{
 		PreparedStatement insert = this.conn.prepareStatement("insert into routes (name, espace) " +
-				"values (?, ?)");
+		"values (?, ?)");
 		//insertion des données dans la table route
 
 		insert.setString(1, route.getName());
@@ -450,7 +466,7 @@ public class Stip extends FileParser{
 		insert.close();
 		//puis insertion des balises
 		insert = this.conn.prepareStatement("insert into routebalise (route, balise, appartient, sens) " +
-				"values (?, ?, ?, ?)");
+		"values (?, ?, ?, ?)");
 		Iterator<Couple<String, Boolean>> balises = route.getBalises().iterator();
 		Iterator<String> sens = route.getSens().iterator();
 		while(balises.hasNext()){
@@ -524,7 +540,7 @@ public class Stip extends FileParser{
 		insert.executeUpdate();
 		insert.close();
 	}
-	
+
 	private void insertCartePoint(CartePoint cartePoint, String contour) throws SQLException{
 		PreparedStatement insert = this.conn.prepareStatement("insert into cartepoint (sectnum, flsup, pointref, refcontour) " +
 		"values (?, ?, ?, ?)");
@@ -535,7 +551,7 @@ public class Stip extends FileParser{
 		insert.executeUpdate();
 		insert.close();
 	}
-	
+
 	/**
 	 * Lecteur de fichier POINSECT
 	 * @param path Chemin vers le fichier POINSECT
@@ -543,7 +559,7 @@ public class Stip extends FileParser{
 	private void setPoinSect(String path) {
 		try {
 			PreparedStatement insert = this.conn.prepareStatement("insert into poinsect (ref, latitude, longitude) " +
-		"values (?, ?, ?)");
+			"values (?, ?, ?)");
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while (in.ready()){
 				String line = in.readLine();
@@ -579,7 +595,7 @@ public class Stip extends FileParser{
 		insert.setDouble(3, point.getLongitude().toDecimal());
 		insert.addBatch();
 	}
-	
+
 
 	/**
 	 * Lecteur de fichier SECT
@@ -588,7 +604,7 @@ public class Stip extends FileParser{
 	private void setSecteur(String path) {
 		try {
 			PreparedStatement insert = this.conn.prepareStatement("insert into secteurs (nom, centre, espace, numero, flinf, flsup, modes) " +
-		"values (?, ?, ?, ?, ?, ?, ?)");
+			"values (?, ?, ?, ?, ?, ?, ?)");
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while (in.ready()){
 				String line = in.readLine();
@@ -634,7 +650,7 @@ public class Stip extends FileParser{
 	private void setCentre(String path) {
 		try {
 			PreparedStatement insert = this.conn.prepareStatement("insert into centres (name, identite, numero, type) " +
-				"values (?, ?, ?, ?)");
+			"values (?, ?, ?, ?)");
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while (in.ready()){
 				String line = in.readLine();
@@ -654,14 +670,13 @@ public class Stip extends FileParser{
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Insère dans la table centres 
 	 * @param centre une ligne du fichier CENTRE
 	 * @throws SQLException 
 	 */
 	private void insertCentre(Centre centre, PreparedStatement insert) throws SQLException {
-		
 		insert.setString(1, centre.getNom());
 		insert.setString(2, centre.getIdentite());
 		insert.setInt(3, centre.getNumero());
@@ -689,7 +704,7 @@ public class Stip extends FileParser{
 		}
 		try {
 			PreparedStatement insert = this.conn.prepareStatement("insert into balises (name, publicated, latitude, longitude, centre, definition, sccag, sect1, limit1, sect2, limit2, sect3, limit3, sect4, limit4, sect5, limit5, sect6, limit6, sect7, limit7, sect8, limit8, sect9, limit9) " +
-	       "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(balisePath)));
 			Balise balise = new Balise(precision);
 			while (in.ready()){
@@ -697,7 +712,7 @@ public class Stip extends FileParser{
 				if (line.startsWith("1")) {
 					//la balise est vide lors du premier passage
 					if(balise.getIndicatif() != null) {//alors on stocke la balise précédente
-							this.insertBalise(balise, insert);
+						this.insertBalise(balise, insert);
 					}
 					balise = new Balise(line, precision);
 				} else if (line.startsWith("2")) {
@@ -714,7 +729,6 @@ public class Stip extends FileParser{
 			if(balise != null) {
 				this.insertBalise(balise, insert);
 			}
-			insert.executeBatch();
 			insert.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -754,7 +768,10 @@ public class Stip extends FileParser{
 			i++;
 			insert.setInt(i, -1);
 		}
-		insert.addBatch();
+		insert.executeUpdate();
+		int id = insert.getGeneratedKeys().getInt(1);
+		balises.put(balise.getIndicatif(), id);
+		
 	}
 
 	@SuppressWarnings("unused")
@@ -771,13 +788,12 @@ public class Stip extends FileParser{
 		}
 		List<Couple<Integer, Integer>> table = new LinkedList<Couple<Integer,Integer>>();
 		for(ArrayList<Object> trajet : trajets){
-			System.out.println("Test nouveau trajet"+trajet.get(0));
 			String eclatement = (String) trajet.get(1);
 			String raccordement = (String) trajet.get(2);
 			//tous les itis ayant les deux balises qui se succèdent dans le bon ordre
 			rs = st.executeQuery("SELECT *,COUNT(*) as count, sum(balitis.id) as total from itis, balitis "+
-								"WHERE itis.id = balitis.iditi and (balitis.balise='"+eclatement+"'  or balitis.balise = '"+raccordement+"') "+
-								"GROUP BY iditi HAVING count = 2 and total = 2*balitis.id -1 and balise = '"+raccordement+"'");
+					"WHERE itis.id = balitis.iditi and (balitis.balise='"+eclatement+"'  or balitis.balise = '"+raccordement+"') "+
+					"GROUP BY iditi HAVING count = 2 and total = 2*balitis.id -1 and balise = '"+raccordement+"'");
 			while(rs.next()) 
 				table.add(new Couple<Integer, Integer>((Integer) trajet.get(0), rs.getInt(1)));
 		}
@@ -792,7 +808,49 @@ public class Stip extends FileParser{
 		insert.executeBatch();
 		insert.close();
 	}
-	
+
+	private void insertCoupleBalItis() throws SQLException{
+		Statement st = this.conn.createStatement();
+		ResultSet rs = st.executeQuery("select iditi, balise, balid from balitis");
+		PreparedStatement insert = this.conn.prepareStatement("insert into couplebalitis (iditi, idbal1, idbal2, bal1, bal2) values (?, ?, ?, ?, ?)");
+		int idIti = 0;
+		String first = "";
+		int firstId = 0;
+		while(rs.next()){
+			if(idIti != rs.getInt(1)){
+				//nouvel iti
+				idIti = rs.getInt(1);
+				first = rs.getString(2);
+				firstId = rs.getInt(3);
+			} else {
+				String second = rs.getString(2);
+				int secondId = rs.getInt(3);
+				insert.setInt(1, idIti);
+				insert.setInt(2, firstId);
+				insert.setInt(3, secondId);
+				insert.setString(4, first);
+				insert.setString(5, second);
+				insert.addBatch();
+				first = second;
+				firstId = secondId;
+			}
+		}
+		insert.executeBatch();
+		insert.close();
+		//et enfin, on crée les index et la table adéquate, toujours pour des raisons de performances
+		st.executeUpdate("create index idx_trajets on trajets (eclatement_id, raccordement_id)");
+		st.executeUpdate("create index idx_couples on couplebalitis (idbal1, idbal2)");
+		st.executeUpdate("create index idx_baltrajets on baltrajets (idtrajet)");
+		st.executeUpdate("create index idx_balitis on balitis (iditi)");
+		st.executeUpdate("create index idx_balitis2 on balitis (balise)");
+		st.executeUpdate("create table couple_trajets as select couplebalitis.*, trajets.id as trajetid, trajets.*  from couplebalitis, trajets where eclatement_id = idbal1 and raccordement_id = idbal2");
+		//et on supprime la table intermédiaire
+//		st.executeUpdate("drop index idx_couples");
+//		st.executeUpdate("drop table couplebalitis");
+		st.close();
+		
+	}
+
 	@Override
 	public int numberFiles() {
 		return this.numberFiles;
