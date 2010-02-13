@@ -546,6 +546,7 @@ public final class DatabaseManager{
 		//table mettant en relation les routes et les balises qui les définissent
 		st.executeUpdate("create table routebalise (id integer primary key autoincrement, " +
 				"route varchar(7), " +
+				"routeid int, " +
 				"balise varchar(10), " +
 				"appartient boolean, " +
 		"sens varchar(1))");

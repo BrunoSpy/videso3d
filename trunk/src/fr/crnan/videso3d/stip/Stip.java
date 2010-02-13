@@ -464,11 +464,14 @@ public class Stip extends FileParser{
 		insert.setString(2, route.getEspace());
 		insert.executeUpdate();
 		insert.close();
+		int id = insert.getGeneratedKeys().getInt(1);
 		//puis insertion des balises
-		insert = this.conn.prepareStatement("insert into routebalise (route, balise, appartient, sens) " +
-		"values (?, ?, ?, ?)");
+		insert = this.conn.prepareStatement("insert into routebalise (route, routeid, balise, appartient, sens) " +
+		"values (?, ?, ?, ?, ?)");
 		Iterator<Couple<String, Boolean>> balises = route.getBalises().iterator();
 		Iterator<String> sens = route.getSens().iterator();
+		insert.setString(1, route.getName());
+		insert.setInt(2, id);
 		while(balises.hasNext()){
 			Couple<String, Boolean> balise = balises.next();
 			String sensTr;
@@ -478,10 +481,9 @@ public class Stip extends FileParser{
 				//dernière balise de la liste : sans objet
 				sensTr = "";
 			}
-			insert.setString(1, route.getName());
-			insert.setString(2, balise.getFirst());
-			insert.setBoolean(3, balise.getSecond());
-			insert.setString(4, sensTr);
+			insert.setString(3, balise.getFirst());
+			insert.setBoolean(4, balise.getSecond());
+			insert.setString(5, sensTr);
 			insert.addBatch();
 		}
 		insert.executeBatch();

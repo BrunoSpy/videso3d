@@ -24,7 +24,7 @@ import fr.crnan.videso3d.Couple;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class Iti {
 
@@ -54,8 +54,8 @@ public class Iti {
 	 * @param line
 	 */
 	public Iti(String line){
-		this.setEntree(line.substring(7, 12));
-		this.setSortie(line.substring(15, 20));
+		this.setEntree(line.substring(7, 12).trim());
+		this.setSortie(line.substring(15, 20).trim());
 		this.setFlinf(new Integer(line.substring(23, 26)));
 		this.setFlsup(new Integer(line.substring(31, 34)));
 	}
