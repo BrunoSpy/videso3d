@@ -558,6 +558,7 @@ public final class DatabaseManager{
 		//table mettant en relation les balises formant les itis
 		st.executeUpdate("create table balitis (id integer primary key autoincrement, " +
 				"iditi int, " +
+				"balid int, " +
 				"balise varchar(5), " +
 				"appartient boolean)");
 		//table des lieux
@@ -595,7 +596,9 @@ public final class DatabaseManager{
 		//table des trajets
 		st.executeUpdate("create table trajets (id integer primary key autoincrement, " +
 				"eclatement varchar(5), " +
+				"eclatement_id int, " +
 				"raccordement varchar(5), " +
+				"raccordement_id int, " +
 				"type varchar(2), " +
 				"fl int, " +
 				"cond1 varchar(7), " +
@@ -605,12 +608,15 @@ public final class DatabaseManager{
 				"cond3 varchar(7), " +
 				"etat3 varchar(1), " +
 				"cond4 varchar(7), " +
-				"etat4 varchar(1))");
+				"etat4 varchar(1), " +
+				"FOREIGN KEY (eclatement_id) REFERENCES balises(id))");
 		//table des balises des trajets
 		st.executeUpdate("create table baltrajets (id integer primary key autoincrement, " +
 				"idtrajet int," +
 				"balise varchar(5), " +
-				"appartient boolean)");
+				"balid int, " +
+				"appartient boolean, " +
+				"FOREIGN KEY(balid) REFERENCES balises(id))");
 		st.close();
 		//table des couples de balises interdits
 		st.executeUpdate("create table balint (id integer primary key autoincrement, " +
@@ -624,6 +630,14 @@ public final class DatabaseManager{
 		st.executeUpdate("create table trajiti (id integer primary key autoincrement, " +
 				"idtraj int, " +
 				"iditi int)");
+		//table des couples de balises des itis
+		//nécessaire pour rendre plus rapide la recherche de connexions et de trajets
+		st.executeUpdate("create table couplebalitis (id integer primary key autoincrement, " +
+				"iditi int, " +
+				"idbal1 int, " +
+				"idbal2 int," +
+				"bal1 varchar(5), " +
+				"bal2 varchar(6))");
 		//on référence la base de données
 		DatabaseManager.addDatabase(name, Type.STIP, new SimpleDateFormat().format(new Date()));
 	}
