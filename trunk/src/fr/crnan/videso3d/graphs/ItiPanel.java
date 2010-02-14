@@ -1,0 +1,226 @@
+/*
+ * This file is part of ViDESO.
+ * ViDESO is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ViDESO is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package fr.crnan.videso3d.graphs;
+
+import java.awt.BorderLayout;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.swing.JComponent;
+import javax.swing.JTextArea;
+import javax.swing.SwingWorker;
+
+import com.mxgraph.model.mxCell;
+import com.mxgraph.swing.mxGraphComponent;
+import com.mxgraph.util.mxEvent;
+
+import fr.crnan.videso3d.DatabaseManager;
+
+
+/**
+ * Itis recherchés sour forme de graphe
+ * @author Bruno Spyckerelle
+ * @version 0.1
+ */
+public class ItiPanel extends ResultGraphPanel {
+
+	public ItiPanel(String balise) {
+		super(balise);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see fr.crnan.videso3d.graphs.ResultGraphPanel#createGraphComponent(java.lang.String)
+	 */
+	@Override
+	protected void createGraphComponent(final String balise){
+
+		progressBar.setMinimum(0);
+		progressBar.setMaximum(8);
+		progressBar.setVisible(true);
+		this.add(progressBar, BorderLayout.NORTH);
+
+		//remplissage du graphe dans un swingworker pour éviter de figer l'IHM
+		new SwingWorker<Integer, String>() {
+
+			private Boolean hasResults;
+			
+			@Override
+			protected Integer doInBackground() throws Exception {
+
+				progressBar.setValue(0);
+
+				try {
+					Statement st = DatabaseManager.getCurrentStip();
+					ResultSet rs = st.executeQuery("select balise, appartient, iditi, balid from balitis where iditi in (select iditi from balitis where balise='"+balise+"')");
+
+					progressBar.setValue(1);
+
+
+					//ensemble des itis (conteneurs)
+					Set<mxCell> itis = new HashSet<mxCell>();
+					//liste des balises pour l'ajout de trajet/balint
+
+					HashMap<Integer, HashMap<Integer, mxCell>> balisesByItis = new HashMap<Integer, HashMap<Integer, mxCell>>();
+
+					HashMap<Integer, mxCell> balises = null;
+
+					mxCell iti = null;
+					mxCell first = null;
+					String entree = "";
+					int id = 0;
+
+					graph.getModel().beginUpdate();
+					while(rs.next()){
+						String name = rs.getString(1);
+						if(id != rs.getInt(3)) {
+							if(id != 0){//on termine l'iti précédent si il existe
+								first.setStyle(GraphStyle.baliseDefault);
+								balisesByItis.put(id, balises);
+							}
+							//nouvel iti
+							id = rs.getInt(3);
+							balises = new HashMap<Integer, mxCell>();			
+							// Swimlane
+							if(!entree.equals(rs.getString(1))){
+								//nouveau groupe
+								iti = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, new CellContent(CellContent.TYPE_ITI, id, name), 0, 0, 80, 50, GraphStyle.groupStyle);
+								iti.setConnectable(false);
+								itis.add(iti);
+								entree = rs.getString(1);
+							}
+							first = (mxCell) graph.insertVertex(iti, null, new CellContent(CellContent.TYPE_BALISE, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize);
+							first.setConnectable(false);
+							balises.put(rs.getInt(4), first);
+						} else {
+							String style = rs.getBoolean(2) ? 
+									(name.equals(balise) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
+										(name.equals(balise) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
+									mxCell bal = (mxCell) graph.insertVertex(iti, null, new CellContent(CellContent.TYPE_BALISE, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
+									bal.setConnectable(false);
+									graph.insertEdge(iti, null, "", first, bal, GraphStyle.edgeStyle);
+									balises.put(rs.getInt(4), bal);
+									first  = bal;
+						}
+					}
+
+					progressBar.setValue(2);
+
+					//on termine le dernier iti si il existe
+					if(iti != null){
+						first.setStyle(GraphStyle.baliseDefault);
+						balisesByItis.put(id, balises);
+					}
+
+					progressBar.setValue(3);
+
+					rs = st.executeQuery("select iditi, trajetid, raccordement_id, cond1, balise, balid from couple_trajets, baltrajets where couple_trajets.trajetid = baltrajets.idtrajet and iditi in (select iditi from balitis where balise ='"+balise+"') ");
+
+					progressBar.setValue(4);
+
+					id = 0; //id des trajets
+					int idBal = 0;//id de la première balise du trajet
+					Object parent = null;
+					mxCell second = null;
+					//ajout des trajets
+					while(rs.next()){
+						//String balise = rs.getString(5);
+						if(id != rs.getInt(2) || rs.getInt(6) == idBal){
+							//nouveau trajet
+							first = balisesByItis.get(rs.getInt(1)).get(rs.getInt(6));
+							parent = first.getParent();
+							id = rs.getInt(2);
+							idBal = rs.getInt(6);
+							second = null;
+						} else {
+							if(rs.getInt(3) == rs.getInt(6)){ //on raccorde
+								graph.insertEdge(parent, null, "", first, balisesByItis.get(rs.getInt(1)).get(rs.getInt(6)), GraphStyle.edgeTrajet);
+							} else {
+								if(second == null) {
+									second = (mxCell) graph.insertVertex(parent, null, new CellContent(CellContent.TYPE_BALISE, 0, rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
+									second.setConnectable(false);
+									graph.insertEdge(parent, null, rs.getString(4), first, second, GraphStyle.edgeTrajet);
+								} else {
+									second = (mxCell) graph.insertVertex(parent, null, new CellContent(CellContent.TYPE_BALISE, 0, rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
+									second.setConnectable(false);
+									graph.insertEdge(parent, null, "", first, second, GraphStyle.edgeTrajet);
+								}
+							}
+							first = second;
+						}
+					}
+
+					progressBar.setValue(4);
+
+					for(mxCell o : itis){
+						layout.execute(o);
+						graph.addListener(mxEvent.CELLS_FOLDED, new CellFoldedListener(o, stack));
+					}
+
+					progressBar.setValue(5);
+
+					graph.updateGroupBounds(itis.toArray(), graph.getGridSize());
+
+					progressBar.setValue(6);
+
+					stack.execute(graph.getDefaultParent());
+
+					progressBar.setValue(7);
+
+					graph.getModel().endUpdate();
+
+					progressBar.setValue(8);
+
+					//les cellules ne doivent pas pouvoir bouger
+					graph.setCellsLocked(true);
+
+					hasResults = (id != 0);
+					
+				} catch (SQLException e) {
+					e.printStackTrace();
+				} catch (Exception e){
+					e.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			protected void done() {
+				super.done();
+				progressBar.setVisible(false);
+				JComponent component;
+
+				if(hasResults){
+					component = new mxGraphComponent(graph);
+					component.setBorder(null);
+				} else {
+					component = new JTextArea("\n Aucun résultat.");
+				}
+
+				add(component, BorderLayout.CENTER);
+			}
+
+
+		}.execute();
+	}
+
+
+}

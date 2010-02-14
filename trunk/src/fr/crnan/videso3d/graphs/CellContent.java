@@ -26,6 +26,10 @@ public class CellContent {
 	
 	public static String TYPE_ITI = "iti";
 	
+	public static String TYPE_ROUTE = "route";
+	
+	public static String TYPE_TRAJET = "trajet";
+	
 	private String type = null;
 	
 	private int id = 0;

@@ -32,8 +32,8 @@ public class BaliseMarkerLayer extends MarkerLayer {
 		super();
 		this.setKeepSeparated(false);
 		this.setMinActiveAltitude(0);
-		//inutile d'afficher le point avant 1500km d'altitude
-		this.setMaxActiveAltitude(15e5);
+		//inutile d'afficher le point avant 1000km d'altitude
+		this.setMaxActiveAltitude(10e5);
 	}
 	
 	/**
