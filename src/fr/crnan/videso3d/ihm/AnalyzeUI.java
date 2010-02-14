@@ -17,15 +17,12 @@
 package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Set;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -37,23 +34,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-import com.mxgraph.layout.mxStackLayout;
-import com.mxgraph.model.mxCell;
-import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.util.mxEvent;
-import com.mxgraph.util.mxEventObject;
-import com.mxgraph.util.mxEventSource.mxIEventListener;
-import com.mxgraph.view.mxGraph;
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.graphs.GraphStyle;
-import fr.crnan.videso3d.graphs.Iti;
+import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.graphs.ItiPanel;
 import fr.crnan.videso3d.graphs.ResultPanel;
+import fr.crnan.videso3d.graphs.RoutePanel;
+import fr.crnan.videso3d.graphs.TrajetPanel;
 /**
  * Fenêtre d'analyse des données Stip et Stpv
  * @author Bruno Spyckerelle
@@ -64,7 +54,7 @@ public class AnalyzeUI extends JFrame {
 	private JTabbedPane tabPane = new JTabbedPane();
 
 	private ContextPanel context = new ContextPanel();
-	
+
 	public AnalyzeUI(){
 		super();
 		this.setLayout(new BorderLayout());
@@ -84,54 +74,16 @@ public class AnalyzeUI extends JFrame {
 
 	}
 
+	private ResultPanel createResultPanel(final String type, final String search){
 
-
-	private ResultPanel createResultPanel(String type, String search){
-
-		mxGraph graph = new mxGraph();
-		mxCell group = null;
-		mxStackLayout stack = null;
-		
-		graph.getSelectionModel().addListener(mxEvent.CHANGE, context);
-		
-		graph.setCellsCloneable(false);
-		graph.setCellsEditable(false);
-		graph.setCellsResizable(false);
-		graph.setCellsDisconnectable(false);
-		
-		group = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, "Groupe", 0, 0, 500, 500, GraphStyle.groupStyle);
-
-		
-		Set<Object> groups = new HashSet<Object>();
-		((mxCell)group).setConnectable(false);
-		stack = new mxStackLayout(graph, false);
-		
 		if(type.equals("iti")){
-			try {
-				Statement st = DatabaseManager.getCurrentStip();
-				ResultSet rs = st.executeQuery("select iditi from balitis where balise='"+search+"'");
-				while(rs.next()){
-					mxCell iti = (mxCell)Iti.addIti(graph, group, rs.getInt(1));
-					groups.add(iti);
-					graph.addListener(mxEvent.CELLS_FOLDED, new CellFoldedListener(iti, stack, graph, group));
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			
-			
+			return new ItiPanel(search);
+		} else if(type.equals("route")){
+			return new RoutePanel(search);
+		} else if(type.equals("trajet")){
+			return new TrajetPanel(search);
 		}
-		graph.updateGroupBounds(groups.toArray(), graph.getGridSize());
-
-		stack.execute(group);
-
-		graph.updateCellSize(group);
-
-		mxGraphComponent graphComponent = new mxGraphComponent(graph);
-		graphComponent.setBorder(null);
-		ResultPanel result = new ResultPanel(graphComponent);
-		result.setBorder(null);
-		return result;
+		return null;
 	}
 
 	private JToolBar createToolbar(){
@@ -140,7 +92,7 @@ public class AnalyzeUI extends JFrame {
 
 		toolbar.add(new JLabel(" Rechercher : "));
 
-		String[] types = {"balise", "iti"};
+		String[] types = {"balise", "iti", "trajet", "route"};
 
 		final JComboBox type = new JComboBox(types);
 
@@ -176,18 +128,14 @@ public class AnalyzeUI extends JFrame {
 				String t = type.getSelectedItem().toString();
 				String s = search.getSelectedItem().toString();
 				ResultPanel content = createResultPanel(t, s);
-				context.setGraph(content.getGraph());
-				tabPane.addTab(t+" "+s, content);
-				tabPane.addChangeListener(new ChangeListener() {
-					
-					@Override
-					public void stateChanged(ChangeEvent arg0) {
-						context.setGraph(((ResultPanel)tabPane.getSelectedComponent()).getGraph());
-					}
-				});
-				
+				content.setContext(context);
+				JScrollPane scrollContent = new JScrollPane(content);
+				scrollContent.setBorder(null);
+				tabPane.addTab(t+" "+s, scrollContent);
+
 				ButtonTabComponent buttonTab = new ButtonTabComponent(tabPane);
-				tabPane.setTabComponentAt(tabPane.indexOfComponent(content), buttonTab);
+				tabPane.setTabComponentAt(tabPane.indexOfComponent(scrollContent), buttonTab);
+				tabPane.setSelectedIndex(tabPane.indexOfComponent(scrollContent));
 			}
 		});
 
@@ -198,49 +146,27 @@ public class AnalyzeUI extends JFrame {
 	}
 
 	private JPanel createStatusBar(){
+		String versionStip = "";
+		String versionStpv = "";
+		try {
+			Statement st = DatabaseManager.getCurrent(Type.Databases);
+			ResultSet rs = st.executeQuery("select * from databases where selected = '1' and type = 'STIP'");
+			if(rs.next()) versionStip = rs.getString(2);
+			rs = st.executeQuery("select * from databases where selected = '1' and type = 'STPV'");
+			if(rs.next()) versionStpv = rs.getString(2);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		JPanel statusBar = new JPanel();
 		statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
-		JLabel stip = new JLabel("Version Stip : " + "1.12.12:45.45.45");
+		JLabel stip = new JLabel("Version Stip : " + versionStip);
 		statusBar.add(stip);
 		statusBar.add(new JLabel(" | "));
-		statusBar.add(new JLabel("Version Stpv : " + "45.12.13"));
+		statusBar.add(new JLabel("Version Stpv : " + versionStpv));
 
 		return statusBar;
 	}
 
-	/* *********************************************** */
-	/* ***************** Listeners ******************* */
-	/* *********************************************** */
 
-	private class CellFoldedListener implements mxIEventListener {
-
-		private mxCell cell;
-
-		private mxGraph graph;
-		
-		private mxStackLayout stack;
-
-		private mxCell group;
-		
-		public CellFoldedListener(mxCell cell, mxStackLayout stack, mxGraph graph, mxCell group){
-			super();
-			this.cell = cell;
-			this.graph = graph;
-			this.stack = stack;
-			this.group = group;
-		}
-
-		@Override
-		public void invoke(Object sender, mxEventObject evt) {
-			if(cell.isCollapsed()){
-				cell.setStyle(GraphStyle.groupStyleFolded);
-				cell.getGeometry().setWidth(cell.getGeometry().getAlternateBounds().getWidth());
-			} else {
-				cell.setStyle(GraphStyle.groupStyle);
-			}
-			stack.execute(group);
-			graph.updateCellSize(group);
-		}
-
-	}
 }

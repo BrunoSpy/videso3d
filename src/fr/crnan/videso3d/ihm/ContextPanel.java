@@ -29,53 +29,35 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 
-import com.mxgraph.model.mxCell;
-import com.mxgraph.util.mxEventObject;
-import com.mxgraph.util.mxEventSource.mxIEventListener;
-import com.mxgraph.view.mxGraph;
-
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.geom.Latitude;
 import fr.crnan.videso3d.geom.Longitude;
 import fr.crnan.videso3d.graphics.Balise2D;
-import fr.crnan.videso3d.graphs.CellContent;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
-public class ContextPanel extends JPanel implements mxIEventListener, SelectListener {
+public class ContextPanel extends JPanel implements SelectListener {
 
-	private mxGraph graph;
-	
 	private JPanel content = new JPanel();
-	
+
 	private TitledPanel titleAreaPanel = new TitledPanel("Informations");
-	
+
 	public ContextPanel(){
 		super();
 		this.setPreferredSize(new Dimension(300, 0));
 		this.setLayout(new BorderLayout());
-		
+
 		this.add(titleAreaPanel, BorderLayout.NORTH);
 		content.setLayout(new BoxLayout(content, BoxLayout.PAGE_AXIS));
-		
+
 		this.add(content, BorderLayout.CENTER);
 	}
-	
-	public ContextPanel(mxGraph graph){
-		this();
-		this.graph = graph;
 
-	}
-	
-	public void setGraph(mxGraph graph){
-		this.graph = graph;
-	}
-	
 	/**
 	 * Ouvre le panneau si le parent est un {@link JSplitPane}
 	 */
@@ -85,17 +67,6 @@ public class ContextPanel extends JPanel implements mxIEventListener, SelectList
 				((JSplitPane)this.getParent()).setDividerLocation(250);
 			} else {
 				((JSplitPane)this.getParent()).setDividerLocation(this.getParent().getWidth()-250);
-			}
-		}
-	}
-	
-	@Override
-	public void invoke(Object sender, mxEventObject evt) {
-		mxCell cell = (mxCell) graph.getSelectionCell();
-		if(cell.getValue() instanceof CellContent){
-			CellContent content = (CellContent) cell.getValue();
-			if(content.getType().equals(CellContent.TYPE_BALISE)){
-				this.showBalise(((CellContent)cell.getValue()).getName());
 			}
 		}
 	}
@@ -126,12 +97,12 @@ public class ContextPanel extends JPanel implements mxIEventListener, SelectList
 			String latitude = lat.getDegres()+"°"+lat.getMinutes()+"\'"+lat.getSecondes()+"\" N";
 			String longitude = Math.abs(lon.getDegres())+"°"+lon.getMinutes()+"\'"+lon.getSecondes()+"\""+ (lon.getDegres() < 0 ? "E" : "O");
 			String t = "\nCommentaire : " + rs.getString("definition")+"\n\n"+
-					"Coordonnées :\n" +
-					"   WGS84 : " + latitude + ", "+longitude+"\n"+
-					"   Cautra : "+String.format("%7.2f",coor.getCautra()[0])+", "+String.format("%7.2f",coor.getCautra()[1])+"\n" +
-					"\n" +
-					"Affectée au centre : "+rs.getString("centre")+"\n\n" +
-					"Affectée aux secteurs :";
+			"Coordonnées :\n" +
+			"   WGS84 : " + latitude + ", "+longitude+"\n"+
+			"   Cautra : "+String.format("%7.2f",coor.getCautra()[0])+", "+String.format("%7.2f",coor.getCautra()[1])+"\n" +
+			"\n" +
+			"Affectée au centre : "+rs.getString("centre")+"\n\n" +
+			"Affectée aux secteurs :";
 			int plancher = 0;
 			for(int i = 1; i<= 9; i++){
 				int plafond = rs.getInt("limit"+i);
@@ -144,10 +115,9 @@ public class ContextPanel extends JPanel implements mxIEventListener, SelectList
 			text.setOpaque(true);
 			text.setBackground(/*UIManager.getColor("background")*/new Color(214,217,223));
 			text.setBorder(null);
-			
-			
+
 			content.add(text);
-			
+
 			content.add(new TitledPanel("Eléments Stip"));
 			rs = st.executeQuery("select COUNT(*) from routebalise where balise = '"+name+"'");
 			String stipText = "\n Appartient à "+rs.getInt(1)+" routes.\n";
@@ -166,30 +136,73 @@ public class ContextPanel extends JPanel implements mxIEventListener, SelectList
 			stip.setOpaque(true);
 			stip.setBackground(/*UIManager.getColor("background")*/new Color(214,217,223));
 			content.add(stip);
-			
-			content.add(new TitledPanel("Eléments Stpv"));
+			rs.close();
+			st.close();
+
 			st = DatabaseManager.getCurrentStpv();
-			rs = st.executeQuery("select COUNT(*) from lieu26 where balise ='"+name+"'");
-			String stpvText = "\n Possède "+rs.getInt(1)+" lieu(x) 26.\n";
-			rs = st.executeQuery("select COUNT(*) from lieu27 where balise ='"+name+"'");
-			stpvText += "\n Possède "+rs.getInt(1)+" lieu(x) 27.\n";
-			
+			String stpvText ="";
+			content.add(new TitledPanel("Eléments Stpv"));
+			if(st != null){
+				rs = st.executeQuery("select COUNT(*) from lieu26 where balise ='"+name+"'");
+				stpvText = "\n Possède "+rs.getInt(1)+" lieu(x) 26.\n";
+				rs = st.executeQuery("select COUNT(*) from lieu27 where balise ='"+name+"'");
+				stpvText += "\n Possède "+rs.getInt(1)+" lieu(x) 27.\n";
+				rs.close();
+				st.close();
+			}else {
+				stpvText = "\n Aucune base STPV configurée.";
+			}
 			JTextArea stpv = new JTextArea();
 			stpv.setBorder(null);
 			stpv.setText(stpvText);
 			stpv.setEditable(false);
 			stpv.setOpaque(true);
 			stpv.setBackground(/*UIManager.getColor("background")*/new Color(214,217,223));
-			
+
 			content.add(stpv);
+
 			content.add(Box.createVerticalStrut(1000));
-			
-			rs.close();
-			st.close();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Affiche les infos de l'iti <code>id</code>
+	 * @param id
+	 */
+	public void showIti(int id){
+		content.removeAll();
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select * from itis where id ='"+id+"'");
+			String name = rs.getString(2)+"->"+rs.getString(3);
+			titleAreaPanel.setTitle("Iti : "+name);	
+			
+			
+			content.add(Box.createVerticalStrut(1000));
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Affiche les infos du trajet <code>id</code>
+	 * @param id
+	 */
+	public void showTrajet(int id){
+		content.removeAll();
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select * from trajets where id ='"+id+"'");
+			String name = rs.getString(2)+"->"+rs.getString(4);
+			titleAreaPanel.setTitle("Trajet : "+name);	
+			
+			
+			content.add(Box.createVerticalStrut(1000));
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+	}
 }

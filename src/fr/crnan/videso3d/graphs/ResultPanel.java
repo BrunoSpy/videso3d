@@ -16,23 +16,17 @@
 
 package fr.crnan.videso3d.graphs;
 
-import java.awt.Component;
+import javax.swing.JPanel;
 
-import javax.swing.JScrollPane;
-
-import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.view.mxGraph;
-
-public class ResultPanel extends JScrollPane {
-
-	private mxGraph graph;
+import fr.crnan.videso3d.ihm.ContextPanel;
+/**
+ * Panel de résultats.
+ * Doit permettre la liaison avec le panel contextuel
+ * @author Bruno Spyckerelle
+ * @version 0.2
+ */
+public abstract class ResultPanel extends JPanel {
 	
-	public ResultPanel(mxGraphComponent component){
-		super(component);
-		this.graph = component.getGraph();
-	}
-	
-	public mxGraph getGraph(){
-		return this.graph;
-	}
+	public abstract void setContext(ContextPanel context);
+
 }
