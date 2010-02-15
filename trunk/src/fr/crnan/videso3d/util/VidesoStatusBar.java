@@ -51,7 +51,7 @@ public class VidesoStatusBar extends StatusBar {
         this.handleCursorPositionChange(event);
     }
 	
-	private void handleCursorPositionChange(PositionEvent event)
+	protected void handleCursorPositionChange(PositionEvent event)
     {
         Position newPos = event.getPosition();
         if (newPos != null)
