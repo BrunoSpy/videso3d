@@ -39,11 +39,11 @@ import fr.crnan.videso3d.DatabaseManager;
  */
 public class RoutePanel extends ResultGraphPanel {
 
-	public RoutePanel(final String balise){
-		super(balise);
+	public RoutePanel(String balise, String balise2){
+		super(balise, balise2);
 	}
 
-	protected void createGraphComponent(final String balise) {
+	protected void createGraphComponent(final String balise, final String balise2) {
 
 		progressBar.setMinimum(0);
 		progressBar.setMaximum(6);

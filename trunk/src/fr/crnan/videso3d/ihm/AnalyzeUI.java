@@ -74,14 +74,14 @@ public class AnalyzeUI extends JFrame {
 
 	}
 
-	private ResultPanel createResultPanel(final String type, final String search){
+	private ResultPanel createResultPanel(final String type, final String search, final String search2){
 
 		if(type.equals("iti")){
-			return new ItiPanel(search);
+			return new ItiPanel(search, search2);
 		} else if(type.equals("route")){
-			return new RoutePanel(search);
+			return new RoutePanel(search, search2);
 		} else if(type.equals("trajet")){
-			return new TrajetPanel(search);
+			return new TrajetPanel(search, search2);
 		}
 		return null;
 	}
@@ -92,7 +92,7 @@ public class AnalyzeUI extends JFrame {
 
 		toolbar.add(new JLabel(" Rechercher : "));
 
-		String[] types = {"balise", "iti", "trajet", "route"};
+		String[] types = {"balise", "balint", "iti", "trajet", "route", "balint", "connexion"};
 
 		final JComboBox type = new JComboBox(types);
 
@@ -114,11 +114,21 @@ public class AnalyzeUI extends JFrame {
 			e1.printStackTrace();
 		}
 		final JComboBox search = new JComboBox(results.toArray());
-		search.setToolTipText("Rechercher un élément Stip affiché");
 		search.setEditable(true);
 		AutoCompleteDecorator.decorate(search);
 
 		toolbar.add(search);
+
+		toolbar.add(new JLabel(" et : "));
+
+		//nouvelle liste de résultat avec un résultat vide en première position
+		LinkedList<String> results2 = (LinkedList<String>) results.clone();
+		results2.addFirst("");
+		final JComboBox search2 = new JComboBox((results2).toArray());
+		search2.setEditable(true);
+		AutoCompleteDecorator.decorate(search2);
+
+		toolbar.add(search2);
 
 		JButton newSearch = new JButton("Nouvelle recherche");
 		newSearch.addActionListener(new ActionListener() {
@@ -127,11 +137,12 @@ public class AnalyzeUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String t = type.getSelectedItem().toString();
 				String s = search.getSelectedItem().toString();
-				ResultPanel content = createResultPanel(t, s);
+				String s2 = search2.getSelectedItem().toString();
+				ResultPanel content = createResultPanel(t, s, s2);
 				content.setContext(context);
 				JScrollPane scrollContent = new JScrollPane(content);
 				scrollContent.setBorder(null);
-				tabPane.addTab(t+" "+s, scrollContent);
+				tabPane.addTab(t+" "+s+(s2.isEmpty() ? "" : "+"+s2), scrollContent);
 
 				ButtonTabComponent buttonTab = new ButtonTabComponent(tabPane);
 				tabPane.setTabComponentAt(tabPane.indexOfComponent(scrollContent), buttonTab);
@@ -157,7 +168,7 @@ public class AnalyzeUI extends JFrame {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		JPanel statusBar = new JPanel();
 		statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
 		JLabel stip = new JLabel("Version Stip : " + versionStip);
