@@ -42,8 +42,8 @@ import fr.crnan.videso3d.DatabaseManager;
  */
 public class TrajetPanel extends ResultGraphPanel {
 
-	public TrajetPanel(String balise) {
-		super(balise);
+	public TrajetPanel(String balise, String balise2) {
+		super(balise, balise2);
 	}
 
 	/*
@@ -51,7 +51,7 @@ public class TrajetPanel extends ResultGraphPanel {
 	 * @see fr.crnan.videso3d.graphs.ResultGraphPanel#createGraphComponent(java.lang.String)
 	 */
 	@Override
-	protected void createGraphComponent(final String balise) {
+	protected void createGraphComponent(final String balise, final String balise2) {
 
 		progressBar.setMinimum(0);
 		progressBar.setMaximum(6);

@@ -45,8 +45,9 @@ public abstract class ResultGraphPanel extends ResultPanel  {
 	/**
 	 * Construit le panneau
 	 * @param balise Balise recherchée
+	 * @param balise2 
 	 */
-	public ResultGraphPanel(final String balise){
+	public ResultGraphPanel(final String balise, String balise2){
 		layout.setParallelEdgeSpacing(5.0);
 		layout.setInterRankCellSpacing(20.0);//edge size
 		layout.setInterHierarchySpacing(10.0);
@@ -61,7 +62,7 @@ public abstract class ResultGraphPanel extends ResultPanel  {
 		this.setBorder(null);
 		this.setLayout(new BorderLayout());
 
-		this.createGraphComponent(balise);
+		this.createGraphComponent(balise, balise2);
 	}
 
 	/**
@@ -69,8 +70,17 @@ public abstract class ResultGraphPanel extends ResultPanel  {
 	 * @param balise
 	 * @return
 	 */
-	protected abstract void createGraphComponent(final String balise);
+	protected abstract void createGraphComponent(final String balise, final String balise2);
 
+	protected String forgeSql(String balise){
+		int length = balise.length();
+		if(balise.charAt(length-1) == '*') {
+			return "LIKE '"+balise.substring(0, length-1)+"%'";
+		} else {
+			return "= '"+balise+"'";
+		}
+	}
+		
 	protected mxGraph getGraph(){
 		return this.graph;
 	}

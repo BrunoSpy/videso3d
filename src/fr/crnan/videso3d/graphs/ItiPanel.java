@@ -42,16 +42,29 @@ import fr.crnan.videso3d.DatabaseManager;
  */
 public class ItiPanel extends ResultGraphPanel {
 
-	public ItiPanel(String balise) {
-		super(balise);
+	public ItiPanel(String balise, String balise2) {
+		super(balise, balise2);
 	}
 
+	private String findItis(String balise1, String balise2){
+		if(balise2.isEmpty()){
+			return "select iditi from balitis where balise "+forgeSql(balise1)+ 
+			   " UNION select id as iditi from itis where entree "+forgeSql(balise1);
+		} else {
+			return "select iditi from (select iditi from balitis where balise "+forgeSql(balise1)+ 
+				   " UNION select id as iditi from itis where entree "+forgeSql(balise1)+") as ab"+ 
+				   " INTERSECT "+ 
+				   "select iditi from (select iditi from balitis where balise "+forgeSql(balise2)+ 
+				   " UNION select id as iditi from itis where sortie "+forgeSql(balise2)+") as cd";
+		}
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see fr.crnan.videso3d.graphs.ResultGraphPanel#createGraphComponent(java.lang.String)
 	 */
 	@Override
-	protected void createGraphComponent(final String balise){
+	protected void createGraphComponent(final String balise1, final String balise2){
 
 		progressBar.setMinimum(0);
 		progressBar.setMaximum(8);
@@ -70,7 +83,7 @@ public class ItiPanel extends ResultGraphPanel {
 
 				try {
 					Statement st = DatabaseManager.getCurrentStip();
-					ResultSet rs = st.executeQuery("select balise, appartient, iditi, balid from balitis where iditi in (select iditi from balitis where balise='"+balise+"')");
+					ResultSet rs = st.executeQuery("select balise, appartient, iditi, balid from balitis where iditi in ("+findItis(balise1, balise2)+")");
 
 					progressBar.setValue(1);
 
@@ -112,8 +125,8 @@ public class ItiPanel extends ResultGraphPanel {
 							balises.put(rs.getInt(4), first);
 						} else {
 							String style = rs.getBoolean(2) ? 
-									(name.equals(balise) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
-										(name.equals(balise) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
+									((name.equals(balise1) || name.equals(balise2)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
+										((name.equals(balise1) || name.equals(balise2)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
 									mxCell bal = (mxCell) graph.insertVertex(iti, null, new CellContent(CellContent.TYPE_BALISE, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 									bal.setConnectable(false);
 									graph.insertEdge(iti, null, "", first, bal, GraphStyle.edgeStyle);
@@ -130,12 +143,14 @@ public class ItiPanel extends ResultGraphPanel {
 						balisesByItis.put(id, balises);
 					}
 
+					hasResults = (id != 0);
+					
 					progressBar.setValue(3);
 
-					rs = st.executeQuery("select iditi, trajetid, raccordement_id, cond1, balise, balid from couple_trajets, baltrajets where couple_trajets.trajetid = baltrajets.idtrajet and iditi in (select iditi from balitis where balise ='"+balise+"') ");
+					rs = st.executeQuery("select iditi, trajetid, raccordement_id, cond1, balise, balid from couple_trajets, baltrajets where couple_trajets.trajetid = baltrajets.idtrajet and iditi in ("+findItis(balise1, balise2)+") ");
 
 					progressBar.setValue(4);
-
+					
 					id = 0; //id des trajets
 					int idBal = 0;//id de la première balise du trajet
 					Object parent = null;
@@ -191,8 +206,6 @@ public class ItiPanel extends ResultGraphPanel {
 
 					//les cellules ne doivent pas pouvoir bouger
 					graph.setCellsLocked(true);
-
-					hasResults = (id != 0);
 					
 				} catch (SQLException e) {
 					e.printStackTrace();
