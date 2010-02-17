@@ -82,28 +82,33 @@ public class ItiPanel extends ResultGraphPanel {
 
 				try {
 					Statement st = DatabaseManager.getCurrentStip();
-					ResultSet rs = st.executeQuery("select balise, appartient, iditi, balid from balitis where iditi in ("+findItis(balise1, balise2)+")");
-
+					ResultSet rs = st.executeQuery("select balise, appartient, iditi, balid, entree, sortie from balitis, itis where itis.id = balitis.iditi and iditi in ("+findItis(balise1, balise2)+")");
+					
 					progressBar.setValue(1);
-
 
 					//ensemble des itis (conteneurs)
 					Set<mxCell> itis = new HashSet<mxCell>();
+					
+					//ensemble des groupes d'itis
+					Set<mxCell> itisRoot = new HashSet<mxCell>();
+					
 					//liste des balises pour l'ajout de trajet/balint
 
 					HashMap<Integer, HashMap<Integer, mxCell>> balisesByItis = new HashMap<Integer, HashMap<Integer, mxCell>>();
 
 					HashMap<Integer, mxCell> balises = null;
 
+					mxCell itiRoot = null;
 					mxCell iti = null;
 					mxCell first = null;
 					String entree = "";
 					int id = 0;
-
+					int count = 0;
 					graph.getModel().beginUpdate();
 					while(rs.next()){
 						String name = rs.getString(1);
 						if(id != rs.getInt(3)) {
+							count++;
 							if(id != 0){//on termine l'iti précédent si il existe
 								first.setStyle(GraphStyle.baliseDefault);
 								balisesByItis.put(id, balises);
@@ -112,13 +117,16 @@ public class ItiPanel extends ResultGraphPanel {
 							id = rs.getInt(3);
 							balises = new HashMap<Integer, mxCell>();			
 							// Swimlane
-							if(!entree.equals(rs.getString(1))){
-								//nouveau groupe
-								iti = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, new CellContent(CellContent.TYPE_ITI, id, name), 0, 0, 80, 50, GraphStyle.groupStyle);
-								iti.setConnectable(false);
-								itis.add(iti);
-								entree = rs.getString(1);
+							if(!entree.equals(rs.getString(5))){
+								//nouveau groupe d'itis
+								itiRoot = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, rs.getString(5), 0, 0, 80, 50, GraphStyle.groupStyle);
+								itiRoot.setConnectable(false);
+								itisRoot.add(itiRoot);
+								entree = rs.getString(5);
 							}
+							iti = (mxCell) graph.insertVertex(itiRoot, null, new CellContent(CellContent.TYPE_ITI, id, rs.getString(6)), 0, 0, 80, 50, GraphStyle.groupStyle);
+							iti.setConnectable(false);
+							itis.add(iti);
 							first = (mxCell) graph.insertVertex(iti, null, new CellContent(CellContent.TYPE_BALISE, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize);
 							first.setConnectable(false);
 							balises.put(rs.getInt(4), first);
@@ -133,7 +141,9 @@ public class ItiPanel extends ResultGraphPanel {
 									first  = bal;
 						}
 					}
-
+					
+					fireNumberResults(count);
+					
 					progressBar.setValue(2);
 
 					//on termine le dernier iti si il existe
@@ -186,13 +196,20 @@ public class ItiPanel extends ResultGraphPanel {
 
 					for(mxCell o : itis){
 						layout.execute(o);
-						graph.addListener(mxEvent.CELLS_FOLDED, new CellFoldedListener(o, stack));
 					}
-
-					progressBar.setValue(5);
-
+					
 					graph.updateGroupBounds(itis.toArray(), graph.getGridSize());
 
+					for(mxCell o : itisRoot){
+						stack.execute(o);
+						graph.addListener(mxEvent.CELLS_FOLDED, new CellFoldedListener(o, stack));
+					}
+					
+					progressBar.setValue(5);
+
+					
+					graph.updateGroupBounds(itisRoot.toArray(), 0);
+					
 					progressBar.setValue(6);
 
 					stack.execute(graph.getDefaultParent());
