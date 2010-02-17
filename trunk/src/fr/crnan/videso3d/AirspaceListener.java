@@ -30,6 +30,8 @@ import javax.swing.event.ChangeListener;
 
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.ObjectAnnotation;
+import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import gov.nasa.worldwind.awt.AWTInputHandler;
 import gov.nasa.worldwind.event.SelectEvent;
@@ -70,7 +72,7 @@ public class AirspaceListener implements SelectListener {
 	final private VidesoGLCanvas wwd;
 
 	final private ContextPanel context;
-	
+
 	public AirspaceListener(VidesoGLCanvas wwd, ContextPanel context){
 		this.wwd = wwd;
 		this.context = context;
@@ -81,7 +83,7 @@ public class AirspaceListener implements SelectListener {
 	 */
 	@Override
 	public void selected(final SelectEvent event) {
-		
+
 		//suppression de la surbrillance
 		if (lastHighlit != null
 				&& (event.getTopObject() == null || !event.getTopObject().equals(lastHighlit)))
@@ -99,8 +101,8 @@ public class AirspaceListener implements SelectListener {
 		//suppression tooltip on rollover
 		if (lastToolTip != null										//un tooltip doit préalablement exister
 				&& (event.getTopObject() == null  					//l'objet survolé doit exister
-					|| !event.getTopObject().equals(lastToolTip))) 	//l'objet survolé doit être différent du précédent
-						
+						|| !event.getTopObject().equals(lastToolTip))) 	//l'objet survolé doit être différent du précédent
+
 		{
 			if(lastAnnotation != null) {
 				this.wwd.getAnnotationLayer().removeAnnotation(lastAnnotation);
@@ -161,7 +163,7 @@ public class AirspaceListener implements SelectListener {
 			if(lastAttrs != null) {
 				final JPopupMenu menu = new JPopupMenu("Menu");
 				JMenuItem colorItem = new JMenuItem("Couleur...");
-				menu.add(colorItem);
+				
 
 				JMenu opacityItem = new JMenu("Opacité ...");
 				JSlider slider = new JSlider();
@@ -173,14 +175,13 @@ public class AirspaceListener implements SelectListener {
 				slider.setPaintLabels(true);
 				slider.setPaintTicks(true);
 				opacityItem.add(slider);
-				menu.add(opacityItem);
-
-				JMenuItem contextItem = new JMenuItem("Informations...");				
-				menu.add(contextItem);
+				
 
 
 				//Ajout des listeners en fonction du type d'objet
 				if(lastAttrs instanceof AirspaceAttributes){
+					menu.add(colorItem);
+					menu.add(opacityItem);
 					colorItem.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -200,7 +201,19 @@ public class AirspaceListener implements SelectListener {
 							wwd.redraw();
 						}
 					});
+					JMenuItem contextItem = new JMenuItem("Informations...");				
+					menu.add(contextItem);
+					contextItem.addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							context.showSecteur(((Secteur3D)event.getTopObject()).getName());
+							context.open();
+						}
+					});
 				} else if(lastAttrs instanceof ShapeAttributes){
+					menu.add(colorItem);
+					menu.add(opacityItem);
 					colorItem.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
@@ -225,20 +238,51 @@ public class AirspaceListener implements SelectListener {
 						}
 					});
 				} else if(lastAttrs instanceof MarkerAttributes){
+					JMenuItem contextItem = new JMenuItem("Informations...");				
+					menu.add(contextItem);
 					contextItem.addActionListener(new ActionListener() {
-						
+
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							context.showBalise(((Balise2D)event.getTopObject()).getName());
 							context.open();
 						}
 					});
+					JMenu analyseItem = new JMenu("Analyse");
+					JMenuItem analyseIti = new JMenuItem("Itinéraires");
+					JMenuItem analyseTrajet = new JMenuItem("Trajets");
+					JMenuItem analyseRoute = new JMenuItem("Routes");
+					analyseIti.addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							new AnalyzeUI("iti", ((Balise2D)event.getTopObject()).getName(), "").setVisible(true);
+						}
+					});
+					analyseItem.add(analyseIti);
+					analyseTrajet.addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							new AnalyzeUI("trajet", ((Balise2D)event.getTopObject()).getName(),	"").setVisible(true);
+						}
+					});
+					analyseItem.add(analyseTrajet);
+					analyseRoute.addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							new AnalyzeUI("route", ((Balise2D)event.getTopObject()).getName(), "").setVisible(true);
+						}
+					});
+					analyseItem.add(analyseRoute);
+					menu.add(analyseItem);
 				}
-				
+
 				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 			}			
 		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){
-			
+
 		} else if (event.getEventAction() == SelectEvent.LEFT_CLICK){
 			if(event.getTopObject() != null){ 
 				Object o = event.getTopObject();

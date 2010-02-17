@@ -34,6 +34,7 @@ import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.geom.Latitude;
 import fr.crnan.videso3d.geom.Longitude;
 import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.Secteur3D;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 /**
@@ -77,6 +78,8 @@ public class ContextPanel extends JPanel implements SelectListener {
 			this.open();
 			if(event.getTopObject() instanceof Balise2D){
 				this.showBalise(((Balise2D)event.getTopObject()).getName());
+			} else if(event.getTopObject() instanceof Secteur3D){
+				this.showSecteur(((Secteur3D)event.getTopObject()).getName());
 			}
 		}
 	}
@@ -85,7 +88,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 	 * Affiche les informations de la balise <code>name</code>
 	 * @param name
 	 */
-	public void showBalise(String name){
+	public void showBalise(String name){		
 		titleAreaPanel.setTitle("Balise : "+name);
 		content.removeAll();
 		try {
@@ -249,4 +252,48 @@ public class ContextPanel extends JPanel implements SelectListener {
 			e.printStackTrace();
 		}
 	}
+	
+	public void showRoute(int id){
+		content.removeAll();
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select * from routes where id='"+id+"'");
+			titleAreaPanel.setTitle("Route "+rs.getString(2));
+			
+			JTextArea trajet =  new JTextArea();
+			trajet.setBorder(null);
+			trajet.setText("\n Espace : "+(rs.getString(3).equals("U")?"UIR":"FIR"));
+			trajet.setEditable(false);
+			trajet.setOpaque(true);
+			trajet.setBackground(/*UIManager.getColor("background")*/new Color(214,217,223));
+			
+			content.add(Box.createVerticalStrut(1000));
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void showSecteur(String name){
+		content.removeAll();
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select * from secteurs where nom='"+name+"'");
+			titleAreaPanel.setTitle("Secteur "+rs.getString(2));
+			
+			JTextArea secteur =  new JTextArea();
+			secteur.setBorder(null);
+			secteur.setText("\n Espace : "+(rs.getString(3).equals("U")?"UIR":"FIR")
+					+"\n Appartient au centre : "+rs.getString(3)
+					+"\n Plancher : "+rs.getInt(6)
+					+"\n Plafond : "+rs.getInt(7));
+			secteur.setEditable(false);
+			secteur.setOpaque(true);
+			secteur.setBackground(/*UIManager.getColor("background")*/new Color(214,217,223));
+			content.add(secteur);
+			content.add(Box.createVerticalStrut(1000));
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
 }

@@ -155,7 +155,7 @@ public class TrajetPanel extends ResultGraphPanel {
 				JComponent component;
 				
 				if(hasResults){
-					component = new mxGraphComponent(graph);
+					component = new VGraphComponent(graph);
 					component.setBorder(null);
 				} else {
 					component = new JTextArea("\n Aucun résultat.");
