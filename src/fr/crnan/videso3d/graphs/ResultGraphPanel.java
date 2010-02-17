@@ -81,6 +81,15 @@ public abstract class ResultGraphPanel extends ResultPanel  {
 		}
 	}
 		
+	protected boolean nameMatch(String balise, String name){
+		int length = balise.length();
+		if(!balise.isEmpty() && balise.charAt(length-1) == '*') {
+			return name.startsWith(balise.substring(0, length-1));
+		} else {
+			return name.equals(balise); 
+		}
+	}
+	
 	protected mxGraph getGraph(){
 		return this.graph;
 	}

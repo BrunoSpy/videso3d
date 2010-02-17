@@ -29,7 +29,6 @@ import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 
 import com.mxgraph.model.mxCell;
-import com.mxgraph.swing.mxGraphComponent;
 
 import fr.crnan.videso3d.DatabaseManager;
 /**
@@ -43,7 +42,15 @@ public class RoutePanel extends ResultGraphPanel {
 		super(balise, balise2);
 	}
 
-	protected void createGraphComponent(final String balise, final String balise2) {
+	private String findRoute(String balise1, String balise2){
+		if(balise2.isEmpty()){
+			return "select routeid as id from routebalise where balise "+forgeSql(balise1)+" UNION select id from routes where name "+forgeSql(balise1);
+		} else {
+			return "select routeid as id from routebalise where balise "+forgeSql(balise1)+" INTERSECT select routeid as id from routebalise where balise "+forgeSql(balise2);
+		}
+	}
+	
+	protected void createGraphComponent(final String balise1, final String balise2) {
 
 		progressBar.setMinimum(0);
 		progressBar.setMaximum(6);
@@ -62,7 +69,7 @@ public class RoutePanel extends ResultGraphPanel {
 
 				try {
 					Statement st = DatabaseManager.getCurrentStip();
-					ResultSet rs = st.executeQuery("select routebalise.routeid, routebalise.route, routebalise.id as balid, balise, appartient, sens, espace from routes, routebalise where routes.id = routebalise.routeid and routes.id in (select routeid from routebalise where balise='"+balise+"')");
+					ResultSet rs = st.executeQuery("select routebalise.routeid, routebalise.route, routebalise.id as balid, balise, appartient, sens, espace from routes, routebalise where routes.id = routebalise.routeid and routes.id in ("+findRoute(balise1, balise2)+")");
 
 					progressBar.setValue(1);
 
@@ -83,11 +90,11 @@ public class RoutePanel extends ResultGraphPanel {
 							route = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, new CellContent(CellContent.TYPE_ROUTE, idRoute, rs.getString(2)), 0, 0, 80, 50, GraphStyle.groupStyleHorizontal);
 							route.setConnectable(false);
 							routes.add(route);
-							first = (mxCell) graph.insertVertex(route, null, new CellContent(CellContent.TYPE_BALISE, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, (balise.equals(name)? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
+							first = (mxCell) graph.insertVertex(route, null, new CellContent(CellContent.TYPE_BALISE, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
 							first.setConnectable(false);
 							sens = rs.getString(6);
 						} else {
-							mxCell second = (mxCell) graph.insertVertex(route, null, new CellContent(CellContent.TYPE_BALISE, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, (balise.equals(name)? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
+							mxCell second = (mxCell) graph.insertVertex(route, null, new CellContent(CellContent.TYPE_BALISE, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
 							second.setConnectable(false);
 							String style = "";
 							if(sens.equals("=")){
@@ -131,6 +138,8 @@ public class RoutePanel extends ResultGraphPanel {
 
 				} catch (SQLException e) {
 					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 
 				return null;
@@ -140,10 +149,10 @@ public class RoutePanel extends ResultGraphPanel {
 			protected void done() {
 				super.done();
 				progressBar.setVisible(false);
-				JComponent component;
+				final JComponent component;
 
 				if(hasResults){
-					component = new mxGraphComponent(graph);
+					component = new VGraphComponent(graph);
 					component.setBorder(null);
 				} else {
 					component = new JTextArea("\n Aucun résultat.");

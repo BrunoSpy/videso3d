@@ -29,7 +29,6 @@ import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 
 import com.mxgraph.model.mxCell;
-import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
 
 import fr.crnan.videso3d.DatabaseManager;
@@ -125,8 +124,8 @@ public class ItiPanel extends ResultGraphPanel {
 							balises.put(rs.getInt(4), first);
 						} else {
 							String style = rs.getBoolean(2) ? 
-									((name.equals(balise1) || name.equals(balise2)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
-										((name.equals(balise1) || name.equals(balise2)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
+									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
+										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
 									mxCell bal = (mxCell) graph.insertVertex(iti, null, new CellContent(CellContent.TYPE_BALISE, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 									bal.setConnectable(false);
 									graph.insertEdge(iti, null, "", first, bal, GraphStyle.edgeStyle);
@@ -222,7 +221,7 @@ public class ItiPanel extends ResultGraphPanel {
 				JComponent component;
 
 				if(hasResults){
-					component = new mxGraphComponent(graph);
+					component = new VGraphComponent(graph);
 					component.setBorder(null);
 				} else {
 					component = new JTextArea("\n Aucun résultat.");
