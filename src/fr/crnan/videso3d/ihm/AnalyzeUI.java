@@ -17,6 +17,7 @@
 package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -62,6 +63,10 @@ public class AnalyzeUI extends JFrame {
 		super();
 		this.setLayout(new BorderLayout());
 
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
+		
+		this.setTitle("Videso - Analyse (0.7.0)");
+		
 		this.add(this.createToolbar(), BorderLayout.PAGE_START);
 
 		this.add(this.createStatusBar(), BorderLayout.PAGE_END);
@@ -77,6 +82,32 @@ public class AnalyzeUI extends JFrame {
 
 	}
 
+	/**
+	 * Launch AnalyzeUI with a research
+	 * @param type
+	 * @param balise1
+	 * @param balise2
+	 */
+	public AnalyzeUI(String type, String balise1, String balise2){
+		this();
+		ResultPanel content = createResultPanel(type, balise1, balise2);
+		content.setContext(context);
+		content.addPropertyChangeListener(ResultPanel.PROPERTY_RESULT, new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				nombreResultats.setText(evt.getNewValue().toString());
+			}
+		});
+		JScrollPane scrollContent = new JScrollPane(content);
+		scrollContent.setBorder(null);
+		tabPane.addTab(type+" "+balise1+(balise2.isEmpty() ? "" : "+"+balise2), scrollContent);
+
+		ButtonTabComponent buttonTab = new ButtonTabComponent(tabPane);
+		tabPane.setTabComponentAt(tabPane.indexOfComponent(scrollContent), buttonTab);
+		tabPane.setSelectedIndex(tabPane.indexOfComponent(scrollContent));
+	}
+	
 	private ResultPanel createResultPanel(final String type, final String search, final String search2){
 
 		if(type.equals("iti")){
