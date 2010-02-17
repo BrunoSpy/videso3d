@@ -19,6 +19,8 @@ package fr.crnan.videso3d.ihm;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -37,7 +39,6 @@ import javax.swing.JToolBar;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphs.ItiPanel;
@@ -55,6 +56,8 @@ public class AnalyzeUI extends JFrame {
 
 	private ContextPanel context = new ContextPanel();
 
+	private JLabel nombreResultats = new JLabel();
+	
 	public AnalyzeUI(){
 		super();
 		this.setLayout(new BorderLayout());
@@ -140,6 +143,13 @@ public class AnalyzeUI extends JFrame {
 				String s2 = search2.getSelectedItem().toString();
 				ResultPanel content = createResultPanel(t, s, s2);
 				content.setContext(context);
+				content.addPropertyChangeListener(ResultPanel.PROPERTY_RESULT, new PropertyChangeListener() {
+					
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						nombreResultats.setText(evt.getNewValue().toString());
+					}
+				});
 				JScrollPane scrollContent = new JScrollPane(content);
 				scrollContent.setBorder(null);
 				tabPane.addTab(t+" "+s+(s2.isEmpty() ? "" : "+"+s2), scrollContent);
@@ -176,6 +186,10 @@ public class AnalyzeUI extends JFrame {
 		statusBar.add(new JLabel(" | "));
 		statusBar.add(new JLabel("Version Stpv : " + versionStpv));
 
+		statusBar.add(new JLabel(" | "));
+		statusBar.add(new JLabel("Nombre de résultats : "));
+		statusBar.add(nombreResultats);
+		
 		return statusBar;
 	}
 

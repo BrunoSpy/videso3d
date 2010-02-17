@@ -89,11 +89,12 @@ public class TrajetPanel extends ResultGraphPanel {
 					int eclatement_id = 0;
 					int raccordement_id = 0;
 					int idTrajet = 0;
-
+					int count = 0;
 					graph.getModel().beginUpdate();
 					while(rs.next()){
 						String name = rs.getString(16); 
 						if(idTrajet != rs.getInt(1)){
+							count++;
 							idTrajet = rs.getInt(1);
 							//nouveau trajet
 							if(rs.getInt(3) != eclatement_id || rs.getInt(5) != raccordement_id){
@@ -113,7 +114,7 @@ public class TrajetPanel extends ResultGraphPanel {
 							first = second;
 						}
 					}
-
+					fireNumberResults(count);
 					progressBar.setValue(2);
 
 					for(mxCell o : trajets){

@@ -180,6 +180,19 @@ public class ContextPanel extends JPanel implements SelectListener {
 			String name = rs.getString(2)+"->"+rs.getString(3);
 			titleAreaPanel.setTitle("Iti : "+name);	
 			
+			String itiText = "\n Entrée : "+rs.getString(2);
+			itiText += "\n Sortie : "+rs.getString(3);
+			itiText += "\n\n Plancher : "+rs.getInt(4);
+			itiText += "\n Plafond : "+rs.getInt(5);
+			
+			JTextArea iti =  new JTextArea();
+			iti.setBorder(null);
+			iti.setText(itiText);
+			iti.setEditable(false);
+			iti.setOpaque(true);
+			iti.setBackground(/*UIManager.getColor("background")*/new Color(214,217,223));
+			
+			content.add(iti);
 			
 			content.add(Box.createVerticalStrut(1000));
 		} catch (SQLException e){
@@ -195,10 +208,41 @@ public class ContextPanel extends JPanel implements SelectListener {
 		content.removeAll();
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
-			ResultSet rs = st.executeQuery("select * from trajets where id ='"+id+"'");
+			ResultSet rs = st.executeQuery("select * from trajets where id='"+id+"'");
+			int ecl_id = rs.getInt(3);
+			int rac_id = rs.getInt(5);
+			rs = st.executeQuery("select * from trajets where eclatement_id='"+ecl_id+"' and raccordement_id = '"+rac_id+"'");
 			String name = rs.getString(2)+"->"+rs.getString(4);
 			titleAreaPanel.setTitle("Trajet : "+name);	
 			
+			String trajetText = "";
+			int count = 1;
+			while(rs.next()){
+				trajetText += "\n Trajet "+count+" : ";
+				trajetText += "\n     Type : "+rs.getString(6);
+				trajetText += "\n     Plafond : "+rs.getInt(7);
+				trajetText += "\n     Condition 1 : "+rs.getString(8)+" "+rs.getString(9);
+				if(rs.getString(10) != null){
+					trajetText += "\n     Condition 2 : "+rs.getString(10)+" "+rs.getString(11);
+				}
+				if(rs.getString(12) != null){
+					trajetText += "\n     Condition 3 : "+rs.getString(12)+" "+rs.getString(15);
+				}
+				if(rs.getString(14) != null){
+					trajetText += "\n     Condition 4 : "+rs.getString(14)+" "+rs.getString(15);
+				}
+				trajetText += "\n";
+				count++;
+			}
+			
+			JTextArea trajet =  new JTextArea();
+			trajet.setBorder(null);
+			trajet.setText(trajetText);
+			trajet.setEditable(false);
+			trajet.setOpaque(true);
+			trajet.setBackground(/*UIManager.getColor("background")*/new Color(214,217,223));
+			
+			content.add(trajet);
 			
 			content.add(Box.createVerticalStrut(1000));
 		} catch (SQLException e){

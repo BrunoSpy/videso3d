@@ -80,11 +80,12 @@ public class RoutePanel extends ResultGraphPanel {
 					mxCell first = null;
 					String sens = "";
 					int idRoute = 0;
-
+					int count = 0;
 					graph.getModel().beginUpdate();
 					while(rs.next()){
 						String name = rs.getString(4); 
 						if(idRoute != rs.getInt(1)){
+							count++;
 							idRoute = rs.getInt(1);
 							//nouvelle route
 							route = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, new CellContent(CellContent.TYPE_ROUTE, idRoute, rs.getString(2)), 0, 0, 80, 50, GraphStyle.groupStyleHorizontal);
@@ -112,6 +113,8 @@ public class RoutePanel extends ResultGraphPanel {
 						}
 					}
 
+					fireNumberResults(count);
+					
 					progressBar.setValue(2);
 
 					for(mxCell o : routes){
