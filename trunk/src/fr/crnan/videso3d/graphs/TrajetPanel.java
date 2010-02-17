@@ -17,7 +17,6 @@
 package fr.crnan.videso3d.graphs;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
@@ -25,7 +24,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 
@@ -46,12 +44,22 @@ public class TrajetPanel extends ResultGraphPanel {
 		super(balise, balise2);
 	}
 
+	private String findTrajets(String balise1, String balise2){
+		if(balise2.isEmpty()){
+			return "select idtrajet as id from baltrajets where balise "+forgeSql(balise1);
+		} else {
+			return "select idtrajet as id from baltrajets where balise "+forgeSql(balise1)+ 
+				   " INTERSECT "+ 
+				   "select idtrajet as id from baltrajets where balise "+forgeSql(balise2);
+		}
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see fr.crnan.videso3d.graphs.ResultGraphPanel#createGraphComponent(java.lang.String)
 	 */
 	@Override
-	protected void createGraphComponent(final String balise, final String balise2) {
+	protected void createGraphComponent(final String balise1, final String balise2) {
 
 		progressBar.setMinimum(0);
 		progressBar.setMaximum(6);
@@ -69,7 +77,7 @@ public class TrajetPanel extends ResultGraphPanel {
 
 				try {
 					Statement st = DatabaseManager.getCurrentStip();
-					ResultSet rs = st.executeQuery("select trajets.*, baltrajets.balise, baltrajets.balid, baltrajets.appartient from trajets, baltrajets where trajets.id = baltrajets.idtrajet and trajets.id in (select idtrajet from baltrajets where balise='"+balise+"')");
+					ResultSet rs = st.executeQuery("select trajets.*, baltrajets.balise, baltrajets.balid, baltrajets.appartient from trajets, baltrajets where trajets.id = baltrajets.idtrajet and trajets.id in ("+findTrajets(balise1, balise2)+")");
 
 					progressBar.setValue(1);
 
@@ -96,10 +104,10 @@ public class TrajetPanel extends ResultGraphPanel {
 								eclatement_id = rs.getInt(3);
 								raccordement_id = rs.getInt(5);
 							}
-							first = (mxCell) graph.insertVertex(trajet, null, new CellContent(CellContent.TYPE_BALISE, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, (balise.equals(name)? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
+							first = (mxCell) graph.insertVertex(trajet, null, new CellContent(CellContent.TYPE_BALISE, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
 							first.setConnectable(false);
 						} else {
-							mxCell second = (mxCell) graph.insertVertex(trajet, null, new CellContent(CellContent.TYPE_BALISE, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, (balise.equals(name)? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
+							mxCell second = (mxCell) graph.insertVertex(trajet, null, new CellContent(CellContent.TYPE_BALISE, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
 							second.setConnectable(false);
 							graph.insertEdge(trajet, null, "", first, second, GraphStyle.edgeStyle);
 							first = second;

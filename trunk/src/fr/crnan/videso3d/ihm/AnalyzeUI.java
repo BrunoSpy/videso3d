@@ -92,7 +92,7 @@ public class AnalyzeUI extends JFrame {
 
 		toolbar.add(new JLabel(" Rechercher : "));
 
-		String[] types = {"balise", "balint", "iti", "trajet", "route", "balint", "connexion"};
+		String[] types = {/*"balise", "balint",*/ "iti", "trajet", "route"/*, "connexion"*/};
 
 		final JComboBox type = new JComboBox(types);
 
@@ -105,7 +105,7 @@ public class AnalyzeUI extends JFrame {
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
 			if(st != null){
-				ResultSet rs = st.executeQuery("select name from balises UNION select name from routes UNION select nom from secteurs");
+				ResultSet rs = st.executeQuery("select name from balises UNION select name from routes" /*UNION select nom from secteurs*/);
 				while(rs.next()){
 					results.add(rs.getString(1));
 				}
