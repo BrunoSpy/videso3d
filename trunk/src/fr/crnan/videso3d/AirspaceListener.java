@@ -33,7 +33,6 @@ import fr.crnan.videso3d.graphics.ObjectAnnotation;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
-import gov.nasa.worldwind.awt.AWTInputHandler;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.render.Annotation;
@@ -256,7 +255,7 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
-							new AnalyzeUI("iti", ((Balise2D)event.getTopObject()).getName(), "").setVisible(true);
+							AnalyzeUI.showResults("iti", ((Balise2D)event.getTopObject()).getName(), "");
 						}
 					});
 					analyseItem.add(analyseIti);
@@ -264,7 +263,7 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							new AnalyzeUI("trajet", ((Balise2D)event.getTopObject()).getName(),	"").setVisible(true);
+							AnalyzeUI.showResults("trajet", ((Balise2D)event.getTopObject()).getName(),	"");
 						}
 					});
 					analyseItem.add(analyseTrajet);
@@ -272,7 +271,7 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							new AnalyzeUI("route", ((Balise2D)event.getTopObject()).getName(), "").setVisible(true);
+							AnalyzeUI.showResults("route", ((Balise2D)event.getTopObject()).getName(), "");
 						}
 					});
 					analyseItem.add(analyseRoute);

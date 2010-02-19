@@ -47,19 +47,54 @@ import fr.crnan.videso3d.graphs.ResultPanel;
 import fr.crnan.videso3d.graphs.RoutePanel;
 import fr.crnan.videso3d.graphs.TrajetPanel;
 /**
- * Fenêtre d'analyse des données Stip et Stpv
+ * Fenêtre d'analyse des données Stip et Stpv.<br />
+ * Cette classe est un singleton afin de n'être ouverte qu'une fois maximum.
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class AnalyzeUI extends JFrame {
+public final class AnalyzeUI extends JFrame {
 
+	private static AnalyzeUI instance = null;
+	
 	private JTabbedPane tabPane = new JTabbedPane();
 
 	private ContextPanel context = new ContextPanel();
 
 	private JLabel nombreResultats = new JLabel();
 	
-	public AnalyzeUI(){
+	public final static AnalyzeUI getInstance(){
+		if(instance == null){
+			instance = new AnalyzeUI();
+		}
+		return instance;
+	}
+	
+	public static void showAnalyzeUI(){
+		getInstance().setVisible(true);
+	}
+	
+	public final static void showResults(String type, String balise1, String balise2){
+		ResultPanel content = getInstance().createResultPanel(type, balise1, balise2);
+		content.setContext(getInstance().context);
+		content.addPropertyChangeListener(ResultPanel.PROPERTY_RESULT, new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				getInstance().nombreResultats.setText(evt.getNewValue().toString());
+			}
+		});
+		JScrollPane scrollContent = new JScrollPane(content);
+		scrollContent.setBorder(null);
+		getInstance().tabPane.addTab(type+" "+balise1+(balise2.isEmpty() ? "" : "+"+balise2), scrollContent);
+
+		ButtonTabComponent buttonTab = new ButtonTabComponent(getInstance().tabPane);
+		getInstance().tabPane.setTabComponentAt(getInstance().tabPane.indexOfComponent(scrollContent), buttonTab);
+		getInstance().tabPane.setSelectedIndex(getInstance().tabPane.indexOfComponent(scrollContent));
+		
+		getInstance().setVisible(true);
+	}
+	
+	private AnalyzeUI(){
 		super();
 		this.setLayout(new BorderLayout());
 
@@ -80,33 +115,7 @@ public class AnalyzeUI extends JFrame {
 		//FullScreen
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
-	}
-
-	/**
-	 * Launch AnalyzeUI with a research
-	 * @param type
-	 * @param balise1
-	 * @param balise2
-	 */
-	public AnalyzeUI(String type, String balise1, String balise2){
-		this();
-		ResultPanel content = createResultPanel(type, balise1, balise2);
-		content.setContext(context);
-		content.addPropertyChangeListener(ResultPanel.PROPERTY_RESULT, new PropertyChangeListener() {
-			
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				nombreResultats.setText(evt.getNewValue().toString());
-			}
-		});
-		JScrollPane scrollContent = new JScrollPane(content);
-		scrollContent.setBorder(null);
-		tabPane.addTab(type+" "+balise1+(balise2.isEmpty() ? "" : "+"+balise2), scrollContent);
-
-		ButtonTabComponent buttonTab = new ButtonTabComponent(tabPane);
-		tabPane.setTabComponentAt(tabPane.indexOfComponent(scrollContent), buttonTab);
-		tabPane.setSelectedIndex(tabPane.indexOfComponent(scrollContent));
-	}
+	}	
 	
 	private ResultPanel createResultPanel(final String type, final String search, final String search2){
 

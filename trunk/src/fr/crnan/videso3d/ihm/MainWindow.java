@@ -346,7 +346,7 @@ public class MainWindow extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new AnalyzeUI().setVisible(true);
+				AnalyzeUI.showAnalyzeUI();
 			}
 		});
 		toolbar.add(analyze);
