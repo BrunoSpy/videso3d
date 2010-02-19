@@ -57,6 +57,8 @@ public class CellSelectionListener implements mxIEventListener {
 				context.showIti(((CellContent)cell.getValue()).getId());
 			} else if(content.getType().equals(CellContent.TYPE_TRAJET)){
 				context.showTrajet(((CellContent)cell.getValue()).getId());
+			} else if(content.getType().equals(CellContent.TYPE_ROUTE)){
+				context.showRoute(((CellContent)cell.getValue()).getId());
 			}
 		}
 	}

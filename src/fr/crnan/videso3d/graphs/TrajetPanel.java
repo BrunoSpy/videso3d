@@ -28,7 +28,6 @@ import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 
 import com.mxgraph.model.mxCell;
-import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.util.mxEvent;
 
 import fr.crnan.videso3d.DatabaseManager;

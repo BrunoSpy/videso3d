@@ -246,8 +246,6 @@ public class ItiPanel extends ResultGraphPanel {
 
 				add(component, BorderLayout.CENTER);
 			}
-
-
 		}.execute();
 	}
 
