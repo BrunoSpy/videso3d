@@ -49,7 +49,7 @@ public class Stip extends FileParser{
 	/**
 	 * Nombre de fichiers gérés
 	 */
-	private int numberFiles = 12;
+	private int numberFiles = 13;
 
 	/**
 	 * Version des fichiers Stip
@@ -63,7 +63,7 @@ public class Stip extends FileParser{
 	private Connection conn;
 
 	/**
-	 * Table des balises, nécessaire pour accélerer l'import afin de ne pas faire des reqêtes à chaque insertion de balise
+	 * Table des balises, nécessaire pour accélerer l'import afin de ne pas faire des requêtes à chaque insertion de balise
 	 */
 	private HashMap<String, Integer> balises = new HashMap<String, Integer>();
 	
@@ -89,7 +89,7 @@ public class Stip extends FileParser{
 				//parsing des fichiers et stockage en base
 				this.getFromFiles();
 				//table d'association traj->iti
-				this.setProgress(11);
+				this.setProgress(12);
 				this.setFile("COUPLES ITI");
 				this.insertCoupleBalItis();
 
@@ -172,6 +172,55 @@ public class Stip extends FileParser{
 		this.setFile("BALINT");
 		this.setBalInt(this.path+ "/BALINT");
 		this.setProgress(10);
+		this.setFile("CONNEXION");
+		this.setConnexion(this.path+"/CONNEX");
+		this.setProgress(11);
+	}
+
+	/**
+	 * Lecteur de fichier CONNEX
+	 * @param string
+	 */
+	private void setConnexion(String path) {
+		try {
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			in.readLine(); //suppression de la première ligne FORMAT
+			while(in.ready()){
+				String line = in.readLine();
+				if(line.length() >= 30)  
+					this.insertConnexion(new Connexion(line));
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void insertConnexion(Connexion connexion) throws SQLException {
+		PreparedStatement insert = this.conn.prepareStatement("insert into connexions (terrain, type, perfo, flinf, flsup, vitessesigne, vitesse) " +
+		"values (?, ?, ?, ?, ?, ?, ?)");
+		insert.setString(1, connexion.getTerrain());
+		insert.setString(2, connexion.getType());
+		insert.setString(3, connexion.getPerfo());
+		insert.setInt(4, connexion.getFlinf());
+		insert.setInt(5, connexion.getFlsup());
+		insert.setString(6, connexion.getVitesseCompar());
+		insert.setInt(7, connexion.getVitesseValue());
+		insert.executeUpdate();
+		int id = insert.getGeneratedKeys().getInt(1);
+		insert = this.conn.prepareStatement("insert into balconnexions (idconn, balise, balid, appartient) values (?, ?, ?, ?)");
+		insert.setInt(1, id);
+		for(Couple<String, Boolean> b : connexion.getBalises()){
+			insert.setString(2, b.getFirst());
+			insert.setInt(3, balises.get(b.getFirst()));
+			insert.setBoolean(4, b.getSecond());
+			insert.addBatch();
+		}
+		insert.executeBatch();
+		insert.close();
 	}
 
 	/**

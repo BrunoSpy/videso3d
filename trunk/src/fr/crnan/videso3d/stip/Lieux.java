@@ -22,7 +22,7 @@ import java.util.LinkedList;
 /**
  * Représentation d'un lieu : carte 1 suivie de ses cartes M, D et R
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class Lieux {
 	/**
@@ -36,7 +36,7 @@ public class Lieux {
 	/**
 	 * Numéro du centre
 	 */
-	private Character[] centre = {0, 0, 0, 0};
+	private String[] centre = {"0", "0", "0", "0"};
 	/**
 	 * Distance
 	 */
@@ -65,7 +65,7 @@ public class Lieux {
 		this.distanceType = line.substring(12, 14);
 		for(int i=0; i < 4;i++){
 			String tmp = line.substring(16 + i*13, 17+i*13).trim();
-			if(!tmp.isEmpty()) this.centre[i] = tmp.charAt(0);
+			if(!tmp.isEmpty()) this.centre[i] = tmp.substring(0,1);
 			tmp = line.substring(18 + i*13, 22+i*13).trim();
 			if(!tmp.isEmpty()) this.distance[i] = new Integer(tmp);
 			tmp = line.substring(23 + i*13, 25+i*13).trim();
@@ -96,7 +96,7 @@ public class Lieux {
 	/**
 	 * @return the centre
 	 */
-	public Character[] getCentre() {
+	public String[] getCentre() {
 		return centre;
 	}
 
