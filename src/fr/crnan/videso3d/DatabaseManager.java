@@ -627,10 +627,6 @@ public final class DatabaseManager{
 				"bal2 varchar(5), " +
 				"balise varchar(5), " +
 				"appartient boolean)");
-		//table d'association trajets -> itis
-		st.executeUpdate("create table trajiti (id integer primary key autoincrement, " +
-				"idtraj int, " +
-				"iditi int)");
 		//table des couples de balises des itis
 		//nécessaire pour rendre plus rapide la recherche de connexions et de trajets
 		st.executeUpdate("create table couplebalitis (id integer primary key autoincrement, " +
@@ -639,6 +635,21 @@ public final class DatabaseManager{
 				"idbal2 int," +
 				"bal1 varchar(5), " +
 				"bal2 varchar(6))");
+		//table des connexions
+		st.executeUpdate("create table connexions (id integer primary key autoincrement, " +
+				"terrain varchar(4), " +
+				"type varchar(1), " +
+				"perfo varchar(1), " +
+				"flinf int, " +
+				"flsup int, " +
+				"vitessesigne varchar(1), " +
+				"vitesse int)");
+		//table des balises des connexions
+		st.executeUpdate("create table balconnexions (id integer primary key autoincrement, " +
+				"idconn int, " +
+				"balise varchar(5), " +
+				"balid int, " +
+				"appartient boolean)");
 		//on référence la base de données
 		DatabaseManager.addDatabase(name, Type.STIP, new SimpleDateFormat().format(new Date()));
 	}
