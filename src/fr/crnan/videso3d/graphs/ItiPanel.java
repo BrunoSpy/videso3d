@@ -48,16 +48,16 @@ public class ItiPanel extends ResultGraphPanel {
 	private String findItis(String balise1, String balise2){
 		if(balise2.isEmpty()){
 			return "select iditi from balitis where balise "+forgeSql(balise1)+ 
-			   " UNION select id as iditi from itis where entree "+forgeSql(balise1);
+			" UNION select id as iditi from itis where entree "+forgeSql(balise1);
 		} else {
 			return "select iditi from (select iditi from balitis where balise "+forgeSql(balise1)+ 
-				   " UNION select id as iditi from itis where entree "+forgeSql(balise1)+") as ab"+ 
-				   " INTERSECT "+ 
-				   "select iditi from (select iditi from balitis where balise "+forgeSql(balise2)+ 
-				   " UNION select id as iditi from itis where sortie "+forgeSql(balise2)+") as cd";
+			" UNION select id as iditi from itis where entree "+forgeSql(balise1)+") as ab"+ 
+			" INTERSECT "+ 
+			"select iditi from (select iditi from balitis where balise "+forgeSql(balise2)+ 
+			" UNION select id as iditi from itis where sortie "+forgeSql(balise2)+") as cd";
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see fr.crnan.videso3d.graphs.ResultGraphPanel#createGraphComponent(java.lang.String)
@@ -74,7 +74,7 @@ public class ItiPanel extends ResultGraphPanel {
 		new SwingWorker<Integer, String>() {
 
 			private Boolean hasResults;
-			
+
 			@Override
 			protected Integer doInBackground() throws Exception {
 
@@ -83,15 +83,15 @@ public class ItiPanel extends ResultGraphPanel {
 				try {
 					Statement st = DatabaseManager.getCurrentStip();
 					ResultSet rs = st.executeQuery("select balise, appartient, iditi, balid, entree, sortie from balitis, itis where itis.id = balitis.iditi and iditi in ("+findItis(balise1, balise2)+")");
-					
+
 					progressBar.setValue(1);
 
 					//ensemble des itis (conteneurs)
 					Set<mxCell> itis = new HashSet<mxCell>();
-					
+
 					//ensemble des groupes d'itis
 					Set<mxCell> itisRoot = new HashSet<mxCell>();
-					
+
 					//liste des balises pour l'ajout de trajet/balint
 
 					HashMap<Integer, HashMap<Integer, mxCell>> balisesByItis = new HashMap<Integer, HashMap<Integer, mxCell>>();
@@ -134,16 +134,16 @@ public class ItiPanel extends ResultGraphPanel {
 							String style = rs.getBoolean(2) ? 
 									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
 										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
-									mxCell bal = (mxCell) graph.insertVertex(iti, null, new CellContent(CellContent.TYPE_BALISE, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
-									bal.setConnectable(false);
-									graph.insertEdge(iti, null, "", first, bal, GraphStyle.edgeStyle);
-									balises.put(rs.getInt(4), bal);
-									first  = bal;
+							mxCell bal = (mxCell) graph.insertVertex(iti, null, new CellContent(CellContent.TYPE_BALISE, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
+							bal.setConnectable(false);
+							graph.insertEdge(iti, null, "", first, bal, GraphStyle.edgeStyle);
+							balises.put(rs.getInt(4), bal);
+							first  = bal;
 						}
 					}
-					
+
 					fireNumberResults(count);
-					
+
 					progressBar.setValue(2);
 
 					//on termine le dernier iti si il existe
@@ -153,13 +153,13 @@ public class ItiPanel extends ResultGraphPanel {
 					}
 
 					hasResults = (id != 0);
-					
+
 					progressBar.setValue(3);
 
 					rs = st.executeQuery("select iditi, trajetid, raccordement_id, cond1, balise, balid from couple_trajets, baltrajets where couple_trajets.trajetid = baltrajets.idtrajet and iditi in ("+findItis(balise1, balise2)+") ");
 
 					progressBar.setValue(4);
-					
+
 					id = 0; //id des trajets
 					int idBal = 0;//id de la première balise du trajet
 					Object parent = null;
@@ -197,19 +197,19 @@ public class ItiPanel extends ResultGraphPanel {
 					for(mxCell o : itis){
 						layout.execute(o);
 					}
-					
+
 					graph.updateGroupBounds(itis.toArray(), graph.getGridSize());
 
 					for(mxCell o : itisRoot){
 						stack.execute(o);
 						graph.addListener(mxEvent.CELLS_FOLDED, new CellFoldedListener(o, stack));
 					}
-					
+
 					progressBar.setValue(5);
 
-					
+
 					graph.updateGroupBounds(itisRoot.toArray(), 0);
-					
+
 					progressBar.setValue(6);
 
 					stack.execute(graph.getDefaultParent());
@@ -222,7 +222,7 @@ public class ItiPanel extends ResultGraphPanel {
 
 					//les cellules ne doivent pas pouvoir bouger
 					graph.setCellsLocked(true);
-					
+
 				} catch (SQLException e) {
 					e.printStackTrace();
 				} catch (Exception e){

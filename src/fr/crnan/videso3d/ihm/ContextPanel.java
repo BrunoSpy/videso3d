@@ -33,6 +33,7 @@ import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.geom.Latitude;
 import fr.crnan.videso3d.geom.Longitude;
@@ -43,7 +44,7 @@ import gov.nasa.worldwind.event.SelectListener;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 public class ContextPanel extends JPanel implements SelectListener {
 
@@ -51,6 +52,8 @@ public class ContextPanel extends JPanel implements SelectListener {
 	
 	private TitledPanel titleAreaPanel = new TitledPanel("Informations");
 
+	private VidesoGLCanvas wwd = null;	
+	
 	public ContextPanel(){
 		super();
 		this.setPreferredSize(new Dimension(300, 0));
@@ -61,6 +64,11 @@ public class ContextPanel extends JPanel implements SelectListener {
 		this.add(content, BorderLayout.CENTER);
 	}
 
+	public ContextPanel(VidesoGLCanvas wwd){
+		this();
+		this.wwd = wwd;
+	}
+	
 	/**
 	 * Ouvre le panneau si le parent est un {@link JSplitPane}
 	 */
@@ -109,19 +117,25 @@ public class ContextPanel extends JPanel implements SelectListener {
 			balise.add(new AbstractAction() {
 				{
 					putValue(Action.NAME, "  WGS84 : "+latitude+", "+longitude);
+					putValue(Action.SHORT_DESCRIPTION, "Centrer le globe sur ces coordonnées.");
 				}
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					//TODO centrer la vue sur ces coordonnées
+					if(wwd!=null){
+						wwd.highlight(name);
+					}
 				}
 			});
 			balise.add(new AbstractAction() {
 				{
 					putValue(Action.NAME, "  Cautra : X: "+String.format("%7.2f",coor.getCautra()[0])+" Y: "+String.format("%7.2f",coor.getCautra()[1]));
+					putValue(Action.SHORT_DESCRIPTION, "Centrer le globe sur ces coordonnées.");
 				}
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					//TODO centrer la vue sur ces coordonnées
+					if(wwd!=null){
+						wwd.highlight(name);
+					}
 				}
 			});
 			balise.add(new JLabel("<html><b>Affectée au centre</b> : "+rs.getString("centre")+"</html>"));
@@ -144,6 +158,9 @@ public class ContextPanel extends JPanel implements SelectListener {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					AnalyzeUI.showResults("route", name, "");
+					if(wwd!=null){
+						AnalyzeUI.setWWD(wwd);
+					}
 				}
 			});
 			
@@ -154,6 +171,9 @@ public class ContextPanel extends JPanel implements SelectListener {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					AnalyzeUI.showResults("iti", name, "");
+					if(wwd!=null){
+						AnalyzeUI.setWWD(wwd);
+					}
 				}
 			});
 			
@@ -164,6 +184,9 @@ public class ContextPanel extends JPanel implements SelectListener {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					AnalyzeUI.showResults("trajet", name, "");
+					if(wwd!=null){
+						AnalyzeUI.setWWD(wwd);
+					}
 				}
 			});
 			
@@ -183,7 +206,10 @@ public class ContextPanel extends JPanel implements SelectListener {
 				}
 				@Override
 				public void actionPerformed(ActionEvent e) {
-
+					AnalyzeUI.showResults("balise", name, "");
+					if(wwd!=null){
+						AnalyzeUI.setWWD(wwd);
+					}
 				}
 			});
 			content.add(stip);
@@ -201,7 +227,10 @@ public class ContextPanel extends JPanel implements SelectListener {
 					}
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						
+						AnalyzeUI.showResults("balise", name, "");
+						if(wwd!=null){
+							AnalyzeUI.setWWD(wwd);
+						}
 					}
 				});
 				stpv.add(new AbstractAction() {
@@ -210,12 +239,52 @@ public class ContextPanel extends JPanel implements SelectListener {
 					}
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						
+						AnalyzeUI.showResults("balise", name, "");
+						if(wwd!=null){
+							AnalyzeUI.setWWD(wwd);
+						}
+					}
+				});
+				stpv.add(new AbstractAction() {
+					{
+						putValue(Action.NAME, "Possède "+(st2.executeQuery("select COUNT(*) from lieu8 where depart ='"+name+"' or arrivee = '"+name+"'")).getInt(1)+" lieu(x) 8.");
+					}
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						AnalyzeUI.showResults("balise", name, "");
+						if(wwd!=null){
+							AnalyzeUI.setWWD(wwd);
+						}
+					}
+				});
+				stpv.add(new AbstractAction() {
+					{
+						putValue(Action.NAME, "Possède "+(st2.executeQuery("select COUNT(*) from lieu91 where bal1 ='"+name+"' or bal2='"+name+"'")).getInt(1)+" lieu(x) 91.");
+					}
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						AnalyzeUI.showResults("balise", name, "");
+						if(wwd!=null){
+							AnalyzeUI.setWWD(wwd);
+						}
+					}
+				});
+				stpv.add(new AbstractAction() {
+					{
+						putValue(Action.NAME, "Possède "+(st2.executeQuery("select COUNT(*) from lieu6 where oaci ='"+name+"' or bal1='"+name+"'")).getInt(1)+" lieu(x) 6.");
+					}
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						AnalyzeUI.showResults("balise", name, "");
+						if(wwd!=null){
+							AnalyzeUI.setWWD(wwd);
+						}
 					}
 				});
 			}
 			
 			content.add(stpv);
+			content.validate();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -307,9 +376,20 @@ public class ContextPanel extends JPanel implements SelectListener {
 			route.add(new JLabel("<html><b>Espace</b> : "+(rs.getString(3).equals("U")?"UIR":"FIR")+"</html>"));
 			
 			content.add(route);
+			content.validate();
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
+	}
+	
+	public void showRoute(String name) {
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			this.showRoute(st.executeQuery("select id from routes where name ='"+name+"'").getInt(1));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public void showSecteur(String name){
@@ -325,12 +405,18 @@ public class ContextPanel extends JPanel implements SelectListener {
 			secteur.add(new JLabel("<html><b>Espace</b> : "+(rs.getString(4).equals("U")?"UIR":"FIR")+"</html>"));
 			secteur.add(new JLabel("<html><b>Appartient au centre</b> : "+rs.getString(3)+"</html>"));
 			secteur.add(new JLabel("<html><b>Plancher</b> : "+rs.getString(6)+"</html>"));
-			secteur.add(new JLabel("<html><b>Plafond</b> : "+rs.getString(7)+"</html>"));			
+			secteur.add(new JLabel("<html><b>Plafond</b> : "+rs.getString(7)+"</html>"));
+			secteur.add(new JLabel("<html><b>Mode S</b> : "+(rs.getBoolean(8)?"Oui":"Non")));
 			
 			content.add(secteur);
+			content.validate();
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
+	}
+
+	public void setWWD(VidesoGLCanvas wwd) {
+		this.wwd = wwd;
 	}
 	
 }

@@ -33,7 +33,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
@@ -41,25 +40,28 @@ import javax.swing.JToolBar;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphs.ItiPanel;
-import fr.crnan.videso3d.graphs.ResultPanel;
 import fr.crnan.videso3d.graphs.RoutePanel;
 import fr.crnan.videso3d.graphs.TrajetPanel;
+import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 /**
  * Fenêtre d'analyse des données Stip et Stpv.<br />
  * Cette classe est un singleton afin de n'être ouverte qu'une fois maximum.
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2.1
  */
 public final class AnalyzeUI extends JFrame {
 
 	private static AnalyzeUI instance = null;
-	
+		
 	private JTabbedPane tabPane = new JTabbedPane();
 
 	private ContextPanel context = new ContextPanel();
 
+	private JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, context, tabPane);
+	
 	private JLabel nombreResultats = new JLabel();
 	
 	public final static AnalyzeUI getInstance(){
@@ -73,6 +75,16 @@ public final class AnalyzeUI extends JFrame {
 		getInstance().setVisible(true);
 	}
 	
+	public static void setWWD(VidesoGLCanvas wwd){
+		getInstance().context.setWWD(wwd);
+	}
+	
+	/**
+	 * Ajoute un tab de résultats et ouvre la fenêtre si besoin
+	 * @param type Type de recherche
+	 * @param balise1 Première balise cherchée
+	 * @param balise2 Deuxième balise cherchée (optionnel)
+	 */
 	public final static void showResults(String type, String balise1, String balise2){
 		ResultPanel content = getInstance().createResultPanel(type, balise1, balise2);
 		content.setContext(getInstance().context);
@@ -83,15 +95,34 @@ public final class AnalyzeUI extends JFrame {
 				getInstance().nombreResultats.setText(evt.getNewValue().toString());
 			}
 		});
-		JScrollPane scrollContent = new JScrollPane(content);
-		scrollContent.setBorder(null);
-		getInstance().tabPane.addTab(type+" "+balise1+(balise2.isEmpty() ? "" : "+"+balise2), scrollContent);
+
+		getInstance().tabPane.addTab(type+" "+balise1+(balise2.isEmpty() ? "" : "+"+balise2), content);
 
 		ButtonTabComponent buttonTab = new ButtonTabComponent(getInstance().tabPane);
-		getInstance().tabPane.setTabComponentAt(getInstance().tabPane.indexOfComponent(scrollContent), buttonTab);
-		getInstance().tabPane.setSelectedIndex(getInstance().tabPane.indexOfComponent(scrollContent));
+		getInstance().tabPane.setTabComponentAt(getInstance().tabPane.indexOfComponent(content), buttonTab);
+		getInstance().tabPane.setSelectedIndex(getInstance().tabPane.indexOfComponent(content));
 		
 		getInstance().setVisible(true);
+		
+		//si type balise, on affiche les infos contextuelles sur cette balise
+		if(type.equals("balise")){
+			try {
+				if(DatabaseManager.getCurrentStip().executeQuery("select * from balises where name = '"+balise1+"'").next()) {
+					getInstance().context.showBalise(balise1);
+				} 
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * Ajoute un tab de résultats et ouvre la fenêtre si besoin
+	 * @param type Type de recherche
+	 * @param balise Balise cherchée
+	 */
+	public final static void showResults(String type, String balise){
+		showResults(type, balise, "");
 	}
 	
 	private AnalyzeUI(){
@@ -106,7 +137,6 @@ public final class AnalyzeUI extends JFrame {
 
 		this.add(this.createStatusBar(), BorderLayout.PAGE_END);
 
-		JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, context, tabPane);
 		splitpane.setOneTouchExpandable(true);
 		splitpane.setContinuousLayout(true);
 
@@ -125,6 +155,8 @@ public final class AnalyzeUI extends JFrame {
 			return new RoutePanel(search, search2);
 		} else if(type.equals("trajet")){
 			return new TrajetPanel(search, search2);
+		} else if(type.equals("balise")){
+			return new BaliseResultPanel(search);
 		}
 		return null;
 	}
@@ -135,7 +167,7 @@ public final class AnalyzeUI extends JFrame {
 
 		toolbar.add(new JLabel(" Rechercher : "));
 
-		String[] types = {/*"balise", "balint",*/ "iti", "trajet", "route"/*, "connexion"*/};
+		String[] types = {"balise", /*"balint",*/ "iti", "trajet", "route"/*, "connexion"*/};
 
 		final JComboBox type = new JComboBox(types);
 
@@ -178,25 +210,7 @@ public final class AnalyzeUI extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String t = type.getSelectedItem().toString();
-				String s = search.getSelectedItem().toString();
-				String s2 = search2.getSelectedItem().toString();
-				ResultPanel content = createResultPanel(t, s, s2);
-				content.setContext(context);
-				content.addPropertyChangeListener(ResultPanel.PROPERTY_RESULT, new PropertyChangeListener() {
-					
-					@Override
-					public void propertyChange(PropertyChangeEvent evt) {
-						nombreResultats.setText(evt.getNewValue().toString());
-					}
-				});
-				JScrollPane scrollContent = new JScrollPane(content);
-				scrollContent.setBorder(null);
-				tabPane.addTab(t+" "+s+(s2.isEmpty() ? "" : "+"+s2), scrollContent);
-
-				ButtonTabComponent buttonTab = new ButtonTabComponent(tabPane);
-				tabPane.setTabComponentAt(tabPane.indexOfComponent(scrollContent), buttonTab);
-				tabPane.setSelectedIndex(tabPane.indexOfComponent(scrollContent));
+				showResults(type.getSelectedItem().toString(), search.getSelectedItem().toString(), search2.getSelectedItem().toString());
 			}
 		});
 

@@ -403,15 +403,7 @@ public final class DatabaseManager{
 		st.executeUpdate("create table lieu6 (id integer primary key autoincrement, " +
 				"oaci varchar(4), " +
 				"bal1 varchar(5), " +
-				"xfl1 int, " +
-				"bal2 varchar(5), " +
-				"xfl2 int, " +
-				"bal3 varchar(5), " +
-				"xfl3 int, " +
-				"bal4 varchar(5), " +
-				"xfl4 int, " +
-				"bal5 varchar(5), " +
-				"xfl5 int)");
+				"xfl1 int)");
 		st.executeUpdate("create table lieu8 (id integer primary key autoincrement, " +
 				"depart varchar(4), " +
 				"arrivee varchar(4), " +

@@ -91,13 +91,19 @@ public class RoutePanel extends ResultGraphPanel {
 							route = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, new CellContent(CellContent.TYPE_ROUTE, idRoute, rs.getString(2)), 0, 0, 80, 50, GraphStyle.groupStyleHorizontal);
 							route.setConnectable(false);
 							routes.add(route);
-							first = (mxCell) graph.insertVertex(route, null, new CellContent(CellContent.TYPE_BALISE, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
+							String style = rs.getBoolean(5) ? 
+									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
+										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
+							first = (mxCell) graph.insertVertex(route, null, new CellContent(CellContent.TYPE_BALISE, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							first.setConnectable(false);
 							sens = rs.getString(6);
 						} else {
-							mxCell second = (mxCell) graph.insertVertex(route, null, new CellContent(CellContent.TYPE_BALISE, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
+							String style = rs.getBoolean(5) ? 
+									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
+										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
+							mxCell second = (mxCell) graph.insertVertex(route, null, new CellContent(CellContent.TYPE_BALISE, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							second.setConnectable(false);
-							String style = "";
+							style = "";
 							if(sens.equals("=")){
 								style = GraphStyle.edgeRoute;
 							} else if(sens.equals(">")){

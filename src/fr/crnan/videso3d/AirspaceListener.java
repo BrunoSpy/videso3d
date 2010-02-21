@@ -30,6 +30,8 @@ import javax.swing.event.ChangeListener;
 
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.ObjectAnnotation;
+import fr.crnan.videso3d.graphics.Route2D;
+import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
@@ -200,16 +202,29 @@ public class AirspaceListener implements SelectListener {
 							wwd.redraw();
 						}
 					});
-					JMenuItem contextItem = new JMenuItem("Informations...");				
-					menu.add(contextItem);
-					contextItem.addActionListener(new ActionListener() {
+					if(event.getTopObject() instanceof Secteur3D){
+						JMenuItem contextItem = new JMenuItem("Informations...");				
+						menu.add(contextItem);
+						contextItem.addActionListener(new ActionListener() {
 
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							context.showSecteur(((Secteur3D)event.getTopObject()).getName());
-							context.open();
-						}
-					});
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								context.showSecteur(((Secteur3D)event.getTopObject()).getName());
+								context.open();
+							}
+						});
+					} else if(event.getTopObject() instanceof Route3D) {
+						JMenuItem contextItem = new JMenuItem("Informations...");				
+						menu.add(contextItem);
+						contextItem.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								context.showRoute(((Route3D)event.getTopObject()).getName());
+								context.open();
+							}
+						});
+					}
 				} else if(lastAttrs instanceof ShapeAttributes){
 					menu.add(colorItem);
 					menu.add(opacityItem);
@@ -236,6 +251,19 @@ public class AirspaceListener implements SelectListener {
 							}
 						}
 					});
+					if(event.getTopObject() instanceof Route2D){
+						JMenuItem contextItem = new JMenuItem("Informations...");				
+						menu.add(contextItem);
+						contextItem.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								context.showRoute(((Route2D)event.getTopObject()).getName());
+								context.open();
+							}
+						});
+					}
+					
 				} else if(lastAttrs instanceof MarkerAttributes){
 					JMenuItem contextItem = new JMenuItem("Informations...");				
 					menu.add(contextItem);
@@ -251,11 +279,20 @@ public class AirspaceListener implements SelectListener {
 					JMenuItem analyseIti = new JMenuItem("Itinéraires");
 					JMenuItem analyseTrajet = new JMenuItem("Trajets");
 					JMenuItem analyseRoute = new JMenuItem("Routes");
+					JMenuItem analyseBalise = new JMenuItem("Balise");
+					analyseBalise.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							AnalyzeUI.showResults("balise", ((Balise2D)event.getTopObject()).getName());
+						}
+					});
+					analyseItem.add(analyseBalise);
 					analyseIti.addActionListener(new ActionListener() {
 
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
-							AnalyzeUI.showResults("iti", ((Balise2D)event.getTopObject()).getName(), "");
+							AnalyzeUI.showResults("iti", ((Balise2D)event.getTopObject()).getName());
 						}
 					});
 					analyseItem.add(analyseIti);
@@ -263,7 +300,7 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("trajet", ((Balise2D)event.getTopObject()).getName(),	"");
+							AnalyzeUI.showResults("trajet", ((Balise2D)event.getTopObject()).getName());
 						}
 					});
 					analyseItem.add(analyseTrajet);
@@ -271,7 +308,7 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("route", ((Balise2D)event.getTopObject()).getName(), "");
+							AnalyzeUI.showResults("route", ((Balise2D)event.getTopObject()).getName());
 						}
 					});
 					analyseItem.add(analyseRoute);

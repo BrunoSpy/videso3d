@@ -206,8 +206,8 @@ public class Stpv extends FileParser{
 		Statement st = this.conn.createStatement();
 		ResultSet rs = st.executeQuery("select max(id) from lieu91"); //le lieu 91 auquel se rapporte ce lieu 91s est forcément le dernier lieu91 enregistré
 		int id = rs.getInt(1);
-		String terrain1 = line.substring(14, 18);
-		String conf1 = line.substring(20, 21);
+		String terrain1 = line.substring(14, 18).trim();
+		String conf1 = line.substring(20, 21).trim();
 		String terrain2 = "";
 		String conf2 = "";
 		if(line.length()>34){
@@ -227,7 +227,7 @@ public class Stpv extends FileParser{
 		PreparedStatement insert = this.conn.prepareStatement("insert into lieu91 (oaci, indicateur, secteur_donnant, secteur_recevant, bal1, bal2, piste, avion, tfl) " +
 				"values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		insert.setString(1, line.substring(8, 12).trim());
-		insert.setString(2, line.substring(14, 17));
+		insert.setString(2, line.substring(14, 17).trim());
 		insert.setString(3, line.substring(20, 22).trim());
 		insert.setString(4, line.substring(26, 28).trim());
 		insert.setString(5, line.substring(32, 37).trim());
@@ -242,43 +242,48 @@ public class Stpv extends FileParser{
 
 	private void insertLieu8(String line) throws SQLException {
 		PreparedStatement insert = this.conn.prepareStatement("insert into lieu8 (depart, arrivee, fl) values (?, ?, ?)");
-		insert.setString(1, line.substring(8, 12));
-		insert.setString(2, line.substring(14, 18));
-		insert.setInt(3, new Integer(line.substring(22, 25)));
+		insert.setString(1, line.substring(8, 12).trim());
+		insert.setString(2, line.substring(14, 18).trim());
+		insert.setInt(3, new Integer(line.substring(22, 25).trim()));
 		insert.executeUpdate();
 	}
 
 
 
 	private void insertLieu6(String line) throws SQLException {
-		PreparedStatement insert = this.conn.prepareStatement("insert into lieu6 (oaci, bal1, xfl1, bal2, xfl2, bal3, xfl3, bal4, xfl4, bal5, xfl5) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		insert.setString(1, line.substring(8, 12));
-		insert.setString(2, line.substring(14, 20));
+		PreparedStatement insert = this.conn.prepareStatement("insert into lieu6 (oaci, bal1, xfl1) values (?, ?, ?)");
+		insert.setString(1, line.substring(8, 12).trim());
+		insert.setString(2, line.substring(14, 20).trim());
 		insert.setInt(3, new Integer(line.substring(20, 25).trim()));
+		insert.addBatch();
 		if(line.trim().length() > 36) {
-			insert.setString(4, line.substring(26, 31));
-			insert.setInt(5, new Integer(line.substring(34, 37).trim()));
+			insert.setString(2, line.substring(26, 31).trim());
+			insert.setInt(3, new Integer(line.substring(34, 37).trim()));
+			insert.addBatch();
 		}
 		if(line.trim().length() > 48){
-			insert.setString(6, line.substring(38, 43));
-			insert.setInt(7, new Integer(line.substring(46, 49).trim()));
+			insert.setString(2, line.substring(38, 43).trim());
+			insert.setInt(3, new Integer(line.substring(46, 49).trim()));
+			insert.addBatch();
 		}
 		if(line.trim().length() > 60){
-			insert.setString(8, line.substring(50, 56));
-			insert.setInt(9, new Integer(line.substring(58, 61).trim()));
+			insert.setString(2, line.substring(50, 56).trim());
+			insert.setInt(3, new Integer(line.substring(58, 61).trim()));
+			insert.addBatch();
 		}
 		if(line.trim().length() > 72){
-			insert.setString(10, line.substring(62, 68));
-			insert.setInt(11, new Integer(line.substring(70, 73).trim()));
+			insert.setString(2, line.substring(62, 68).trim());
+			insert.setInt(3, new Integer(line.substring(70, 73).trim()));
+			insert.addBatch();
 		}
-		insert.executeUpdate();
+		insert.executeBatch();
 	}
 
 
 
 	private void insertLieu27(String line) throws SQLException {
 		PreparedStatement insert = this.conn.prepareStatement("insert into lieu27 (oaci, balise, niveau) values (?, ?, ?)");
-		insert.setString(1, line.substring(8, 12));
+		insert.setString(1, line.substring(8, 12).trim());
 		insert.setString(2, line.substring(14, 19).trim());
 		insert.setInt(3, new Integer(line.substring(20, 23).trim()));
 		insert.executeUpdate();
@@ -286,7 +291,7 @@ public class Stpv extends FileParser{
 
 	private void insertLieu26(String line) throws SQLException {
 		PreparedStatement insert = this.conn.prepareStatement("insert into lieu26 (oaci, balise, niveau) values (?, ?, ?)");
-		insert.setString(1, line.substring(8, 12));
+		insert.setString(1, line.substring(8, 12).trim());
 		insert.setString(2, line.substring(14, 19).trim());
 		insert.setInt(3, new Integer(line.substring(20, 23).trim()));
 		insert.executeUpdate();
