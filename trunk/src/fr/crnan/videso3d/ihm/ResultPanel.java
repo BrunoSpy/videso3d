@@ -14,11 +14,10 @@
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.crnan.videso3d.graphs;
+package fr.crnan.videso3d.ihm;
 
 import javax.swing.JPanel;
 
-import fr.crnan.videso3d.ihm.ContextPanel;
 /**
  * Panel de résultats.
  * Doit permettre la liaison avec le panel contextuel
@@ -35,4 +34,22 @@ public abstract class ResultPanel extends JPanel {
 		firePropertyChange(PROPERTY_RESULT, -1, count);
 	}
 
+	protected String forgeSql(String balise){
+		int length = balise.length();
+		if(balise.charAt(length-1) == '*') {
+			return "LIKE '"+balise.substring(0, length-1)+"%'";
+		} else {
+			return "= '"+balise+"'";
+		}
+	}
+		
+	protected boolean nameMatch(String balise, String name){
+		int length = balise.length();
+		if(!balise.isEmpty() && balise.charAt(length-1) == '*') {
+			return name.startsWith(balise.substring(0, length-1));
+		} else {
+			return name.equals(balise); 
+		}
+	}
+	
 }

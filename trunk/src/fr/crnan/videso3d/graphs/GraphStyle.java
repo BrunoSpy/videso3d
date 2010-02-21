@@ -38,11 +38,11 @@ public final class GraphStyle {
 	/**
 	 * Balise travers
 	 */
-	public static String baliseTravers = "defaultVertex;shape=triangle;direction=north;fontSize=8;fillColor=white;opacity=30;dashed=true";
+	public static String baliseTravers = "defaultVertex;shape=cloud;fontSize=8;fillColor=white;opacity=30;";
 	/**
 	 * Balise travers en surbrillance
 	 */
-	public static String baliseTraversHighlight = "defaultVertex;shape=triangle;direction=north;fontSize=8;fillColor=yellow;opacity=30;dashed=true";
+	public static String baliseTraversHighlight = "defaultVertex;shape=cloud;fontSize=8;fillColor=yellow;opacity=30;";
 	/**
 	 * Balise trajet
 	 */

@@ -1011,7 +1011,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 						lastLayer = balisesNP;
 						this.toggleLayer(balisesNP, true);
 					} 
-					this.getView().goTo(airspace.getPosition(), 5e5);
+					this.getView().goTo(airspace.getPosition(), 4e5);
 					return;
 				}
 			} catch (SQLException e) {

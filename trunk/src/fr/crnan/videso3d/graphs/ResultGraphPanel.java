@@ -26,6 +26,7 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.view.mxGraph;
 
 import fr.crnan.videso3d.ihm.ContextPanel;
+import fr.crnan.videso3d.ihm.ResultPanel;
 /**
  * Panneau de résultats représentés sous forme de graphe
  * @author Bruno Spyckerelle
@@ -70,24 +71,6 @@ public abstract class ResultGraphPanel extends ResultPanel  {
 	 * @return
 	 */
 	protected abstract void createGraphComponent(final String balise, final String balise2);
-
-	protected String forgeSql(String balise){
-		int length = balise.length();
-		if(balise.charAt(length-1) == '*') {
-			return "LIKE '"+balise.substring(0, length-1)+"%'";
-		} else {
-			return "= '"+balise+"'";
-		}
-	}
-		
-	protected boolean nameMatch(String balise, String name){
-		int length = balise.length();
-		if(!balise.isEmpty() && balise.charAt(length-1) == '*') {
-			return name.startsWith(balise.substring(0, length-1));
-		} else {
-			return name.equals(balise); 
-		}
-	}
 	
 	protected mxGraph getGraph(){
 		return this.graph;

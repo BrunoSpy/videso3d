@@ -30,6 +30,8 @@ public class VGraphComponent extends mxGraphComponent {
 	public VGraphComponent(mxGraph graph) {
 		super(graph);
 				
+		this.getVerticalScrollBar().setUnitIncrement(20); //20px est environ la taille d'un swimlane
+		
 		this.addMouseWheelListener(new MouseWheelListener() {
 
 			@Override

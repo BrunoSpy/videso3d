@@ -26,7 +26,7 @@ import gov.nasa.worldwind.render.airspaces.Polygon;
 /**
  * Représentation 3D d'un secteur de contrôle
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.2.3
  */
 public class Secteur3D extends Polygon implements ObjectAnnotation{
 
@@ -48,7 +48,9 @@ public class Secteur3D extends Polygon implements ObjectAnnotation{
 		this.setNiveaux(plancher, plafond);
 		this.setDefaultMaterial();
 		
-		this.annotation = new GlobeAnnotation("Secteur "+name+"\nPlancher : FL"+plancher+", plafond : FL"+plafond, Position.ZERO);
+		this.annotation = new GlobeAnnotation("Secteur "+name
+											+"\nPlafond : FL"+plafond
+											+", plancher : FL"+plancher, Position.ZERO);
 		this.annotation.setAlwaysOnTop(true);
 	}
 

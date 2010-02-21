@@ -207,7 +207,7 @@ public class MainWindow extends JFrame {
 		mainPane.setBorder(null);
 		mainPane.setPreferredSize(new Dimension(600, 0));
 		
-		ContextPanel context = new ContextPanel();
+		ContextPanel context = new ContextPanel(wwd);
 		wwd.addSelectListener(context);
 		wwd.addSelectListener(new AirspaceListener(wwd, context));
 		context.setMinimumSize(new Dimension(0,0)); //taille mini à 0 pour permettre la fermeture du panneau avec setDividerLocation
@@ -347,6 +347,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AnalyzeUI.showAnalyzeUI();
+				AnalyzeUI.setWWD(wwd);
 			}
 		});
 		toolbar.add(analyze);

@@ -27,7 +27,7 @@ import gov.nasa.worldwind.render.SurfacePolyline;
  * Route en 2D.<br />
  * Couleurs respectant le codage SIA
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 
@@ -40,7 +40,7 @@ public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 	public Route2D(String name, Type type){
 		this.setAnnotation("Route "+name);
 		this.setType(type);
-		this.setColor(name);
+		this.setName(name);
 	}
 	
 	public Route2D() {
@@ -116,5 +116,12 @@ public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 		this.name = name;
 		if(this.name != temp && this.type != null) this.setColor(this.name);
 	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+	
+	
 
 }
