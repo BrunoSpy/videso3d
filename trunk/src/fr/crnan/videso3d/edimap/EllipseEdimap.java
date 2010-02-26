@@ -51,20 +51,20 @@ public class EllipseEdimap extends SurfaceEllipse {
 		angle = ((String) angles.get(1).getValue()).split("\\s+");
 		int angle2 = (new Integer(angle[1]) * 16) / new Integer(angle[0]);
 		
-		this.setRect(-a, -b, 2*a, 2*b);
-		this.setStartAngle(angle1);
-		this.setSpanAngle(angle2-angle1);
-		
-		Entity point = ( (List<Entity>) geometry.getValue()).get(0);
-		if(point.getKeyword().equalsIgnoreCase("point")){
-			PointEdimap pt = pointsRef.get(((String)point.getValue()).replaceAll("\"", ""));
-			dx = pt.x();
-			dy = pt.y();
-		} else {
-			String[] points = ((String)point.getValue()).split("\\s+");
-			dx = new Double(points[1]);
-			dy = new Double(points[3])*-1.0;
-		}
-		this.translate(dx, dy);
+//		this.setRect(-a, -b, 2*a, 2*b);
+//		this.setStartAngle(angle1);
+//		this.setSpanAngle(angle2-angle1);
+//		
+//		Entity point = ( (List<Entity>) geometry.getValue()).get(0);
+//		if(point.getKeyword().equalsIgnoreCase("point")){
+//			PointEdimap pt = pointsRef.get(((String)point.getValue()).replaceAll("\"", ""));
+//			dx = pt.x();
+//			dy = pt.y();
+//		} else {
+//			String[] points = ((String)point.getValue()).split("\\s+");
+//			dx = new Double(points[1]);
+//			dy = new Double(points[3])*-1.0;
+//		}
+//		this.translate(dx, dy);
 	}
 }
