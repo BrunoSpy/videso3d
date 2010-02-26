@@ -46,9 +46,15 @@ public class ItiPanel extends ResultGraphPanel {
 	}
 
 	private String findItis(String balise1, String balise2){
-		if(balise2.isEmpty()){
+		if(balise2.isEmpty() && !balise1.isEmpty()){
 			return "select iditi from balitis where balise "+forgeSql(balise1)+ 
 			" UNION select id as iditi from itis where entree "+forgeSql(balise1);
+		} else if(balise1.isEmpty() && !balise2.isEmpty()){
+			return "select iditi from balitis where balise "+forgeSql(balise2)+ 
+			" UNION select id as iditi from itis where sortie "+forgeSql(balise2);
+		} else if(balise1.isEmpty() && balise2.isEmpty()){
+			//cas impossible normalement
+			return "";
 		} else {
 			return "select iditi from (select iditi from balitis where balise "+forgeSql(balise1)+ 
 			" UNION select id as iditi from itis where entree "+forgeSql(balise1)+") as ab"+ 

@@ -46,6 +46,8 @@ public class TrajetPanel extends ResultGraphPanel {
 	private String findTrajets(String balise1, String balise2){
 		if(balise2.isEmpty()){
 			return "select idtrajet as id from baltrajets where balise "+forgeSql(balise1);
+		} else if(balise1.isEmpty()){
+			return "select idtrajet as id from baltrajets where balise "+forgeSql(balise2);
 		} else {
 			return "select idtrajet as id from baltrajets where balise "+forgeSql(balise1)+ 
 				   " INTERSECT "+ 
@@ -80,9 +82,11 @@ public class TrajetPanel extends ResultGraphPanel {
 
 					progressBar.setValue(1);
 
-					//ensemble des routes
+					//ensemble des trajets
 					Set<mxCell> trajets = new HashSet<mxCell>();
+					Set<mxCell> trajetsGroupes = new HashSet<mxCell>();
 
+					mxCell trajetGroupe = null;
 					mxCell trajet = null;
 					mxCell first = null;
 					int eclatement_id = 0;
@@ -98,12 +102,25 @@ public class TrajetPanel extends ResultGraphPanel {
 							//nouveau trajet
 							if(rs.getInt(3) != eclatement_id || rs.getInt(5) != raccordement_id){
 								//nouveau groupe
-								trajet = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, new CellContent(CellContent.TYPE_TRAJET, idTrajet, rs.getString(2)), 0, 0, 80, 50, GraphStyle.groupStyle);
-								trajet.setConnectable(false);
-								trajets.add(trajet);
+								trajetGroupe = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, new CellContent(CellContent.TYPE_TRAJET_GROUPE, idTrajet, rs.getString(2)), 0, 0, 80, 50, GraphStyle.groupStyle);
+								trajetGroupe.setConnectable(false);
+								trajetsGroupes.add(trajetGroupe);
 								eclatement_id = rs.getInt(3);
 								raccordement_id = rs.getInt(5);
 							}
+							String condition = "FL < "+rs.getString(7) + " - "+rs.getString(8)+" "+rs.getString(9);
+							if(rs.getString(10) != null){
+								condition += " + "+rs.getString(10)+" "+rs.getString(11);
+							}
+							if(rs.getString(12) != null){
+								condition += " + "+rs.getString(12)+" "+rs.getString(13);
+							}
+							if(rs.getString(14) != null){
+								condition += " + "+rs.getString(14)+" "+rs.getString(15);
+							}
+							trajet = (mxCell) graph.insertVertex(trajetGroupe, null, new CellContent(CellContent.TYPE_TRAJET, idTrajet, condition), 0, 0, 0, 0, GraphStyle.groupStyleFolded);
+							trajet.setConnectable(false);
+							trajets.add(trajet);
 							first = (mxCell) graph.insertVertex(trajet, null, new CellContent(CellContent.TYPE_BALISE, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
 							first.setConnectable(false);
 						} else {
@@ -118,12 +135,19 @@ public class TrajetPanel extends ResultGraphPanel {
 
 					for(mxCell o : trajets){
 						layout.execute(o);
-						graph.addListener(mxEvent.CELLS_FOLDED, new CellFoldedListener(o, stack));
+						
 					}
 
+					graph.updateGroupBounds(trajets.toArray(), graph.getGridSize());
+					
+					for(mxCell o : trajetsGroupes){
+						stack.execute(o);
+						graph.addListener(mxEvent.CELLS_FOLDED, new CellFoldedListener(o, stack));
+					}
+					
 					progressBar.setValue(3);
 
-					graph.updateGroupBounds(trajets.toArray(), graph.getGridSize());
+					graph.updateGroupBounds(trajetsGroupes.toArray(), 0);
 
 					progressBar.setValue(4);
 

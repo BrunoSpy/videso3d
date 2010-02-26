@@ -23,18 +23,17 @@ import javax.swing.SwingConstants;
 import com.mxgraph.layout.mxStackLayout;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.util.mxEvent;
-import com.mxgraph.view.mxGraph;
 
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.ihm.ResultPanel;
 /**
  * Panneau de résultats représentés sous forme de graphe
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public abstract class ResultGraphPanel extends ResultPanel  {
 
-	protected final mxGraph graph = new mxGraph();
+	protected final VGraph graph = new VGraph();
 
 	protected final mxStackLayout stack = new mxStackLayout(graph, false);
 
@@ -52,11 +51,6 @@ public abstract class ResultGraphPanel extends ResultPanel  {
 		layout.setInterRankCellSpacing(20.0);//edge size
 		layout.setInterHierarchySpacing(10.0);
 
-		graph.setCellsCloneable(false);
-		graph.setCellsEditable(false);
-		graph.setCellsResizable(false);
-		graph.setCellsDisconnectable(false);
-
 		this.progressBar.setVisible(false);
 
 		this.setBorder(null);
@@ -72,7 +66,7 @@ public abstract class ResultGraphPanel extends ResultPanel  {
 	 */
 	protected abstract void createGraphComponent(final String balise, final String balise2);
 	
-	protected mxGraph getGraph(){
+	protected VGraph getGraph(){
 		return this.graph;
 	}
 	

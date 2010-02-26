@@ -15,57 +15,41 @@
  */
 
 package fr.crnan.videso3d.graphs;
+
+import com.mxgraph.model.mxCell;
+import com.mxgraph.view.mxGraph;
 /**
- * Contenu d'une cellule
+ * 
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class CellContent {
+public class VGraph extends mxGraph {
 
-	public static String TYPE_BALISE = "balise";
-	
-	public static String TYPE_ITI = "iti";
-	
-	public static String TYPE_ROUTE = "route";
-	
-	public static String TYPE_TRAJET = "trajet";
-	
-	public static String TYPE_TRAJET_GROUPE = "trajet_groupe";
-	
-	private String type = null;
-	
-	private int id = 0;
-	
-	private String name;
-
-	/**
-	 * 
-	 * @param type
-	 * @param id
-	 */
-	public CellContent(String type, int id, String name){
-		this.type = type;
-		this.id = id;
-		this.name = name;
-	}
-
-
-	public String getType() {
-		return type;
-	}
-
-
-	public int getId() {
-		return id;
-	}
-	
-	public String getName(){
-		return name;
+	public VGraph(){
+		super();
+		this.setCellsCloneable(false);
+		this.setCellsEditable(false);
+		this.setCellsResizable(false);
+		this.setCellsDisconnectable(false);
 	}
 	
 	@Override
-	public String toString(){
-		return name;
-	}
-}
+	public boolean isCellFoldable(Object cell, boolean arg1) {
 
+		if(cell instanceof mxCell){
+			Object v = ((mxCell) cell).getValue();
+			if(v instanceof CellContent ){
+				String t = ((CellContent) v).getType();
+				//les routes et les itis ne doivent pas pouvoir être réduits
+				if(t.equals(CellContent.TYPE_ROUTE) || t.equals(CellContent.TYPE_ITI) || t.equals(CellContent.TYPE_TRAJET)){
+					return false;
+				}
+			}
+		}
+		
+		return super.isCellFoldable(cell, arg1);
+	}
+
+	
+	
+}

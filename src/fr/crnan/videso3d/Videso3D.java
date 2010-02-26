@@ -54,11 +54,11 @@ public class Videso3D {
 				}
 
 
-				//if(args.length > 0 && args[0].equals("analyze")) { 
-				//	new AnalyzeUI().setVisible(true);
-				//} else {
+				if(args.length > 0 && args[0].equals("analyze")) { 
+					AnalyzeUI.showAnalyzeUI();
+				} else {
 					new MainWindow();
-				//}
+				}
 			}
 		});
 	}

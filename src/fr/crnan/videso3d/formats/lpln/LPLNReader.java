@@ -62,7 +62,9 @@ public class LPLNReader {
 							new FileInputStream(file)));
 			int count = 0; //nombre de lignes lues
 			while(in.ready() && !lpln && count < 50){
-				if(in.readLine().startsWith("-                           NUMERO PLN")){
+				String line = in.readLine();
+				if(line.startsWith("-                           NUMERO PLN")
+						|| line.startsWith("CHAMP GESTION TRANSMIS")){
 					lpln = true;
 				}
 				count++;

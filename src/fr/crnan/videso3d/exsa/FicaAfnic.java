@@ -55,7 +55,6 @@ public class FicaAfnic {
 			line = line.substring(0, line.length() - 1);
 		}
 		String[] word = line.split(formated ? "\\s+" : ",");
-		int length = word.length;
 		int i = formated ? 0 : 1;
 		if (word[0].equals(formated ? "FICA_AFNIC" : "FICA.AFNIC")){
 			this.setAbonne(word[1+i]);

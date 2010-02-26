@@ -45,7 +45,6 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphs.ItiPanel;
 import fr.crnan.videso3d.graphs.RoutePanel;
 import fr.crnan.videso3d.graphs.TrajetPanel;
-import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 /**
  * Fenêtre d'analyse des données Stip et Stpv.<br />
  * Cette classe est un singleton afin de n'être ouverte qu'une fois maximum.
@@ -55,30 +54,30 @@ import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 public final class AnalyzeUI extends JFrame {
 
 	private static AnalyzeUI instance = null;
-		
+
 	private JTabbedPane tabPane = new JTabbedPane();
 
 	private ContextPanel context = new ContextPanel();
 
 	private JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, context, tabPane);
-	
+
 	private JLabel nombreResultats = new JLabel();
-	
+
 	public final static AnalyzeUI getInstance(){
 		if(instance == null){
 			instance = new AnalyzeUI();
 		}
 		return instance;
 	}
-	
+
 	public static void showAnalyzeUI(){
 		getInstance().setVisible(true);
 	}
-	
+
 	public static void setWWD(VidesoGLCanvas wwd){
 		getInstance().context.setWWD(wwd);
 	}
-	
+
 	/**
 	 * Ajoute un tab de résultats et ouvre la fenêtre si besoin
 	 * @param type Type de recherche
@@ -89,7 +88,7 @@ public final class AnalyzeUI extends JFrame {
 		ResultPanel content = getInstance().createResultPanel(type, balise1, balise2);
 		content.setContext(getInstance().context);
 		content.addPropertyChangeListener(ResultPanel.PROPERTY_RESULT, new PropertyChangeListener() {
-			
+
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				getInstance().nombreResultats.setText(evt.getNewValue().toString());
@@ -101,9 +100,9 @@ public final class AnalyzeUI extends JFrame {
 		ButtonTabComponent buttonTab = new ButtonTabComponent(getInstance().tabPane);
 		getInstance().tabPane.setTabComponentAt(getInstance().tabPane.indexOfComponent(content), buttonTab);
 		getInstance().tabPane.setSelectedIndex(getInstance().tabPane.indexOfComponent(content));
-		
+
 		getInstance().setVisible(true);
-		
+
 		//si type balise, on affiche les infos contextuelles sur cette balise
 		if(type.equals("balise")){
 			try {
@@ -115,7 +114,7 @@ public final class AnalyzeUI extends JFrame {
 			}
 		}
 	}
-	
+
 	/**
 	 * Ajoute un tab de résultats et ouvre la fenêtre si besoin
 	 * @param type Type de recherche
@@ -124,15 +123,15 @@ public final class AnalyzeUI extends JFrame {
 	public final static void showResults(String type, String balise){
 		showResults(type, balise, "");
 	}
-	
+
 	private AnalyzeUI(){
 		super();
 		this.setLayout(new BorderLayout());
 
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
-		
+
 		this.setTitle("Videso - Analyse (0.7.0)");
-		
+
 		this.add(this.createToolbar(), BorderLayout.PAGE_START);
 
 		this.add(this.createStatusBar(), BorderLayout.PAGE_END);
@@ -146,7 +145,7 @@ public final class AnalyzeUI extends JFrame {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 	}	
-	
+
 	private ResultPanel createResultPanel(final String type, final String search, final String search2){
 
 		if(type.equals("iti")){
@@ -190,6 +189,8 @@ public final class AnalyzeUI extends JFrame {
 		}
 		final JComboBox search = new JComboBox(results.toArray());
 		search.setEditable(true);
+		search.setToolTipText("<html>Nom de la balise ou du terrain recherché.<br />Exemple : LF* renverra toutes les informations sur les terrains français.</html>");
+	
 		AutoCompleteDecorator.decorate(search);
 
 		toolbar.add(search);
@@ -201,21 +202,70 @@ public final class AnalyzeUI extends JFrame {
 		results2.addFirst("");
 		final JComboBox search2 = new JComboBox((results2).toArray());
 		search2.setEditable(true);
+		search2.setToolTipText("Sans objet.");
 		AutoCompleteDecorator.decorate(search2);
 
 		toolbar.add(search2);
 
-		JButton newSearch = new JButton("Nouvelle recherche");
+		final JButton newSearch = new JButton("Nouvelle recherche");
 		newSearch.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				showResults(type.getSelectedItem().toString(), search.getSelectedItem().toString(), search2.getSelectedItem().toString());
+				if(!search.getSelectedItem().toString().isEmpty() || !search2.getSelectedItem().toString().isEmpty()){
+					showResults(type.getSelectedItem().toString(), search.getSelectedItem().toString(), search2.getSelectedItem().toString());
+				}
 			}
 		});
 
 		toolbar.add(newSearch);
 
+
+		//Ajout des tooltips en fonction du type de recherche
+		type.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String item = (String)((JComboBox)e.getSource()).getSelectedItem();
+				if(item.equals("balise")){
+					search.setToolTipText("<html>Nom de la balise ou du terrain recherché.<br />Exemple : LF* renverra toutes les informations sur les terrains français.</html>");
+					search2.setToolTipText("Sans objet.");
+				} else if(item.equals("iti")){
+					search.setToolTipText("<html>Première balise recherchée.<br />Recherche aussi dans les entrées des itis." +
+					"<br /><i>Astuce : </i>Pour rechercher tous les itis qui contiennent une balise commençant par OM, mettre OM*.</html>");
+					search2.setToolTipText("<html>Deuxième balise recherchée.<br />Recherche aussi dans les sorties des itis.</html>");
+				} else if(item.equals("trajet")){
+					search.setToolTipText("<html>Première balise recherchée." +
+					"<br /><i>Astuce : </i>Pour rechercher tous les trajets qui contiennent une balise commençant par OM, mettre OM*.</html>");
+					search2.setToolTipText("<html>Deuxième balise recherchée.</html>");
+				} else if(item.equals("route")){
+					search.setToolTipText("<html>Première balise recherchée.<br />Recherche aussi dnas les nom de route si il n'y a pas de deuxième balise recherchée.<br />" +
+					"<br /><i>Astuce : </i>Pour rechercher toutes les routes qui contiennent une balise commençant par OM, mettre OM*.</html>");
+					search2.setToolTipText("<html>Deuxième balise recherchée.</html>");
+				}
+			}
+		});
+
+		//un appui sur la touche entrée lance la recherche
+		search.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if("comboBoxEdited".equals(e.getActionCommand())){
+					newSearch.doClick();
+				}
+			}
+		});
+		search2.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if("comboBoxEdited".equals(e.getActionCommand())){
+					newSearch.doClick();
+				}
+			}
+		});
+		
 		return toolbar;
 
 	}
@@ -243,7 +293,7 @@ public final class AnalyzeUI extends JFrame {
 		statusBar.add(new JLabel(" | "));
 		statusBar.add(new JLabel("Nombre de résultats : "));
 		statusBar.add(nombreResultats);
-		
+
 		return statusBar;
 	}
 
