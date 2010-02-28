@@ -152,7 +152,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Liste des layers couvertures radios
 	 */
-	// private RadioCovLayer radioCovLayer = new RadioCovLayer("Radio Coverage",this);
+	 private RadioCovLayer radioCovLayer;
 	
 	
 	/**
@@ -206,6 +206,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 		
 		this.buildStip();	
+		
+		//Layer des radio couv
+		radioCovLayer = new RadioCovLayer("Radio Coverage",this);
 		
 		//position de départ centrée sur la France
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));
@@ -716,7 +719,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/*----------------- Gestion des couvertures radios ------------------*/
 	/*-------------------------------------------------------------------*/
     // TODO : Décommenter pour le debug de l'appel du constructeur RadioCovLayers.
-	/*
+	
     public void addRadioCov(String antennaName) {    	
     	radioCovLayer.addVisibleRadioCov(antennaName);
     	this.redraw();
@@ -726,7 +729,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
     	radioCovLayer.removeVisibleRadioCov(antennaName);
     	this.redraw();
     }
-    */
+    
     
 	
 	/*--------------------------------------------------------------*/
@@ -1006,6 +1009,19 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 					airspace.setAttributes(attrs);
 					highlight = airspace;
 					selectedAirspaces.addAirspace((Airspace) highlight);
+					
+					//ajout des balises
+					rs = st.executeQuery("select * from routebalise where route = '"+text+"'");
+					balisesPub.removeAllBalises();
+					balisesNP.removeAllBalises();
+					while(rs.next()){
+						String b = rs.getString(4);
+						balisesNP.showBalise(b);
+						balisesPub.showBalise(b);
+					}
+					this.toggleLayer(balisesNP, true);
+					this.toggleLayer(balisesPub, true);
+					
 					this.getView().goTo(airspace.getReferencePosition(), 1e6);
 					return;
 				}
@@ -1030,12 +1046,14 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 					airspace.highlight(true);
 					this.unHighlightPrevious(airspace);
 					highlight = airspace;
-					if (rs.getInt("publicated") == 1 && !balisesPub.isEnabled()) {
+					if (rs.getInt("publicated") == 1) {
 						lastLayer = balisesPub;
+						balisesPub.showAll();
 						this.toggleLayer(balisesPub, true);
 					}
-					if (rs.getInt("publicated") == 0 && !balisesNP.isEnabled() ) {
+					if (rs.getInt("publicated") == 0) {
 						lastLayer = balisesNP;
+						balisesNP.showAll();
 						this.toggleLayer(balisesNP, true);
 					} 
 					this.getView().goTo(airspace.getPosition(), 4e5);
