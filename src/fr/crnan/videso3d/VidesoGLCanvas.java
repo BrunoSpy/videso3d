@@ -52,6 +52,8 @@ import fr.crnan.videso3d.layers.Routes3DLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.Secteur;
+import fr.crnan.videso3d.layers.RadioCovLayer;
+
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.data.DataDescriptor;
@@ -97,6 +99,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	private Routes3DLayer routes3D;
 	private Routes2DLayer routes2D;
 	/**
+	 * 
 	 * Layers pour les balises publiées
 	 */
 	private BaliseLayer balisesPub = new BaliseLayer("Balises publiées");
@@ -145,6 +148,12 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Liste des layers Edimap
 	 */
 	private List<Layer> edimapLayers = new LinkedList<Layer>();
+	
+	/**
+	 * Liste des layers couvertures radios
+	 */
+	// private RadioCovLayer radioCovLayer = new RadioCovLayer("Radio Coverage",this);
+	
 	
 	/**
 	 * Liste des objets affichés
@@ -702,6 +711,24 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		radars.remove(name);
 		this.redraw();
 	}
+	
+	/*-------------------------------------------------------------------*/
+	/*----------------- Gestion des couvertures radios ------------------*/
+	/*-------------------------------------------------------------------*/
+    // TODO : Décommenter pour le debug de l'appel du constructeur RadioCovLayers.
+	/*
+    public void addRadioCov(String antennaName) {    	
+    	radioCovLayer.addVisibleRadioCov(antennaName);
+    	this.redraw();
+    }
+    
+    public void removeRadioCov(String antennaName) {    
+    	radioCovLayer.removeVisibleRadioCov(antennaName);
+    	this.redraw();
+    }
+    */
+    
+	
 	/*--------------------------------------------------------------*/
 	/*------------------ Gestion des mosaiques   -------------------*/
 	/*--------------------------------------------------------------*/
