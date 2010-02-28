@@ -36,7 +36,7 @@ import gov.nasa.worldwind.render.markers.Marker;
  * Balise 2D projetée sur le terrain.<br />
  * A ajouter à un BaliseLayer pour être affichée sur le globe.
  * @author Bruno Spyckerelle
- * @version 0.5
+ * @version 0.5.1
  */
 public class Balise2D extends MarkerAnnotation {
 		
@@ -47,22 +47,24 @@ public class Balise2D extends MarkerAnnotation {
 	/**
 	 * Crée une balise 2D
 	 * @param name Nom de la balise
-	 * @param position {@link LatLon} Position de la balise
+	 * @param position Position de la balise
+	 * @param annotation Annotation associée
 	 */
-	public Balise2D(CharSequence name, Position position){
+	public Balise2D(CharSequence name, Position position, String annotation){
 		super(position, new BasicMarkerAttributes());
 		this.name = (String) name;
 		this.getAttributes().setMarkerPixels(3);
 		this.getAttributes().setMaterial(new Material(Pallet.getColorBaliseMarker()));
-		this.setAnnotation("Balise "+name);
+		
+		if(annotation == null){
+			this.setAnnotation("Balise "+name);
+		} else {
+			this.setAnnotation(annotation);
+		}
 		
 		this.text = new UserFacingText(name, new Position(Angle.fromDegrees(position.latitude.degrees+0.01), position.longitude, position.elevation));
 		this.text.setFont(new Font("Sans Serif", Font.PLAIN, 9));
 		this.text.setColor(Pallet.getColorBaliseText());
-		
-
-		//attrs.setMaxMarkerSize(3000);
-		//attrs.setMinMarkerSize(700);
 
 		Configuration.addPropertyChangeListener(new PropertyChangeListener() {
 			
@@ -75,6 +77,15 @@ public class Balise2D extends MarkerAnnotation {
 				}
 			}
 		});
+	}
+	
+	/**
+	 * Crée une balise 2D
+	 * @param name Nom de la balise
+	 * @param position {@link LatLon} Position de la balise
+	 */
+	public Balise2D(CharSequence name, Position position){
+		this(name, position, null);
 	}
 	
 	public UserFacingText getUserFacingText(){

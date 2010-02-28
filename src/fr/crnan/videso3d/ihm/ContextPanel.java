@@ -112,6 +112,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 
 			JXTaskPane balise = new JXTaskPane();
 			balise.setTitle("Informations générales");
+			balise.add(new JLabel("<html><b>Publiée</b> : "+(rs.getBoolean(3)?"oui":"non")+"</html>"));
 			balise.add(new JLabel("<html><b>Commentaires</b> : "+ rs.getString("definition")+"</html>"));
 			balise.add(new JLabel("<html><b>Cooordonnées</b> :</html>"));
 			balise.add(new AbstractAction() {
@@ -368,11 +369,20 @@ public class ContextPanel extends JPanel implements SelectListener {
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
 			ResultSet rs = st.executeQuery("select * from routes where id='"+id+"'");
-			titleAreaPanel.setTitle("Route "+rs.getString(2));
+			final String name = rs.getString(2);
+			titleAreaPanel.setTitle("Route "+name);
 			
 			JXTaskPane route = new JXTaskPane();
 			route.setTitle("Informations générales");
-			
+			route.add(new AbstractAction() {
+				{
+					putValue(Action.NAME, "<html><b>Vue 3D</b> : Afficher la route.</html>");
+				}
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					wwd.highlight(name);
+				}
+			});
 			route.add(new JLabel("<html><b>Espace</b> : "+(rs.getString(3).equals("U")?"UIR":"FIR")+"</html>"));
 			
 			content.add(route);
