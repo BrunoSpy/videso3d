@@ -25,28 +25,19 @@ import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Polyline;
 import gov.nasa.worldwind.render.SurfacePolyline;
-import gov.nasa.worldwind.render.UserFacingText;
-import gov.nasa.worldwind.render.markers.BasicMarker;
-import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
-import gov.nasa.worldwind.render.markers.BasicMarkerShape;
-import gov.nasa.worldwind.render.markers.Marker;
 /**
  * Profil d'un vol avec affichage des couples balise/niveau.<br />
  * Le profil est à la fois dessiné en 3D et en projeté sur le sol.
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class Profil3D {
 
 	/**
 	 * Balises
 	 */
-	private List<UserFacingText> balises = new ArrayList<UserFacingText>();
-	/**
-	 * Markers
-	 */
-	private List<Marker> markers = new ArrayList<Marker>();
-	private BasicMarkerAttributes markerAttrs = new BasicMarkerAttributes();
+	private List<Balise2D> balises = new ArrayList<Balise2D>();
+
 	/**
 	 * Profil
 	 */
@@ -78,8 +69,6 @@ public class Profil3D {
 		curtain.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
 		profil.setColor(Color.BLUE);
 		profil.setLineWidth(2.0);
-		markerAttrs.setMarkerPixels(3.0);
-		markerAttrs.setShapeType(BasicMarkerShape.SPHERE);
 	}
 	/**
 	 * Profil sans balises
@@ -107,13 +96,11 @@ public class Profil3D {
 	}
 	
 	public void addBalise(String balise, Position position){
-		this.balises.add(new UserFacingText(balise, position));
-		this.markers.add(new BasicMarker(position, markerAttrs));
+		this.balises.add(new Balise2D(balise, position));
 	}
 	
 	public void addBalise(String balise, String annotation, Position position){
-		this.balises.add(new UserFacingText(balise, position));
-		this.markers.add(new MarkerAnnotation(annotation, position, markerAttrs));
+		this.balises.add(new Balise2D(balise, position));
 	}
 	
 	public void setBalises(List<String> balises, List<String> annotations, Iterable<? extends Position> positions){
@@ -162,11 +149,8 @@ public class Profil3D {
 		return this.projected;
 	}
 	
-	public List<UserFacingText> getBalises(){
+	public List<Balise2D> getBalises(){
 		return this.balises;
 	}
-	
-	public List<Marker> getMarkers(){
-		return this.markers;
-	}
+
 }

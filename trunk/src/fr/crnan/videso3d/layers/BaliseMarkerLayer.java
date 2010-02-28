@@ -24,7 +24,7 @@ import gov.nasa.worldwind.render.markers.Marker;
 /**
  * MarkerLayer avec une possibilité d'ajouter des Marker à l'ensemble existant
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class BaliseMarkerLayer extends MarkerLayer {
 
@@ -48,6 +48,22 @@ public class BaliseMarkerLayer extends MarkerLayer {
 			Iterator<Marker> iterator = this.getMarkers().iterator();
 			while(iterator.hasNext()){
 				markersList.add(iterator.next());
+			}
+		}
+		this.setMarkers(markersList);
+	}
+	
+	/**
+	 * Enlève un marker au layer. Si il n'existe pas, ne fait rien.
+	 * @param marker Marker à enlever
+	 */
+	public void removeMarker(Marker marker){
+		LinkedList<Marker> markersList = new LinkedList<Marker>();
+		if(this.getMarkers() != null) {
+			for(Marker m : this.getMarkers()){
+				if(!m.equals(marker)){
+					markersList.add(m);
+				}
 			}
 		}
 		this.setMarkers(markersList);

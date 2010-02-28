@@ -16,7 +16,6 @@
 package fr.crnan.videso3d.layers;
 
 import fr.crnan.videso3d.graphics.Profil3D;
-import gov.nasa.worldwind.layers.MarkerLayer;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 /**
@@ -30,7 +29,7 @@ public class ProfilLayer extends LayerSet {
 	/**
 	 * Texte des couples balise/niveau
 	 */
-	private TextLayer textLayer = new TextLayer("Balises");
+	private BaliseLayer baliseLayer = new BaliseLayer("Balises", true);
 	/**
 	 * Dessins
 	 */
@@ -39,32 +38,28 @@ public class ProfilLayer extends LayerSet {
 	 * Projection
 	 */
 	private SurfaceShapeLayer shapeLayer = new SurfaceShapeLayer();
-	/**
-	 * Markers
-	 */
-	private MarkerLayer markerLayer = new MarkerLayer();
+
 	
 	public ProfilLayer(String name){
 		this.setName(name);
-		this.textLayer.setAMSL(true);
-		this.add(textLayer);
+		this.add(baliseLayer);
 		this.add(renderableLayer);
 		this.add(shapeLayer);
-		this.add(markerLayer);
 	}
 	
 	public void addProfil3D(Profil3D profil3d){
 		this.shapeLayer.addRenderable(profil3d.getProjection());
 		this.renderableLayer.addRenderable(profil3d.getProfil());
-		if(profil3d.withMarkers()) this.textLayer.addGeographicTexts(profil3d.getBalises());
-		if(profil3d.withMarkers()) this.markerLayer.setMarkers(profil3d.getMarkers());
+		if(profil3d.withMarkers()) {
+			this.baliseLayer.addBalises(profil3d.getBalises());
+			this.baliseLayer.showAll();
+		}
 		if(profil3d.isPlain()) this.renderableLayer.addRenderable(profil3d.getCurtain());
 	}
 	
 	public void removeAll(){
 		this.shapeLayer.removeAllRenderables();
 		this.renderableLayer.removeAllRenderables();
-		this.textLayer.removeAllGeographicTexts();
-		this.markerLayer.setMarkers(null);
+		this.baliseLayer.removeAllBalises();
 	}
 }
