@@ -717,8 +717,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	
 	/*-------------------------------------------------------------------*/
 	/*----------------- Gestion des couvertures radios ------------------*/
-	/*-------------------------------------------------------------------*/
-    // TODO : Décommenter pour le debug de l'appel du constructeur RadioCovLayers.
+	/*-------------------------------------------------------------------*/    
 	
     public void addRadioCov(String antennaName) {    	
     	radioCovLayer.addVisibleRadioCov(antennaName);
@@ -730,7 +729,15 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
     	this.redraw();
     }
     
-    
+    public void hideAllRadioCovLayers() {
+    	radioCovLayer.hideAllRadioCovLayers();
+    	this.redraw();    
+    }
+        
+    public void removeAllRadioCovLayers() {
+    	radioCovLayer.removeAllRadioCovLayers();
+    	this.redraw();
+    }
 	
 	/*--------------------------------------------------------------*/
 	/*------------------ Gestion des mosaiques   -------------------*/
