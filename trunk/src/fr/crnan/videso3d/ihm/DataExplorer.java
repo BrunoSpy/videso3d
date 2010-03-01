@@ -49,6 +49,7 @@ public class DataExplorer extends JPanel {
 	private Component exsa;
 	private Component edimap;
 	private Component stpv;
+	private Component radioCov;
 
 	/**
 	 * Constructeur
@@ -76,6 +77,7 @@ public class DataExplorer extends JPanel {
 		this.updateStrView();
 		this.updateStpvView();
 		this.updateEdimapView();
+		this.updateRadioCovView();
 
 		add(tabs, BorderLayout.CENTER);
 	}	
@@ -283,4 +285,38 @@ public class DataExplorer extends JPanel {
 		tabs.setTabComponentAt(tabs.indexOfComponent(content), buttonTab);
 		tabs.setSelectedIndex(tabs.getTabCount()-1);
 	}
+	
+	
+	/**
+	 *  Ajoute un tab de sélection des couvertures radio
+	 */
+	public void updateRadioCovView() {		
+			try {
+				radioCov = new RadioCovView(wwd);
+				ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
+				buttonTab.getButton().addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						try {
+							// TODO 
+							//DatabaseManager.unselectDatabase(Type.RadioCov);							
+							wwd.removeAllRadioCovLayers();
+							radioCov = null;
+						} //catch (SQLException e1) {
+							catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				});
+				tabs.addTab("Antennes", radioCov);
+				tabs.setTabComponentAt(tabs.indexOfComponent(radioCov), buttonTab);			
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+	}
+
+
 }
+
