@@ -16,8 +16,7 @@
 
 package fr.crnan.videso3d.ihm;
 
-/**
- * *
+/**  
  * @author mickaël PAPAIL
  * Interface de sélection des couvertures radios.
  */
@@ -25,24 +24,27 @@ package fr.crnan.videso3d.ihm;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
+//import java.awt.BorderLayout;
+import java.awt.Dimension;
+//import java.awt.Font;
+//import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
+//import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
+//import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
+//import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.tree.DefaultMutableTreeNode;
+//import javax.swing.JTabbedPane;
+//import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.graphics.RadioCovPolygon;
 import fr.crnan.videso3d.DatabaseManager;
@@ -53,65 +55,78 @@ import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 
-public class RadioCovView extends JPanel{
+public class RadioCovView extends JPanel {//implements ItemListener{
 	
 	private Boolean DEBUG = false;	
 	private JPanel jPanel1= new JPanel();
-	private JCheckBox jCheckBox1 = new JCheckBox();
-	private JTabbedPane tabbedPane1 = new JTabbedPane(); 	
+	private Box box = Box.createVerticalBox();
 	
 	private ItemAntennaListener itemAntennaListener = new ItemAntennaListener();	
 	//tabbedPane1.setBorder(BorderFactory.createTitledBorder("couvertures radio"));
 	
 	private VidesoGLCanvas wwd;
 	private Layer layer;
-	private LayerList layers;
 	private AirspaceLayer radioCovAirspaces=(AirspaceLayer)layer;
-		
+	private LayerList layers;
+				
+	public RadioCovView(VidesoGLCanvas wwd) {		
 	
-	public RadioCovView(VidesoGLCanvas wwd) {
-		this.wwd = wwd;	
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));	
+		this.wwd = wwd;			
 		layers = wwd.getModel().getLayers();
-	
-		try {
-			if(DatabaseManager.getCurrentRadioCov() != null) { 
-				initRadioCovAirspaces();
-				initPanel();
-			}
-		}			
-		catch (SQLException e) {
-			e.printStackTrace();
-		}	
-	}			
+		if (DEBUG) System.out.println("Valeur de layers :"+layers);
 		
-	/***
-	 * Recherche du layer contenant les couvertures radios à partir de la Layer List
-	 */
-	public void initRadioCovAirspaces() {
-		for (Layer layer : layers) {
-			if (layer instanceof AirspaceLayer && layer.getName()=="Radio Coverage") {		
-				radioCovAirspaces =(AirspaceLayer)layer;				
-				for (Airspace airspace : radioCovAirspaces.getAirspaces()) {
-					if ((airspace  instanceof RadioCovPolygon)) {						
-						//radioCov=(RadioCovPolygon)airspace;													
-						//tabRadioCov=radioCov.getCurtains().toArray();		
-					}			
-				}
-			}
-		}
+		
+		//try {
+			//if(DatabaseManager.getCurrentRadioCov() != null) { 						
+			initGUI();
+			initRadioCovAirspaces();
+			feedPanel();		
+		//	}
+		//}			
+		//catch (SQLException e) {
+		//	e.printStackTrace();
+		//}	
+	}			
+	
+	public void initGUI() {
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));					
+		box.add(Box.createVerticalStrut(10));
+		box.setPreferredSize(new Dimension(150,150));		
+		box.setBorder(BorderFactory.createTitledBorder("Couvertures radios"));
+		jPanel1.add(box);
+		this.add(jPanel1);
+		this.setVisible(true);					
 	}
 		
-	public void initPanel() {
-		JScrollPane scrollPane = new JScrollPane(jPanel1);
+	/***
+	 * Recherche du layer contenant les couvertures radio à partir de la Layer List.
+	 */
+	public void initRadioCovAirspaces() {
+		if (layers != null) {
+			for (Layer layer : layers) {				
+						if (layer instanceof AirspaceLayer && layer.getName()=="Radio Coverage") {						
+							radioCovAirspaces = (AirspaceLayer)layer;
+						}								
+			}
+		}	
+	}
+		
+	/***
+	 * Alimentation du Panel en infos.
+	 */
+	public void feedPanel() {		
+		//JScrollPane scrollPane = new JScrollPane(jPanel1);		
 		for (Airspace airspace : radioCovAirspaces.getAirspaces()) {
 			if ((airspace  instanceof RadioCovPolygon)) {
 				JCheckBox check = new JCheckBox(((RadioCovPolygon) airspace).getName());
+				check.setAlignmentX(LEFT_ALIGNMENT);
+				box.add(check);
+				box.add(Box.createVerticalStrut(5));
 				check.addItemListener(itemAntennaListener);
 			}
 		}
 	}
-	
+		
 	/**
 	 * Listener de sélection des couvertures.
 	 */
@@ -126,5 +141,4 @@ public class RadioCovView extends JPanel{
 		}
 	}			
 }	
-
 
