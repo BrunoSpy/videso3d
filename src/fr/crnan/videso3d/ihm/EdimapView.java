@@ -22,6 +22,7 @@ import java.awt.event.ItemListener;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -39,7 +40,7 @@ import fr.crnan.videso3d.edimap.Entity;
 /**
  * Sélecteur de cartes edimap
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 @SuppressWarnings("serial")
 public class EdimapView extends JPanel {
@@ -67,6 +68,10 @@ public class EdimapView extends JPanel {
 	 
 	private ItemCheckListener itemCheckListener = new ItemCheckListener();
 	
+	/**
+	 * Liste des checkbox de la vue, afin de pouvoir tous les désélectionner facilement
+	 */
+	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
 	
 	public EdimapView(final VidesoGLCanvas wwd){
 		this.wwd = wwd;
@@ -101,10 +106,19 @@ public class EdimapView extends JPanel {
 		while(iterator.hasNext()){
 			JCheckBox checkBox = new JCheckBox(iterator.next().getValue("name"));
 			checkBox.addItemListener(itemCheckListener);
+			checkBoxList.add(checkBox);
 			list.add(checkBox);
 		}
 		panel.add(scrollPane);
 		return panel;
+	}
+	
+	public void reset() {
+		for(JCheckBox c : checkBoxList){
+			if(c.isSelected()){
+				c.setSelected(false);
+			}
+		}
 	}
 	
 	/**
@@ -137,4 +151,6 @@ public class EdimapView extends JPanel {
 		}
 
 	}
+
+
 }

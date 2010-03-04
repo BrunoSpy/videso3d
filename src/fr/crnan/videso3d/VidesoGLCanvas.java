@@ -64,6 +64,7 @@ import gov.nasa.worldwind.avlist.AVListImpl;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.examples.util.LayerManagerLayer;
 import gov.nasa.worldwind.exception.WWRuntimeException;
+import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Earth;
@@ -1166,5 +1167,16 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 */
 	public int getNumberInitSteps() {
 		return 6;
+	}
+
+	/**
+	 * Recentre la vue
+	 */
+	public void resetView() {
+		this.getView().stopMovement();
+		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));
+		this.getView().setPitch(Angle.ZERO);
+		this.getView().setHeading(Angle.ZERO);
+		this.redraw();
 	}
 }
