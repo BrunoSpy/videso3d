@@ -338,7 +338,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			measureTool.setMeasureShapeType(MeasureTool.SHAPE_LINE);
 			measureTool.setFollowTerrain(true);
 			measureTool.setShowAnnotation(true);
-			measureTool.setUnitsFormat(new UnitsFormat(UnitsFormat.NAUTICAL_MILES, UnitsFormat.SQUARE_KILOMETERS));
+			measureTool.setUnitsFormat(new UnitsFormat(UnitsFormat.NAUTICAL_MILES, UnitsFormat.SQUARE_KILOMETERS, true));
 		}
 		return measureTool;
 	}
