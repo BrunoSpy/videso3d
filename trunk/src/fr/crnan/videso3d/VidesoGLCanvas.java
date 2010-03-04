@@ -52,26 +52,30 @@ import fr.crnan.videso3d.layers.Routes3DLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.Secteur;
+import fr.crnan.videso3d.util.VMeasureTool;
 import fr.crnan.videso3d.layers.RadioCovLayer;
 
+import gov.nasa.worldwind.DataConfiguration;
+import gov.nasa.worldwind.Factory;
 import gov.nasa.worldwind.WorldWind;
+import gov.nasa.worldwind.avlist.AVKey;
+import gov.nasa.worldwind.avlist.AVList;
+import gov.nasa.worldwind.avlist.AVListImpl;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
-import gov.nasa.worldwind.data.DataDescriptor;
 import gov.nasa.worldwind.examples.util.LayerManagerLayer;
+import gov.nasa.worldwind.exception.WWRuntimeException;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.AnnotationLayer;
-import gov.nasa.worldwind.layers.BasicTiledImageLayer;
 import gov.nasa.worldwind.layers.LatLonGraticuleLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.layers.SurfaceShapeLayer;
-import gov.nasa.worldwind.layers.TiledImageLayer;
 import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
@@ -80,7 +84,11 @@ import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
+import gov.nasa.worldwind.util.DataConfigurationFilter;
+import gov.nasa.worldwind.util.DataConfigurationUtils;
+import gov.nasa.worldwind.util.Logging;
 import gov.nasa.worldwind.util.UnitsFormat;
+import gov.nasa.worldwind.util.WWIO;
 import gov.nasa.worldwind.util.measure.MeasureTool;
 import gov.nasa.worldwind.util.measure.MeasureToolController;
 import gov.nasa.worldwind.view.orbit.BasicOrbitView;
@@ -139,7 +147,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Outil de mesure (alidade)
 	 */
-	private MeasureTool measureTool;
+	private VMeasureTool measureTool;
 	/**
 	 * Liste des layers Mosaiques
 	 */
@@ -252,11 +260,12 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
         }
         layers.add(compassPosition, layer);
     }
+    
 	/**
 	 * Mets à jour les layers installés dans WorldWindInstalled
 	 */
 	public void updateWWI(){
-		//code inspired by gov.nasa.worldwind.examples.InstalledData.synchronizeLayers(Iterable<DataDescriptor> descriptors, LayerList layerList)
+		//code inspired by gov.nasa.worldwind.examples.ImportedGeographicRasterData.java
 		
 		File installLocation = null;
 		for (java.io.File f : WorldWind.getDataFileStore().getLocations())
@@ -267,58 +276,64 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				break;
 			}
 		}
-		java.util.List<? extends DataDescriptor> descriptors =
-			WorldWind.getDataFileStore().findDataDescriptors(installLocation.getPath());		 
 		
-		java.util.List<DataDescriptor> installedDescriptors = new java.util.ArrayList<DataDescriptor>();
-        for (DataDescriptor d : descriptors)
-            installedDescriptors.add(d);
+		String[] names = WWIO.listDescendantFilenames(installLocation, new DataConfigurationFilter(), false);
+        if (names == null || names.length == 0)
+            return;
 
-        java.util.List<Layer> uninstalledLayers = new java.util.ArrayList<Layer>();
-
-        // Remove layers with DataDescriptors that are no longer installed, and remove DataDescriptors that
-        // are already installed as a layer.
-        for (Layer layer : this.getModel().getLayers())
+        for (String filename : names)
         {
-            Object o = layer.getValue("DataSourceDescriptor");
-            if (o != null && o instanceof DataDescriptor)
+            DataConfiguration dataConfig = null;
+
+            try
             {
-                DataDescriptor d = (DataDescriptor) o;
-                // If the layer references an installed DataDesriptor, then we can eliminate it from the list
-                // of new DataDescriptors.
-                if (installedDescriptors.contains(d))
-                    installedDescriptors.remove(d);
-                // If the layer references a DataDescriptor that is no longer installed,
-                // then remove that layer.
-                else
-                    uninstalledLayers.add(layer);
+                File dataConfigFile = new File(installLocation, filename);
+                dataConfig = DataConfigurationUtils.openDataConfigFile(dataConfigFile.getPath(), null);
             }
-        }
+            catch (WWRuntimeException e)
+            {
+                e.printStackTrace();
+            }
 
-        // Remove layers for uninstalled DataDescriptors.
-        for (Layer layer : uninstalledLayers)
-            this.getModel().getLayers().remove(layer);
+            if (dataConfig == null)
+                continue;
 
-        // Add layers for installedDataDescriptors.
-        for (DataDescriptor d : installedDescriptors) {
-        	TiledImageLayer layer = new BasicTiledImageLayer(d);
-			layer.setNetworkRetrievalEnabled(false);
-			layer.setValue("DataSourceDescriptor", d);
-			if (d.getName() != null)
-				layer.setName(d.getName());
-			this.insertBeforePlacenames(layer);
-			layer.setEnabled(false); //don't show these layers by default 
-        }
+            AVList params = new AVListImpl();
+            DataConfigurationUtils.getDataConfigCacheName(filename, params);
             
+            if (dataConfig.getType().equalsIgnoreCase("Layer"))
+            {
+            	Layer layer = null;
+                try
+                {
+                    Factory factory = (Factory) WorldWind.createConfigurationComponent(AVKey.LAYER_FACTORY);
+                    layer = (Layer) factory.createFromDataConfig(dataConfig, params);
+                }
+                catch (Exception e)
+                {
+                    String message = Logging.getMessage("generic.CreationFromDataConfigurationFailed", dataConfig.getName());
+                    Logging.logger().log(java.util.logging.Level.SEVERE, message, e);
+                }
+
+                if (layer == null)
+                    return;
+                
+                if (!this.getModel().getLayers().contains(layer)) {
+                	this.insertBeforePlacenames(layer);
+                	layer.setEnabled(false);
+                }
+            }
+            
+        }            
 	}
 	
 	/*--------------------------------------------------------------*/
 	/*---------------------- Outil de mesure -----------------------*/
 	/*--------------------------------------------------------------*/
 	
-	public MeasureTool getMeasureTool(){
+	public VMeasureTool getMeasureTool(){
 		if(measureTool == null){
-			measureTool = new MeasureTool(this);
+			measureTool = new VMeasureTool(this);
 			measureTool.setController(new MeasureToolController());
 			measureTool.setMeasureShapeType(MeasureTool.SHAPE_LINE);
 			measureTool.setFollowTerrain(true);
