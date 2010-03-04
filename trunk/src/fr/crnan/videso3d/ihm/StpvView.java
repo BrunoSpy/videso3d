@@ -58,7 +58,7 @@ public class StpvView extends JPanel {
 			if(DatabaseManager.getCurrentStpv() != null) {
 				this.add(buildPanel(mosaique, "select type from mosaique"));
 				
-				this.add(Box.createVerticalGlue());
+				this.add(Box.createVerticalStrut(1000));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

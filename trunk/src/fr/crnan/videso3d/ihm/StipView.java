@@ -28,6 +28,8 @@ import java.awt.event.ItemListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -47,7 +49,7 @@ import fr.crnan.videso3d.layers.BaliseLayer;
 /**
  * Sélecteur d'objets Stip
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 @SuppressWarnings("serial")
 public class StipView extends JPanel {
@@ -72,6 +74,12 @@ public class StipView extends JPanel {
 
 	private VidesoGLCanvas wwd;
 
+	/**
+	 * Liste des checkbox de la vue, afin de pouvoir tous les désélectionner facilement
+	 */
+	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
+	private CheckboxTree routesTree;
+	
 	public StipView(VidesoGLCanvas wwd){
 
 		this.wwd = wwd;
@@ -143,9 +151,11 @@ public class StipView extends JPanel {
 		balises.setLayout(new BoxLayout(balises, BoxLayout.X_AXIS));
 
 		balisesNPChk = new JCheckBox("Non publiées");
+		checkBoxList.add(balisesNPChk);
 		balisesNPChk.addItemListener(this.itemCheckBoxListener);
 
 		balisesPubChk = new JCheckBox("Publiées");
+		checkBoxList.add(balisesPubChk);
 		balisesPubChk.addItemListener(this.itemCheckBoxListener);
 
 		balises.add(Box.createHorizontalGlue());
@@ -193,6 +203,7 @@ public class StipView extends JPanel {
 				JCheckBox chk = new JCheckBox(rs.getString("nom"));
 				chk.addItemListener(itemSecteurListener);
 				list.add(chk);
+				checkBoxList.add(chk);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -217,7 +228,7 @@ public class StipView extends JPanel {
 		DefaultMutableTreeNode pdr = new DefaultMutableTreeNode("PDR");
 		this.addNodes("routes", "U", pdr);
 		route.add(pdr);
-		CheckboxTree routesTree = new CheckboxTree(route);
+		routesTree = new CheckboxTree(route);
 		routesTree.setRootVisible(false);
 		routesTree.setCellRenderer(new TreeCellNimbusRenderer());
 		routesTree.setOpaque(false);
@@ -227,30 +238,6 @@ public class StipView extends JPanel {
 		scrollRouteTree.setBorder(null);
 
 		routes.add(scrollRouteTree, BorderLayout.CENTER);
-
-
-		//		balises.setLayout(new BorderLayout());
-		//		
-		//		DefaultMutableTreeNode b = new DefaultMutableTreeNode("balises");
-		//		DefaultMutableTreeNode pub = new DefaultMutableTreeNode("Publiées");
-		//		this.addNodes("balises", "1", pub);
-		//		b.add(pub);
-		//		DefaultMutableTreeNode npub = new DefaultMutableTreeNode("Non publiées");
-		//		this.addNodes("balises", "0", npub);
-		//		b.add(npub);
-		//		CheckboxTree balisesTree = new CheckboxTree(b);
-		//		balisesTree.setRootVisible(false);
-		//		balisesTree.setCellRenderer(new TreeCellNimbusRenderer());
-		//		balisesTree.setOpaque(false);
-		//		balisesTree.addTreeCheckingListener(new StipTreeListener());
-		//		
-		//		JScrollPane scrollBaliseTree = new JScrollPane(balisesTree);
-		//		scrollBaliseTree.setBorder(null);
-		//		
-		//		balises.add(scrollBaliseTree);
-
-
-
 
 	}
 
@@ -279,6 +266,19 @@ public class StipView extends JPanel {
 		return secteurs;
 	}	
 
+	
+	/**
+	 * Décoche tous les éléments cochés
+	 */
+	public void reset() {
+		for(JCheckBox c : checkBoxList){
+			if(c.isSelected()){
+				c.setSelected(false);
+			}
+		}
+		routesTree.clearChecking();
+	}
+	
 	/*--------------------------------------------------*/
 	/*------------------ Listeners ---------------------*/
 
@@ -401,4 +401,6 @@ public class StipView extends JPanel {
 
 
 	}
+
+
 }

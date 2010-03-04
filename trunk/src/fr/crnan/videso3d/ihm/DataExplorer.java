@@ -47,6 +47,7 @@ public class DataExplorer extends JPanel {
 
 	private Component stip;
 	private Component exsa;
+	private JScrollPane exsaPane;
 	private Component edimap;
 	private Component stpv;
 	private Component radioCov;
@@ -82,7 +83,7 @@ public class DataExplorer extends JPanel {
 		add(tabs, BorderLayout.CENTER);
 	}	
 
-	private JScrollPane buildTab(JPanel panel){
+	private JScrollPane buildTab(Component panel){
 		JScrollPane pane = new JScrollPane(panel);
 		pane.setBorder(null);
 		return pane;
@@ -140,7 +141,8 @@ public class DataExplorer extends JPanel {
 		if(exsa == null){
 			try {
 				if(DatabaseManager.getCurrentExsa() != null){
-					exsa = this.buildTab(new StrView(wwd));
+					exsa = new StrView(wwd);
+					exsaPane = this.buildTab(exsa);
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {
 						
@@ -149,14 +151,15 @@ public class DataExplorer extends JPanel {
 							try {
 								DatabaseManager.unselectDatabase(Type.EXSA);
 								wwd.removeMosaiques();
+								exsaPane = null;
 								exsa = null;
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}
 						}
 					});
-					tabs.addTab("STR", exsa);
-					tabs.setTabComponentAt(tabs.indexOfComponent(exsa), buttonTab);
+					tabs.addTab("STR", exsaPane);
+					tabs.setTabComponentAt(tabs.indexOfComponent(exsaPane), buttonTab);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -165,11 +168,13 @@ public class DataExplorer extends JPanel {
 			try {
 				if(DatabaseManager.getCurrentExsa() != null){
 					int i = tabs.indexOfComponent(exsa);
-					exsa = this.buildTab(new StrView(wwd));
-					tabs.setComponentAt(i, exsa);
+					exsa = new StrView(wwd);
+					exsaPane = this.buildTab(exsa);
+					tabs.setComponentAt(i, exsaPane);
 				} else {
-					int i = tabs.indexOfComponent(exsa);
+					int i = tabs.indexOfComponent(exsaPane);
 					exsa = null;
+					exsaPane = null;
 					tabs.removeTabAt(i);
 				}
 			} catch (SQLException e) {
@@ -315,6 +320,22 @@ public class DataExplorer extends JPanel {
 			catch (Exception e) {
 				e.printStackTrace();
 			}
+	}
+
+	/**
+	 * Remet à zéro les différentes sélections
+	 * TODO : prendre en charge le sélecteur Stpv et Radio
+	 */
+	public void resetView() {
+		if(stip != null){
+			((StipView)stip).reset();
+		}
+		if(exsa != null){
+			((StrView)exsa).reset();
+		}
+		if(edimap != null){
+			((EdimapView)edimap).reset();
+		}
 	}
 
 

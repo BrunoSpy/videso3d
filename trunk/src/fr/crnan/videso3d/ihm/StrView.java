@@ -21,6 +21,8 @@ import java.awt.event.ItemListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -36,7 +38,7 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 /**
  * Sélecteur de données STR
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 @SuppressWarnings("serial")
 public class StrView extends JPanel {
@@ -67,6 +69,11 @@ public class StrView extends JPanel {
 	private JPanel radars = new JPanel();
 	
 	private ItemCheckListener itemCheckListener = new ItemCheckListener();
+	
+	/**
+	 * Liste des checkbox de la vue, afin de pouvoir tous les désélectionner facilement
+	 */
+	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
 	
 	private VidesoGLCanvas wwd;
 	
@@ -131,6 +138,7 @@ public class StrView extends JPanel {
 			while(rs.next()){
 				JCheckBox chk = new JCheckBox(rs.getString(1));
 				chk.addItemListener(itemCheckListener);
+				checkBoxList.add(chk);
 				panel.add(chk);	
 				i++;
 			}
@@ -138,6 +146,14 @@ public class StrView extends JPanel {
 			e.printStackTrace();
 		}
 		return panel;
+	}
+	
+	public void reset() {
+		for(JCheckBox c : checkBoxList){
+			if(c.isSelected()){
+				c.setSelected(false);
+			}
+		}
 	}
 	
 	/*---------------------------------------------------------*/
@@ -181,4 +197,6 @@ public class StrView extends JPanel {
 		}
 		
 	}
+
+
 }

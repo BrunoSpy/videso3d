@@ -55,6 +55,7 @@ import javax.swing.event.ChangeListener;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
+
 import fr.crnan.videso3d.AirspaceListener;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.SplashScreen;
@@ -70,7 +71,7 @@ import gov.nasa.worldwind.BasicModel;
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -202,12 +203,14 @@ public class MainWindow extends JFrame {
 		//		wwdFrame.setVisible(true);
 		//		desktop.add(wwdFrame);
 
+		ContextPanel context = new ContextPanel(wwd);
+		
 		JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, dataExplorer, wwd);
 		mainPane.setOneTouchExpandable(true);
 		mainPane.setBorder(null);
 		mainPane.setPreferredSize(new Dimension(600, 0));
 		
-		ContextPanel context = new ContextPanel(wwd);
+		
 		wwd.addSelectListener(context);
 		wwd.addSelectListener(new AirspaceListener(wwd, context));
 		context.setMinimumSize(new Dimension(0,0)); //taille mini à 0 pour permettre la fermeture du panneau avec setDividerLocation
@@ -327,6 +330,22 @@ public class MainWindow extends JFrame {
 	private JToolBar createToolBar(){
 		JToolBar toolbar = new JToolBar("Actions");
 
+		
+		//Reset de l'affichage
+		final JButton reset = new JButton(new ImageIcon(getClass().getResource("/resources/reset_22.png")));
+		reset.setToolTipText("Remettre à zéro la carte.");
+
+		reset.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dataExplorer.resetView();
+				wwd.resetView();
+			}
+		});
+		
+		toolbar.add(reset);
+		
 		//Configuration
 		final JButton config = new JButton(new ImageIcon(getClass().getResource("/resources/configure.png")));
 		config.setToolTipText("Configurer les paramètres généraux de l'application");
