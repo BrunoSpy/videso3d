@@ -29,7 +29,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package fr.crnan.videso3d.ihm;
+package fr.crnan.videso3d.ihm.components;
 
 import java.awt.Color;
 import java.awt.Dimension;

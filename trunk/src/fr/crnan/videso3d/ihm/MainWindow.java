@@ -52,6 +52,11 @@ import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.jdesktop.swingx.JXMultiSplitPane;
+import org.jdesktop.swingx.MultiSplitLayout;
+import org.jdesktop.swingx.MultiSplitLayout.Divider;
+import org.jdesktop.swingx.MultiSplitLayout.Leaf;
+import org.jdesktop.swingx.MultiSplitLayout.Node;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 
@@ -63,6 +68,7 @@ import fr.crnan.videso3d.formats.geo.GEOFileFilter;
 import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
 import fr.crnan.videso3d.formats.opas.OPASFileFilter;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
+import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
@@ -214,10 +220,27 @@ public class MainWindow extends JFrame {
 		wwd.addSelectListener(new AirspaceListener(wwd, context));
 		context.setMinimumSize(new Dimension(0,0)); //taille mini à 0 pour permettre la fermeture du panneau avec setDividerLocation
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, mainPane, context);
-		splitPane.setOneTouchExpandable(true);
+	//	splitPane.setOneTouchExpandable(true); //en attendant de trouver mieux ...
 		splitPane.setResizeWeight(1.0);
 		
-		
+		//multisplitpane
+//		Leaf left = new Leaf("left");
+//		left.setWeight(0.0);
+//		Leaf center = new Leaf("center");
+//		center.setWeight(1.0);
+//		Leaf right = new Leaf("right");
+//		right.setWeight(0.0);
+//		List<Node> children = Arrays.asList(left, new Divider(), center, new Divider(), right);
+//		
+//		MultiSplitLayout.Split model = new MultiSplitLayout.Split();
+//		model.setChildren(children);
+//		
+//		JXMultiSplitPane multiSplitPane = new JXMultiSplitPane();
+//		multiSplitPane.setBorder(null);
+//		multiSplitPane.getMultiSplitLayout().setModel(model);
+//		multiSplitPane.add(dataExplorer, "left");
+//		multiSplitPane.add(wwd, "center");
+//		multiSplitPane.add(context, "right");
 		
 		this.getContentPane().add(splitPane, BorderLayout.CENTER);
 

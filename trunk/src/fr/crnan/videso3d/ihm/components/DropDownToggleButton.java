@@ -1,4 +1,4 @@
-package fr.crnan.videso3d.ihm;
+package fr.crnan.videso3d.ihm.components;
 
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -20,7 +20,7 @@ import javax.swing.event.PopupMenuListener;
  * Toggle Button with Drop down menu.
  * @author  santhosh kumar - santhosh@in.fiorano.com
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class DropDownToggleButton extends JToggleButton implements ChangeListener, PopupMenuListener, ActionListener, PropertyChangeListener{ 
 	
@@ -95,7 +95,7 @@ public class DropDownToggleButton extends JToggleButton implements ChangeListene
 
 	/*------------------------------[ Other Methods ]---------------------------------------------------*/ 
 
-	protected JPopupMenu getPopupMenu(){
+	public JPopupMenu getPopupMenu(){
 		return popupMenu;
 	}
 

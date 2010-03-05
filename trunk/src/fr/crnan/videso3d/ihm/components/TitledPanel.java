@@ -14,7 +14,7 @@
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package fr.crnan.videso3d.ihm;
+package fr.crnan.videso3d.ihm.components;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+
 /**
  * Panel de titre<br />
  * Idée trouvée dans SwingSet3

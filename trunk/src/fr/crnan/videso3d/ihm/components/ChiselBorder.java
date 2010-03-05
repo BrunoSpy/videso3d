@@ -1,4 +1,4 @@
-package fr.crnan.videso3d.ihm;
+package fr.crnan.videso3d.ihm.components;
 
 import java.awt.Color;
 import java.awt.Component;
