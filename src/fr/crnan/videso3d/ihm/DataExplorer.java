@@ -22,12 +22,15 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.sql.SQLException;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingWorker;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -57,7 +60,7 @@ public class DataExplorer extends JPanel {
 	 * @param db {@link DatabaseManager} Association avec la gestionnaire de db
 	 * @param wwd {@link VidesoGLCanvas} Association avec la vue 3D
 	 */
-	public DataExplorer(VidesoGLCanvas wwd){
+	public DataExplorer(final VidesoGLCanvas wwd){
 
 		this.wwd = wwd;
 
@@ -81,6 +84,31 @@ public class DataExplorer extends JPanel {
 		this.updateRadioCovView();
 
 		add(tabs, BorderLayout.CENTER);
+		
+		//listener des changements de base de données
+		DatabaseManager.addPropertyChangeListener(DatabaseManager.BASE_CHANGED, new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				switch ((Type)evt.getNewValue()) {
+				case STIP:
+					updateStipView();
+					break;
+				case STPV:
+					updateStpvView();
+					break;
+				case Edimap:
+					updateEdimapView();
+					break;
+				case EXSA:
+					updateStrView();
+					break;
+				case RadioCov:
+					updateRadioCovView();
+					break;
+				}
+			}
+		});
 	}	
 
 	private JScrollPane buildTab(Component panel){
@@ -123,10 +151,37 @@ public class DataExplorer extends JPanel {
 					int i = tabs.indexOfComponent(stip);
 					stip = new StipView(wwd);
 					tabs.setComponentAt(i, stip);
+					
+					//pré-création des éléments 3D
+					final ProgressMonitor progress = new ProgressMonitor(null, 
+							"Mise à jour des éléments STIP", "Suppression des éléments précédents", 0, 6);
+					progress.setMillisToDecideToPopup(0);
+					progress.setMillisToPopup(0);
+					progress.setProgress(0);
+					PropertyChangeListener l = new PropertyChangeListener() {
+						@Override
+						public void propertyChange(PropertyChangeEvent evt) {
+							progress.setNote((String) evt.getNewValue());
+						}
+					};
+					wwd.addPropertyChangeListener("step", l);
+					//mise à jour de la vue 3D en background
+					new SwingWorker<Integer, Integer>() {
+
+						@Override
+						protected Integer doInBackground() throws Exception {
+							wwd.buildStip();
+							return null;
+						}
+					}.execute();
+					progress.setNote("Chargement terminé");
+					progress.setProgress(7);
+					wwd.removePropertyChangeListener(l);
 				} else {
 					int i = tabs.indexOfComponent(stip);
 					stip = null;
 					tabs.removeTabAt(i);
+					wwd.buildStip();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -151,6 +206,7 @@ public class DataExplorer extends JPanel {
 							try {
 								DatabaseManager.unselectDatabase(Type.EXSA);
 								wwd.removeMosaiques();
+								wwd.removeRadars();
 								exsaPane = null;
 								exsa = null;
 							} catch (SQLException e1) {
@@ -168,6 +224,8 @@ public class DataExplorer extends JPanel {
 			try {
 				if(DatabaseManager.getCurrentExsa() != null){
 					int i = tabs.indexOfComponent(exsa);
+					wwd.removeMosaiques();
+					wwd.removeRadars();
 					exsa = new StrView(wwd);
 					exsaPane = this.buildTab(exsa);
 					tabs.setComponentAt(i, exsaPane);
@@ -175,6 +233,8 @@ public class DataExplorer extends JPanel {
 					int i = tabs.indexOfComponent(exsaPane);
 					exsa = null;
 					exsaPane = null;
+					wwd.removeMosaiques();
+					wwd.removeRadars();
 					tabs.removeTabAt(i);
 				}
 			} catch (SQLException e) {
@@ -259,10 +319,12 @@ public class DataExplorer extends JPanel {
 			try {
 				if(DatabaseManager.getCurrentEdimap() != null){
 					int i = tabs.indexOfComponent(edimap);
+					wwd.removeAllEdimapLayers();
 					edimap = new EdimapView(wwd);
 					tabs.setComponentAt(i, edimap);
 				} else {
 					int i = tabs.indexOfComponent(edimap);
+					wwd.removeAllEdimapLayers();
 					edimap = null;
 					tabs.removeTabAt(i);
 				}

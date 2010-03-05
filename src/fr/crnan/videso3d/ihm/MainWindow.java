@@ -16,7 +16,6 @@
 
 package fr.crnan.videso3d.ihm;
 
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -71,7 +70,7 @@ import gov.nasa.worldwind.BasicModel;
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -95,7 +94,7 @@ public class MainWindow extends JFrame {
 	 * Nombre d'étapes d'initialisation pour la barre de progression
 	 */
 	private int step = 0;
-
+	
 	static {
 		// Ensure that menus and tooltips interact successfully with the WWJ window.
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
@@ -412,55 +411,6 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				databaseUI = new DatabaseManagerUI();
 				databaseUI.setVisible(true);
-				databaseUI.addPropertyChangeListener("baseChanged", new PropertyChangeListener() {		
-					@Override
-					public void propertyChange(PropertyChangeEvent evt) {
-						final String type = (String)evt.getNewValue();
-						//mises à jour en background
-						new SwingWorker<String, Integer>(){
-							@Override
-							protected String doInBackground() throws Exception {
-								try{
-									if(type.equals("STIP")){
-										final ProgressMonitor progress = new ProgressMonitor(null, 
-												"Mise à jour des éléments STIP", "Suppression des éléments précédents", 0, 6);
-										progress.setMillisToDecideToPopup(0);
-										progress.setMillisToPopup(0);
-										progress.setProgress(0);
-										wwd.addPropertyChangeListener("step", new PropertyChangeListener() {
-											@Override
-											public void propertyChange(PropertyChangeEvent evt) {
-												progress.setNote((String) evt.getNewValue());
-											}
-										});
-										//mise à jour de la vue 3D
-										wwd.buildStip();
-										progress.setNote("Chargement terminé");
-										progress.setProgress(7);
-										//mise à jour de l'explorateur de données
-										dataExplorer.updateStipView();
-									} else if (type.equals("EXSA")){
-										//mise à jour de l'explorateur de données
-										dataExplorer.updateStrView();
-										//mise à jour de la vue 3D
-										wwd.removeMosaiques();
-										//suppression des radars
-										wwd.removeRadars();
-									} else if(type.equals("STPV")){
-										dataExplorer.updateStpvView();
-										wwd.removeMosaiques();
-									} else if(type.equals("Edimap")){
-										dataExplorer.updateEdimapView();
-										wwd.removeAllEdimapLayers();
-									}
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-								return null;
-							}
-						}.execute();
-					}
-				});
 			}
 		});
 		toolbar.add(datas);
@@ -607,7 +557,7 @@ public class MainWindow extends JFrame {
 
 
 		LinkedList<String> results = new LinkedList<String>();
-		results.add(" ");//utile pour supprimer l'élément de la vue
+		results.add("");//utile pour supprimer l'élément de la vue
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
 			if(st != null){
@@ -619,10 +569,11 @@ public class MainWindow extends JFrame {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		JComboBox search = new JComboBox(results.toArray());
+		final JComboBox search = new JComboBox(results.toArray());
+
 		search.setToolTipText("Rechercher un élément Stip affiché");
 		AutoCompleteDecorator.decorate(search);
-
+		
 		search.addActionListener(new ActionListener() {
 
 			@Override
@@ -633,6 +584,31 @@ public class MainWindow extends JFrame {
 			}
 		});
 
+		//Mise à jour du contenu en cas de changement de base de données Stip
+		DatabaseManager.addPropertyChangeListener(DatabaseManager.BASE_CHANGED, new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if(DatabaseManager.Type.STIP.equals(evt.getNewValue())){
+					search.removeAllItems();
+					search.addItem("");
+					try {
+						Statement st = DatabaseManager.getCurrentStip();
+						if(st != null){
+							ResultSet rs = st.executeQuery("select name from balises UNION select name from routes UNION select nom from secteurs");
+							while(rs.next()){
+								search.addItem(rs.getString(1));
+							}
+						}
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					} catch (Exception e){
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		
 		toolbar.add(search);
 
 		return toolbar;

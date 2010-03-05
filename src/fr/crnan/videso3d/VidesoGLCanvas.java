@@ -696,6 +696,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/*--------------------------------------------------------------*/
 	/*------------------ Gestion des radars      -------------------*/
 	/*--------------------------------------------------------------*/
+	//TODO devrait être géré au niveau d'une classe spéciale
 	/**
 	 * Enlève tous les radars du globe
 	 */
@@ -982,7 +983,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public void removeMosaiques(){
 		Iterator<MosaiqueLayer> iterator = mosaiquesLayer.values().iterator();
 		while(iterator.hasNext()){
-			this.toggleLayer(iterator.next(), false);
+			this.getModel().getLayers().remove(iterator.next());
 		}
 		mosaiquesLayer.clear();
 	}

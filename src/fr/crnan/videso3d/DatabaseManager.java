@@ -16,22 +16,37 @@
 
 package fr.crnan.videso3d;
 
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.sql.*;
+
+import javax.swing.event.SwingPropertyChangeSupport;
 
 
 /**
  * Gère la base de données
  * @author Bruno Spyckerelle
- * @version 0.6
+ * @version 0.7
  */
-public final class DatabaseManager{
-
+public final class DatabaseManager {
+	
 	private static DatabaseManager instance = new DatabaseManager();
+	
+	private SwingPropertyChangeSupport support;
+	
+	/**
+	 * Property fired when a base is changed
+	 */
+	public static String BASE_CHANGED = "fr.crnan.videso3d.basechanged";
 	
 	/**
 	 * Types de base de données possibles
@@ -110,6 +125,7 @@ public final class DatabaseManager{
 		catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} 
+		support = new SwingPropertyChangeSupport(this);
 	}
 	
 	/**
@@ -274,9 +290,11 @@ public final class DatabaseManager{
 			insertDatabase.setBoolean(4, true);
 			insertDatabase.executeUpdate();
 			insertDatabase.close();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
+		//à l'ajout d'une base de données, l'envoi de propertychange est demandé par le Filemanager à la fin de l'import
 	}
 
 	/**
@@ -761,11 +779,19 @@ public final class DatabaseManager{
 			}
 		}
 		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+		ResultSet rs = st.executeQuery("select selected from databases where name = '"+name+"'");
+		boolean changed = false;
+		if(rs.next() && rs.getBoolean(1)){
+			//la base de données sélectionnée va changer
+			changed = true;
+		}
 		//on supprime l'entrée dans la db
 		st.executeUpdate("delete from databases where name = '" + name+"'");
 		//puis on supprime les clefs correspondantes
 		st.executeUpdate("delete from clefs where type='"+name+"'");
 		st.close();
+		//si la base de données sélectionnée a changé
+		if(changed) instance.support.firePropertyChange(BASE_CHANGED, null, type);
 	}
 
 	/**
@@ -780,24 +806,8 @@ public final class DatabaseManager{
 		rs.next();
 		String name = rs.getString(1);
 		String type = rs.getString(2);
-		Type t = null;
-		if(type.equalsIgnoreCase("STPV")){
-			t = Type.STPV;
-		}else if (type.equalsIgnoreCase("EXSA")){
-			t = Type.EXSA;
-		}else if (type.equalsIgnoreCase("Edimap")){
-			t = Type.Edimap;
-		}else if (type.equalsIgnoreCase("Stip")){
-			t = Type.STIP;
-		}else if (type.equalsIgnoreCase("Ods")){
-			t = Type.Ods;
-		}else if(type.equalsIgnoreCase("Pays")){
-			t = Type.PAYS;
-		}else if(type.equalsIgnoreCase("RadioCov")){
-			t = Type.RadioCov;
-		}
 		st.close();
-		DatabaseManager.deleteDatabase(name, t);
+		DatabaseManager.deleteDatabase(name, stringToType(type));
 	}
 
 	/**
@@ -816,24 +826,11 @@ public final class DatabaseManager{
 		result.close();
 		st.close();
 		DatabaseManager.selectDB(type, name);
+		instance.support.firePropertyChange(BASE_CHANGED, null, type);
 	}
 	
 	public static void selectDatabase(Integer id, String type) throws SQLException {
-		if(type.equals("STIP")) {
-			DatabaseManager.selectDatabase(id, Type.STIP);
-		} else if(type.equals("PAYS")){
-			DatabaseManager.selectDatabase(id, Type.PAYS);
-		} else if(type.equals("STPV")){
-			DatabaseManager.selectDatabase(id, Type.STPV);
-		} else if(type.equals("EXSA")){
-			DatabaseManager.selectDatabase(id, Type.EXSA);
-		} else if(type.equals("Edimap")){
-			DatabaseManager.selectDatabase(id, Type.Edimap);
-		} else if(type.equals("Ods")){
-			DatabaseManager.selectDatabase(id, Type.Ods);
-		} else if(type.equals("RadioCov")){
-			DatabaseManager.selectDatabase(id, Type.RadioCov);
-		}	
+			DatabaseManager.selectDatabase(id, stringToType(type));	
 	}
 
 	/**
@@ -849,14 +846,17 @@ public final class DatabaseManager{
 		}
 		result.close();
 		st.close();
-		if(id != null) DatabaseManager.unselectDatabase(id);
+		if(id != null) {
+			DatabaseManager.unselectDatabase(id);
+			instance.support.firePropertyChange(BASE_CHANGED, null, type);
+		}
 	}
 	
 	/**
 	 * Désélectionne une base de données
 	 * @param id de la base de données
 	 */
-	public static void unselectDatabase(Integer id) throws SQLException{
+	private static void unselectDatabase(Integer id) throws SQLException{
 		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		st.executeUpdate("update databases set selected = 0 where id ='"+id+"'");
 		st.close();
@@ -949,7 +949,6 @@ public final class DatabaseManager{
 		return DatabaseManager.getCurrent(Type.RadioCov);
 	}
 	
-	
 	public static void closeAll(){
 			try {
 				if(instance.currentPays != null) { instance.currentPays.close(); instance.currentPays = null;}
@@ -963,5 +962,65 @@ public final class DatabaseManager{
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+	}
+	
+	/**
+	 * Indique au DatabaseManager que l'import d'une base de données est terminé
+	 * @param type Type de la base de données importées
+	 */
+	public static void importFinished(Type type){
+		instance.support.firePropertyChange(BASE_CHANGED, null, type);
+	}
+	
+	/**
+	 * Indique au DatabaseManager que l'import d'une base de données est terminé
+	 * @param type Type de la base de données importées
+	 */
+	public static void importFinished(String type){
+		instance.support.firePropertyChange(BASE_CHANGED, null, stringToType(type));
+	}
+	
+	/**
+	 * Convertit un type sous forme de string en Type
+	 * @param type Chaine de caractères à convertir
+	 * @return Le Type correspondant
+	 */
+	public static Type stringToType(String type){
+		if(type.equals("STIP")) {
+			return Type.STIP;
+		} else if(type.equals("PAYS")){
+			return Type.PAYS;
+		} else if(type.equals("STPV")){
+			return Type.STPV;
+		} else if(type.equals("EXSA")){
+			return Type.EXSA;
+		} else if(type.equals("Edimap")){
+			return Type.Edimap;
+		} else if(type.equals("Ods")){
+			return Type.Ods;
+		} else if(type.equals("RadioCov")){
+			return Type.RadioCov;
+		}
+		return null;
+	}
+	
+	/* ****************************************************** */
+	/* *************** Gestion des listeners **************** */
+	/* ****************************************************** */
+	
+	public static void addPropertyChangeListener(PropertyChangeListener l){
+		instance.support.addPropertyChangeListener(l);
+	}
+	
+	public static void addPropertyChangeListener(String propertyName, PropertyChangeListener l){
+		instance.support.addPropertyChangeListener(propertyName, l);
+	}
+	
+	public static void removePropertyChangeListener(PropertyChangeListener l){
+		instance.support.removePropertyChangeListener(l);
+	}
+	
+	public static void removePropertyChangeListener(String propertyName, PropertyChangeListener l){
+		instance.support.removePropertyChangeListener(propertyName, l);
 	}
 }
