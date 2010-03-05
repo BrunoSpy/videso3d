@@ -39,6 +39,7 @@ import fr.crnan.videso3d.geom.Latitude;
 import fr.crnan.videso3d.geom.Longitude;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.ihm.components.TitledPanel;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 /**

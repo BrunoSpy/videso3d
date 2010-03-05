@@ -31,6 +31,7 @@ import javax.swing.table.DefaultTableModel;
 import org.jdesktop.swingx.JXTable;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.ihm.components.TitledPanel;
 
 /**
  * Résultats de données Stip/Stpv sur une balise/terrain

@@ -35,6 +35,8 @@ import javax.swing.SwingWorker;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.ihm.components.ButtonTabComponent;
+import fr.crnan.videso3d.ihm.components.TitledPanel;
 
 /**
  * Panel de configuration des objets affichés sur le globe

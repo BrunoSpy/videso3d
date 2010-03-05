@@ -45,6 +45,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphs.ItiPanel;
 import fr.crnan.videso3d.graphs.RoutePanel;
 import fr.crnan.videso3d.graphs.TrajetPanel;
+import fr.crnan.videso3d.ihm.components.ButtonTabComponent;
 /**
  * Fenêtre d'analyse des données Stip et Stpv.<br />
  * Cette classe est un singleton afin de n'être ouverte qu'une fois maximum.

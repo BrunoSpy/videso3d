@@ -37,6 +37,7 @@ import javax.swing.JTextField;
 
 import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.Pallet;
+import fr.crnan.videso3d.ihm.components.TitledPanel;
 import gov.nasa.worldwind.avlist.AVKey;
 /**
  * Interface de configuration
