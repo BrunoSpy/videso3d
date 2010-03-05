@@ -33,8 +33,8 @@ import java.util.Vector;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -57,12 +57,12 @@ import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.stpv.Stpv;
 
 /**
- * Interface de gestion des base de données
+ * Interface de gestion des base de données.<br />
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 @SuppressWarnings("serial")
-public class DatabaseManagerUI extends JFrame {
+public class DatabaseManagerUI extends JDialog {
 
 	private JXTable table;
 	private JButton select;
@@ -70,7 +70,7 @@ public class DatabaseManagerUI extends JFrame {
 	private JButton delete;
 		
 	private static ProgressMonitor progressMonitor;
-	
+		
 	public DatabaseManagerUI() {
 
 		this.setTitle("Gestion des bases de données");
@@ -80,8 +80,10 @@ public class DatabaseManagerUI extends JFrame {
 		this.setLayout(new BorderLayout());
 		
 		this.build();	
-		
+				
 		this.pack();
+		
+		this.setModal(true);
 		
 	}
 	
@@ -214,7 +216,9 @@ public class DatabaseManagerUI extends JFrame {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				if(evt.getPropertyName().equals("done")){
-					if((Boolean) evt.getNewValue()) firePropertyChange("baseChanged", "", type);
+					if((Boolean) evt.getNewValue()) {
+						DatabaseManager.importFinished(type);
+					}
 					((DBTableModel)table.getModel()).update();
 					//suppression des fichiers temporaires si besoin
 					FileManager.removeTempFiles();
