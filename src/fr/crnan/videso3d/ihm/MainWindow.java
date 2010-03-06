@@ -52,11 +52,6 @@ import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jdesktop.swingx.JXMultiSplitPane;
-import org.jdesktop.swingx.MultiSplitLayout;
-import org.jdesktop.swingx.MultiSplitLayout.Divider;
-import org.jdesktop.swingx.MultiSplitLayout.Leaf;
-import org.jdesktop.swingx.MultiSplitLayout.Node;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 
@@ -67,11 +62,14 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.geo.GEOFileFilter;
 import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
 import fr.crnan.videso3d.formats.opas.OPASFileFilter;
+import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
+import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
 
 /**
  * Fenêtre principale
@@ -593,8 +591,12 @@ public class MainWindow extends JFrame {
 			e1.printStackTrace();
 		}
 		final JComboBox search = new JComboBox(results.toArray());
-
-		search.setToolTipText("Rechercher un élément Stip affiché");
+		search.setEditable(true);
+		search.setToolTipText("<html>Recherche universelle.<br />" +
+				"<ul><li>Si une base Stip est importée, permet de rechercher dans les éléments Stip (balises, secteurs, routes).</li>" +
+				"<li>Permet de centrer la vue sur des coordonnées. Syntaxe acceptée :" +
+				"<ul><li>45N 123W</li><li>+45.1234, -123.12</li><li>45.1234N 123.12W</li>" +
+				"<li>45° 30' 00\"N, 50° 30'W</li><li>45°30' -50°30'</li><li>45 30 N 50 30 W</li></ul></ul></html>");
 		AutoCompleteDecorator.decorate(search);
 		
 		search.addActionListener(new ActionListener() {
@@ -602,7 +604,15 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(e.getActionCommand().equals("comboBoxEdited")){
-					wwd.highlight((String)((JComboBox)e.getSource()).getSelectedItem());
+					
+					String input = (String)((JComboBox)e.getSource()).getSelectedItem();
+					//try to convert into latlon first
+					LatLon coord = LatLonUtils.computeLatLonFromString(input);
+					if(coord != null) {
+						wwd.getView().goTo(new Position(coord, 0), 1e6);
+					} else {
+						wwd.highlight(input);
+					}
 				}
 			}
 		});
