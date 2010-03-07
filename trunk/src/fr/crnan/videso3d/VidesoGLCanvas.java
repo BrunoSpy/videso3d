@@ -27,6 +27,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.SwingWorker;
+
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
@@ -97,7 +99,7 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.6
+ * @version 0.6.1
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
@@ -213,8 +215,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			this.flatGlobe = new EarthFlatCautra();
 			this.roundGlobe = this.getModel().getGlobe();
 		}
-		
-		this.buildStip();	
 		
 		//Layer des radio couv
 		radioCovLayer = new RadioCovLayer("Radio Coverage",this);
@@ -472,6 +472,14 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * @param publicated Balises publéies ou non
 	 */
 	private void buildBalises(int publicated){
+		switch (publicated) {
+		case 0:
+			firePropertyChange("step", "", "Création des balises publiées");
+			break;
+		case 1:
+			firePropertyChange("step", "", "Création des balises non publiées");
+			break;
+		}
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
 			ResultSet rs = st.executeQuery("select * from balises where publicated = " + publicated);
@@ -577,6 +585,14 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/*------------------ Gestion des routes STIP -------------------*/
 	/*--------------------------------------------------------------*/
 	private void buildRoutes(String type) {
+		switch (type.charAt(0)) {
+		case 'F':
+			firePropertyChange("step", "", "Création des routes FIR");
+			break;
+		case 'U':
+			firePropertyChange("step", "", "Création des routes UIR");
+			break;
+		}
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
 			ResultSet routes = st.executeQuery("select name from routes where espace = '"+type+"'");
@@ -639,57 +655,67 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Construit ou met à jour les objets Stip
 	 * Appelé lors de l'initialisation de la vue ou lors du changement de base de données Stip
+	 * Attention à bien prendre en compte le fait que cette méthode est lancée dans un thread à part.
 	 */
 	public void buildStip() {
 		firePropertyChange("step", "", "Suppression des objets 3D");
-		//Suppression des objets
-		if(routes3D != null) {
-			routes3D.removeAllAirspaces();
-		} else {
-			routes3D = new Routes3DLayer("Routes Stip 3D");
-			this.toggleLayer(routes3D, false); //affichage en 2D par défaut
-		}
-		if(routes2D != null){
-			routes2D.removeAllRenderables();
-		} else {
-			routes2D = new Routes2DLayer("Routes Stip 2D");
-			this.toggleLayer(routes2D, true);
-		}
-		if(balisesPub != null) {
-			this.toggleLayer(balisesPub, false);
-			balisesPub.removeAllBalises();
-		}
-		if(balisesNP != null) {
-			this.toggleLayer(balisesNP, false);
-			balisesNP.removeAllBalises();
-		}
-		if(secteursLayer != null) {
-			secteursLayer.removeAllAirspaces();
-			this.toggleLayer(secteursLayer, true);
-		} else {
-			secteursLayer = new AirspaceLayer();
-			secteursLayer.setName("Secteurs");
-			secteursLayer.setEnableAntialiasing(true);
-			this.toggleLayer(secteursLayer, true);
-		}
-		try {
-			if(DatabaseManager.getCurrentStip() != null) {
-				//création des nuveaux objets
-				firePropertyChange("step", "", "Création des balises publiées");
-				this.buildBalises(0);
-				firePropertyChange("step", "", "Création des balises non publiées");
-				this.buildBalises(1);
-				firePropertyChange("step", "", "Création des routes FIR");
-				this.buildRoutes("F");
-				firePropertyChange("step", "", "Création des routes UIR");
-				this.buildRoutes("U");
-				this.toggleLayer(secteursLayer, true);
-				this.secteurs = new HashMap<String, Secteur3D>();				
+		new SwingWorker<Integer, Integer>() {
+
+			public Integer doInBackground(){
+				
+				//Suppression des objets
+				if(routes3D != null) {
+					routes3D.removeAllAirspaces();
+				} else {
+					routes3D = new Routes3DLayer("Routes Stip 3D");
+					toggleLayer(routes3D, false); //affichage en 2D par défaut
+				}
+				if(routes2D != null){
+					routes2D.removeAllRenderables();
+				} else {
+					routes2D = new Routes2DLayer("Routes Stip 2D");
+					toggleLayer(routes2D, true);
+				}
+				if(balisesPub != null) {
+					toggleLayer(balisesPub, false);
+					balisesPub.removeAllBalises();
+				}
+				if(balisesNP != null) {
+					toggleLayer(balisesNP, false);
+					balisesNP.removeAllBalises();
+				}
+				if(secteursLayer != null) {
+					secteursLayer.removeAllAirspaces();
+					toggleLayer(secteursLayer, true);
+				} else {
+					secteursLayer = new AirspaceLayer();
+					secteursLayer.setName("Secteurs");
+					secteursLayer.setEnableAntialiasing(true);
+					toggleLayer(secteursLayer, true);
+				}
+				try {
+					if(DatabaseManager.getCurrentStip() != null) {
+						//création des nouveaux objets
+						buildBalises(0);
+						buildBalises(1);
+						buildRoutes("F");
+						buildRoutes("U");
+						toggleLayer(secteursLayer, true);
+						secteurs = new HashMap<String, Secteur3D>();				
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				redraw();
+				return null;
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		this.redraw();
+
+			@Override
+			protected void done() {
+				
+			}
+
+		}.execute();
 
 	}
 

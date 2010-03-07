@@ -143,6 +143,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				splashScreen.setStatus((String) evt.getNewValue(), (step*100)/(wwd.getNumberInitSteps()+3) );
+				System.out.println("évènement "+evt.getNewValue()+" "+(step*100)/(wwd.getNumberInitSteps()+3));
 				step++;
 			}
 		});
@@ -153,6 +154,7 @@ public class MainWindow extends JFrame {
 			protected String doInBackground() {
 				try {
 					wwd.initialize();
+					dataExplorer = new DataExplorer(wwd);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -172,9 +174,7 @@ public class MainWindow extends JFrame {
 
 
 	private void launchVideso3D(){
-		splashScreen.setStatus("Création de l'interface", 90);
-
-
+		
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
 
 		//Titre de la fenêtre
@@ -198,7 +198,7 @@ public class MainWindow extends JFrame {
 
 
 		//Explorateur de données
-		dataExplorer = new DataExplorer(wwd);
+//		dataExplorer = new DataExplorer(wwd);
 		//		JDesktopPane desktop = new JDesktopPane();
 		//		JInternalFrame wwdFrame = new JInternalFrame("WorldWind", true, false, true, true);
 		//		wwdFrame.setSize(500, 300);
@@ -220,25 +220,6 @@ public class MainWindow extends JFrame {
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, mainPane, context);
 	//	splitPane.setOneTouchExpandable(true); //en attendant de trouver mieux ...
 		splitPane.setResizeWeight(1.0);
-		
-		//multisplitpane
-//		Leaf left = new Leaf("left");
-//		left.setWeight(0.0);
-//		Leaf center = new Leaf("center");
-//		center.setWeight(1.0);
-//		Leaf right = new Leaf("right");
-//		right.setWeight(0.0);
-//		List<Node> children = Arrays.asList(left, new Divider(), center, new Divider(), right);
-//		
-//		MultiSplitLayout.Split model = new MultiSplitLayout.Split();
-//		model.setChildren(children);
-//		
-//		JXMultiSplitPane multiSplitPane = new JXMultiSplitPane();
-//		multiSplitPane.setBorder(null);
-//		multiSplitPane.getMultiSplitLayout().setModel(model);
-//		multiSplitPane.add(dataExplorer, "left");
-//		multiSplitPane.add(wwd, "center");
-//		multiSplitPane.add(context, "right");
 		
 		this.getContentPane().add(splitPane, BorderLayout.CENTER);
 

@@ -59,7 +59,7 @@ import fr.crnan.videso3d.stpv.Stpv;
 /**
  * Interface de gestion des base de données.<br />
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 @SuppressWarnings("serial")
 public class DatabaseManagerUI extends JDialog {
@@ -358,19 +358,14 @@ public class DatabaseManagerUI extends JDialog {
 					DatabaseManager.selectDatabase((Integer)((DBTableModel)table.getModel()).getId(index), type);
 					//Mise à jour de la vue
 					((DBTableModel)table.getModel()).select(index);
-					firePropertyChange("baseChanged", "", type);
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
 			} else if (source == delete) {
 				int index = table.convertRowIndexToModel(table.getSelectionModel().getAnchorSelectionIndex());
 				try {
-					String type = (String)table.getModel().getValueAt(index, 2);
 					Integer id = (Integer)((DBTableModel)table.getModel()).getId(index);
-					Boolean changed = DatabaseManager.isSelected(id);
 					DatabaseManager.deleteDatabase(id);
-					//on n'envoit le changement de base que si la base supprimée était sélectionnée
-					if(changed) firePropertyChange("baseChanged", "", type);
 					((DBTableModel)table.getModel()).delete(index);
 				} catch (SQLException e1) {
 					e1.printStackTrace();
