@@ -30,7 +30,6 @@ import java.sql.SQLException;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingWorker;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -77,8 +76,8 @@ public class DataExplorer extends JPanel {
 		//tabs scrollables si conteneur trop petit
 		//	tabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
-		tabs.setPreferredSize(new Dimension(300, 0));
-
+		tabs.setPreferredSize(new Dimension(300, 0));		
+		
 		this.updateStipView();
 		this.updateStrView();
 		this.updateStpvView();
@@ -121,6 +120,7 @@ public class DataExplorer extends JPanel {
 
 	/**
 	 * Met à jour le tab de données Stip
+	 * @param progressMonitor Si vrai, affiche un progressMonitor
 	 */
 	public void updateStipView() {		
 		if(stip == null){
@@ -128,6 +128,7 @@ public class DataExplorer extends JPanel {
 				if(DatabaseManager.getCurrentStip() != null){
 					stip = new StipView(wwd);
 					tabs.add("Stip", stip);
+					wwd.buildStip();
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {
 						
@@ -153,32 +154,7 @@ public class DataExplorer extends JPanel {
 					int i = tabs.indexOfComponent(stip);
 					stip = new StipView(wwd);
 					tabs.setComponentAt(i, stip);
-					
-					//pré-création des éléments 3D
-					final ProgressMonitor progress = new ProgressMonitor(null, 
-							"Mise à jour des éléments STIP", "Suppression des éléments précédents", 0, 6);
-					progress.setMillisToDecideToPopup(0);
-					progress.setMillisToPopup(0);
-					progress.setProgress(0);
-					PropertyChangeListener l = new PropertyChangeListener() {
-						@Override
-						public void propertyChange(PropertyChangeEvent evt) {
-							progress.setNote((String) evt.getNewValue());
-						}
-					};
-					wwd.addPropertyChangeListener("step", l);
-					//mise à jour de la vue 3D en background
-					new SwingWorker<Integer, Integer>() {
-
-						@Override
-						protected Integer doInBackground() throws Exception {
-							wwd.buildStip();
-							return null;
-						}
-					}.execute();
-					progress.setNote("Chargement terminé");
-					progress.setProgress(7);
-					wwd.removePropertyChangeListener(l);
+					wwd.buildStip();
 				} else {
 					int i = tabs.indexOfComponent(stip);
 					stip = null;
