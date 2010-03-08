@@ -36,4 +36,13 @@ public class ProgressMonitor extends javax.swing.ProgressMonitor {
 		step++;
 		this.setProgress(step);
 	}
+
+
+	@Override
+	public void setProgress(int nv) {
+		super.setProgress(nv);
+		if(nv == 0) step = 0;
+	}
+	
+	
 }

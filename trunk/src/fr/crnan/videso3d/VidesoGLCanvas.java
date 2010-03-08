@@ -219,6 +219,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		//Layer des radio couv
 		radioCovLayer = new RadioCovLayer("Radio Coverage",this);
 		
+		//pré-création des éléments Stip 3D
+		this.buildStip();
+		
 		//position de départ centrée sur la France
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));
 		
@@ -655,70 +658,56 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Construit ou met à jour les objets Stip
 	 * Appelé lors de l'initialisation de la vue ou lors du changement de base de données Stip
-	 * Attention à bien prendre en compte le fait que cette méthode est lancée dans un thread à part.
 	 */
 	public void buildStip() {
 		firePropertyChange("step", "", "Suppression des objets 3D");
-		new SwingWorker<Integer, Integer>() {
 
-			public Integer doInBackground(){
-				
-				//Suppression des objets
-				if(routes3D != null) {
-					routes3D.removeAllAirspaces();
-				} else {
-					routes3D = new Routes3DLayer("Routes Stip 3D");
-					toggleLayer(routes3D, false); //affichage en 2D par défaut
-				}
-				if(routes2D != null){
-					routes2D.removeAllRenderables();
-				} else {
-					routes2D = new Routes2DLayer("Routes Stip 2D");
-					toggleLayer(routes2D, true);
-				}
-				if(balisesPub != null) {
-					toggleLayer(balisesPub, false);
-					balisesPub.removeAllBalises();
-				}
-				if(balisesNP != null) {
-					toggleLayer(balisesNP, false);
-					balisesNP.removeAllBalises();
-				}
-				if(secteursLayer != null) {
-					secteursLayer.removeAllAirspaces();
-					toggleLayer(secteursLayer, true);
-				} else {
-					secteursLayer = new AirspaceLayer();
-					secteursLayer.setName("Secteurs");
-					secteursLayer.setEnableAntialiasing(true);
-					toggleLayer(secteursLayer, true);
-				}
-				try {
-					if(DatabaseManager.getCurrentStip() != null) {
-						//création des nouveaux objets
-						buildBalises(0);
-						buildBalises(1);
-						buildRoutes("F");
-						buildRoutes("U");
-						toggleLayer(secteursLayer, true);
-						secteurs = new HashMap<String, Secteur3D>();				
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-				redraw();
-				return null;
+		//Suppression des objets
+		if(routes3D != null) {
+			routes3D.removeAllAirspaces();
+		} else {
+			routes3D = new Routes3DLayer("Routes Stip 3D");
+			toggleLayer(routes3D, false); //affichage en 2D par défaut
+		}
+		if(routes2D != null){
+			routes2D.removeAllRenderables();
+		} else {
+			routes2D = new Routes2DLayer("Routes Stip 2D");
+			toggleLayer(routes2D, true);
+		}
+		if(balisesPub != null) {
+			toggleLayer(balisesPub, false);
+			balisesPub.removeAllBalises();
+		}
+		if(balisesNP != null) {
+			toggleLayer(balisesNP, false);
+			balisesNP.removeAllBalises();
+		}
+		if(secteursLayer != null) {
+			secteursLayer.removeAllAirspaces();
+			toggleLayer(secteursLayer, true);
+		} else {
+			secteursLayer = new AirspaceLayer();
+			secteursLayer.setName("Secteurs");
+			secteursLayer.setEnableAntialiasing(true);
+			toggleLayer(secteursLayer, true);
+		}
+		try {
+			if(DatabaseManager.getCurrentStip() != null) {
+				//création des nouveaux objets
+				buildBalises(0);
+				buildBalises(1);
+				buildRoutes("F");
+				buildRoutes("U");
+				toggleLayer(secteursLayer, true);
+				secteurs = new HashMap<String, Secteur3D>();				
 			}
-
-			@Override
-			protected void done() {
-				
-			}
-
-		}.execute();
-
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		redraw();
 	}
-
+	
 	/*--------------------------------------------------------------*/
 	/*------------------ Gestion des radars      -------------------*/
 	/*--------------------------------------------------------------*/

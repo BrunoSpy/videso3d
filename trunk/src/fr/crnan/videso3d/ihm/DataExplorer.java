@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingWorker;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -40,7 +41,7 @@ import fr.crnan.videso3d.ihm.components.TitledPanel;
 /**
  * Panel de configuration des objets affichés sur le globe
  * @author Bruno Spyckerelle
- * @version 0.4
+ * @version 0.4.1
  */
 @SuppressWarnings("serial")
 public class DataExplorer extends JPanel {
@@ -56,6 +57,8 @@ public class DataExplorer extends JPanel {
 	private Component stpv;
 	private Component radioCov;
 
+	private ProgressMonitor progressMonitor;
+	
 	/**
 	 * Constructeur
 	 * @param db {@link DatabaseManager} Association avec la gestionnaire de db
@@ -65,6 +68,15 @@ public class DataExplorer extends JPanel {
 
 		this.wwd = wwd;
 
+		progressMonitor = new ProgressMonitor(this, "Mise à jour", "", 0, 6);
+		wwd.addPropertyChangeListener("step", new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				progressMonitor.setNote(evt.getNewValue().toString());
+			}
+		});
+		
 		setLayout(new BorderLayout());
 
 		//Title
@@ -73,8 +85,6 @@ public class DataExplorer extends JPanel {
 
 		//Tabs
 		tabs.setTabPlacement(JTabbedPane.TOP);
-		//tabs scrollables si conteneur trop petit
-		//	tabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
 		tabs.setPreferredSize(new Dimension(300, 0));		
 		
@@ -93,7 +103,22 @@ public class DataExplorer extends JPanel {
 			public void propertyChange(PropertyChangeEvent evt) {
 				switch ((Type)evt.getNewValue()) {
 				case STIP:
-					updateStipView();
+					//précréation des éléments 3D dans un SwingWorker avec ProgressMonitor
+					new SwingWorker<Integer, Integer>(){
+
+						@Override
+						protected Integer doInBackground() throws Exception {
+							progressMonitor.setProgress(0);
+							wwd.buildStip();
+							return null;
+						}
+
+						@Override
+						protected void done() {
+							updateStipView();
+							progressMonitor.close();
+						}
+					}.execute();
 					break;
 				case STPV:
 					updateStpvView();
@@ -117,18 +142,17 @@ public class DataExplorer extends JPanel {
 		pane.setBorder(null);
 		return pane;
 	}
-
+	
 	/**
 	 * Met à jour le tab de données Stip
 	 * @param progressMonitor Si vrai, affiche un progressMonitor
 	 */
-	public void updateStipView() {		
+	public void updateStipView() {	
 		if(stip == null){
 			try {
 				if(DatabaseManager.getCurrentStip() != null){
 					stip = new StipView(wwd);
 					tabs.add("Stip", stip);
-					wwd.buildStip();
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {
 						
@@ -136,14 +160,13 @@ public class DataExplorer extends JPanel {
 						public void actionPerformed(ActionEvent e) {
 							try {
 								DatabaseManager.unselectDatabase(Type.STIP);
-								wwd.buildStip();
-								stip = null;
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}
 						}
 					});
 					tabs.setTabComponentAt(tabs.indexOfComponent(stip), buttonTab);
+					tabs.setSelectedIndex(tabs.getTabCount()-1);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -154,12 +177,9 @@ public class DataExplorer extends JPanel {
 					int i = tabs.indexOfComponent(stip);
 					stip = new StipView(wwd);
 					tabs.setComponentAt(i, stip);
-					wwd.buildStip();
+					tabs.setSelectedIndex(i);
 				} else {
-					int i = tabs.indexOfComponent(stip);
 					stip = null;
-					tabs.removeTabAt(i);
-					wwd.buildStip();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -183,10 +203,6 @@ public class DataExplorer extends JPanel {
 						public void actionPerformed(ActionEvent e) {
 							try {
 								DatabaseManager.unselectDatabase(Type.EXSA);
-								wwd.removeMosaiques();
-								wwd.removeRadars();
-								exsaPane = null;
-								exsa = null;
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}
@@ -194,6 +210,7 @@ public class DataExplorer extends JPanel {
 					});
 					tabs.addTab("STR", exsaPane);
 					tabs.setTabComponentAt(tabs.indexOfComponent(exsaPane), buttonTab);
+					tabs.setSelectedIndex(tabs.getTabCount()-1);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -207,13 +224,12 @@ public class DataExplorer extends JPanel {
 					exsa = new StrView(wwd);
 					exsaPane = this.buildTab(exsa);
 					tabs.setComponentAt(i, exsaPane);
+					tabs.setSelectedIndex(i);
 				} else {
-					int i = tabs.indexOfComponent(exsaPane);
 					exsa = null;
 					exsaPane = null;
 					wwd.removeMosaiques();
 					wwd.removeRadars();
-					tabs.removeTabAt(i);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -236,7 +252,6 @@ public class DataExplorer extends JPanel {
 						public void actionPerformed(ActionEvent e) {
 							try {
 								DatabaseManager.unselectDatabase(Type.STPV);
-								stpv = null;
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}
@@ -244,6 +259,7 @@ public class DataExplorer extends JPanel {
 					});
 					tabs.addTab("Stpv", stpv);
 					tabs.setTabComponentAt(tabs.indexOfComponent(stpv), buttonTab);
+					tabs.setSelectedIndex(tabs.getTabCount()-1);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -254,10 +270,9 @@ public class DataExplorer extends JPanel {
 					int i = tabs.indexOfComponent(stpv);
 					stpv = new StpvView(wwd);
 					tabs.setComponentAt(i, stpv);
+					tabs.setSelectedIndex(i);
 				} else {
-					int i = tabs.indexOfComponent(stpv);
 					stpv = null;
-					tabs.removeTabAt(i);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -280,8 +295,6 @@ public class DataExplorer extends JPanel {
 						public void actionPerformed(ActionEvent e) {
 							try {
 								DatabaseManager.unselectDatabase(Type.Edimap);
-								wwd.removeAllEdimapLayers();
-								edimap = null;
 							} catch (SQLException e1) {
 								e1.printStackTrace();
 							}
@@ -289,6 +302,7 @@ public class DataExplorer extends JPanel {
 					});
 					tabs.addTab("Edimap", edimap);
 					tabs.setTabComponentAt(tabs.indexOfComponent(edimap), buttonTab);
+					tabs.setSelectedIndex(tabs.getTabCount()-1);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -300,11 +314,10 @@ public class DataExplorer extends JPanel {
 					wwd.removeAllEdimapLayers();
 					edimap = new EdimapView(wwd);
 					tabs.setComponentAt(i, edimap);
+					tabs.setSelectedIndex(i);
 				} else {
-					int i = tabs.indexOfComponent(edimap);
 					wwd.removeAllEdimapLayers();
 					edimap = null;
-					tabs.removeTabAt(i);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
