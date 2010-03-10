@@ -331,6 +331,8 @@ public class AirspaceListener implements SelectListener {
 					this.wwd.redraw();
 				}
 			}
+		} else if (event.getEventAction() == SelectEvent.DRAG){
+			this.wwd.getView().getViewInputHandler().mouseDragged(event.getMouseEvent());
 		}
 	}
 }
