@@ -76,18 +76,19 @@ public class RadioCovView extends JPanel {//implements ItemListener{
 		if (DEBUG) System.out.println("Valeur de layers :"+layers);
 		
 		
-		//try {
-			//if(DatabaseManager.getCurrentRadioCov() != null) { 						
-			initGUI();
-			initRadioCovAirspaces();
-			feedPanel();		
-		//	}
-		//}			
-		//catch (SQLException e) {
-		//	e.printStackTrace();
-		//}	
-	}			
-	
+		try {
+			if(DatabaseManager.getCurrentRadioCov() != null) { 						
+				initGUI();
+				if (initRadioCovAirspaces()){
+					feedPanel();
+				}						
+			}
+		}
+		catch (SQLException e) {	
+			e.printStackTrace();
+		}
+	}	
+													
 	public void initGUI() {
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));					
 		box.add(Box.createVerticalStrut(10));
@@ -101,14 +102,16 @@ public class RadioCovView extends JPanel {//implements ItemListener{
 	/***
 	 * Recherche du layer contenant les couvertures radio à partir de la Layer List.
 	 */
-	public void initRadioCovAirspaces() {
+	public boolean initRadioCovAirspaces() {
 		if (layers != null) {
 			for (Layer layer : layers) {				
 						if (layer instanceof AirspaceLayer && layer.getName()=="Radio Coverage") {						
 							radioCovAirspaces = (AirspaceLayer)layer;
+							return true;
 						}								
 			}
 		}	
+		return false;
 	}
 		
 	/***
@@ -127,6 +130,11 @@ public class RadioCovView extends JPanel {//implements ItemListener{
 		}
 	}
 		
+	public void reset() {
+		
+	}
+	
+	
 	/**
 	 * Listener de sélection des couvertures.
 	 */
