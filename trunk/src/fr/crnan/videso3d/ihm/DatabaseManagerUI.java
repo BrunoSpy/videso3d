@@ -55,6 +55,7 @@ import fr.crnan.videso3d.exsa.Exsa;
 import fr.crnan.videso3d.pays.Pays;
 import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.stpv.Stpv;
+import fr.crnan.videso3d.radio.Radio;
 
 /**
  * Interface de gestion des base de données.<br />
@@ -194,9 +195,16 @@ public class DatabaseManagerUI extends JDialog {
 		} else if(files.contains(new File(file.getAbsolutePath()+"/CartesDynamiques.csv"))){
 //			Ods ods = new Ods(file.absolutePath(), this.db);
 //			this.getDatas(ods, "Import des données BDSATCATM");
-		} else {
+		} 
+		else if ( files.contains(new File(file.getAbsolutePath()+"/output.xml"))){
+			//Radio radio = new Radio(file.getAbsolutePath());
+			
+				Radio radio = new Radio();					
+				this.getDatas(radio,"Import des données Radio","RadioCov");
+		}		
+		else {
 			System.out.println("Pas de fichier de base de données trouvé");
-    		}
+    	}
     	
 	}
 	
@@ -361,9 +369,9 @@ public class DatabaseManagerUI extends JDialog {
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
-			} else if (source == delete) {
-				int index = table.convertRowIndexToModel(table.getSelectionModel().getAnchorSelectionIndex());
+			} else if (source == delete) {				
 				try {
+					int index = table.convertRowIndexToModel(table.getSelectionModel().getAnchorSelectionIndex());
 					Integer id = (Integer)((DBTableModel)table.getModel()).getId(index);
 					DatabaseManager.deleteDatabase(id);
 					((DBTableModel)table.getModel()).delete(index);

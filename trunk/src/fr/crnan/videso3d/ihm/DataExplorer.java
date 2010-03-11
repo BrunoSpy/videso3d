@@ -130,9 +130,11 @@ public class DataExplorer extends JPanel {
 					updateStrView();
 					break;
 				case RadioCov:
+					System.out.println("case RadioCov du dataExplorer");
 					updateRadioCovView();
 					break;
-				}
+				default : break;
+				}				
 			}
 		});
 	}	
@@ -348,6 +350,60 @@ public class DataExplorer extends JPanel {
 	/**
 	 *  Ajoute un tab de sélection des couvertures radio
 	 */
+	
+	public void updateRadioCovView() {	
+		if(radioCov == null){
+			try {
+				if(DatabaseManager.getCurrentRadioCov() != null){
+					radioCov = new RadioCovView(wwd);
+					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
+					buttonTab.getButton().addActionListener(new ActionListener() {
+					
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							try {
+								DatabaseManager.unselectDatabase(Type.RadioCov);
+							} 
+							catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+					tabs.addTab("Antennes", radioCov);
+					tabs.setTabComponentAt(tabs.indexOfComponent(radioCov), buttonTab);
+					tabs.setSelectedIndex(tabs.getTabCount()-1);
+				}
+			} 
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} 
+		else {
+			try {
+				if(DatabaseManager.getCurrentRadioCov() != null){
+					int i = tabs.indexOfComponent(radioCov);
+					wwd.removeAllRadioCovLayers();
+					radioCov = new RadioCovView(wwd);
+					tabs.setComponentAt(i, radioCov);
+					tabs.setSelectedIndex(i);
+				} 
+				else {
+					/* Cas de la suppression d'une ligne radioCov dans la liste du databaseManagerUI */					
+					// TODO : Recherche et Suppression du Tab lors de la suppression de la ligne.
+					wwd.removeAllRadioCovLayers();					
+					int i = tabs.indexOfTabComponent(radioCov);
+					if (i==-1) tabs.remove(0);
+					else tabs.remove(i);
+					radioCov = null;
+				}
+			} 
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}	
+	
+	/*
 	public void updateRadioCovView() {		
 			try {
 				radioCov = new RadioCovView(wwd);
@@ -374,6 +430,8 @@ public class DataExplorer extends JPanel {
 				e.printStackTrace();
 			}
 	}
+	*/
+
 
 	/**
 	 * Remet à zéro les différentes sélections
@@ -388,6 +446,9 @@ public class DataExplorer extends JPanel {
 		}
 		if(edimap != null){
 			((EdimapView)edimap).reset();
+		}
+		if (radioCov != null) {
+			((RadioCovView)radioCov).reset();
 		}
 	}
 

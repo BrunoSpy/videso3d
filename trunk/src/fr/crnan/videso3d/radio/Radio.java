@@ -49,7 +49,7 @@ public class Radio extends FileParser {
 	 * Version des fichiers Radio
 	 */
 	private String name="RadioCovBase";
-
+	private String path;
 	/**
 	 * Connection à la base de données
 	 */
@@ -58,9 +58,10 @@ public class Radio extends FileParser {
 	public Radio(){
 		super();
 	}
-
+		
 	public Radio(String path) {
 		super(path);
+		this.path=path;
 	}
 
 
@@ -73,7 +74,7 @@ public class Radio extends FileParser {
 			this.conn.setAutoCommit(false); //fixes performance issue
 			if(!DatabaseManager.databaseExists(this.name)){
 				//création de la structure de la base de données
-				DatabaseManager.createRadioCov(this.name);
+				DatabaseManager.createRadioCov(this.name,this.path);
 				//parsing des fichiers et stockage en base
 				///this.getFromFiles();				
 				//this.setProgress(12);
