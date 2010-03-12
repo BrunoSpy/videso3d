@@ -129,8 +129,7 @@ public class DataExplorer extends JPanel {
 				case EXSA:
 					updateStrView();
 					break;
-				case RadioCov:
-					System.out.println("case RadioCov du dataExplorer");
+				case RadioCov:				
 					updateRadioCovView();
 					break;
 				default : break;
@@ -354,11 +353,11 @@ public class DataExplorer extends JPanel {
 	public void updateRadioCovView() {	
 		if(radioCov == null){
 			try {
-				if(DatabaseManager.getCurrentRadioCov() != null){
+				if(DatabaseManager.getCurrentRadioCov() != null){					
+					wwd.insertAllRadioCovLayers();
 					radioCov = new RadioCovView(wwd);
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
-					buttonTab.getButton().addActionListener(new ActionListener() {
-					
+					buttonTab.getButton().addActionListener(new ActionListener() {					
 						@Override
 						public void actionPerformed(ActionEvent e) {
 							try {
@@ -373,6 +372,7 @@ public class DataExplorer extends JPanel {
 					tabs.setTabComponentAt(tabs.indexOfComponent(radioCov), buttonTab);
 					tabs.setSelectedIndex(tabs.getTabCount()-1);
 				}
+			
 			} 
 			catch (SQLException e) {
 				e.printStackTrace();
@@ -388,13 +388,10 @@ public class DataExplorer extends JPanel {
 					tabs.setSelectedIndex(i);
 				} 
 				else {
-					/* Cas de la suppression d'une ligne radioCov dans la liste du databaseManagerUI */					
-					// TODO : Recherche et Suppression du Tab lors de la suppression de la ligne.
+					/* On supprime une ligne radioCov dans la liste du databaseManagerUI */									
 					wwd.removeAllRadioCovLayers();					
-					int i = tabs.indexOfTabComponent(radioCov);
-					if (i==-1) tabs.remove(0);
-					else tabs.remove(i);
-					radioCov = null;
+					tabs.remove(radioCov);
+					radioCov = null;											
 				}
 			} 
 			catch (SQLException e) {
@@ -402,35 +399,7 @@ public class DataExplorer extends JPanel {
 			}
 		}
 	}	
-	
-	/*
-	public void updateRadioCovView() {		
-			try {
-				radioCov = new RadioCovView(wwd);
-				ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
-				buttonTab.getButton().addActionListener(new ActionListener() {
-					
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						try {
-							// TODO 
-							//DatabaseManager.unselectDatabase(Type.RadioCov);							
-							wwd.removeAllRadioCovLayers();
-							radioCov = null;
-						} //catch (SQLException e1) {
-							catch (Exception e1) {
-							e1.printStackTrace();
-						}
-					}
-				});
-				tabs.addTab("Antennes", radioCov);
-				tabs.setTabComponentAt(tabs.indexOfComponent(radioCov), buttonTab);			
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-	}
-	*/
+		
 
 
 	/**

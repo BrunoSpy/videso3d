@@ -72,14 +72,11 @@ public class RadioCovView extends JPanel {//implements ItemListener{
 	public RadioCovView(VidesoGLCanvas wwd) {		
 	
 		this.wwd = wwd;			
-		layers = wwd.getModel().getLayers();
-		if (DEBUG) System.out.println("Valeur de layers :"+layers);
-		
-		
-		try {
-			if(DatabaseManager.getCurrentRadioCov() != null) { 						
+		layers = wwd.getModel().getLayers();					
+		try {			
+			if(DatabaseManager.getCurrentRadioCov() != null) { 									
 				initGUI();
-				if (initRadioCovAirspaces()){
+				if (initRadioCovAirspaces()){					
 					feedPanel();
 				}						
 			}
@@ -130,8 +127,8 @@ public class RadioCovView extends JPanel {//implements ItemListener{
 		}
 	}
 		
-	public void reset() {
-		
+	/** TODO Gestion des checkboxes */
+	public void reset() {		
 	}
 	
 	

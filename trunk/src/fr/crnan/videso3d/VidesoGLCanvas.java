@@ -770,6 +770,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
     	radioCovLayer.removeAllRadioCovLayers();
     	this.redraw();
     }
+    
+    public void insertAllRadioCovLayers() {
+    	radioCovLayer.insertAllRadioCovLayers();
+    	this.redraw();
+    }
 	
 	/*--------------------------------------------------------------*/
 	/*------------------ Gestion des mosaiques   -------------------*/
