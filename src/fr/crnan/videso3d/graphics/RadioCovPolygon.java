@@ -38,11 +38,12 @@ import java.util.List;
 
 public class RadioCovPolygon extends AbstractAirspace {
 
+	private boolean DEBUG = false;
 	private ArrayList<Curtain> curtains = new ArrayList<Curtain>();
 	private ArrayList<double[]> refAltitudes = new ArrayList<double[]>(); //reference altitudes, en cas de mofification des valeurs min et max de chaque curtain.
 //	private ArrayList<Curtain> saveCurtains =new ArrayList<Curtain>(); // liste de base des curtains.
 	private boolean enableInnerCaps = true;
-	private boolean curtainsOutOfDate = true;
+	private boolean curtainsOutOfDate = true;	
 	private String name;
 	
 	private double minAltitude=0;
@@ -252,7 +253,7 @@ public class RadioCovPolygon extends AbstractAirspace {
 
 	    protected void doRenderGeometry(DrawContext dc, String drawStyle)
 	    {
-	    	System.out.println("AbstractAirspace.doRenderGeometry");
+	    	if (DEBUG) System.out.println("AbstractAirspace.doRenderGeometry");
 	    	if (dc == null)
 	        {
 	            String message = Logging.getMessage("nullValue.DrawContextIsNull");
@@ -265,7 +266,7 @@ public class RadioCovPolygon extends AbstractAirspace {
 	       
 	        for (Curtain c : this.curtains)
 	            if (c.isVisible()==Boolean.TRUE) {
-	            	System.out.println("doRenderGeometry :curtain "+c.isVisible());
+	            	if (DEBUG) System.out.println("doRenderGeometry :curtain "+c.isVisible());
 	            	c.renderGeometry(dc, drawStyle);
 	            	//c.render(dc);
 	            	
@@ -274,16 +275,15 @@ public class RadioCovPolygon extends AbstractAirspace {
 
 	    protected void doRenderExtent(DrawContext dc)
 	    {
-	     System.out.println("AbstractAirspace.doRenderContext");
+	    	if (DEBUG) System.out.println("AbstractAirspace.doRenderContext");
 	    	if (dc == null)
 	        {
 	            String message = Logging.getMessage("nullValue.DrawContextIsNull");
 	            Logging.logger().severe(message);
 	            throw new IllegalArgumentException(message);
 	        }
-
 	       // super.doRenderExtent(dc);
-	        //System.out.println("doRenderExtent");
+	    	if (DEBUG) System.out.println("doRenderExtent");
 	        for (Curtain c : this.curtains) {  
 	        	if (c.isAirspaceVisible(dc)==Boolean.TRUE) c.renderExtent(dc); 
 	        }

@@ -36,7 +36,7 @@ public class RadioCovLayer extends AirspaceLayer{
 	//private LinkedList<RadioCovPolygon> ActiveRadioCov = new LinkedList<RadioCovPolygon>();
 	private AirspaceLayer activeRadioCov = new AirspaceLayer();
 	private LayerList layers;
-	private Boolean DEBUG = true;
+	private Boolean DEBUG = false;
 	private String radioCovName;
 	private VidesoGLCanvas wwd;
 	
@@ -48,10 +48,7 @@ public class RadioCovLayer extends AirspaceLayer{
 		this.setName(radioCovName);
 		this.setEnableAntialiasing(true);
 		this.setEnableBlending(true);
-		this.setEnableLighting(true);
-		
-
-		insertAllRadioCovLayers();				
+		this.setEnableLighting(true);							
 	}
 		
 	/** Recherche une couverture radio dans la liste, et la rend visible*/
