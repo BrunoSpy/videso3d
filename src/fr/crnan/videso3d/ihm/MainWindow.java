@@ -54,7 +54,6 @@ import javax.swing.event.ChangeListener;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-
 import fr.crnan.videso3d.AirspaceListener;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.SplashScreen;
@@ -88,6 +87,10 @@ public class MainWindow extends JFrame {
 	 */
 	private DataExplorer dataExplorer;
 
+	/**
+	 * Panel contextuel
+	 */
+	private ContextPanel context;
 	/**
 	 * Gestionnaire de bases de données
 	 */
@@ -178,7 +181,7 @@ public class MainWindow extends JFrame {
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
 
 		//Titre de la fenêtre
-		this.setTitle("Videso 3D (0.7.0)");
+		this.setTitle("Videso 3D (0.7.0 beta 3)");
 
 		//Fermeture de l'application
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -206,7 +209,7 @@ public class MainWindow extends JFrame {
 		//		wwdFrame.setVisible(true);
 		//		desktop.add(wwdFrame);
 
-		ContextPanel context = new ContextPanel(wwd);
+		context = new ContextPanel(wwd);
 		
 		JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, dataExplorer, wwd);
 		mainPane.setOneTouchExpandable(true);
@@ -592,6 +595,7 @@ public class MainWindow extends JFrame {
 					if(coord != null) {
 						wwd.getView().goTo(new Position(coord, 0), 1e6);
 					} else {
+						context.showInfo(input);
 						wwd.highlight(input);
 					}
 				}
