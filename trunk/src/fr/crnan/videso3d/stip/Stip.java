@@ -47,6 +47,19 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 public class Stip extends FileParser{
 
 	/**
+	 * Type Route
+	 */
+	public final static String STIP_ROUTE = "stip.route";
+	/**
+	 * Type Balise
+	 */
+	public final static String STIP_BALISE = "stip.balise";
+	/**
+	 * Type Route
+	 */
+	public final static String STIP_SECTEUR = "stip.secteur";
+	
+	/**
 	 * Nombre de fichiers gérés
 	 */
 	private int numberFiles = 13;
@@ -907,4 +920,31 @@ public class Stip extends FileParser{
 		return this.numberFiles;
 	}
 
+	/**
+	 * Détermine le type de l'objet en fonction de son nom
+	 * @param name Nom de l'objet
+	 * @return Type de l'objet
+	 */
+	public static String getTypeFromName(String name){
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select name from routes where name = '"+name+"'");
+			if(rs.next()){
+				return STIP_ROUTE;
+			}
+			rs = st.executeQuery("select * from secteurs where nom = '"+name+"'");
+			if(rs.next()){
+				return STIP_SECTEUR;
+			}
+			rs = st.executeQuery("select * from balises where name = '"+name+"'");
+			if(rs.next()){
+				return STIP_BALISE;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
 }

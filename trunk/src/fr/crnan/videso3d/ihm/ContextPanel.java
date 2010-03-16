@@ -40,6 +40,7 @@ import fr.crnan.videso3d.geom.Longitude;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
+import fr.crnan.videso3d.stip.Stip;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 /**
@@ -95,6 +96,24 @@ public class ContextPanel extends JPanel implements SelectListener {
 		}
 	}
 
+	/**
+	 * Détermine le type de l'objet envoyé et affiche les infos en conséquence
+	 * @param name Nom de l'objet
+	 */
+	public void showInfo(String name){
+		String type = Stip.getTypeFromName(name);
+		if(name != null){
+			this.open();
+			if(type.equals(Stip.STIP_BALISE)){
+				this.showBalise(name);
+			} else if(type.equals(Stip.STIP_ROUTE)){
+				this.showRoute(name);
+			} else if(type.equals(Stip.STIP_SECTEUR)){
+				this.showSecteur(name);
+			}
+		}
+	}
+	
 	/**
 	 * Affiche les informations de la balise <code>name</code>
 	 * @param name
