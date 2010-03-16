@@ -66,7 +66,7 @@ public class Consigne {
 	public Consigne(String line) {
 		this.type = line.charAt(0);
 		this.oaci = line.substring(2, 6);
-		this.balise = line.substring(7, 12);
+		this.balise = line.substring(7, 12).trim();
 		this.niveau = new Integer(line.substring(13, 16));
 		this.ecart = new Integer(line.substring(17, 20));
 		this.eveil = line.substring(21, 24).equals("EVE");
