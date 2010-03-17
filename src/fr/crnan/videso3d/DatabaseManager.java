@@ -35,7 +35,7 @@ import javax.swing.event.SwingPropertyChangeSupport;
 /**
  * Gère la base de données
  * @author Bruno Spyckerelle
- * @version 0.7
+ * @version 0.7.1
  */
 public final class DatabaseManager {
 	
@@ -110,6 +110,7 @@ public final class DatabaseManager {
 				"name varchar(20), " +
 				"type varchar(20), " +
 				"date varchar(12), " +
+				"commentaire varchar(64), "+
 				"selected boolean)";
 				st.executeUpdate(create);
 				create = "create table clefs (id integer primary key autoincrement," +
@@ -1002,6 +1003,21 @@ public final class DatabaseManager {
 			return Type.RadioCov;
 		}
 		return null;
+	}
+	
+	/**
+	 * Ajoute un commentaire à la base
+	 * @param id Id de la base concernée
+	 * @param comment Commentaire à ajouter
+	 */
+	public static void setComment(int id, String comment){
+		try {
+			Statement st = DatabaseManager.getCurrent(Type.Databases);
+			st.executeUpdate("update databases set commentaire = '"+comment+"' where id ='"+id+"'");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	/* ****************************************************** */

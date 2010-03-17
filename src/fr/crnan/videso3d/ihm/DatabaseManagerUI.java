@@ -60,7 +60,7 @@ import fr.crnan.videso3d.radio.Radio;
 /**
  * Interface de gestion des base de données.<br />
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.3
  */
 @SuppressWarnings("serial")
 public class DatabaseManagerUI extends JDialog {
@@ -92,10 +92,11 @@ public class DatabaseManagerUI extends JDialog {
 		
 		table = new JXTable(new DBTableModel());
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setEditable(false);
+	//	table.setEditable(false);
 		table.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setColumnControlVisible(true);
 		table.getColumnExt("id").setVisible(false);
+		table.getColumnExt("Commentaire").setEditable(true);
 		this.getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
 		
 		JPanel buttons = new JPanel();
@@ -104,6 +105,8 @@ public class DatabaseManagerUI extends JDialog {
 		select = new JButton("Sélectionner");
 		select.setEnabled(false);
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if(table.getSelectedRow() != -1 && DatabaseManager.isSelected(((DBTableModel)table.getModel()).getId(table.convertRowIndexToModel(table.getSelectedRow())))){
@@ -113,6 +116,7 @@ public class DatabaseManagerUI extends JDialog {
 				}
 			}
 		});
+		
 		select.addActionListener(new TableListener());
 
 		buttons.add(select);
@@ -248,10 +252,10 @@ public class DatabaseManagerUI extends JDialog {
 	/*-------------- TableModel ----------------*/
 	private  class DBTableModel extends AbstractTableModel {
 		
-		private String[] titles = {"id", "Nom", "Type", "Date d'import", "Sélectionné"};
+		private String[] titles = {"id", "Nom", "Type", "Date d'import", "Commentaire", "Sélectionné"};
 		
 		@SuppressWarnings("unchecked")
-		private Class[] types = new Class[] {Integer.class, String.class, String.class, String.class, Boolean.class};
+		private Class[] types = new Class[] {Integer.class, String.class, String.class, String.class, String.class, Boolean.class};
 				
 		private Vector<Vector<Object>> data = new Vector<Vector<Object>>();
 		
@@ -265,6 +269,7 @@ public class DatabaseManagerUI extends JDialog {
 					line.add(rs.getString("name"));
 					line.add(rs.getString("type"));
 					line.add(rs.getString("date"));
+					line.add(rs.getString("commentaire"));
 					line.add(rs.getBoolean("selected"));
 					data.add(line);
 				}		
@@ -338,6 +343,7 @@ public class DatabaseManagerUI extends JDialog {
 					line.add(rs.getString("name"));
 					line.add(rs.getString("type"));
 					line.add(rs.getString("date"));
+					line.add(rs.getString("commentaire"));
 					line.add(rs.getBoolean("selected"));
 					data.add(line);
 				}		
@@ -351,6 +357,33 @@ public class DatabaseManagerUI extends JDialog {
 		public Integer getId(int rowIndex){
 			return (Integer) data.get(rowIndex).get(0);
 		}
+
+		/* (non-Javadoc)
+		 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
+		 */
+		@Override
+		public boolean isCellEditable(int rowIndex, int columnIndex) {
+			if(columnIndex == 4) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
+		 */
+		@Override
+		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+			if(columnIndex == 4){
+				DatabaseManager.setComment((Integer)this.getValueAt(rowIndex, 0), aValue.toString());
+				data.get(rowIndex).set(4, aValue);
+				fireTableDataChanged();
+			}
+		}
+		
+		
+		
 	}
 	
 	/*-------------- Listener ------------------*/
