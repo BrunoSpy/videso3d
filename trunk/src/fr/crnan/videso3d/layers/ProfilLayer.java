@@ -60,6 +60,6 @@ public class ProfilLayer extends LayerSet {
 	public void removeAll(){
 		this.shapeLayer.removeAllRenderables();
 		this.renderableLayer.removeAllRenderables();
-		this.baliseLayer.removeAllBalises();
+		this.baliseLayer.eraseAllBalises();
 	}
 }

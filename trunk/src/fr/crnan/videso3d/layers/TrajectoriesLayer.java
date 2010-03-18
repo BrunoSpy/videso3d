@@ -72,12 +72,9 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	/**
 	 * Met en valeur un track
 	 * @param track 
+	 * @param b
 	 */
-	public abstract void highlightTrack(Track track);
-	/**
-	 * Supprime le highlight des tracks
-	 */
-	public abstract void removeHighlightedTracks();
+	public abstract void highlightTrack(Track track, Boolean b);
 	
 	/**
 	 * Met à jour les trajectoires affichées
@@ -85,4 +82,18 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	public abstract void update();
 	
 	public abstract Collection<? extends Track> getSelectedTracks();
+	
+	/**
+	 * Returns true or false wether the track is displayed on the globe or not
+	 * @param track
+	 * @return
+	 */
+	public abstract Boolean isVisible(Track track);
+	
+	/**
+	 * Rend visible ou non le track concerné
+	 * @param b
+	 * @param track
+	 */
+	public abstract void setVisible(Boolean b, Track track);
 }

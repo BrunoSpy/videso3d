@@ -152,5 +152,13 @@ public class Profil3D {
 	public List<Balise2D> getBalises(){
 		return this.balises;
 	}
+	
+	public void highlight(Boolean b) {
+		if(b){
+			curtain.setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 0.4f)));
+		} else {
+			curtain.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+		}
+	}
 
 }

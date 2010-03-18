@@ -47,6 +47,9 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
+import fr.crnan.videso3d.layers.GEOTracksLayer;
+import fr.crnan.videso3d.layers.LPLNTracksLayer;
+import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.tracks.Track;
@@ -129,7 +132,7 @@ public class TrajectoriesView extends JPanel {
 		type.add(typeField);
 
 		filtres.add(type);
-
+		
 		JPanel validate = new JPanel();
 		validate.setLayout(new BoxLayout(validate, BoxLayout.X_AXIS));
 		JButton val = new JButton("Filtrer");
@@ -182,15 +185,26 @@ public class TrajectoriesView extends JPanel {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				if(!e.getValueIsAdjusting()){
-					layer.removeHighlightedTracks();
-					for(int i : pistes.getSelectedRows()){
-						layer.highlightTrack((Track)((TrackTableModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(i)));
+					if(e.getFirstIndex() != -1){
+						for(int i = e.getFirstIndex(); i <= e.getLastIndex(); i++){
+							layer.highlightTrack(
+									(Track)((TrackTableModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(i)),
+									pistes.isRowSelected(i));
+						}
 					}
-					layer.update();
 				}
 			}
 		});
 		pistes.setColumnControlVisible(true);
+		if(layer instanceof LPLNTracksLayer){
+			pistes.getColumnExt("IAF").setVisible(false);
+		} else if (layer instanceof GEOTracksLayer) {
+			pistes.getColumnExt("IAF").setVisible(false);
+			pistes.getColumnExt("Affiché").setVisible(false);
+		} else if (layer instanceof OPASTracksLayer) {
+			pistes.getColumnExt("Type").setVisible(false);
+			pistes.getColumnExt("Affiché").setVisible(false);
+		}
 		JScrollPane scrollPane = new JScrollPane(pistes);
 		scrollPane.setBorder(null);
 		table.add(scrollPane);
@@ -247,15 +261,15 @@ public class TrajectoriesView extends JPanel {
 	
 	private class TrackTableModel extends AbstractTableModel {
 
-		String[] columnNames = {"Indicatif", "Départ", "Arrivée", "IAF", "Type"};
+		String[] columnNames = {"Indicatif", "Départ", "Arrivée", "IAF", "Type", "Affiché"};
 
-		Object[] tracks;
+		Object[] tracks = null;
 
 		Collection<? extends Track> tracksCollection;
 		
 		public TrackTableModel(){
 			super();
-			tracks = layer.getSelectedTracks().toArray();
+			tracks = layer.getSelectedTracks().toArray();//TODO gérer les mauvais fichiers
 			tracksCollection = layer.getSelectedTracks();
 			layer.addPropertyChangeListener(AVKey.LAYER, new PropertyChangeListener() {
 				@Override
@@ -291,48 +305,55 @@ public class TrajectoriesView extends JPanel {
 
 		@Override
 		public Object getValueAt(int row, int col) {
-			if(tracks[row] instanceof GEOTrack){
+			Track t = (Track) tracks[row];
+			if(t instanceof GEOTrack){
 				switch (col) {
 				case 0:
-					return ((GEOTrack)tracks[row]).getIndicatif();
+					return ((GEOTrack)t).getIndicatif();
 				case 1:
-					return ((GEOTrack)tracks[row]).getDepart();
+					return ((GEOTrack)t).getDepart();
 				case 2:
-					return ((GEOTrack)tracks[row]).getArrivee();
+					return ((GEOTrack)t).getArrivee();
 				case 3:
 					return "";
 				case 4:
-					return ((GEOTrack)tracks[row]).getType();
+					return ((GEOTrack)t).getType();
+				case 5:
+					return layer.isVisible((Track)t);
 				default:
 					return "";
 				}
-			} else if(tracks[row] instanceof OPASTrack){
+			} else if(t instanceof OPASTrack){
 				switch (col) {
 				case 0:
-					return ((OPASTrack)tracks[row]).getIndicatif();
+					return ((OPASTrack)t).getIndicatif();
 				case 1:
-					return ((OPASTrack)tracks[row]).getDepart();
+					return ((OPASTrack)t).getDepart();
 				case 2:
-					return ((OPASTrack)tracks[row]).getArrivee();
+					return ((OPASTrack)t).getArrivee();
 				case 3:
-					return ((OPASTrack)tracks[row]).getIaf();
+					return ((OPASTrack)t).getIaf();
 				case 4:
 					return "";
+				case 5:
+					return layer.isVisible((Track)t);
 				default:
 					return "";
 				}
-			} else if(tracks[row] instanceof LPLNTrack) {
+			} else if(t instanceof LPLNTrack) {
 				switch (col) {
 				case 0:
-					return ((LPLNTrack)tracks[row]).getIndicatif();
+					return ((LPLNTrack)t).getIndicatif();
 				case 1:
-					return ((LPLNTrack)tracks[row]).getDepart();
+					return ((LPLNTrack)t).getDepart();
 				case 2:
-					return ((LPLNTrack)tracks[row]).getArrivee();
+					return ((LPLNTrack)t).getArrivee();
 				case 3:
 					return "";
 				case 4:
-					return ((LPLNTrack)tracks[row]).getType();
+					return ((LPLNTrack)t).getType();
+				case 5:
+					return layer.isVisible((Track)t);
 				default:
 					return "";
 				}
@@ -341,5 +362,43 @@ public class TrajectoriesView extends JPanel {
 			}
 		}
 
+		
+		/* (non-Javadoc)
+		 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
+		 */
+		@Override
+		public Class<?> getColumnClass(int columnIndex) {
+			if(columnIndex == 5){
+				return Boolean.class;
+			} else {
+				return String.class;
+			}
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
+		 */
+		@Override
+		public boolean isCellEditable(int rowIndex, int columnIndex) {
+			if(columnIndex == 5){
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
+		 */
+		@Override
+		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+			if(columnIndex == 5){
+				layer.setVisible((Boolean)aValue, (Track)tracks[rowIndex]);
+				fireTableDataChanged();
+			}
+		}
+
+		
+		
 	}
 }

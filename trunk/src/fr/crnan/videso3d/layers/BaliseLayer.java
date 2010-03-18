@@ -138,6 +138,17 @@ public class BaliseLayer extends LayerSet {
 		}
 	}
 	
+	/**
+	 * Supprime toutes les balises
+	 */
+	public void eraseAllBalises(){
+			textLayer.removeAllGeographicTexts();
+			markerLayer.setMarkers(null);
+			balisesActives.clear();
+			balises.clear();
+	}
+	
+	
 	public Boolean isLocked(){
 		return this.lock;
 	}

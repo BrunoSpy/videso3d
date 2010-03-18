@@ -181,7 +181,7 @@ public class MainWindow extends JFrame {
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
 
 		//Titre de la fenêtre
-		this.setTitle("Videso 3D (0.7.0 beta 3)");
+		this.setTitle("Videso 3D (0.7.0 beta 4)");
 
 		//Fermeture de l'application
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -595,7 +595,8 @@ public class MainWindow extends JFrame {
 					if(coord != null) {
 						wwd.getView().goTo(new Position(coord, 0), 1e6);
 					} else {
-						context.showInfo(input);
+						if(!input.isEmpty())
+							context.showInfo(input);
 						wwd.highlight(input);
 					}
 				}
