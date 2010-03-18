@@ -16,7 +16,6 @@
 
 package fr.crnan.videso3d.layers;
 
-import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.ResultSet;
@@ -1171,9 +1170,7 @@ public class FrontieresStipLayer extends SurfaceShapeLayer {
 		});
 		france.setAttributes(attrs);
 	
-		this.addRenderable(france);
-		this.setPickEnabled(false);
-		
+		this.addRenderable(france);		
 		
 //		try {
 //			Statement st = db.getCurrent(Type.PAYS);
