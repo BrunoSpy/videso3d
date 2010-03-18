@@ -16,9 +16,9 @@
 package fr.crnan.videso3d.layers;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
@@ -30,13 +30,15 @@ import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer d'accueil pour des trajectoires issues d'un LPLN
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class LPLNTracksLayer extends TrajectoriesLayer {
 
 	private ProfilLayer layer = new ProfilLayer("LPLN");
 	
-	private List<LPLNTrack> tracks = new LinkedList<LPLNTrack>();
+	private HashMap<LPLNTrack, Boolean> tracks = new HashMap<LPLNTrack, Boolean>();
+	
+	private HashMap<LPLNTrack, Profil3D> profils = new HashMap<LPLNTrack, Profil3D>();
 	
 	private Set<LPLNTrack> selectedTracks = null;
 	
@@ -50,13 +52,13 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		Collection<LPLNTrack> tracks;
 		if(!this.isFilterDisjunctive()){
 			if(selectedTracks == null) {
-				tracks = this.tracks;
+				tracks = this.tracks.keySet();
 			} else {
 				tracks = new HashSet<LPLNTrack>(this.selectedTracks);
 				this.selectedTracks.clear();
 			}
 		} else {
-			tracks = this.tracks;
+			tracks = this.tracks.keySet();
 		}
 		switch (field) {
 		case FIELD_ADEST:
@@ -97,21 +99,26 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	}
 
 	private void addTrack(LPLNTrack track){
-		this.tracks.add(track);
+		this.tracks.put(track, true);
 		this.addSelectedTrack(track);
 		this.showTrack(track);
 	}
 	
 	private void showTrack(LPLNTrack track){
-		LinkedList<Position> positions = new LinkedList<Position>();
-		LinkedList<String> balises = new LinkedList<String>();
-		for(LPLNTrackPoint point : track.getTrackPoints()){
-			positions.add(point.getPosition());
-			balises.add(point.getName());			
-		}
-		if(positions.size()>1){ //only add a line if there's enough points
-			Profil3D profil = new Profil3D(balises, positions);
-			this.layer.addProfil3D(profil);
+		if(profils.containsKey(track)){
+			this.layer.addProfil3D(profils.get(track));
+		} else {
+			LinkedList<Position> positions = new LinkedList<Position>();
+			LinkedList<String> balises = new LinkedList<String>();
+			for(LPLNTrackPoint point : track.getTrackPoints()){
+				positions.add(point.getPosition());
+				balises.add(point.getName());
+			}
+			if(positions.size()>1){ //only add a line if there's enough points
+				Profil3D profil = new Profil3D(balises, positions);
+				this.profils.put(track, profil);
+				this.layer.addProfil3D(profil);
+			}
 		}
 	}
 	
@@ -124,7 +131,7 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 
 	@Override
 	public Collection<LPLNTrack> getSelectedTracks() {
-		return this.selectedTracks == null ? tracks : selectedTracks;
+		return this.selectedTracks == null ? tracks.keySet() : selectedTracks;
 	}
 
 	@Override
@@ -135,8 +142,8 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	@Override
 	public void update() {
 		this.layer.removeAll();
-		for(LPLNTrack track : (selectedTracks == null ? tracks : selectedTracks)){
-			this.showTrack(track);
+		for(LPLNTrack track : (selectedTracks == null ? tracks.keySet() : selectedTracks)){
+			if(this.isVisible(track)) this.showTrack(track);
 		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
 
@@ -148,15 +155,24 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	}
 
 	@Override
-	public void highlightTrack(Track track) {
-		// TODO Auto-generated method stub
-		
+	public void highlightTrack(Track track, Boolean b) {
+		Profil3D profil = this.profils.get(track);
+		if(profil != null){
+			profil.highlight(b);
+		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
-	public void removeHighlightedTracks() {
-		// TODO Auto-generated method stub
-		
+	public Boolean isVisible(Track track) {
+		return tracks.get(track);
+	}
+
+	@Override
+	public void setVisible(Boolean b, Track track) {
+		tracks.put((LPLNTrack) track, b);
+		System.out.println(tracks.size());
+		this.update();
 	}
 	
 }

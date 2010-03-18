@@ -17,6 +17,7 @@ package fr.crnan.videso3d.layers;
 
 import java.awt.Color;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,17 +35,18 @@ import gov.nasa.worldwind.tracks.TrackPoint;
 /**
  * Layer contenant des tracks Elvira GEO et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.2
  */
 public class GEOTracksLayer extends TrajectoriesLayer {
 
 	private List<GEOTrack> tracks = new LinkedList<GEOTrack>();
 	
 	private Set<GEOTrack> selectedTracks = null;
-
-	private Set<GEOTrack> highlightedTracks = new HashSet<GEOTrack>();
+	
+	private HashMap<GEOTrack, VPolyline> lines = new HashMap<GEOTrack, VPolyline>();
 	
 	private RenderableLayer layer = new RenderableLayer();
+	
 	
 	public GEOTracksLayer(){
 		super();
@@ -68,21 +70,16 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 				positions.add(point.getPosition());
 				position = point.getPosition();
 			}
-			
 		}
 		if(positions.size()>1){ //only add a line if there's enough points
 			VPolyline line = new VPolyline();
 			line.setPlain(true);
-			if(highlightedTracks.contains(track)){
-				line.setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 0.4f)));
-			} else {
-				line.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
-			}
+			line.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
 			line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
 			line.setPositions(positions);
+			lines.put(track, line);
 			this.layer.addRenderable(line);
 		}
-		
 	}
 
 	@Override
@@ -166,13 +163,28 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	}
 
 	@Override
-	public void highlightTrack(Track track){
-		this.highlightedTracks.add((GEOTrack) track);
+	public void highlightTrack(Track track, Boolean b){
+		VPolyline line = this.lines.get((GEOTrack)track);
+		if(line != null){
+			if(b){
+				this.lines.get((GEOTrack)track).setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 0.4f)));
+			} else {
+				this.lines.get((GEOTrack)track).setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+			}
+			this.firePropertyChange(AVKey.LAYER, null, this);
+		}
 	}
 
 	@Override
-	public void removeHighlightedTracks() {
-		this.highlightedTracks.clear();
+	public Boolean isVisible(Track track) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setVisible(Boolean b, Track track) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

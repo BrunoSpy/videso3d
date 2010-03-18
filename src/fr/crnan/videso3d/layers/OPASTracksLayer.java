@@ -157,13 +157,18 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 	}
 
 	@Override
-	public void highlightTrack(Track track) {
+	public void highlightTrack(Track track, Boolean b) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void removeHighlightedTracks() {
+	public Boolean isVisible(Track track) {
+		return true;
+	}
+
+	@Override
+	public void setVisible(Boolean b, Track track) {
 		// TODO Auto-generated method stub
 		
 	}

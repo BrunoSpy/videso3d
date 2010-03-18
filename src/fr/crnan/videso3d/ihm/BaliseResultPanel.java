@@ -42,20 +42,29 @@ public class BaliseResultPanel extends ResultPanel {
 
 	public BaliseResultPanel(String balise){
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		Boolean stip = false;
+		Boolean stpv = false;
+		try {
+			stip = DatabaseManager.getCurrentStip() != null;
+			stpv = DatabaseManager.getCurrentStpv() != null;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
 		
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.X_AXIS));
-		top.add(this.createConsignesTable(balise));
-		top.add(this.createLieu26Table(balise));
-		top.add(this.createLieu27Table(balise));
+		if(stip) top.add(this.createConsignesTable(balise));
+		if(stpv) top.add(this.createLieu26Table(balise));
+		if(stpv) top.add(this.createLieu27Table(balise));
 		
 		this.add(top);
 		
 		JPanel bottom = new JPanel();
 		bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
-		bottom.add(this.createLieu6Table(balise));
-		bottom.add(this.createLieu8Table(balise));
-		bottom.add(this.createLieu91Table(balise));
+		if(stpv) bottom.add(this.createLieu6Table(balise));
+		if(stpv) bottom.add(this.createLieu8Table(balise));
+		if(stpv) bottom.add(this.createLieu91Table(balise));
 		
 		this.add(bottom);
 	}
