@@ -171,7 +171,6 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	@Override
 	public void setVisible(Boolean b, Track track) {
 		tracks.put((LPLNTrack) track, b);
-		System.out.println(tracks.size());
 		this.update();
 	}
 	

@@ -16,17 +16,13 @@
 
 package fr.crnan.videso3d.graphics;
 
-import java.awt.Color;
-
-import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.GlobeAnnotation;
-import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Polygon;
 /**
  * Représentation 3D d'un secteur de contrôle
  * @author Bruno Spyckerelle
- * @version 0.2.3
+ * @version 0.2.4
  */
 public class Secteur3D extends Polygon implements ObjectAnnotation{
 
@@ -46,7 +42,6 @@ public class Secteur3D extends Polygon implements ObjectAnnotation{
 	public Secteur3D(String name, Integer plancher, Integer plafond){
 		this.setName(name);
 		this.setNiveaux(plancher, plafond);
-		this.setDefaultMaterial();
 		
 		this.annotation = new GlobeAnnotation("Secteur "+name
 											+"\nPlafond : FL"+plafond
@@ -75,22 +70,6 @@ public class Secteur3D extends Polygon implements ObjectAnnotation{
 	public GlobeAnnotation getAnnotation(Position pos){
 		annotation.setPosition(pos);
 		return annotation;
-	}
-	
-	/*---------- Pour tests -----------*/
-	
-	 private void setDefaultMaterial() {
-			Color color = Color.CYAN;
-			Color outline = Pallet.makeBrighter(color);
-			
-	        this.getAttributes().setDrawOutline(true);
-	        this.getAttributes().setMaterial(new Material(color));
-	        this.getAttributes().setOutlineMaterial(new Material(outline));
-	        this.getAttributes().setOpacity(0.2);
-	        this.getAttributes().setOutlineOpacity(0.9);
-	        this.getAttributes().setOutlineWidth(2.0);
-		}
-	 
-	 
+	}	 
 }
 
