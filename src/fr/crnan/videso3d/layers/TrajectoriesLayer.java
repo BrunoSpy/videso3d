@@ -25,11 +25,29 @@ import gov.nasa.worldwind.tracks.Track;
  */
 public abstract class TrajectoriesLayer extends LayerSet {
 
+	/**
+	 * Les différents champs accessibles
+	 */
 	public static final int FIELD_ADEP = 1;
 	public static final int FIELD_ADEST = 2;
 	public static final int FIELD_IAF = 3;
 	public static final int FIELD_INDICATIF = 4;
 	public static final int FIELD_TYPE_AVION = 5;
+	
+	
+	//Les différents styles disponibles pour la représentation des trajectoires
+	/**
+	 * Une polyligne dont la couleur change en fonction de l'altitude
+	 */
+	public final static int STYLE_SIMPLE = 1;
+	/**
+	 * Une suite de polygones allant du sol à la trajectoire
+	 */
+	public final static int STYLE_CURTAIN = 2;
+	/**
+	 * Un style complexe, avec une ombre projectée au sol et la possibilité d'afficher des balises
+	 */
+	public final static int STYLE_PROFIL = 3;
 	
 	private boolean disjunctive = true; //"or" by default
 	
@@ -96,4 +114,33 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 * @param track
 	 */
 	public abstract void setVisible(Boolean b, Track track);
+	
+	/**
+	 * Possibilité de sélectionner les tracks (avec highlight) ?
+	 * @return
+	 */
+	public abstract Boolean isTrackHighlightable();
+	/**
+	 * Possibilité de cacher des tracks ?
+	 * @return
+	 */
+	public abstract Boolean isTrackHideable();
+	
+	/**
+	 * Mettre à FALSE améliore généralement les performances
+	 * @param b
+	 */
+	public abstract void setTracksHideable(Boolean b);
+	
+	/**
+	 * Mettre à FALSE améliore généralement les performances
+	 * @param b
+	 */
+	public abstract void setTracksHighlightable(Boolean b);
+	
+	/**
+	 * Change le style parmi <code>TrajectoriesLayer.STYLE_SIMPLE</code>, <code>TrajectoriesLayer.STYLE_CURTAIN</code> et <code>TrajectoriesLayer.STYLE_PROFIL</code>
+	 * @param style
+	 */
+	public abstract void setStyle(int style);
 }

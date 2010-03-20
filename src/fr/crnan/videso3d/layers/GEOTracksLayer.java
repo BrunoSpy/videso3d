@@ -34,6 +34,7 @@ import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.tracks.TrackPoint;
 /**
  * Layer contenant des tracks Elvira GEO et permettant un affichage sélectif.
+ * Le style par défaut est <code>TrajectoriesLayer.STYLE_CURTAIN</code>
  * @author Bruno Spyckerelle
  * @version 0.2
  */
@@ -46,12 +47,23 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	private HashMap<GEOTrack, VPolyline> lines = new HashMap<GEOTrack, VPolyline>();
 	
 	private RenderableLayer layer = new RenderableLayer();
+		
+	private Boolean tracksHighlightable = true;
 	
+	private Boolean tracksHideable = false;
+	
+	private int style = TrajectoriesLayer.STYLE_CURTAIN;
 	
 	public GEOTracksLayer(){
 		super();
 		this.add(layer);
 		this.setPickEnabled(true);
+	}
+	
+	public GEOTracksLayer(Boolean tracksHideable, Boolean tracksHighlightable){
+		super();
+		this.add(layer);
+		this.setTracksHighlightable(tracksHighlightable);
 	}
 	
 	private void addTrack(GEOTrack track){
@@ -73,11 +85,17 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		}
 		if(positions.size()>1){ //only add a line if there's enough points
 			VPolyline line = new VPolyline();
-			line.setPlain(true);
-			line.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+			line.setNumSubsegments(1); //améliore les performances
+			if(style == TrajectoriesLayer.STYLE_CURTAIN){
+				line.setPlain(true);
+				line.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+			} else {
+				line.setPlain(false);
+				line.setShadedColors(true);
+			}
 			line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
 			line.setPositions(positions);
-			lines.put(track, line);
+			if(this.isTrackHighlightable()) lines.put(track, line);
 			this.layer.addRenderable(line);
 		}
 	}
@@ -164,14 +182,16 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 
 	@Override
 	public void highlightTrack(Track track, Boolean b){
-		VPolyline line = this.lines.get((GEOTrack)track);
-		if(line != null){
-			if(b){
-				this.lines.get((GEOTrack)track).setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 0.4f)));
-			} else {
-				this.lines.get((GEOTrack)track).setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+		if(this.isTrackHighlightable()){
+			VPolyline line = this.lines.get((GEOTrack)track);
+			if(line != null){
+				if(b){
+					this.lines.get((GEOTrack)track).setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 0.4f)));
+				} else {
+					this.lines.get((GEOTrack)track).setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+				}
+				this.firePropertyChange(AVKey.LAYER, null, this);
 			}
-			this.firePropertyChange(AVKey.LAYER, null, this);
 		}
 	}
 
@@ -185,6 +205,41 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	public void setVisible(Boolean b, Track track) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Boolean isTrackHideable() {
+		return this.tracksHideable;
+	}
+
+	@Override
+	public Boolean isTrackHighlightable() {
+		return this.tracksHighlightable;
+	}
+
+	@Override
+	/**
+	 * Non implémenté par ce calque.
+	 */
+	public void setTracksHideable(Boolean b) {
+		
+	}
+
+	@Override
+	public void setTracksHighlightable(Boolean b) {
+		this.tracksHighlightable = b;
+		this.setPickEnabled(b);
+		if(b){
+			this.lines = new HashMap<GEOTrack, VPolyline>();
+		} else {
+			this.lines = null;
+		}
+	}
+
+	@Override
+	public void setStyle(int style) {
+		this.style = style;
+		this.update();
 	}
 	
 }

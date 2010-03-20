@@ -30,7 +30,7 @@ import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer d'accueil pour des trajectoires issues d'un LPLN
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 public class LPLNTracksLayer extends TrajectoriesLayer {
 
@@ -172,6 +172,43 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	public void setVisible(Boolean b, Track track) {
 		tracks.put((LPLNTrack) track, b);
 		this.update();
+	}
+
+	@Override
+	public Boolean isTrackHideable() {
+		return true;
+	}
+
+	@Override
+	public Boolean isTrackHighlightable() {
+		return true;
+	}
+
+	@Override
+	/**
+	 * Not implemented by this layer
+	 */
+	public void setTracksHideable(Boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	/**
+	 * Not implemented by this layer
+	 */
+	public void setTracksHighlightable(Boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	/**
+	 * Not implemented by this layer
+	 */
+	public void setStyle(int style) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
