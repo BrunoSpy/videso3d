@@ -201,11 +201,11 @@ public class TrajectoriesView extends JPanel {
 			pistes.getColumnExt("IAF").setVisible(false);
 		} else if (layer instanceof GEOTracksLayer) {
 			pistes.getColumnExt("IAF").setVisible(false);
-			pistes.getColumnExt("Affiché").setVisible(false);
 		} else if (layer instanceof OPASTracksLayer) {
 			pistes.getColumnExt("Type").setVisible(false);
-			pistes.getColumnExt("Affiché").setVisible(false);
 		}
+		pistes.getColumnExt("Affiché").setVisible(layer.isTrackHideable());
+		pistes.packAll();
 		JScrollPane scrollPane = new JScrollPane(pistes);
 		scrollPane.setBorder(null);
 		table.add(scrollPane);

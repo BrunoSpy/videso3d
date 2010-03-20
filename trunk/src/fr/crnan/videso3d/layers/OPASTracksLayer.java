@@ -32,7 +32,7 @@ import gov.nasa.worldwind.tracks.TrackPoint;
 /**
  * Layer contenant des tracks OPAS et permettant un affichage sélectif
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class OPASTracksLayer extends TrajectoriesLayer {
 
@@ -72,6 +72,7 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 			positions.add(point.getPosition());
 		}
 		VPolyline line = new VPolyline();
+		line.setNumSubsegments(1);
 		line.setShadedColors(true);
 		line.setMaxElevation(400*30.48);
 		line.setMinElevation(50*30.48);
@@ -157,6 +158,9 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 	}
 
 	@Override
+	/**
+	 * Not implemented by this layer
+	 */
 	public void highlightTrack(Track track, Boolean b) {
 		// TODO Auto-generated method stub
 		
@@ -168,7 +172,47 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 	}
 
 	@Override
+	/**
+	 * Not implemented by this layer
+	 */
 	public void setVisible(Boolean b, Track track) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Boolean isTrackHideable() {
+		return false;
+	}
+
+	@Override
+	public Boolean isTrackHighlightable() {
+		return false;
+	}
+
+	@Override
+	/**
+	 * Not implemented by this layer
+	 */
+	public void setTracksHideable(Boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	/**
+	 * Not implemented by this layer
+	 */
+	public void setTracksHighlightable(Boolean b) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	/**
+	 * Not implemented by this layer
+	 */
+	public void setStyle(int style) {
 		// TODO Auto-generated method stub
 		
 	}

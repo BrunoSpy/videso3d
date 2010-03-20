@@ -318,10 +318,10 @@ public class DatabaseManagerUI extends JDialog {
 			String type = (String) this.getValueAt(rowIndex, 2);
 			for(Vector<Object> row : data){
 				if(row.get(2).equals(type)){
-					row.set(4, false);
+					row.set(5, false);
 				}
 			}
-			data.get(rowIndex).set(4, true);
+			data.get(rowIndex).set(5, true);
 			fireTableDataChanged();
 		}
 		
