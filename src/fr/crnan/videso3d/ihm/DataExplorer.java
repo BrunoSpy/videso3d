@@ -26,6 +26,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -35,6 +36,10 @@ import javax.swing.SwingWorker;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.formats.geo.GEOReader;
+import fr.crnan.videso3d.formats.lpln.LPLNReader;
+import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.ihm.components.ButtonTabComponent;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 
@@ -335,12 +340,39 @@ public class DataExplorer extends JPanel {
 	}
 
 	/**
-	 * Ajoute un tab de sélection des trajectoires
+	 * Ajoute un tab de sélection des trajectoires.<br />
+	 * Un tab est créé pour chaque type de fichier si plusieurs fichiers sont sélectionnés.
 	 * @param file
 	 */
-	public void addTrajectoriesView(File file) {
-		final Component content = new TrajectoriesView(wwd, file);
-		tabs.addTab(file.getName(), content);
+	public void addTrajectoriesViews(File[] files) {
+		Vector<File> opasFile = new Vector<File>();
+		Vector<File> geoFile = new Vector<File>();
+		Vector<File> lplnFile = new Vector<File>();
+		
+		for(File f : files){
+			if(OPASReader.isOpasFile(f)) {
+				opasFile.add(f);
+			} else if(LPLNReader.isLPLNFile(f)) {
+				lplnFile.add(f);
+			} else if(GEOReader.isGeoFile(f)) {
+				geoFile.add(f);
+			}
+		}
+		
+		if(opasFile.size()>0){
+			this.addTrajectoriesView(new OPASReader(opasFile));
+		}
+		if(geoFile.size()>0){
+			this.addTrajectoriesView(new GEOReader(geoFile));
+		}
+		if(lplnFile.size()>0){
+			this.addTrajectoriesView(new LPLNReader(lplnFile));
+		}
+	}
+	
+	private void addTrajectoriesView(TrackFilesReader reader){
+		final Component content = new TrajectoriesView(wwd, reader);
+		tabs.addTab(reader.getName(), content);	
 		ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 		buttonTab.getButton().addActionListener(new ActionListener() {
 			
@@ -352,7 +384,6 @@ public class DataExplorer extends JPanel {
 		tabs.setTabComponentAt(tabs.indexOfComponent(content), buttonTab);
 		tabs.setSelectedIndex(tabs.getTabCount()-1);
 	}
-	
 	
 	/**
 	 *  Ajoute un tab de sélection des couvertures radio

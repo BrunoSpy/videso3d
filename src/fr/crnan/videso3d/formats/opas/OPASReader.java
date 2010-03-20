@@ -21,37 +21,27 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Vector;
 
 import javax.swing.ProgressMonitorInputStream;
 
-import gov.nasa.worldwind.util.Logging;
+import fr.crnan.videso3d.formats.TrackFilesReader;
 
 /**
  * Lecteur de fichier OPAS
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
-public class OPASReader {
-
-	private List<OPASTrack> tracks = new LinkedList<OPASTrack>();
-	
-	private String name;
-
-	public OPASReader(){
-		super();
+public class OPASReader extends TrackFilesReader{
+		
+	public OPASReader(Vector<File> files){
+		super(files);
 	}
 	
 	public OPASReader(File selectedFile) {
-		try {
-			this.readFile(selectedFile.getAbsolutePath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		super(selectedFile);
 	}
 
 	/**
@@ -79,35 +69,7 @@ public class OPASReader {
 		return opas;
 	}
 	
-	/**
-     * @param path
-     * @throws IllegalArgumentException if <code>path</code> is null
-     * @throws java.io.IOException
-     */
-    public void readFile(String path) throws IOException
-    {
-        if (path == null)
-        {
-            String msg = Logging.getMessage("nullValue.PathIsNull");
-            Logging.logger().severe(msg);
-            throw new IllegalArgumentException(msg);
-        }
-
-        this.setName(path);
-
-        java.io.File file = new java.io.File(path);
-        if (!file.exists())
-        {
-            String msg = Logging.getMessage("generic.FileNotFound", path);
-            Logging.logger().severe(msg);
-            throw new FileNotFoundException(path);
-        }
-
-        FileInputStream fis = new FileInputStream(file);
-        this.doReadStream(fis);
-    }
-	
-    private void doReadStream(InputStream stream)
+    protected void doReadStream(FileInputStream stream)
     {
         String sentence;
 
@@ -126,7 +88,7 @@ public class OPASReader {
         		if (sentence != null)
         		{
         			if(sentence.startsWith("Simulation de")){
-        				if(track != null) this.tracks.add(track);
+        				if(track != null) this.getTracks().add(track);
         				String[] words = sentence.split("\\s+");
         				track = new OPASTrack(words[2], (words[6].split(":"))[1], (words[7].split(":"))[1], (words[8].split(":"))[1]);
         			} else {
@@ -140,20 +102,7 @@ public class OPASReader {
         	//noinspection UnnecessaryReturnStatement
         	return;
         } catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
-
-	private void setName(String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
-    
-	public List<OPASTrack> getTracks(){
-		return tracks;
-	}
 }

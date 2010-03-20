@@ -385,6 +385,8 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fileChooser.setMultiSelectionEnabled(true);
 				fileChooser.addChoosableFileFilter(new OPASFileFilter());
 				fileChooser.addChoosableFileFilter(new GEOFileFilter());
 				fileChooser.addChoosableFileFilter(new LPLNFileFilter());
@@ -394,7 +396,7 @@ public class MainWindow extends JFrame {
 						@Override
 						protected String doInBackground() throws Exception {
 							try {
-								dataExplorer.addTrajectoriesView(fileChooser.getSelectedFile());
+								dataExplorer.addTrajectoriesViews(fileChooser.getSelectedFiles());
 							} catch(Exception e1){
 								e1.printStackTrace();
 							}

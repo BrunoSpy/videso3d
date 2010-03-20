@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.io.File;
@@ -27,14 +28,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.SwingWorker;
-
+import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
-import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
-import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.opas.OPASReader;
-import fr.crnan.videso3d.formats.opas.OPASTrack;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
@@ -87,6 +84,7 @@ import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
+import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.util.DataConfigurationFilter;
 import gov.nasa.worldwind.util.DataConfigurationUtils;
 import gov.nasa.worldwind.util.Logging;
@@ -535,11 +533,19 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			Statement st = DatabaseManager.getCurrentStip();
 			ResultSet rs = st.executeQuery("select secteurs.nom, secteurs.numero, cartesect.flinf, cartesect.flsup from secteurs, cartesect where secteurs.numero = cartesect.sectnum and secteurs.nom ='"+name+"'");
 			Integer i = 0;
+			BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
+			attrs.setDrawOutline(true);
+			attrs.setMaterial(new Material(Color.CYAN));
+			attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(Color.CYAN)));
+			attrs.setOpacity(0.2);
+			attrs.setOutlineOpacity(0.9);
+			attrs.setOutlineWidth(1.5);
 			while(rs.next()){
 				Secteur3D secteur3D = new Secteur3D(name, rs.getInt("flinf"), rs.getInt("flsup"));
 				Secteur secteur = new Secteur(name, rs.getInt("numero"), DatabaseManager.getCurrentStip());
 				secteur.setConnectionPays(DatabaseManager.getCurrent(DatabaseManager.Type.PAYS));
 				secteur3D.setLocations(secteur.getContour(rs.getInt("flsup")));
+				secteur3D.setAttributes(attrs);
 				this.addToSecteursLayer(secteur3D);
 				secteurs.put(name+i.toString(), secteur3D);
 				i++;
@@ -1134,13 +1140,13 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Ajoute les trajectoires à la vue
 	 * @param file Fichier contenant les trajectoires
 	 */
-	public TrajectoriesLayer addTrajectoires(File file){
-		if(OPASReader.isOpasFile(file)){
-			return this.addTrajectoires(new OPASReader(file));
-		} else if(GEOReader.isGeoFile(file)){
-			return this.addTrajectoires(new GEOReader(file));
-		} else if(LPLNReader.isLPLNFile(file)) {
-			return this.addTrajectoires(new LPLNReader(file));
+	public TrajectoriesLayer addTrajectoires(TrackFilesReader reader){
+		if(reader instanceof LPLNReader){
+			return this.addTrajectoires((LPLNReader)reader);
+		} else if(reader instanceof GEOReader){
+			return this.addTrajectoires((GEOReader)reader);
+		} else if(reader instanceof OPASReader){
+			return this.addTrajectoires((OPASReader)reader);
 		}
 		return null;
 	}
@@ -1148,7 +1154,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	private TrajectoriesLayer addTrajectoires(LPLNReader lpln){
 		LPLNTracksLayer trajLayer = new LPLNTracksLayer();
 		this.toggleLayer(trajLayer, true);
-		for(LPLNTrack track : lpln.getTracks()){
+		for(Track track : lpln.getTracks()){
 			trajLayer.addTrack(track);
 		}
 		return trajLayer;
@@ -1163,7 +1169,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		GEOTracksLayer trajLayer = new GEOTracksLayer();
 		this.toggleLayer(trajLayer, true);
 
-		for(GEOTrack track : geo.getTracks()){
+		for(Track track : geo.getTracks()){
 			trajLayer.addTrack(track);
 		}
 		return trajLayer;
@@ -1176,7 +1182,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public TrajectoriesLayer addTrajectoires(OPASReader opas) {
 		OPASTracksLayer trajLayer = new OPASTracksLayer();
 		this.toggleLayer(trajLayer, true);
-		for(OPASTrack track : opas.getTracks()){
+		for(Track track : opas.getTracks()){
 			trajLayer.addTrack(track);
 		}
 		return trajLayer;

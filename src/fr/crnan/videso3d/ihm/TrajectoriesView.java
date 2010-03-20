@@ -24,7 +24,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
@@ -44,6 +43,7 @@ import javax.swing.table.AbstractTableModel;
 import org.jdesktop.swingx.JXTable;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
@@ -53,6 +53,7 @@ import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.tracks.Track;
+
 /**
  * Panel de sélection des trajectoires affichées
  * @author Bruno Spyckerelle
@@ -65,8 +66,8 @@ public class TrajectoriesView extends JPanel {
 
 	private VidesoGLCanvas wwd;
 	
-	public TrajectoriesView(final VidesoGLCanvas wwd, File file){
-		this.layer = wwd.addTrajectoires(file);
+	public TrajectoriesView(final VidesoGLCanvas wwd, TrackFilesReader reader){
+		this.layer = wwd.addTrajectoires(reader);
 		this.wwd = wwd;
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

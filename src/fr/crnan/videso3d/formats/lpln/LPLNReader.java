@@ -15,18 +15,16 @@
  */
 package fr.crnan.videso3d.formats.lpln;
 
-import gov.nasa.worldwind.util.Logging;
+import fr.crnan.videso3d.formats.TrackFilesReader;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Vector;
 
 import javax.swing.ProgressMonitorInputStream;
 
@@ -34,26 +32,18 @@ import javax.swing.ProgressMonitorInputStream;
  * Lecteur de fichier LPLN.<br />
  * Un LPLN ne contenant pas les coordonnées des balises, un liaison à une base de donnée Stip est nécessaire.
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
-public class LPLNReader {
-
-	private List<LPLNTrack> tracks = new LinkedList<LPLNTrack>();
-
-	private String name;
-
-	public LPLNReader(){
-		super();
-	}
-
+public class LPLNReader extends TrackFilesReader{
+		
 	public LPLNReader(File selectedFile) {
-		try {
-			this.readFile(selectedFile.getAbsolutePath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		super(selectedFile);
 	}
 
+	public LPLNReader(Vector<File> files){
+		super(files);
+	}
+	
 	public static Boolean isLPLNFile(File file){
 		Boolean lpln = false;
 		try {
@@ -77,35 +67,8 @@ public class LPLNReader {
 		return lpln;
 	}
 
-	/**
-	 * @param path
-	 * @throws IllegalArgumentException if <code>path</code> is null
-	 * @throws java.io.IOException
-	 */
-	public void readFile(String path) throws IOException
-	{
-		if (path == null)
-		{
-			String msg = Logging.getMessage("nullValue.PathIsNull");
-			Logging.logger().severe(msg);
-			throw new IllegalArgumentException(msg);
-		}
-
-		this.setName(path);
-
-		java.io.File file = new java.io.File(path);
-		if (!file.exists())
-		{
-			String msg = Logging.getMessage("generic.FileNotFound", path);
-			Logging.logger().severe(msg);
-			throw new FileNotFoundException(path);
-		}
-
-		FileInputStream fis = new FileInputStream(file);
-		this.doReadStream(fis);
-	}
-
-	private void doReadStream(InputStream stream)
+	@Override
+	protected void doReadStream(FileInputStream stream)
 	{
 		String sentence;
 
@@ -127,7 +90,7 @@ public class LPLNReader {
 					if(sentence.startsWith("-                           NUMERO PLN")){
 						//nouveau track et enregistrement du précédent si besoin
 						if(track != null) {
-							if(track.getNumPoints() > 0) this.tracks.add(track);
+							if(track.getNumPoints() > 0) this.getTracks().add(track);
 							//réinitialisation des compteurs
 							count=0;
 							balisesFound = false;
@@ -166,18 +129,6 @@ public class LPLNReader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private void setName(String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public List<LPLNTrack> getTracks(){
-		return tracks;
 	}
 
 }
