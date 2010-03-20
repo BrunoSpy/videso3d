@@ -15,42 +15,32 @@
 */
 package fr.crnan.videso3d.formats.geo;
 
-import gov.nasa.worldwind.util.Logging;
+import fr.crnan.videso3d.formats.TrackFilesReader;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Vector;
 
 import javax.swing.ProgressMonitorInputStream;
 
 /**
  * Lecteur de fichiers Elvira GEO.<br />
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.2
  */
-public class GEOReader {
-
-private List<GEOTrack> tracks = new LinkedList<GEOTrack>();
+public class GEOReader extends TrackFilesReader{
 	
-	private String name;
-
-	public GEOReader(){
-		super();
+	public GEOReader(Vector<File> files) {
+		super(files);
 	}
 	
 	public GEOReader(File selectedFile) {
-		try {
-			this.readFile(selectedFile.getAbsolutePath());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		super(selectedFile);
 	}
 
 	
@@ -75,35 +65,8 @@ private List<GEOTrack> tracks = new LinkedList<GEOTrack>();
 		return geo;
 	}
 	
-	/**
-     * @param path
-     * @throws IllegalArgumentException if <code>path</code> is null
-     * @throws java.io.IOException
-     */
-    public void readFile(String path) throws IOException
-    {
-        if (path == null)
-        {
-            String msg = Logging.getMessage("nullValue.PathIsNull");
-            Logging.logger().severe(msg);
-            throw new IllegalArgumentException(msg);
-        }
-
-        this.setName(path);
-
-        java.io.File file = new java.io.File(path);
-        if (!file.exists())
-        {
-            String msg = Logging.getMessage("generic.FileNotFound", path);
-            Logging.logger().severe(msg);
-            throw new FileNotFoundException(path);
-        }
-
-        FileInputStream fis = new FileInputStream(file);
-        this.doReadStream(fis);
-    }
-	
-    private void doReadStream(InputStream stream)
+    @Override
+    protected void doReadStream(FileInputStream stream)
     {
         String sentence;
 
@@ -122,7 +85,7 @@ private List<GEOTrack> tracks = new LinkedList<GEOTrack>();
         		{
         			if(!sentence.startsWith("!")  && !sentence.startsWith("Voie")){
         				if(track == null || track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0){
-        					if(track != null) tracks.add(track);
+        					if(track != null) this.getTracks().add(track);
         					track = new GEOTrack(sentence);
         				} else {
         					track.addTrackPoint(sentence);
@@ -130,7 +93,7 @@ private List<GEOTrack> tracks = new LinkedList<GEOTrack>();
         			}
         		} 
         	}
-        	if(track != null) tracks.add(track);
+        	if(track != null) this.getTracks().add(track);
         }
         catch (NoSuchElementException e)
         {
@@ -142,17 +105,5 @@ private List<GEOTrack> tracks = new LinkedList<GEOTrack>();
 			e.printStackTrace();
 		}
     }
-
-	private void setName(String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
-    
-	public List<GEOTrack> getTracks(){
-		return tracks;
-	}
 	
 }
