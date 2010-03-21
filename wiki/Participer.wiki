@@ -1,5 +1,5 @@
 #summary Comment contribuer au projet Videso 3D
-#labels Phase-Implementation Featured
+#labels Phase-Implementation,Featured
 
 = Participer au développement =
 == Configurer Eclipse ==
