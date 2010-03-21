@@ -25,8 +25,13 @@ La façon la plus simple et la plus intuitive est de manipuler directement la vu
 La barre d'outils permet certaines actions particulières :
 
 || * Action * || * Bouton/Champ * || 
+|| Effacer toutes les données et réinitialiser la vue || [http://videso3d.googlecode.com/svn/trunk/src/resources/reset_22.png] ||
+|| Configurer l'application || [http://videso3d.googlecode.com/svn/trunk/src/resources/configure.png] ||
+|| [Analyser Analyser les données Stip/Stpv] || [http://videso3d.googlecode.com/svn/trunk/src/resources/analyze_22.png] ||
+|| [Trajectoires Ajouter des trajectoires] || [http://videso3d.googlecode.com/svn/trunk/src/resources/plus_traj_22.png] ||
+|| [BDD Ajouter/changer une base de données] || [http://videso3d.googlecode.com/svn/trunk/src/resources/database_22.png] ||
 || Ajouter un fond blanc sur la France || Bouton "Fond" ||
 || Mesurer des distances || Bouton "Alidade" ||
 || Activer une projection 2D || Bouton "2D/3D" (projection Mercator par défaut) ||
 || Exagérer l'échelle verticale || Slider "Exagération verticale" ||
-|| Rechercher un élément Stip || Champ de recherche (centre la vue sur l'élément recherché)||
+|| Rechercher un élément Stip ou des coordonnées || Champ de recherche (centre la vue sur l'élément recherché)||

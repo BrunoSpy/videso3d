@@ -1,7 +1,7 @@
 #summary Fonctions principales de Videso 3D
 
 Videso 3D permet d'afficher toutes sortes de données :
- * des [Données données provenant des systèmes] :
+ * des [Donnees données provenant des systèmes] :
    * Données Stip (routes, secteurs, balises, ...) ;
    * Données STR (mosaïques, portées radars, ...) ;
    * Données ODS (cartes Edimap) ;

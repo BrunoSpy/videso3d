@@ -4,7 +4,7 @@
 
 = Gestionnaire de bases de données =
 
-Le gestionnaire de base de données est accessible via le bouton [http://videso3d.googlecode.com/svn/trunk/src/resources/database_22.png] de la barre d'outils.
+Le gestionnaire de base de données est accessible via le bouton [http://videso3d.googlecode.com/svn/trunk/src/resources/database_22.png] de la [WWJ#Actions_accessibles_via_la_barre_d'outils barre d'outils].
 
 = Ajouter une base de données =
 
