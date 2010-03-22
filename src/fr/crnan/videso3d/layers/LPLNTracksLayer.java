@@ -42,6 +42,8 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	
 	private Set<LPLNTrack> selectedTracks = null;
 	
+	private String name = "LPLN";
+	
 	public LPLNTracksLayer(){
 		super();
 		this.add(layer);
@@ -209,6 +211,16 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	public void setStyle(int style) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

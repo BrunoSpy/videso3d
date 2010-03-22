@@ -143,4 +143,13 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 * @param style
 	 */
 	public abstract void setStyle(int style);
+	
+	/**
+	 * Nom du calque. Apparait dans le gestionnaire de calques
+	 */
+	public abstract void setName(String name);
+	/**
+	 * @return Nom du calque
+	 */
+	public abstract String getName();
 }
