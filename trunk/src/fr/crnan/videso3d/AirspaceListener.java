@@ -332,7 +332,9 @@ public class AirspaceListener implements SelectListener {
 				}
 			}
 		} else if (event.getEventAction() == SelectEvent.DRAG){
-			this.wwd.getView().getViewInputHandler().mouseDragged(event.getMouseEvent());
+			if(!(event.getTopObject() instanceof Annotation)) {//ne pas transférer l'évènement pour les annotations
+				this.wwd.getView().getViewInputHandler().mouseDragged(event.getMouseEvent());
+			}
 		}
 	}
 }
