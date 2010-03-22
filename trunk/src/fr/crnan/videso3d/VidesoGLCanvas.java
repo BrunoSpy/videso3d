@@ -1150,9 +1150,14 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 		return null;
 	}
-	
+	/**
+	 * Ajoute des trajectoires au format LPLN
+	 * @param lpln
+	 * @return {@link Layer}
+	 */
 	private TrajectoriesLayer addTrajectoires(LPLNReader lpln){
 		LPLNTracksLayer trajLayer = new LPLNTracksLayer();
+		trajLayer.setName(lpln.getName());
 		this.toggleLayer(trajLayer, true);
 		for(Track track : lpln.getTracks()){
 			trajLayer.addTrack(track);
@@ -1167,9 +1172,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 */
 	private TrajectoriesLayer addTrajectoires(GEOReader geo) {
 		GEOTracksLayer trajLayer = new GEOTracksLayer();
+		trajLayer.setName(geo.getName());
 		if(geo.getTracks().size() > 50) {
 			//au delà de 50 tracks, on change les paramètres de façon à ne pas perdre en perfo
-			//TODO render tout ça configurable
+			//TODO rendre tout ça configurable
 			trajLayer.setStyle(TrajectoriesLayer.STYLE_SIMPLE);
 			trajLayer.setTracksHighlightable(false);
 		}
@@ -1187,6 +1193,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 */
 	public TrajectoriesLayer addTrajectoires(OPASReader opas) {
 		OPASTracksLayer trajLayer = new OPASTracksLayer();
+		trajLayer.setName(opas.getName());
 		this.toggleLayer(trajLayer, true);
 		for(Track track : opas.getTracks()){
 			trajLayer.addTrack(track);
@@ -1195,7 +1202,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	}
 
 	/**
-	 * Nombre d'étapes de l'initialisation (utile pour le splashscreen
+	 * Nombre d'étapes de l'initialisation (utile pour le splashscreen)
 	 * @return int
 	 */
 	public int getNumberInitSteps() {

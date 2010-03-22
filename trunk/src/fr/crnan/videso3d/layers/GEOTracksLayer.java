@@ -54,6 +54,8 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	
 	private int style = TrajectoriesLayer.STYLE_CURTAIN;
 	
+	private String name = "Trajectoires GEO";
+	
 	public GEOTracksLayer(){
 		super();
 		this.add(layer);
@@ -240,6 +242,16 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	public void setStyle(int style) {
 		this.style = style;
 		this.update();
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

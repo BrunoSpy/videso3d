@@ -42,6 +42,8 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 	
 	private RenderableLayer layer = new RenderableLayer();
 	
+	private String name = "Trajectoires OPAS";
+	
 	public OPASTracksLayer() {
 		super();
 		this.add(layer);
@@ -215,5 +217,15 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 	public void setStyle(int style) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
 	}
 }
