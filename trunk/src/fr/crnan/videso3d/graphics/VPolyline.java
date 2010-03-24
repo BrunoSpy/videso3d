@@ -102,6 +102,8 @@ public class VPolyline extends Polyline
         gl.glPushAttrib(attrBits);
         dc.getView().pushReferenceCenter(dc, this.referenceCenterPoint);
 
+        boolean projectionOffsetPushed = false; // keep track for error recovery
+        
         try
         {
             if (!dc.isPickingMode())
@@ -144,8 +146,10 @@ public class VPolyline extends Polyline
                 gl.glLineWidth((float) this.getLineWidth());
 
 
-            if (this.isFollowTerrain())
-                this.pushOffest(dc);
+            if (this.isFollowTerrain()){
+            	dc.pushProjectionOffest(0.99);
+            	projectionOffsetPushed = true;
+            }
 
             for (int i=0;i< this.currentSpans.size();i++)
             {
@@ -210,38 +214,16 @@ public class VPolyline extends Polyline
                 }
             }
 
-            if (this.isFollowTerrain())
-                this.popOffest(dc);
+           
         }
         finally
         {
+        	if (projectionOffsetPushed)
+                dc.popProjectionOffest();
+        	
             gl.glPopAttrib();
             dc.getView().popReferenceCenter(dc);
         }
-    }
-
-    private void pushOffest(DrawContext dc)
-    {
-        // Modify the projection transform to shift the depth values slightly toward the camera in order to
-        // ensure the lines are selected during depth buffering.
-        GL gl = dc.getGL();
-
-        float[] pm = new float[16];
-        gl.glGetFloatv(GL.GL_PROJECTION_MATRIX, pm, 0);
-        pm[10] *= 0.99; // TODO: See Lengyel 2 ed. Section 9.1.2 to compute optimal/minimal offset
-
-        gl.glPushAttrib(GL.GL_TRANSFORM_BIT);
-        gl.glMatrixMode(GL.GL_PROJECTION);
-        gl.glPushMatrix();
-        gl.glLoadMatrixf(pm, 0);
-    }
-
-    private void popOffest(DrawContext dc)
-    {
-        GL gl = dc.getGL();
-        gl.glMatrixMode(GL.GL_PROJECTION);
-        gl.glPopMatrix();
-        gl.glPopAttrib();
     }
     
     @Override
@@ -262,7 +244,7 @@ public class VPolyline extends Polyline
             return;
 
         Position posA = ((ArrayList<Position>)this.getPositions()).get(0);
-        Position posGrdA = new Position(posA.getLatLon(), 0);
+        Position posGrdA = new Position(posA.getLatitude(), posA.getLongitude(), 0);
         Vec4 ptA = this.computePoint(dc, posA, true);
         Vec4 grdA =  this.computePoint(dc, posGrdA, true);
         for (int i = 1; i <= ((ArrayList<Position>)this.getPositions()).size(); i++)
@@ -271,11 +253,11 @@ public class VPolyline extends Polyline
             Position posGrdB;
             if (i < ((ArrayList<Position>)this.getPositions()).size()){
                 posB = ((ArrayList<Position>)this.getPositions()).get(i);
-                posGrdB = new Position(posB.getLatLon(), 0);
+                posGrdB = new Position(posB.getLatitude(), posB.getLongitude(), 0);
             }
             else if (this.isClosed()) {
                 posB = ((ArrayList<Position>)this.getPositions()).get(0);
-                posGrdB = new Position(posB.getLatLon(), 0);
+                posGrdB = new Position(posB.getLatitude(), posB.getLongitude(), 0);
             }
             else
                 break;
