@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
@@ -36,7 +37,7 @@ import fr.crnan.videso3d.ihm.components.TitledPanel;
 /**
  * Résultats de données Stip/Stpv sur une balise/terrain
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class BaliseResultPanel extends ResultPanel {
 
@@ -51,22 +52,52 @@ public class BaliseResultPanel extends ResultPanel {
 			e.printStackTrace();
 		}
 		
+		Component panel = null;
 		
 		JPanel top = new JPanel();
 		top.setLayout(new BoxLayout(top, BoxLayout.X_AXIS));
-		if(stip) top.add(this.createConsignesTable(balise));
-		if(stpv) top.add(this.createLieu26Table(balise));
-		if(stpv) top.add(this.createLieu27Table(balise));
+		
+		JPanel bottom = null;
+		
+		Vector<Component> panels = new Vector<Component>();
+		
+		if(stip && (panel = this.createConsignesTable(balise)) != null) {
+			panels.add(panel);
+		}
+		if(stpv && (panel = this.createLieu26Table(balise)) != null) {
+			panels.add(panel);
+		}
+		if(stpv && (panel = this.createLieu27Table(balise)) != null) {
+			panels.add(panel);
+		}
+		if(stpv && (panel = this.createLieu6Table(balise)) != null){
+			panels.add(panel);
+		}
+		if(stpv && (panel = this.createLieu8Table(balise)) != null){
+			panels.add(panel);
+		}
+		if(stpv && (panel = this.createLieu91Table(balise)) != null){
+			panels.add(panel);
+		}
+		
+		if(panels.size() <= 2){ //cas particulier, en dessous de 2 éléments, on mets les résultats sur une seule ligne
+			for(Component c : panels) {
+				top.add(c);
+			}
+		} else {
+			bottom = new JPanel();
+			bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
+			int middle = panels.size() /2;
+			for(int i = 0; i < middle; i++){
+				top.add(panels.get(i));
+			}
+			for(int i = middle; i<panels.size(); i++){
+				bottom.add(panels.get(i));
+			}
+		}
 		
 		this.add(top);
-		
-		JPanel bottom = new JPanel();
-		bottom.setLayout(new BoxLayout(bottom, BoxLayout.X_AXIS));
-		if(stpv) bottom.add(this.createLieu6Table(balise));
-		if(stpv) bottom.add(this.createLieu8Table(balise));
-		if(stpv) bottom.add(this.createLieu91Table(balise));
-		
-		this.add(bottom);
+		if(bottom != null) this.add(bottom);
 	}
 
 
@@ -98,15 +129,18 @@ public class BaliseResultPanel extends ResultPanel {
 		} catch(Exception e){
 			e.printStackTrace();
 		}
-		
-		table.setModel(model);
-		table.packAll();
+		if(model.getRowCount() > 0){
+			table.setModel(model);
+			table.packAll();
 
-		JPanel lieux91 = new JPanel();
-		lieux91.setLayout(new BorderLayout());
-		lieux91.add(new TitledPanel("TFL (lieu 91)"), BorderLayout.PAGE_START);
-		lieux91.add(new JScrollPane(table), BorderLayout.CENTER);
-		return lieux91;
+			JPanel lieux91 = new JPanel();
+			lieux91.setLayout(new BorderLayout());
+			lieux91.add(new TitledPanel("TFL (lieu 91)"), BorderLayout.PAGE_START);
+			lieux91.add(new JScrollPane(table), BorderLayout.CENTER);
+			return lieux91;
+		} else {
+			return null;
+		}
 	}
 
 
@@ -135,14 +169,19 @@ public class BaliseResultPanel extends ResultPanel {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		table.setModel(model);
-		table.packAll();
+		if(model.getRowCount() > 0){
+		
+			table.setModel(model);
+			table.packAll();
 
-		JPanel lieux8 = new JPanel();
-		lieux8.setLayout(new BorderLayout());
-		lieux8.add(new TitledPanel("City pairs (lieu 8)"), BorderLayout.PAGE_START);
-		lieux8.add(new JScrollPane(table), BorderLayout.CENTER);
-		return lieux8;
+			JPanel lieux8 = new JPanel();
+			lieux8.setLayout(new BorderLayout());
+			lieux8.add(new TitledPanel("City pairs (lieu 8)"), BorderLayout.PAGE_START);
+			lieux8.add(new JScrollPane(table), BorderLayout.CENTER);
+			return lieux8;
+		} else {
+			return null;
+		}
 	}
 
 
@@ -173,15 +212,18 @@ public class BaliseResultPanel extends ResultPanel {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		
-		table.setModel(model);
-		table.packAll();
+		if(model.getRowCount() > 0){
+			table.setModel(model);
+			table.packAll();
 
-		JPanel lieux6 = new JPanel();
-		lieux6.setLayout(new BorderLayout());
-		lieux6.add(new TitledPanel("XFL (lieu 6)"), BorderLayout.PAGE_START);
-		lieux6.add(new JScrollPane(table), BorderLayout.CENTER);
-		return lieux6;
+			JPanel lieux6 = new JPanel();
+			lieux6.setLayout(new BorderLayout());
+			lieux6.add(new TitledPanel("XFL (lieu 6)"), BorderLayout.PAGE_START);
+			lieux6.add(new JScrollPane(table), BorderLayout.CENTER);
+			return lieux6;
+		} else {
+			return null;
+		}
 	}
 
 	private Component createLieu27Table(String balise) {
@@ -208,14 +250,19 @@ public class BaliseResultPanel extends ResultPanel {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		table.setModel(model);
-		table.packAll();
 
-		JPanel lieux27 = new JPanel();
-		lieux27.setLayout(new BorderLayout());
-		lieux27.add(new TitledPanel("FL tabulés en sortie (lieu 27)"), BorderLayout.PAGE_START);
-		lieux27.add(new JScrollPane(table), BorderLayout.CENTER);
-		return lieux27;
+		if(model.getRowCount() > 0){
+			table.setModel(model);
+			table.packAll();
+
+			JPanel lieux27 = new JPanel();
+			lieux27.setLayout(new BorderLayout());
+			lieux27.add(new TitledPanel("FL tabulés en sortie (lieu 27)"), BorderLayout.PAGE_START);
+			lieux27.add(new JScrollPane(table), BorderLayout.CENTER);
+			return lieux27;
+		} else {
+			return null;
+		}
 	}
 
 	private Component createLieu26Table(String balise) {
@@ -242,14 +289,18 @@ public class BaliseResultPanel extends ResultPanel {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		table.setModel(model);
-		table.packAll();
+		if(model.getRowCount() > 0){
+			table.setModel(model);
+			table.packAll();
 
-		JPanel lieux26 = new JPanel();
-		lieux26.setLayout(new BorderLayout());
-		lieux26.add(new TitledPanel("FL tabulés en entrée (lieu 26)"), BorderLayout.PAGE_START);
-		lieux26.add(new JScrollPane(table), BorderLayout.CENTER);
-		return lieux26;
+			JPanel lieux26 = new JPanel();
+			lieux26.setLayout(new BorderLayout());
+			lieux26.add(new TitledPanel("FL tabulés en entrée (lieu 26)"), BorderLayout.PAGE_START);
+			lieux26.add(new JScrollPane(table), BorderLayout.CENTER);
+			return lieux26;
+		} else { 
+			return null;
+		}
 	}
 
 	private Component createConsignesTable(String balise) {
@@ -276,14 +327,18 @@ public class BaliseResultPanel extends ResultPanel {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		table.setModel(model);
-		table.packAll();
+		if(model.getRowCount() > 0){
+			table.setModel(model);
+			table.packAll();
 
-		JPanel consignes = new JPanel();
-		consignes.setLayout(new BorderLayout());
-		consignes.add(new TitledPanel("Consignes"), BorderLayout.PAGE_START);
-		consignes.add(new JScrollPane(table), BorderLayout.CENTER);
-		return consignes;
+			JPanel consignes = new JPanel();
+			consignes.setLayout(new BorderLayout());
+			consignes.add(new TitledPanel("Consignes"), BorderLayout.PAGE_START);
+			consignes.add(new JScrollPane(table), BorderLayout.CENTER);
+			return consignes;
+		} else { 
+			return null;
+		}
 	}
 
 	@Override

@@ -226,7 +226,7 @@ public class DataExplorer extends JPanel {
 		} else {
 			try {
 				if(DatabaseManager.getCurrentExsa() != null){
-					int i = tabs.indexOfComponent(exsa);
+					int i = tabs.indexOfComponent(exsaPane);
 					wwd.removeMosaiques();
 					wwd.removeRadars();
 					exsa = new StrView(wwd);
