@@ -41,6 +41,7 @@ public final class Configuration {
 	
 	public static final String NETWORK_PROXY_HOST = "fr.crnan.videso3d.network.proxy_host";
 	public static final String NETWORK_PROXY_PORT = "fr.crnan.videso3d.network.proxy_port";
+	public static final String DEFAULT_REP = "fr.crnan.videso3d.files.defaultrep";
 	
 	private static Configuration instance = new Configuration();
 

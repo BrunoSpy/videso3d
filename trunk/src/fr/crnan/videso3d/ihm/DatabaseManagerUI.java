@@ -52,6 +52,7 @@ import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.edimap.Cartes;
 import fr.crnan.videso3d.exsa.Exsa;
+import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.pays.Pays;
 import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.stpv.Stpv;
@@ -126,7 +127,7 @@ public class DatabaseManagerUI extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
-					JFileChooser fileChooser = new JFileChooser();
+					VFileChooser fileChooser = new VFileChooser();
 					fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 					if(fileChooser.showOpenDialog(add) == JFileChooser.APPROVE_OPTION){
 						MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
@@ -196,20 +197,16 @@ public class DatabaseManagerUI extends JDialog {
 		} else if(files.contains(new File(file.getAbsolutePath()+"/PAYS"))) {
 			Pays pays = new Pays(file.getAbsolutePath());
 			this.getDatas(pays, "Import des contours des pays", "PAYS");
-		} else if(files.contains(new File(file.getAbsolutePath()+"/CartesDynamiques.csv"))){
-//			Ods ods = new Ods(file.absolutePath(), this.db);
-//			this.getDatas(ods, "Import des données BDSATCATM");
-		} 
-		else if ( files.contains(new File(file.getAbsolutePath()+"/output.xml"))){
+		} else if ( files.contains(new File(file.getAbsolutePath()+"/output.xml"))){
 			//Radio radio = new Radio(file.getAbsolutePath());
-			
-				Radio radio = new Radio();					
-				this.getDatas(radio,"Import des données Radio","RadioCov");
+
+			Radio radio = new Radio();					
+			this.getDatas(radio,"Import des données Radio","RadioCov");
 		}		
 		else {
 			System.out.println("Pas de fichier de base de données trouvé");
-    	}
-    	
+		}
+
 	}
 	
 	/**
