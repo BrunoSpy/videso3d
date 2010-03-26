@@ -37,7 +37,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -64,6 +63,7 @@ import fr.crnan.videso3d.formats.opas.OPASFileFilter;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
+import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
@@ -384,13 +384,13 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final JFileChooser fileChooser = new JFileChooser();
-				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				final VFileChooser fileChooser = new VFileChooser();
+				fileChooser.setFileSelectionMode(VFileChooser.FILES_ONLY);
 				fileChooser.setMultiSelectionEnabled(true);
 				fileChooser.addChoosableFileFilter(new OPASFileFilter());
 				fileChooser.addChoosableFileFilter(new GEOFileFilter());
 				fileChooser.addChoosableFileFilter(new LPLNFileFilter());
-				if(fileChooser.showOpenDialog(trajectoires) == JFileChooser.APPROVE_OPTION){
+				if(fileChooser.showOpenDialog(trajectoires) == VFileChooser.APPROVE_OPTION){
 
 					new SwingWorker<String, Integer>(){
 						@Override
