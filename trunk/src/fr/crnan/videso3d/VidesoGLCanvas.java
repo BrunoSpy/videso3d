@@ -88,16 +88,13 @@ import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.util.DataConfigurationFilter;
 import gov.nasa.worldwind.util.DataConfigurationUtils;
 import gov.nasa.worldwind.util.Logging;
-import gov.nasa.worldwind.util.UnitsFormat;
 import gov.nasa.worldwind.util.WWIO;
-import gov.nasa.worldwind.util.measure.MeasureTool;
-import gov.nasa.worldwind.util.measure.MeasureToolController;
 import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.6.1
+ * @version 0.7.1
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
@@ -253,14 +250,14 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
     public void insertBeforePlacenames(Layer layer)
     {
         // Insert the layer into the layer list just before the placenames.
-        int compassPosition = 0;
+        int position = 0;
         LayerList layers = this.getModel().getLayers();
         for (Layer l : layers)
         {
             if (l instanceof PlaceNameLayer)
-                compassPosition = layers.indexOf(l);
+                position = layers.indexOf(l);
         }
-        layers.add(compassPosition, layer);
+        layers.add(position, layer);
     }
     
 	/**
@@ -336,11 +333,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public VMeasureTool getMeasureTool(){
 		if(measureTool == null){
 			measureTool = new VMeasureTool(this);
-			measureTool.setController(new MeasureToolController());
-			measureTool.setMeasureShapeType(MeasureTool.SHAPE_LINE);
-			measureTool.setFollowTerrain(true);
-			measureTool.setShowAnnotation(true);
-			measureTool.setUnitsFormat(new UnitsFormat(UnitsFormat.NAUTICAL_MILES, UnitsFormat.SQUARE_KILOMETERS, true));
 		}
 		return measureTool;
 	}
@@ -487,12 +479,19 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			while(rs.next()){
 				Balise2D balise = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0));
 				String annotation = "Balise "+rs.getString("name") +" ("+rs.getString("definition")+")";
-				int plancher = 0;
-				for(int i = 1; i<= 9; i++){
-					int plafond = rs.getInt("limit"+i);
-					if(plafond != -1) annotation += "\nDu "+plancher+" au "+plafond+" : "+rs.getString("sect"+i);
-					plancher = plafond;
+				int plafond = -1;
+				String secteur = null;
+				for(int i = 9; i>= 1; i--){
+					int plancher = rs.getInt("limit"+i);
+					if(plancher != -1){
+						if(secteur!=null){
+							annotation += "\nDu "+plafond+" au "+plancher+" : "+secteur;
+						}	
+						plafond = plancher;
+						secteur = rs.getString("sect"+i);
+					}
 				}
+				if(secteur != null) annotation += "\nDu "+plafond+" au "+0+" : "+secteur;
 				balise.setAnnotation(annotation);
 				if(publicated == 1){
 					balisesPub.addBalise(balise);

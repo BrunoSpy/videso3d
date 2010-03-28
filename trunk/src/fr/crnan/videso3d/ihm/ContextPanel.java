@@ -161,12 +161,21 @@ public class ContextPanel extends JPanel implements SelectListener {
 			});
 			balise.add(new JLabel("<html><b>Affectée au centre</b> : "+rs.getString("centre")+"</html>"));
 			balise.add(new JLabel("<html><b>Affectée aux secteurs</b> :</html>"));
-			int plancher = 0;
-			for(int i = 1; i<= 9; i++){
-				int plafond = rs.getInt("limit"+i);
-				if(plafond != -1) balise.add(new JLabel("\n   du "+plancher+" au "+plafond+" : "+rs.getString("sect"+i)));
-				plancher = plafond;
+		
+			int plafond = -1;
+			String secteur = null;
+			for(int i = 9; i>= 1; i--){
+				int plancher = rs.getInt("limit"+i);
+				if(plancher != -1){
+					if(secteur!=null){
+						balise.add(new JLabel("\nDu "+plafond+" au "+plancher+" : "+secteur));
+					}	
+					plafond = plancher;
+					secteur = rs.getString("sect"+i);
+				}
 			}
+			if(secteur != null) balise.add(new JLabel("\nDu "+plafond+" au "+0+" : "+secteur));
+
 			content.add(balise);
 			
 
