@@ -18,17 +18,25 @@ package fr.crnan.videso3d.util;
 
 import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.util.UnitsFormat;
 import gov.nasa.worldwind.util.measure.MeasureTool;
+import gov.nasa.worldwind.util.measure.MeasureToolController;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class VMeasureTool extends MeasureTool {
 
 	
 	public VMeasureTool(WorldWindow wwd) {
 		super(wwd);
+		this.setController(new MeasureToolController());
+		this.setMeasureShapeType(MeasureTool.SHAPE_LINE);
+		this.setFollowTerrain(true);
+		this.setShowAnnotation(true);
+		this.setUnitsFormat(new UnitsFormat(UnitsFormat.NAUTICAL_MILES, UnitsFormat.SQUARE_KILOMETERS, true));
+	
 	}
 
 	@Override
