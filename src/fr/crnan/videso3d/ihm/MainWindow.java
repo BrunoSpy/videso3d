@@ -181,7 +181,7 @@ public class MainWindow extends JFrame {
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
 
 		//Titre de la fenêtre
-		this.setTitle("Videso 3D (0.7.1)");
+		this.setTitle("Videso 3D (0.7.2)");
 
 		//Fermeture de l'application
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
