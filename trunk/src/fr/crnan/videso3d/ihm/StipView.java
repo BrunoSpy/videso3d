@@ -294,21 +294,21 @@ public class StipView extends JPanel {
 				if(source == balisesPubChk){
 					((BaliseLayer)wwd.getBalisesPubLayer()).showAll();
 					((BaliseLayer)wwd.getBalisesPubLayer()).setLocked(true);
-					wwd.toggleLayer(wwd.getBalisesPubLayer(), true);
+//					wwd.toggleLayer(wwd.getBalisesPubLayer(), true);
 				} else if(source == balisesNPChk){
 					((BaliseLayer)wwd.getBalisesNPLayer()).showAll();
 					((BaliseLayer)wwd.getBalisesNPLayer()).setLocked(true);
-					wwd.toggleLayer(wwd.getBalisesNPLayer(), true);
+//					wwd.toggleLayer(wwd.getBalisesNPLayer(), true);
 				}
 			} else {
 				if(source == balisesPubChk){
-					((BaliseLayer)wwd.getBalisesPubLayer()).removeAllBalises();
 					((BaliseLayer)wwd.getBalisesPubLayer()).setLocked(false);
-					wwd.toggleLayer(wwd.getBalisesPubLayer(), false);
+					((BaliseLayer)wwd.getBalisesPubLayer()).removeAllBalises();
+//					wwd.toggleLayer(wwd.getBalisesPubLayer(), false);
 				} else if(source == balisesNPChk){
-					((BaliseLayer)wwd.getBalisesNPLayer()).removeAllBalises();
 					((BaliseLayer)wwd.getBalisesNPLayer()).setLocked(false);
-					wwd.toggleLayer(wwd.getBalisesNPLayer(), false);
+					((BaliseLayer)wwd.getBalisesNPLayer()).removeAllBalises();
+//					wwd.toggleLayer(wwd.getBalisesNPLayer(), false);
 				}
 			}
 		}      
@@ -348,21 +348,16 @@ public class StipView extends JPanel {
 					wwd.getRoutes2DLayer().hideAllRoutesPDR();
 					wwd.getRoutes3DLayer().hideAllRoutesPDR();
 				}
-			} else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("AWY")) {
+				//TODO corriger la condition
+			} else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("AWY") ||
+					((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("PDR")) {
 				if(e.isCheckedPath()){
-					wwd.getRoutes2DLayer().displayRouteAwy(name);
-					wwd.getRoutes3DLayer().displayRouteAwy(name);
+					wwd.getRoutes2DLayer().displayRoute(name);
+					wwd.getRoutes3DLayer().displayRoute(name);
 				} else {
-					wwd.getRoutes2DLayer().hideRouteAwy(name);
-					wwd.getRoutes3DLayer().hideRouteAwy(name);
-				}
-			} else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("PDR")) {
-				if(e.isCheckedPath()){
-					wwd.getRoutes2DLayer().displayRoutePDR(name);
-					wwd.getRoutes3DLayer().displayRoutePDR(name);
-				} else {
-					wwd.getRoutes2DLayer().hideRoutePDR(name);
-					wwd.getRoutes3DLayer().hideRoutePDR(name);
+					wwd.getRoutes2DLayer().hideRoute(name);
+					wwd.getRoutes3DLayer().hideRoute(name);
+					wwd.hideRoutesBalises(name);
 				}
 			} 
 		}

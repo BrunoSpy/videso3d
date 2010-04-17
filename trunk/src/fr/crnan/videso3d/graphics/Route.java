@@ -15,6 +15,14 @@
  */
 package fr.crnan.videso3d.graphics;
 
+import java.util.LinkedList;
+import java.util.List;
+
+/**
+ * Représentation graphique d'une route
+ * @author Bruno Spyckerelle
+ * @version 0.2
+ */
 public interface Route {
 
 	/**
@@ -24,5 +32,16 @@ public interface Route {
 	
 	public void setType(Type type);
 	
+	public Type getType();
+	
 	public String getName();
+	
+	public void setBalises(List<String> balises);
+	
+	public void addBalise(String balise);
+	
+	public List<String> getBalises();
+	
+	public void highlight(boolean highlight);
+
 }

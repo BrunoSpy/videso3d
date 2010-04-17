@@ -132,6 +132,7 @@ public class AirspaceListener implements SelectListener {
 						BasicShapeAttributes highliteAttrs = new BasicShapeAttributes((ShapeAttributes) lastAttrs);
 						highliteAttrs.setInteriorMaterial(new Material(Pallet.makeBrighter(((ShapeAttributes)lastAttrs).getInteriorMaterial().getDiffuse())));
 						highliteAttrs.setOutlineMaterial(new Material(Pallet.makeBrighter(((ShapeAttributes)lastAttrs).getOutlineMaterial().getDiffuse())));
+						highliteAttrs.setOutlineWidth(2.0);
 						((SurfaceShape) lastHighlit).setAttributes(highliteAttrs);
 					} else if(event.getTopObject() instanceof Balise2D) {
 						lastHighlit = (Balise2D)o;
@@ -213,6 +214,15 @@ public class AirspaceListener implements SelectListener {
 								context.open();
 							}
 						});
+						JMenuItem supprItem = new JMenuItem("Supprimer");				
+						menu.add(supprItem);
+						supprItem.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								wwd.removeSecteur3D((Secteur3D)event.getTopObject());
+							}
+						});
 					} else if(event.getTopObject() instanceof Route3D) {
 						JMenuItem contextItem = new JMenuItem("Informations...");				
 						menu.add(contextItem);
@@ -222,6 +232,17 @@ public class AirspaceListener implements SelectListener {
 							public void actionPerformed(ActionEvent e) {
 								context.showRoute(((Route3D)event.getTopObject()).getName());
 								context.open();
+							}
+						});
+						JMenuItem supprItem = new JMenuItem("Supprimer");				
+						menu.add(supprItem);
+						supprItem.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								Route3D r = (Route3D) event.getTopObject();
+								wwd.getRoutes3DLayer().hideRoute(r.getName());
+								wwd.hideRoutesBalises(r.getName());
 							}
 						});
 					}
@@ -260,6 +281,17 @@ public class AirspaceListener implements SelectListener {
 							public void actionPerformed(ActionEvent e) {
 								context.showRoute(((Route2D)event.getTopObject()).getName());
 								context.open();
+							}
+						});
+						JMenuItem supprItem = new JMenuItem("Supprimer");				
+						menu.add(supprItem);
+						supprItem.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								Route2D r = (Route2D) event.getTopObject();
+								wwd.getRoutes2DLayer().hideRoute(r.getName());
+								wwd.hideRoutesBalises(r.getName());
 							}
 						});
 					}

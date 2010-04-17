@@ -18,6 +18,7 @@ package fr.crnan.videso3d.layers;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import fr.crnan.videso3d.graphics.Balise2D;
 import gov.nasa.worldwind.avlist.AVKey;
@@ -26,7 +27,7 @@ import gov.nasa.worldwind.avlist.AVKey;
  * Layer contenant les balises.<br />
  * Permet d'afficher une ou plusieurs balises selon leur nom.
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.2
  */
 public class BaliseLayer extends LayerSet {
 
@@ -41,7 +42,11 @@ public class BaliseLayer extends LayerSet {
 	private BaliseMarkerLayer markerLayer = new BaliseMarkerLayer();
 	
 	private Boolean lock = false;
-	
+	/**
+	 * Crée un nouveau calque de balises
+	 * @param name Nom du calque
+	 * @param amsl Si vrai, AMSL, sinon AGL.
+	 */
 	public BaliseLayer(String name, Boolean amsl){
 		this.setName(name);
 		this.add(textLayer);
@@ -97,7 +102,12 @@ public class BaliseLayer extends LayerSet {
 		}
 	}
 	
-	private void showBalise(Balise2D b){
+	/**
+	 * Affiche une balise.<br />
+	 * Cett balise doit d'abord être ajoutée grâce à <code>addBalise(Balise2D balise)</code>
+	 * @param b Balise à affichers
+	 */
+	public void showBalise(Balise2D b){
 		if(!balisesActives.contains(b)){
 			balisesActives.add(b);
 			textLayer.addGeographicText(b.getUserFacingText());
@@ -107,8 +117,28 @@ public class BaliseLayer extends LayerSet {
 	}
 	
 	/**
+	 * Affiche une liste de balises
+	 * @param balises
+	 */
+	public void showBalises(List<String> balises) {
+		for(String b : balises){
+			this.showBalise(b);
+		}
+	}
+	
+	/**
+	 * Enlève une liste de balises de la vue
+	 * @param balises
+	 */
+	public void unshowBalises(List<String> balises) {
+		for(String b : balises){
+			this.removeBalise(b);
+		}
+	}
+	
+	/**
 	 * Enlève une balise de la vue.<br />
-	 * Cettebalise est toujours accessible pour être à nouveau affichée plus tard.
+	 * Cette balise est toujours accessible pour être à nouveau affichée plus tard.
 	 * @param name
 	 */
 	public void removeBalise(String name){
@@ -118,8 +148,13 @@ public class BaliseLayer extends LayerSet {
 		}
 	}
 	
-	private void removeBalise(Balise2D b) {
-		if(balisesActives.contains(b)){
+	/**
+	 * Enlève une balise de la vue.<br />
+	 * Cette balise est toujours accessible pour être à nouveau affichée plus tard.
+	 * @param name
+	 */
+	public void removeBalise(Balise2D b) {
+		if(!this.isLocked() && balisesActives.contains(b)){
 			balisesActives.remove(b);
 			textLayer.removeGeographicText(b.getUserFacingText());
 			markerLayer.removeMarker(b.getMarker());
@@ -135,6 +170,7 @@ public class BaliseLayer extends LayerSet {
 			textLayer.removeAllGeographicTexts();
 			markerLayer.setMarkers(null);
 			balisesActives.clear();
+			this.firePropertyChange(AVKey.LAYER, null, this);
 		}
 	}
 	
@@ -142,13 +178,13 @@ public class BaliseLayer extends LayerSet {
 	 * Supprime toutes les balises
 	 */
 	public void eraseAllBalises(){
-			textLayer.removeAllGeographicTexts();
-			markerLayer.setMarkers(null);
-			balisesActives.clear();
-			balises.clear();
+		textLayer.removeAllGeographicTexts();
+		markerLayer.setMarkers(null);
+		balisesActives.clear();
+		balises.clear();
 	}
-	
-	
+
+
 	public Boolean isLocked(){
 		return this.lock;
 	}
