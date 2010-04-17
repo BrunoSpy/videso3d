@@ -17,155 +17,140 @@
 package fr.crnan.videso3d.layers;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.HashSet;
 
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route3D;
+import fr.crnan.videso3d.graphics.Route.Type;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 /**
  * Layer destiné à afficher les routes<br />
  * Permet d'afficher sélectivement une ou plusieurs routes, selon leur nom ou leur type
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
-
+	
 	/**
-	 * Liste des routes PDR
+	 * Ensemble des routes
 	 */
-	private HashMap<String, Route3D> pdr = new HashMap<String, Route3D>();
-	/**
-	 * Liste des AWY
-	 */
-	private HashMap<String, Route3D> awy = new HashMap<String, Route3D>();
-	/**
-	 * Liste des PDR actives
-	 */
-	private LinkedList<Route3D> pdrActives = new LinkedList<Route3D>();
-	/**
-	 * Liste des AWY actives
-	 */
-	private LinkedList<Route3D> awyActives = new LinkedList<Route3D>();
-
-	/**
-	 * Nouveau Layer
-	 * @param name Nom du layer
-	 */
-	public Routes3DLayer(String name){
-		this.setName(name);
-		this.setEnableAntialiasing(true);
+	private HashMap<String, Route3D> routes = new HashMap<String, Route3D>();
+	
+	private HashSet<Route3D> displayedRoutes = new HashSet<Route3D>();
+	
+	public Routes3DLayer(String string) {
+		this.setName(string);
 	}
 
-	public void addRoutePDR(Route route, String name){
-		if(route instanceof Route3D) {
-			pdr.put(name, (Route3D) route);
+	@Override
+	public void addRoute(Route route, String name) {
+		if(route instanceof Route3D)
+			this.routes.put(name, (Route3D) route);
+	}
+
+	@Override
+	public void displayAllRoutes() {
+		for(Route3D r : routes.values()){
+			this.displayRoute(r);
 		}
 	}
-	
-	public void addRouteAwy(Route route, String name){
-		if(route instanceof Route3D) {
-			awy.put(name, (Route3D) route);
-		} 
-	}
-	
-	public Route3D getRoutePDR(String name){
-		return pdr.get(name);
-	}
-	
-	public Route3D getRouteAwy(String name){
-		return awy.get(name);
+
+	private void displayAllRoutes(Type t){
+		for(Route3D r : routes.values()){
+			if(!displayedRoutes.contains(r)){
+				if(r.getType().compareTo(t) == 0) {
+					this.displayRoute(r);
+				}
+			}
+		}
 	}
 	
 	@Override
-	public void removeAllAirspaces(){
-		super.removeAllAirspaces();
-		pdr.clear();
-		awy.clear();
-		pdrActives.clear();
-		awyActives.clear();
-		this.firePropertyChange(AVKey.LAYER, null, this);
+	public void displayAllRoutesAwy() {
+		this.displayAllRoutes(Type.FIR);
 	}
-	
-	public void displayAllRoutes(){
-		displayAllRoutesAwy();
-		displayAllRoutesPDR();
+
+	@Override
+	public void displayAllRoutesPDR() {
+		this.displayAllRoutes(Type.UIR);
 	}
-	
-	public void hideAllRoutes(){
-		super.removeAllAirspaces();
-		pdrActives.clear();
-		awyActives.clear();
-		this.firePropertyChange(AVKey.LAYER, null, this);
-	}
-	
-	public void displayAllRoutesPDR(){
-		Iterator<Route3D> iterator = pdr.values().iterator();
-		while(iterator.hasNext()){
-			displayRoutePDR(iterator.next());
+
+	private void displayRoute(Route3D r){
+		if(!this.displayedRoutes.contains(r)){
+			displayedRoutes.add(r);
+			this.addAirspace(r);
 		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
-	public void displayAllRoutesAwy(){
-		Iterator<Route3D> iterator = awy.values().iterator();
-		while(iterator.hasNext()){
-			displayRouteAwy(iterator.next());
+	@Override
+	public void displayRoute(String route) {
+		Route3D r = routes.get(route);
+		this.displayRoute(r);
+	}
+
+	@Override
+	public Route getRoute(String name) {
+		return this.routes.get(name);
+	}
+
+	@Override
+	public void hideAllRoutes() {
+		this.displayedRoutes.clear();
+		this.removeAllAirspaces();
+		this.firePropertyChange(AVKey.LAYER, null, this);
+	}
+
+	private void hideRoute(Route3D r){
+		if(this.displayedRoutes.contains(r)){
+			this.displayedRoutes.remove(r);
+			this.removeAirspace(r);
 		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
-	public void hideAllRoutesPDR(){
-		Iterator<Route3D> iterator = pdrActives.iterator();
-		while(iterator.hasNext()){
-			removeAirspace(iterator.next());
+	private void hideAllRoutes(Type t){
+		//copie temporaire pour pouvoir modifier displayedRoutes
+		//sinon on a un accès concurrent impossible
+		HashSet<Route3D> temp = new HashSet<Route3D>(this.displayedRoutes);
+		for(Route3D r : temp){
+			if(r.getType().compareTo(t) == 0){
+				this.displayedRoutes.remove(r);
+				this.removeAirspace(r);
+			}
 		}
-		pdrActives.clear();
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
-	public void hideAllRoutesAWY(){
-		Iterator<Route3D> iterator = awyActives.iterator();
-		while(iterator.hasNext()){
-			removeAirspace(iterator.next());
-		}
-		awyActives.clear();
-		this.firePropertyChange(AVKey.LAYER, null, this);
+	@Override
+	public void hideAllRoutesAWY() {
+		this.hideAllRoutes(Type.FIR);
 	}
+
+	@Override
+	public void hideAllRoutesPDR() {
+		this.hideAllRoutes(Type.UIR);
+	}
+
+	@Override
+	public void hideRoute(String route) {
+		this.hideRoute(this.routes.get(route));
+	}
+
+	@Override
+	public void highlight(String name) {
+		Route3D r = this.routes.get(name);
+		r.highlight(true);
+		this.displayRoute(r);
+	}
+
+	@Override
+	public void unHighlight(String name) {
+		Route3D r = this.routes.get(name);
+		r.highlight(false);
+	}
+
 	
-	private void displayRoutePDR(Route3D r){
-		addAirspace(r);
-		pdrActives.add(r);
-	}
-	
-	public void displayRoutePDR(String route){
-		displayRoutePDR(pdr.get(route));
-		this.firePropertyChange(AVKey.LAYER, null, this);
-	}
-	
-	public void hideRoutePDR(String route){
-		Route3D r = pdr.get(route);
-		removeAirspace(r);
-		pdrActives.remove(r);
-		this.firePropertyChange(AVKey.LAYER, null, this);
-	}
-	
-	private void displayRouteAwy(Route3D r){
-		addAirspace(r);
-		awyActives.add(r);
-	}
-	
-	public void displayRouteAwy(String route){
-		displayRouteAwy(awy.get(route));
-		this.firePropertyChange(AVKey.LAYER, null, this);
-	}
-	
-	public void hideRouteAwy(String route){
-		Route3D r = awy.get(route);
-		removeAirspace(r);
-		awyActives.remove(r);
-		this.firePropertyChange(AVKey.LAYER, null, this);
-	}
 
 }

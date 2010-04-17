@@ -102,7 +102,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 	 */
 	public void showInfo(String name){
 		String type = Stip.getTypeFromName(name);
-		if(name != null){
+		if(name != null && type != null){
 			this.open();
 			if(type.equals(Stip.STIP_BALISE)){
 				this.showBalise(name);
@@ -403,18 +403,42 @@ public class ContextPanel extends JPanel implements SelectListener {
 			
 			JXTaskPane route = new JXTaskPane();
 			route.setTitle("Informations générales");
-			route.add(new AbstractAction() {
+			
+			route.add(new JLabel("<html><b>Espace</b> : "+(rs.getString(3).equals("U")?"UIR":"FIR")+"</html>"));
+			
+			content.add(route);
+			
+			JXTaskPane vue = new JXTaskPane();
+			vue.setTitle("Vue 3D");
+			vue.add(new AbstractAction() {
 				{
-					putValue(Action.NAME, "<html><b>Vue 3D</b> : Afficher la route.</html>");
+					putValue(Action.NAME, "<html>Afficher/centrer la route.</html>");
 				}
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					wwd.highlight(name);
 				}
 			});
-			route.add(new JLabel("<html><b>Espace</b> : "+(rs.getString(3).equals("U")?"UIR":"FIR")+"</html>"));
+			vue.add(new AbstractAction() {
+				{
+					putValue(Action.NAME, "<html>Afficher les balises.</html>");
+				}
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					wwd.showRoutesBalises(name);
+				}
+			});
+			vue.add(new AbstractAction() {
+				{
+					putValue(Action.NAME, "<html>Cacher les balises.</html>");
+				}
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					wwd.hideRoutesBalises(name);
+				}
+			});
+			content.add(vue);
 			
-			content.add(route);
 			content.validate();
 		} catch (SQLException e){
 			e.printStackTrace();

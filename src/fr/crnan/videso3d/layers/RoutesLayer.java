@@ -21,17 +21,13 @@ import fr.crnan.videso3d.graphics.Route;
  * Layer destiné à afficher les routes<br />
  * Permet d'afficher sélectivement une ou plusieurs routes, selon leur nom ou leur type
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public interface RoutesLayer {
 
-	public void addRoutePDR(Route route, String name);
+	public void addRoute(Route route, String name);
 	
-	public void addRouteAwy(Route route, String name);
-	
-	public Route getRoutePDR(String name);
-	
-	public Route getRouteAwy(String name);
+	public Route getRoute(String name);
 		
 	public void displayAllRoutes();
 	
@@ -45,12 +41,12 @@ public interface RoutesLayer {
 	
 	public void hideAllRoutesAWY();
 		
-	public void displayRoutePDR(String route);
+	public void displayRoute(String route);
 	
-	public void hideRoutePDR(String route);
+	public void hideRoute(String route);
 	
-	public void displayRouteAwy(String route);
+	public void highlight(String name);
 	
-	public void hideRouteAwy(String route);
+	public void unHighlight(String name);
 }
 

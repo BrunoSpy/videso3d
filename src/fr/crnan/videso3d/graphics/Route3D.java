@@ -18,6 +18,7 @@ package fr.crnan.videso3d.graphics;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import fr.crnan.videso3d.Pallet;
@@ -32,7 +33,7 @@ import gov.nasa.worldwind.util.RestorableSupport;
 /**
  * Représentation 3D d'une route sous la forme d'un ruban
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
 
@@ -44,7 +45,10 @@ public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
 
 	private GlobeAnnotation annotation;
 	
-
+	private Type type;
+	
+	private List<String> balises;
+	
 	/**
 	 * Nom de la route
 	 */
@@ -65,6 +69,7 @@ public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
 	 * @param type {@link Type}
 	 */
 	public void setType(Type type){
+		this.type = type;
 		switch (type) {
 		case FIR:
 			this.setAltitudes(0, 5943); //FL0 à FL195, en mètres
@@ -220,6 +225,17 @@ public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
 		this.getAttributes().setOutlineWidth(1.0);
 	}
 
+	@Override
+	public void highlight(boolean highlight) {
+		if(highlight){
+			this.getAttributes().setMaterial(Material.YELLOW);
+			this.getAttributes().setOutlineMaterial(Material.YELLOW);
+			this.getAttributes().setOutlineWidth(2.0);
+		} else {
+			this.setDefaultMaterial();
+		}
+	}
+	
 	public void setName(String name){
 		this.name = name;
 		this.setValue("Description", name);
@@ -230,6 +246,31 @@ public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
 		return this.name;
 	}
 
+	
+	
+	@Override
+	public void addBalise(String balise) {
+		if(this.balises == null){
+			this.balises = new LinkedList<String>();
+		}
+		this.balises.add(balise);
+	}
+
+	@Override
+	public List<String> getBalises() {
+		return this.balises;
+	}
+
+	@Override
+	public void setBalises(List<String> balises) {
+		this.balises = balises;
+	}
+
+	@Override
+	public Type getType() {
+		return type;
+	}
+	
 	public double getWidth()
 	{
 		return this.width;
@@ -311,5 +352,6 @@ public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
 		if (locs != null)
 			this.setLocations(locs);
 	}
+
 
 }

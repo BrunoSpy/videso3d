@@ -16,6 +16,9 @@
 
 package fr.crnan.videso3d.graphics;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import fr.crnan.videso3d.graphics.Route.Type;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Annotation;
@@ -27,7 +30,7 @@ import gov.nasa.worldwind.render.SurfacePolyline;
  * Route en 2D.<br />
  * Couleurs respectant le codage SIA
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 
@@ -36,6 +39,8 @@ public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 	private Type type;
 	
 	private String name;
+	
+	private List<String> balises;
 	
 	public Route2D(String name, Type type){
 		this.setAnnotation("Route "+name);
@@ -71,11 +76,12 @@ public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 				attrs.setOutlineMaterial(Material.RED);
 				break;
 			default:
+				attrs.setOutlineMaterial(Material.BLACK);
 				break;
 			}
 			break;
 		case UIR:
-
+			attrs.setOutlineMaterial(Material.BLACK);
 			break;
 		default:
 			break;
@@ -121,7 +127,39 @@ public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 	public String getName() {
 		return this.name;
 	}
-	
-	
 
+	@Override
+	public Type getType() {
+		return type;
+	}
+
+	@Override
+	public void highlight(boolean highlight) {
+		if(highlight){
+			BasicShapeAttributes attrs = (BasicShapeAttributes) this.getAttributes();
+			attrs.setOutlineMaterial(Material.WHITE);
+			attrs.setOutlineWidth(2.0);
+			this.setAttributes(attrs);
+			
+		} else {
+			this.setColor(this.getName());
+		}
+	}
+	
+	public void setBalises(List<String> balises){
+		this.balises = balises;
+	}
+	
+	public void addBalise(String balise){
+		if(this.balises == null){
+			this.balises = new LinkedList<String>();
+		}
+		this.balises.add(balise);
+	}
+
+	@Override
+	public List<String> getBalises(){
+		return this.balises;
+	}
+	
 }
