@@ -181,7 +181,8 @@ public class DatabaseManagerUI extends JDialog {
 		if(files.contains(new File(file.getAbsolutePath()+"/LIEUX"))){//une méthode comme une autre pour vérifier que le dossier est une dossier de données STIP
 			Stip stip = new Stip(file.getAbsolutePath());
 			this.getDatas(stip, "Import des données STIP", "STIP");
-		} else if(files.contains(new File(file.getAbsolutePath()+"/LIEU"))) {//une méthode comme une autre pour vérifier que le dossier est une dossier de données STPV
+		} else if(files.contains(new File(file.getAbsolutePath()+"/LIEU"))//une méthode comme une autre pour vérifier que le dossier est une dossier de données STPV
+					|| files.contains(new File(file.getAbsolutePath()+"/LIEU.txt"))) { //Bordeaux a des fichiers Stpv qui finissent par un .txt
 			Stpv stpv = new Stpv(file.getAbsolutePath());
 			this.getDatas(stpv, "Import des données STPV", "STPV");
 		} else if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))

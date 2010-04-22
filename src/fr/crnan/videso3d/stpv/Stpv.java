@@ -17,6 +17,7 @@
 package fr.crnan.videso3d.stpv;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -118,6 +119,9 @@ public class Stpv extends FileParser{
 	 */
 	private void setRadr(String path) {
 		try {
+			if(!new File(path).exists()){
+				path += ".txt";			
+			}
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while (in.ready()){
 				String line = in.readLine();
@@ -125,6 +129,8 @@ public class Stpv extends FileParser{
 					this.insertMosaique(line);
 				}
 			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -172,6 +178,9 @@ public class Stpv extends FileParser{
 	 */
 	private void setLieu(String path) {
 		try {
+			if(!new File(path).exists()){
+				path += ".txt";			
+			}
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while(in.ready()){
 				String line = in.readLine();
