@@ -185,8 +185,13 @@ public class DataExplorer extends JPanel {
 					tabs.setComponentAt(i, stip);
 					tabs.setSelectedIndex(i);
 				} else {
+					System.out.println("test0");
 					int i = tabs.indexOfComponent(stip);
-					tabs.removeTabAt(i);
+					System.out.println("i "+i);
+					if(i>=0){
+						System.out.println("test");
+						tabs.removeTabAt(i);
+					}
 					stip = null;
 				}
 			} catch (SQLException e) {
@@ -235,7 +240,7 @@ public class DataExplorer extends JPanel {
 					tabs.setSelectedIndex(i);
 				} else {
 					int i = tabs.indexOfComponent(exsaPane);
-					tabs.removeTabAt(i);
+					if(i>=0) tabs.removeTabAt(i);
 					exsa = null;
 					exsaPane = null;
 					wwd.removeMosaiques();
@@ -283,7 +288,7 @@ public class DataExplorer extends JPanel {
 					tabs.setSelectedIndex(i);
 				} else {
 					int i = tabs.indexOfComponent(stpv);
-					tabs.removeTabAt(i);
+					if(i>=0) tabs.removeTabAt(i);
 					stpv = null;
 				}
 			} catch (SQLException e) {
@@ -330,7 +335,7 @@ public class DataExplorer extends JPanel {
 				} else {
 					wwd.removeAllEdimapLayers();
 					int i = tabs.indexOfComponent(edimap);
-					tabs.removeTabAt(i);
+					if(i>=0) tabs.removeTabAt(i);
 					edimap = null;
 				}
 			} catch (SQLException e) {
