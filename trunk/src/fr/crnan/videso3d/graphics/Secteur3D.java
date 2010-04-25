@@ -45,7 +45,7 @@ public class Secteur3D extends Polygon implements ObjectAnnotation{
 		
 		this.annotation = new GlobeAnnotation("Secteur "+name
 											+"\nPlafond : FL"+plafond
-											+", plancher : FL"+plancher, Position.ZERO);
+											+"\nPlancher : FL"+plancher, Position.ZERO);
 		this.annotation.setAlwaysOnTop(true);
 	}
 

@@ -185,11 +185,8 @@ public class DataExplorer extends JPanel {
 					tabs.setComponentAt(i, stip);
 					tabs.setSelectedIndex(i);
 				} else {
-					System.out.println("test0");
 					int i = tabs.indexOfComponent(stip);
-					System.out.println("i "+i);
 					if(i>=0){
-						System.out.println("test");
 						tabs.removeTabAt(i);
 					}
 					stip = null;

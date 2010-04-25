@@ -510,10 +510,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		
 	}
 	
-	public Layer getBalisesPubLayer(){
+	public BaliseLayer getBalisesPubLayer(){
 		return balisesPub;
 	}
-	public Layer getBalisesNPLayer(){
+	public BaliseLayer getBalisesNPLayer(){
 		return balisesNP;
 	}
 	
@@ -1215,6 +1215,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		this.secteursLayer.removeAllAirspaces();
 		this.routes2D.hideAllRoutes();
 		this.routes3D.hideAllRoutes();
+		this.annotationLayer.removeAllAnnotations();
 		
 		this.getView().stopMovement();
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));
