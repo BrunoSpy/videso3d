@@ -22,6 +22,8 @@ import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -420,21 +422,21 @@ public class ContextPanel extends JPanel implements SelectListener {
 				}
 			});
 			vue.add(new AbstractAction() {
+				boolean show = true;
 				{
 					putValue(Action.NAME, "<html>Afficher les balises.</html>");
 				}
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					wwd.showRoutesBalises(name);
-				}
-			});
-			vue.add(new AbstractAction() {
-				{
-					putValue(Action.NAME, "<html>Cacher les balises.</html>");
-				}
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					wwd.hideRoutesBalises(name);
+					if(show) {
+						wwd.showRoutesBalises(name);
+						putValue(Action.NAME, "<html>Cacher les balises.</html>");
+						show = false;
+					} else {
+						wwd.hideRoutesBalises(name);
+						putValue(Action.NAME, "<html>Afficher les balises.</html>");
+						show = true;
+					}
 				}
 			});
 			content.add(vue);
@@ -455,10 +457,10 @@ public class ContextPanel extends JPanel implements SelectListener {
 		
 	}
 	
-	public void showSecteur(String name){
+	public void showSecteur(final String name){
 		content.removeAll();
 		try {
-			Statement st = DatabaseManager.getCurrentStip();
+			final Statement st = DatabaseManager.getCurrentStip();
 			ResultSet rs = st.executeQuery("select * from secteurs where nom='"+name+"'");
 			titleAreaPanel.setTitle("Secteur "+rs.getString(2));
 			
@@ -467,11 +469,62 @@ public class ContextPanel extends JPanel implements SelectListener {
 			
 			secteur.add(new JLabel("<html><b>Espace</b> : "+(rs.getString(4).equals("U")?"UIR":"FIR")+"</html>"));
 			secteur.add(new JLabel("<html><b>Appartient au centre</b> : "+rs.getString(3)+"</html>"));
-			secteur.add(new JLabel("<html><b>Plancher</b> : "+rs.getString(6)+"</html>"));
 			secteur.add(new JLabel("<html><b>Plafond</b> : "+rs.getString(7)+"</html>"));
+			secteur.add(new JLabel("<html><b>Plancher</b> : "+rs.getString(6)+"</html>"));
 			secteur.add(new JLabel("<html><b>Mode S</b> : "+(rs.getBoolean(8)?"Oui":"Non")));
 			
 			content.add(secteur);
+
+			rs = st.executeQuery("select name from balises where sect1 ='"+name+"' or " +
+					"sect2 ='"+name+"' or " +
+					"sect3 ='"+name+"' or " +
+					"sect4 ='"+name+"' or " +
+					"sect5 ='"+name+"' or " +
+					"sect6 ='"+name+"' or " +
+					"sect7 ='"+name+"' or " +
+					"sect8 ='"+name+"' or " +
+					"sect9 ='"+name+"'");
+			final List<String> balises = new LinkedList<String>();
+			while(rs.next()){
+				balises.add(rs.getString(1));
+			}
+			
+			JXTaskPane stip = new JXTaskPane();
+			stip.setTitle("Eléments Stip");
+			
+			stip.add(new AbstractAction() {
+				boolean show = true;
+				{
+					putValue(Action.NAME, "Afficher les "+balises.size()+" balises.");
+				}
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if(show){
+					wwd.getBalisesNPLayer().showBalises(balises);
+					wwd.getBalisesPubLayer().showBalises(balises);
+					putValue(Action.NAME, "Cacher les "+balises.size()+" balises.");
+					show = false;
+					} else {
+						wwd.getBalisesNPLayer().unshowBalises(balises);
+						wwd.getBalisesPubLayer().unshowBalises(balises);
+						putValue(Action.NAME, "Afficher les "+balises.size()+" balises.");
+						show = true;
+					}
+				}
+			});
+			
+			content.add(stip);
+			
+//			JXTaskPane stpv = new JXTaskPane();
+//			stpv.setTitle("Eléments Stpv");
+//			
+//			content.add(stpv);
+//			
+//			JXTaskPane ods = new JXTaskPane();
+//			ods.setTitle("Eléments ODS");
+//			
+//			content.add(ods);
+			
 			content.validate();
 		} catch (SQLException e){
 			e.printStackTrace();

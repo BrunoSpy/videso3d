@@ -349,8 +349,15 @@ public class AirspaceListener implements SelectListener {
 
 				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 			}			
-		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){
-
+		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){ //ouverture du contexte
+			Object o = event.getTopObject();
+			if(o instanceof Secteur3D){
+				this.context.showSecteur(((Secteur3D)o).getName());
+			} else if (o instanceof Route2D){
+				this.context.showRoute(((Route2D)o).getName());
+			} else if (o instanceof Route3D){
+				this.context.showRoute(((Route3D)o).getName());
+			}
 		} else if (event.getEventAction() == SelectEvent.LEFT_CLICK){
 			if(event.getTopObject() != null){ 
 				Object o = event.getTopObject();
