@@ -29,6 +29,11 @@ public class Connexion {
 
 	private String terrain;
 
+	/**
+	 * Balise de connexion
+	 */
+	private String connexion;
+
 	private String type;
 
 	private String perfo;
@@ -51,17 +56,36 @@ public class Connexion {
 		this.setFlsup(line.substring(15, 18).trim());
 		this.setVitesseCompar(line.substring(19, 20));
 		this.setVitesseValue(new Integer(line.substring(20, 23)));
-		this.addBalise(line.substring(29, 35).trim());
-		this.addBalise(line.substring(36, 42).trim());
-		for(int i = 1; i<=2;i++){
-			if(line.length()>42+13*i){
-				String bal = line.substring(29+14*i, 35+14*i).trim();
-				if(!bal.isEmpty()){
-					this.addBalise(bal);
-					this.addBalise(line.substring(36+14*i, 42+14*i).trim());
+		if(type.equals("A")){
+			this.setConnexion(line.substring(36, 42).trim());
+			for(int i = 0; i<=2;i++){
+				if(line.length()>30+13*i){
+					String bal = line.substring(29+14*i, 35+14*i).trim();
+					if(!bal.isEmpty()){
+						this.addBalise(bal);
+					}
+				}
+			}
+		} else {
+			this.setConnexion(line.substring(29, 35).trim());
+			for(int i = 0; i<=2;i++){
+				if(line.length()>37+13*i){
+					String bal = line.substring(36+14*i, 42+14*i).trim();
+					if(!bal.isEmpty()){
+						this.addBalise(bal);
+					}
 				}
 			}
 		}
+
+	}
+
+	public void setConnexion(String connexion){
+		this.connexion = connexion;
+	}
+
+	public String getConnexion(){
+		return this.connexion;
 	}
 
 	private void addBalise(String balise){
@@ -107,7 +131,7 @@ public class Connexion {
 			this.setFlinf(new Integer(flinf));
 		}
 	}
-	
+
 	public void setFlinf(Integer flinf) {
 		this.flinf = flinf;
 	}
@@ -123,7 +147,7 @@ public class Connexion {
 			this.setFlsup(new Integer(flsup));
 		}
 	}
-	
+
 	public void setFlsup(Integer flsup) {
 		this.flsup = flsup;
 	}

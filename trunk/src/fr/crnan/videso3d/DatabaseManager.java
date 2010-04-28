@@ -649,6 +649,7 @@ public final class DatabaseManager {
 		//table des connexions
 		st.executeUpdate("create table connexions (id integer primary key autoincrement, " +
 				"terrain varchar(4), " +
+				"connexion varchar(5), " +
 				"type varchar(1), " +
 				"perfo varchar(1), " +
 				"flinf int, " +

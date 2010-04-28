@@ -58,7 +58,7 @@ public class Stip extends FileParser{
 	 * Type Route
 	 */
 	public final static String STIP_SECTEUR = "stip.secteur";
-	
+
 	/**
 	 * Nombre de fichiers gérés
 	 */
@@ -79,7 +79,7 @@ public class Stip extends FileParser{
 	 * Table des balises, nécessaire pour accélerer l'import afin de ne pas faire des requêtes à chaque insertion de balise
 	 */
 	private HashMap<String, Integer> balises = new HashMap<String, Integer>();
-	
+
 	public Stip(){
 		super();
 	}
@@ -213,19 +213,24 @@ public class Stip extends FileParser{
 	}
 
 	private void insertConnexion(Connexion connexion) throws SQLException {
-		PreparedStatement insert = this.conn.prepareStatement("insert into connexions (terrain, type, perfo, flinf, flsup, vitessesigne, vitesse) " +
-		"values (?, ?, ?, ?, ?, ?, ?)");
-		insert.setString(1, connexion.getTerrain());
-		insert.setString(2, connexion.getType());
-		insert.setString(3, connexion.getPerfo());
-		insert.setInt(4, connexion.getFlinf());
-		insert.setInt(5, connexion.getFlsup());
-		insert.setString(6, connexion.getVitesseCompar());
-		insert.setInt(7, connexion.getVitesseValue());
-		insert.executeUpdate();
-		int id = insert.getGeneratedKeys().getInt(1);
+		int previousId = this.previousConnexion(connexion);
+		PreparedStatement insert;
+		if(previousId == -1){
+			insert = this.conn.prepareStatement("insert into connexions (terrain, connexion, type, perfo, flinf, flsup, vitessesigne, vitesse) " +
+			"values (?, ?, ?, ?, ?, ?, ?, ?)");
+			insert.setString(1, connexion.getTerrain());
+			insert.setString(2, connexion.getConnexion());
+			insert.setString(3, connexion.getType());
+			insert.setString(4, connexion.getPerfo());
+			insert.setInt(5, connexion.getFlinf());
+			insert.setInt(6, connexion.getFlsup());
+			insert.setString(7, connexion.getVitesseCompar());
+			insert.setInt(8, connexion.getVitesseValue());
+			insert.executeUpdate();
+			previousId = insert.getGeneratedKeys().getInt(1);
+		}
 		insert = this.conn.prepareStatement("insert into balconnexions (idconn, balise, balid, appartient) values (?, ?, ?, ?)");
-		insert.setInt(1, id);
+		insert.setInt(1, previousId);
 		for(Couple<String, Boolean> b : connexion.getBalises()){
 			insert.setString(2, b.getFirst());
 			insert.setInt(3, balises.get(b.getFirst()));
@@ -235,6 +240,25 @@ public class Stip extends FileParser{
 		insert.executeBatch();
 		insert.close();
 	}
+
+	/**
+	 * Vérifie si une connexion identique existe déjà en base
+	 * @param connexion
+	 * @return
+	 * @throws SQLException 
+	 */
+	private int previousConnexion(Connexion connexion) throws SQLException{
+		Statement st = this.conn.createStatement();
+		ResultSet rs = st.executeQuery("select * from connexions where terrain='"+connexion.getTerrain()+"' and connexion='"+connexion.getConnexion()
+				+"' and type='"+connexion.getType()+"' and perfo='"+connexion.getPerfo()+"' and flinf='"+connexion.getFlinf()
+				+"' and flsup='"+connexion.getFlsup()+"' and vitessesigne='"+connexion.getVitesseCompar()+"' and vitesse='"+connexion.getVitesseValue()+"'");
+		if(rs.next()){
+			return rs.getInt(1);
+		} else {
+			return -1;
+		}
+	}
+
 
 	/**
 	 * Lecteur de fichier BalInt
@@ -835,7 +859,7 @@ public class Stip extends FileParser{
 		insert.executeUpdate();
 		int id = insert.getGeneratedKeys().getInt(1);
 		balises.put(balise.getIndicatif(), id);
-		
+
 	}
 
 	@SuppressWarnings("unused")
@@ -909,10 +933,10 @@ public class Stip extends FileParser{
 		st.executeUpdate("create index idx_balitis2 on balitis (balise)");
 		st.executeUpdate("create table couple_trajets as select couplebalitis.*, trajets.id as trajetid, trajets.*  from couplebalitis, trajets where eclatement_id = idbal1 and raccordement_id = idbal2");
 		//et on supprime la table intermédiaire
-//		st.executeUpdate("drop index idx_couples");
-//		st.executeUpdate("drop table couplebalitis");
+		//		st.executeUpdate("drop index idx_couples");
+		//		st.executeUpdate("drop table couplebalitis");
 		st.close();
-		
+
 	}
 
 	@Override
@@ -946,5 +970,5 @@ public class Stip extends FileParser{
 
 		return null;
 	}
-	
+
 }

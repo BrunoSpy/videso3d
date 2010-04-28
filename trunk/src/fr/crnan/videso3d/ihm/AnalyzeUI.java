@@ -40,6 +40,7 @@ import javax.swing.JToolBar;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphs.ItiPanel;
@@ -131,7 +132,7 @@ public final class AnalyzeUI extends JFrame {
 
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
 
-		this.setTitle("Videso - Analyse (0.7.0)");
+		this.setTitle("Videso - Analyse ("+Videso3D.VERSION+")");
 
 		this.add(this.createToolbar(), BorderLayout.PAGE_START);
 
