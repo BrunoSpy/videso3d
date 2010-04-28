@@ -224,6 +224,20 @@ public class ContextPanel extends JPanel implements SelectListener {
 			
 			stip.add(new AbstractAction() {
 				{
+					putValue(Action.NAME, "Appartient à "+(st.executeQuery("select COUNT(*) from (select distinct balconnexions.idconn from connexions, balconnexions where connexions.id = balconnexions.idconn and (balconnexions.balise = '"+name+"' or connexions.connexion = '"+name+"'))")).getInt(1)
+							+" connexions.");
+				}
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					AnalyzeUI.showResults("connexion", name, "");
+					if(wwd!=null){
+						AnalyzeUI.setWWD(wwd);
+					}
+				}
+			});
+			
+			stip.add(new AbstractAction() {
+				{
 					putValue(Action.NAME, "Appartient à "+(st.executeQuery("select COUNT(*) from balint where bal1 = '"+name+"' or bal2='"+name+"' or balise='"+name+"'")).getInt(1)+" balint.");
 				}
 				@Override
@@ -244,6 +258,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 					}
 				}
 			});
+			
 			content.add(stip);
 			
 			JXTaskPane stpv = new JXTaskPane();
@@ -353,6 +368,39 @@ public class ContextPanel extends JPanel implements SelectListener {
 		}
 	}
 
+	/**
+	 * Affiche les infos de la connexion
+	 * @param id
+	 */
+	public void showConnexion(int id){
+		content.removeAll();
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			final ResultSet rs = st.executeQuery("select * from connexions where id ='"+id+"'");
+			String name = rs.getString(2);
+			titleAreaPanel.setTitle("Connexion : "+name);	
+			
+			JXTaskPane infos = new JXTaskPane();
+			infos.setTitle("Informations générales");
+			
+			infos.add(new JLabel("<html><b>Type</b> : "+rs.getString(4)+"</html>"));
+			infos.add(new JLabel("<html><b>Plafond</b> : "+rs.getString(7)+"</html>"));
+			infos.add(new JLabel("<html><b>Plancher</b> : "+rs.getString(6)+"</html>"));
+			infos.add(new JLabel("<html><b>Balise de connexion</b> : "+rs.getString(3)+"</html>"));
+			if(rs.getString(9).compareTo("0") != 0){
+				infos.add(new JLabel("<html><b>Vitesse</b> : "+rs.getString(8)+rs.getString(9)+"</html>"));
+			}
+			content.add(infos);
+			rs.close();
+			st.close();
+		} catch (SQLException e){
+			e.printStackTrace();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		content.validate();
+	}
+	
 	/**
 	 * Affiche les infos du trajet <code>id</code>
 	 * @param id

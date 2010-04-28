@@ -32,6 +32,8 @@ public class CellContent {
 	
 	public static String TYPE_TRAJET_GROUPE = "trajet_groupe";
 	
+	public static String TYPE_CONNEXION = "connexion";
+	
 	private String type = null;
 	
 	private int id = 0;

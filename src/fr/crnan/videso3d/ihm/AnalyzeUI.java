@@ -43,6 +43,7 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.graphs.ConnexPanel;
 import fr.crnan.videso3d.graphs.ItiPanel;
 import fr.crnan.videso3d.graphs.RoutePanel;
 import fr.crnan.videso3d.graphs.TrajetPanel;
@@ -158,6 +159,8 @@ public final class AnalyzeUI extends JFrame {
 			return new TrajetPanel(search, search2);
 		} else if(type.equals("balise")){
 			return new BaliseResultPanel(search);
+		} else if(type.equals("connexion")){
+			return new ConnexPanel(search, search2);
 		}
 		return null;
 	}
@@ -168,7 +171,7 @@ public final class AnalyzeUI extends JFrame {
 
 		toolbar.add(new JLabel(" Rechercher : "));
 
-		String[] types = {"balise", /*"balint",*/ "iti", "trajet", "route"/*, "connexion"*/};
+		String[] types = {"balise", /*"balint",*/ "iti", "trajet", "route", "connexion"};
 
 		final JComboBox type = new JComboBox(types);
 
