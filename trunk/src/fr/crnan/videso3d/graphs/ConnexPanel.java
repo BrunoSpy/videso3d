@@ -130,7 +130,7 @@ public class ConnexPanel extends ResultGraphPanel {
 								connexionsRoot.add(connexRoot);
 								terrain = rs.getString(2);
 							}
-							connex = (mxCell) graph.insertVertex(connexRoot, null, new CellContent(CellContent.TYPE_CONNEXION, id, rs.getString(3)), 0, 0, 80, 50, GraphStyle.groupStyle);
+							connex = (mxCell) graph.insertVertex(connexRoot, null, new CellContent(CellContent.TYPE_CONNEXION, id, rs.getString(6)+"->"+rs.getString(7)), 0, 0, 80, 50, GraphStyle.groupStyle);
 							connex.setConnectable(false);
 							connexions.add(connex);							
 							
