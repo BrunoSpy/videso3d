@@ -56,6 +56,7 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import fr.crnan.videso3d.AirspaceListener;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.SplashScreen;
+import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.geo.GEOFileFilter;
 import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
@@ -181,7 +182,7 @@ public class MainWindow extends JFrame {
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
 
 		//Titre de la fenêtre
-		this.setTitle("Videso 3D (0.7.2)");
+		this.setTitle("Videso 3D ("+Videso3D.VERSION+")");
 
 		//Fermeture de l'application
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
