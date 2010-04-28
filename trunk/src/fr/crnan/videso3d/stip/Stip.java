@@ -55,7 +55,7 @@ public class Stip extends FileParser{
 	 */
 	public final static String STIP_BALISE = "stip.balise";
 	/**
-	 * Type Route
+	 * Type Secteur
 	 */
 	public final static String STIP_SECTEUR = "stip.secteur";
 
