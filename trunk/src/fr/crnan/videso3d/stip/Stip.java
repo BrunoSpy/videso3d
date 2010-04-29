@@ -35,6 +35,7 @@ import java.util.List;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
 
@@ -156,37 +157,37 @@ public class Stip extends FileParser{
 	protected void getFromFiles() {
 		this.setFile("CENTRE");
 		this.setProgress(0);
-		this.setCentre(this.path + "/CENTRE");
+		this.setCentre(FileManager.getFile(this.path + "/CENTRE"));
 		this.setProgress(1);
 		this.setFile("SECT");
-		this.setSecteur(this.path + "/SECT");
+		this.setSecteur(FileManager.getFile(this.path + "/SECT"));
 		this.setProgress(2);
 		this.setFile("balise");
 		this.setBalise(this.path);
 		this.setProgress(3);
 		this.setFile("POINSECT");
-		this.setPoinSect(this.path + "/POINSECT");
+		this.setPoinSect(FileManager.getFile(this.path + "/POINSECT"));
 		this.setProgress(4);
 		this.setFile("ROUTSECT");
-		this.setRoutSect(this.path + "/ROUTSECT");
+		this.setRoutSect(FileManager.getFile(this.path + "/ROUTSECT"));
 		this.setProgress(5);
 		this.setFile("ROUTE");
-		this.setRoute(this.path + "/ROUTE");
+		this.setRoute(FileManager.getFile(this.path + "/ROUTE"));
 		this.setProgress(6);
 		this.setFile("ITI");
-		this.setItis(this.path + "/ITI");
+		this.setItis(FileManager.getFile(this.path + "/ITI"));
 		this.setProgress(7);
 		this.setFile("LIEUX");
-		this.setLieux(this.path + "/LIEUX");
+		this.setLieux(FileManager.getFile(this.path + "/LIEUX"));
 		this.setProgress(8);
 		this.setFile("TRAJET");
-		this.setTrajets(this.path+ "/TRAJET");
+		this.setTrajets(FileManager.getFile(this.path+ "/TRAJET"));
 		this.setProgress(9);
 		this.setFile("BALINT");
-		this.setBalInt(this.path+ "/BALINT");
+		this.setBalInt(FileManager.getFile(this.path+ "/BALINT"));
 		this.setProgress(10);
 		this.setFile("CONNEXION");
-		this.setConnexion(this.path+"/CONNEX");
+		this.setConnexion(FileManager.getFile(this.path+"/CONNEX"));
 		this.setProgress(11);
 	}
 

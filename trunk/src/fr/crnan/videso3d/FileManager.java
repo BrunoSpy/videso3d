@@ -53,6 +53,31 @@ public class FileManager {
 		}
 	}
 	
+	/**
+	 * Recherche le fichier correspondant au chemin en essaynt les différentes casses possibles.
+	 * Essaye aussi de trouver le fichier en ajoutant l'extension ".txt"
+	 * @param path
+	 * @return path
+	 */
+	public static String getFile(String path){
+		File f = new File(path);
+		String file = f.getName();
+		String rep = f.getParent();
+		if((new File(path)).exists()){
+			return path;
+		} else if((new File(rep+"/"+file.toLowerCase()).exists())){
+			return rep+"/"+file.toLowerCase();
+		} else if((new File(rep+"/"+file.toUpperCase()).exists())){
+			return rep+"/"+file.toUpperCase();
+		} else if((new File(rep+"/"+file.toLowerCase()+".txt").exists())){
+			return rep+"/"+file.toLowerCase()+".txt";
+		} else if((new File(rep+"/"+file.toUpperCase()+".txt").exists())){
+			return rep+"/"+file.toUpperCase()+".txt";
+		} 
+		else {
+			return null;
+		}
+	}
 	
 	/**
 	 * Untar file and returns the list of files
