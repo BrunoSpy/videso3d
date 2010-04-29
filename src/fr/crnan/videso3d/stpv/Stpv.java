@@ -29,6 +29,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
 
@@ -106,10 +107,10 @@ public class Stpv extends FileParser{
 
 		this.setFile("LIEU");
 		this.setProgress(0);
-		this.setLieu(path + "/LIEU");
+		this.setLieu(FileManager.getFile(path + "/LIEU"));
 		this.setFile("RADR");
 		this.setProgress(1);
-		this.setRadr(path + "/RADR");
+		this.setRadr(FileManager.getFile(path + "/RADR"));
 		this.setProgress(2);
 	}
 
@@ -119,9 +120,6 @@ public class Stpv extends FileParser{
 	 */
 	private void setRadr(String path) {
 		try {
-			if(!new File(path).exists()){
-				path += ".txt";			
-			}
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while (in.ready()){
 				String line = in.readLine();
@@ -178,9 +176,6 @@ public class Stpv extends FileParser{
 	 */
 	private void setLieu(String path) {
 		try {
-			if(!new File(path).exists()){
-				path += ".txt";			
-			}
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while(in.ready()){
 				String line = in.readLine();
