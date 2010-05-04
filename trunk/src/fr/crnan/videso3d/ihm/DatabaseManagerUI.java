@@ -361,9 +361,12 @@ public class DatabaseManagerUI extends JDialog {
 		 */
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			if(columnIndex == 4) {
+			switch (columnIndex) {
+			case 4:
 				return true;
-			} else {
+			case 5:
+				return true;//!((Boolean)data.get(rowIndex).get(columnIndex));
+			default:
 				return false;
 			}
 		}
@@ -373,10 +376,25 @@ public class DatabaseManagerUI extends JDialog {
 		 */
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-			if(columnIndex == 4){
+			switch (columnIndex) {
+			case 4: //commentaire dans la table
 				DatabaseManager.setComment((Integer)this.getValueAt(rowIndex, 0), aValue.toString());
 				data.get(rowIndex).set(4, aValue);
 				fireTableDataChanged();
+				break;
+			case 5: //table sélectionnée
+				try {
+					if(!(Boolean)data.get(rowIndex).get(5)){//le test est déjà fait par ailleurs, mais ça ne fait pas de mal de le refaire
+						DatabaseManager.selectDatabase((Integer)data.get(rowIndex).get(0), (String)data.get(rowIndex).get(2));
+					} else {
+						DatabaseManager.unselectDatabase(DatabaseManager.stringToType((String)data.get(rowIndex).get(2)));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				//Puis on change la valeur des cellules conformément aux nouvelles valeurs de la base
+				this.update();
+				break;
 			}
 		}
 		
