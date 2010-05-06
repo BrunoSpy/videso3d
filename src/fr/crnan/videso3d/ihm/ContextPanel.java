@@ -242,7 +242,10 @@ public class ContextPanel extends JPanel implements SelectListener {
 				}
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					
+					AnalyzeUI.showResults("balise", name, "");
+					if(wwd!=null){
+						AnalyzeUI.setWWD(wwd);
+					}
 				}
 			});
 			

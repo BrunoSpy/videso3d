@@ -365,7 +365,7 @@ public class DatabaseManagerUI extends JDialog {
 			case 4:
 				return true;
 			case 5:
-				return true;//!((Boolean)data.get(rowIndex).get(columnIndex));
+				return true;
 			default:
 				return false;
 			}
@@ -384,7 +384,7 @@ public class DatabaseManagerUI extends JDialog {
 				break;
 			case 5: //table sélectionnée
 				try {
-					if(!(Boolean)data.get(rowIndex).get(5)){//le test est déjà fait par ailleurs, mais ça ne fait pas de mal de le refaire
+					if(!(Boolean)data.get(rowIndex).get(5)){
 						DatabaseManager.selectDatabase((Integer)data.get(rowIndex).get(0), (String)data.get(rowIndex).get(2));
 					} else {
 						DatabaseManager.unselectDatabase(DatabaseManager.stringToType((String)data.get(rowIndex).get(2)));
