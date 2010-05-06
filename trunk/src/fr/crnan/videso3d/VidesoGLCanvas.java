@@ -1215,7 +1215,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		this.secteursLayer.removeAllAirspaces();
 		this.routes2D.hideAllRoutes();
 		this.routes3D.hideAllRoutes();
-		this.annotationLayer.removeAllAnnotations();
+		if(this.annotationLayer != null) this.annotationLayer.removeAllAnnotations();
 		
 		this.getView().stopMovement();
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));

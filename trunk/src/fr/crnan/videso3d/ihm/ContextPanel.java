@@ -170,13 +170,36 @@ public class ContextPanel extends JPanel implements SelectListener {
 				int plancher = rs.getInt("limit"+i);
 				if(plancher != -1){
 					if(secteur!=null){
-						balise.add(new JLabel("\nDu "+plafond+" au "+plancher+" : "+secteur));
+						final int tPlafond = plafond;
+						final int tPlancher = plancher;
+						final String tSecteur = secteur;
+						balise.add(new AbstractAction() {
+							{
+								putValue(Action.NAME, "\nDu "+tPlafond+" au "+tPlancher+" : "+tSecteur);
+							}
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								wwd.highlight(tSecteur);
+							}
+						});
 					}	
 					plafond = plancher;
 					secteur = rs.getString("sect"+i);
 				}
 			}
-			if(secteur != null) balise.add(new JLabel("\nDu "+plafond+" au "+0+" : "+secteur));
+			if(secteur != null) {
+				final int tPlafond = plafond;
+				final String tSecteur = secteur;
+				balise.add(new AbstractAction() {
+					{
+						putValue(Action.NAME, "\nDu "+tPlafond+" au 0 : "+tSecteur);
+					}
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						wwd.highlight(tSecteur);
+					}
+				});
+			}
 
 			content.add(balise);
 			
