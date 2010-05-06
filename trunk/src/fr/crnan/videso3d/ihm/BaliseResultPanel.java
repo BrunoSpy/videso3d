@@ -37,7 +37,7 @@ import fr.crnan.videso3d.ihm.components.TitledPanel;
 /**
  * Résultats de données Stip/Stpv sur une balise/terrain
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 public class BaliseResultPanel extends ResultPanel {
 
@@ -62,6 +62,9 @@ public class BaliseResultPanel extends ResultPanel {
 		Vector<Component> panels = new Vector<Component>();
 		
 		if(stip && (panel = this.createConsignesTable(balise)) != null) {
+			panels.add(panel);
+		}
+		if(stip && (panel = this.createBalintTable(balise)) != null){
 			panels.add(panel);
 		}
 		if(stpv && (panel = this.createLieu26Table(balise)) != null) {
@@ -341,6 +344,53 @@ public class BaliseResultPanel extends ResultPanel {
 		}
 	}
 
+	private Component createBalintTable(String balise){
+		JXTable table = new JXTable();
+		table.setHorizontalScrollEnabled(true);
+		table.setEditable(false);
+		table.setColumnControlVisible(true);
+		String[] columns = {"UIR", "FIR", "Balise 1", "Balise", "Travers", "Balise 2"};
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		model.setColumnIdentifiers(columns);
+
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select uir, fir, bal1, balise, appartient, bal2 from balint where bal1 "+forgeSql(balise)+" or bal2 "+forgeSql(balise)+" or balise "+forgeSql(balise));
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int columnCount = rsmd.getColumnCount();
+			while(rs.next()){
+				Object[] objects = new Object[columnCount];
+				for(int i=0; i<columnCount;i++){
+					if(i==4 || i==1 || i==0){//on affiche un peu mieux les booléens
+						int b = (Integer) rs.getObject(i+1);
+						if(b==0) {
+							objects [i] = "Non";
+						} else {
+							objects [i] = "Oui";
+						}
+					} else {
+						objects[i] = rs.getObject(i+1);
+					}
+				}
+				model.addRow(objects);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if(model.getRowCount() > 0){
+			table.setModel(model);
+			table.packAll();
+
+			JPanel balint = new JPanel();
+			balint.setLayout(new BorderLayout());
+			balint.add(new TitledPanel("Couples interdits"), BorderLayout.PAGE_START);
+			balint.add(new JScrollPane(table), BorderLayout.CENTER);
+			return balint;
+		} else { 
+			return null;
+		}
+	}
+	
 	@Override
 	public void setContext(ContextPanel context) {
 		//la vue contextuelle est sans objet pour l'instant
