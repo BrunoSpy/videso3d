@@ -29,7 +29,7 @@ import gov.nasa.worldwind.Configuration;
  */
 public class Videso3D {
 
-	public static final String VERSION = "0.7.2";
+	public static final String VERSION = "0.7.3";
 	
 	public static void main(final String[] args)
 	{
