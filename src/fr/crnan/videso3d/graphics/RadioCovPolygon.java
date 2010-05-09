@@ -24,6 +24,7 @@ package fr.crnan.videso3d.graphics;
  */
 
 import gov.nasa.worldwind.geom.*;
+import gov.nasa.worldwind.globes.Globe;
 //import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.util.Logging;
@@ -288,6 +289,11 @@ public class RadioCovPolygon extends AbstractAirspace {
 	        	if (c.isAirspaceVisible(dc)==Boolean.TRUE) c.renderExtent(dc); 
 	        }
 	    }
+		@Override
+		protected Extent computeExtent(Globe globe, double verticalExaggeration) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 
 	    //**************************************************************//
 	    //********************  END Geometry Rendering  ****************//

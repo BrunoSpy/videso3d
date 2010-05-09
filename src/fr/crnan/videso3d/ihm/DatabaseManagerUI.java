@@ -172,7 +172,12 @@ public class DatabaseManagerUI extends JDialog {
 				Exsa exsa = new Exsa(file.getAbsolutePath());
 				this.getDatas(exsa, "Import des données EXSA", "EXSA");
 				return;
-			} else {
+			} else if (file.getName().equalsIgnoreCase("output.xml")){
+				//Radio radio = new Radio(file.getAbsolutePath());
+				Radio radio = new Radio();		
+				this.getDatas(radio,"Import des données Radio","RadioCov");
+				return;
+			}	else {
 				file = file.getParentFile();
 			}
 		}
@@ -198,12 +203,7 @@ public class DatabaseManagerUI extends JDialog {
 		} else if(files.contains(new File(file.getAbsolutePath()+"/PAYS"))) {
 			Pays pays = new Pays(file.getAbsolutePath());
 			this.getDatas(pays, "Import des contours des pays", "PAYS");
-		} else if ( files.contains(new File(file.getAbsolutePath()+"/output.xml"))){
-			//Radio radio = new Radio(file.getAbsolutePath());
-
-			Radio radio = new Radio();					
-			this.getDatas(radio,"Import des données Radio","RadioCov");
-		}		
+		} 	
 		else {
 			System.out.println("Pas de fichier de base de données trouvé");
 		}

@@ -28,6 +28,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.xpath.XPath;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
@@ -54,7 +59,6 @@ import fr.crnan.videso3d.stip.Secteur;
 import fr.crnan.videso3d.util.VMeasureTool;
 import fr.crnan.videso3d.layers.RadioCovLayer;
 
-import gov.nasa.worldwind.DataConfiguration;
 import gov.nasa.worldwind.Factory;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
@@ -88,6 +92,7 @@ import gov.nasa.worldwind.util.DataConfigurationFilter;
 import gov.nasa.worldwind.util.DataConfigurationUtils;
 import gov.nasa.worldwind.util.Logging;
 import gov.nasa.worldwind.util.WWIO;
+import gov.nasa.worldwind.util.WWXML;
 import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
@@ -263,7 +268,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Mets à jour les layers installés dans WorldWindInstalled
 	 */
 	public void updateWWI(){
-		//code inspired by gov.nasa.worldwind.examples.ImportedGeographicRasterData.java
+		//code inspired by gov.nasa.worldwind.examples.ImportingImagesAndElevationsDemo.java
 		
 		File installLocation = null;
 		for (java.io.File f : WorldWind.getDataFileStore().getLocations())
@@ -281,12 +286,13 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 
         for (String filename : names)
         {
-            DataConfiguration dataConfig = null;
+            Document dataConfig = null;
 
             try
             {
                 File dataConfigFile = new File(installLocation, filename);
-                dataConfig = DataConfigurationUtils.openDataConfigFile(dataConfigFile.getPath(), null);
+                dataConfig = WWXML.openDocument(dataConfigFile);
+                dataConfig = DataConfigurationUtils.convertToStandardDataConfigDocument(dataConfig);
             }
             catch (WWRuntimeException e)
             {
@@ -296,20 +302,39 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
             if (dataConfig == null)
                 continue;
 
-            AVList params = new AVListImpl();
-            DataConfigurationUtils.getDataConfigCacheName(filename, params);
-            
-            if (dataConfig.getType().equalsIgnoreCase("Layer"))
+            AVList params = new AVListImpl();            
+            XPath xpath = WWXML.makeXPath();
+            Element domElement = dataConfig.getDocumentElement();
+
+            // If the data configuration document doesn't define a cache name, then compute one using the file's path
+            // relative to its file cache directory.
+            String s = WWXML.getText(domElement, "DataCacheName", xpath);
+            if (s == null || s.length() == 0)
+                DataConfigurationUtils.getDataConfigCacheName(filename, params);
+
+            // If the data configuration document doesn't define the data's extreme elevations, provide default values using
+            // the minimum and maximum elevations of Earth.
+            String type = DataConfigurationUtils.getDataConfigType(domElement);
+            if (type.equalsIgnoreCase("ElevationModel"))
+            {
+                if (WWXML.getDouble(domElement, "ExtremeElevations/@min", xpath) == null)
+                    params.setValue(AVKey.ELEVATION_MIN, -11000d); // Depth of Mariana trench.
+                if (WWXML.getDouble(domElement, "ExtremeElevations/@max", xpath) == null)
+                    params.setValue(AVKey.ELEVATION_MAX, 8500d); // Height of Mt. Everest.
+            }
+                       
+            if (DataConfigurationUtils.getDataConfigType(domElement).equalsIgnoreCase("Layer"))
             {
             	Layer layer = null;
                 try
                 {
                     Factory factory = (Factory) WorldWind.createConfigurationComponent(AVKey.LAYER_FACTORY);
-                    layer = (Layer) factory.createFromDataConfig(dataConfig, params);
+                    layer = (Layer) factory.createFromConfigSource(domElement, params);
                 }
                 catch (Exception e)
                 {
-                    String message = Logging.getMessage("generic.CreationFromDataConfigurationFailed", dataConfig.getName());
+                    String message = Logging.getMessage("generic.CreationFromDataConfigurationFailed", 
+                    		DataConfigurationUtils.getDataConfigDisplayName(domElement));
                     Logging.logger().log(java.util.logging.Level.SEVERE, message, e);
                 }
 
