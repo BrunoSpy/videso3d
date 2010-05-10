@@ -133,7 +133,7 @@ public class ItiPanel extends ResultGraphPanel {
 							iti = (mxCell) graph.insertVertex(itiRoot, null, new CellContent(CellContent.TYPE_ITI, id, rs.getString(6)), 0, 0, 80, 50, GraphStyle.groupStyle);
 							iti.setConnectable(false);
 							itis.add(iti);
-							first = (mxCell) graph.insertVertex(iti, null, new CellContent(CellContent.TYPE_BALISE, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize);
+							first = (mxCell) graph.insertVertex(iti, null, new CellContent(CellContent.TYPE_BALISE, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
 							first.setConnectable(false);
 							balises.put(rs.getInt(4), first);
 						} else {
