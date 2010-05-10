@@ -18,7 +18,7 @@ package fr.crnan.videso3d.graphs;
 /**
  * Style de cellules
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public final class GraphStyle {
 
@@ -26,74 +26,74 @@ public final class GraphStyle {
 	 * Rayon des balises
 	 */
 	public static int baliseSize = 35;
-	
-	/**
-	 * Balise simple
-	 */
-	public static String baliseStyle = "defaultVertex;shape=ellipse;fontSize=8;fillColor=white;strokeColor=blue;opacity=40";
-	/**
-	 * Balise en surbrillance
-	 */
-	public static String baliseHighlight = "defaultVertex;shape=ellipse;fontSize=8;fillColor=yellow;opacity=40";
-	/**
-	 * Balise travers
-	 */
-	public static String baliseTravers = "defaultVertex;shape=cloud;fontSize=8;fillColor=white;opacity=30;";
-	/**
-	 * Balise travers en surbrillance
-	 */
-	public static String baliseTraversHighlight = "defaultVertex;shape=cloud;fontSize=8;fillColor=yellow;opacity=30;";
-	/**
-	 * Balise trajet
-	 */
-	public static String baliseTrajet = "defaultVertex;shape=ellipse;fontSize=8;fillColor=white;opacity=40;dashed=true";
-	/**
-	 * Balise trajet en surbrillance
-	 */
-	public static String baliseTrajetHighlight = "defaultVertex;shape=ellipse;fontSize=8;fillColor=yellow;opacity=40;dashed=true";
 	/**
 	 * Balise ouvrante ou fermante
 	 */
-	public static String baliseDefault = "defaultVertex;";
+	public static String baliseDefault = "defaultVertex;fontColor=black;verticalAlign=middle;";
+	/**
+	 * Balise simple
+	 */
+	public static String baliseStyle = baliseDefault+"shape=ellipse;fillColor=white;strokeColor=blue;opacity=40;fontSize=8;";
+	/**
+	 * Balise en surbrillance
+	 */
+	public static String baliseHighlight = baliseDefault+"shape=ellipse;fillColor=yellow;opacity=40;fontSize=8;";
+	/**
+	 * Balise travers
+	 */
+	public static String baliseTravers = baliseDefault+"shape=cloud;fillColor=white;opacity=30;fontSize=8;";
+	/**
+	 * Balise travers en surbrillance
+	 */
+	public static String baliseTraversHighlight = baliseDefault+"shape=cloud;fillColor=yellow;opacity=30;fontSize=8;";
+	/**
+	 * Balise trajet
+	 */
+	public static String baliseTrajet = baliseDefault+"shape=ellipse;fillColor=white;opacity=40;dashed=true;fontSize=8;";
+	/**
+	 * Balise trajet en surbrillance
+	 */
+	public static String baliseTrajetHighlight = baliseDefault+"shape=ellipse;fillColor=yellow;opacity=40;dashed=true;fontSize=8;";
+	
 	
 	/**
 	 * Groupe ouvert
 	 */
-	public static String groupStyle = "defaultVertex;shape=swimlane;fontSize=12;fontStyle=1;startSize=23;horizontal=false";
+	public static String groupStyle = "defaultVertex;shape=swimlane;fontSize=12;fontStyle=1;startSize=23;horizontal=false;";
 	/**
 	 * Groupe ouvert horizontal
 	 */
-	public static String groupStyleHorizontal = "defaultVertex;shape=swimlane;fontSize=12;fontStyle=1;startSize=23;horizontal=true";
+	public static String groupStyleHorizontal = groupStyle+"horizontal=true";
 	/**
 	 * Groupe fermé
 	 */
-	public static String groupStyleFolded = "defaultVertex;shape=swimlane;fontSize=12;fontStyle=1;startSize=23;horizontal=true;align=left;spacingLeft=14";
+	public static String groupStyleFolded = groupStyle+"horizontal=true;align=left;spacingLeft=14";
 
 	/**
 	 * Connecteurs
 	 */
-	public static String edgeStyle = "defaultEdge;rounded=true";
+	public static String edgeStyle = "defaultEdge;rounded=true;";
 	
 	/**
 	 * Connecteur pour les trajets
 	 */
-	public static String edgeTrajet = "defaultEdge;rounded=true;dashed=true;";
+	public static String edgeTrajet = edgeStyle+"dashed=true;";
 	/**
 	 * Connecteur route en double sens (=)
 	 */
-	public static String edgeRoute = "defaultEdge;rounded=true;startArrow=classic;endArrow=classic";
+	public static String edgeRoute = edgeStyle+"startArrow=classic;endArrow=classic";
 	/**
 	 * Connecteur route en sens unique (>)
 	 */
-	public static String edgeRouteSensUnique = "defaultEdge;rounded=true;startArrow=none;endArrow=classic";
+	public static String edgeRouteSensUnique = edgeStyle+"startArrow=none;endArrow=classic";
 	/**
 	 * Connecteur route en sens unique inverse (<)
 	 */
-	public static String edgeRouteSensUniqueInverse = "defaultEdge;rounded=true;startArrow=classic;endArrow=none";
+	public static String edgeRouteSensUniqueInverse = edgeStyle+"startArrow=classic;endArrow=none";
 	/**
 	 * Connecteur route en sens interdit (+)
 	 */
-	public static String edgeRouteSensInterdit = "defaultEdge;rounded=true;startArrow=none;endArrow=none;dashed=true";
+	public static String edgeRouteSensInterdit = edgeStyle+"startArrow=none;endArrow=none;dashed=true";
 
 
 }
