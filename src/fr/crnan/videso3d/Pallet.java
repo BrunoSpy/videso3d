@@ -20,7 +20,7 @@ import java.awt.Color;
 /**
  * Gestion des couleurs
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class Pallet {
 
@@ -31,6 +31,8 @@ public class Pallet {
 	private static String BALISE_MARKER = "#FFFFFF";
 	private static String BALISE_TEXT = "#FFFFFF";
 		
+	public static Color ANNOTATION_BACKGROUND = new Color(1f, 1f, 1f, .7f);
+	
 	public static Color getColorFondPays(){
 		return Color.decode(Configuration.getProperty(Configuration.COLOR_FOND_PAYS, FOND_PAYS));
 	}
