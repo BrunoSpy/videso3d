@@ -455,7 +455,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * @param toggle
 	 */
     public void toggleFrontieres(Boolean toggle){
-			if(frontieres == null) frontieres = new FrontieresStipLayer();
+			if(frontieres == null){
+				frontieres = new FrontieresStipLayer();
+				this.insertBeforePlacenames(frontieres);
+			}
 			this.toggleLayer(frontieres, toggle);
 	}
 	

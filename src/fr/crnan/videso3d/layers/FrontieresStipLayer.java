@@ -1172,6 +1172,8 @@ public class FrontieresStipLayer extends SurfaceShapeLayer {
 	
 		this.addRenderable(france);		
 		
+		this.setPickEnabled(false);
+		
 //		try {
 //			Statement st = db.getCurrent(Type.PAYS);
 //			ResultSet rs = st.executeQuery("select * from contpays, poinpays where refcontour = 'C0001' and refpoint = ref");
