@@ -38,7 +38,7 @@ import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
  * Affiche une mosaique (STR ou STPV) en 2D ou en 3D</br>
  * Permet de colorier certains carrés et sous-carrés
  * @author Bruno Spyckerelle
- * @version 0.4
+ * @version 0.4.1
  */
 @SuppressWarnings("serial")
 public class MosaiqueLayer extends LayerSet {
@@ -197,9 +197,10 @@ public class MosaiqueLayer extends LayerSet {
 				if(alt != null) altitude = alt.next();
 				String annotation = null;
 				if(annotationTitle != null) {
-					annotation = annotationTitle;
-					annotation += "\nCarré "+square.getFirst()+ (square.getSecond() == 0 ? "" : "\nSous carré "+square.getSecond()) ;
-					annotation += "\nPlancher : "+String.format("%3.0f", altitude.getFirst()/30.48)+"\nPlafond : "+String.format("%3.0f", altitude.getSecond()/30.48);
+					annotation = "<p><b>"+annotationTitle+"</b></p>";
+					annotation += "<p>Carré : "+square.getFirst()+ (square.getSecond() == 0 ? "" : "<br />Sous carré : "+square.getSecond()) ;
+					annotation += "<br />Plafond : "+String.format("%3.0f", altitude.getSecond()/30.48)+
+								  "<br />Plancher : "+String.format("%3.0f", altitude.getFirst()/30.48)+"</p>";
 				}
 				this.colorieCarre(annotation, origine, square.getFirst(), square.getSecond(), width, height, size, altitude.getFirst(), altitude.getSecond(), hsens, vsens, numSens, attr, airspaceAttr);
 			}

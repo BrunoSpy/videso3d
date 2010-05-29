@@ -16,9 +16,11 @@
 
 package fr.crnan.videso3d.graphics;
 
+import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
+import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.graphics.Route.Type;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Annotation;
@@ -105,6 +107,9 @@ public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 		if(annotation == null) {
 			annotation = new GlobeAnnotation(text, Position.ZERO);
 			annotation.setAlwaysOnTop(true);
+			annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
+			annotation.getAttributes().setBorderColor(Color.BLACK);
+			annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
 		} else {
 			annotation.setText(text);
 		}

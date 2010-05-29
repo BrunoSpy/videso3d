@@ -16,10 +16,13 @@
 
 package fr.crnan.videso3d.graphics;
 
+import java.awt.Color;
 import java.util.List;
 
+import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.SurfacePolygon;
 /**
@@ -40,6 +43,9 @@ public class SurfacePolygonAnnotation extends SurfacePolygon implements ObjectAn
 		if(annotation == null) {
 			annotation = new GlobeAnnotation(text, Position.ZERO);
 			annotation.setAlwaysOnTop(true);
+			annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
+			annotation.getAttributes().setBorderColor(Color.BLACK);
+			annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);			
 		} else {
 			annotation.setText(text);
 		}

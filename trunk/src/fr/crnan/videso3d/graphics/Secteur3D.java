@@ -16,22 +16,17 @@
 
 package fr.crnan.videso3d.graphics;
 
-import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.GlobeAnnotation;
-import gov.nasa.worldwind.render.airspaces.Polygon;
 /**
  * Représentation 3D d'un secteur de contrôle
  * @author Bruno Spyckerelle
- * @version 0.2.4
+ * @version 0.3
  */
-public class Secteur3D extends Polygon implements ObjectAnnotation{
+public class Secteur3D extends PolygonAnnotation{
 
 	/*
 	 * Nom du secteur
 	 */
 	private String name;
-	
-	private GlobeAnnotation annotation;
 	
 	/**
 	 * Crée un secteur 3D
@@ -43,10 +38,9 @@ public class Secteur3D extends Polygon implements ObjectAnnotation{
 		this.setName(name);
 		this.setNiveaux(plancher, plafond);
 		
-		this.annotation = new GlobeAnnotation("Secteur "+name
-											+"\nPlafond : FL"+plafond
-											+"\nPlancher : FL"+plancher, Position.ZERO);
-		this.annotation.setAlwaysOnTop(true);
+		this.setAnnotation("<p><b>Secteur "+name+"</b></p>"
+											+"<p>Plafond : FL"+plafond
+											+"<br />Plancher : FL"+plancher+"</p>");
 	}
 
 	public void setNiveaux(Integer plancher, Integer plafond){
@@ -61,15 +55,6 @@ public class Secteur3D extends Polygon implements ObjectAnnotation{
 	public String getName(){
 		return this.name;
 	}
-	
-	@Override
-	public void setAnnotation(String text) {
-		this.annotation.setText(text);
-	}
-	
-	public GlobeAnnotation getAnnotation(Position pos){
-		annotation.setPosition(pos);
-		return annotation;
-	}	 
+	 
 }
 

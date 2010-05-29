@@ -502,20 +502,22 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			ResultSet rs = st.executeQuery("select * from balises where publicated = " + publicated);
 			while(rs.next()){
 				Balise2D balise = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0));
-				String annotation = "Balise "+rs.getString("name") +" ("+rs.getString("definition")+")";
+				String annotation = "<p><b>Balise "+rs.getString("name") +"</b></p>";
+				annotation += "<p>Commentaire : "+rs.getString("definition")+"<br />";
 				int plafond = -1;
 				String secteur = null;
 				for(int i = 9; i>= 1; i--){
 					int plancher = rs.getInt("limit"+i);
 					if(plancher != -1){
 						if(secteur!=null){
-							annotation += "\nDu "+plafond+" au "+plancher+" : "+secteur;
+							annotation += "\nDu "+plafond+" au "+plancher+" : "+secteur+"<br />";
 						}	
 						plafond = plancher;
 						secteur = rs.getString("sect"+i);
 					}
 				}
-				if(secteur != null) annotation += "\nDu "+plafond+" au "+0+" : "+secteur;
+				if(secteur != null) annotation += "\nDu "+plafond+" au "+0+" : "+secteur+"<br />";
+				annotation += "</p>";
 				balise.setAnnotation(annotation);
 				if(publicated == 1){
 					balisesPub.addBalise(balise);

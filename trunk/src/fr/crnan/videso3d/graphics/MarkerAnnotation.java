@@ -16,7 +16,11 @@
 
 package fr.crnan.videso3d.graphics;
 
+import java.awt.Color;
+
+import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.markers.BasicMarker;
 import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
@@ -25,7 +29,7 @@ import gov.nasa.worldwind.render.markers.MarkerAttributes;
 /**
  * {@link BasicMarker} avec {@link GlobeAnnotation} intégré
  * @author  Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class MarkerAnnotation extends BasicMarker implements ObjectAnnotation {
 
@@ -46,6 +50,9 @@ public class MarkerAnnotation extends BasicMarker implements ObjectAnnotation {
 		if(annotation == null) {
 			annotation = new GlobeAnnotation(text, Position.ZERO);
 			annotation.setAlwaysOnTop(true);
+			annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
+			annotation.getAttributes().setBorderColor(Color.BLACK);
+			annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
 		} else {
 			annotation.setText(text);
 		}

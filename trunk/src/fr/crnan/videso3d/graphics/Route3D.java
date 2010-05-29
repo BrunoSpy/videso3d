@@ -24,6 +24,7 @@ import java.util.List;
 import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Box;
@@ -89,6 +90,9 @@ public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
 	private void createAnnotation(){
 		this.annotation = new GlobeAnnotation("Route "+this.getName(), Position.ZERO);
 		this.annotation.setAlwaysOnTop(true);
+		this.annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
+		this.annotation.getAttributes().setBorderColor(Color.BLACK);
+		this.annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
 	}
 	
 	public GlobeAnnotation getAnnotation(Position pos){

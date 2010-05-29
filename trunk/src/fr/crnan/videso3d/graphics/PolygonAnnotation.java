@@ -16,21 +16,28 @@
 
 package fr.crnan.videso3d.graphics;
 
+import java.awt.Color;
 import java.util.List;
 
+import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.airspaces.Polygon;
 /**
  * Polygon avec Annotation intégrée
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class PolygonAnnotation extends Polygon implements ObjectAnnotation{
 
 	private GlobeAnnotation annotation;
 
+	public PolygonAnnotation(){
+		super();
+	}
+	
 	public PolygonAnnotation(List<LatLonCautra> locations) {
 		super(locations);
 	}
@@ -39,6 +46,9 @@ public class PolygonAnnotation extends Polygon implements ObjectAnnotation{
 		if(annotation == null) {
 			annotation = new GlobeAnnotation(text, Position.ZERO);
 			annotation.setAlwaysOnTop(true);
+			annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
+			annotation.getAttributes().setBorderColor(Color.BLACK);
+			annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
 		} else {
 			annotation.setText(text);
 		}

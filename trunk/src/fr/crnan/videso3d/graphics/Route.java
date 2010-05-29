@@ -15,13 +15,12 @@
  */
 package fr.crnan.videso3d.graphics;
 
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Représentation graphique d'une route
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public interface Route {
 
