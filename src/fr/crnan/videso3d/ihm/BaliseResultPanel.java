@@ -317,7 +317,15 @@ public class BaliseResultPanel extends ResultPanel {
 
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
-			ResultSet rs = st.executeQuery("select type, oaci, balise, niveau, ecart, eve, act, mod, base from consignes where oaci "+forgeSql(balise)+" or balise "+forgeSql(balise));
+			String query = "select type, oaci, balise, niveau, ecart, eve, act, mod, base from consignes where oaci "+forgeSql(balise);
+			ResultSet rs = st.executeQuery("select oaci from consignes where oaci "+forgeSql(balise));
+			if(rs.next() && !balise.endsWith("*")){//ajout des consignes en 999 si la recherche concerne un terrain
+				query += " or oaci ='"+balise.substring(0, 3)+"9' ";
+				query += " or oaci ='"+balise.substring(0, 2)+"99' ";
+				query += " or oaci ='"+balise.substring(0, 1)+"999' ";
+			} 
+			query += " or balise "+forgeSql(balise);
+			rs = st.executeQuery(query);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnCount = rsmd.getColumnCount();
 			while(rs.next()){
