@@ -274,7 +274,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 			
 			stip.add(new AbstractAction() {
 				{
-					putValue(Action.NAME, "Possède "+(st.executeQuery("select COUNT(*) from consignes where balise='"+name+"'")).getInt(1)+" consignes.");
+					putValue(Action.NAME, "Possède "+(st.executeQuery("select COUNT(*) from consignes where balise='"+name+"' or oaci='"+name+"'" )).getInt(1)+" consignes.");
 				}
 				@Override
 				public void actionPerformed(ActionEvent e) {
