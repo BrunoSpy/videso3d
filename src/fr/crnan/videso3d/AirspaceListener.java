@@ -35,6 +35,7 @@ import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
+import fr.crnan.videso3d.layers.VAnnotationLayer;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.render.Annotation;
@@ -155,7 +156,12 @@ public class AirspaceListener implements SelectListener {
 					lastToolTip = o;
 					Point point = event.getPickPoint();
 					if(event.getTopObject() instanceof ObjectAnnotation){
-						lastAnnotation = ((ObjectAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5)); //décalage de 5 pixels pour éviter le clignotement
+						Annotation a = ((ObjectAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5)); //décalage de 5 pixels pour éviter le clignotement
+						if(!((VAnnotationLayer)this.wwd.getAnnotationLayer()).contains(a)){
+							//on ne modifie lastAnnotation que si l'annotation n'a pas déjà été ajoutée
+							//(notamment lors d'un clic gauche)
+							lastAnnotation = a;
+						}
 					} 
 					if(lastAnnotation != null) this.wwd.getAnnotationLayer().addAnnotation(lastAnnotation);
 					this.wwd.redraw();
