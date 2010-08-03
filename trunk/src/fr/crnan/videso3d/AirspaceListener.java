@@ -53,7 +53,7 @@ import gov.nasa.worldwind.render.markers.MarkerAttributes;
 /**
  * Listener d'évènements sur les airspaces et shapes
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 public class AirspaceListener implements SelectListener {
 
@@ -377,7 +377,8 @@ public class AirspaceListener implements SelectListener {
 				}
 			}
 		} else if (event.getEventAction() == SelectEvent.DRAG){
-			if(!(event.getTopObject() instanceof Annotation)) {//ne pas transférer l'évènement pour les annotations
+			if(!(event.getTopObject() instanceof Annotation) &&  //ne pas transférer l'évènement pour les annotations
+				!(this.wwd.getMeasureTool().isArmed()) ){ //pas de transfert si l'alidad est activé
 				this.wwd.getView().getViewInputHandler().mouseDragged(event.getMouseEvent());
 			}
 		}
