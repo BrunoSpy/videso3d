@@ -22,13 +22,13 @@ import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route.Type;
 import gov.nasa.worldwind.avlist.AVKey;
-import gov.nasa.worldwind.layers.SurfaceShapeLayer;
+import gov.nasa.worldwind.layers.RenderableLayer;
 /**
  * 
  * @author Bruno Spyckerelle
  * @version 0.2
  */
-public class Routes2DLayer extends SurfaceShapeLayer implements RoutesLayer {
+public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 
 	/**
 	 * Liste des routes

@@ -27,7 +27,7 @@ import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.layers.SurfaceShapeLayer;
+import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfacePolygon;
@@ -36,7 +36,7 @@ import gov.nasa.worldwind.render.SurfacePolygon;
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class FrontieresStipLayer extends SurfaceShapeLayer {
+public class FrontieresStipLayer extends RenderableLayer {
 
 	private static final double [] FRANCE = {
 		43.4, -1.7697222222222222, 
@@ -1170,6 +1170,8 @@ public class FrontieresStipLayer extends SurfaceShapeLayer {
 		});
 		france.setAttributes(attrs);
 	
+		this.setPickEnabled(false);
+		
 		this.addRenderable(france);		
 		
 		this.setPickEnabled(false);
