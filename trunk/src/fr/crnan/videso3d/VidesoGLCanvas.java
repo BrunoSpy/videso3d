@@ -55,6 +55,7 @@ import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
+import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.stip.Secteur;
 import fr.crnan.videso3d.util.VMeasureTool;
 import fr.crnan.videso3d.layers.RadioCovLayer;
@@ -77,9 +78,9 @@ import gov.nasa.worldwind.layers.AnnotationLayer;
 import gov.nasa.worldwind.layers.LatLonGraticuleLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
+import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
-import gov.nasa.worldwind.layers.SurfaceShapeLayer;
 import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
@@ -126,7 +127,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Layer pour les radars
 	 */
-	private SurfaceShapeLayer radarsLayer = new SurfaceShapeLayer();
+	private RenderableLayer radarsLayer = new RenderableLayer();
 	{radarsLayer.setName("Radars");}
 	/**
 	 * Liste des radars affichés
@@ -228,7 +229,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	
 	public AnnotationLayer getAnnotationLayer(){
 		if(annotationLayer == null){
-			annotationLayer = new AnnotationLayer();
+			annotationLayer = new VAnnotationLayer();
 			this.getModel().getLayers().add(annotationLayer);
 		}
 		return annotationLayer;

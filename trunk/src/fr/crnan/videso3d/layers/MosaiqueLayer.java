@@ -29,7 +29,7 @@ import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AirspaceLayer;
-import gov.nasa.worldwind.layers.SurfaceShapeLayer;
+import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfacePolyline;
 import gov.nasa.worldwind.render.UserFacingText;
@@ -79,7 +79,7 @@ public class MosaiqueLayer extends LayerSet {
 	/**
 	 * Layer pour les mosaiques 2D
 	 */
-	private SurfaceShapeLayer shapeLayer = new SurfaceShapeLayer();
+	private RenderableLayer shapeLayer = new RenderableLayer();
 	/**
 	 * Layer pour les numéros
 	 */
@@ -87,7 +87,7 @@ public class MosaiqueLayer extends LayerSet {
 	/**
 	 * Layer pour la grille
 	 */
-	private SurfaceShapeLayer grilleLayer = new SurfaceShapeLayer();
+	private RenderableLayer grilleLayer = new RenderableLayer();
 	/**
 	 * Création d'une mosaïque</br>
 	 * @param annotationTitle {@link String} Titre des annotations des carrés

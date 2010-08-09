@@ -18,7 +18,7 @@ package fr.crnan.videso3d.edimap;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.layers.LayerSet;
 import gov.nasa.worldwind.layers.AirspaceLayer;
-import gov.nasa.worldwind.layers.SurfaceShapeLayer;
+import gov.nasa.worldwind.layers.RenderableLayer;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,7 +46,7 @@ public class Carte extends LayerSet {
 	/**
 	 * Layers
 	 */
-	private SurfaceShapeLayer surfaceLayer = new SurfaceShapeLayer();
+	private RenderableLayer surfaceLayer = new RenderableLayer();
 	private AirspaceLayer airspaceLayer = new AirspaceLayer();
 	
 	public Carte(Entity carte, PaletteEdimap palette){
