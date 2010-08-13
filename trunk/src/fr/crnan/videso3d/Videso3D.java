@@ -16,12 +16,15 @@
 
 package fr.crnan.videso3d;
 
+import java.util.logging.Level;
+
 import javax.swing.UIManager;
 
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.MainWindow;
 
 import gov.nasa.worldwind.Configuration;
+import gov.nasa.worldwind.util.Logging;
 
 /**
  * @author Bruno Spyckerelle
@@ -29,7 +32,7 @@ import gov.nasa.worldwind.Configuration;
  */
 public class Videso3D {
 
-	public static final String VERSION = "0.7.4";
+	public static final String VERSION = "0.8.0";
 	
 	public static void main(final String[] args)
 	{
@@ -59,6 +62,7 @@ public class Videso3D {
 				if(args.length > 0 && args[0].equals("analyze")) { 
 					AnalyzeUI.showAnalyzeUI();
 				} else {
+					Logging.logger().setLevel(Level.ALL);
 					new MainWindow();
 				}
 			}
