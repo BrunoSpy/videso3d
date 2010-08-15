@@ -29,13 +29,16 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.edimap.Carte;
 import fr.crnan.videso3d.edimap.Cartes;
 import fr.crnan.videso3d.edimap.Entity;
+import gov.nasa.worldwind.util.Logging;
 
 /**
  * Sélecteur de cartes edimap
@@ -113,6 +116,9 @@ public class EdimapView extends JPanel {
 		return panel;
 	}
 	
+	/**
+	 * Réinitialise la vue
+	 */
 	public void reset() {
 		for(JCheckBox c : checkBoxList){
 			if(c.isSelected()){
@@ -129,27 +135,32 @@ public class EdimapView extends JPanel {
 	private class ItemCheckListener implements ItemListener {
 		@Override
 		public void itemStateChanged(ItemEvent e) {
+			String name = ((JCheckBox)e.getSource()).getText();
+			String type = "";
+			if(dynamiques.isAncestorOf((Component) e.getSource())){
+				type = "dynamique";
+			} else if (statiques.isAncestorOf((Component) e.getSource())){
+				type = "statique";
+			} else if (secteurs.isAncestorOf((Component) e.getSource())){
+				type = "secteur";
+			} else if (volumes.isAncestorOf((Component) e.getSource())){
+				type = "volume";
+			} 
+			Carte carte = null;
 			try {
-				String name = ((JCheckBox)e.getSource()).getText();
-				String type = "";
-				if(dynamiques.isAncestorOf((Component) e.getSource())){
-					type = "dynamique";
-				} else if (statiques.isAncestorOf((Component) e.getSource())){
-					type = "statique";
-				} else if (secteurs.isAncestorOf((Component) e.getSource())){
-					type = "secteur";
-				} else if (volumes.isAncestorOf((Component) e.getSource())){
-					type = "volume";
-				} 
-				wwd.addEdimapLayer(cartes.getCarte(name, type));
-				wwd.toggleLayer(cartes.getCarte(name, type), e.getStateChange() == ItemEvent.SELECTED);
+				carte = cartes.getCarte(name, type);
 			} catch (FileNotFoundException e1) {
-				e1.printStackTrace();
+				Logging.logger().severe("La carte "+e1.getMessage()+" est inexistante.");
+				if(e.getStateChange() == ItemEvent.SELECTED){//ne pas envoyer deux fois le message d'erreur
+					JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />La carte demandée n'a pas pû être trouvée.<br /><br />" +
+							"<b>Solution :</b><br />Supprimez la base des cartes et réimportez là.</html>", "Erreur", JOptionPane.ERROR_MESSAGE);
+				}
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
+			wwd.addEdimapLayer(carte);
+			wwd.toggleLayer(carte, e.getStateChange() == ItemEvent.SELECTED);
 		}
-
 	}
 
 
