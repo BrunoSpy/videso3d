@@ -57,6 +57,7 @@ import fr.crnan.videso3d.pays.Pays;
 import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.stpv.Stpv;
 import fr.crnan.videso3d.radio.Radio;
+import gov.nasa.worldwind.util.Logging;
 
 /**
  * Interface de gestion des base de données.<br />
@@ -172,6 +173,11 @@ public class DatabaseManagerUI extends JDialog {
 				Exsa exsa = new Exsa(file.getAbsolutePath());
 				this.getDatas(exsa, "Import des données EXSA", "EXSA");
 				return;
+			} else if (suffix.equalsIgnoreCase(".mdb")) { //base SkyView
+				DatabaseManager.createSkyView(file.getName(), file.getAbsolutePath());
+				DatabaseManager.importFinished(Type.SkyView);
+				((DBTableModel)table.getModel()).update();
+				return;
 			} else if (file.getName().equalsIgnoreCase("output.xml")){
 				//Radio radio = new Radio(file.getAbsolutePath());
 				Radio radio = new Radio();		
@@ -205,7 +211,7 @@ public class DatabaseManagerUI extends JDialog {
 			this.getDatas(pays, "Import des contours des pays", "PAYS");
 		} 	
 		else {
-			System.out.println("Pas de fichier de base de données trouvé");
+			Logging.logger().warning("Pas de fichier de base de données trouvé");
 		}
 
 	}
@@ -252,7 +258,6 @@ public class DatabaseManagerUI extends JDialog {
 		
 		private String[] titles = {"id", "Nom", "Type", "Date d'import", "Commentaire", "Sélectionné"};
 		
-		@SuppressWarnings("unchecked")
 		private Class[] types = new Class[] {Integer.class, String.class, String.class, String.class, String.class, Boolean.class};
 				
 		private Vector<Vector<Object>> data = new Vector<Vector<Object>>();

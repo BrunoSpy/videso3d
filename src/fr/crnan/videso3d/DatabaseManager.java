@@ -16,6 +16,8 @@
 
 package fr.crnan.videso3d;
 
+import gov.nasa.worldwind.util.Logging;
+
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileWriter;
@@ -35,7 +37,7 @@ import javax.swing.event.SwingPropertyChangeSupport;
 /**
  * Gère la base de données
  * @author Bruno Spyckerelle
- * @version 0.7.1
+ * @version 0.8.0
  */
 public final class DatabaseManager {
 	
@@ -51,7 +53,7 @@ public final class DatabaseManager {
 	/**
 	 * Types de base de données possibles
 	 */
-	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, RadioCov, Databases};
+	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, RadioCov, SkyView, Databases};
 	/**
 	 * Base des frontières Pays
 	 */
@@ -80,6 +82,10 @@ public final class DatabaseManager {
 	 * Base couvertures radios sélectionnée
 	 */
 	private Connection currentRadioCov;	
+	/**
+	 * Base SkyView
+	 */
+	private Connection currentSkyView;
 	/**
 	 * Connection par défaut
 	 */
@@ -230,6 +236,31 @@ public final class DatabaseManager {
 				}
 			}
 			return instance.databases;
+		case SkyView:
+			//il faut d'abord récupérer le chemin de la bdd
+			String path = getSkyViewPath(name);
+			if(path != null) {
+				try {
+					Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				String database = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=";
+				database += path + ";DriverID=22;READONLY=true}";
+				if(instance.currentSkyView == null) {
+					instance.currentSkyView = DriverManager.getConnection(database, "", "");
+				} else {
+					if(!instance.currentSkyView.getMetaData().getURL().equals(database)){
+						instance.currentSkyView.close();
+						instance.currentSkyView = DriverManager.getConnection(database, "", "");
+					}
+				}
+				return instance.currentSkyView;
+			} else {
+				//aucune base trouvée
+				return null;
+			}
+			
 		default:
 			return null;
 		}
@@ -298,6 +329,26 @@ public final class DatabaseManager {
 		//à l'ajout d'une base de données, l'envoi de propertychange est demandé par le Filemanager à la fin de l'import
 	}
 
+	/**
+	 * Ajoute une référence à une base SkyView
+	 * @param name
+	 * @param path
+	 */
+	public static void createSkyView(String name, String path){
+		PreparedStatement insertClef;
+		try {
+			insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
+			insertClef.setString(1, "path");
+			insertClef.setString(2, name);
+			insertClef.setString(3, path);
+			insertClef.executeUpdate();
+			insertClef.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		DatabaseManager.addDatabase(name, Type.SkyView, new SimpleDateFormat().format(new Date()));
+	}
+	
 	/**
 	 * Crée la structure des tables relatives aux données EXSA
 	 * @param name Nom de la base de données recevant les tables
@@ -765,21 +816,36 @@ public final class DatabaseManager {
 				instance.currentRadioCov = null;
 			}
 			break;	
+		case SkyView:
+			String path = getSkyViewPath(name);
+			if(path != null){
+				String driver = "jdbc:odbc:Driver={Microsoft Access Driver (*.mdb)};DBQ=";
+				driver += path + ";DriverID=22;READONLY=true}";
+				if(instance.currentSkyView != null && instance.currentSkyView.getMetaData().getURL().equals(driver)){
+					instance.currentSkyView.close();
+					instance.currentSkyView = null;
+				}
+			}
+			break;
 		default:
 			break;
 		}
-		//suppression du fichier correspondant
-		File file = new File(name);
-		if(!file.delete()) {	
-			try {
-				//on vide le fichier si on arrive pas à le supprimer
-				//c'est moche, mais c'est comme ça sous windows
-				FileWriter out = new FileWriter(file);
-				out.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+
+		//suppression du fichier correspondant seulement si ce n'est pas une base SkyView
+		if(type.compareTo(Type.SkyView) != 0) {
+			File file = new File(name);
+			if(!file.delete()) {	
+				try {
+					//on vide le fichier si on arrive pas à le supprimer
+					//c'est moche, mais c'est comme ça sous windows
+					FileWriter out = new FileWriter(file);
+					out.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
+		//on vérifie si la bdd était sélectionnée
 		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		ResultSet rs = st.executeQuery("select selected from databases where name = '"+name+"'");
 		boolean changed = false;
@@ -907,6 +973,23 @@ public final class DatabaseManager {
 	}
 
 	/**
+	 * Retourne le chemin correspondant à une base SkyView.
+	 * Renvoit null si aucune base n'est trouvée
+	 * @param name
+	 * @return Le chemin correspondant à la base SkyView <code>name</code>
+	 * @throws SQLException 
+	 */
+	private static String getSkyViewPath(String name) throws SQLException{
+		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+		ResultSet rs = st.executeQuery("select value from clefs where type ='"+name+"' and name = 'path'");
+		if(rs.next()){
+			return rs.getString(1);
+		} else {
+			return null;
+		}
+	}
+	
+	/**
 	 * Renvoie une connexion vers la base de données STIP sélectionnée
 	 * @return {@link Statement}
 	 * @throws SQLException 
@@ -951,6 +1034,15 @@ public final class DatabaseManager {
 		return DatabaseManager.getCurrent(Type.RadioCov);
 	}
 	
+	/**
+	 * Renvoit une connection vers la base SkyView sélectionnée
+	 * @return {@link Statement}
+	 * @throws SQLException
+	 */
+	public static Statement getCurrentSkyView() throws SQLException {
+		return DatabaseManager.getCurrent(Type.SkyView);
+	}
+	
 	public static void closeAll(){
 			try {
 				if(instance.currentPays != null) { instance.currentPays.close(); instance.currentPays = null;}
@@ -960,6 +1052,7 @@ public final class DatabaseManager {
 				if(instance.currentEdimap != null) { instance.currentEdimap.close();instance.currentEdimap= null;}
 				if(instance.currentODS != null) { instance.currentODS.close();instance.currentODS = null;}
 				if(instance.currentRadioCov != null) { instance.currentRadioCov.close();instance.currentRadioCov = null;}
+				if(instance.currentSkyView != null) {instance.currentSkyView.close(); instance.currentSkyView = null;}
 				if(instance.databases != null) { instance.databases.close(); instance.databases = null;}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -971,6 +1064,7 @@ public final class DatabaseManager {
 	 * @param type Type de la base de données importées
 	 */
 	public static void importFinished(Type type){
+		Logging.logger().info("La base de type "+type.toString()+" a changée.");
 		instance.support.firePropertyChange(BASE_CHANGED, null, type);
 	}
 	
@@ -979,7 +1073,7 @@ public final class DatabaseManager {
 	 * @param type Type de la base de données importées
 	 */
 	public static void importFinished(String type){
-		instance.support.firePropertyChange(BASE_CHANGED, null, stringToType(type));
+		DatabaseManager.importFinished(stringToType(type));
 	}
 	
 	/**
@@ -988,20 +1082,22 @@ public final class DatabaseManager {
 	 * @return Le Type correspondant
 	 */
 	public static Type stringToType(String type){
-		if(type.equals("STIP")) {
+		if(type.equalsIgnoreCase("STIP")) {
 			return Type.STIP;
-		} else if(type.equals("PAYS")){
+		} else if(type.equalsIgnoreCase("PAYS")){
 			return Type.PAYS;
-		} else if(type.equals("STPV")){
+		} else if(type.equalsIgnoreCase("STPV")){
 			return Type.STPV;
-		} else if(type.equals("EXSA")){
+		} else if(type.equalsIgnoreCase("EXSA")){
 			return Type.EXSA;
-		} else if(type.equals("Edimap")){
+		} else if(type.equalsIgnoreCase("Edimap")){
 			return Type.Edimap;
-		} else if(type.equals("Ods")){
+		} else if(type.equalsIgnoreCase("Ods")){
 			return Type.Ods;
-		} else if(type.equals("RadioCov")){
+		} else if(type.equalsIgnoreCase("RadioCov")){
 			return Type.RadioCov;
+		} else if(type.equalsIgnoreCase("SkyView")){
+			return Type.SkyView;
 		}
 		return null;
 	}
