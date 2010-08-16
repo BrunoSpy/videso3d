@@ -43,6 +43,7 @@ import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.stip.Stip;
+import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 /**
@@ -57,6 +58,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 	private TitledPanel titleAreaPanel = new TitledPanel("Informations");
 
 	private VidesoGLCanvas wwd = null;	
+	private StipController stipController;
 	
 	public ContextPanel(){
 		super();
@@ -144,8 +146,8 @@ public class ContextPanel extends JPanel implements SelectListener {
 				}
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if(wwd!=null){
-						wwd.highlight(name);
+					if(stipController!=null){
+						stipController.highlight(name);
 					}
 				}
 			});
@@ -156,8 +158,8 @@ public class ContextPanel extends JPanel implements SelectListener {
 				}
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if(wwd!=null){
-						wwd.highlight(name);
+					if(stipController!=null){
+						stipController.highlight(name);
 					}
 				}
 			});
@@ -179,7 +181,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 							}
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								wwd.highlight(tSecteur);
+								stipController.highlight(tSecteur);
 							}
 						});
 					}	
@@ -196,7 +198,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 					}
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						wwd.highlight(tSecteur);
+						stipController.highlight(tSecteur);
 					}
 				});
 			}
@@ -492,7 +494,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 				}
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					wwd.highlight(name);
+					stipController.highlight(name);
 				}
 			});
 			vue.add(new AbstractAction() {
@@ -503,11 +505,11 @@ public class ContextPanel extends JPanel implements SelectListener {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					if(show) {
-						wwd.showRoutesBalises(name);
+						stipController.showRoutesBalises(name);
 						putValue(Action.NAME, "<html>Cacher les balises.</html>");
 						show = false;
 					} else {
-						wwd.hideRoutesBalises(name);
+						stipController.hideRoutesBalises(name);
 						putValue(Action.NAME, "<html>Afficher les balises.</html>");
 						show = true;
 					}
@@ -574,13 +576,13 @@ public class ContextPanel extends JPanel implements SelectListener {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if(show){
-					wwd.getBalisesNPLayer().showBalises(balises);
-					wwd.getBalisesPubLayer().showBalises(balises);
-					putValue(Action.NAME, "Cacher les "+balises.size()+" balises.");
-					show = false;
+						stipController.getBalisesNPLayer().showBalises(balises);
+						stipController.getBalisesPubLayer().showBalises(balises);
+						putValue(Action.NAME, "Cacher les "+balises.size()+" balises.");
+						show = false;
 					} else {
-						wwd.getBalisesNPLayer().unshowBalises(balises);
-						wwd.getBalisesPubLayer().unshowBalises(balises);
+						stipController.getBalisesNPLayer().unshowBalises(balises);
+						stipController.getBalisesPubLayer().unshowBalises(balises);
 						putValue(Action.NAME, "Afficher les "+balises.size()+" balises.");
 						show = true;
 					}
@@ -607,6 +609,10 @@ public class ContextPanel extends JPanel implements SelectListener {
 
 	public void setWWD(VidesoGLCanvas wwd) {
 		this.wwd = wwd;
+	}
+	
+	public void setStipController(StipController controller){
+		this.stipController = controller;
 	}
 	
 }

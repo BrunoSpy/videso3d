@@ -22,8 +22,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -31,22 +29,26 @@ import java.util.Vector;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingWorker;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.edimap.EdimapController;
+import fr.crnan.videso3d.exsa.STRController;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.ihm.components.ButtonTabComponent;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
+import fr.crnan.videso3d.skyview.SkyViewController;
+import fr.crnan.videso3d.stip.StipController;
+import fr.crnan.videso3d.stpv.StpvController;
 
 /**
  * Panel de configuration des objets affichés sur le globe
  * @author Bruno Spyckerelle
- * @version 0.4.1
+ * @version 0.4.2
  */
 @SuppressWarnings("serial")
 public class DataExplorer extends JPanel {
@@ -61,26 +63,15 @@ public class DataExplorer extends JPanel {
 	private Component edimap;
 	private Component stpv;
 	private Component radioCov;
-
-	private ProgressMonitor progressMonitor;
+	private Component skyview;
 	
 	/**
 	 * Constructeur
-	 * @param db {@link DatabaseManager} Association avec la gestionnaire de db
 	 * @param wwd {@link VidesoGLCanvas} Association avec la vue 3D
 	 */
 	public DataExplorer(final VidesoGLCanvas wwd){
 
 		this.wwd = wwd;
-
-		progressMonitor = new ProgressMonitor(this, "Mise à jour", "", 0, 6);
-		wwd.addPropertyChangeListener("step", new PropertyChangeListener() {
-			
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				progressMonitor.setNote(evt.getNewValue().toString());
-			}
-		});
 		
 		setLayout(new BorderLayout());
 
@@ -98,55 +89,98 @@ public class DataExplorer extends JPanel {
 		this.updateStpvView();
 		this.updateEdimapView();
 		this.updateRadioCovView();
+		this.updateSkyView();
 
-		add(tabs, BorderLayout.CENTER);
+		add(tabs, BorderLayout.CENTER);		
 		
-		//listener des changements de base de données
-		DatabaseManager.addPropertyChangeListener(DatabaseManager.BASE_CHANGED, new PropertyChangeListener() {
-			
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				switch ((Type)evt.getNewValue()) {
-				case STIP:
-					//précréation des éléments 3D dans un SwingWorker avec ProgressMonitor
-					new SwingWorker<Integer, Integer>(){
-
-						@Override
-						protected Integer doInBackground() throws Exception {
-							progressMonitor.setProgress(0);
-							wwd.buildStip();
-							return null;
-						}
-
-						@Override
-						protected void done() {
-							updateStipView();
-							progressMonitor.close();
-						}
-					}.execute();
-					break;
-				case STPV:
-					updateStpvView();
-					break;
-				case Edimap:
-					updateEdimapView();
-					break;
-				case EXSA:
-					updateStrView();
-					break;
-				case RadioCov:				
-					updateRadioCovView();
-					break;
-				default : break;
-				}				
-			}
-		});
 	}	
 
+	/**
+	 * Force une mise à jour de la vue
+	 */
+	public void updateView(Type type){
+		switch (type) {
+		case STIP:
+			updateStipView();
+			break;
+		case STPV:
+			updateStpvView();
+			break;
+		case Edimap:
+			updateEdimapView();
+			break;
+		case EXSA:
+			updateStrView();
+			break;
+		case RadioCov:				
+			updateRadioCovView();
+			break;
+		case SkyView:
+			updateSkyView();
+			break;
+		default : break;
+		}	
+	}
+	
+	//TODO en attendant de faire mieux
+	public StipController getStipController(){
+		if (stip != null){
+			return ((StipView)stip).getController();
+		} 
+		return null;
+	}
+	
 	private JScrollPane buildTab(Component panel){
 		JScrollPane pane = new JScrollPane(panel);
 		pane.setBorder(null);
 		return pane;
+	}
+	
+	/**
+	 * Met à jour le tab SkyView
+	 */
+	public void updateSkyView() {	
+		if(skyview == null){
+			try {
+				if(DatabaseManager.getCurrentSkyView() != null){
+					skyview = new SkyView(new SkyViewController(wwd));
+					tabs.add("SkyView", skyview);
+					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
+					buttonTab.getButton().addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							try {
+								DatabaseManager.unselectDatabase(Type.SkyView);
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+					tabs.setTabComponentAt(tabs.indexOfComponent(skyview), buttonTab);
+					tabs.setSelectedIndex(tabs.getTabCount()-1);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				if(DatabaseManager.getCurrentSkyView() != null){
+					int i = tabs.indexOfComponent(skyview);
+					skyview = new SkyView(new SkyViewController(wwd));
+					tabs.setComponentAt(i, skyview);
+					tabs.setSelectedIndex(i);
+				} else {
+					int i = tabs.indexOfComponent(skyview);
+					if(i>=0){
+						tabs.removeTabAt(i);
+					}
+					skyview = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**
@@ -157,7 +191,7 @@ public class DataExplorer extends JPanel {
 		if(stip == null){
 			try {
 				if(DatabaseManager.getCurrentStip() != null){
-					stip = new StipView(wwd);
+					stip = new StipView(new StipController(wwd));
 					tabs.add("Stip", stip);
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {
@@ -181,10 +215,11 @@ public class DataExplorer extends JPanel {
 			try {
 				if(DatabaseManager.getCurrentStip() != null){
 					int i = tabs.indexOfComponent(stip);
-					stip = new StipView(wwd);
+					stip = new StipView(new StipController(wwd));
 					tabs.setComponentAt(i, stip);
 					tabs.setSelectedIndex(i);
 				} else {
+					((StipView)stip).getController().reset();
 					int i = tabs.indexOfComponent(stip);
 					if(i>=0){
 						tabs.removeTabAt(i);
@@ -204,7 +239,7 @@ public class DataExplorer extends JPanel {
 		if(exsa == null){
 			try {
 				if(DatabaseManager.getCurrentExsa() != null){
-					exsa = new StrView(wwd);
+					exsa = new StrView(new STRController(wwd));
 					exsaPane = this.buildTab(exsa);
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {
@@ -229,19 +264,17 @@ public class DataExplorer extends JPanel {
 			try {
 				if(DatabaseManager.getCurrentExsa() != null){
 					int i = tabs.indexOfComponent(exsaPane);
-					wwd.removeMosaiques();
-					wwd.removeRadars();
-					exsa = new StrView(wwd);
+					((StrView)exsa).getController().removeAllLayers();
+					exsa = new StrView(new STRController(wwd));
 					exsaPane = this.buildTab(exsa);
 					tabs.setComponentAt(i, exsaPane);
 					tabs.setSelectedIndex(i);
 				} else {
 					int i = tabs.indexOfComponent(exsaPane);
 					if(i>=0) tabs.removeTabAt(i);
+					((StrView)exsa).getController().removeAllLayers();
 					exsa = null;
 					exsaPane = null;
-					wwd.removeMosaiques();
-					wwd.removeRadars();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -256,7 +289,7 @@ public class DataExplorer extends JPanel {
 		if(stpv == null){
 			try {
 				if(DatabaseManager.getCurrentStpv() != null){
-					stpv = new StpvView(wwd);
+					stpv = new StpvView(new StpvController(wwd));
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {
 						
@@ -280,12 +313,14 @@ public class DataExplorer extends JPanel {
 			try {
 				if(DatabaseManager.getCurrentStpv() != null){
 					int i = tabs.indexOfComponent(stpv);
-					stpv = new StpvView(wwd);
+					((StpvView)stpv).getController().removeAllLayers();
+					stpv = new StpvView(new StpvController(wwd));
 					tabs.setComponentAt(i, stpv);
 					tabs.setSelectedIndex(i);
 				} else {
 					int i = tabs.indexOfComponent(stpv);
 					if(i>=0) tabs.removeTabAt(i);
+					((StpvView)stpv).getController().removeAllLayers();
 					stpv = null;
 				}
 			} catch (SQLException e) {
@@ -301,7 +336,7 @@ public class DataExplorer extends JPanel {
 		if(edimap == null){
 			try {
 				if(DatabaseManager.getCurrentEdimap() != null){
-					edimap = new EdimapView(wwd);
+					edimap = new EdimapView(new EdimapController(wwd));
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {
 						
@@ -325,12 +360,12 @@ public class DataExplorer extends JPanel {
 			try {
 				if(DatabaseManager.getCurrentEdimap() != null){
 					int i = tabs.indexOfComponent(edimap);
-					wwd.removeAllEdimapLayers();
-					edimap = new EdimapView(wwd);
+					((EdimapView)edimap).getController().removeAllLayers();
+					edimap = new EdimapView(new EdimapController(wwd));
 					tabs.setComponentAt(i, edimap);
 					tabs.setSelectedIndex(i);
 				} else {
-					wwd.removeAllEdimapLayers();
+					((EdimapView)edimap).getController().removeAllLayers();
 					int i = tabs.indexOfComponent(edimap);
 					if(i>=0) tabs.removeTabAt(i);
 					edimap = null;
@@ -456,6 +491,9 @@ public class DataExplorer extends JPanel {
 		}
 		if(edimap != null){
 			((EdimapView)edimap).reset();
+		}
+		if(stpv != null){
+			((StpvView)stpv).reset();
 		}
 		if (radioCov != null) {
 			((RadioCovView)radioCov).reset();

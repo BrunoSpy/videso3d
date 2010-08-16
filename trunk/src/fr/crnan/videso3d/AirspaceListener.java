@@ -36,6 +36,7 @@ import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
+import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.render.Annotation;
@@ -75,11 +76,18 @@ public class AirspaceListener implements SelectListener {
 
 	final private ContextPanel context;
 
-	public AirspaceListener(VidesoGLCanvas wwd, ContextPanel context){
+	private StipController stipController;
+	
+	public AirspaceListener(VidesoGLCanvas wwd, ContextPanel context, StipController stipController){
 		this.wwd = wwd;
 		this.context = context;
+		this.stipController = stipController;
 	}
 
+	public void setStipController(StipController stipController){
+		this.stipController = stipController;
+	}
+	
 	/* (non-Javadoc)
 	 * @see gov.nasa.worldwind.event.SelectListener#selected(gov.nasa.worldwind.event.SelectEvent)
 	 */
@@ -226,7 +234,7 @@ public class AirspaceListener implements SelectListener {
 
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								wwd.removeSecteur3D((Secteur3D)event.getTopObject());
+								stipController.hideObject(StipController.SECTEUR, ((Secteur3D)event.getTopObject()).getName());
 							}
 						});
 					} else if(event.getTopObject() instanceof Route3D) {
@@ -247,8 +255,8 @@ public class AirspaceListener implements SelectListener {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								Route3D r = (Route3D) event.getTopObject();
-								wwd.getRoutes3DLayer().hideRoute(r.getName());
-								wwd.hideRoutesBalises(r.getName());
+								stipController.getRoutes3DLayer().hideRoute(r.getName());
+								stipController.hideRoutesBalises(r.getName());
 							}
 						});
 					}
@@ -296,8 +304,8 @@ public class AirspaceListener implements SelectListener {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								Route2D r = (Route2D) event.getTopObject();
-								wwd.getRoutes2DLayer().hideRoute(r.getName());
-								wwd.hideRoutesBalises(r.getName());
+								stipController.getRoutes2DLayer().hideRoute(r.getName());
+								stipController.hideRoutesBalises(r.getName());
 							}
 						});
 					}

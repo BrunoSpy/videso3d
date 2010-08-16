@@ -1169,8 +1169,6 @@ public class FrontieresStipLayer extends RenderableLayer {
 			}
 		});
 		france.setAttributes(attrs);
-	
-		this.setPickEnabled(false);
 		
 		this.addRenderable(france);		
 		

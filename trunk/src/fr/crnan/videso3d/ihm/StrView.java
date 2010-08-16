@@ -34,14 +34,15 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.exsa.STRController;
+import fr.crnan.videso3d.ihm.components.DataView;
 /**
  * Sélecteur de données STR
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.2.3
  */
 @SuppressWarnings("serial")
-public class StrView extends JPanel {
+public class StrView extends JPanel implements DataView{
 
 	/**
 	 * Choix des mosaïques à afficher
@@ -75,12 +76,12 @@ public class StrView extends JPanel {
 	 */
 	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
 	
-	private VidesoGLCanvas wwd;
+	private STRController controller;
 	
 	private JRadioButton flat;
 	
-	public StrView( final VidesoGLCanvas wwd) {
-		this.wwd = wwd;
+	public StrView( final STRController controller) {
+		this.controller = controller;
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -99,7 +100,7 @@ public class StrView extends JPanel {
 			
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				wwd.toggleMosaique2D(e.getStateChange() == ItemEvent.SELECTED);
+				controller.set2D(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
 		JRadioButton round = new JRadioButton("3D");
@@ -129,6 +130,11 @@ public class StrView extends JPanel {
 		}
 	}
 	
+	@Override
+	public STRController getController(){
+		return this.controller;
+	}
+	
 	private JPanel buildPanel(JPanel panel, String query){
 		panel.setLayout(new GridLayout(0, 3));
 		int i = 0;
@@ -148,6 +154,7 @@ public class StrView extends JPanel {
 		return panel;
 	}
 	
+	@Override
 	public void reset() {
 		for(JCheckBox c : checkBoxList){
 			if(c.isSelected()){
@@ -167,31 +174,31 @@ public class StrView extends JPanel {
 			Object parent = ((JCheckBox)e.getSource()).getParent();
 			if(e.getStateChange() == ItemEvent.SELECTED) {
 				if(mosaiques.equals(parent)){
-					wwd.toggleMosaiqueLayer("mosaique", ((JCheckBox)e.getSource()).getText(), true, flat.isSelected());
+					controller.showObject(STRController.MOSAIQUE, ((JCheckBox)e.getSource()).getText());
 				} else if (capa.equals(parent)){
-					wwd.toggleMosaiqueLayer("capa", ((JCheckBox)e.getSource()).getText(), true, flat.isSelected());
+					controller.showObject(STRController.MOSAIQUE_CAPA, ((JCheckBox)e.getSource()).getText());
 				} else if (dyn.equals(parent)){
-					wwd.toggleMosaiqueLayer("dyn", ((JCheckBox)e.getSource()).getText(), true, flat.isSelected());
+					controller.showObject(STRController.MOSAIQUE_DYN, ((JCheckBox)e.getSource()).getText());
 				}else if (zocc.equals(parent)){
-					wwd.toggleMosaiqueLayer("zocc", ((JCheckBox)e.getSource()).getText(), true, flat.isSelected());
+					controller.showObject(STRController.MOSAIQUE_ZOCC, ((JCheckBox)e.getSource()).getText());
 				}else if (vvf.equals(parent)){
-					wwd.toggleMosaiqueLayer("vvf", ((JCheckBox)e.getSource()).getText(), true, flat.isSelected());
+					controller.showObject(STRController.MOSAIQUE_VVF, ((JCheckBox)e.getSource()).getText());
 				} else if(radars.equals(parent)){
-					wwd.addRadar(((JCheckBox)e.getSource()).getText());
+					controller.showObject(STRController.RADAR,((JCheckBox)e.getSource()).getText());
 				}
 			} else {
 				if(mosaiques.equals(parent)){
-					wwd.toggleMosaiqueLayer("mosaique", ((JCheckBox)e.getSource()).getText(), false, flat.isSelected());
+					controller.hideObject(STRController.MOSAIQUE, ((JCheckBox)e.getSource()).getText());
 				} else if (capa.equals(parent)){
-					wwd.toggleMosaiqueLayer("capa", ((JCheckBox)e.getSource()).getText(), false, flat.isSelected());
+					controller.hideObject(STRController.MOSAIQUE_CAPA, ((JCheckBox)e.getSource()).getText());
 				} else if (dyn.equals(parent)){
-					wwd.toggleMosaiqueLayer("dyn", ((JCheckBox)e.getSource()).getText(), false, flat.isSelected());
+					controller.hideObject(STRController.MOSAIQUE_DYN, ((JCheckBox)e.getSource()).getText());
 				}else if (zocc.equals(parent)){
-					wwd.toggleMosaiqueLayer("zocc", ((JCheckBox)e.getSource()).getText(), false, flat.isSelected());
+					controller.hideObject(STRController.MOSAIQUE_ZOCC, ((JCheckBox)e.getSource()).getText());
 				}else if (vvf.equals(parent)){
-					wwd.toggleMosaiqueLayer("vvf", ((JCheckBox)e.getSource()).getText(), false, flat.isSelected());
+					controller.hideObject(STRController.MOSAIQUE_VVF, ((JCheckBox)e.getSource()).getText());
 				} else if(radars.equals(parent)){
-					wwd.removeRadar(((JCheckBox)e.getSource()).getText());
+					controller.hideObject(STRController.RADAR, ((JCheckBox)e.getSource()).getText());
 				}
 			}
 		}

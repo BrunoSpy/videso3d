@@ -44,15 +44,16 @@ import javax.swing.JTabbedPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.layers.BaliseLayer;
+import fr.crnan.videso3d.stip.StipController;
 /**
  * Sélecteur d'objets Stip
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.4.0
  */
 @SuppressWarnings("serial")
-public class StipView extends JPanel {
+public class StipView extends JPanel implements DataView{
 
 	/**
 	 * Arbre des routes et balises
@@ -72,7 +73,7 @@ public class StipView extends JPanel {
 
 	private ItemSecteurListener itemSecteurListener = new ItemSecteurListener();
 
-	private VidesoGLCanvas wwd;
+	private StipController controller;
 
 	/**
 	 * Liste des checkbox de la vue, afin de pouvoir tous les désélectionner facilement
@@ -80,10 +81,10 @@ public class StipView extends JPanel {
 	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
 	private CheckboxTree routesTree;
 	
-	public StipView(VidesoGLCanvas wwd){
+	public StipView(StipController controller){
 
-		this.wwd = wwd;
-
+		this.controller = controller;
+		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 
@@ -105,7 +106,12 @@ public class StipView extends JPanel {
 		this.add(Box.createVerticalGlue());
 
 	}
-
+	
+	@Override
+	public StipController getController(){
+		return controller;
+	}
+	
 	/**
 	 * Titre du panel Routes.<br />
 	 * Contient un sélecteur pour choisir la méthode de représentation (2D/3D).
@@ -126,8 +132,8 @@ public class StipView extends JPanel {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				Boolean state = e.getStateChange() == ItemEvent.SELECTED;
-				wwd.toggleLayer(wwd.getRoutes2DLayer(), state);
-				wwd.toggleLayer(wwd.getRoutes3DLayer(), !state);
+				controller.toggleLayer(controller.getRoutes2DLayer(), state);
+				controller.toggleLayer(controller.getRoutes3DLayer(), !state);
 			}
 		});
 		JRadioButton round = new JRadioButton("3D");
@@ -267,10 +273,9 @@ public class StipView extends JPanel {
 	}	
 
 	
-	/**
-	 * Décoche tous les éléments cochés
-	 */
+	@Override
 	public void reset() {
+		this.controller.reset();
 		for(JCheckBox c : checkBoxList){
 			if(c.isSelected()){
 				c.setSelected(false);
@@ -292,23 +297,19 @@ public class StipView extends JPanel {
 			Object source = e.getItemSelectable();
 			if(e.getStateChange() == ItemEvent.SELECTED ) {
 				if(source == balisesPubChk){
-					((BaliseLayer)wwd.getBalisesPubLayer()).showAll();
-					((BaliseLayer)wwd.getBalisesPubLayer()).setLocked(true);
-//					wwd.toggleLayer(wwd.getBalisesPubLayer(), true);
+					((BaliseLayer)controller.getBalisesPubLayer()).showAll();
+					((BaliseLayer)controller.getBalisesPubLayer()).setLocked(true);
 				} else if(source == balisesNPChk){
-					((BaliseLayer)wwd.getBalisesNPLayer()).showAll();
-					((BaliseLayer)wwd.getBalisesNPLayer()).setLocked(true);
-//					wwd.toggleLayer(wwd.getBalisesNPLayer(), true);
+					((BaliseLayer)controller.getBalisesNPLayer()).showAll();
+					((BaliseLayer)controller.getBalisesNPLayer()).setLocked(true);
 				}
 			} else {
 				if(source == balisesPubChk){
-					((BaliseLayer)wwd.getBalisesPubLayer()).setLocked(false);
-					((BaliseLayer)wwd.getBalisesPubLayer()).removeAllBalises();
-//					wwd.toggleLayer(wwd.getBalisesPubLayer(), false);
+					((BaliseLayer)controller.getBalisesPubLayer()).setLocked(false);
+					((BaliseLayer)controller.getBalisesPubLayer()).removeAllBalises();
 				} else if(source == balisesNPChk){
-					((BaliseLayer)wwd.getBalisesNPLayer()).setLocked(false);
-					((BaliseLayer)wwd.getBalisesNPLayer()).removeAllBalises();
-//					wwd.toggleLayer(wwd.getBalisesNPLayer(), false);
+					((BaliseLayer)controller.getBalisesNPLayer()).setLocked(false);
+					((BaliseLayer)controller.getBalisesNPLayer()).removeAllBalises();
 				}
 			}
 		}      
@@ -326,38 +327,38 @@ public class StipView extends JPanel {
 			String name = (String)c.getUserObject();
 			if(name.equals("routes")){
 				if(e.isCheckedPath()){
-					wwd.getRoutes2DLayer().displayAllRoutes();
-					wwd.getRoutes3DLayer().displayAllRoutes();
+					controller.getRoutes2DLayer().displayAllRoutes();
+					controller.getRoutes3DLayer().displayAllRoutes();
 				} else  {
-					wwd.getRoutes2DLayer().hideAllRoutes();
-					wwd.getRoutes3DLayer().hideAllRoutes();
+					controller.getRoutes2DLayer().hideAllRoutes();
+					controller.getRoutes3DLayer().hideAllRoutes();
 				}
 			} else if (name.equals("AWY")){
 				if(e.isCheckedPath()){
-					wwd.getRoutes2DLayer().displayAllRoutesAwy();
-					wwd.getRoutes3DLayer().displayAllRoutesAwy();
+					controller.getRoutes2DLayer().displayAllRoutesAwy();
+					controller.getRoutes3DLayer().displayAllRoutesAwy();
 				} else  {
-					wwd.getRoutes2DLayer().hideAllRoutesAWY();
-					wwd.getRoutes3DLayer().hideAllRoutesAWY();
+					controller.getRoutes2DLayer().hideAllRoutesAWY();
+					controller.getRoutes3DLayer().hideAllRoutesAWY();
 				}
 			} else if(name.equals("PDR")) {
 				if(e.isCheckedPath()){
-					wwd.getRoutes2DLayer().displayAllRoutesPDR();
-					wwd.getRoutes3DLayer().displayAllRoutesPDR();
+					controller.getRoutes2DLayer().displayAllRoutesPDR();
+					controller.getRoutes3DLayer().displayAllRoutesPDR();
 				} else  {
-					wwd.getRoutes2DLayer().hideAllRoutesPDR();
-					wwd.getRoutes3DLayer().hideAllRoutesPDR();
+					controller.getRoutes2DLayer().hideAllRoutesPDR();
+					controller.getRoutes3DLayer().hideAllRoutesPDR();
 				}
 				//TODO corriger la condition
 			} else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("AWY") ||
 					((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("PDR")) {
 				if(e.isCheckedPath()){
-					wwd.getRoutes2DLayer().displayRoute(name);
-					wwd.getRoutes3DLayer().displayRoute(name);
+					controller.getRoutes2DLayer().displayRoute(name);
+					controller.getRoutes3DLayer().displayRoute(name);
 				} else {
-					wwd.getRoutes2DLayer().hideRoute(name);
-					wwd.getRoutes3DLayer().hideRoute(name);
-					wwd.hideRoutesBalises(name);
+					controller.getRoutes2DLayer().hideRoute(name);
+					controller.getRoutes3DLayer().hideRoute(name);
+					controller.hideRoutesBalises(name);
 				}
 			} 
 		}
@@ -373,10 +374,10 @@ public class StipView extends JPanel {
 		public void itemStateChanged(ItemEvent e) {
 			String name = ((JCheckBox)e.getSource()).getText();
 			if(e.getStateChange() == ItemEvent.SELECTED){
-				wwd.addSecteur3D(name);
+				controller.showObject(StipController.SECTEUR, name);
 			}
 			else {
-				wwd.removeSecteur3D(name);
+				controller.hideObject(StipController.SECTEUR, name);
 			}
 		}
 
