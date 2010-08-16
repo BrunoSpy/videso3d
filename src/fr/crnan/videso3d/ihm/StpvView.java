@@ -22,6 +22,8 @@ import java.awt.event.ItemListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -30,14 +32,16 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.VidesoController;
+import fr.crnan.videso3d.ihm.components.DataView;
+import fr.crnan.videso3d.stpv.StpvController;
 /**
  * Sélecteur de données STPV
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 @SuppressWarnings("serial")
-public class StpvView extends JPanel {
+public class StpvView extends JPanel implements DataView{
 
 	/**
 	 * Mosaique
@@ -46,10 +50,12 @@ public class StpvView extends JPanel {
 	
 	private ItemCheckListener itemCheckListener = new ItemCheckListener();
 	
-	private VidesoGLCanvas wwd;
+	private List<JCheckBox> chkList = new LinkedList<JCheckBox>();
 	
-	public StpvView(VidesoGLCanvas wwd){
-		this.wwd = wwd;
+	private VidesoController controller;
+	
+	public StpvView(VidesoController controller){
+		this.controller = controller;
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -65,6 +71,11 @@ public class StpvView extends JPanel {
 		}
 	}
 
+	@Override
+	public VidesoController getController(){
+		return controller;
+	}
+	
 	private JPanel buildPanel(JPanel panel, String query){
 		panel.setLayout(new GridLayout(0, 3));
 		int i = 0;
@@ -74,6 +85,7 @@ public class StpvView extends JPanel {
 			while(rs.next()){
 				JCheckBox chk = new JCheckBox(rs.getString(1));
 				chk.addItemListener(itemCheckListener);
+				chkList.add(chk);
 				panel.add(chk);	
 				i++;
 			}
@@ -83,7 +95,16 @@ public class StpvView extends JPanel {
 		
 		return panel;
 	}
-
+	
+	@Override
+	public void reset() {
+		for(JCheckBox c : chkList){
+			if(c.isSelected()){
+				c.setSelected(false);
+			}
+		}
+	}
+	
 	/*---------------------------------------------------------*/
 	/*------------------- Listeners ---------------------------*/
 	/*---------------------------------------------------------*/
@@ -95,15 +116,17 @@ public class StpvView extends JPanel {
 			Object parent = ((JCheckBox)e.getSource()).getParent();
 			if(e.getStateChange() == ItemEvent.SELECTED) {
 				if(mosaique.equals(parent)){
-					wwd.toggleMosaiqueLayer("stpv", ((JCheckBox)e.getSource()).getText(), true, true);
+					controller.showObject(StpvController.MOSAIQUE, ((JCheckBox)e.getSource()).getText());
 				} 
 			} else {
 				if(mosaique.equals(parent)){
-					wwd.toggleMosaiqueLayer("stpv", ((JCheckBox)e.getSource()).getText(), false, true);
+					controller.hideObject(StpvController.MOSAIQUE, ((JCheckBox)e.getSource()).getText());
 				}
 			}
 		}
 		
 	}
+
+
 }
 

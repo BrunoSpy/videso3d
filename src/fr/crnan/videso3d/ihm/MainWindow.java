@@ -74,7 +74,7 @@ import gov.nasa.worldwind.geom.Position;
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3.2
+ * @version 0.3.3
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -98,6 +98,9 @@ public class MainWindow extends JFrame {
 	private DatabaseManagerUI databaseUI;
 
 	private final SplashScreen splashScreen;
+	
+	private ProgressMonitor progressMonitor;
+	
 	/**
 	 * Nombre d'étapes d'initialisation pour la barre de progression
 	 */
@@ -211,6 +214,7 @@ public class MainWindow extends JFrame {
 		//		desktop.add(wwdFrame);
 
 		context = new ContextPanel(wwd);
+		context.setStipController(dataExplorer.getStipController());
 		
 		JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, dataExplorer, wwd);
 		mainPane.setOneTouchExpandable(true);
@@ -219,13 +223,51 @@ public class MainWindow extends JFrame {
 		
 		
 		wwd.addSelectListener(context);
-		wwd.addSelectListener(new AirspaceListener(wwd, context));
+		final AirspaceListener airspaceListener = new AirspaceListener(wwd, context, dataExplorer.getStipController());
+		wwd.addSelectListener(airspaceListener);
 		context.setMinimumSize(new Dimension(0,0)); //taille mini à 0 pour permettre la fermeture du panneau avec setDividerLocation
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, mainPane, context);
 	//	splitPane.setOneTouchExpandable(true); //en attendant de trouver mieux ...
 		splitPane.setResizeWeight(1.0);
 		
 		this.getContentPane().add(splitPane, BorderLayout.CENTER);
+
+		
+		//mises à jour en cas de changement de base
+		progressMonitor = new ProgressMonitor(this, "Mise à jour", "", 0, 6);
+		wwd.addPropertyChangeListener("step", new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				progressMonitor.setNote(evt.getNewValue().toString());
+			}
+		});
+
+		DatabaseManager.addPropertyChangeListener(DatabaseManager.BASE_CHANGED, new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(final PropertyChangeEvent evt) {
+				//précréation des éléments 3D dans un SwingWorker avec ProgressMonitor
+				new SwingWorker<Integer, Integer>(){
+
+					@Override
+					protected Integer doInBackground() throws Exception {
+						progressMonitor.setProgress(0);
+						dataExplorer.updateView((DatabaseManager.Type)evt.getNewValue());
+						return null;
+					}
+
+					@Override
+					protected void done() {
+						if(DatabaseManager.Type.STIP.equals(evt.getNewValue())){
+							context.setStipController(dataExplorer.getStipController());
+							airspaceListener.setStipController(dataExplorer.getStipController());
+						}
+						progressMonitor.close();
+					}
+				}.execute();
+			}
+		});
 
 		//suppression du splashscreen et affichage de la fenêtre
 		splashScreen.dispose();
@@ -600,7 +642,9 @@ public class MainWindow extends JFrame {
 					} else {
 						if(!input.isEmpty())
 							context.showInfo(input);
-						wwd.highlight(input);
+						//wwd.highlight(input);
+						if(dataExplorer.getStipController() != null)
+							dataExplorer.getStipController().highlight(input);
 					}
 				}
 			}
@@ -617,10 +661,13 @@ public class MainWindow extends JFrame {
 					try {
 						Statement st = DatabaseManager.getCurrentStip();
 						if(st != null){
+							search.setEnabled(true);
 							ResultSet rs = st.executeQuery("select name from balises UNION select name from routes UNION select nom from secteurs");
 							while(rs.next()){
 								search.addItem(rs.getString(1));
 							}
+						} else {
+							search.setEnabled(false);
 						}
 					} catch (SQLException e1) {
 						e1.printStackTrace();

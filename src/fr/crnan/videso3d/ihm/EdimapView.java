@@ -34,19 +34,21 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.edimap.Carte;
 import fr.crnan.videso3d.edimap.Cartes;
+import fr.crnan.videso3d.edimap.EdimapController;
 import fr.crnan.videso3d.edimap.Entity;
+import fr.crnan.videso3d.ihm.components.DataView;
 import gov.nasa.worldwind.util.Logging;
 
 /**
  * Sélecteur de cartes edimap
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.3.0
  */
 @SuppressWarnings("serial")
-public class EdimapView extends JPanel {
+public class EdimapView extends JPanel implements DataView{
 
 	/**
 	 * Cartes statiques
@@ -65,7 +67,7 @@ public class EdimapView extends JPanel {
 	 */
 	private JPanel volumes = new JPanel();
 	
-	private VidesoGLCanvas wwd;
+	private EdimapController controller;
 	
 	private Cartes cartes;
 	 
@@ -76,8 +78,9 @@ public class EdimapView extends JPanel {
 	 */
 	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
 	
-	public EdimapView(final VidesoGLCanvas wwd){
-		this.wwd = wwd;
+	public EdimapView(EdimapController controller){
+		
+		this.controller = controller;
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -116,15 +119,18 @@ public class EdimapView extends JPanel {
 		return panel;
 	}
 	
-	/**
-	 * Réinitialise la vue
-	 */
+	@Override
 	public void reset() {
 		for(JCheckBox c : checkBoxList){
 			if(c.isSelected()){
 				c.setSelected(false);
 			}
 		}
+	}
+	
+	@Override
+	public VidesoController getController(){
+		return controller;
 	}
 	
 	/**
@@ -158,8 +164,8 @@ public class EdimapView extends JPanel {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-			wwd.addEdimapLayer(carte);
-			wwd.toggleLayer(carte, e.getStateChange() == ItemEvent.SELECTED);
+			controller.addLayer(name, carte);
+			controller.toggleLayer(carte, e.getStateChange() == ItemEvent.SELECTED);
 		}
 	}
 
