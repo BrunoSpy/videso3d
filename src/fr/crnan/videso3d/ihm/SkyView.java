@@ -28,6 +28,8 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -38,6 +40,7 @@ import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.ihm.components.DataView;
+import fr.crnan.videso3d.skyview.SkyViewController;
 
 /**
  * Interface de sélection de données SkyView
@@ -75,13 +78,49 @@ public class SkyView extends JPanel implements DataView{
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	
 	private Component buildRoutes() {
 		panel.setLayout(new BorderLayout());
-		AbstractTreeTableModel model = new SkyViewRouteTreeModel();
+		AbstractTreeTableModel model = new SkyViewTreeModel();
+		model.addTreeModelListener(new TreeModelListener() {
+			
+			@Override
+			public void treeStructureChanged(TreeModelEvent e) {}
+			
+			@Override
+			public void treeNodesRemoved(TreeModelEvent e) {}
+			
+			@Override
+			public void treeNodesInserted(TreeModelEvent e) {}
+			
+			@Override
+			public void treeNodesChanged(TreeModelEvent e) {
+				String type = ((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[1])).getUserObject()).getFirst();
+				Couple<String, Boolean> source = (Couple<String, Boolean>) ((DefaultMutableTreeNode)e.getTreePath().getLastPathComponent()).getUserObject();
+				if(type.equals("Routes")){
+					if(source.getSecond()){
+						controller.showObject(SkyViewController.TYPE_ROUTE, source.getFirst());
+					} else {
+						controller.hideObject(SkyViewController.TYPE_ROUTE, source.getFirst());
+					}
+				} else if(type.equals("Waypoints")){
+					if(source.getSecond()){
+						controller.showObject(SkyViewController.TYPE_WAYPOINT, source.getFirst());
+					} else {
+						controller.hideObject(SkyViewController.TYPE_WAYPOINT, source.getFirst());
+					}
+				} else if(type.equals("Airports")){
+					if(source.getSecond()){
+						controller.showObject(SkyViewController.TYPE_AIRPORT, source.getFirst());
+					} else {
+						controller.hideObject(SkyViewController.TYPE_AIRPORT, source.getFirst());
+					}
+				}
+			}
+		});
 		final JXTreeTable treeRoutesTable = new JXTreeTable(model);
 		treeRoutesTable.setRootVisible(false);
 		panel.add(new JScrollPane(treeRoutesTable));
@@ -92,13 +131,13 @@ public class SkyView extends JPanel implements DataView{
 	/* **************** Table models *************************** */
 	/* ********************************************************* */
 	
-	private class SkyViewRouteTreeModel extends AbstractTreeTableModel {
+	private class SkyViewTreeModel extends AbstractTreeTableModel {
 
 		private String[] titles = {"Objet", "Afficher"};
 		
 		private Class[] types = {String.class, Boolean.class};
 				
-		public SkyViewRouteTreeModel(){
+		public SkyViewTreeModel(){
 			super(new DefaultMutableTreeNode("root"));
 			try {
 				Statement st = DatabaseManager.getCurrentSkyView();
@@ -202,8 +241,10 @@ public class SkyView extends JPanel implements DataView{
 					for(int i=0;i<treeNode.getChildCount();i++){
 						DefaultMutableTreeNode child = (DefaultMutableTreeNode) treeNode.getChildAt(i);
 						setValueAt(value, child, column);
-						this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), i, child);
+						
 					}
+				} else {
+					this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);
 				}
 			}
 		}

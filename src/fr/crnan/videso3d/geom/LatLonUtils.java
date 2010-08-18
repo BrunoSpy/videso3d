@@ -26,7 +26,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Classe d'outils de conversion 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class LatLonUtils {
 	/**
@@ -115,6 +115,39 @@ public class LatLonUtils {
 
         return null;
     }
+    
+    /**
+     * Extract a {@link LatLon} from a SkyView string
+     * @author Bruno Spyckerelle
+     * @param lat the latitude input strinf
+     * @param lon the longitude input string
+     * @return the corresponding {@link LatLon}
+     */
+    public static LatLon computeLatLonFromSkyviewString(String lat, String lon){
+    	
+    	double deg = 0;
+    	
+    	deg = Double.parseDouble(lat.substring(2, 4));
+    	deg += Double.parseDouble(lat.substring(5, 7))/60;
+    	deg += Double.parseDouble(lat.substring(8, 10))/3600;
+    	if(lat.substring(0, 1).equals("S")){
+    		deg *= -1.0;
+    	}
+    	
+    	Angle latitude = Angle.fromDegrees(deg);
+    	
+    	deg = Double.parseDouble(lon.substring(2, 5));
+    	deg += Double.parseDouble(lon.substring(6, 8))/60;
+    	deg += Double.parseDouble(lon.substring(9, 11))/3600;
+    	if(lon.substring(0, 1).equals("W")){
+    		deg *= -1.0;
+    	}
+    	
+    	Angle longitude = Angle.fromDegrees(deg);
+    	
+    	return new LatLon(latitude, longitude);
+    }
+    
     
     /**
      * Parse a Degrees, Minute, Second coordinate string.
