@@ -62,7 +62,7 @@ public class SkyView extends JPanel implements DataView{
 		
 		try{
 			if(DatabaseManager.getCurrentSkyView() != null){
-				this.add(this.buildRoutes());
+				this.add(this.buildTree());
 			}
 		} catch (SQLException e){
 			e.printStackTrace();
@@ -82,7 +82,7 @@ public class SkyView extends JPanel implements DataView{
 		
 	}
 	
-	private Component buildRoutes() {
+	private Component buildTree() {
 		panel.setLayout(new BorderLayout());
 		AbstractTreeTableModel model = new SkyViewTreeModel();
 		model.addTreeModelListener(new TreeModelListener() {
@@ -166,7 +166,7 @@ public class SkyView extends JPanel implements DataView{
 					icao.add(rs.getString(1));
 				}
 				for(String oaci : icao){
-					rs = st.executeQuery("select ident from waypoint order by ident");
+					rs = st.executeQuery("select ident from waypoint where icao='"+oaci+"' order by ident");
 					DefaultMutableTreeNode point = new DefaultMutableTreeNode(new Couple<String, Boolean>(oaci, false));
 					waypoints.add(point);
 					while(rs.next()){
@@ -182,7 +182,7 @@ public class SkyView extends JPanel implements DataView{
 					icao.add(rs.getString(1));
 				}
 				for(String oaci : icao){
-					rs = st.executeQuery("select ident from airport order by ident");
+					rs = st.executeQuery("select ident from airport where icao='"+oaci+"' order by ident");
 					DefaultMutableTreeNode airport = new DefaultMutableTreeNode(new Couple<String, Boolean>(oaci, false));
 					airports.add(airport);
 					while(rs.next()){

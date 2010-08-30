@@ -29,11 +29,13 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.geom.LatLonUtils;
+import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.Layer;
 
 /**
@@ -46,18 +48,20 @@ public class SkyViewController implements VidesoController {
 	private VidesoGLCanvas wwd;
 	
 	private Routes2DLayer routes = new Routes2DLayer("Routes SkyView");
-	private BaliseLayer balises = new BaliseLayer("Balises SkyView");
+	private BaliseLayer airports = new BaliseLayer("Aéroports SkyView");
+	private BaliseLayer waypoints = new BaliseLayer("Balises SkyView");
 	
 	private HashSet<String> routesList = new HashSet<String>();
 	
 	public final static int TYPE_ROUTE = 0;
-	public final static int TYPE_WAYPOINT = 0;
-	public final static int TYPE_AIRPORT = 0;
+	public final static int TYPE_WAYPOINT = 1;
+	public final static int TYPE_AIRPORT = 2;
 	
 	public SkyViewController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
 		this.toggleLayer(routes, true);
-		this.toggleLayer(balises, true);
+		this.toggleLayer(airports, true);
+		this.toggleLayer(waypoints, true);
 	}
 	
 	@Override
@@ -75,7 +79,8 @@ public class SkyViewController implements VidesoController {
 	@Override
 	public void removeAllLayers() {
 		this.wwd.removeLayer(routes);
-		this.wwd.removeLayer(balises);
+		this.wwd.removeLayer(airports);
+		this.wwd.removeLayer(waypoints);
 	}
 
 	@Override
@@ -98,6 +103,40 @@ public class SkyViewController implements VidesoController {
 				this.routes.displayRoute(name+i);
 			}
 			break;
+		case TYPE_AIRPORT:
+			if(!airports.contains(name)){
+				try {
+					Statement st = DatabaseManager.getCurrentSkyView();
+					ResultSet rs = st.executeQuery("select * from airport where ident='"+name+"'");
+					if(rs.next()){
+						Balise2D airport = new Balise2D(name, 
+												new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(8), rs.getString(9)), 0));
+						airport.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
+						airports.addBalise(airport);
+					}
+					st.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			airports.showBalise(name);
+			break;
+		case TYPE_WAYPOINT:
+			if(!waypoints.contains(name)){
+				try{
+					Statement st = DatabaseManager.getCurrentSkyView();
+					ResultSet rs = st.executeQuery("select * from waypoint where ident='"+name+"'");
+					if(rs.next()){
+						Balise2D waypoint = new Balise2D(name, new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(7), rs.getString(8)), 0));
+						waypoint.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
+						waypoints.addBalise(waypoint);
+					}
+				} catch (SQLException e){
+					e.printStackTrace();
+				}
+			}
+			waypoints.showBalise(name);
+			break;
 		default:
 			break;
 		}
@@ -110,6 +149,12 @@ public class SkyViewController implements VidesoController {
 			for(int i=0;routesList.contains(name+i);i++){
 				this.routes.hideRoute(name+i);
 			}
+			break;
+		case TYPE_AIRPORT:
+			this.airports.hideBalise(name);
+			break;
+		case TYPE_WAYPOINT:
+			this.waypoints.hideBalise(name);
 			break;
 		default:
 			break;
@@ -166,6 +211,7 @@ public class SkyViewController implements VidesoController {
 			}
 			//on enregistre le dernier tronçon
 			routes.add((LinkedList<Couple<String, String>>) points.clone());
+			//puis on crée les routes 2D
 			for(LinkedList<Couple<String, String>> route : routes){
 				Route2D r = new Route2D(ident, type.equals("H")? Route.Type.UIR : Route.Type.FIR);
 				LinkedList<LatLon> loc = new LinkedList<LatLon>();
@@ -191,6 +237,7 @@ public class SkyViewController implements VidesoController {
 				r.setBalises(balises);
 				routes2D.add(r);
 			}
+			st.close();
 			return routes2D;
 		} catch (SQLException e) {
 			e.printStackTrace();

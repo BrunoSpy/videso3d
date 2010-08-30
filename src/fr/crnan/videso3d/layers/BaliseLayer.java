@@ -27,7 +27,7 @@ import gov.nasa.worldwind.avlist.AVKey;
  * Layer contenant les balises.<br />
  * Permet d'afficher une ou plusieurs balises selon leur nom.
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.3.0
  */
 public class BaliseLayer extends LayerSet {
 
@@ -130,9 +130,9 @@ public class BaliseLayer extends LayerSet {
 	 * Enlève une liste de balises de la vue
 	 * @param balises
 	 */
-	public void unshowBalises(List<String> balises) {
+	public void hideBalises(List<String> balises) {
 		for(String b : balises){
-			this.removeBalise(b);
+			this.hideBalise(b);
 		}
 	}
 	
@@ -141,10 +141,10 @@ public class BaliseLayer extends LayerSet {
 	 * Cette balise est toujours accessible pour être à nouveau affichée plus tard.
 	 * @param name
 	 */
-	public void removeBalise(String name){
+	public void hideBalise(String name){
 		Balise2D b = balises.get(name);
 		if(name != null){
-			this.removeBalise(b);
+			this.hideBalise(b);
 		}
 	}
 	
@@ -153,7 +153,7 @@ public class BaliseLayer extends LayerSet {
 	 * Cette balise est toujours accessible pour être à nouveau affichée plus tard.
 	 * @param name
 	 */
-	public void removeBalise(Balise2D b) {
+	public void hideBalise(Balise2D b) {
 		if(!this.isLocked() && balisesActives.contains(b)){
 			balisesActives.remove(b);
 			textLayer.removeGeographicText(b.getUserFacingText());
@@ -196,5 +196,13 @@ public class BaliseLayer extends LayerSet {
 	 */
 	public void setLocked(Boolean b){
 		this.lock = b;
+	}
+	/**
+	 * Test si une balise a déjà été ajoutée
+	 * @param balise nom de la balise
+	 * @return Vrai si la balise a déjà été ajoutée
+	 */
+	public Boolean contains(String balise){
+		return balises.containsKey(balise);
 	}
 }

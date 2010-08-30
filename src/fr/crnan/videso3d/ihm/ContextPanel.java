@@ -581,8 +581,8 @@ public class ContextPanel extends JPanel implements SelectListener {
 						putValue(Action.NAME, "Cacher les "+balises.size()+" balises.");
 						show = false;
 					} else {
-						stipController.getBalisesNPLayer().unshowBalises(balises);
-						stipController.getBalisesPubLayer().unshowBalises(balises);
+						stipController.getBalisesNPLayer().hideBalises(balises);
+						stipController.getBalisesPubLayer().hideBalises(balises);
 						putValue(Action.NAME, "Afficher les "+balises.size()+" balises.");
 						show = true;
 					}

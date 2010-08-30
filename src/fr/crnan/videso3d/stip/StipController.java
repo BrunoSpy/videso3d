@@ -400,8 +400,8 @@ public class StipController implements VidesoController {
 	
 	public void hideRoutesBalises(String name){
 		List<String> balises = routes3D.getRoute(name).getBalises();
-		balisesNP.unshowBalises(balises);
-		balisesPub.unshowBalises(balises);
+		balisesNP.hideBalises(balises);
+		balisesPub.hideBalises(balises);
 	}
 	
 	/**
