@@ -89,7 +89,7 @@ public class Carte extends LayerSet {
 			} else if(type.equalsIgnoreCase("TextEntity")){
 	//			this.addRenderable(new TextEdimap(entity, pointsRef, palette, idAtc);
 			} else if(type.equalsIgnoreCase("EllipseEntity")){
-	//			this.addRenderable(new EllipseEdimap(entity, pointsRef, palette, idAtc));
+				this.surfaceLayer.addRenderable(new EllipseEdimap(entity, pointsRef, palette, idAtc));
 			} else if(type.equalsIgnoreCase("MosaiqueEntity")) {
 				this.airspaceLayer.addAirspaces(new MosaiqueEntity(entity, pointsRef));
 			}
