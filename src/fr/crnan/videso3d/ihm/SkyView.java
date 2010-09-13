@@ -18,16 +18,19 @@ package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -52,14 +55,16 @@ public class SkyView extends JPanel implements DataView{
 	private VidesoController controller;
 	
 	private JPanel panel = new JPanel();
+	private JTextField filtre = new JTextField(20);
 	
 	public SkyView(VidesoController controller){
 		this.controller = controller;
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
-		panel.setBorder(BorderFactory.createTitledBorder(""));
+//		panel.setBorder(BorderFactory.createTitledBorder(""));
 		
+		this.add(Box.createVerticalGlue());
 		try{
 			if(DatabaseManager.getCurrentSkyView() != null){
 				this.add(this.buildTree());
@@ -68,7 +73,7 @@ public class SkyView extends JPanel implements DataView{
 			e.printStackTrace();
 		}
 		
-		this.add(Box.createVerticalGlue());		
+		//this.add(Box.createVerticalGlue());		
 	}
 
 	@Override
@@ -84,7 +89,16 @@ public class SkyView extends JPanel implements DataView{
 	
 	private Component buildTree() {
 		panel.setLayout(new BorderLayout());
-		AbstractTreeTableModel model = new SkyViewTreeModel();
+		
+		JPanel filterPanel = new JPanel();
+		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
+		filterPanel.add(Box.createVerticalGlue());
+		filterPanel.add(new Label("Filtre : "));
+		filterPanel.add(filtre);
+		
+		panel.add(filterPanel, BorderLayout.NORTH);
+		
+		final AbstractTreeTableModel model = new SkyViewTreeModel();
 		model.addTreeModelListener(new TreeModelListener() {
 			
 			@Override
@@ -123,6 +137,15 @@ public class SkyView extends JPanel implements DataView{
 		});
 		final JXTreeTable treeRoutesTable = new JXTreeTable(model);
 		treeRoutesTable.setRootVisible(false);
+		
+		filtre.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				((SkyViewTreeModel) model).update(filtre.getText());
+			}
+		});
+		
 		panel.add(new JScrollPane(treeRoutesTable));
 		return panel;
 	}
@@ -139,18 +162,24 @@ public class SkyView extends JPanel implements DataView{
 				
 		public SkyViewTreeModel(){
 			super(new DefaultMutableTreeNode("root"));
+			this.update("");
+		}
+
+		public void update(String filter){
+			this.root = new DefaultMutableTreeNode("root");
+			filter = filter+'%';
 			try {
 				Statement st = DatabaseManager.getCurrentSkyView();
 				//ajout des routes
 				DefaultMutableTreeNode routes = new DefaultMutableTreeNode(new Couple<String, Boolean>("Routes", false));
 				((DefaultMutableTreeNode) getRoot()).add(routes);
-				ResultSet rs = st.executeQuery("select distinct icao from airway order by icao");
+				ResultSet rs = st.executeQuery("select distinct icao from airway where ident LIKE '"+filter+"' order by icao");
 				LinkedList<String> icao = new LinkedList<String>();
 				while(rs.next()){
 					icao.add(rs.getString(1));
 				}
 				for(String oaci : icao){
-					rs = st.executeQuery("select distinct ident from airway where icao='"+oaci+"' order by ident");
+					rs = st.executeQuery("select distinct ident from airway where icao='"+oaci+"' and ident LIKE '"+filter+"' order by ident");
 					DefaultMutableTreeNode state = new DefaultMutableTreeNode(new Couple<String, Boolean>(oaci, false));
 					routes.add(state);
 					while(rs.next()){
@@ -160,13 +189,13 @@ public class SkyView extends JPanel implements DataView{
 				//ajout des waypoints
 				DefaultMutableTreeNode waypoints = new DefaultMutableTreeNode(new Couple<String, Boolean>("Waypoints", false));
 				((DefaultMutableTreeNode) getRoot()).add(waypoints);
-				rs = st.executeQuery("select distinct icao from waypoint order by icao");
+				rs = st.executeQuery("select distinct icao from waypoint where ident LIKE '"+filter+"' order by icao");
 				icao.clear();
 				while(rs.next()){
 					icao.add(rs.getString(1));
 				}
 				for(String oaci : icao){
-					rs = st.executeQuery("select ident from waypoint where icao='"+oaci+"' order by ident");
+					rs = st.executeQuery("select ident from waypoint where icao='"+oaci+"' and ident LIKE '"+filter+"' order by ident");
 					DefaultMutableTreeNode point = new DefaultMutableTreeNode(new Couple<String, Boolean>(oaci, false));
 					waypoints.add(point);
 					while(rs.next()){
@@ -176,13 +205,13 @@ public class SkyView extends JPanel implements DataView{
 				//ajout des aéroports
 				DefaultMutableTreeNode airports = new DefaultMutableTreeNode(new Couple<String, Boolean>("Airports", false));
 				((DefaultMutableTreeNode) getRoot()).add(airports);
-				rs = st.executeQuery("select distinct icao from airport order by icao");
+				rs = st.executeQuery("select distinct icao from airport where ident LIKE '"+filter+"' order by icao");
 				icao.clear();
 				while(rs.next()){
 					icao.add(rs.getString(1));
 				}
 				for(String oaci : icao){
-					rs = st.executeQuery("select ident from airport where icao='"+oaci+"' order by ident");
+					rs = st.executeQuery("select ident from airport where icao='"+oaci+"' and ident LIKE '"+filter+"' order by ident");
 					DefaultMutableTreeNode airport = new DefaultMutableTreeNode(new Couple<String, Boolean>(oaci, false));
 					airports.add(airport);
 					while(rs.next()){
@@ -194,8 +223,9 @@ public class SkyView extends JPanel implements DataView{
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			this.modelSupport.fireNewRoot();
 		}
-
+		
 		@Override
 		public int getColumnCount() {
 			return 2;
