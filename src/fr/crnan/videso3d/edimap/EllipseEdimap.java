@@ -101,11 +101,17 @@ public class EllipseEdimap extends SurfacePolyline {
 									/Integer.parseInt(((String)angles.get(0).getValue()).split("\\s+")[0])+90);
 		angle2 = Angle.fromDegrees(Double.parseDouble(((String)angles.get(1).getValue()).split("\\s+")[1])
 				/Integer.parseInt(((String)angles.get(1).getValue()).split("\\s+")[0])+90);
+		System.out.println(ellipse);
+		
+		double diffAngles = angle2.subtract(angle1).degrees;
+		double ouvertureAngulaire = diffAngles>0 ? diffAngles  :  360+diffAngles;
 		
 		//Nombre de points à utiliser pour dessiner l'arc de cercle.
-		int nbPoints = ((int)Math.abs(angle2.degrees-angle1.degrees)/90)*precision;
+		int nbPoints = (int) ((ouvertureAngulaire/90+1)*precision);
+		double pas = ouvertureAngulaire/(nbPoints-1);
 		
-		double pas = angle2.subtract(angle1).degrees/(nbPoints-1);
+		System.out.println("a2-a1 : "+angle2.subtract(angle1).degrees);
+		System.out.println("nbpoints : "+nbPoints);
 		for (int i=0; i<nbPoints; i++){
 			double x = centre.getCautra()[0]+rayon*angle1.addDegrees(pas*i).cos();
 			double y = centre.getCautra()[1]+rayon*angle1.addDegrees(pas*i).sin();
