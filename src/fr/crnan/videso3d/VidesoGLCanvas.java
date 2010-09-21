@@ -473,9 +473,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	private TrajectoriesLayer addTrajectoires(GEOReader geo) {
 		GEOTracksLayer trajLayer = new GEOTracksLayer();
 		trajLayer.setName(geo.getName());
-		if(geo.getTracks().size() > 50) {
-			//au delà de 50 tracks, on change les paramètres de façon à ne pas perdre en perfo
-			//TODO rendre tout ça configurable
+		if(geo.getTracks().size() > Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))) {
+			//au delà de x tracks, on change les paramètres de façon à ne pas perdre en perfo
 			trajLayer.setStyle(TrajectoriesLayer.STYLE_SIMPLE);
 			trajLayer.setTracksHighlightable(false);
 		}

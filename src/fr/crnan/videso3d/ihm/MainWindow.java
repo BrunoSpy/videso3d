@@ -431,8 +431,8 @@ public class MainWindow extends JFrame {
 				fileChooser.setFileSelectionMode(VFileChooser.FILES_ONLY);
 				fileChooser.setMultiSelectionEnabled(true);
 				fileChooser.addChoosableFileFilter(new OPASFileFilter());
-				fileChooser.addChoosableFileFilter(new GEOFileFilter());
 				fileChooser.addChoosableFileFilter(new LPLNFileFilter());
+				fileChooser.addChoosableFileFilter(new GEOFileFilter());
 				if(fileChooser.showOpenDialog(trajectoires) == VFileChooser.APPROVE_OPTION){
 
 					new SwingWorker<String, Integer>(){

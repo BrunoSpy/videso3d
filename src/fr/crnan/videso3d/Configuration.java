@@ -43,6 +43,8 @@ public final class Configuration {
 	public static final String NETWORK_PROXY_PORT = "fr.crnan.videso3d.network.proxy_port";
 	public static final String DEFAULT_REP = "fr.crnan.videso3d.files.defaultrep";
 	
+	public static final String TRAJECTOGRAPHIE_SEUIL = "fr.crnan.videso3d.trajectographie.seuil";
+	
 	private static Configuration instance = new Configuration();
 
 	private Properties properties;
