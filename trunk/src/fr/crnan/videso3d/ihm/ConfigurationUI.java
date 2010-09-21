@@ -188,6 +188,28 @@ public class ConfigurationUI extends JFrame {
 		});
 		proxy.add(val);
 		all.add(proxy);
+		
+		//Trajectographie
+		all.add(new TitledPanel("Trajectographie"));
+		JPanel trajecto = new JPanel();
+		trajecto.setLayout(new BoxLayout(trajecto, BoxLayout.LINE_AXIS));
+		trajecto.add(new JLabel("Chevelus à partir de : "));
+		trajecto.add(Box.createHorizontalGlue());
+		final JTextField chevelus = new JTextField(20);
+		chevelus.setText(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"));
+		trajecto.add(chevelus);
+		JButton valChevelus = new JButton("Valider");
+		valChevelus.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Configuration.setProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, chevelus.getText());
+			}
+		});
+		trajecto.add(valChevelus);
+		
+		all.add(trajecto);
+		
 		all.add(new Box.Filler(new Dimension(0, Short.MAX_VALUE), new Dimension(0, Short.MAX_VALUE), new Dimension(0, Short.MAX_VALUE)));
 		this.setSize(new Dimension(500, 300));
 	}
