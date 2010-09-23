@@ -16,11 +16,10 @@
 
 /** SAXON 9.0 IMPLEMENTS XPATH 2.0 
  * @author mickael papail 
+ * @version 0.1
  * */
 
-
 package fr.crnan.videso3d.formats.xml;
-
 
 import java.io.*;
 
@@ -33,13 +32,6 @@ import javax.xml.transform.TransformerFactory;
 
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-
-
-/**
- * @author mickael papail
- * @version 0.1
-* */
-
 
 public class SaxonFactory {
 

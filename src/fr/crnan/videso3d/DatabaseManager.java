@@ -29,6 +29,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.swing.event.SwingPropertyChangeSupport;
@@ -750,12 +751,20 @@ public final class DatabaseManager {
 	 */
 	public static void createRadioCov(String name, String path) throws SQLException {
 		Statement st = DatabaseManager.selectDB(Type.RadioCov, name).createStatement();
-		st.executeUpdate("create table cartes (id integer primary key autoincrement," +
+		/*
+		st.executeUpdate("create table radio (id integer primary key autoincrement," +
 				"name varchar(32), " +
 				"type varchar(16), " +
-				"fichier varchar(64)" +
+				"path varchar(64)" +
+		")");
+		*/
+		st.executeUpdate("create table radio (id integer primary key autoincrement," +
+				"databaseId integer, " +				
+				"path varchar(64)" +
 		")");
 		st.close();
+
+		/*
 		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
 		insertClef.setString(1, "path");
 		insertClef.setString(2, name);
@@ -763,6 +772,33 @@ public final class DatabaseManager {
 		insertClef.executeUpdate();
 		insertClef.close();
 		DatabaseManager.addDatabase(name, Type.RadioCov, new SimpleDateFormat().format(new Date()));
+		 */
+	}
+	
+	public static void insertRadioCov(String name, String path) throws SQLException {
+			
+		String date = new SimpleDateFormat().format(new Date());
+		int databaseId = 0;
+		
+		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
+		insertClef.setString(1, "path");
+		insertClef.setString(2, name);
+		insertClef.setString(3, path);
+		insertClef.executeUpdate();
+		insertClef.close();
+		DatabaseManager.addDatabase(name, Type.RadioCov, date);
+		
+		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+		ResultSet rs = st.executeQuery("select id from databases where name = '"+name+"'");				
+		 rs.next();
+		 databaseId = rs.getInt(1);			
+		
+		PreparedStatement insertRadio = DatabaseManager.selectDB(Type.RadioCov, "radio").prepareStatement("insert into radio(databaseId,path) values (?,?)");
+		insertRadio.setInt(1, databaseId);
+		
+		insertRadio.setString(2,path);
+		insertRadio.executeUpdate();
+		insertRadio.close();		
 	}
 	
 	
@@ -1032,6 +1068,23 @@ public final class DatabaseManager {
 	 */
 	public static Statement getCurrentRadioCov() throws SQLException {
 		return DatabaseManager.getCurrent(Type.RadioCov);
+	}
+	
+	/**
+	 * Renvoit la liste des path des donnees de couvertures radio selectionnes
+	 * @ return 
+	 * @throws SQLException
+	 * 
+	 */
+	public static ArrayList<String> getCurrentRadioCovPath() throws SQLException {
+		ArrayList <String> pathTab = new ArrayList<String>();
+		Statement st = DatabaseManager.getCurrentRadioCov();
+		ResultSet rs = st.executeQuery("select radio.path from radio");
+		while (rs.next()) {
+		    pathTab.add(rs.getString(1));
+			// System.out.println("(databaseManager /  getCurrentRadioCovPath) "+ rs.getString(1)+ "///" + rs.getString(2));
+		}
+		return pathTab;
 	}
 	
 	/**

@@ -57,6 +57,7 @@ import fr.crnan.videso3d.pays.Pays;
 import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.stpv.Stpv;
 import fr.crnan.videso3d.radio.Radio;
+import fr.crnan.videso3d.radio.RadioDataManager;
 import gov.nasa.worldwind.util.Logging;
 
 /**
@@ -177,17 +178,22 @@ public class DatabaseManagerUI extends JDialog {
 				DatabaseManager.createSkyView(file.getName(), file.getAbsolutePath());
 				DatabaseManager.importFinished(Type.SkyView);
 				((DBTableModel)table.getModel()).update();
-				return;
-			} else if (file.getName().equalsIgnoreCase("output.xml")){
-				//Radio radio = new Radio(file.getAbsolutePath());
-				Radio radio = new Radio();		
-				this.getDatas(radio,"Import des données Radio","RadioCov");
-				return;
+				return;			
 			}	else {
 				file = file.getParentFile();
 			}
 		}
 		
+		if (file.isDirectory() /*&& file.getName()=="RadioCoverageData"*/ ) { 
+			System.out.println("(DatabaseManagerUI.java) - ouverture du répertoire :" + file.getAbsolutePath());
+			// Radio radio = new Radio();
+			RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
+			// Radio radio = new Radio(file.getAbsolutePath());
+			this.getDatas(radioDataManager,"Import des données radio","RadioCov");			
+			//RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
+			//radioDataManager.loadData();				
+		}
+				
 		List<File> files = Arrays.asList(file.listFiles());
 		if(files.contains(new File(file.getAbsolutePath()+"/LIEUX"))){//une méthode comme une autre pour vérifier que le dossier est une dossier de données STIP
 			Stip stip = new Stip(file.getAbsolutePath());

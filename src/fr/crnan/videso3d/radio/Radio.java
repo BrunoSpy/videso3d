@@ -38,17 +38,16 @@ import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
 
 
-public class Radio extends FileParser {
-		
+public class Radio extends FileParser {		
 	/**
 	 * Nombre de fichiers gérés
 	 */
-	private int numberFiles = 1;
-
+	private int numberFiles = 0;	
+	
 	/**
 	 * Version des fichiers Radio
 	 */
-	private String name="RadioCovBase";
+	private String name="radio";
 	private String path;
 	/**
 	 * Connection à la base de données
@@ -62,29 +61,53 @@ public class Radio extends FileParser {
 	public Radio(String path) {
 		super(path);
 		this.path=path;
+		// nombre de fichiers à gérer
+		
+	//	RadioDataManager radioDataManager = new RadioDataManager(path);
+	//	radioDataManager.loadData();	
 	}
 
-
+	public  void insertRadio() throws SQLException {
+	PreparedStatement insert = this.conn.prepareStatement("insert into radio (id, databaseId, path) " +
+	"values (?, ?, ?)");
+	// id,  path
+	// insert.setInt(1, new Integer(line.substring(9, 13).trim()) /2);
+	insert.executeUpdate();
+	}
+		
+		
 	@Override
 	public Integer doInBackground() {
 		
 		try {
+			// System.out.println("(Radio.java / Appel méthode doInBackground())");
+			
 			//création de la connection à la base de données
 			this.conn = DatabaseManager.selectDB(Type.RadioCov, this.name);
 			this.conn.setAutoCommit(false); //fixes performance issue
+		
 			if(!DatabaseManager.databaseExists(this.name)){
-				//création de la structure de la base de données
-				DatabaseManager.createRadioCov(this.name,this.path);
-				//parsing des fichiers et stockage en base
-				///this.getFromFiles();				
-				//this.setProgress(12);
 				
-				try {
-					this.conn.commit();
+				System.out.println("(Radio.java) / La base de données n'existe pas" +"");
+				
+				// création de la structure de la base de données
+				 DatabaseManager.createRadioCov(this.name,this.path);
+				 DatabaseManager.insertRadioCov(this.name, this.path);
+				 // parsing des fichiers et stockage en base
+				// /this.getFromFiles();				
+				// this.setProgress(12);
+				
+				try {this.conn.commit();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 				//this.setProgress(this.numberFiles());
+			}
+			else {		
+				// ajout d'une ligne dans la table radio
+				// Ajout d'une ligne dans la table databases.
+				System.out.println("La base de données existe");
+				DatabaseManager.insertRadioCov(this.name, this.path);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
