@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -41,6 +42,7 @@ import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.ihm.components.ButtonTabComponent;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
+import fr.crnan.videso3d.radio.RadioDataManager;
 import fr.crnan.videso3d.skyview.SkyViewController;
 import fr.crnan.videso3d.stip.StipController;
 import fr.crnan.videso3d.stpv.StpvController;
@@ -425,13 +427,23 @@ public class DataExplorer extends JPanel {
 	/**
 	 *  Ajoute un tab de sélection des couvertures radio
 	 */
-	
 	public void updateRadioCovView() {	
+
 		if(radioCov == null){
 			try {
-				if(DatabaseManager.getCurrentRadioCov() != null){					
-					wwd.insertAllRadioCovLayers();
+				if(DatabaseManager.getCurrentRadioCov() != null) {
+						ArrayList<String> radioCovPathTab = new ArrayList<String>();
+						radioCovPathTab = DatabaseManager.getCurrentRadioCovPath();
+						for (int i=0;i<radioCovPathTab.size();i++) {
+
+						this.wwd.firePropertyChange("step", "", "Création des données radio");
+						RadioDataManager radioDataManager = new RadioDataManager(radioCovPathTab.get(i));				
+						wwd.insertAllRadioCovLayers(radioDataManager.loadData());			
+						
+						}	
+												
 					radioCov = new RadioCovView(wwd);
+			
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {					
 						@Override
@@ -448,11 +460,15 @@ public class DataExplorer extends JPanel {
 					tabs.setTabComponentAt(tabs.indexOfComponent(radioCov), buttonTab);
 					tabs.setSelectedIndex(tabs.getTabCount()-1);
 				}
-			
+//				else {System.out.println("(DataExplorer)  getCurrentRadio est nul");}
 			} 
 			catch (SQLException e) {
 				e.printStackTrace();
 			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		
 		} 
 		else {
 			try {
@@ -464,7 +480,7 @@ public class DataExplorer extends JPanel {
 					tabs.setSelectedIndex(i);
 				} 
 				else {
-					/* On supprime une ligne radioCov dans la liste du databaseManagerUI */									
+					/* On supprime une ligne radioCov dans la liste du databaseManagerUI  */									
 					wwd.removeAllRadioCovLayers();					
 					tabs.remove(radioCov);
 					radioCov = null;											

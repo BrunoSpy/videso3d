@@ -19,6 +19,7 @@ package fr.crnan.videso3d;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.xml.xpath.XPath;
 
@@ -60,6 +61,7 @@ import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
+import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.util.DataConfigurationFilter;
 import gov.nasa.worldwind.util.DataConfigurationUtils;
@@ -430,7 +432,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
     	radioCovLayer.insertAllRadioCovLayers();
     	this.redraw();
     }
-
+    public void insertAllRadioCovLayers(ArrayList<Airspace> airspaces) {
+    	radioCovLayer.insertAllRadioCovLayers(airspaces);
+    	this.redraw();
+    }
+    
 	/*--------------------------------------------------------------*/
 	/*------------------ Gestion du highlight ----------------------*/
 	/*--------------------------------------------------------------*/
