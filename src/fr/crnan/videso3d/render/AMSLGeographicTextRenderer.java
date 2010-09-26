@@ -242,7 +242,7 @@ public class AMSLGeographicTextRenderer extends GeographicTextRenderer {
 					textList.add(this);
 
 					// Draw as many as we can in a batch to save ogl state switching.
-					Object nextItem = dc.getOrderedRenderables().peek();
+					Object nextItem = dc.peekOrderedRenderables();
 					while (nextItem != null && nextItem instanceof OrderedText)
 					{
 						OrderedText ot = (OrderedText) nextItem;
@@ -250,8 +250,8 @@ public class AMSLGeographicTextRenderer extends GeographicTextRenderer {
 							break;
 
 						textList.add(ot);
-						dc.getOrderedRenderables().poll(); // take it off the queue
-						nextItem = dc.getOrderedRenderables().peek();
+						dc.pollOrderedRenderables(); // take it off the queue
+						nextItem = dc.peekOrderedRenderables();
 					}
 
 					Collections.sort(textList); // sort for rendering priority then front to back
@@ -284,7 +284,7 @@ public class AMSLGeographicTextRenderer extends GeographicTextRenderer {
 					double[] scaleAndOpacity = AMSLGeographicTextRenderer.this.computeDistanceScaleAndOpacity(dc, this);
 					AMSLGeographicTextRenderer.this.drawText(dc, this, scaleAndOpacity[0], scaleAndOpacity[1]);
 					// Draw as many as we can in a batch to save ogl state switching.
-					Object nextItem = dc.getOrderedRenderables().peek();
+					Object nextItem = dc.peekOrderedRenderables();
 					while (nextItem != null && nextItem instanceof OrderedText)
 					{
 						OrderedText ot = (OrderedText) nextItem;
@@ -293,8 +293,8 @@ public class AMSLGeographicTextRenderer extends GeographicTextRenderer {
 
 						scaleAndOpacity = AMSLGeographicTextRenderer.this.computeDistanceScaleAndOpacity(dc, ot);
 						AMSLGeographicTextRenderer.this.drawText(dc, ot, scaleAndOpacity[0], scaleAndOpacity[1]);
-						dc.getOrderedRenderables().poll(); // take it off the queue
-						nextItem = dc.getOrderedRenderables().peek();
+						dc.pollOrderedRenderables(); // take it off the queue
+						nextItem = dc.peekOrderedRenderables();
 					}
 				}
 			}
