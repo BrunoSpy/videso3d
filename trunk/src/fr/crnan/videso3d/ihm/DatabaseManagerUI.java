@@ -183,17 +183,7 @@ public class DatabaseManagerUI extends JDialog {
 				file = file.getParentFile();
 			}
 		}
-		
-		if (file.isDirectory() /*&& file.getName()=="RadioCoverageData"*/ ) { 
-			System.out.println("(DatabaseManagerUI.java) - ouverture du répertoire :" + file.getAbsolutePath());
-			// Radio radio = new Radio();
-			RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
-			// Radio radio = new Radio(file.getAbsolutePath());
-			this.getDatas(radioDataManager,"Import des données radio","RadioCov");			
-			//RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
-			//radioDataManager.loadData();				
-		}
-				
+			
 		List<File> files = Arrays.asList(file.listFiles());
 		if(files.contains(new File(file.getAbsolutePath()+"/LIEUX"))){//une méthode comme une autre pour vérifier que le dossier est une dossier de données STIP
 			Stip stip = new Stip(file.getAbsolutePath());
@@ -215,7 +205,15 @@ public class DatabaseManagerUI extends JDialog {
 		} else if(files.contains(new File(file.getAbsolutePath()+"/PAYS"))) {
 			Pays pays = new Pays(file.getAbsolutePath());
 			this.getDatas(pays, "Import des contours des pays", "PAYS");
-		} 	
+		} else if(files.contains(new File(file.getAbsoluteFile()+"/radioOutput.xml"))){
+			System.out.println("(DatabaseManagerUI.java) - ouverture du répertoire :" + file.getAbsolutePath());
+			// Radio radio = new Radio();
+			RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
+			// Radio radio = new Radio(file.getAbsolutePath());
+			this.getDatas(radioDataManager,"Import des données radio","RadioCov");			
+			//RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
+			//radioDataManager.loadData();			
+		}
 		else {
 			Logging.logger().warning("Pas de fichier de base de données trouvé");
 		}
