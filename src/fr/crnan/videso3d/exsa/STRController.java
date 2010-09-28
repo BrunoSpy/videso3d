@@ -43,7 +43,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage des éléments Exsa
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class STRController implements VidesoController {
 
@@ -130,6 +130,13 @@ public class STRController implements VidesoController {
 					ResultSet rs = st.executeQuery("select * from radrgener, radrtechn where radrgener.name = radrtechn.name and radrgener.name ='"+name+"'");
 					if(rs.next()){
 						Radar radar = new Radar(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")), rs.getInt("portee"));
+						radar.setAnnotation("<html><b>Radar : "+name+"</b><br /><br />" +
+								"Portée : "+rs.getInt("portee")+"NM<br />" +
+								"Numéro : "+rs.getInt("numero")+"<br />" +
+								"Code pays : "+rs.getInt("codepays")+"<br />" +
+								"Code radar : "+rs.getInt("coderadar")+"<br />" +
+								"Tour d'antenne : "+rs.getInt("vitesse")+"s<br />" +
+										"</html>");
 						radarsLayer.addRenderable(radar);
 						radars.put(name, radar);
 						this.toggleLayer(radarsLayer, true);
