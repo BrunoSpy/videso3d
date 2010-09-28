@@ -16,9 +16,13 @@
 
 package fr.crnan.videso3d.graphics;
 
+import java.awt.Color;
+
+import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
@@ -26,7 +30,7 @@ import gov.nasa.worldwind.render.SurfaceCircle;
 /**
  * Représentation graphique de la portée d'un radar
  * @author Bruno Spyckerelle
- *
+ * @version 0.1.1
  */
 public class Radar extends SurfaceCircle implements ObjectAnnotation {
 	
@@ -56,6 +60,9 @@ public class Radar extends SurfaceCircle implements ObjectAnnotation {
 		if(annotation == null) {
 			annotation = new GlobeAnnotation(text, Position.ZERO);
 			annotation.setAlwaysOnTop(true);
+			annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
+			annotation.getAttributes().setBorderColor(Color.BLACK);
+			annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
 		} else {
 			annotation.setText(text);
 		}
