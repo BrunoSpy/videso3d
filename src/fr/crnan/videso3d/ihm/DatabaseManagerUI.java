@@ -50,6 +50,7 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.edimap.Cartes;
 import fr.crnan.videso3d.exsa.Exsa;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
@@ -179,45 +180,48 @@ public class DatabaseManagerUI extends JDialog {
 				DatabaseManager.importFinished(Type.SkyView);
 				((DBTableModel)table.getModel()).update();
 				return;			
-			}	else {
+			} else if (suffix.equalsIgnoreCase(".xml")){ //export des données SIA, base AIP
+				AIP aip = new AIP(file.getAbsolutePath());
+				this.getDatas(aip, "Import des données AIP", "AIP");
+			} else {
 				file = file.getParentFile();
 			}
 		}
-			
-		List<File> files = Arrays.asList(file.listFiles());
-		if(files.contains(new File(file.getAbsolutePath()+"/LIEUX"))){//une méthode comme une autre pour vérifier que le dossier est une dossier de données STIP
-			Stip stip = new Stip(file.getAbsolutePath());
-			this.getDatas(stip, "Import des données STIP", "STIP");
-		} else if(files.contains(new File(file.getAbsolutePath()+"/LIEU"))//une méthode comme une autre pour vérifier que le dossier est une dossier de données STPV
+		if(file.isDirectory()){
+			List<File> files = Arrays.asList(file.listFiles());
+			if(files.contains(new File(file.getAbsolutePath()+"/LIEUX"))){//une méthode comme une autre pour vérifier que le dossier est une dossier de données STIP
+				Stip stip = new Stip(file.getAbsolutePath());
+				this.getDatas(stip, "Import des données STIP", "STIP");
+			} else if(files.contains(new File(file.getAbsolutePath()+"/LIEU"))//une méthode comme une autre pour vérifier que le dossier est une dossier de données STPV
 					|| files.contains(new File(file.getAbsolutePath()+"/LIEU.txt"))) { //Bordeaux a des fichiers Stpv qui finissent par un .txt
-			Stpv stpv = new Stpv(file.getAbsolutePath());
-			this.getDatas(stpv, "Import des données STPV", "STPV");
-		} else if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))
-				|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))
-				|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) {
-			//TODO trouver une meilleure gestion des extensions
-			String caracJeuPath = "";
-			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))) caracJeuPath = "carac_jeu";
-			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))) caracJeuPath = "carac_jeu.nct";
-			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) caracJeuPath = "carac_jeu.NCT";
-			Cartes cartes = new Cartes(file.getAbsolutePath(),caracJeuPath);
-			this.getDatas(cartes, "Import des données EDIMAP", "Edimap");
-		} else if(files.contains(new File(file.getAbsolutePath()+"/PAYS"))) {
-			Pays pays = new Pays(file.getAbsolutePath());
-			this.getDatas(pays, "Import des contours des pays", "PAYS");
-		} else if(files.contains(new File(file.getAbsoluteFile()+"/radioOutput.xml"))){
-			System.out.println("(DatabaseManagerUI.java) - ouverture du répertoire :" + file.getAbsolutePath());
-			// Radio radio = new Radio();
-			RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
-			// Radio radio = new Radio(file.getAbsolutePath());
-			this.getDatas(radioDataManager,"Import des données radio","RadioCov");			
-			//RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
-			//radioDataManager.loadData();			
+				Stpv stpv = new Stpv(file.getAbsolutePath());
+				this.getDatas(stpv, "Import des données STPV", "STPV");
+			} else if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))
+					|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))
+					|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) {
+				//TODO trouver une meilleure gestion des extensions
+				String caracJeuPath = "";
+				if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))) caracJeuPath = "carac_jeu";
+				if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))) caracJeuPath = "carac_jeu.nct";
+				if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) caracJeuPath = "carac_jeu.NCT";
+				Cartes cartes = new Cartes(file.getAbsolutePath(),caracJeuPath);
+				this.getDatas(cartes, "Import des données EDIMAP", "Edimap");
+			} else if(files.contains(new File(file.getAbsolutePath()+"/PAYS"))) {
+				Pays pays = new Pays(file.getAbsolutePath());
+				this.getDatas(pays, "Import des contours des pays", "PAYS");
+			} else if(files.contains(new File(file.getAbsoluteFile()+"/radioOutput.xml"))){
+				System.out.println("(DatabaseManagerUI.java) - ouverture du répertoire :" + file.getAbsolutePath());
+				// Radio radio = new Radio();
+				RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
+				// Radio radio = new Radio(file.getAbsolutePath());
+				this.getDatas(radioDataManager,"Import des données radio","RadioCov");			
+				//RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
+				//radioDataManager.loadData();			
+			}
+			else {
+				Logging.logger().warning("Pas de fichier de base de données trouvé");
+			}
 		}
-		else {
-			Logging.logger().warning("Pas de fichier de base de données trouvé");
-		}
-
 	}
 	
 	/**
