@@ -34,6 +34,7 @@ import javax.swing.JTabbedPane;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.edimap.EdimapController;
 import fr.crnan.videso3d.exsa.STRController;
 import fr.crnan.videso3d.formats.TrackFilesReader;
@@ -66,6 +67,7 @@ public class DataExplorer extends JPanel {
 	private Component stpv;
 	private Component radioCov;
 	private Component skyview;
+	private Component aip;
 	
 	/**
 	 * Constructeur
@@ -92,6 +94,7 @@ public class DataExplorer extends JPanel {
 		this.updateEdimapView();
 		this.updateRadioCovView();
 		this.updateSkyView();
+		this.updateAIPView();
 
 		add(tabs, BorderLayout.CENTER);		
 		
@@ -119,6 +122,9 @@ public class DataExplorer extends JPanel {
 			break;
 		case SkyView:
 			updateSkyView();
+			break;
+		case AIP:
+			updateAIPView();
 			break;
 		default : break;
 		}	
@@ -377,6 +383,56 @@ public class DataExplorer extends JPanel {
 			}
 		}
 	}
+	
+	
+	/** 
+	 * Met à jour l'onglet AIP 
+	 */
+	private void updateAIPView(){
+		if(aip == null){
+			try {
+				if(DatabaseManager.getCurrentAIP() != null){
+					aip = new AIPView(new AIPController(wwd));
+					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
+					buttonTab.getButton().addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							try {
+								DatabaseManager.unselectDatabase(Type.AIP);
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+					tabs.addTab("AIP", aip);
+					tabs.setTabComponentAt(tabs.indexOfComponent(aip), buttonTab);
+					tabs.setSelectedIndex(tabs.getTabCount()-1);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				if(DatabaseManager.getCurrentAIP() != null){
+					int i = tabs.indexOfComponent(aip);
+					aip = new AIPView(new AIPController(wwd));
+					tabs.setComponentAt(i, aip);
+					tabs.setSelectedIndex(i);
+				} else {
+					((AIPView)aip).getController().reset();
+					int i = tabs.indexOfComponent(aip);
+					if(i>=0){
+						tabs.removeTabAt(i);
+					}
+					aip = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 
 	/**
 	 * Ajoute un tab de sélection des trajectoires.<br />
