@@ -54,7 +54,7 @@ public final class DatabaseManager {
 	/**
 	 * Types de base de données possibles
 	 */
-	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, RadioCov, SkyView, Databases};
+	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, RadioCov, SkyView, AIP, Databases};
 	/**
 	 * Base des frontières Pays
 	 */
@@ -87,6 +87,10 @@ public final class DatabaseManager {
 	 * Base SkyView
 	 */
 	private Connection currentSkyView;
+	/**
+	 * Base AIP
+	 */
+	private Connection currentAIP;
 	/**
 	 * Connection par défaut
 	 */
@@ -262,6 +266,17 @@ public final class DatabaseManager {
 				return null;
 			}
 			
+		case AIP:
+			if(instance.currentAIP == null) {
+				instance.currentAIP = DriverManager.getConnection("jdbc:sqlite:"+name);
+			} else {
+				if(!instance.currentAIP.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
+					//changement de base de données
+					instance.currentAIP.close();
+					instance.currentAIP = DriverManager.getConnection("jdbc:sqlite:"+name);
+				}
+			}
+			return instance.currentAIP;
 		default:
 			return null;
 		}
@@ -801,6 +816,32 @@ public final class DatabaseManager {
 		insertRadio.close();		
 	}
 	
+	/**
+	 * Cree la structure des tables pour les données AIP
+	 * @param name Nom de la base recevant les tables
+	 * @throws SQLException 
+	 */
+	//TODO compléter la base pour les autres types d'objets.
+	public static void createAIP(String name, String path) throws SQLException{
+		Statement st = DatabaseManager.selectDB(Type.AIP, name).createStatement();
+		
+		st.executeUpdate("create table volumes (id integer primary key," +
+				"type varchar(8),"+
+				"nom varchar(64)"+
+		")");
+		st.close();
+		
+		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
+		insertClef.setString(1, "path");
+		insertClef.setString(2, name);
+		insertClef.setString(3, path);
+		insertClef.executeUpdate();
+		insertClef.close();
+		
+		//on référence la base de données
+		DatabaseManager.addDatabase(name, Type.AIP, new SimpleDateFormat().format(new Date()));
+	}
+	
 	
 	/**
 	 * Supprimer une base de donnees
@@ -863,6 +904,12 @@ public final class DatabaseManager {
 				}
 			}
 			break;
+		case AIP:
+			if (instance.currentAIP != null && instance.currentAIP.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
+				instance.currentAIP.close();
+				instance.currentAIP = null;
+			}
+			break;	
 		default:
 			break;
 		}
@@ -1079,11 +1126,11 @@ public final class DatabaseManager {
 	public static ArrayList<String> getCurrentRadioCovPath() throws SQLException {
 		ArrayList <String> pathTab = new ArrayList<String>();
 		Statement st = DatabaseManager.getCurrentRadioCov();
-		ResultSet rs = st.executeQuery("select radio.path from radio");
+	/*	ResultSet rs = st.executeQuery("select radio.path from radio");
 		while (rs.next()) {
 		    pathTab.add(rs.getString(1));
 			// System.out.println("(databaseManager /  getCurrentRadioCovPath) "+ rs.getString(1)+ "///" + rs.getString(2));
-		}
+		}*/
 		return pathTab;
 	}
 	
@@ -1096,6 +1143,15 @@ public final class DatabaseManager {
 		return DatabaseManager.getCurrent(Type.SkyView);
 	}
 	
+	/**
+	 * Renvoit une connection vers la base AIP sélectionnée
+	 * @return {@link Statement}
+	 * @throws SQLException
+	 */
+	public static Statement getCurrentAIP() throws SQLException {
+		return DatabaseManager.getCurrent(Type.AIP);
+	}
+	
 	public static void closeAll(){
 			try {
 				if(instance.currentPays != null) { instance.currentPays.close(); instance.currentPays = null;}
@@ -1106,6 +1162,7 @@ public final class DatabaseManager {
 				if(instance.currentODS != null) { instance.currentODS.close();instance.currentODS = null;}
 				if(instance.currentRadioCov != null) { instance.currentRadioCov.close();instance.currentRadioCov = null;}
 				if(instance.currentSkyView != null) {instance.currentSkyView.close(); instance.currentSkyView = null;}
+				if(instance.currentAIP!=null) {instance.currentAIP.close(); instance.currentAIP = null;}
 				if(instance.databases != null) { instance.databases.close(); instance.databases = null;}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -1151,6 +1208,8 @@ public final class DatabaseManager {
 			return Type.RadioCov;
 		} else if(type.equalsIgnoreCase("SkyView")){
 			return Type.SkyView;
+		} else if(type.equalsIgnoreCase("AIP")){
+			return Type.AIP;
 		}
 		return null;
 	}
