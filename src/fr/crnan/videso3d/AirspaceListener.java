@@ -33,6 +33,7 @@ import fr.crnan.videso3d.graphics.ObjectAnnotation;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.graphics.Secteur3D.Type;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
@@ -366,7 +367,11 @@ public class AirspaceListener implements SelectListener {
 		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){ //ouverture du contexte
 			Object o = event.getTopObject();
 			if(o instanceof Secteur3D){
-				this.context.showSecteur(((Secteur3D)o).getName());
+				if(((Secteur3D)event.getTopObject()).getType()==Type.Secteur){
+					this.context.showSecteur(((Secteur3D)event.getTopObject()).getName());
+				}else{
+					this.context.showAIPZone(((Secteur3D)event.getTopObject()).getName());
+				}
 			} else if (o instanceof Route2D){
 				this.context.showRoute(((Route2D)o).getName());
 			} else if (o instanceof Route3D){

@@ -51,7 +51,6 @@ public class EdimapController implements VidesoController {
 			}
 		}
 	}
-
 	@Override
 	public void removeLayer(String name, Layer layer) {
 		this.wwd.removeLayer(layer);

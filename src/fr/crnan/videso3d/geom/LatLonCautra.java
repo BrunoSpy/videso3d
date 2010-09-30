@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.geom;
 
+import fr.crnan.videso3d.Couple;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 /**
@@ -95,6 +96,33 @@ public class LatLonCautra extends LatLon {
 		return LatLonCautra.fromRadians(latlon[0], latlon[1]);
 	}
 	
+	
+	public static LatLonCautra fromCautraExacte(double x, double y){
+		LatLonCautra result = LatLonCautra.fromDegrees(47+y/60.0, x/60.0);
+		/** Par defaut, la position corrigee initiale est la position donnee;
+		 *  ceci pour correspondre a un ecart initial nul.
+		 */
+		double[] corrige;
+		Couple<Double,Double> ecart = new Couple<Double,Double>(0.,0.);
+		boolean exit=false;
+		int compteur=0;
+		do{
+			compteur+=1;
+			result = LatLonCautra.fromDegrees(result.latitude.degrees-ecart.getSecond()/60.0, result.longitude.degrees-ecart.getFirst()/60.0);
+			corrige = LatLonCautra.fromDegrees(result.latitude.degrees, result.longitude.degrees).getCautra();
+			ecart = new Couple<Double,Double>(corrige[0]-x,corrige[1]-y);
+			exit=(ecart.getFirst()<0.00001 && ecart.getSecond()<0.00001);
+		}
+		while(!exit);
+		/**  ALGORITHME ITERATIF DE POSITION EXACTE:
+		 *  INITIALISATION:
+		 *  on approxime lineairement les latitude et longitude (position WGS84)
+		 *  initiales a l'aide de la relation 1 NM <--> 1/60 de degre
+		 *  et des coordonnees CAUTRA passees en parametres
+		 *  rappel: l'origine CAUTRA est en 47N 0W
+		 */
+		return result;
+	}
 	
 	/*-----------------------------------------------------*/
 	/*---------- Transformation inverse quasi-exacte ------*/

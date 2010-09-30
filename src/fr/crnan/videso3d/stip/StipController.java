@@ -271,7 +271,7 @@ public class StipController implements VidesoController {
 			attrs.setOutlineOpacity(0.9);
 			attrs.setOutlineWidth(1.5);
 			while(rs.next()){
-				Secteur3D secteur3D = new Secteur3D(name, rs.getInt("flinf"), rs.getInt("flsup"));
+				Secteur3D secteur3D = new Secteur3D(name, rs.getInt("flinf"), rs.getInt("flsup"),fr.crnan.videso3d.graphics.Secteur3D.Type.Secteur);
 				Secteur secteur = new Secteur(name, rs.getInt("numero"), DatabaseManager.getCurrentStip());
 				secteur.setConnectionPays(DatabaseManager.getCurrent(DatabaseManager.Type.PAYS));
 				secteur3D.setLocations(secteur.getContour(rs.getInt("flsup")));

@@ -420,7 +420,7 @@ public class DataExplorer extends JPanel {
 					tabs.setComponentAt(i, aip);
 					tabs.setSelectedIndex(i);
 				} else {
-					((AIPView)aip).getController().reset();
+					((AIPView)aip).reset();
 					int i = tabs.indexOfComponent(aip);
 					if(i>=0){
 						tabs.removeTabAt(i);
@@ -569,6 +569,9 @@ public class DataExplorer extends JPanel {
 		}
 		if (radioCov != null) {
 			((RadioCovView)radioCov).reset();
+		}
+		if(aip != null){
+			((AIPView)aip).reset();
 		}
 	}
 

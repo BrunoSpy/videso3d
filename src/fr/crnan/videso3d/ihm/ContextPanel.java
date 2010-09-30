@@ -41,6 +41,7 @@ import fr.crnan.videso3d.geom.Latitude;
 import fr.crnan.videso3d.geom.Longitude;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.graphics.Secteur3D.Type;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.stip.StipController;
@@ -95,10 +96,16 @@ public class ContextPanel extends JPanel implements SelectListener {
 			if(event.getTopObject() instanceof Balise2D){
 				this.showBalise(((Balise2D)event.getTopObject()).getName());
 			} else if(event.getTopObject() instanceof Secteur3D){
-				this.showSecteur(((Secteur3D)event.getTopObject()).getName());
+				if(((Secteur3D)event.getTopObject()).getType()==Type.Secteur){
+					this.showSecteur(((Secteur3D)event.getTopObject()).getName());
+				}else{
+					this.showAIPZone(((Secteur3D)event.getTopObject()).getName());
+				}
 			}
 		}
 	}
+
+	
 
 	/**
 	 * Détermine le type de l'objet envoyé et affiche les infos en conséquence
@@ -605,6 +612,10 @@ public class ContextPanel extends JPanel implements SelectListener {
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
+	}
+	
+	public void showAIPZone(String name) {
+		// TODO Auto-generated method stub
 	}
 
 	public void setWWD(VidesoGLCanvas wwd) {
