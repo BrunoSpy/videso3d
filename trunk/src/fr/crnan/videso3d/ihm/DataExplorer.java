@@ -27,6 +27,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -47,6 +48,7 @@ import fr.crnan.videso3d.radio.RadioDataManager;
 import fr.crnan.videso3d.skyview.SkyViewController;
 import fr.crnan.videso3d.stip.StipController;
 import fr.crnan.videso3d.stpv.StpvController;
+import gov.nasa.worldwind.util.Logging;
 
 /**
  * Panel de configuration des objets affichés sur le globe
@@ -462,6 +464,11 @@ public class DataExplorer extends JPanel {
 		}
 		if(lplnFile.size()>0){
 			this.addTrajectoriesView(new LPLNReader(lplnFile));
+		}
+		if(opasFile.size() == 0 && geoFile.size() == 0 && lplnFile.size() == 0){
+			Logging.logger().warning("Aucun fichier trajectoire trouvé.");
+			JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucun fichier trajectoire trouvé.<br /><br />" +
+					"<b>Solution :</b><br />Vérifiez que les fichiers sélectionnés sont bien dans un format pris en compte.</html>", "Erreur", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 	

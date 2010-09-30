@@ -70,6 +70,7 @@ import fr.crnan.videso3d.util.VidesoStatusBar;
 import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.util.Logging;
 
 /**
  * Fenêtre principale
@@ -150,7 +151,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				splashScreen.setStatus((String) evt.getNewValue(), (step*100)/(wwd.getNumberInitSteps()+3) );
-				System.out.println("évènement "+evt.getNewValue()+" "+(step*100)/(wwd.getNumberInitSteps()+3));
+				Logging.logger().info(evt.getNewValue()+" "+(step*100)/(wwd.getNumberInitSteps()+3));
 				step++;
 			}
 		});
