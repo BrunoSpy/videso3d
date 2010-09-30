@@ -32,6 +32,9 @@ public class Pallet {
 	private static String BALISE_TEXT = "#FFFFFF";
 		
 	public static Color ANNOTATION_BACKGROUND = new Color(1f, 1f, 1f, .7f);
+	public static Color SIVColor = new Color(200,100,200);
+	public static Color CTRColor = new Color(230,250,100);
+	
 	
 	public static Color getColorFondPays(){
 		return Color.decode(Configuration.getProperty(Configuration.COLOR_FOND_PAYS, FOND_PAYS));

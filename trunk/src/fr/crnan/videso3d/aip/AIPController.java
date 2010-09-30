@@ -23,6 +23,7 @@ import java.util.Iterator;
 
 import org.jdom.Element;
 
+
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
@@ -30,6 +31,7 @@ import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIP.Altitude;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.graphics.Secteur3D.Type;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.Material;
@@ -131,7 +133,11 @@ public class AIPController implements VidesoController {
 				this.addZone(type,name);
 			}
 			break;
-		default: break;
+		default: 
+			if(!zones.containsKey(name)){
+				this.addZone(type,name);
+			}
+			break;
 		}
 	}
 
@@ -140,6 +146,10 @@ public class AIPController implements VidesoController {
 		switch(type){
 		case AIP.TSA:  
 			this.removeZone(type,name);
+			break;
+		default:
+			this.removeZone(type,name);
+			break;
 		}
 	}
 	
@@ -168,16 +178,32 @@ public class AIPController implements VidesoController {
 	}
 	
 	private void addZone(int type, String name) {
+		Type secteur3DType=null;
+		Color couleurZone=null;
 		switch(type){
-		case AIP.TSA: 
-			Element maTSA = aip.findElementByName(AIP.TSA, name);
-			Couple<Altitude,Altitude> niveaux = aip.getLevels(maTSA);
-			Secteur3D zone = new Secteur3D(name, niveaux.getFirst().getFL(), niveaux.getSecond().getFL());
+		case AIP.TSA:
+			secteur3DType=Type.TSA;
+			couleurZone=Color.red;
+			break;
+		case AIP.SIV:
+			secteur3DType=Type.SIV;
+			couleurZone=Pallet.SIVColor;
+			break;
+		case AIP.CTR:
+			secteur3DType=Type.CTR;
+			couleurZone=Pallet.CTRColor;
+			break;
+		default: 
+			break;
+		}
+			Element maZone = aip.findElementByName(type, name);
+			Couple<Altitude,Altitude> niveaux = aip.getLevels(maZone);
+			Secteur3D zone = new Secteur3D(name, niveaux.getFirst().getFL(), niveaux.getSecond().getFL(),secteur3DType);
 			
 			BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
 			attrs.setDrawOutline(true);
-			attrs.setMaterial(new Material(Color.RED));
-			attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(Color.RED)));
+			attrs.setMaterial(new Material(couleurZone));
+			attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(couleurZone)));
 			attrs.setOpacity(0.2);
 			attrs.setOutlineOpacity(0.9);
 			attrs.setOutlineWidth(1.5);
@@ -186,21 +212,28 @@ public class AIPController implements VidesoController {
 			zone.setAnnotation("<p><b>"+name+"</b></p>"
 											+"<p>Plafond : "+niveaux.getSecond().getFullText()
 											+"<br />Plancher : "+niveaux.getFirst().getFullText()+"</p>");
-			ContourZone contour = new ContourZone(aip.getPartie(maTSA.getChild("Partie").getAttributeValue("pk")));
+			ContourZone contour = new ContourZone(aip.getPartie(maZone.getChild("Partie").getAttributeValue("pk")));
 			zone.setLocations(contour.getLocations());
 			zones.put(name, zone);
 			this.addToZonesLayer(zone);
-		}
-		
 	}
 
 	
+	
+
+
 	private void removeZone(int type, String name) {
+		//TODO voir si il faudra séparer les types
 		switch(type){
-		case AIP.TSA: 
+		case AIP.TSA:
 			this.removeFromZonesLayer(zones.get(name));
 			zones.remove(name);
-			
+			break;
+		default:
+			this.removeFromZonesLayer(zones.get(name));
+			zones.remove(name);
+			break;
+
 		}
 	}
 	
@@ -222,8 +255,9 @@ public class AIPController implements VidesoController {
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
-		
+		this.zones.clear();
+		this.zonesLayer.removeAllAirspaces();
 	}
+
 
 }

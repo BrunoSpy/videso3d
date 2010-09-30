@@ -22,6 +22,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +32,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.filter.Filter;
 import org.jdom.input.SAXBuilder;
+
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
@@ -69,9 +72,10 @@ public class AIP extends FileParser{
 	
 	
 	private List<Couple<Integer,String>> TSAs;
-	
+	private List<Couple<Integer,String>> SIVs;
+	private List<Couple<Integer,String>> CTRs;
 
-	public final static int TSA = 1,Partie=0;
+	public final static int Partie=0, TSA = 1, SIV = 2, CTR = 3;
 	
 
 
@@ -88,6 +92,8 @@ public class AIP extends FileParser{
 	
 	public AIP(){
 		this.TSAs = new LinkedList<Couple<Integer,String>>();
+		this.SIVs = new LinkedList<Couple<Integer,String>>();
+		this.CTRs = new LinkedList<Couple<Integer,String>>();
 		SAXBuilder sxb = new SAXBuilder();
 		try{
 			//on récupère le chemin d'accès au fichier xml à parser
@@ -101,9 +107,16 @@ public class AIP extends FileParser{
 			Statement aipDB = DatabaseManager.getCurrentAIP();
 			if(aipDB != null){
 				//on récupère toutes les TSA de la bdd.
-				ResultSet rSet = aipDB.executeQuery("select * from volumes where type = 'TSA'");
+				ResultSet rSet = aipDB.executeQuery("select * from volumes");
 				while(rSet.next()){
-					TSAs.add(new Couple<Integer, String>(rSet.getInt(1),rSet.getString(3)));
+					Couple<Integer, String> id_name = new Couple<Integer, String>(rSet.getInt(1),rSet.getString(3));
+					if(rSet.getString(2).equals("TSA")){
+						TSAs.add(id_name);
+					}else if(rSet.getString(2).equals("SIV")){
+						SIVs.add(id_name);
+					}else if(rSet.getString(2).equals("CTR")){
+						CTRs.add(id_name);
+					}
 				}
 			}
 		}catch(Exception e){}
@@ -153,8 +166,14 @@ public class AIP extends FileParser{
 		Element racineVolumes = document.getRootElement().getChild("Situation").getChild("VolumeS");
 		//rentrer les TSAs dans la base de données
 		TSAs = new LinkedList<Couple<Integer,String>>();
+		SIVs = new LinkedList<Couple<Integer,String>>();
+		CTRs = new LinkedList<Couple<Integer,String>>();
 		this.setFile("TSA");
 		this.getTSAs(racineVolumes);
+		this.setFile("SIV");
+		this.getSIVs(racineVolumes);
+		this.setFile("CTR");
+		this.getCTRs(racineVolumes);
 		//TODO ensuite traiter les autres types de volumes
 	}
 
@@ -162,15 +181,23 @@ public class AIP extends FileParser{
 	 * Cherche tous les éléments Volume qui sont des TSA, et insère leur nom dans la base de données
 	 */
 	private void getTSAs(Element racine) {
-		List<Element> resultat = findElements(racine, "lk","TSA");
-		Iterator<Element> it = resultat.iterator();
+		List<Element> tsaList = findElements(racine, "lk","TSA");
+		List<Element> cbaList = findElements(racine,"lk", "CBA");
+		Iterator<Element> itTSA = tsaList.iterator();
+		Iterator<Element> itCBA = cbaList.iterator();
 		try{
-			while(it.hasNext()){
-				this.insertTSA(it.next());
+			while(itTSA.hasNext()){
+				this.insertTSA(itTSA.next());
 			}
-		}catch(Exception e){}
+			while(itCBA.hasNext()){
+				this.insertTSA(itCBA.next());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
-
+	
+	
 	/**
 	 * Insère le nom et l'identifiant d'un élément xml de type TSA dans la base de données.
 	 */
@@ -184,12 +211,103 @@ public class AIP extends FileParser{
 		ps.setString(3, tsaName);
 		ps.executeUpdate();
 	}
+	
+	
+	/**
+	 * Cherche tous les éléments Volume qui sont des SIV, et insère leur nom dans la base de données
+	 */
+	private void getSIVs(Element racine){
+		List<Element> sivList = findElements(racine, "lk","SIV");
+		Iterator<Element> it = sivList.iterator();
+		try{
+			while(it.hasNext()){
+				this.insertSIV(it.next());
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	
+	/**
+	 * Insère le nom et l'identifiant d'un élément xml de type SIV dans la base de données.
+	 */
+	private void insertSIV(Element siv) throws SQLException {
+		int sivID = Integer.parseInt(siv.getAttributeValue("pk"));
+		String sivName = getVolumeName(siv.getAttributeValue("lk"));
+		SIVs.add(new Couple<Integer,String>(sivID,sivName));
+		PreparedStatement ps = this.conn.prepareStatement("insert into volumes (id,type,nom) VALUES (?, ?, ?)");
+		ps.setInt(1, sivID);
+		ps.setString(2, "SIV");
+		ps.setString(3, sivName);
+		ps.executeUpdate();
+	}
+	
+	
+	
+	/**
+	 * Cherche tous les éléments Volume qui sont des SIV, et insère leur nom dans la base de données
+	 */
+	private void getCTRs(Element racine){
+		List<Element> ctrList = findElements(racine, "lk","CTR");
+		Iterator<Element> it1 = ctrList.iterator();
+		Iterator<Element> it2 = ctrList.iterator();
+		//identifiants des CTR qui ont le même nom pour leur rajouter le numéro de séquence à la  fin du nom.
+		HashSet<String> sameNames = new HashSet<String>();
+		ArrayList<String> names = new ArrayList<String>();
+		try{
+			while(it1.hasNext()){
+				Element ctr = it1.next();
+				String ctrName = getVolumeName(ctr.getAttributeValue("lk"));
+				if(!names.contains(ctrName)){
+					names.add(ctrName);
+				}else{
+					sameNames.add(ctrName);
+				}
+			}
+			while(it2.hasNext()){
+				Element ctrElement = it2.next();
+				if(sameNames.contains(getVolumeName(ctrElement.getAttributeValue("lk")))){
+					this.insertCTR(ctrElement,true);
+				}else{
+					this.insertCTR(ctrElement,false);
+				}
+			}
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	
+	/**
+	 * Insère le nom et l'identifiant d'un élément xml de type SIV dans la base de données.
+	 */
+	private void insertCTR(Element ctr, boolean displaySequence) throws SQLException {
+		int ctrID = Integer.parseInt(ctr.getAttributeValue("pk"));
+		String ctrName = getVolumeName(ctr.getAttributeValue("lk"));
+		if(displaySequence){
+			ctrName+=" "+ctr.getChildText("Sequence");
+		}
+		this.CTRs.add(new Couple<Integer,String>(ctrID,ctrName));
+		
+		PreparedStatement ps = this.conn.prepareStatement("insert into volumes (id,type,nom) VALUES (?, ?, ?)");
+		ps.setInt(1, ctrID);
+		ps.setString(2, "CTR");
+		ps.setString(3, ctrName);
+		ps.executeUpdate();
+	}
+	
 
 	/**
 	 * Récupère le nom du volume en enlevant les [] et les caractères inutiles.
 	 */
 	private String getVolumeName(String fullName) {
 		String name = fullName.substring(5);
+		if(name.charAt(1)==']'){
+			name = name.substring(3);
+		}
 		if(name.charAt(name.indexOf("[")+1)!='.'){
 			name = name.replaceFirst("[\\]]", " ");
 			name = name.replaceFirst("[\\[]", "");
@@ -208,6 +326,10 @@ public class AIP extends FileParser{
 		switch(type){
 		case TSA:
 			return TSAs;
+		case SIV:
+			return SIVs;
+		case CTR:
+			return CTRs;
 		}
 		return null;
 	}
@@ -261,28 +383,42 @@ public class AIP extends FileParser{
 	 * @return l'élément recherché.
 	 */
 	public Element findElementByName(int type, String name){
-		switch(type){
-		case TSA:
-			String id=null;
-			try {
-				Statement st = DatabaseManager.getCurrentAIP();
-				ResultSet rs = st.executeQuery("select * from volumes where type = 'TSA' AND nom = '"+name+"'");
-				if(rs.next()){
-					id=rs.getString(1);
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-			
-			Element racine = document.getRootElement().getChild("Situation").getChild("VolumeS");
-			return findElement(racine, id);
-		default: break;
-		
-		};
-		
-		return null;
+		Element racine = document.getRootElement().getChild("Situation").getChild("VolumeS");
+		return findElement(racine, getID(type,name));
 	}
 	
+	
+	private String getID(int type, String name){
+		String id=null;
+		String typeString=null;
+		switch(type){
+		case TSA:
+			typeString="TSA";
+			break;
+		case SIV: 
+			typeString="SIV";
+			break;
+		case CTR:
+			typeString="CTR";
+			break;
+		default:break;
+		}
+		try {
+			PreparedStatement st = DatabaseManager.prepareStatement(Type.AIP, "select * from volumes where type = ? AND nom = ?");
+			st.setString(1, typeString);
+			st.setString(2, name);
+			ResultSet rs = st.executeQuery();
+			if(rs.next()){
+				id=rs.getString(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return id;
+	}
+	
+	
+
 	/**
 	 * Renvoie l'élément de type Partie identifié par id.
 	 * @param id L'identifiant de la Partie (champ "pk").
@@ -306,7 +442,7 @@ public class AIP extends FileParser{
 			public boolean matches(Object o) {
 				if(!(o instanceof Element)){return false;}
 				Element element = (Element)o;
-				if (element.getAttributeValue("pk").contains(id)){
+				if (element.getAttributeValue("pk").equals(id)){
 					return true;
 				}
 				return false;
@@ -314,7 +450,7 @@ public class AIP extends FileParser{
 		};
 		return ((List<Element>) racine.getContent(f)).get(0);
 	}
-	
+		
 	
 	/**
 	 * Renvoie les niveaux plancher et plafond d'une zone, sous forme de couple d'<code>Altitude</code>. 
@@ -361,7 +497,7 @@ public class AIP extends FileParser{
 					ref=Altitude.amsl;
 				}
 			}
-			if(refUnite.equals("sfc")){
+			if(refUnite.equals("SFC")){
 				FL=0;
 				unite=Altitude.sfc;
 				ref=Altitude.refSFC;

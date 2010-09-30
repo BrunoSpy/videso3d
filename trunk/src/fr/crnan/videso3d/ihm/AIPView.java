@@ -92,9 +92,14 @@ public class AIPView extends JPanel implements DataView{
 		volumes.setLayout(new BorderLayout());
 		DefaultMutableTreeNode volume = new DefaultMutableTreeNode("volumes");
 		DefaultMutableTreeNode TSAs = new DefaultMutableTreeNode("TSA");
+		DefaultMutableTreeNode SIVs = new DefaultMutableTreeNode("SIV");
+		DefaultMutableTreeNode CTRs = new DefaultMutableTreeNode("CTR");
 		this.addNodes("TSA", "TSA", TSAs);
+		this.addNodes("SIV", "SIV", SIVs);
+		this.addNodes("CTR", "CTR", CTRs);
 		volume.add(TSAs);
-		
+		volume.add(SIVs);
+		volume.add(CTRs);
 		volumesTree = new CheckboxTree(volume);
 		volumesTree.setRootVisible(false);
 		volumesTree.setCellRenderer(new TreeCellNimbusRenderer());
@@ -114,9 +119,13 @@ public class AIPView extends JPanel implements DataView{
 	private void addNodes(String type, String classe, DefaultMutableTreeNode root){
 		try {
 			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet rs = st.executeQuery("select * from volumes where type = '"+type+"'");
+			ResultSet rs = st.executeQuery("select * from volumes where type = '"+type+"' ORDER BY nom");
 			while(rs.next()){
-				root.add(new DefaultMutableTreeNode(rs.getString("nom")));
+				String nomAffiche = rs.getString("nom");
+				if(nomAffiche.startsWith("CTR")||nomAffiche.startsWith("SIV")){
+					nomAffiche = nomAffiche.substring(4);
+				}
+				root.add(new DefaultMutableTreeNode(nomAffiche));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -133,21 +142,40 @@ public class AIPView extends JPanel implements DataView{
 		@Override
 		public void valueChanged(TreeCheckingEvent e) {
 			DefaultMutableTreeNode c = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
-			String name = (String)c.getUserObject();
-			if (name.equals("TSA")){
-				if(e.isCheckedPath()){
-					controller.displayAll(AIP.TSA);
-				} else  {
-					controller.hideAll(AIP.TSA);
+			if(!c.getUserObject().equals("volumes")){
+				String name = (String)c.getUserObject();
+				int type=-1;
+
+				if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("TSA")||name.equals("TSA"))
+					type=AIP.TSA;
+				if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("SIV")){
+					type=AIP.SIV;
+					name = "SIV "+name;
 				}
-			} //TODO corriger la condition
-			else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("TSA")) {
-				if(e.isCheckedPath()){
-					controller.showObject(AIP.TSA,name);
-				} else {
-					controller.hideObject(AIP.TSA,name);
+				if(name.equals("SIV"))
+					type=AIP.SIV;
+				if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("CTR")){
+					type=AIP.CTR;
+					name = "CTR "+name;
 				}
-			} 
+				if(name.equals("CTR"))
+					type=AIP.CTR;
+
+				if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("volumes")) {
+					if(e.isCheckedPath()){
+						controller.displayAll(type);
+					} else  {
+						controller.hideAll(type);
+					}
+				}
+				else{
+					if(e.isCheckedPath()){
+						controller.showObject(type,name);
+					} else {
+						controller.hideObject(type,name);
+					}
+				}
+			}
 		}
 
 	}

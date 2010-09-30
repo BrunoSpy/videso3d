@@ -1035,6 +1035,30 @@ public final class DatabaseManager {
 			return connectionName == null ? null : DatabaseManager.selectDB(type, connectionName).createStatement();
 		}
 	}
+	
+	
+	/**
+	 * Crée un PreparedStatement sur la base de données courante du type <code>type</code>, avec la requête sql passée en paramètre.
+	 * @param type
+	 * @param sqlRequest
+	 * @return
+	 * @throws SQLException
+	 */
+	public static PreparedStatement prepareStatement(Type type, String sqlRequest) throws SQLException{
+		if(type.equals(Type.Databases)){
+			return DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement(sqlRequest);
+		} else {
+			Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+			ResultSet result = st.executeQuery("select name from databases where selected = 1 and type = '"+type.toString()+"'");
+			String connectionName = null;
+			if(result.next()) {
+				connectionName = result.getString(1) ;
+			} 
+			result.close();
+			st.close();
+			return connectionName == null ? null : DatabaseManager.selectDB(type, connectionName).prepareStatement(sqlRequest);
+		}
+	}
 
 	/**
 	 * Renvoie le nom de la base de données sélectionnée
