@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -35,7 +36,7 @@ import com.ice.tar.TarInputStream;
 /**
  * Manages several kind of files
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class FileManager {
 
@@ -51,6 +52,68 @@ public class FileManager {
 				f.delete();
 			}
 		}
+	}
+	
+	/**
+	 * Copy a file to the datas repertory
+	 * @param file to copy
+	 * @return File : the new file
+	 */
+	public static File copyFile(File file){
+		File src = file;
+		File dest = new File(src.getName());
+		try {
+			
+			if(!dest.exists()){
+				dest.createNewFile();
+			}
+
+			FileChannel source = new FileInputStream(src).getChannel();
+			FileChannel destination = new FileOutputStream(dest).getChannel();
+
+			destination.transferFrom(source, 0, source.size());
+			
+			source.close();
+			destination.close();
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return dest;
+	}
+	
+	/**
+	 * Copy a file to the datas repertory
+	 * @param file to copy
+	 * @return File : the new file
+	 */
+	public static File copyFile(String path){
+		File src = new File(path);
+		File dest = new File(src.getName());
+		try {
+			
+			if(!dest.exists()){
+				dest.createNewFile();
+			}
+
+			FileChannel source = new FileInputStream(src).getChannel();
+			FileChannel destination = new FileOutputStream(dest).getChannel();
+
+			destination.transferFrom(source, 0, source.size());
+			
+			source.close();
+			destination.close();
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return dest;
 	}
 	
 	/**

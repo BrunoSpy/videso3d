@@ -57,7 +57,6 @@ import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.pays.Pays;
 import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.stpv.Stpv;
-import fr.crnan.videso3d.radio.Radio;
 import fr.crnan.videso3d.radio.RadioDataManager;
 import gov.nasa.worldwind.util.Logging;
 
@@ -181,7 +180,9 @@ public class DatabaseManagerUI extends JDialog {
 				((DBTableModel)table.getModel()).update();
 				return;			
 			} else if (suffix.equalsIgnoreCase(".xml")){ //export des données SIA, base AIP
-				AIP aip = new AIP(file.getAbsolutePath());
+				//on copie le fichier pour éviter de le perdre
+				File aipFile = FileManager.copyFile(file);
+				AIP aip = new AIP(aipFile.getAbsolutePath());
 				this.getDatas(aip, "Import des données AIP", "AIP");
 			} else {
 				file = file.getParentFile();
