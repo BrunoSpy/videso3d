@@ -69,7 +69,7 @@ public class AIPController implements VidesoController {
 			this.toggleLayer(zonesLayer, true);
 		}
 		try {
-			if(DatabaseManager.getCurrentStip() != null) {
+			if(DatabaseManager.getCurrentAIP() != null) {
 				//création des nouveaux objets
 				this.toggleLayer(zonesLayer, true);
 				zones = new HashMap<String, Secteur3D>();				
