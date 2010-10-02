@@ -1,0 +1,11 @@
+#summary Visualiser l'AIP
+
+= Comment visualiser les données de l'AIP France ? =
+
+Pour visualiser en 3D les données de l'AIP France, il faut [BDD ajouter] le fichier au format XML dans les bases de données.
+
+La plupart des données de l'AIP sont alors accessibles via le sélecteur de données.
+
+= Exemple : SIV, TSA et CBA dans l'espace français =
+
+[http://videso3d.googlecode.com/svn/wiki/img/aip_siv_tsa.png]

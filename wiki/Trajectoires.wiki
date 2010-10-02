@@ -14,5 +14,6 @@ les fichiers à importer en cliquant sur le bouton [http://videso3d.googlecode.c
 
 La manipulation des trajectoires se fait grâce à un panneau de contrôle qui varie légèrement en fonction du type de trajectoires importé.
 De manière générale, il ressemble à ce panneau :
+
 [http://videso3d.googlecode.com/svn/wiki/img/trajectoires.png]
 

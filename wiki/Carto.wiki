@@ -1,0 +1,20 @@
+#summary Ajouter un fond de carte
+
+Il est possible d'ajouter des fonds de carte à Videso 3D : cartes IGN, SIA, ...
+
+= Pré-requis =
+
+Les cartes doivent être pré-traitées avant de pouvoir être ajoutées à Videso 3D. Pour ce faire, vous devez posséder une version numérique géoréférencée de la carte que vous souhaitez visualiser (le format GeoTiff rempli ce pré-requis).
+
+Par exemple, la carte OACI 500.000 de l'IGN est géoréférencée : [http://loisirs.ign.fr/5279825/produit/cdrom-france-oaci.htm].
+
+= Pré-traitement =
+
+Vos cartes doivent être géoréférencées dans une projection lat-lon et dans le référentiel WGS84. SI ce n'est pas le cas, la première étape consiste à reprojeter les cartes
+
+Ensuite, il faut créer le jeu de dalles (le cache de Videso 3D).
+
+= Ajout d'un jeu de carte =
+
+Une fois les étapes précédentes remplies, il vous suffit d'ajouter votre jeu de carte dans le dossier datas/WorldWindInstalled.
+Au prochain lancement de Videso 3D, le fond de carte sera disponible via le bouton "LayerList" (en bas à gauche de la vue 3D).
