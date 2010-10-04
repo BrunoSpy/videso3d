@@ -127,30 +127,13 @@ public class AIPController implements VidesoController {
 
 	@Override
 	public void showObject(int type, String name) {
-		switch(type){
-		case AIP.TSA:  
-			if(!zones.containsKey(name)){
-				this.addZone(type,name);
-			}
-			break;
-		default: 
-			if(!zones.containsKey(name)){
-				this.addZone(type,name);
-			}
-			break;
-		}
+		if(!zones.containsKey(name))
+			this.addZone(type,name);
 	}
 
 	@Override
 	public void hideObject(int type, String name) {
-		switch(type){
-		case AIP.TSA:  
-			this.removeZone(type,name);
-			break;
-		default:
-			this.removeZone(type,name);
-			break;
-		}
+		this.removeZone(type,name);
 	}
 	
 	
@@ -183,7 +166,7 @@ public class AIPController implements VidesoController {
 		switch(type){
 		case AIP.TSA:
 			secteur3DType=Type.TSA;
-			couleurZone=Color.red;
+			couleurZone=Color.orange;
 			break;
 		case AIP.SIV:
 			secteur3DType=Type.SIV;
@@ -192,6 +175,18 @@ public class AIPController implements VidesoController {
 		case AIP.CTR:
 			secteur3DType=Type.CTR;
 			couleurZone=Pallet.CTRColor;
+			break;
+		case AIP.TMA:
+			secteur3DType=Type.TMA;
+			couleurZone=Pallet.TMAColor;
+			break;
+		case AIP.R:
+			secteur3DType=Type.R;
+			couleurZone=Color.red;
+			break;
+		case AIP.D:
+			secteur3DType=Type.D;
+			couleurZone=Color.red;
 			break;
 		default: 
 			break;
@@ -223,18 +218,8 @@ public class AIPController implements VidesoController {
 
 
 	private void removeZone(int type, String name) {
-		//TODO voir si il faudra séparer les types
-		switch(type){
-		case AIP.TSA:
-			this.removeFromZonesLayer(zones.get(name));
-			zones.remove(name);
-			break;
-		default:
-			this.removeFromZonesLayer(zones.get(name));
-			zones.remove(name);
-			break;
-
-		}
+		this.removeFromZonesLayer(zones.get(name));
+		zones.remove(name);
 	}
 	
 	
@@ -248,9 +233,7 @@ public class AIPController implements VidesoController {
 	}
 
 	@Override
-	public void set2D(Boolean flat) {
-		// TODO Auto-generated method stub
-		
+	public void set2D(Boolean flat) {		
 	}
 
 	@Override

@@ -94,12 +94,21 @@ public class AIPView extends JPanel implements DataView{
 		DefaultMutableTreeNode TSAs = new DefaultMutableTreeNode("TSA");
 		DefaultMutableTreeNode SIVs = new DefaultMutableTreeNode("SIV");
 		DefaultMutableTreeNode CTRs = new DefaultMutableTreeNode("CTR");
+		DefaultMutableTreeNode TMAs = new DefaultMutableTreeNode("TMA");
+		DefaultMutableTreeNode Rs = new DefaultMutableTreeNode("R");
+		DefaultMutableTreeNode Ds = new DefaultMutableTreeNode("D");
 		this.addNodes("TSA", "TSA", TSAs);
 		this.addNodes("SIV", "SIV", SIVs);
 		this.addNodes("CTR", "CTR", CTRs);
+		this.addNodes("TMA", "TMA", TMAs);
+		this.addNodes("R", "R", Rs);
+		this.addNodes("D", "D", Ds);
 		volume.add(TSAs);
 		volume.add(SIVs);
 		volume.add(CTRs);
+		volume.add(TMAs);
+		volume.add(Rs);
+		volume.add(Ds);
 		volumesTree = new CheckboxTree(volume);
 		volumesTree.setRootVisible(false);
 		volumesTree.setCellRenderer(new TreeCellNimbusRenderer());
@@ -113,7 +122,7 @@ public class AIPView extends JPanel implements DataView{
 	
 	/** Ajoute à <code>root</code> les noeuds correspondants
 	 * @param type Type des noeuds à ajouter (routes, balises)
-	 * @param classe Classe des noeuds à ajouter (FIR, UIR, Publiées, ...)
+	 * @param classe Classe des noeuds à ajouter
 	 * @param root Noeud recevant
 	 */
 	private void addNodes(String type, String classe, DefaultMutableTreeNode root){
@@ -122,9 +131,10 @@ public class AIPView extends JPanel implements DataView{
 			ResultSet rs = st.executeQuery("select * from volumes where type = '"+type+"' ORDER BY nom");
 			while(rs.next()){
 				String nomAffiche = rs.getString("nom");
-				if(nomAffiche.startsWith("CTR")||nomAffiche.startsWith("SIV")){
-					nomAffiche = nomAffiche.substring(4);
-				}
+				//si le type est indiqué dans le nom de la zone, on l'enlève 
+				int lettersToRemove = startsWithType(nomAffiche);
+				nomAffiche = nomAffiche.substring(lettersToRemove);
+				
 				root.add(new DefaultMutableTreeNode(nomAffiche));
 			}
 		} catch (SQLException e) {
@@ -145,22 +155,16 @@ public class AIPView extends JPanel implements DataView{
 			if(!c.getUserObject().equals("volumes")){
 				String name = (String)c.getUserObject();
 				int type=-1;
-
-				if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("TSA")||name.equals("TSA"))
-					type=AIP.TSA;
-				if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("SIV")){
-					type=AIP.SIV;
-					name = "SIV "+name;
+				type = getNodeType(c);
+				if(!((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("volumes")
+						&& !((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("TSA")
+						&& !((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("R")
+						&& !((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("D"))
+				{
+					name = (String)((DefaultMutableTreeNode) c.getParent()).getUserObject()+ " " + name;
 				}
-				if(name.equals("SIV"))
-					type=AIP.SIV;
-				if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("CTR")){
-					type=AIP.CTR;
-					name = "CTR "+name;
-				}
-				if(name.equals("CTR"))
-					type=AIP.CTR;
 
+				
 				if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("volumes")) {
 					if(e.isCheckedPath()){
 						controller.displayAll(type);
@@ -177,9 +181,33 @@ public class AIPView extends JPanel implements DataView{
 				}
 			}
 		}
+		
+		private int getNodeType(DefaultMutableTreeNode c){
+			String type=null;
+			if(((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("volumes")){
+				type = (String) c.getUserObject();
+			}else{
+				type = (String)((DefaultMutableTreeNode)c.getParent()).getUserObject();
+			}
+			return AIP.getTypeInt(type);
+		}
 
 	}
 
+	
+	/**
+	 * Vérifie si le nom de la zone commence par le type (CTR, TMA,...)
+	 * @param name Le nom à vérifier
+	 * @return Le nombre de lettres à enlever, où 0 si le type de la zone n'est pas indiqué dans le nom.
+	 */
+	private int startsWithType(String name){
+		if(name.startsWith("SIV")
+				||name.startsWith("CTR")
+				||name.startsWith("TMA")){
+			return 4;
+		}
+		return 0;
+	}
 	
 	/**
 	 * Classe temporaire pour corriger un bug de rendu avec le style Nimbus

@@ -825,7 +825,8 @@ public final class DatabaseManager {
 	public static void createAIP(String name, String path) throws SQLException{
 		Statement st = DatabaseManager.selectDB(Type.AIP, name).createStatement();
 		
-		st.executeUpdate("create table volumes (id integer primary key," +
+		st.executeUpdate("create table volumes (id integer primary key autoincrement," +
+				"pk integer,"+
 				"type varchar(8),"+
 				"nom varchar(64)"+
 		")");

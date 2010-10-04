@@ -34,6 +34,7 @@ public class Pallet {
 	public static Color ANNOTATION_BACKGROUND = new Color(1f, 1f, 1f, .7f);
 	public static Color SIVColor = new Color(200,100,200);
 	public static Color CTRColor = new Color(230,250,100);
+	public static Color TMAColor = new Color(240,240,240);
 	
 	
 	public static Color getColorFondPays(){
