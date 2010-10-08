@@ -208,7 +208,7 @@ public class AIPView extends JPanel implements DataView{
 			}else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("Treuils planeurs")){
 				name = "TrPla "+c.getUserObject();
 			}else{
-				name = (String)((DefaultMutableTreeNode) c.getParent()).getUserObject()+ " " + name;
+				name = (String)((DefaultMutableTreeNode) c.getParent()).getUserObject()+ " " + c.getUserObject();
 			}
 			return name;
 		}
