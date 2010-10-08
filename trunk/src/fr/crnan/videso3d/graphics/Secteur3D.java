@@ -32,7 +32,7 @@ public class Secteur3D extends PolygonAnnotation{
 	/**
 	 * Type de zone
 	 */
-	public static enum Type {Secteur, TSA, SIV, CTR, TMA, R, D};
+	public static enum Type {Secteur, TSA, SIV, CTR, TMA, R, D, FIR, UIR, LTA, UTA, CTA, CTL, Pje, Aer, Vol, Bal, TrPla};
 	
 	private Type type;
 	

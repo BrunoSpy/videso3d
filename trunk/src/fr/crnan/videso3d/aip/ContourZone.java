@@ -17,6 +17,7 @@
 package fr.crnan.videso3d.aip;
 
 import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.globes.Earth;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -50,12 +51,36 @@ public class ContourZone{
 	private List<LatLon> parseLocations(String geometrie) {
 		List<LatLon> locations = new LinkedList<LatLon>();
 		String[] locs = geometrie.split("\\s+");
-		for (int i=0;i<locs.length;i++){
-			if(!locs[i].isEmpty()){
-				String[] latlon = locs[i].split(",");
-				double lat=Double.parseDouble(latlon[0]);
-				double lon = Double.parseDouble(latlon[1]);
-				locations.add(LatLon.fromDegrees(lat, lon));
+		int step = 1;
+		if(locs.length>500){
+			step = locs.length/500;
+			if(!locs[1].isEmpty()){
+				String[] loc = locs[1].split(",");
+				LatLon latLon=LatLon.fromDegrees(Double.parseDouble(loc[0]), Double.parseDouble(loc[1]));
+				locations.add(latLon);
+			}	
+			int nbreducs=0;
+			boolean stepReduced = false; 
+			for (int i=2;i<locs.length;i+=step){
+				if(!locs[i].isEmpty()){
+					String[] loc = locs[i].split(",");
+					LatLon latLon=LatLon.fromDegrees(Double.parseDouble(loc[0]), Double.parseDouble(loc[1]));
+					if(getDistance(latLon, locations.get(locations.size()-1))<5000 || stepReduced || step<2){
+						locations.add(latLon);
+						stepReduced=false;
+					}else{
+						i-=Math.min(i-3, 2*step-1);
+						stepReduced = true;nbreducs++;
+					}
+				}
+			}
+		}else{
+			for (int i=0;i<locs.length;i++){
+				if(!locs[i].isEmpty()){
+					String[] loc = locs[i].split(",");
+					LatLon latLon=LatLon.fromDegrees(Double.parseDouble(loc[0]), Double.parseDouble(loc[1]));
+						locations.add(latLon);
+				}
 			}
 		}
 		return locations;
@@ -69,7 +94,17 @@ public class ContourZone{
 		return locations;
 	}
 
-
+	/**
+	 * 
+	 * @param l1
+	 * @param l2
+	 * @return Renvoie la distance entre l1 et l2.
+	 * 
+	 * @since Visualisation_de_flotte 1.0
+	 */
+    public static double getDistance(LatLon l1, LatLon l2){
+        return LatLon.greatCircleDistance(l1, l2).radians*Earth.WGS84_EQUATORIAL_RADIUS;
+    }
 	
 	
 	

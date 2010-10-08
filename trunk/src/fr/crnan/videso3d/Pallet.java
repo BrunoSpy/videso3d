@@ -35,6 +35,14 @@ public class Pallet {
 	public static Color SIVColor = new Color(200,100,200);
 	public static Color CTRColor = new Color(230,250,100);
 	public static Color TMAColor = new Color(240,240,240);
+	public static Color FIRColor = new Color(50,255,50);
+	public static Color UIRColor = new Color(150,255,150);
+	public static Color LTAColor = new Color(150,0,150);
+	public static Color UTAColor = new Color(255,180,255);
+	public static Color CTAColor = Color.pink;
+	public static Color CTLColor = new Color(0,150,250);
+	public static Color defaultColor = new Color(50,50,50);
+	
 	
 	
 	public static Color getColorFondPays(){

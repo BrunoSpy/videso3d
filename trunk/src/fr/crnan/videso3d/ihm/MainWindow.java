@@ -114,7 +114,6 @@ public class MainWindow extends JFrame {
 	}
 
 	public MainWindow(){
-							
 		//Création du splashscreen
 		splashScreen = new SplashScreen();
 		splashScreen.setVisible(true);
@@ -216,6 +215,8 @@ public class MainWindow extends JFrame {
 
 		context = new ContextPanel(wwd);
 		context.setStipController(dataExplorer.getStipController());
+		if(dataExplorer.getAIPController()!=null)
+			context.setAIP(dataExplorer.getAIPController().getAIP());
 		
 		JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, dataExplorer, wwd);
 		mainPane.setOneTouchExpandable(true);

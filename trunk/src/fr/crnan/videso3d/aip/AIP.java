@@ -79,8 +79,22 @@ public class AIP extends FileParser{
 	private List<Couple<Integer,String>> TMAs;
 	private List<Couple<Integer,String>> Rs;
 	private List<Couple<Integer,String>> Ds;
+	private List<Couple<Integer,String>> FIRs;
+	private List<Couple<Integer,String>> UIRs;
+	private List<Couple<Integer,String>> LTAs;
+	private List<Couple<Integer,String>> UTAs;
+	private List<Couple<Integer,String>> CTAs;
+	private List<Couple<Integer,String>> CTLs;
+	private List<Couple<Integer,String>> Pjes;
+	private List<Couple<Integer,String>> Aers;
+	private List<Couple<Integer,String>> Vols;
+	private List<Couple<Integer,String>> Bals;
+	private List<Couple<Integer,String>> TrPlas;
 	
-	public final static int Partie=0, TSA = 1, SIV = 2, CTR = 3, TMA = 4, R = 5, D = 6;
+	
+	public final static int Partie=0, TSA = 1, SIV = 2, CTR = 3, TMA = 4, R = 5, 
+							D = 6, FIR = 7, UIR = 8, LTA = 9, UTA = 10, CTA = 11, 
+							CTL = 12, Pje = 13, Aer = 14, Vol=15, Bal = 16, TrPla = 17;
 	
 
 
@@ -105,6 +119,17 @@ public class AIP extends FileParser{
 		this.TMAs = new LinkedList<Couple<Integer,String>>();
 		this.Rs = new LinkedList<Couple<Integer,String>>();
 		this.Ds = new LinkedList<Couple<Integer,String>>();
+		this.FIRs = new LinkedList<Couple<Integer,String>>();
+		this.UIRs = new LinkedList<Couple<Integer,String>>();
+		this.LTAs = new LinkedList<Couple<Integer,String>>();
+		this.UTAs = new LinkedList<Couple<Integer,String>>();
+		this.CTAs = new LinkedList<Couple<Integer,String>>();
+		this.CTLs = new LinkedList<Couple<Integer,String>>();
+		this.Pjes = new LinkedList<Couple<Integer,String>>();
+		this.Aers = new LinkedList<Couple<Integer,String>>();
+		this.Vols = new LinkedList<Couple<Integer,String>>();
+		this.Bals = new LinkedList<Couple<Integer,String>>();
+		this.TrPlas = new LinkedList<Couple<Integer,String>>();
 		
 		SAXBuilder sxb = new SAXBuilder();
 		try {
@@ -177,12 +202,23 @@ public class AIP extends FileParser{
 	@Override
 	protected void getFromFiles() {
 		Element racineVolumes = document.getRootElement().getChild("Situation").getChild("VolumeS");
-		TSAs = new LinkedList<Couple<Integer,String>>();
-		SIVs = new LinkedList<Couple<Integer,String>>();
-		CTRs = new LinkedList<Couple<Integer,String>>();
-		TMAs = new LinkedList<Couple<Integer,String>>();
+		this.TSAs = new LinkedList<Couple<Integer,String>>();
+		this.SIVs = new LinkedList<Couple<Integer,String>>();
+		this.CTRs = new LinkedList<Couple<Integer,String>>();
+		this.TMAs = new LinkedList<Couple<Integer,String>>();
 		this.Rs = new LinkedList<Couple<Integer,String>>();
 		this.Ds = new LinkedList<Couple<Integer,String>>();
+		this.FIRs = new LinkedList<Couple<Integer,String>>();
+		this.UIRs = new LinkedList<Couple<Integer,String>>();
+		this.LTAs = new LinkedList<Couple<Integer,String>>();
+		this.UTAs = new LinkedList<Couple<Integer,String>>();
+		this.CTAs = new LinkedList<Couple<Integer,String>>();
+		this.CTLs = new LinkedList<Couple<Integer,String>>();
+		this.Pjes = new LinkedList<Couple<Integer,String>>();
+		this.Aers = new LinkedList<Couple<Integer,String>>();
+		this.Vols = new LinkedList<Couple<Integer,String>>();
+		this.Bals = new LinkedList<Couple<Integer,String>>();
+		this.TrPlas = new LinkedList<Couple<Integer,String>>();
 		this.setFile("TSA");
 		this.getTSAs(racineVolumes);
 		this.setFile("SIV");
@@ -195,6 +231,29 @@ public class AIP extends FileParser{
 		this.getZones(racineVolumes,"R");
 		this.setFile("D");
 		this.getZones(racineVolumes,"D");
+		this.setFile("FIR");
+		this.getZones(racineVolumes,"FIR");
+		this.setFile("UIR");
+		this.getZones(racineVolumes,"UIR");
+		this.setFile("LTA");
+		this.getZones(racineVolumes,"LTA");
+		this.setFile("UTA");
+		this.getZones(racineVolumes,"UTA");
+		this.setFile("CTA");
+		this.getZones(racineVolumes,"CTA");
+		this.setFile("CTL");
+		this.getZones(racineVolumes,"CTL");
+		this.setFile("Parachutages");
+		this.getZones(racineVolumes,"Pje");
+		this.setFile("Aer");
+		this.getZones(racineVolumes,"Aer");
+		this.setFile("Voltige");
+		this.getZones(racineVolumes,"Vol");
+		this.setFile("Ballons");
+		this.getZones(racineVolumes,"Bal");
+		this.setFile("Treuils planeurs");
+		this.getZones(racineVolumes,"TrPla");
+		
 	}
 
 	/**
@@ -225,11 +284,9 @@ public class AIP extends FileParser{
 	 * @param type
 	 */
 	private void getZones(Element racine, String type){
-		//TODO le probleme est ici !
 		List<Element> zoneList = findElements(racine, "lk",type);
 		Iterator<Element> it1 = zoneList.iterator();
 		Iterator<Element> it2 = zoneList.iterator();
-		//identifiants des zones (du même type) qui ont le même nom pour leur rajouter le numéro de séquence à la  fin du nom.
 		HashSet<String> sameNames = new HashSet<String>();
 		ArrayList<String> names = new ArrayList<String>();
 		try{
@@ -266,6 +323,15 @@ public class AIP extends FileParser{
 	private void insertZone(Element zone, boolean displaySequence, String type) throws SQLException {
 		int zoneID = Integer.parseInt(zone.getAttributeValue("pk"));
 		String zoneName = getVolumeName(zone.getAttributeValue("lk"));
+		//on teste s'il s'agit d'une zone Pje, Aer, Vol, Bal ou TrPla en regardant si le deuxième caractère est en minuscule
+		if(type.length()>1){
+			if (Character.isLowerCase(type.charAt(1))){
+				String usualName = getUsualName(zone);
+				if(usualName != null){
+					zoneName += " -- "+usualName;
+				}
+			}
+		}
 		if(displaySequence){
 			zoneName+=" "+zone.getChildText("Sequence");
 		}
@@ -296,6 +362,13 @@ public class AIP extends FileParser{
 		return region.equals("LF")? name.substring(0, bracketIndex) : name.substring(0, bracketIndex)+" "+region;
 	}
 
+	private String getUsualName(Element zone){
+		String usualName=null;
+		String partieID = zone.getChild("Partie").getAttributeValue("pk");
+		Element partie = this.findElement(document.getRootElement().getChild("Situation").getChild("PartieS"), partieID);
+		usualName = partie.getChildText("NomUsuel");
+		return usualName;
+	}
 	
 	@Override
 	public int numberFiles() {
@@ -317,6 +390,28 @@ public class AIP extends FileParser{
 			return Rs;
 		case D:
 			return Ds;
+		case FIR:
+			return FIRs;
+		case UIR:
+			return UIRs;
+		case LTA:
+			return LTAs;
+		case UTA:
+			return UTAs;
+		case CTA:
+			return CTAs;
+		case CTL:
+			return CTLs;
+		case Pje:
+			return Pjes;
+		case Aer:
+			return Aers;
+		case Vol:
+			return Vols;
+		case Bal:
+			return Bals;
+		case TrPla:
+			return TrPlas;
 		}
 		return null;
 	}
@@ -336,6 +431,28 @@ public class AIP extends FileParser{
 			return "R";
 		case D:
 			return "D";
+		case FIR:
+			return "FIR";
+		case UIR:
+			return "UIR";
+		case LTA:
+			return "LTA";
+		case UTA:
+			return "UTA";
+		case CTA:
+			return "CTA";
+		case CTL:
+			return "CTL";
+		case Pje:
+			return "Pje";
+		case Aer:
+			return "Aer";
+		case Vol:
+			return "Vol";
+		case Bal:
+			return "Bal";
+		case TrPla:
+			return "TrPla";
 		default:
 			return "";
 		}
@@ -359,6 +476,39 @@ public class AIP extends FileParser{
 		}
 		if (type.equals("D")){
 			return D;
+		}
+		if (type.equals("FIR")){
+			return FIR;
+		}
+		if (type.equals("UIR")){
+			return UIR;
+		}
+		if (type.equals("LTA")){
+			return LTA;
+		}
+		if (type.equals("UTA")){
+			return UTA;
+		}
+		if (type.equals("CTA")){
+			return CTA;
+		}
+		if (type.equals("CTL")){
+			return CTL;
+		}
+		if (type.equals("Pje")){
+			return Pje;
+		}
+		if (type.equals("Aer")){
+			return Aer;
+		}
+		if (type.equals("Vol")){
+			return Vol;
+		}
+		if (type.equals("Bal")){
+			return Bal;
+		}
+		if (type.equals("TrPla")){
+			return TrPla;
 		}
 		return -1;
 	}
@@ -419,34 +569,6 @@ public class AIP extends FileParser{
 	}
 	
 	
-	private String getID(int type, String name){
-		String pk=null;
-		String typeString=getTypeString(type);
-		try {
-			PreparedStatement st = DatabaseManager.prepareStatement(Type.AIP, "select * from volumes where type = ? AND nom = ?");
-			st.setString(1, typeString);
-			st.setString(2, name);
-			ResultSet rs = st.executeQuery();
-			if(rs.next()){
-				pk=rs.getString(2);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return pk;
-	}
-	
-	
-
-	/**
-	 * Renvoie l'élément de type Partie identifié par id.
-	 * @param id L'identifiant de la Partie (champ "pk").
-	 * @return La partie recherchée.
-	 */
-	public Element getPartie(String id){
-		return findElement(document.getRootElement().getChild("Situation").getChild("PartieS"), id);
-	}
-	
 	/**
 	 * Renvoie l'élément dont l'attribut "pk" correspond à <code>idNumber</code> parmi les fils de l'élément <code>racine</code>
 	 * @param racine 
@@ -469,6 +591,43 @@ public class AIP extends FileParser{
 		};
 		return ((List<Element>) racine.getContent(f)).get(0);
 	}
+	
+	
+	/**
+	 * Renvoie l'élément de type Partie identifié par id.
+	 * @param id L'identifiant de la Partie (champ "pk").
+	 * @return La partie recherchée.
+	 */
+	public Element getPartie(String id){
+		return findElement(document.getRootElement().getChild("Situation").getChild("PartieS"), id);
+	}
+	
+	
+	public static String getID(int type, String name){
+		String pk=null;
+		String typeString=getTypeString(type);
+		try {
+			PreparedStatement st = DatabaseManager.prepareStatement(Type.AIP, "select * from volumes where type = ? AND nom = ?");
+			st.setString(1, typeString);
+			st.setString(2, name);
+			ResultSet rs = st.executeQuery();
+			if(rs.next()){
+				pk=rs.getString(2);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return pk;
+	}
+	
+	
+	public String getZoneAttributeValue(String zoneID, String attribute){
+		Element zone = findElement(document.getRootElement().getChild("Situation").getChild("VolumeS"),zoneID);
+		return zone != null ? zone.getChildText(attribute) : null;
+	}
+
+	
+
 		
 	
 	
