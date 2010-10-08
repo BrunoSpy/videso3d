@@ -370,7 +370,7 @@ public class AirspaceListener implements SelectListener {
 				if(((Secteur3D)event.getTopObject()).getType()==Type.Secteur){
 					this.context.showSecteur(((Secteur3D)event.getTopObject()).getName());
 				}else{
-					this.context.showAIPZone(((Secteur3D)event.getTopObject()).getName());
+					this.context.showAIPZone((Secteur3D)event.getTopObject());
 				}
 			} else if (o instanceof Route2D){
 				this.context.showRoute(((Route2D)o).getName());

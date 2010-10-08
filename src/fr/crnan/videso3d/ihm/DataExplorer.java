@@ -140,6 +140,14 @@ public class DataExplorer extends JPanel {
 		return null;
 	}
 	
+	public AIPController getAIPController(){
+		if(aip != null){
+			return ((AIPView )aip).getController();
+		}
+		return null;
+	}
+	
+	
 	private JScrollPane buildTab(Component panel){
 		JScrollPane pane = new JScrollPane(panel);
 		pane.setBorder(null);
@@ -390,7 +398,7 @@ public class DataExplorer extends JPanel {
 	/** 
 	 * Met à jour l'onglet AIP 
 	 */
-	private void updateAIPView(){
+	public void updateAIPView(){
 		if(aip == null){
 			try {
 				if(DatabaseManager.getCurrentAIP() != null){
@@ -431,7 +439,7 @@ public class DataExplorer extends JPanel {
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
+			}			
 		}
 	}
 	

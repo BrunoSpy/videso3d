@@ -36,6 +36,8 @@ import org.jdesktop.swingx.JXTaskPaneContainer;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.aip.AIP;
+import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.geom.Latitude;
 import fr.crnan.videso3d.geom.Longitude;
@@ -60,6 +62,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 
 	private VidesoGLCanvas wwd = null;	
 	private StipController stipController;
+	private AIP aip;
 	
 	public ContextPanel(){
 		super();
@@ -99,7 +102,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 				if(((Secteur3D)event.getTopObject()).getType()==Type.Secteur){
 					this.showSecteur(((Secteur3D)event.getTopObject()).getName());
 				}else{
-					this.showAIPZone(((Secteur3D)event.getTopObject()).getName());
+					this.showAIPZone((Secteur3D)event.getTopObject());
 				}
 			}
 		}
@@ -614,8 +617,36 @@ public class ContextPanel extends JPanel implements SelectListener {
 		}
 	}
 	
-	public void showAIPZone(String name) {
-		// TODO Auto-generated method stub
+	public void showAIPZone(Secteur3D zone) {
+		String zoneID = AIP.getID(AIP.getTypeInt(zone.getType().toString()), zone.getName());
+		content.removeAll();
+		titleAreaPanel.setTitle(zone.getName());
+		
+		JXTaskPane infos = new JXTaskPane();
+		infos.setTitle("Informations diverses");
+		String classe = aip.getZoneAttributeValue(zoneID, "Classe");
+		String hor = aip.getZoneAttributeValue(zoneID, "HorTxt");
+		String act = aip.getZoneAttributeValue(zoneID, "Activite");
+		String rmq = aip.getZoneAttributeValue(zoneID, "Remarque");
+		
+		if(classe != null){
+			infos.add(new JLabel("<html><b>Classe</b> : " + classe+"</html>"));
+		}
+		if(zone.getType()==Secteur3D.Type.R){
+			if(aip.getZoneAttributeValue(zoneID, "Rtba")!=null)
+				infos.add(new JLabel("<html><b>RTBA</b></html>"));
+		}
+		if(hor != null){
+			infos.add(new JLabel("<html><b>Horaires</b> : " + hor.replaceAll("#", "<br/>")+"</html>"));
+		}
+		if(act != null){
+			infos.add(new JLabel("<html><b>Activité</b> : " + act.replaceAll("#", "<br/>")+"</html>"));
+		}
+		if(rmq != null){
+			infos.add(new JLabel("<html><b>Remarques</b> : " + rmq.replaceAll("#", "<br/>")+"</html>"));
+		}
+		
+		content.add(infos);
 	}
 
 	public void setWWD(VidesoGLCanvas wwd) {
@@ -624,6 +655,10 @@ public class ContextPanel extends JPanel implements SelectListener {
 	
 	public void setStipController(StipController controller){
 		this.stipController = controller;
+	}
+	
+	public void setAIP(AIP aip){
+		this.aip = aip;
 	}
 	
 }

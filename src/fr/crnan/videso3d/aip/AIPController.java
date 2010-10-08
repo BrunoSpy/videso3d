@@ -36,6 +36,7 @@ import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
+import gov.nasa.worldwind.util.Logging;
 
 public class AIPController implements VidesoController {
 
@@ -110,7 +111,6 @@ public class AIPController implements VidesoController {
 	@Override
 	public void removeLayer(String name, Layer layer) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -188,6 +188,50 @@ public class AIPController implements VidesoController {
 			secteur3DType=Type.D;
 			couleurZone=Color.red;
 			break;
+		case AIP.FIR:
+			secteur3DType=Type.FIR;
+			couleurZone=Pallet.FIRColor;
+			break;
+		case AIP.UIR:
+			secteur3DType=Type.UIR;
+			couleurZone=Pallet.UIRColor;
+			break;
+		case AIP.LTA:
+			secteur3DType=Type.LTA;
+			couleurZone=Pallet.LTAColor;
+			break;
+		case AIP.UTA:
+			secteur3DType=Type.UTA;
+			couleurZone=Pallet.UTAColor;
+			break;
+		case AIP.CTA:
+			secteur3DType=Type.CTA;
+			couleurZone=Pallet.CTAColor;
+			break;
+		case AIP.CTL:
+			secteur3DType=Type.CTL;
+			couleurZone=Pallet.CTLColor;
+			break;
+		case AIP.Pje:
+			secteur3DType=Type.Pje;
+			couleurZone=Pallet.defaultColor;
+			break;
+		case AIP.Aer:
+			secteur3DType=Type.Aer;
+			couleurZone=Pallet.defaultColor;
+			break;
+		case AIP.Vol:
+			secteur3DType=Type.Vol;
+			couleurZone=Pallet.defaultColor;
+			break;
+		case AIP.Bal:
+			secteur3DType=Type.Bal;
+			couleurZone=Pallet.defaultColor;
+			break;
+		case AIP.TrPla:
+			secteur3DType=Type.TrPla;
+			couleurZone=Pallet.defaultColor;
+			break;
 		default: 
 			break;
 		}
@@ -228,7 +272,12 @@ public class AIPController implements VidesoController {
 		this.wwd.redraw();
 	}
 	private void removeFromZonesLayer(Secteur3D zone){
-		this.zonesLayer.removeAirspace(zone);
+		try{
+			this.zonesLayer.removeAirspace(zone);
+		}catch(java.lang.IllegalArgumentException e){
+			e.printStackTrace();
+			Logging.logger().log(java.util.logging.Level.WARNING, "La zone à supprimer n'existe pas.");
+		}
 		this.wwd.redraw();
 	}
 
@@ -242,5 +291,9 @@ public class AIPController implements VidesoController {
 		this.zonesLayer.removeAllAirspaces();
 	}
 
+	
+	public AIP getAIP(){
+		return aip;
+	}
 
 }

@@ -34,7 +34,6 @@ import javax.swing.JScrollPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.ihm.components.DataView;
@@ -75,7 +74,7 @@ public class AIPView extends JPanel implements DataView{
 	
 	
 	@Override
-	public VidesoController getController() {
+	public AIPController getController() {
 		return controller;
 	}
 
@@ -91,24 +90,58 @@ public class AIPView extends JPanel implements DataView{
 		//Construction du panel avec le checkboxTree qui ne contient que les TSA pour l'instant.
 		volumes.setLayout(new BorderLayout());
 		DefaultMutableTreeNode volume = new DefaultMutableTreeNode("volumes");
-		DefaultMutableTreeNode TSAs = new DefaultMutableTreeNode("TSA");
+
+		DefaultMutableTreeNode FIRs = new DefaultMutableTreeNode("FIR");
+		DefaultMutableTreeNode UIRs = new DefaultMutableTreeNode("UIR");
+		DefaultMutableTreeNode LTAs = new DefaultMutableTreeNode("LTA");
+		DefaultMutableTreeNode UTAs = new DefaultMutableTreeNode("UTA");
 		DefaultMutableTreeNode SIVs = new DefaultMutableTreeNode("SIV");
-		DefaultMutableTreeNode CTRs = new DefaultMutableTreeNode("CTR");
 		DefaultMutableTreeNode TMAs = new DefaultMutableTreeNode("TMA");
+		DefaultMutableTreeNode CTRs = new DefaultMutableTreeNode("CTR");
+		DefaultMutableTreeNode CTAs = new DefaultMutableTreeNode("CTA");
+		DefaultMutableTreeNode TSAs = new DefaultMutableTreeNode("TSA");
 		DefaultMutableTreeNode Rs = new DefaultMutableTreeNode("R");
 		DefaultMutableTreeNode Ds = new DefaultMutableTreeNode("D");
-		this.addNodes("TSA", "TSA", TSAs);
+		DefaultMutableTreeNode CTLs = new DefaultMutableTreeNode("CTL");
+		DefaultMutableTreeNode Pjes = new DefaultMutableTreeNode("Parachutage");
+		DefaultMutableTreeNode Aers = new DefaultMutableTreeNode("Aer");
+		DefaultMutableTreeNode Vols = new DefaultMutableTreeNode("Voltige");
+		DefaultMutableTreeNode Bals = new DefaultMutableTreeNode("Ballons");
+		DefaultMutableTreeNode TrPlas = new DefaultMutableTreeNode("Treuils planeurs");
+		this.addNodes("FIR", "FIR", FIRs);
+		this.addNodes("UIR", "UIR", UIRs);
+		this.addNodes("LTA", "LTA", LTAs);
+		this.addNodes("UTA", "UTA", UTAs);
 		this.addNodes("SIV", "SIV", SIVs);
-		this.addNodes("CTR", "CTR", CTRs);
 		this.addNodes("TMA", "TMA", TMAs);
+		this.addNodes("CTR", "CTR", CTRs);
+		this.addNodes("CTA", "CTA", CTAs);
+		this.addNodes("TSA", "TSA", TSAs);
 		this.addNodes("R", "R", Rs);
 		this.addNodes("D", "D", Ds);
-		volume.add(TSAs);
+		this.addNodes("CTL", "CTL", CTLs);
+		this.addNodes("Pje", "Pje", Pjes);
+		this.addNodes("Aer", "Aer", Aers);
+		this.addNodes("Vol", "Vol", Vols);
+		this.addNodes("Bal", "Bal", Bals);
+		this.addNodes("TrPla", "TrPla", TrPlas);
+		volume.add(FIRs);
+		volume.add(UIRs);
+		volume.add(LTAs);
+		volume.add(UTAs);		
 		volume.add(SIVs);
-		volume.add(CTRs);
 		volume.add(TMAs);
+		volume.add(CTRs);
+		volume.add(CTAs);
+		volume.add(TSAs);
 		volume.add(Rs);
 		volume.add(Ds);
+		volume.add(CTLs);
+		volume.add(Pjes);
+		volume.add(Aers);
+		volume.add(Vols);
+		volume.add(Bals);
+		volume.add(TrPlas);
 		volumesTree = new CheckboxTree(volume);
 		volumesTree.setRootVisible(false);
 		volumesTree.setCellRenderer(new TreeCellNimbusRenderer());
@@ -153,33 +186,31 @@ public class AIPView extends JPanel implements DataView{
 		public void valueChanged(TreeCheckingEvent e) {
 			DefaultMutableTreeNode c = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
 			if(!c.getUserObject().equals("volumes")){
-				String name = (String)c.getUserObject();
-				int type=-1;
-				type = getNodeType(c);
-				if(!((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("volumes")
-						&& !((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("TSA")
-						&& !((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("R")
-						&& !((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("D"))
-				{
-					name = (String)((DefaultMutableTreeNode) c.getParent()).getUserObject()+ " " + name;
-				}
-
-				
-				if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("volumes")) {
-					if(e.isCheckedPath()){
-						controller.displayAll(type);
-					} else  {
-						controller.hideAll(type);
-					}
-				}
-				else{
-					if(e.isCheckedPath()){
-						controller.showObject(type,name);
-					} else {
-						controller.hideObject(type,name);
-					}
-				}
+				int type=-1;			
+				type = getNodeType(c);							if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("volumes")) {					if(e.isCheckedPath()){						controller.displayAll(type);					} else  {						controller.hideAll(type);					}				}				else{					String name = getZoneName(c);					if(e.isCheckedPath()){						controller.showObject(type,name);					} else {						controller.hideObject(type,name);					}				}
 			}
+		}
+		
+		private String getZoneName(DefaultMutableTreeNode c){
+			String name = null;
+			if(((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("TSA")
+					|| ((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("R")
+					|| ((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("D")){
+				name = (String)c.getUserObject();
+			}else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("Parachutage")){
+				name = "Pje "+c.getUserObject();
+			}else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("Aer")){
+				name = "Aer "+c.getUserObject();
+			}else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("Voltige")){
+				name = "Vol "+c.getUserObject();
+			}else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("Ballons")){
+				name = "Bal "+c.getUserObject();
+			}else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("Treuils planeurs")){
+				name = "TrPla "+c.getUserObject();
+			}else{
+				name = (String)((DefaultMutableTreeNode) c.getParent()).getUserObject()+ " " + name;
+			}
+			return name;
 		}
 		
 		private int getNodeType(DefaultMutableTreeNode c){
@@ -189,9 +220,20 @@ public class AIPView extends JPanel implements DataView{
 			}else{
 				type = (String)((DefaultMutableTreeNode)c.getParent()).getUserObject();
 			}
+			if(type.equals("Parachutage")){
+				type = "Pje";
+			}
+			if(type.equals("Voltige")){
+				type = "Vol";
+			}
+			if(type.equals("Ballons")){
+				type = "Bal";
+			}
+			if(type.equals("Treuils planeurs")){
+				type = "TrPla";
+			}
 			return AIP.getTypeInt(type);
 		}
-
 	}
 
 	
@@ -203,9 +245,21 @@ public class AIPView extends JPanel implements DataView{
 	private int startsWithType(String name){
 		if(name.startsWith("SIV")
 				||name.startsWith("CTR")
-				||name.startsWith("TMA")){
+				||name.startsWith("TMA")
+				||name.startsWith("FIR")
+				||name.startsWith("UIR")
+				||name.startsWith("LTA")
+				||name.startsWith("UTA")
+				||name.startsWith("CTA")
+				||name.startsWith("CTL")
+				||name.startsWith("Pje")
+				||name.startsWith("Aer")
+				||name.startsWith("Vol")
+				||name.startsWith("Bal")){
 			return 4;
 		}
+		if(name.startsWith("TrPla"))
+				return 6;
 		return 0;
 	}
 	
