@@ -373,4 +373,9 @@ public class STRController implements VidesoController {
 		}
 	}
 
+	@Override
+	public int string2type(String type) {
+		return 0;
+	}
+
 }

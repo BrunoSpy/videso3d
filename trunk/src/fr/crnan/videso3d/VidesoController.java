@@ -78,6 +78,13 @@ public interface VidesoController {
 	public void hideObject(int type, String name);
 	
 	/**
+	 * Transforme un string en int conformément aux types gérés par le controlleur
+	 * @param type 
+	 * @return
+	 */
+	public int string2type(String type);
+	
+	/**
 	 * Affiche les objets en 2D
 	 * @param flat 2D si vrai, 3D si faux
 	 */
