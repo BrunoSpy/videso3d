@@ -142,7 +142,7 @@ public class DataExplorer extends JPanel {
 	
 	public AIPController getAIPController(){
 		if(aip != null){
-			return ((AIPView )aip).getController();
+			return (AIPController) ((AIPViewTreeTable )aip).getController();
 		}
 		return null;
 	}
@@ -402,7 +402,7 @@ public class DataExplorer extends JPanel {
 		if(aip == null){
 			try {
 				if(DatabaseManager.getCurrentAIP() != null){
-					aip = new AIPView(new AIPController(wwd));
+					aip = new AIPViewTreeTable(new AIPController(wwd));
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {
 						
@@ -426,11 +426,11 @@ public class DataExplorer extends JPanel {
 			try {
 				if(DatabaseManager.getCurrentAIP() != null){
 					int i = tabs.indexOfComponent(aip);
-					aip = new AIPView(new AIPController(wwd));
+					aip = new AIPViewTreeTable(new AIPController(wwd));
 					tabs.setComponentAt(i, aip);
 					tabs.setSelectedIndex(i);
 				} else {
-					((AIPView)aip).reset();
+					((AIPViewTreeTable)aip).reset();
 					int i = tabs.indexOfComponent(aip);
 					if(i>=0){
 						tabs.removeTabAt(i);
@@ -586,7 +586,7 @@ public class DataExplorer extends JPanel {
 			((RadioCovView)radioCov).reset();
 		}
 		if(aip != null){
-			((AIPView)aip).reset();
+			((AIPViewTreeTable)aip).reset();
 		}
 	}
 
