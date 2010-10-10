@@ -16,11 +16,6 @@
 
 package fr.crnan.videso3d.ihm;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Label;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -28,35 +23,22 @@ import java.util.LinkedList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
-
-import org.jdesktop.swingx.JXTreeTable;
-import org.jdesktop.swingx.treetable.AbstractTreeTableModel;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoController;
-import fr.crnan.videso3d.ihm.components.DataView;
+import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
-import fr.crnan.videso3d.ihm.components.RegexViewFilter;
-import fr.crnan.videso3d.skyview.SkyViewController;
 
 /**
  * Interface de sélection de données SkyView
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
-public class SkyView extends JPanel implements DataView{
+public class SkyView extends FilteredMultiTreeTableView {
 
 	private VidesoController controller;
-
-	private JPanel panel = new JPanel();
-	private JTextField filtre = new JTextField(20);
 
 	public SkyView(VidesoController controller){
 		this.controller = controller;
@@ -68,7 +50,14 @@ public class SkyView extends JPanel implements DataView{
 		this.add(Box.createVerticalGlue());
 		try{
 			if(DatabaseManager.getCurrentSkyView() != null){
-				this.add(this.buildTree());
+				
+				
+				DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+				this.fillRootNode(root);
+				FilteredTreeTableModel model = new FilteredTreeTableModel(root);
+
+				this.addTableTree(model, null);
+				
 			}
 		} catch (SQLException e){
 			e.printStackTrace();
@@ -82,81 +71,6 @@ public class SkyView extends JPanel implements DataView{
 		return this.controller;
 	}
 
-	@Override
-	public void reset() {
-
-
-	}
-
-	private Component buildTree() {
-		panel.setLayout(new BorderLayout());
-
-		JPanel filterPanel = new JPanel();
-		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
-		filterPanel.add(Box.createVerticalGlue());
-		filterPanel.add(new Label("Filtre : "));
-		filterPanel.add(filtre);
-
-		panel.add(filterPanel, BorderLayout.NORTH);
-
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
-		this.fillRootNode(root);
-
-		final AbstractTreeTableModel model = new FilteredTreeTableModel(root);
-		model.addTreeModelListener(new TreeModelListener() {
-
-			@Override
-			public void treeStructureChanged(TreeModelEvent e) {}
-
-			@Override
-			public void treeNodesRemoved(TreeModelEvent e) {}
-
-			@Override
-			public void treeNodesInserted(TreeModelEvent e) {}
-
-			@Override
-			public void treeNodesChanged(TreeModelEvent e) {
-				String type = ((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[1])).getUserObject()).getFirst();
-				Couple<String, Boolean> source = (Couple<String, Boolean>) ((DefaultMutableTreeNode)e.getTreePath().getLastPathComponent()).getUserObject();
-				if(type.equals("Routes")){
-					if(source.getSecond()){
-						controller.showObject(SkyViewController.TYPE_ROUTE, source.getFirst());
-					} else {
-						controller.hideObject(SkyViewController.TYPE_ROUTE, source.getFirst());
-					}
-				} else if(type.equals("Waypoints")){
-					if(source.getSecond()){
-						controller.showObject(SkyViewController.TYPE_WAYPOINT, source.getFirst());
-					} else {
-						controller.hideObject(SkyViewController.TYPE_WAYPOINT, source.getFirst());
-					}
-				} else if(type.equals("Airports")){
-					if(source.getSecond()){
-						controller.showObject(SkyViewController.TYPE_AIRPORT, source.getFirst());
-					} else {
-						controller.hideObject(SkyViewController.TYPE_AIRPORT, source.getFirst());
-					}
-				}
-			}
-		});
-		final JXTreeTable treeRoutesTable = new JXTreeTable(model);
-		treeRoutesTable.setRootVisible(false);
-
-		filtre.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if(filtre.getText().isEmpty()){
-					((FilteredTreeTableModel) model).setViewFilter(null);
-				} else {
-					((FilteredTreeTableModel) model).setViewFilter(new RegexViewFilter(filtre.getText()));
-				}
-			}
-		});
-
-		panel.add(new JScrollPane(treeRoutesTable));
-		return panel;
-	}
 
 	private void fillRootNode(DefaultMutableTreeNode root) {
 

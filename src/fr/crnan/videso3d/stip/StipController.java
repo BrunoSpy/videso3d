@@ -558,5 +558,11 @@ public class StipController implements VidesoController {
 			}
 		}
 	}
+
+	@Override
+	public int string2type(String type) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }

@@ -137,7 +137,7 @@ public class AIPController implements VidesoController {
 	}
 	
 	
-	public static int string2type(String type){
+	public int string2type(String type){
 		if(type.equals("FIR")) {
 			return AIP.FIR;
 		} else if (type.equals("UIR")) {

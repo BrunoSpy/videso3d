@@ -17,6 +17,8 @@
 package fr.crnan.videso3d.ihm.components;
 
 
+import java.util.Enumeration;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -36,7 +38,7 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 	private Class[] types = {String.class, Boolean.class};
 
 	private ViewFilter filter;
-
+	
 	public FilteredTreeTableModel(DefaultMutableTreeNode root) {
 		super(root);
 	}
@@ -137,6 +139,7 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 					}
 				}
 			} else {
+				Boolean old = ((Couple<String, Boolean>)((DefaultMutableTreeNode)treeNode).getUserObject()).getSecond();
 				((Couple<String, Boolean>) treeNode.getUserObject()).setSecond((Boolean)value);
 				if(!treeNode.isLeaf()){
 					for(int i=0;i<treeNode.getChildCount();i++){
@@ -144,7 +147,10 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 						setValueAt(value, child, column);
 					}
 				} else {
-					this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);
+					//ne pas envoyer d'évènement si la valeur n'a pas changé
+					if(old != value) {
+						this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);
+					}
 				}
 			}
 		}
@@ -188,4 +194,21 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 		}
 	}
 
+	/**
+	 * Delete the filter and clear the selection.
+	 */
+	public void clearSelection(){
+		this.setViewFilter(null);
+		
+		Enumeration<Object> e = ((DefaultMutableTreeNode)this.getRoot()).children();
+		while(e.hasMoreElements()){
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
+			System.out.println("elements "+((Couple<String, Boolean>)node.getUserObject()).getFirst());
+		//	if(((Couple<String, Boolean>)node.getUserObject()).getSecond()){
+				this.setValueAt(false, node, 1);
+		//	}
+		}
+		
+	}
+	
 }

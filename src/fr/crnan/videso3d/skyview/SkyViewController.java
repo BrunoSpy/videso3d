@@ -269,4 +269,17 @@ public class SkyViewController implements VidesoController {
 			return false;
 		}
 	}
+
+	@Override
+	public int string2type(String type) {
+		if(type.equals("Routes")){
+			return SkyViewController.TYPE_ROUTE;
+		} else if(type.equals("Waypoints")){
+			return SkyViewController.TYPE_WAYPOINT;
+		} else if(type.equals("Airports")){
+			return SkyViewController.TYPE_AIRPORT;
+		}
+		
+		return 0;
+	}
 }

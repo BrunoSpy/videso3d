@@ -88,4 +88,9 @@ public class EdimapController implements VidesoController {
 	@Override
 	public void set2D(Boolean flat) {}
 
+	@Override
+	public int string2type(String type) {
+		return 0;
+	}
+
 }

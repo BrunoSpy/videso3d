@@ -139,4 +139,10 @@ public class StpvController implements VidesoController {
 	@Override
 	public void reset() {}
 
+	@Override
+	public int string2type(String type) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
