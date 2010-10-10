@@ -137,7 +137,44 @@ public class AIPController implements VidesoController {
 	}
 	
 	
-
+	public static int string2type(String type){
+		if(type.equals("FIR")) {
+			return AIP.FIR;
+		} else if (type.equals("UIR")) {
+			return AIP.UIR;
+		} else if (type.equals("LTA")) {
+			return AIP.LTA;
+		} else if (type.equals("UTA")) {
+			return AIP.UTA;
+		} else if (type.equals("SIV")) {
+			return AIP.SIV;
+		} else if (type.equals("TMA")) {
+			return AIP.TMA;
+		} else if (type.equals("CTR")) {
+			return AIP.CTR;
+		} else if (type.equals("CTA")) {
+			return AIP.CTA;
+		} else if (type.equals("TSA")) {
+			return AIP.TSA;
+		} else if (type.equals("R")) {
+			return AIP.R;
+		}else if (type.equals("D")) {
+			return AIP.D;
+		}else if (type.equals("CTL")) {
+			return AIP.CTL;
+		}else if (type.equals("Pje")) {
+			return AIP.Pje;
+		}else if (type.equals("Aer")) {
+			return AIP.Aer;
+		}else if (type.equals("Vol")) {
+			return AIP.Vol;
+		}else if (type.equals("Bal")) {
+			return AIP.Bal;
+		}else if (type.equals("TrPla")) {
+			return AIP.TrPla;
+		}
+		return 0;
+	}
 
 	/**
 	 * Affiche tous les objets correspondant aux checkBox de la liste.
