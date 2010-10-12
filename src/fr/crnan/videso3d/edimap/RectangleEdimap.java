@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Rectangle
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class RectangleEdimap extends SurfaceQuad {
 
@@ -40,6 +40,7 @@ public class RectangleEdimap extends SurfaceQuad {
 						   HashMap<String, LatLonCautra> pointsRef,
 						   PaletteEdimap palette,
 						   HashMap<String, Entity> idAtc){
+		super(new BasicShapeAttributes());
 		this.pointsRef = pointsRef;
 		this.name = entity.getValue("name");
 		List<Entity> points = (List<Entity>) entity.getEntity("geometry").getValue();

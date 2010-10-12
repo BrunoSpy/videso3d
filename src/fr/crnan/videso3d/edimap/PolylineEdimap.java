@@ -30,7 +30,7 @@ import java.util.List;
 /**
  * Construit une polyline à partir d'une entité Edimap
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class PolylineEdimap extends SurfacePolyline {
 	
@@ -45,6 +45,7 @@ public class PolylineEdimap extends SurfacePolyline {
 			HashMap<String,	LatLonCautra> pointsRef,
 			PaletteEdimap palette,
 			HashMap<String, Entity> idAtc){
+		super(new BasicShapeAttributes());
 		this.name = polyline.getValue("name");
 		this.pointsRef = pointsRef;
 		List<Entity> points = (LinkedList<Entity>) polyline.getEntity("geometry").getValue();
