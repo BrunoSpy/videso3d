@@ -32,7 +32,7 @@ import java.util.List;
  * Le  type de construction est ignoré ici.
  * @author Bruno Spyckerelle
  * @author Adrien Vidal
- * @version 0.2
+ * @version 0.2.1
  */
 public class EllipseEdimap extends SurfacePolyline {
 
@@ -48,6 +48,8 @@ public class EllipseEdimap extends SurfacePolyline {
 			  PaletteEdimap palette,
 			  HashMap<String, Entity> idAtc){
 	
+		super(new BasicShapeAttributes());
+		
 		Entity geometry = ellipse.getEntity("geometry");
 		List<Entity> axes = geometry.getValues("distance");
 		List<Entity> angles = geometry.getValues("angle");
