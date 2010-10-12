@@ -145,7 +145,6 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 
 	@Override
 	public void reset() {
-		System.out.println("reset");
 		filtre.setText("");
 		for(JXTreeTable t : tables){
 			t.collapseAll();

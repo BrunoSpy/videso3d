@@ -203,10 +203,7 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 		Enumeration<Object> e = ((DefaultMutableTreeNode)this.getRoot()).children();
 		while(e.hasMoreElements()){
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
-			System.out.println("elements "+((Couple<String, Boolean>)node.getUserObject()).getFirst());
-		//	if(((Couple<String, Boolean>)node.getUserObject()).getSecond()){
 				this.setValueAt(false, node, 1);
-		//	}
 		}
 		
 	}
