@@ -255,6 +255,11 @@ public class MainWindow extends JFrame {
 					@Override
 					protected Integer doInBackground() throws Exception {
 						progressMonitor.setProgress(0);
+						try { 
+							progressMonitor.setNote(evt.getNewValue().toString());
+						} catch (Exception e){
+							e.printStackTrace();
+						}
 						dataExplorer.updateView((DatabaseManager.Type)evt.getNewValue());
 						return null;
 					}

@@ -20,6 +20,8 @@ import java.awt.BorderLayout;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -108,9 +110,9 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 
 			@Override
 			public void treeNodesChanged(TreeModelEvent e) {
+				@SuppressWarnings("unchecked")
 				String type = ((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[1])).getUserObject()).getFirst();
 				Couple<String, Boolean> source = (Couple<String, Boolean>) ((DefaultMutableTreeNode)e.getTreePath().getLastPathComponent()).getUserObject();
-				
 				if(source.getSecond()){
 					getController().showObject(getController().string2type(type), source.getFirst());
 				} else {
@@ -140,6 +142,25 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 		
 		tablePanel.add(new JScrollPane(treeTable));
 		container.add(tablePanel);
+		
+		
+		treeTable.addMouseListener(new MouseAdapter(){
+			@Override
+			public void mouseClicked(MouseEvent e){
+				if(e.getClickCount()==2){
+					int row = treeTable.rowAtPoint(e.getPoint());  
+					Object[] path = treeTable.getPathForRow(row).getPath();
+					if(path.length>2){
+						String type = ((Couple<String, Boolean>)((DefaultMutableTreeNode)path[1]).getUserObject()).getFirst();
+						String name = (String) treeTable.getValueAt(row, 0);
+						treeTable.setValueAt(true, row, 1);
+						//TODO problème avec les données AIP : il faut rajouter le type devant le nom car highlight ne prend pas le 
+						//type en paramètre.
+						getController().highlight(getController().string2type(type)+" "+name);
+					}
+				}
+			}
+		});
 	
 	}
 

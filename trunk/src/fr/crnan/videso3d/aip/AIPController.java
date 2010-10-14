@@ -17,7 +17,10 @@
 package fr.crnan.videso3d.aip;
 
 import java.awt.Color;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -32,6 +35,8 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIP.Altitude;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Secteur3D.Type;
+import gov.nasa.worldwind.avlist.AVKey;
+import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.Material;
@@ -58,8 +63,7 @@ public class AIPController implements VidesoController {
 
 	
 	private void buildAIP() {
-		//this.wwd.firePropertyChange("step", "", "Données AIP");
-
+		this.wwd.firePropertyChange("step", "", "Création des volumes");
 		if(zonesLayer != null) {
 			zonesLayer.removeAllAirspaces();
 			this.toggleLayer(zonesLayer, true);
@@ -88,14 +92,6 @@ public class AIPController implements VidesoController {
 	
 	
 	
-	
-	
-	@Override
-	public void highlight(String name) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public void unHighlight(String name) {
 		// TODO Auto-generated method stub
@@ -127,53 +123,39 @@ public class AIPController implements VidesoController {
 
 	@Override
 	public void showObject(int type, String name) {
-		if(!zones.containsKey(name))
-			this.addZone(type,name);
+		/*
+		 * si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
+		 * donc on va chercher les différents morceaux avec getCTLSecteurs et on les ajoute tous.
+		 */
+		if(type == AIP.CTL){
+			for(String nomPartieSecteur : getCTLSecteurs(name)){
+				if(!zones.containsKey(nomPartieSecteur))
+					this.addZone(type, nomPartieSecteur);
+			}
+		}else{
+			if(!zones.containsKey(name))
+				this.addZone(type,name);
+		}
 	}
 
 	@Override
 	public void hideObject(int type, String name) {
-		this.removeZone(type,name);
+		/*
+		 * si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
+		 * donc on va chercher les différents morceaux avec getCTLSecteurs et on les enlève tous.
+		 */
+		if(type == AIP.CTL){
+			for(String nomPartieSecteur : getCTLSecteurs(name)){
+				this.removeZone(type,nomPartieSecteur);
+			}
+		}else{
+			this.removeZone(type,name);
+		}
 	}
 	
 	
 	public int string2type(String type){
-		if(type.equals("FIR")) {
-			return AIP.FIR;
-		} else if (type.equals("UIR")) {
-			return AIP.UIR;
-		} else if (type.equals("LTA")) {
-			return AIP.LTA;
-		} else if (type.equals("UTA")) {
-			return AIP.UTA;
-		} else if (type.equals("SIV")) {
-			return AIP.SIV;
-		} else if (type.equals("TMA")) {
-			return AIP.TMA;
-		} else if (type.equals("CTR")) {
-			return AIP.CTR;
-		} else if (type.equals("CTA")) {
-			return AIP.CTA;
-		} else if (type.equals("TSA")) {
-			return AIP.TSA;
-		} else if (type.equals("R")) {
-			return AIP.R;
-		}else if (type.equals("D")) {
-			return AIP.D;
-		}else if (type.equals("CTL")) {
-			return AIP.CTL;
-		}else if (type.equals("Pje")) {
-			return AIP.Pje;
-		}else if (type.equals("Aer")) {
-			return AIP.Aer;
-		}else if (type.equals("Vol")) {
-			return AIP.Vol;
-		}else if (type.equals("Bal")) {
-			return AIP.Bal;
-		}else if (type.equals("TrPla")) {
-			return AIP.TrPla;
-		}
-		return 0;
+		return AIP.string2type(type);
 	}
 
 	/**
@@ -272,44 +254,61 @@ public class AIPController implements VidesoController {
 		default: 
 			break;
 		}
-			Element maZone = aip.findElementByName(type, name);
-			Couple<Altitude,Altitude> niveaux = aip.getLevels(maZone);
-			Secteur3D zone = new Secteur3D(name, niveaux.getFirst().getFL(), niveaux.getSecond().getFL(),secteur3DType);
-			
-			BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
-			attrs.setDrawOutline(true);
-			attrs.setMaterial(new Material(couleurZone));
-			attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(couleurZone)));
-			attrs.setOpacity(0.2);
-			attrs.setOutlineOpacity(0.9);
-			attrs.setOutlineWidth(1.5);
-			zone.setAttributes(attrs);
-			
-			zone.setAnnotation("<p><b>"+name+"</b></p>"
-											+"<p>Plafond : "+niveaux.getSecond().getFullText()
-											+"<br />Plancher : "+niveaux.getFirst().getFullText()+"</p>");
-			ContourZone contour = new ContourZone(aip.getPartie(maZone.getChild("Partie").getAttributeValue("pk")));
-			zone.setLocations(contour.getLocations());
-			zones.put(name, zone);
-			this.addToZonesLayer(zone);
+		Element maZone = aip.findElementByName(type, name);
+		Couple<Altitude,Altitude> niveaux = aip.getLevels(maZone);
+		Secteur3D zone = new Secteur3D(name, niveaux.getFirst().getFL(), niveaux.getSecond().getFL(),secteur3DType);
+
+		BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
+		attrs.setDrawOutline(true);
+		attrs.setMaterial(new Material(couleurZone));
+		attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(couleurZone)));
+		attrs.setOpacity(0.2);
+		attrs.setOutlineOpacity(0.9);
+		attrs.setOutlineWidth(1.5);
+		zone.setAttributes(attrs);
+
+		zone.setAnnotation("<p><b>"+name+"</b></p>"
+				+"<p>Plafond : "+niveaux.getSecond().getFullText()
+				+"<br />Plancher : "+niveaux.getFirst().getFullText()+"</p>");
+		ContourZone contour = new ContourZone(aip.getPartie(maZone.getChild("Partie").getAttributeValue("pk")));
+		zone.setLocations(contour.getLocations());
+		String upperAltitudeRef, lowerAltitudeRef = null;
+
+		if(niveaux.getFirst().getRef()==Altitude.asfc){
+			lowerAltitudeRef = AVKey.ABOVE_GROUND_LEVEL;
+		}else{
+			//Si le plancher est SFC, on met comme référence AMSL pour éviter que 
+			//les zones au-dessus de la mer ne descendent sous la surface de l'eau.
+			lowerAltitudeRef = AVKey.ABOVE_MEAN_SEA_LEVEL;
+		}
+		if(niveaux.getSecond().getRef()==Altitude.asfc||niveaux.getSecond().getRef()==Altitude.refSFC){
+			upperAltitudeRef = AVKey.ABOVE_GROUND_LEVEL;
+		}else{
+			upperAltitudeRef = AVKey.ABOVE_MEAN_SEA_LEVEL;
+		}
+		zone.setAltitudeDatum(lowerAltitudeRef, upperAltitudeRef);
+		zones.put(type+" "+name, zone);
+		this.addToZonesLayer(zone);
 	}
 
-	
-	
+
+
 
 
 	private void removeZone(int type, String name) {
-		this.removeFromZonesLayer(zones.get(name));
+		this.removeFromZonesLayer(zones.get(type+" "+name));
 		zones.remove(name);
 	}
-	
-	
+
+
 	private void addToZonesLayer(Secteur3D zone){
 		this.zonesLayer.addAirspace(zone);
 		this.wwd.redraw();
 	}
+	
 	private void removeFromZonesLayer(Secteur3D zone){
 		try{
+			this.wwd.getAnnotationLayer().removeAnnotation(zone.getAnnotation(null));
 			this.zonesLayer.removeAirspace(zone);
 		}catch(java.lang.IllegalArgumentException e){
 			e.printStackTrace();
@@ -332,5 +331,71 @@ public class AIPController implements VidesoController {
 	public AIP getAIP(){
 		return aip;
 	}
+
+	
+	/**
+	 * Centre la vue sur la zone identifiée par name et affiche l'annotation associée 
+	 * (ou les annotations si c'est un secteur en plusieurs morceaux)
+	 * @param name
+	 */
+	@Override
+	public void highlight(String name) {
+		if(name.startsWith(AIP.CTL+" ")){
+			//on passe en paramètre name.substring(3) car le nom qu'on a récupéré est précédé du chiffre correspondant au type de zone
+			highlightCTL(getCTLSecteurs(name.substring(3)));
+		}else{
+			Secteur3D zone = zones.get(name);
+			this.centerView(zone);
+		}
+	}
+	
+	/**
+	 * Centre la vue sur le premier morceau du secteur de contrôle, et affiche les annotations de tous les morceaux.
+	 * @param names les noms des différents morceaux correspondant à un secteur.
+	 */
+	private void highlightCTL(ArrayList<String> names){
+		Position center = centerView(zones.get(AIP.CTL+" "+names.get(0)));
+		if(names.size()>1){
+			for(int i = 1; i<names.size(); i++){
+				Position otherPosition = new Position(center.latitude.addDegrees(i*0.2), center.longitude.addDegrees(-i*0.2), center.elevation);
+				this.wwd.getAnnotationLayer().addAnnotation(zones.get(AIP.CTL+" "+names.get(i)).getAnnotation(otherPosition));
+			}
+		}
+	}
+	
+	/**
+	 * Renvoie les noms des morceaux de secteur correspondant au secteur name.
+	 * @param name
+	 * @return
+	 */
+	private ArrayList<String> getCTLSecteurs(String name){
+		ArrayList<String> names = new ArrayList<String>();
+		try{
+			Statement st = DatabaseManager.getCurrentAIP();
+			ResultSet rs = st.executeQuery("select nom from volumes where type ='CTL' and nom LIKE '"+name+"%'");
+			while(rs.next()){
+				names.add(rs.getString(1));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return names;
+	}
+	
+	
+	/**
+	 * Centre la vue sur un secteur3D, avec le niveau de zoom approprié, et affiche l'annotation associée au secteur.
+	 * @param zone
+	 * @return La position sur laquelle la vue est centrée.
+	 */
+	public Position centerView(Secteur3D zone){
+		wwd.getView().setValue(AVKey.ELEVATION, 1e11);
+		double[] eyePosition = this.wwd.computeBestEyePosition(zone);
+		Position centerPosition = Position.fromDegrees(eyePosition[0], eyePosition[1]);
+		this.wwd.getView().goTo(centerPosition, eyePosition[2]);
+		this.wwd.getAnnotationLayer().addAnnotation(zone.getAnnotation(centerPosition));
+		return centerPosition;
+	}
+	
 
 }

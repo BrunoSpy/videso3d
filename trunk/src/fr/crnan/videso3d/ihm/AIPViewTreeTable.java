@@ -19,6 +19,7 @@ package fr.crnan.videso3d.ihm;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 import javax.swing.Box;
@@ -79,8 +80,23 @@ public class AIPViewTreeTable extends FilteredMultiTreeTableView {
 				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(t, false));
 				root.add(node);
 				rs = st.executeQuery("select nom from volumes where type = '"+t+"' order by nom");
-				while(rs.next()){
-					node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+				if(t.equals("CTL")){
+					HashSet<String> secteurs = new HashSet<String>();
+					while(rs.next()){
+						String name = rs.getString(1);
+						if(name.contains(" ")){
+							String shortName = name.split("\\s+")[0];
+							if(secteurs.add(shortName)){
+								node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(shortName, false)));
+							}
+						}else{
+							node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+						}
+					}
+				}else{
+					while(rs.next()){
+						node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+					}
 				}
 			}
 			rs.close();

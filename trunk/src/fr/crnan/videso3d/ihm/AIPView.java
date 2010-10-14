@@ -161,14 +161,9 @@ public class AIPView extends JPanel implements DataView{
 	private void addNodes(String type, String classe, DefaultMutableTreeNode root){
 		try {
 			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet rs = st.executeQuery("select * from volumes where type = '"+type+"' ORDER BY nom");
-			while(rs.next()){
-				String nomAffiche = rs.getString("nom");
-				//si le type est indiqué dans le nom de la zone, on l'enlève 
-				int lettersToRemove = startsWithType(nomAffiche);
-				nomAffiche = nomAffiche.substring(lettersToRemove);
-				
-				root.add(new DefaultMutableTreeNode(nomAffiche));
+			ResultSet rs = st.executeQuery("select nom from volumes where type = '"+type+"' ORDER BY nom");
+			while(rs.next()){			
+				root.add(new DefaultMutableTreeNode(rs.getString(1)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -232,36 +227,11 @@ public class AIPView extends JPanel implements DataView{
 			if(type.equals("Treuils planeurs")){
 				type = "TrPla";
 			}
-			return AIP.getTypeInt(type);
+			return AIP.string2type(type);
 		}
 	}
 
 	
-	/**
-	 * Vérifie si le nom de la zone commence par le type (CTR, TMA,...)
-	 * @param name Le nom à vérifier
-	 * @return Le nombre de lettres à enlever, où 0 si le type de la zone n'est pas indiqué dans le nom.
-	 */
-	private int startsWithType(String name){
-		if(name.startsWith("SIV")
-				||name.startsWith("CTR")
-				||name.startsWith("TMA")
-				||name.startsWith("FIR")
-				||name.startsWith("UIR")
-				||name.startsWith("LTA")
-				||name.startsWith("UTA")
-				||name.startsWith("CTA")
-				||name.startsWith("CTL")
-				||name.startsWith("Pje")
-				||name.startsWith("Aer")
-				||name.startsWith("Vol")
-				||name.startsWith("Bal")){
-			return 4;
-		}
-		if(name.startsWith("TrPla"))
-				return 6;
-		return 0;
-	}
 	
 	/**
 	 * Classe temporaire pour corriger un bug de rendu avec le style Nimbus
