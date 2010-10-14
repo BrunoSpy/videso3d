@@ -50,7 +50,7 @@ public class AIP extends FileParser{
 //TODO la fenêtre d'information du fileParser ne s'affiche qu'à la fin.
 	
 	
-	private static final Integer numberFiles = 1;
+	private final Integer numberFiles = 17;
 	
 	/**
 	 * Le nom de la base de données.
@@ -149,7 +149,7 @@ public class AIP extends FileParser{
 				while(rSet.next()){
 					Couple<Integer, String> id_name = new Couple<Integer, String>(rSet.getInt(2),rSet.getString(4));
 					String type = rSet.getString(3);
-					getZones(getTypeInt(type)).add(id_name);
+					getZones(string2type(type)).add(id_name);
 				}
 			}
 		} catch (SQLException e) {
@@ -187,7 +187,7 @@ public class AIP extends FileParser{
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		return AIP.numberFiles;
+		return this.numberFiles();
 	}
 	
 	
@@ -220,39 +220,57 @@ public class AIP extends FileParser{
 		this.Bals = new LinkedList<Couple<Integer,String>>();
 		this.TrPlas = new LinkedList<Couple<Integer,String>>();
 		this.setFile("TSA");
+		this.setProgress(0);
 		this.getTSAs(racineVolumes);
 		this.setFile("SIV");
+		this.setProgress(1);
 		this.getZones(racineVolumes,"SIV");
 		this.setFile("CTR");
+		this.setProgress(2);
 		this.getZones(racineVolumes,"CTR");
 		this.setFile("TMA");
+		this.setProgress(3);
 		this.getZones(racineVolumes,"TMA");
 		this.setFile("R");
+		this.setProgress(4);
 		this.getZones(racineVolumes,"R");
 		this.setFile("D");
+		this.setProgress(5);
 		this.getZones(racineVolumes,"D");
 		this.setFile("FIR");
+		this.setProgress(6);
 		this.getZones(racineVolumes,"FIR");
 		this.setFile("UIR");
+		this.setProgress(7);
 		this.getZones(racineVolumes,"UIR");
 		this.setFile("LTA");
+		this.setProgress(8);
 		this.getZones(racineVolumes,"LTA");
 		this.setFile("UTA");
+		this.setProgress(9);
 		this.getZones(racineVolumes,"UTA");
 		this.setFile("CTA");
+		this.setProgress(10);
 		this.getZones(racineVolumes,"CTA");
 		this.setFile("CTL");
+		this.setProgress(11);
 		this.getZones(racineVolumes,"CTL");
 		this.setFile("Parachutages");
+		this.setProgress(12);
 		this.getZones(racineVolumes,"Pje");
 		this.setFile("Aer");
+		this.setProgress(13);
 		this.getZones(racineVolumes,"Aer");
 		this.setFile("Voltige");
+		this.setProgress(14);
 		this.getZones(racineVolumes,"Vol");
 		this.setFile("Ballons");
+		this.setProgress(15);
 		this.getZones(racineVolumes,"Bal");
 		this.setFile("Treuils planeurs");
+		this.setProgress(16);
 		this.getZones(racineVolumes,"TrPla");
+		this.setProgress(17);
 		
 	}
 
@@ -335,11 +353,11 @@ public class AIP extends FileParser{
 		if(displaySequence){
 			zoneName+=" "+zone.getChildText("Sequence");
 		}
-		getZones(getTypeInt(type)).add(new Couple<Integer,String>(zoneID,zoneName));
+		getZones(string2type(type)).add(new Couple<Integer,String>(zoneID,zoneName));
 		PreparedStatement ps = this.conn.prepareStatement("insert into volumes (pk,type,nom) VALUES (?, ?, ?)");
 		ps.setInt(1, zoneID);
 		ps.setString(2, type);
-		ps.setString(3, zoneName);
+		ps.setString(3, removeType(zoneName));
 		ps.executeUpdate();
 	}
 	
@@ -370,9 +388,38 @@ public class AIP extends FileParser{
 		return usualName;
 	}
 	
+	
+	/**
+	 * Vérifie si le nom de la zone commence par le type (CTR, TMA,...)
+	 * @param name Le nom à vérifier
+	 * @return Le nom amputé du type de zone, sauf si c'est une zone R ou D.
+	 */
+	private String removeType(String name){
+		int lettersToRemove = 0;
+		if(name.startsWith("SIV")
+				||name.startsWith("CTR")
+				||name.startsWith("TMA")
+				||name.startsWith("FIR")
+				||name.startsWith("UIR")
+				||name.startsWith("LTA")
+				||name.startsWith("UTA")
+				||name.startsWith("CTA")
+				||name.startsWith("CTL")
+				||name.startsWith("Pje")
+				||name.startsWith("Aer")
+				||name.startsWith("Vol")
+				||name.startsWith("Bal")){
+			lettersToRemove = 4;
+		}
+		if(name.startsWith("TrPla"))
+				lettersToRemove = 6;
+		return name.substring(lettersToRemove);
+	}
+	
+	
 	@Override
 	public int numberFiles() {
-		return 1;
+		return this.numberFiles;
 	}
 
 	
@@ -458,7 +505,7 @@ public class AIP extends FileParser{
 		}
 	}
 	
-	public static int getTypeInt(String type){
+	public static int string2type(String type){
 		if (type.equals("TSA")){
 			return TSA;
 		}

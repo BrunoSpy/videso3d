@@ -618,7 +618,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 	}
 	
 	public void showAIPZone(Secteur3D zone) {
-		String zoneID = AIP.getID(AIP.getTypeInt(zone.getType().toString()), zone.getName());
+		String zoneID = AIP.getID(AIP.string2type(zone.getType().toString()), zone.getName());
 		content.removeAll();
 		titleAreaPanel.setTitle(zone.getName());
 		

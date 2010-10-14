@@ -20,6 +20,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.xpath.XPath;
 
@@ -32,6 +33,7 @@ import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
+import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
 import fr.crnan.videso3d.layers.LPLNTracksLayer;
@@ -50,6 +52,7 @@ import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.examples.util.LayerManagerLayer;
 import gov.nasa.worldwind.exception.WWRuntimeException;
 import gov.nasa.worldwind.geom.Angle;
+import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.globes.Globe;
@@ -526,5 +529,44 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		this.getView().setPitch(Angle.ZERO);
 		this.getView().setHeading(Angle.ZERO);
 		this.redraw();
+	}
+	
+	
+	/**
+	 * Calcule l'altitude à laquelle doit se trouver l'oeil pour voir correctement la zone.
+	 * @param zone
+	 * @return 
+	 */
+	public double[] computeBestEyePosition(Secteur3D zone){
+		List<LatLon> locations = zone.getLocations();
+		Angle latMin = locations.get(0).latitude;
+		Angle latMax = latMin;
+		Angle lonMin = locations.get(0).longitude;
+		Angle lonMax = lonMin;
+		int step = 1;
+		if(locations.size()>200)
+			step = locations.size()/200+1;
+		for (int i = 0; i<locations.size();i+=step){
+			Angle lat = locations.get(i).latitude;
+			Angle lon = locations.get(i).longitude;
+			if(lat.compareTo(latMax)>0){
+				latMax = lat;
+			}
+			if(lat.compareTo(latMin)<0){
+				latMin = lat;
+			}
+			if(lon.compareTo(lonMax)>0){
+				lonMax = lon;
+			}
+			if(lon.compareTo(lonMin)<0){
+				lonMin = lon;
+			}
+		}
+		double er = this.getView().getGlobe().getEquatorialRadius();
+		double pr = this.getView().getGlobe().getPolarRadius();
+		double maxDistance = LatLon.ellipsoidalDistance(new LatLon(latMin,lonMin), new LatLon(latMax,lonMax), er, pr);
+		
+		double elevation = -6e-7*maxDistance*maxDistance+2.3945*maxDistance+175836;
+		return new double[]{(latMin.degrees+latMax.degrees)/2,(lonMin.degrees+lonMax.degrees)/2, Math.min(elevation,2.5e6)};
 	}
 }
