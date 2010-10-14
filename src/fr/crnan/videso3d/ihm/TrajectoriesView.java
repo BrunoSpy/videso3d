@@ -16,16 +16,23 @@
 package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -42,26 +49,31 @@ import javax.swing.table.AbstractTableModel;
 
 import org.jdesktop.swingx.JXTable;
 
+import fr.crnan.videso3d.Triplet;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
+import fr.crnan.videso3d.ihm.components.ColumnControl;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
 import fr.crnan.videso3d.layers.LPLNTracksLayer;
 import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import gov.nasa.worldwind.avlist.AVKey;
+import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.tracks.Track;
 
 /**
  * Panel de sélection des trajectoires affichées
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 @SuppressWarnings("serial")
 public class TrajectoriesView extends JPanel {
 
+	private List<Triplet<String, String, Color>> colorFilters;
+	
 	private TrajectoriesLayer layer;
 
 	private VidesoGLCanvas wwd;
@@ -196,7 +208,41 @@ public class TrajectoriesView extends JPanel {
 				}
 			}
 		});
-		pistes.setColumnControlVisible(true);
+		pistes.setColumnControlVisible(true);			
+
+		//Gestion des couleurs
+		final TrajectoriesColorsDialog colors = new TrajectoriesColorsDialog(colorFilters);
+		colors.addPropertyChangeListener("valuesChanged", new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(PropertyChangeEvent p) {
+				layer.resetFilterColor();
+				for(Triplet<String, String, Color> filter : (List<Triplet<String, String, Color>>)p.getNewValue()){
+					layer.addFilterColor(TrajectoriesLayer.string2type(filter.getFirst()), filter.getSecond(), filter.getThird());
+				}
+			}
+		});
+		
+		//Ajoute un contrôle pour modifier les couleurs
+		Action couleur = new AbstractAction(){
+			{
+				putValue(Action.NAME, "Modifier les couleurs...");
+			}
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				colors.setVisible(true);
+			}
+
+		};
+		List<Action> actions = new LinkedList<Action>();
+		actions.add(couleur);
+		
+		
+		ColumnControl control = new ColumnControl(pistes);
+		control.addActions(actions);
+		
+		pistes.setColumnControl(control);
+		
 		if(layer instanceof LPLNTracksLayer){
 			pistes.getColumnExt("IAF").setVisible(false);
 		} else if (layer instanceof GEOTracksLayer) {
