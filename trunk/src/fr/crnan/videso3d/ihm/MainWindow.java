@@ -264,7 +264,10 @@ public class MainWindow extends JFrame {
 						if(DatabaseManager.Type.STIP.equals(evt.getNewValue())){
 							context.setStipController(dataExplorer.getStipController());
 							airspaceListener.setStipController(dataExplorer.getStipController());
+						} else if(DatabaseManager.Type.AIP.equals(evt.getNewValue())){
+							context.setAIP(dataExplorer.getAIPController().getAIP());
 						}
+						
 						progressMonitor.close();
 					}
 				}.execute();

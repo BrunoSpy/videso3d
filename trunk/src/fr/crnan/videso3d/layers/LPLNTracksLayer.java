@@ -15,6 +15,7 @@
 */
 package fr.crnan.videso3d.layers;
 
+import java.awt.Color;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,7 +31,7 @@ import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer d'accueil pour des trajectoires issues d'un LPLN
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 public class LPLNTracksLayer extends TrajectoriesLayer {
 
@@ -221,6 +222,24 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	@Override
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public void addFilterColor(int field, String regexp, Color color) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void resetFilterColor() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void centerOnTrack(Track track) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

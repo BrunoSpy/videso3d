@@ -15,13 +15,14 @@
  */
 package fr.crnan.videso3d.layers;
 
+import java.awt.Color;
 import java.util.Collection;
 
 import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer contenant des trajectoires et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 public abstract class TrajectoriesLayer extends LayerSet {
 
@@ -68,6 +69,19 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	public abstract void addFilter(int field, String regexp);
 
 	/**
+	 * Set the corresponding color to the matching tracks
+	 * @param field FIELD_ADEP, FIELD_ADEST, FIELD_IAF, FIELD_INDICATIF
+	 * @param regexp
+	 * @param color Color to be set
+	 */
+	public abstract void addFilterColor(int field, String regexp, Color color);
+	
+	/**
+	 * Delete all color filters
+	 */
+	public abstract void resetFilterColor();
+	
+	/**
 	 * Sets filter type.<br />
 	 * Does not apply to the current filters.
 	 * @param b If true, filters are conjonctives (= and), otherwise disjunctives (=or)
@@ -93,6 +107,12 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 * @param b
 	 */
 	public abstract void highlightTrack(Track track, Boolean b);
+	
+	/**
+	 * Centers the globe on the specified track
+	 * @param track
+	 */
+	public abstract void centerOnTrack(Track track);
 	
 	/**
 	 * Met à jour les trajectoires affichées
@@ -152,4 +172,35 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 * @return Nom du calque
 	 */
 	public abstract String getName();
+	
+	
+	public static int string2type(String type){
+		if("Aéroport de départ".equals(type)){
+			return FIELD_ADEP;
+		} else if("Aéroport de destination".equals(type)){
+			return FIELD_ADEST;
+		} else if("IAF".equals(type)){
+			return FIELD_IAF;
+		} else if("Indicatif".equals(type)){
+			return FIELD_INDICATIF;
+		} else if("Type avion".equals(type)){
+			return FIELD_TYPE_AVION;
+		}
+		return 0;
+	}
+	
+	public static String type2string(int type){
+		if(type == FIELD_ADEP){
+			return "Aéroport de départ";
+		} else if (type == FIELD_ADEST){
+			return "Aéroport de destination";
+		} else if (type == FIELD_IAF){
+			return "IAF";
+		} else if (type == FIELD_INDICATIF){
+			return "Indicatif";
+		} else if (type == FIELD_TYPE_AVION){
+			return "Type avion";
+		}
+		return null;
+	}
 }

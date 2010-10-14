@@ -36,7 +36,7 @@ import gov.nasa.worldwind.tracks.TrackPoint;
  * Layer contenant des tracks Elvira GEO et permettant un affichage sélectif.
  * Le style par défaut est <code>TrajectoriesLayer.STYLE_CURTAIN</code>
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 public class GEOTracksLayer extends TrajectoriesLayer {
 
@@ -44,7 +44,15 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	
 	private Set<GEOTrack> selectedTracks = null;
 	
+	/**
+	 * Ensemble des tracks surlignés
+	 */
 	private HashMap<GEOTrack, VPolyline> lines = new HashMap<GEOTrack, VPolyline>();
+	
+	/**
+	 * Couleurs des tracks
+	 */
+	private HashMap<GEOTrack, Color> colors = new HashMap<GEOTrack, Color>();
 	
 	private RenderableLayer layer = new RenderableLayer();
 		
@@ -158,6 +166,55 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		}
 	}
 
+	public void addFilterColor(int field, String regexp, Color color){
+		switch (field) {
+		case FIELD_ADEST:
+			for(GEOTrack track : tracks){
+				if(track.getArrivee().matches(regexp)){
+					this.colors.put(track, color);
+					this.highlightTrack(track, false);
+				}
+			}
+			break;
+		case FIELD_IAF:
+			//Field not supported
+			//TODO Throw Exception ?
+			break;
+		case FIELD_ADEP:
+			for(GEOTrack track : tracks){
+				if(track.getDepart().matches(regexp)){
+					this.colors.put(track, color);
+					this.highlightTrack(track, false);
+				}
+			}
+			break;	
+		case FIELD_INDICATIF:
+			for(GEOTrack track : tracks){
+				if(track.getIndicatif().matches(regexp)){
+					this.colors.put(track, color);
+					this.highlightTrack(track, false);
+				}
+			}
+			break;
+		case FIELD_TYPE_AVION:
+			for(GEOTrack track : tracks){
+				if(track.getType().matches(regexp)){
+					this.colors.put(track, color);
+					this.highlightTrack(track, false);
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	
+	@Override
+	public void resetFilterColor(){
+		this.colors.clear();
+		this.update();
+	}
+	
 	private void addSelectedTrack(GEOTrack track) {
 		if(selectedTracks == null) this.selectedTracks = new HashSet<GEOTrack>();
 		this.selectedTracks.add(track);
@@ -188,19 +245,34 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 			VPolyline line = this.lines.get((GEOTrack)track);
 			if(line != null){
 				if(b){
-					this.lines.get((GEOTrack)track).setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 0.4f)));
+					line.setShadedColors(false);
+					line.setLineWidth(2.0);
+					line.setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 1.0f)));
 				} else {
-					this.lines.get((GEOTrack)track).setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+					line.setLineWidth(1.0);
+					if(colors.containsKey(track)){
+						line.setShadedColors(false);
+						line.setColor(colors.get(track));
+					} else {
+						line.setShadedColors(true);
+					}
 				}
 				this.firePropertyChange(AVKey.LAYER, null, this);
 			}
 		}
 	}
 
+
+	@Override
+	public void centerOnTrack(Track track) {
+		if(this.isVisible(track)){
+			
+		}
+	}
+
 	@Override
 	public Boolean isVisible(Track track) {
-		// TODO Auto-generated method stub
-		return null;
+		return selectedTracks == null ? tracks.contains(track) : selectedTracks.contains(track);
 	}
 
 	@Override
