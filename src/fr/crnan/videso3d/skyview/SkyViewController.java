@@ -165,7 +165,9 @@ public class SkyViewController implements VidesoController {
 	public void set2D(Boolean flat) {}
 
 	@Override
-	public void reset() {}
+	public void reset() {
+		this.removeAllLayers();
+	}
 
 	private List<Route2D> createRoute(String ident){
 		try {

@@ -62,7 +62,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 
 	private VidesoGLCanvas wwd = null;	
 	private StipController stipController;
-	private AIP aip;
+	private AIPController aipController;
 	
 	public ContextPanel(){
 		super();
@@ -635,16 +635,16 @@ public class ContextPanel extends JPanel implements SelectListener {
 		
 		JXTaskPane infos = new JXTaskPane();
 		infos.setTitle("Informations diverses");
-		String classe = aip.getZoneAttributeValue(zoneID, "Classe");
-		String hor = aip.getZoneAttributeValue(zoneID, "HorTxt");
-		String act = aip.getZoneAttributeValue(zoneID, "Activite");
-		String rmq = aip.getZoneAttributeValue(zoneID, "Remarque");
+		String classe = aipController.getAIP().getZoneAttributeValue(zoneID, "Classe");
+		String hor = aipController.getAIP().getZoneAttributeValue(zoneID, "HorTxt");
+		String act = aipController.getAIP().getZoneAttributeValue(zoneID, "Activite");
+		String rmq = aipController.getAIP().getZoneAttributeValue(zoneID, "Remarque");
 		
 		if(classe != null){
 			infos.add(new JLabel("<html><b>Classe</b> : " + classe+"</html>"));
 		}
 		if(zone.getType()==Secteur3D.Type.R){
-			if(aip.getZoneAttributeValue(zoneID, "Rtba")!=null)
+			if(aipController.getAIP().getZoneAttributeValue(zoneID, "Rtba")!=null)
 				infos.add(new JLabel("<html><b>RTBA</b></html>"));
 		}
 		if(hor != null){
@@ -670,8 +670,8 @@ public class ContextPanel extends JPanel implements SelectListener {
 	}
 	
 	//TODO faire autrement
-	public void setAIP(AIP aip){
-		this.aip = aip;
+	public void setAIPController(AIPController aip){
+		this.aipController = aip;
 	}
 	
 }

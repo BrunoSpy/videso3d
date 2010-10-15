@@ -216,7 +216,7 @@ public class MainWindow extends JFrame {
 		context = new ContextPanel(wwd);
 		context.setStipController(dataExplorer.getStipController());
 		if(dataExplorer.getAIPController()!=null)
-			context.setAIP(dataExplorer.getAIPController().getAIP());
+			context.setAIPController(dataExplorer.getAIPController());
 		
 		JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, dataExplorer, wwd);
 		mainPane.setOneTouchExpandable(true);
@@ -270,7 +270,7 @@ public class MainWindow extends JFrame {
 							context.setStipController(dataExplorer.getStipController());
 							airspaceListener.setStipController(dataExplorer.getStipController());
 						} else if(DatabaseManager.Type.AIP.equals(evt.getNewValue())){
-							context.setAIP(dataExplorer.getAIPController().getAIP());
+							context.setAIPController(dataExplorer.getAIPController());
 						}
 						
 						progressMonitor.close();
