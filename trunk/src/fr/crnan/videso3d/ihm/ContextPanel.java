@@ -601,10 +601,21 @@ public class ContextPanel extends JPanel implements SelectListener {
 			
 			content.add(stip);
 			
-//			JXTaskPane stpv = new JXTaskPane();
-//			stpv.setTitle("Eléments Stpv");
-//			
-//			content.add(stpv);
+			JXTaskPane stpv = new JXTaskPane();
+			stpv.setTitle("Eléments Stpv");
+			
+			if(DatabaseManager.getCurrentStpv() == null){
+				stpv.add(new JLabel("<html><i>Aucune base STPV configurée.</i></html>"));
+			} else {
+				Statement st2 = DatabaseManager.getCurrentStpv();
+				ResultSet rs2 = st2.executeQuery("select freq from sect where nom = '"+name+"'");
+				if(rs2.next()){
+					stpv.add(new JLabel("<html><b>Fréquence : </b>"+rs2.getString(1)+"</html>"));
+				}
+				st2.close();
+			}
+			
+			content.add(stpv);
 //			
 //			JXTaskPane ods = new JXTaskPane();
 //			ods.setTitle("Eléments ODS");
@@ -653,10 +664,12 @@ public class ContextPanel extends JPanel implements SelectListener {
 		this.wwd = wwd;
 	}
 	
+	//TODO faire autrement
 	public void setStipController(StipController controller){
 		this.stipController = controller;
 	}
 	
+	//TODO faire autrement
 	public void setAIP(AIP aip){
 		this.aip = aip;
 	}

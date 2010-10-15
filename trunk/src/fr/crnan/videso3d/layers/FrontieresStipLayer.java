@@ -28,6 +28,7 @@ import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfacePolygon;
@@ -1153,7 +1154,7 @@ public class FrontieresStipLayer extends RenderableLayer {
 	public FrontieresStipLayer(){
 		this.setName("France");
 		
-		final SurfacePolygon france = new SurfacePolygon();
+		final SurfacePolygon france = new SurfacePolygon(new BasicShapeAttributes());
 		france.setLocations(makeLatLon(FRANCE));
 		final ShapeAttributes attrs = france.getAttributes();
 		attrs.setInteriorMaterial(new Material(Pallet.getColorFondPays()));

@@ -110,9 +110,52 @@ public class Stpv extends FileParser{
 		this.setFile("RADR");
 		this.setProgress(1);
 		this.setRadr(FileManager.getFile(path + "/RADR"));
+		this.setFile("SECT");
 		this.setProgress(2);
+		this.setSect(FileManager.getFile(path + "/SECT"));
+		this.setProgress(3);
 	}
 
+	/**
+	 * Parse le fichier SECT
+	 * @param path
+	 */
+	private void setSect(String path){
+		try{
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			while (in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("SECT 5") || line.startsWith("SECT 8")){
+					this.insertSect(line);
+				}
+			}
+		} catch (FileNotFoundException e){
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Insertion en base de données d'une ligne SECT 5 ou SECT 8
+	 * @param line
+	 * @throws SQLException 
+	 */
+	private void insertSect(String line) throws SQLException{
+		PreparedStatement insert = this.conn.prepareStatement("insert into sect (nom, freq) " +
+		"values (?, ?)");
+		insert.setString(1, line.substring(8, 12).trim());
+		if(line.length() > 25) {
+			insert.setString(2, line.substring(20, 26).trim());
+		} else {
+			insert.setString(2, "0");
+		}
+		insert.executeUpdate();
+		insert.close();
+	}
+	
 	/**
 	 * Parse le fichier RADR
 	 * @param path {@link String} Chemin vers le fichier RADR
@@ -312,7 +355,7 @@ public class Stpv extends FileParser{
 
 	@Override
 	public int numberFiles() {
-		return 2;
+		return 3;
 	}
 
 
