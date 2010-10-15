@@ -47,8 +47,6 @@ import fr.crnan.videso3d.DatabaseManager.Type;
  * @version 0.3
  */
 public class AIP extends FileParser{
-//TODO la fenêtre d'information du fileParser ne s'affiche qu'à la fin.
-	
 	
 	private final Integer numberFiles = 17;
 	

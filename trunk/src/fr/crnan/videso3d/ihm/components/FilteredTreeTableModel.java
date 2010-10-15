@@ -199,13 +199,13 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 	 */
 	public void clearSelection(){
 		this.setViewFilter(null);
-		
+
 		Enumeration<Object> e = ((DefaultMutableTreeNode)this.getRoot()).children();
 		while(e.hasMoreElements()){
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
-				this.setValueAt(false, node, 1);
+			this.setValueAt(false, node, 1);
 		}
-		
+
 	}
-	
+
 }

@@ -16,232 +16,94 @@
 
 package fr.crnan.videso3d.ihm;
 
-import it.cnr.imaa.essi.lablib.gui.checkboxtree.CheckboxTree;
-import it.cnr.imaa.essi.lablib.gui.checkboxtree.DefaultCheckboxTreeCellRenderer;
-import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingEvent;
-import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingListener;
-
-import java.awt.BorderLayout;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
+import java.util.LinkedList;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.aip.AIP;
+import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.aip.AIPController;
-import fr.crnan.videso3d.ihm.components.DataView;
-
+import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
+import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
 /**
- * Sélecteur d'objets AIP.
- * @author Adrien VIDAL
- *
+ * 
+ * @author Bruno Spyckerelle
+ * @version 0.3
  */
-public class AIPView extends JPanel implements DataView{
+public class AIPView extends FilteredMultiTreeTableView {
 
-	private JPanel volumes = new JPanel();
-	
-	/**
-	 * Arbre de checkbox pour tous les "volumes" définis dans le fichier xml du SIA.
-	 */
-	private CheckboxTree volumesTree;
-	
 	private AIPController controller;
-	
 
-	
 	public AIPView(AIPController aipController) {
 		this.controller = aipController;
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		volumes.setBorder(BorderFactory.createTitledBorder("Volumes"));
+
 		try {
 			if(DatabaseManager.getCurrentAIP() != null) { //si pas de bdd, ne pas créer la vue
-				this.buildTreePanel();
-				volumes.setBorder(BorderFactory.createTitledBorder("Zones"));
-				this.add(volumes);
+				
+				DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+				this.fillRootNode(root);
+				FilteredTreeTableModel model = new FilteredTreeTableModel(root);
+				
+				this.addTableTree(model, "Zones");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		this.add(Box.createVerticalGlue());
 	}
-	
-	
+
+
 	@Override
-	public AIPController getController() {
+	public VidesoController getController() {
 		return controller;
 	}
-
-	@Override
-	public void reset() {
-		this.controller.reset();
-		volumesTree.clearChecking();
-	}
-
-
-
-	private void buildTreePanel() {
-		//Construction du panel avec le checkboxTree qui ne contient que les TSA pour l'instant.
-		volumes.setLayout(new BorderLayout());
-		DefaultMutableTreeNode volume = new DefaultMutableTreeNode("volumes");
-
-		DefaultMutableTreeNode FIRs = new DefaultMutableTreeNode("FIR");
-		DefaultMutableTreeNode UIRs = new DefaultMutableTreeNode("UIR");
-		DefaultMutableTreeNode LTAs = new DefaultMutableTreeNode("LTA");
-		DefaultMutableTreeNode UTAs = new DefaultMutableTreeNode("UTA");
-		DefaultMutableTreeNode SIVs = new DefaultMutableTreeNode("SIV");
-		DefaultMutableTreeNode TMAs = new DefaultMutableTreeNode("TMA");
-		DefaultMutableTreeNode CTRs = new DefaultMutableTreeNode("CTR");
-		DefaultMutableTreeNode CTAs = new DefaultMutableTreeNode("CTA");
-		DefaultMutableTreeNode TSAs = new DefaultMutableTreeNode("TSA");
-		DefaultMutableTreeNode Rs = new DefaultMutableTreeNode("R");
-		DefaultMutableTreeNode Ds = new DefaultMutableTreeNode("D");
-		DefaultMutableTreeNode CTLs = new DefaultMutableTreeNode("CTL");
-		DefaultMutableTreeNode Pjes = new DefaultMutableTreeNode("Parachutage");
-		DefaultMutableTreeNode Aers = new DefaultMutableTreeNode("Aer");
-		DefaultMutableTreeNode Vols = new DefaultMutableTreeNode("Voltige");
-		DefaultMutableTreeNode Bals = new DefaultMutableTreeNode("Ballons");
-		DefaultMutableTreeNode TrPlas = new DefaultMutableTreeNode("Treuils planeurs");
-		this.addNodes("FIR", "FIR", FIRs);
-		this.addNodes("UIR", "UIR", UIRs);
-		this.addNodes("LTA", "LTA", LTAs);
-		this.addNodes("UTA", "UTA", UTAs);
-		this.addNodes("SIV", "SIV", SIVs);
-		this.addNodes("TMA", "TMA", TMAs);
-		this.addNodes("CTR", "CTR", CTRs);
-		this.addNodes("CTA", "CTA", CTAs);
-		this.addNodes("TSA", "TSA", TSAs);
-		this.addNodes("R", "R", Rs);
-		this.addNodes("D", "D", Ds);
-		this.addNodes("CTL", "CTL", CTLs);
-		this.addNodes("Pje", "Pje", Pjes);
-		this.addNodes("Aer", "Aer", Aers);
-		this.addNodes("Vol", "Vol", Vols);
-		this.addNodes("Bal", "Bal", Bals);
-		this.addNodes("TrPla", "TrPla", TrPlas);
-		volume.add(FIRs);
-		volume.add(UIRs);
-		volume.add(LTAs);
-		volume.add(UTAs);		
-		volume.add(SIVs);
-		volume.add(TMAs);
-		volume.add(CTRs);
-		volume.add(CTAs);
-		volume.add(TSAs);
-		volume.add(Rs);
-		volume.add(Ds);
-		volume.add(CTLs);
-		volume.add(Pjes);
-		volume.add(Aers);
-		volume.add(Vols);
-		volume.add(Bals);
-		volume.add(TrPlas);
-		volumesTree = new CheckboxTree(volume);
-		volumesTree.setRootVisible(false);
-		volumesTree.setCellRenderer(new TreeCellNimbusRenderer());
-		volumesTree.setOpaque(false);
-		volumesTree.addTreeCheckingListener(new AIPVolumeTreeListener());
-		JScrollPane scrollVolumesTree = new JScrollPane(volumesTree);
-		scrollVolumesTree.setBorder(null);
-		volumes.add(scrollVolumesTree, BorderLayout.CENTER);
-	}
-
 	
-	/** Ajoute à <code>root</code> les noeuds correspondants
-	 * @param type Type des noeuds à ajouter (routes, balises)
-	 * @param classe Classe des noeuds à ajouter
-	 * @param root Noeud recevant
-	 */
-	private void addNodes(String type, String classe, DefaultMutableTreeNode root){
+	private void fillRootNode(DefaultMutableTreeNode root){
+
 		try {
 			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet rs = st.executeQuery("select nom from volumes where type = '"+type+"' ORDER BY nom");
-			while(rs.next()){			
-				root.add(new DefaultMutableTreeNode(rs.getString(1)));
+			ResultSet rs = st.executeQuery("select distinct type from volumes order by type");
+			LinkedList<String> types = new LinkedList<String>();
+			while(rs.next()){
+				types.add(rs.getString(1));
 			}
+
+			for(String t : types){
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(t, false));
+				root.add(node);
+				rs = st.executeQuery("select nom from volumes where type = '"+t+"' order by nom");
+				if(t.equals("CTL")){
+					HashSet<String> secteurs = new HashSet<String>();
+					while(rs.next()){
+						String name = rs.getString(1);
+						if(name.contains(" ")){
+							String shortName = name.split("\\s+")[0];
+							if(secteurs.add(shortName)){
+								node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(shortName, false)));
+							}
+						}else{
+							node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+						}
+					}
+				}else{
+					while(rs.next()){
+						node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+					}
+				}
+			}
+			rs.close();
+			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 	}
 
-	/**
-	 * @author Bruno Spyckerelle, Adrien Vidal
-	 * @version 0.1
-	 */
-	private class AIPVolumeTreeListener implements TreeCheckingListener{
-
-		@Override
-		public void valueChanged(TreeCheckingEvent e) {
-			DefaultMutableTreeNode c = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
-			if(!c.getUserObject().equals("volumes")){
-				int type=-1;			
-				type = getNodeType(c);							if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("volumes")) {					if(e.isCheckedPath()){						controller.displayAll(type);					} else  {						controller.hideAll(type);					}				}				else{					String name = getZoneName(c);					if(e.isCheckedPath()){						controller.showObject(type,name);					} else {						controller.hideObject(type,name);					}				}
-			}
-		}
-		
-		private String getZoneName(DefaultMutableTreeNode c){
-			String name = null;
-			if(((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("TSA")
-					|| ((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("R")
-					|| ((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("D")){
-				name = (String)c.getUserObject();
-			}else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("Parachutage")){
-				name = "Pje "+c.getUserObject();
-			}else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("Aer")){
-				name = "Aer "+c.getUserObject();
-			}else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("Voltige")){
-				name = "Vol "+c.getUserObject();
-			}else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("Ballons")){
-				name = "Bal "+c.getUserObject();
-			}else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("Treuils planeurs")){
-				name = "TrPla "+c.getUserObject();
-			}else{
-				name = (String)((DefaultMutableTreeNode) c.getParent()).getUserObject()+ " " + c.getUserObject();
-			}
-			return name;
-		}
-		
-		private int getNodeType(DefaultMutableTreeNode c){
-			String type=null;
-			if(((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("volumes")){
-				type = (String) c.getUserObject();
-			}else{
-				type = (String)((DefaultMutableTreeNode)c.getParent()).getUserObject();
-			}
-			if(type.equals("Parachutage")){
-				type = "Pje";
-			}
-			if(type.equals("Voltige")){
-				type = "Vol";
-			}
-			if(type.equals("Ballons")){
-				type = "Bal";
-			}
-			if(type.equals("Treuils planeurs")){
-				type = "TrPla";
-			}
-			return AIP.string2type(type);
-		}
-	}
-
-	
-	
-	/**
-	 * Classe temporaire pour corriger un bug de rendu avec le style Nimbus
-	 * @author Bruno Spyckerelle
-	 */
-	private class TreeCellNimbusRenderer extends DefaultCheckboxTreeCellRenderer {
-		public TreeCellNimbusRenderer(){
-			this.setOpaque(false);
-			add(this.checkBox);
-			add(this.label);
-		}
-	}
 }
