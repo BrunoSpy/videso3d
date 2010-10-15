@@ -98,10 +98,19 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 			line.setNumSubsegments(1); //améliore les performances
 			if(style == TrajectoriesLayer.STYLE_CURTAIN){
 				line.setPlain(true);
-				line.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+				if(colors.containsKey(track)){
+					line.setColor(colors.get(track));
+				} else {
+					line.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+				}
 			} else {
 				line.setPlain(false);
-				line.setShadedColors(true);
+				if(colors.containsKey(track)){
+					line.setShadedColors(false);
+					line.setColor(colors.get(track));
+				} else {
+					line.setShadedColors(true);
+				}
 			}
 			line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
 			line.setPositions(positions);
@@ -245,16 +254,27 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 			VPolyline line = this.lines.get((GEOTrack)track);
 			if(line != null){
 				if(b){
-					line.setShadedColors(false);
-					line.setLineWidth(2.0);
-					line.setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 1.0f)));
-				} else {
-					line.setLineWidth(1.0);
-					if(colors.containsKey(track)){
+					if(style == TrajectoriesLayer.STYLE_CURTAIN){
+						line.setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 1.0f)));
+					} else {			
+						line.setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 1.0f)));
 						line.setShadedColors(false);
-						line.setColor(colors.get(track));
-					} else {
-						line.setShadedColors(true);
+						line.setLineWidth(2.0);
+					}	
+				} else {
+					if(style == TrajectoriesLayer.STYLE_CURTAIN){
+						if(colors.containsKey(track)){
+							line.setColor(colors.get(track));
+						} else {
+							line.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+						}
+					}else {line.setLineWidth(1.0);
+						if(colors.containsKey(track)){
+							line.setShadedColors(false);
+							line.setColor(colors.get(track));
+						} else {
+							line.setShadedColors(true);
+						}
 					}
 				}
 				this.firePropertyChange(AVKey.LAYER, null, this);
