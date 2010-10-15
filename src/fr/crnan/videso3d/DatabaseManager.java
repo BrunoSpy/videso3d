@@ -508,6 +508,9 @@ public final class DatabaseManager {
 				"conf1 varchar(3), " +
 				"terrain2 varchar(4), " +
 				"conf2 varchar(3))");
+		st.executeUpdate("create table sect (id integer primary key autoincrement, " +
+				"nom varchar(2), " +
+				"freq varchar(7))");
 		st.close();
 		DatabaseManager.addDatabase(name, Type.STPV, new SimpleDateFormat().format(new Date()));
 	}
