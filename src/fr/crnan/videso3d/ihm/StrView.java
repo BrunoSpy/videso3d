@@ -27,19 +27,17 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.exsa.STRController;
 import fr.crnan.videso3d.ihm.components.DataView;
+import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
 /**
  * Sélecteur de données STR
  * @author Bruno Spyckerelle
- * @version 0.2.3
+ * @version 0.2.4
  */
 @SuppressWarnings("serial")
 public class StrView extends JPanel implements DataView{
@@ -77,9 +75,7 @@ public class StrView extends JPanel implements DataView{
 	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
 	
 	private STRController controller;
-	
-	private JRadioButton flat;
-	
+		
 	public StrView( final STRController controller) {
 		this.controller = controller;
 		
@@ -93,27 +89,16 @@ public class StrView extends JPanel implements DataView{
 		radars.setBorder(BorderFactory.createTitledBorder("Portées radars"));
 		
 		//affichage 2D/3D
-		JLabel label = new JLabel("Style d'affichage : ");
-		flat = new JRadioButton("2D");
-		flat.setSelected(true);
-		flat.addItemListener(new ItemListener() {
+		TitleTwoButtons style = new TitleTwoButtons("Style d'affichage : ", "2D", "3D", true);
+		style.addItemListener(new ItemListener() {
 			
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				controller.set2D(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
-		JRadioButton round = new JRadioButton("3D");
-		ButtonGroup style = new ButtonGroup();
-		style.add(flat);
-		style.add(round);
-		JPanel stylePanel = new JPanel();
-		stylePanel.setBorder(BorderFactory.createTitledBorder(" "));
-		stylePanel.setLayout(new BoxLayout(stylePanel, BoxLayout.X_AXIS));
-		stylePanel.add(label);
-		stylePanel.add(flat);
-		stylePanel.add(round);
-		this.add(stylePanel);
+		style.setBorder(BorderFactory.createTitledBorder(" "));
+		this.add(style);
 		
 		try {
 			if(DatabaseManager.getCurrentExsa() != null) {
