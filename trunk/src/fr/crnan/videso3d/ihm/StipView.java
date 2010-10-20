@@ -22,7 +22,6 @@ import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingEvent;
 import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingListener;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.ResultSet;
@@ -34,23 +33,21 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.ihm.components.DataView;
+import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
 import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.stip.StipController;
 /**
  * Sélecteur d'objets Stip
  * @author Bruno Spyckerelle
- * @version 0.4.0
+ * @version 0.4.1
  */
 @SuppressWarnings("serial")
 public class StipView extends JPanel implements DataView{
@@ -118,16 +115,9 @@ public class StipView extends JPanel implements DataView{
 	 * @return JPanel
 	 */
 	private JPanel createTitleRoutes(){
-		JPanel titleRoute = new JPanel();
-		titleRoute.setLayout(new BoxLayout(titleRoute, BoxLayout.X_AXIS));
-		titleRoute.setBorder(BorderFactory.createEmptyBorder(0, 17, 1, 3));
-		JLabel routeLabel = new JLabel("Routes");
-		routeLabel.setFont(routeLabel.getFont().deriveFont(Font.BOLD));
-		titleRoute.add(routeLabel);
-
-		JRadioButton flatRoutes = new JRadioButton("2D");
-		flatRoutes.setSelected(true);
-		flatRoutes.addItemListener(new ItemListener() {
+		
+		TitleTwoButtons titlePanel = new TitleTwoButtons("Routes", "2D", "3D", true);
+		titlePanel.addItemListener(new ItemListener() {
 
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -136,21 +126,8 @@ public class StipView extends JPanel implements DataView{
 				controller.toggleLayer(controller.getRoutes3DLayer(), !state);
 			}
 		});
-		JRadioButton round = new JRadioButton("3D");
-		ButtonGroup style = new ButtonGroup();
-		style.add(flatRoutes);
-		style.add(round);
-		JPanel stylePanel = new JPanel();
-		stylePanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
-		stylePanel.setLayout(new BoxLayout(stylePanel, BoxLayout.X_AXIS));
-		stylePanel.add(Box.createHorizontalGlue());
-		//	stylePanel.add(label);
-		stylePanel.add(flatRoutes);
-		stylePanel.add(round);
-		//	stylePanel.add(Box.createHorizontalGlue());
-		titleRoute.add(stylePanel);
-
-		return titleRoute;
+		
+		return titlePanel; 
 	}
 
 	private JPanel buildBalisesPanel(){
