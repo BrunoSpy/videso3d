@@ -16,6 +16,8 @@
 
 package fr.crnan.videso3d.ihm.components;
 
+import java.util.regex.Pattern;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.Couple;
@@ -23,19 +25,33 @@ import fr.crnan.videso3d.Couple;
  * Affiche les éléments dont le nom correspond à l'expression régulière.<br />
  * Garde affiché les éléments cochés.
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class RegexViewFilter implements ViewFilter {
-
-	private String regex;
+	
+	private Pattern pattern;
 	
 	public RegexViewFilter(String regex) {
-		this.regex = regex;
+		//si la regex ne contient que des lettres et des chiffres, on l'augmente un peu
+		if(regex.split("\\s+").length <= 1 && regex.trim().matches("[a-zA-Z0-9]*")){
+			pattern = Pattern.compile(".*"+regex.trim()+".*", Pattern.CASE_INSENSITIVE);
+		} else if(regex.split("\\s+").length > 1 && regex.matches("[a-zA-Z0-9\\s+]*")){
+			//si la regex contient que des lettres et des chiffres ainsi que des espaces
+			String[] splittedRegex = regex.split("\\s+");
+			String regex2 = "";
+			for(int i=0;i<splittedRegex.length;i++){
+				regex2 += ".*"+splittedRegex[i];
+			}
+			regex2 += ".*";
+			pattern = Pattern.compile(regex2, Pattern.CASE_INSENSITIVE);
+		} else {
+			pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+		}
 	}
 	
 	@Override
 	public boolean isShown(DefaultMutableTreeNode node) {
-		return ((Couple<String, Boolean>)node.getUserObject()).getFirst().matches(regex) || ((Couple<String, Boolean>)node.getUserObject()).getSecond();
+		return pattern.matcher(((Couple<String, Boolean>)node.getUserObject()).getFirst()).matches() || ((Couple<String, Boolean>)node.getUserObject()).getSecond();
 	}
 
 }
