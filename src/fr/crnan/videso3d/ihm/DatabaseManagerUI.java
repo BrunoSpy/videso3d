@@ -182,7 +182,7 @@ public class DatabaseManagerUI extends JDialog {
 			} else if (suffix.equalsIgnoreCase(".xml")){ //export des données SIA, base AIP
 				//on copie le fichier pour éviter de le perdre
 				File aipFile = FileManager.copyFile(file);
-				AIP aip = new AIP(aipFile.getAbsolutePath());
+				AIP aip = new AIP("./"+aipFile.getName());
 				this.getDatas(aip, "Import des données AIP", "AIP");
 			} else {
 				file = file.getParentFile();
