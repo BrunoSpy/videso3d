@@ -10,9 +10,58 @@ Par exemple, la carte OACI 500.000 de l'IGN est géoréférencée : [http://lois
 
 = Pré-traitement =
 
-Vos cartes doivent être géoréférencées dans une projection lat-lon et dans le référentiel WGS84. SI ce n'est pas le cas, la première étape consiste à reprojeter les cartes
+Vos cartes doivent être géoréférencées dans une projection lat-lon et dans le référentiel WGS84. Si ce n'est pas le cas, la première étape consiste à reprojeter les cartes.
 
 Ensuite, il faut créer le jeu de dalles (le cache de Videso 3D).
+
+== Exemple ==
+
+Vous avez un jeu de dalles en projection Lambert 93 et vous souhaitez les intégrer dans Videso 3D.
+
+=== Fusion des dalles ===
+
+La première étape consiste à fusionner les dalles ensembles. En effet, la reprojection crée un fichier plus grand (à cause de la rotation induite par la transformation d'un système de projection à un autre), si vous reprojetez chaque dalle, lorsque vous voudrez les afficher ensemble, elles vous se chevaucher.
+
+La commande pour faire cela est [http://www.gdal.org/gdal_merge.html gdal_merge].
+
+Une autre technique est d'utiliser `gdal_vrtmerge` qui va créer un fichier virtuel à partir de l'ensemble des dalles.
+
+=== Reprojection ===
+
+Le fichier obtenu précédemment est généralement très gros, ce qui va rendre toutes les étapes suivantes assez lentes.
+
+Pour la reprojection, c'est la commande [http://www.gdal.org/gdalwarp.html gdal_warp] qui va nous aider.
+
+Dans notre exemple, les fichiers étant dans une projection Lambert 93, la commande pour accomplir cette étape est la suivante :
+
+`gdalwarp -s_srs '+proj=lcc +lat_1=44 +lat_2=49 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000' -t_srs '+proj=longlat +datum=WGS84' -dstnodata 255 -dstalpha fichier_fusionne.tif fichier_fusionne_latlon.TIF`
+
+Quelques explications :
+  - `'+proj=lcc +lat_1=44 +lat_2=49 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000'` correspond aux paramètres de la projection source, ceci est donc différent suivant l'origine des fichiers
+  - `'+proj=longlat +datum=WGS84'` définit la projection finale, c'est à dire celle utilisée par Videso
+  - `-dstnodata 255 -dstalpha` permet de rendre transparent les zones sans données créées par la reprojection
+
+=== Dallage (tiling) ===
+
+Une fois notre gros fichier reprojeté obtenu, il faut le redécouper. Sans cela, Videso 3D plantera à coup sûr lors de l'import. Cette fois, on utilise [http://www.gdal.org/gdal_retile.html gdal_retile] :
+
+`gdal_retile.py -levels 1 -targetDir ./tiles fichier_fusionne_latlon.TIF`
+
+On ne demande qu'un seul niveau de dalles car c'est Videso 3D qui va créer la pyramide.
+
+=== Import dans Videso 3D ===
+
+Il ne reste plus qu'à [WWJ#Actions_accessibles_via_la_barre_d'outils importer] le dossier obtenu dans Videso 3D.
+
+== Quelques liens intéressants ==
+
+[http://forum.worldwindcentral.com/showthread.php?t=21905 Aide de WorldWind Java pour importer des images]
+
+[http://www.gdal.org/gdal_utilities.html Utilitaires multi-plateformes de manipulation d'images géoréférencées]
+
+[http://lambert93.ign.fr Projet Lambert93 de l'IGN]
+
+[http://www.remotesensing.org/geotiff/proj_list/lambert_conic_conformal_2sp.html Description PROJ.4 d'une projection Lambert]
 
 = Ajout d'un jeu de carte =
 
