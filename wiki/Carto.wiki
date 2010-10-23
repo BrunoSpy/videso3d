@@ -37,9 +37,9 @@ Dans notre exemple, les fichiers étant dans une projection Lambert 93, la comma
 `gdalwarp -s_srs '+proj=lcc +lat_1=44 +lat_2=49 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000' -t_srs '+proj=longlat +datum=WGS84' -dstnodata 255 -dstalpha fichier_fusionne.tif fichier_fusionne_latlon.TIF`
 
 Quelques explications :
-  - `'+proj=lcc +lat_1=44 +lat_2=49 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000'` correspond aux paramètres de la projection source, ceci est donc différent suivant l'origine des fichiers
-  - `'+proj=longlat +datum=WGS84'` définit la projection finale, c'est à dire celle utilisée par Videso
-  - `-dstnodata 255 -dstalpha` permet de rendre transparent les zones sans données créées par la reprojection
+  * `'+proj=lcc +lat_1=44 +lat_2=49 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000'` correspond aux paramètres de la projection source, ceci est donc différent suivant l'origine des fichiers
+  * `'+proj=longlat +datum=WGS84'` définit la projection finale, c'est à dire celle utilisée par Videso
+  * `-dstnodata 255 -dstalpha` permet de rendre transparent les zones sans données créées par la reprojection
 
 === Dallage (tiling) ===
 
@@ -52,6 +52,7 @@ On ne demande qu'un seul niveau de dalles car c'est Videso 3D qui va créer la p
 === Import dans Videso 3D ===
 
 Il ne reste plus qu'à [WWJ#Actions_accessibles_via_la_barre_d'outils importer] le dossier obtenu dans Videso 3D.
+Le fond de carte est alors activé et sera disponible aux prochains lancements via le bouton "LayerList".
 
 == Quelques liens intéressants ==
 
@@ -65,5 +66,5 @@ Il ne reste plus qu'à [WWJ#Actions_accessibles_via_la_barre_d'outils importer] 
 
 = Ajout d'un jeu de carte =
 
-Une fois les étapes précédentes remplies, il vous suffit d'ajouter votre jeu de carte dans le dossier datas/WorldWindInstalled.
+Si vous avez un jeu de carte au bon format (c'est à dire, si il a déjà subit toutes les étapes précédentes), il vous suffit d'ajouter votre jeu de carte dans le dossier datas/WorldWindInstalled.
 Au prochain lancement de Videso 3D, le fond de carte sera disponible via le bouton "LayerList" (en bas à gauche de la vue 3D).
