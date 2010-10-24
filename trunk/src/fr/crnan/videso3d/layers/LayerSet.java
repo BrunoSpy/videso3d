@@ -39,7 +39,7 @@ import java.util.logging.Level;
  * 
  * @author Antonio Santiago [asantiagop(at)gmail.com]
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 @SuppressWarnings("serial")
 public class LayerSet extends LayerList implements Layer {
@@ -537,5 +537,17 @@ public class LayerSet extends LayerList implements Layer {
 		String message = Logging.getMessage("RestorableSupport.RestoreNotSupported");
         Logging.logger().severe(message);
         throw new UnsupportedOperationException(message);
+	}
+
+	@Override
+	public Double getMaxEffectiveAltitude(Double radius) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Double getMinEffectiveAltitude(Double radius) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
