@@ -55,6 +55,22 @@ public class FileManager {
 	}
 	
 	/**
+	 * Deletes a file even if it is a non-empty directory
+	 * @param file
+	 * @return
+	 */
+	public static boolean deleteFile(File file){
+		if(file.isFile()){
+			return file.delete();
+		} else {
+			for(File f : file.listFiles()){
+				FileManager.deleteFile(f);
+			}
+			return file.delete();
+		}
+	}
+	
+	/**
 	 * Copy a file to the datas repertory
 	 * @param file to copy
 	 * @return File : the new file

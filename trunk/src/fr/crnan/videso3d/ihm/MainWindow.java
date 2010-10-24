@@ -37,6 +37,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -75,7 +76,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3.3
+ * @version 0.3.4
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -386,7 +387,6 @@ public class MainWindow extends JFrame {
 	 */
 	private JToolBar createToolBar(){
 		JToolBar toolbar = new JToolBar("Actions");
-
 		
 		//Reset de l'affichage
 		final JButton reset = new JButton(new ImageIcon(getClass().getResource("/resources/reset_22.png")));
@@ -429,6 +429,21 @@ public class MainWindow extends JFrame {
 		toolbar.add(analyze);
 		toolbar.addSeparator();
 		
+		//ajout de dalles
+		JButton dalle = new JButton(new ImageIcon(getClass().getResource("/resources/add_geotiff_22.png")));
+		dalle.setToolTipText("Importer des images géoréférencées.");
+		dalle.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				VFileChooser file = new VFileChooser();
+				file.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				if(file.showOpenDialog(null) == VFileChooser.APPROVE_OPTION){
+					wwd.importImage(file.getSelectedFile());
+				}
+			}
+		});
+		toolbar.add(dalle);
 		
 		//Ajouter trajectoires
 		final JButton trajectoires = new JButton(new ImageIcon(getClass().getResource("/resources/plus_traj_22.png")));
