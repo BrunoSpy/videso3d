@@ -18,10 +18,15 @@ package fr.crnan.videso3d;
 
 import java.awt.Component;
 import java.awt.Cursor;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ProgressMonitor;
+import javax.swing.SwingWorker;
 import javax.xml.xpath.XPath;
 
 import org.w3c.dom.Document;
@@ -43,12 +48,16 @@ import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.util.VMeasureTool;
 import fr.crnan.videso3d.layers.RadioCovLayer;
 
+import gov.nasa.worldwind.BasicFactory;
 import gov.nasa.worldwind.Factory;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.avlist.AVList;
 import gov.nasa.worldwind.avlist.AVListImpl;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
+import gov.nasa.worldwind.cache.FileStore;
+import gov.nasa.worldwind.data.DataImportUtil;
+import gov.nasa.worldwind.data.TiledImageProducer;
 import gov.nasa.worldwind.examples.util.LayerManagerLayer;
 import gov.nasa.worldwind.exception.WWRuntimeException;
 import gov.nasa.worldwind.geom.Angle;
@@ -76,7 +85,7 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.8.0
+ * @version 0.8.1
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
@@ -101,21 +110,21 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Outil de mesure (alidade)
 	 */
 	private VMeasureTool measureTool;	
-	
+
 	/**
 	 * Liste des layers couvertures radios
 	 */
-	 private RadioCovLayer radioCovLayer;
-	
+	private RadioCovLayer radioCovLayer;
 
-//	private Layer lastLayer;
+
+	//	private Layer lastLayer;
 	private AirspaceLayer selectedAirspaces = new AirspaceLayer();
-		
+
 	/**
 	 * Initialise les différents objets graphiques
 	 */
 	public void initialize(){		
-		
+
 		//Proxy
 		Configuration.initializeProxy();
 
@@ -123,19 +132,19 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		Layer latlon = new LatLonGraticuleLayer();
 		latlon.setEnabled(false);
 		this.getModel().getLayers().add(latlon);
-				
+
 		//on screen layer manager
 		LayerManagerLayer layerManager = new LayerManagerLayer(this);
 		layerManager.setEnabled(false); //réduit par défaut
 		this.getModel().getLayers().add(0, layerManager);
-						
+
 		//mise à jour des calques de WorldWindInstalled
 		firePropertyChange("step", "", "Ajout des layers installés");
 		this.updateWWI();
-		
+
 		//layer d'accueil des objets séléctionnés
 		this.getModel().getLayers().add(selectedAirspaces);
-		
+
 		if (isFlatGlobe())
 		{
 			this.flatGlobe = (FlatGlobeCautra)this.getModel().getGlobe();
@@ -146,15 +155,15 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			this.flatGlobe = new EarthFlatCautra();
 			this.roundGlobe = this.getModel().getGlobe();
 		}
-		
+
 		//Layer des radio couv
 		radioCovLayer = new RadioCovLayer("Radio Coverage",this);
-		
+
 		//position de départ centrée sur la France
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));
-		
+
 	}
-	
+
 	public AnnotationLayer getAnnotationLayer(){
 		if(annotationLayer == null){
 			annotationLayer = new VAnnotationLayer();
@@ -162,7 +171,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 		return annotationLayer;
 	}
-	
+
 	/**
 	 * Affiche ou non un Layer<br />
 	 * Ajouter le {@link Layer} aux layers du modèle si il n'en fait pas partie
@@ -181,9 +190,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * @param layer Calque à ajouter
 	 */
 	public void addLayer(Layer layer) throws Exception{
-			this.toggleLayer(layer, true);
+		this.toggleLayer(layer, true);
 	}
-	
+
 	/**
 	 * Supprime un calque
 	 * @param layer Calque à supprimer
@@ -191,30 +200,30 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public void removeLayer(Layer layer){
 		this.getModel().getLayers().remove(layer);
 	}
-	
+
 	/**
 	 * Insère un layer suffisamment haut dans la liste pour être derrière les PlaceNames
 	 * @param layer
 	 */
-    public void insertBeforePlacenames(Layer layer)
-    {
-        // Insert the layer into the layer list just before the placenames.
-        int position = 0;
-        LayerList layers = this.getModel().getLayers();
-        for (Layer l : layers)
-        {
-            if (l instanceof PlaceNameLayer)
-                position = layers.indexOf(l);
-        }
-        layers.add(position, layer);
-    }
-    
+	public void insertBeforePlacenames(Layer layer)
+	{
+		// Insert the layer into the layer list just before the placenames.
+		int position = 0;
+		LayerList layers = this.getModel().getLayers();
+		for (Layer l : layers)
+		{
+			if (l instanceof PlaceNameLayer)
+				position = layers.indexOf(l);
+		}
+		layers.add(position, layer);
+	}
+
 	/**
 	 * Mets à jour les layers installés dans WorldWindInstalled
 	 */
 	public void updateWWI(){
 		//code inspired by gov.nasa.worldwind.examples.ImportingImagesAndElevationsDemo.java
-		
+
 		File installLocation = null;
 		for (java.io.File f : WorldWind.getDataFileStore().getLocations())
 		{
@@ -224,102 +233,102 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 				break;
 			}
 		}
-		
+
 		String[] names = WWIO.listDescendantFilenames(installLocation, new DataConfigurationFilter(), false);
-        if (names == null || names.length == 0)
-            return;
+		if (names == null || names.length == 0)
+			return;
 
-        for (String filename : names)
-        {
-            Document dataConfig = null;
+		for (String filename : names)
+		{
+			Document dataConfig = null;
 
-            try
-            {
-                File dataConfigFile = new File(installLocation, filename);
-                dataConfig = WWXML.openDocument(dataConfigFile);
-                dataConfig = DataConfigurationUtils.convertToStandardDataConfigDocument(dataConfig);
-            }
-            catch (WWRuntimeException e)
-            {
-                e.printStackTrace();
-            }
+			try
+			{
+				File dataConfigFile = new File(installLocation, filename);
+				dataConfig = WWXML.openDocument(dataConfigFile);
+				dataConfig = DataConfigurationUtils.convertToStandardDataConfigDocument(dataConfig);
+			}
+			catch (WWRuntimeException e)
+			{
+				e.printStackTrace();
+			}
 
-            if (dataConfig == null)
-                continue;
+			if (dataConfig == null)
+				continue;
 
-            AVList params = new AVListImpl();            
-            XPath xpath = WWXML.makeXPath();
-            Element domElement = dataConfig.getDocumentElement();
+			AVList params = new AVListImpl();            
+			XPath xpath = WWXML.makeXPath();
+			Element domElement = dataConfig.getDocumentElement();
 
-            // If the data configuration document doesn't define a cache name, then compute one using the file's path
-            // relative to its file cache directory.
-            String s = WWXML.getText(domElement, "DataCacheName", xpath);
-            if (s == null || s.length() == 0)
-                DataConfigurationUtils.getDataConfigCacheName(filename, params);
+			// If the data configuration document doesn't define a cache name, then compute one using the file's path
+			// relative to its file cache directory.
+			String s = WWXML.getText(domElement, "DataCacheName", xpath);
+			if (s == null || s.length() == 0)
+				DataConfigurationUtils.getDataConfigCacheName(filename, params);
 
-            // If the data configuration document doesn't define the data's extreme elevations, provide default values using
-            // the minimum and maximum elevations of Earth.
-            String type = DataConfigurationUtils.getDataConfigType(domElement);
-            if (type.equalsIgnoreCase("ElevationModel"))
-            {
-                if (WWXML.getDouble(domElement, "ExtremeElevations/@min", xpath) == null)
-                    params.setValue(AVKey.ELEVATION_MIN, -11000d); // Depth of Mariana trench.
-                if (WWXML.getDouble(domElement, "ExtremeElevations/@max", xpath) == null)
-                    params.setValue(AVKey.ELEVATION_MAX, 8500d); // Height of Mt. Everest.
-            }
-                       
-            if (DataConfigurationUtils.getDataConfigType(domElement).equalsIgnoreCase("Layer"))
-            {
-            	Layer layer = null;
-                try
-                {
-                    Factory factory = (Factory) WorldWind.createConfigurationComponent(AVKey.LAYER_FACTORY);
-                    layer = (Layer) factory.createFromConfigSource(domElement, params);
-                }
-                catch (Exception e)
-                {
-                    String message = Logging.getMessage("generic.CreationFromDataConfigurationFailed", 
-                    		DataConfigurationUtils.getDataConfigDisplayName(domElement));
-                    Logging.logger().log(java.util.logging.Level.SEVERE, message, e);
-                }
+			// If the data configuration document doesn't define the data's extreme elevations, provide default values using
+			// the minimum and maximum elevations of Earth.
+			String type = DataConfigurationUtils.getDataConfigType(domElement);
+			if (type.equalsIgnoreCase("ElevationModel"))
+			{
+				if (WWXML.getDouble(domElement, "ExtremeElevations/@min", xpath) == null)
+					params.setValue(AVKey.ELEVATION_MIN, -11000d); // Depth of Mariana trench.
+				if (WWXML.getDouble(domElement, "ExtremeElevations/@max", xpath) == null)
+					params.setValue(AVKey.ELEVATION_MAX, 8500d); // Height of Mt. Everest.
+			}
 
-                if (layer == null)
-                    return;
-                
-                if (!this.getModel().getLayers().contains(layer)) {
-                	this.insertBeforePlacenames(layer);
-                	layer.setEnabled(false);
-                }
-            }
-            
-        }            
+			if (DataConfigurationUtils.getDataConfigType(domElement).equalsIgnoreCase("Layer"))
+			{
+				Layer layer = null;
+				try
+				{
+					Factory factory = (Factory) WorldWind.createConfigurationComponent(AVKey.LAYER_FACTORY);
+					layer = (Layer) factory.createFromConfigSource(domElement, params);
+				}
+				catch (Exception e)
+				{
+					String message = Logging.getMessage("generic.CreationFromDataConfigurationFailed", 
+							DataConfigurationUtils.getDataConfigDisplayName(domElement));
+					Logging.logger().log(java.util.logging.Level.SEVERE, message, e);
+				}
+
+				if (layer == null)
+					return;
+
+				if (!this.getModel().getLayers().contains(layer)) {
+					this.insertBeforePlacenames(layer);
+					layer.setEnabled(false);
+				}
+			}
+
+		}            
 	}
-	
+
 	/*--------------------------------------------------------------*/
 	/*---------------------- Outil de mesure -----------------------*/
 	/*--------------------------------------------------------------*/
-	
+
 	public VMeasureTool getMeasureTool(){
 		if(measureTool == null){
 			measureTool = new VMeasureTool(this);
 		}
 		return measureTool;
 	}
-	
+
 	public void switchMeasureTool(Boolean bool){
 		this.getMeasureTool().setArmed(bool);
 		//Changement du curseur
 		((Component) this).setCursor(!measureTool.isArmed() ? Cursor.getDefaultCursor()
-                : Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+				: Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		if(!bool){
 			this.getMeasureTool().clear();
 		}
 	}
-	
+
 	/*--------------------------------------------------------------*/
 	/*----------------- Gestion des projections --------------------*/
 	/*--------------------------------------------------------------*/
-	
+
 	/**
 	 * Change la projection
 	 * @param projection Nom de la projection (parmi {@link FlatGlobeCautra})
@@ -329,69 +338,69 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		if(flatGlobe != null) this.flatGlobe.setProjection(projection);
 		if(isFlatGlobe()) this.redraw();
 	}
-	
-    public boolean isFlatGlobe()
-    {
-        return this.getModel().getGlobe() instanceof FlatGlobeCautra;
-    }
-	
-    public String getProjection(){
-    	return projection;
-    }
-    /**
-     * Active la vue 2D
-     * @param flat
-     */
-    public void enableFlatGlobe(boolean flat)
-    {
-        if(isFlatGlobe() == flat)
-            return;
 
-        if(!flat)
-        {
-            // Switch to round globe
-            this.getModel().setGlobe(roundGlobe) ;
-            // Switch to orbit view and update with current position
-            FlatOrbitView flatOrbitView = (FlatOrbitView)this.getView();
-            BasicOrbitView orbitView = new BasicOrbitView();
-            orbitView.setCenterPosition(flatOrbitView.getCenterPosition());
-            orbitView.setZoom(flatOrbitView.getZoom( ));
-            orbitView.setHeading(flatOrbitView.getHeading());
-            orbitView.setPitch(flatOrbitView.getPitch());
-            this.setView(orbitView);
-            // Change sky layer
-            LayerList layers = this.getModel().getLayers();
-            for(int i = 0; i < layers.size(); i++)
-            {
-                if(layers.get(i) instanceof SkyColorLayer)
-                    layers.set(i, new SkyGradientLayer());
-            }
-        }
-        else
-        {
-            // Switch to flat globe
-            this.getModel().setGlobe(flatGlobe);
-            flatGlobe.setProjection(this.getProjection());
-            // Switch to flat view and update with current position
-            BasicOrbitView orbitView = (BasicOrbitView)this.getView();
-            FlatOrbitView flatOrbitView = new FlatOrbitView();
-            flatOrbitView.setCenterPosition(orbitView.getCenterPosition());
-            flatOrbitView.setZoom(orbitView.getZoom( ));
-            flatOrbitView.setHeading(orbitView.getHeading());
-            flatOrbitView.setPitch(orbitView.getPitch());
-            this.setView(flatOrbitView);
-            // Change sky layer
-            LayerList layers = this.getModel().getLayers();
-            for(int i = 0; i < layers.size(); i++)
-            {
-                if(layers.get(i) instanceof SkyGradientLayer)
-                    layers.set(i, new SkyColorLayer());
-            }
-        }
-        
-        this.redraw();
-    }
-    
+	public boolean isFlatGlobe()
+	{
+		return this.getModel().getGlobe() instanceof FlatGlobeCautra;
+	}
+
+	public String getProjection(){
+		return projection;
+	}
+	/**
+	 * Active la vue 2D
+	 * @param flat
+	 */
+	public void enableFlatGlobe(boolean flat)
+	{
+		if(isFlatGlobe() == flat)
+			return;
+
+		if(!flat)
+		{
+			// Switch to round globe
+			this.getModel().setGlobe(roundGlobe) ;
+			// Switch to orbit view and update with current position
+			FlatOrbitView flatOrbitView = (FlatOrbitView)this.getView();
+			BasicOrbitView orbitView = new BasicOrbitView();
+			orbitView.setCenterPosition(flatOrbitView.getCenterPosition());
+			orbitView.setZoom(flatOrbitView.getZoom( ));
+			orbitView.setHeading(flatOrbitView.getHeading());
+			orbitView.setPitch(flatOrbitView.getPitch());
+			this.setView(orbitView);
+			// Change sky layer
+			LayerList layers = this.getModel().getLayers();
+			for(int i = 0; i < layers.size(); i++)
+			{
+				if(layers.get(i) instanceof SkyColorLayer)
+					layers.set(i, new SkyGradientLayer());
+			}
+		}
+		else
+		{
+			// Switch to flat globe
+			this.getModel().setGlobe(flatGlobe);
+			flatGlobe.setProjection(this.getProjection());
+			// Switch to flat view and update with current position
+			BasicOrbitView orbitView = (BasicOrbitView)this.getView();
+			FlatOrbitView flatOrbitView = new FlatOrbitView();
+			flatOrbitView.setCenterPosition(orbitView.getCenterPosition());
+			flatOrbitView.setZoom(orbitView.getZoom( ));
+			flatOrbitView.setHeading(orbitView.getHeading());
+			flatOrbitView.setPitch(orbitView.getPitch());
+			this.setView(flatOrbitView);
+			// Change sky layer
+			LayerList layers = this.getModel().getLayers();
+			for(int i = 0; i < layers.size(); i++)
+			{
+				if(layers.get(i) instanceof SkyGradientLayer)
+					layers.set(i, new SkyColorLayer());
+			}
+		}
+
+		this.redraw();
+	}
+
 	/*--------------------------------------------------------------*/
 	/*----------------- Gestion des frontières ---------------------*/
 	/*--------------------------------------------------------------*/
@@ -399,51 +408,46 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Affiche ou non le fond uni suivant les frontières Stip
 	 * @param toggle
 	 */
-    public void toggleFrontieres(Boolean toggle){
-			if(frontieres == null){
-				frontieres = new FrontieresStipLayer();
-				this.insertBeforePlacenames(frontieres);
-			}
-			this.toggleLayer(frontieres, toggle);
+	public void toggleFrontieres(Boolean toggle){
+		if(frontieres == null){
+			frontieres = new FrontieresStipLayer();
+			this.insertBeforePlacenames(frontieres);
+		}
+		this.toggleLayer(frontieres, toggle);
 	}
-	
+
 	/*-------------------------------------------------------------------*/
 	/*----------------- Gestion des couvertures radios ------------------*/
 	/*-------------------------------------------------------------------*/    
-	
-    public void addRadioCov(String antennaName) {    	
-    	radioCovLayer.addVisibleRadioCov(antennaName);
-    	this.redraw();
-    }
-    
-    public void removeRadioCov(String antennaName) {    
-    	radioCovLayer.removeVisibleRadioCov(antennaName);
-    	this.redraw();
-    }
-    
-    public void hideAllRadioCovLayers() {
-    	radioCovLayer.hideAllRadioCovLayers();
-    	this.redraw();    
-    }
-        
-    public void removeAllRadioCovLayers() {
-    	radioCovLayer.removeAllRadioCovLayers();
-    	this.redraw();
-    }
-    
-    public void insertAllRadioCovLayers() {
-    	radioCovLayer.insertAllRadioCovLayers();
-    	this.redraw();
-    }
-    public void insertAllRadioCovLayers(ArrayList<Airspace> airspaces) {
-    	radioCovLayer.insertAllRadioCovLayers(airspaces);
-    	this.redraw();
-    }
-    
-	/*--------------------------------------------------------------*/
-	/*------------------ Gestion du highlight ----------------------*/
-	/*--------------------------------------------------------------*/
 
+	public void addRadioCov(String antennaName) {    	
+		radioCovLayer.addVisibleRadioCov(antennaName);
+		this.redraw();
+	}
+
+	public void removeRadioCov(String antennaName) {    
+		radioCovLayer.removeVisibleRadioCov(antennaName);
+		this.redraw();
+	}
+
+	public void hideAllRadioCovLayers() {
+		radioCovLayer.hideAllRadioCovLayers();
+		this.redraw();    
+	}
+
+	public void removeAllRadioCovLayers() {
+		radioCovLayer.removeAllRadioCovLayers();
+		this.redraw();
+	}
+
+	public void insertAllRadioCovLayers() {
+		radioCovLayer.insertAllRadioCovLayers();
+		this.redraw();
+	}
+	public void insertAllRadioCovLayers(ArrayList<Airspace> airspaces) {
+		radioCovLayer.insertAllRadioCovLayers(airspaces);
+		this.redraw();
+	}
 
 	/**
 	 * Ajoute les trajectoires à la vue
@@ -473,7 +477,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 		return trajLayer;
 	}
-	
+
 	/**
 	 * Ajoute les trajectoires au format Elvira GEO
 	 * @param geo
@@ -523,15 +527,15 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public void resetView() {
 
 		if(this.annotationLayer != null) this.annotationLayer.removeAllAnnotations();
-		
+
 		this.getView().stopMovement();
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));
 		this.getView().setPitch(Angle.ZERO);
 		this.getView().setHeading(Angle.ZERO);
 		this.redraw();
 	}
-	
-	
+
+
 	/**
 	 * Calcule l'altitude à laquelle doit se trouver l'oeil pour voir correctement la zone.
 	 * @param zone
@@ -565,8 +569,138 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		double er = this.getView().getGlobe().getEquatorialRadius();
 		double pr = this.getView().getGlobe().getPolarRadius();
 		double maxDistance = LatLon.ellipsoidalDistance(new LatLon(latMin,lonMin), new LatLon(latMax,lonMax), er, pr);
-		
+
 		double elevation = -6e-7*maxDistance*maxDistance+2.3945*maxDistance+175836;
 		return new double[]{(latMin.degrees+latMax.degrees)/2,(lonMin.degrees+lonMax.degrees)/2, Math.min(elevation,2.5e6)};
 	}
+
+	/**
+	 * Import GEOTiff image or a directory containing GEOTiff images.<br />
+	 * Images have to be projected in latlon/WGS84.
+	 * @param selectedFile
+	 */
+	public void importImage(final File selectedFile) {
+
+		FileStore fileStore = WorldWind.getDataFileStore();
+
+		final File fileStoreLocation = DataImportUtil.getDefaultImportLocation(fileStore);
+		String cacheName = WWIO.replaceIllegalFileNameCharacters(selectedFile.getName());
+
+		AVList params = new AVListImpl();
+		params.setValue(AVKey.FILE_STORE_LOCATION, fileStoreLocation.getAbsolutePath());
+		params.setValue(AVKey.DATA_CACHE_NAME, cacheName);
+		params.setValue(AVKey.DATASET_NAME, selectedFile.getName());
+
+
+		// Create a TiledImageProducer to transforms the source image to a pyramid of images tiles in the World Wind
+		// Java cache format.
+		final TiledImageProducer producer = new TiledImageProducer();
+
+		// Configure the TiledImageProducer with the parameter list and the image source.
+		producer.setStoreParameters(params);
+
+		final ProgressMonitor progress = new ProgressMonitor(null, "Import des images", "Tile", 0, 100);
+		progress.setMillisToDecideToPopup(0);
+
+		//Traitement lourd --> SwingWorker
+		final SwingWorker<Integer,Integer> task = new SwingWorker<Integer, Integer>() {
+			@Override
+			protected Integer doInBackground() throws Exception {
+				try {
+					if(selectedFile.isDirectory()){
+						File[] files = selectedFile.listFiles(new FileFilter() {
+
+							@Override
+							public boolean accept(File pathname) {
+								if (pathname.isDirectory()) {
+									return false;
+								}
+
+								String ext = null;
+								String s = pathname.getName();
+								int i = s.lastIndexOf('.');
+								if (i > 0 &&  i < s.length() - 1) {
+									ext = s.substring(i+1).toLowerCase();
+								}
+
+								if (ext != null) {
+									if (ext.equals("tif")||ext.equals("tiff")) {
+										return true;
+									} else {
+										return false;
+									}
+								}
+								return false;
+							}
+						});
+						for(int i = 0;i<files.length;i++){
+							if(progress.isCanceled()){
+								this.cancel(true);
+								return null;
+							} else {
+								Double p = (double)i/(double)files.length * 50;
+								progress.setProgress(p.intValue());
+								progress.setNote("Ajout de l'image "+files[i].getName());
+								producer.offerDataSource(files[i], null);
+							}
+						}
+					} else {
+						producer.offerDataSource(selectedFile, null);
+					}
+					// Import the source image into the FileStore by converting it to the World Wind Java cache format.
+					producer.startProduction();
+				}
+				catch (Exception e) {
+					producer.removeProductionState();
+					e.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			protected void done() {	
+				if(this.isCancelled()) {
+					producer.stopProduction();
+					producer.removeProductionState();
+					//suppression des fichiers déjà créés
+					FileManager.deleteFile(new File(fileStoreLocation.getAbsoluteFile()+"/"+selectedFile.getName()));					
+				} else {
+					Logging.logger().info("Import des images terminé.");
+					progress.setProgress(100);
+
+					// Extract the data configuration document from the production results. If production sucessfully completed, the
+					// TiledImageProducer should always contain a document in the production results, but we test the results
+					// anyway.
+					Iterable<?> results = producer.getProductionResults();
+					if (results == null || results.iterator() == null || !results.iterator().hasNext())
+						return;
+
+					Object o = results.iterator().next();
+					if (o == null || !(o instanceof Document))
+						return;
+
+					// Construct a Layer by passing the data configuration document to a LayerFactory.
+					Layer layer = (Layer) BasicFactory.create(AVKey.LAYER_FACTORY, ((Document) o).getDocumentElement());
+					layer.setEnabled(true); 
+					insertBeforePlacenames(layer);
+				}
+			}
+		};
+		
+		producer.addPropertyChangeListener(AVKey.PROGRESS, new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if(progress.isCanceled()){
+					task.cancel(true);
+				} else {
+					progress.setNote("Conversion des images...");
+					progress.setProgress(new Double((Double)evt.getNewValue()*50).intValue() + 50);
+				}
+			}
+		});
+		
+		task.execute();
+	}
+
 }
