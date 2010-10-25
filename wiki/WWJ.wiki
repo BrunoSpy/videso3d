@@ -28,6 +28,8 @@ La barre d'outils permet certaines actions particulières :
 || Effacer toutes les données et réinitialiser la vue || [http://videso3d.googlecode.com/svn/trunk/src/resources/reset_22.png] ||
 || Configurer l'application || [http://videso3d.googlecode.com/svn/trunk/src/resources/configure.png] ||
 || [Analyser Analyser les données Stip/Stpv] || [http://videso3d.googlecode.com/svn/trunk/src/resources/analyze_22.png] ||
+|| Enregistrer la vue 3D || [http://videso3d.googlecode.com/svn/trunk/src/resources/snapshot.png] ||
+|| [Carto Ajouter des images géoréférencées] || [http://videso3d.googlecode.com/svn/trunk/src/resources/add_geotiff_22.png] ||
 || [Trajectoires Ajouter des trajectoires] || [http://videso3d.googlecode.com/svn/trunk/src/resources/plus_traj_22.png] ||
 || [BDD Ajouter/changer une base de données] || [http://videso3d.googlecode.com/svn/trunk/src/resources/database_22.png] ||
 || Ajouter un fond blanc sur la France || Bouton "Fond" ||
