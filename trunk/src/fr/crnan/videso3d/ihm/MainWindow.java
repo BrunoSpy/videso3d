@@ -69,6 +69,7 @@ import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
+import gov.nasa.worldwind.examples.util.ScreenShotAction;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.util.Logging;
@@ -427,6 +428,13 @@ public class MainWindow extends JFrame {
 			}
 		});
 		toolbar.add(analyze);
+		
+		//Screenshot
+		JButton snapshot = new JButton(new ImageIcon(getClass().getResource("/resources/snapshot.png")));
+		snapshot.setToolTipText("Enregistrer la vue 3D.");
+		snapshot.addActionListener(new ScreenShotAction(wwd));
+		toolbar.add(snapshot);
+		
 		toolbar.addSeparator();
 		
 		//ajout de dalles
