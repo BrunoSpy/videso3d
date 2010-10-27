@@ -58,6 +58,7 @@ public class TitleTwoButtons extends JPanel {
 		
 		//second button
 		JRadioButton secondButton = new JRadioButton(secondLabel);
+		secondButton.setSelected(!first);
 		
 		//group
 		ButtonGroup group = new ButtonGroup();
