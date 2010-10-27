@@ -29,17 +29,17 @@ import org.jdom.Element;
  * @author VIDAL Adrien
  *
  */
-public class ContourZone{
+public class Geometrie{
 
 
 	private List<LatLon> locations;
 
 	/**
 	 * 
-	 * @param partie Un élément "partie" dans le fichier xml du SIA.
+	 * @param elt Un élément "partie" dans le fichier xml du SIA.
 	 */
-	public ContourZone(Element partie){
-		String geometrie = partie.getChild("Geometrie").getValue();
+	public Geometrie(Element elt){
+		String geometrie = elt.getChild("Geometrie").getValue();
 		locations = parseLocations(geometrie);
 	}
 
@@ -55,16 +55,14 @@ public class ContourZone{
 		if(locs.length>500){
 			step = locs.length/500;
 			if(!locs[1].isEmpty()){
-				String[] loc = locs[1].split(",");
-				LatLon latLon=LatLon.fromDegrees(Double.parseDouble(loc[0]), Double.parseDouble(loc[1]));
+				LatLon latLon = parseLatLon(locs[1]);
 				locations.add(latLon);
 			}	
 			int nbreducs=0;
 			boolean stepReduced = false; 
 			for (int i=2;i<locs.length;i+=step){
 				if(!locs[i].isEmpty()){
-					String[] loc = locs[i].split(",");
-					LatLon latLon=LatLon.fromDegrees(Double.parseDouble(loc[0]), Double.parseDouble(loc[1]));
+					LatLon latLon = parseLatLon(locs[i]);
 					if(getDistance(latLon, locations.get(locations.size()-1))<5000 || stepReduced || step<2){
 						locations.add(latLon);
 						stepReduced=false;
@@ -77,20 +75,29 @@ public class ContourZone{
 		}else{
 			for (int i=0;i<locs.length;i++){
 				if(!locs[i].isEmpty()){
-					String[] loc = locs[i].split(",");
-					LatLon latLon=LatLon.fromDegrees(Double.parseDouble(loc[0]), Double.parseDouble(loc[1]));
-						locations.add(latLon);
+					LatLon latLon = parseLatLon(locs[i]);
+					locations.add(latLon);
 				}
 			}
 		}
 		return locations;
 	}
 	
+	
+	private LatLon parseLatLon(String latLonText){
+		String[] location = latLonText.split(",");
+		LatLon latLon = null;
+		if(location.length == 2)
+			latLon = LatLon.fromDegrees(Double.parseDouble(location[0]), Double.parseDouble(location[1]));
+		return latLon;
+	}
+	
+	
 	/**
 	 * 
 	 * @return La liste des points du contour de la zone.
 	 */
-	public Iterable<LatLon> getLocations(){
+	public List<LatLon> getLocations(){
 		return locations;
 	}
 

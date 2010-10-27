@@ -367,13 +367,19 @@ public class AirspaceListener implements SelectListener {
 		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){ //ouverture du contexte
 			Object o = event.getTopObject();
 			if(o instanceof Secteur3D){
-				if(((Secteur3D)event.getTopObject()).getType()==Type.Secteur){
+				if(((Secteur3D)o).getType()==Type.Secteur){
 					this.context.showSecteur(((Secteur3D)event.getTopObject()).getName());
 				}else{
 					this.context.showAIPZone((Secteur3D)event.getTopObject());
 				}
 			} else if (o instanceof Route2D){
-				this.context.showRoute(((Route2D)o).getName());
+				String routeName = ((Route2D)o).getName();
+				//Les noms des routes AIP sont suivis d'un tiret et du numéro de séquence du segment
+				if(routeName.contains("-")){
+					this.context.showAIPRoute((Route2D) o);
+				}else{
+					this.context.showRoute(routeName);
+				}
 			} else if (o instanceof Route3D){
 				this.context.showRoute(((Route3D)o).getName());
 			}

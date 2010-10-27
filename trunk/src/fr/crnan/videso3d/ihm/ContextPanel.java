@@ -18,7 +18,9 @@ package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -33,15 +35,20 @@ import javax.swing.JSplitPane;
 
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
+import org.jdom.Element;
 
+import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIP;
+import fr.crnan.videso3d.aip.AIP.Altitude;
 import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.geom.Latitude;
 import fr.crnan.videso3d.geom.Longitude;
 import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.ObjectAnnotation;
+import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Secteur3D.Type;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
@@ -49,6 +56,7 @@ import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
+import gov.nasa.worldwind.geom.Position;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
@@ -659,6 +667,124 @@ public class ContextPanel extends JPanel implements SelectListener {
 		
 		content.add(infos);
 	}
+	
+	
+	public void showAIPRoute(Route2D segment) {
+		AIP aip = aipController.getAIP();
+		String route = segment.getName().split("-")[0].trim();
+		String sequence = segment.getName().split("-")[1].trim();
+		fr.crnan.videso3d.graphics.Route.Type type = segment.getType();
+		String pkRoute = null;
+		String typeRoute = aip.RouteType2AIPType(route, type);
+		StringBuilder ACCTraverses = new StringBuilder();
+		try {
+			pkRoute = aipController.getRouteIDFromSegmentName(route, typeRoute);
+			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nomACC from ACCTraverses where routes_pk = ?");
+			st.setString(1, pkRoute);
+			ResultSet rs = st.executeQuery();
+			while(rs.next()){
+				ACCTraverses.append(rs.getString(1)+" ");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		content.removeAll();
+		titleAreaPanel.setTitle("Route "+route+" - Segment "+sequence);
+		List<Element> segmentsXML = aip.findElementsByChildId(aip.getDocumentRoot().getChild("SegmentS"), "Route", pkRoute);
+		Element monSegmentXML = null;
+		for(Element segmentXML : segmentsXML){
+			if(segmentXML.getChildText("Sequence").equals(sequence)){
+				monSegmentXML = segmentXML;
+			}
+		}		
+		
+		Element maRoute = aip.findElement(aip.getDocumentRoot().getChild("RouteS"), pkRoute);
+		
+		JXTaskPane infosRoute = new JXTaskPane();
+		infosRoute.setTitle("Informations sur la route");
+		String CRType = maRoute.getChildText("TypeCompteRendu");
+		String rmqRoute = maRoute.getChildText("Remarque");
+		infosRoute.add(new JLabel("<html><b>Type de la route</b> : " + typeRoute+"</html>"));
+		if(CRType != null){
+			infosRoute.add(new JLabel("<html><b>Compte-rendu</b> : " + CRType+"</html>"));
+		}
+		infosRoute.add(new JLabel("<html><b>ACC traversés</b> : " + ACCTraverses+"</html>"));
+		if(rmqRoute != null){
+			infosRoute.add(new JLabel("<html><b>Remarque</b> : " + rmqRoute+"</html>"));
+		}
+		
+		JXTaskPane infosSegment = new JXTaskPane();
+		infosSegment.setTitle("Informations sur le segment");
+		String CR = aip.getChildText(monSegmentXML, "CompteRendu");
+		String circul = aip.getChildText(monSegmentXML, "Circulation");
+		String rnp = aip.getChildText(monSegmentXML, "CodeRnp");
+		String dist = aip.getChildText(monSegmentXML, "Distance");
+		String routeM = aip.getChildText(monSegmentXML, "RouteMag");
+		String ACC = aip.getChildText(monSegmentXML, "Acc");
+		String rmq = aip.getChildText(monSegmentXML, "Remarque");
+		Couple<Altitude, Altitude> levels = aip.getLevels(monSegmentXML);
+		
+		if(CR != null){
+			infosSegment.add(new JLabel("<html><b>Compte-rendu</b> : " + CR+"</html>"));
+		}
+		if(circul != null){
+			infosSegment.add(new JLabel("<html><b>Circulation</b> : " + circul+"</html>"));
+		}
+		if(rnp != null){
+			infosSegment.add(new JLabel("<html><b>Code Rnp</b> : " + rnp+"</html>"));
+		}
+		infosSegment.add(new JLabel("<html><b>Plafond</b> : " + levels.getSecond().getFullText()+"</html>"));
+		infosSegment.add(new JLabel("<html><b>Plancher</b> : " + levels.getFirst().getFullText()+"</html>"));
+		if(dist != null){
+			infosSegment.add(new JLabel("<html><b>Longueur du segment</b> : " + dist+"nm</html>"));
+		}
+		if(routeM != null){
+			infosSegment.add(new JLabel("<html><b>Route magnétique</b> : " + routeM+"</html>"));
+		}
+		if(ACC != null){
+			infosSegment.add(new JLabel("<html><b>ACC</b> : " + ACC+"</html>"));
+		}
+		if(rmq != null){
+			infosSegment.add(new JLabel("<html><b>Remarque</b> : " + rmq+"</html>"));
+		}
+		final Route2D segmentPrecedent = aipController.getPrevious(route, sequence, typeRoute); 
+		final Route2D segmentSuivant = aipController.getNext(route, sequence, typeRoute);
+		if(segmentPrecedent != null){
+			AbstractAction previous = new AbstractAction("<html><font color=\"blue\">&lt;&lt; Segment précédent</font></html>"){
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					displayAnnotationAndGoTo(segmentPrecedent);
+					showAIPRoute(segmentPrecedent);
+				}
+
+			};
+			infosSegment.add(previous);
+		}
+		if(segmentSuivant != null){
+			AbstractAction next = new AbstractAction("<html><font color=\"blue\">Segment suivant &gt;&gt;</font></html>"){
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					displayAnnotationAndGoTo(segmentSuivant);
+					showAIPRoute(segmentSuivant);
+				}
+
+			};
+			infosSegment.add(next);
+		}
+		content.add(infosRoute);
+		content.add(infosSegment);
+	}
+	
+	private void displayAnnotationAndGoTo(Route2D segment){
+		Position annotationPosition = new Position(segment.getLocations().iterator().next(), 0);
+		wwd.getAnnotationLayer().addAnnotation(((ObjectAnnotation)segment).getAnnotation(annotationPosition));
+		wwd.getView().goTo(annotationPosition, wwd.getView().getEyePosition().elevation);
+		wwd.redraw();
+	}
+	
+	
+	
 
 	public void setWWD(VidesoGLCanvas wwd) {
 		this.wwd = wwd;
@@ -673,5 +799,6 @@ public class ContextPanel extends JPanel implements SelectListener {
 	public void setAIPController(AIPController aip){
 		this.aipController = aip;
 	}
+
 	
 }

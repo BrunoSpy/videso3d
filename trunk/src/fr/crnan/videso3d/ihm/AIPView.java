@@ -48,11 +48,15 @@ public class AIPView extends FilteredMultiTreeTableView {
 		try {
 			if(DatabaseManager.getCurrentAIP() != null) { //si pas de bdd, ne pas créer la vue
 				
-				DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
-				this.fillRootNode(root);
-				FilteredTreeTableModel model = new FilteredTreeTableModel(root);
+				DefaultMutableTreeNode ZonesRoot = new DefaultMutableTreeNode("root");
+				this.fillZonesRootNode(ZonesRoot);
+				FilteredTreeTableModel ZonesModel = new FilteredTreeTableModel(ZonesRoot);
+				this.addTableTree(ZonesModel, "Zones");
 				
-				this.addTableTree(model, "Zones");
+				DefaultMutableTreeNode RoutesRoot = new DefaultMutableTreeNode("root");
+				this.fillRoutesRootNode(RoutesRoot);
+				FilteredTreeTableModel RoutesModel = new FilteredTreeTableModel(RoutesRoot);
+				this.addTableTree(RoutesModel, "Routes");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -66,7 +70,7 @@ public class AIPView extends FilteredMultiTreeTableView {
 		return controller;
 	}
 	
-	private void fillRootNode(DefaultMutableTreeNode root){
+	private void fillZonesRootNode(DefaultMutableTreeNode root){
 
 		try {
 			Statement st = DatabaseManager.getCurrentAIP();
@@ -106,4 +110,29 @@ public class AIPView extends FilteredMultiTreeTableView {
 		}
 	}
 
+	
+	private void fillRoutesRootNode(DefaultMutableTreeNode root){
+		try {
+			Statement st = DatabaseManager.getCurrentAIP();
+			ResultSet rs = st.executeQuery("select distinct type from routes order by type");
+			LinkedList<String> types = new LinkedList<String>();
+			while(rs.next()){
+				types.add(rs.getString(1));
+			}
+			for(String t : types){
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(t, false));
+				root.add(node);
+				rs = st.executeQuery("select nom from routes where type = '"+t+"' order by nom");
+				while(rs.next()){
+					node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+				}
+			}
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 }
