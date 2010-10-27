@@ -17,6 +17,7 @@
 package fr.crnan.videso3d.ihm.components;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -126,7 +127,10 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 		treeTable.setTableHeader(null);
 		treeTable.setRootVisible(false);
 		treeTable.setTreeTableModel(model);
-		
+		treeTable.setOpaque(false);
+		treeTable.setBackground(new Color(214, 217, 223));
+		treeTable.getColumnExt(1).setMaxWidth(10);
+				
 		//Ajout du filtre
 		filtre.addActionListener(new ActionListener() {
 
@@ -140,7 +144,9 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 			}
 		});	
 		
-		tablePanel.add(new JScrollPane(treeTable));
+		JScrollPane scrollPane = new JScrollPane(treeTable);
+		scrollPane.setBorder(null);
+		tablePanel.add(scrollPane);
 		container.add(tablePanel);
 		
 		

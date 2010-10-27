@@ -17,6 +17,7 @@
 package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -27,6 +28,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -37,6 +40,8 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -51,6 +56,8 @@ import javax.swing.SwingWorker;
 import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
@@ -65,6 +72,7 @@ import fr.crnan.videso3d.formats.opas.OPASFileFilter;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
+import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
@@ -639,12 +647,11 @@ public class MainWindow extends JFrame {
 			}
 		});
 		toolbar.add(slider);		
-
-		//recherche avec autocomplétion
 		toolbar.addSeparator();
-		toolbar.add(new JLabel(new ImageIcon(getClass().getResource("/resources/zoom-original.png"))));
-
-
+		
+		
+		//recherche avec autocomplétion
+		
 		LinkedList<String> results = new LinkedList<String>();
 		results.add("");//utile pour supprimer l'élément de la vue
 		try {
@@ -719,6 +726,59 @@ public class MainWindow extends JFrame {
 		
 		toolbar.add(search);
 
+		toolbar.addSeparator();
+	
+		JButton aide = new JButton(new ImageIcon(getClass().getResource("/resources/bullet_about_22.png")));
+		aide.setToolTipText("A propos...");
+		aide.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JDialog help = new JDialog();
+				help.setTitle("A propos ...");
+				help.setModal(true);
+				help.add(new TitledPanel("ViDeso 3D "+Videso3D.VERSION), BorderLayout.NORTH);
+				JEditorPane text = new JEditorPane("text/html", "<p align=center><b>Auteurs</b><br />" +
+						"Bruno Spyckerelle<br />" +
+						"Adrien Vidal<br />" +
+						"Mickael Papail<br />" +
+						"<br />" +
+						"<b>Liens</b><br />" +
+				"<a href=\"http://code.google.com/p/videso3d/wiki/Home?tm=6\">Aide en ligne</a><br />" +
+				"<a href=\"http://code.google.com/p/videso3d/issues/list\">Signaler un bug</a><br /></p>");
+				text.setEditable(false);
+				text.setOpaque(false);
+				text.addHyperlinkListener(new HyperlinkListener() {
+
+					@Override
+					public void hyperlinkUpdate(HyperlinkEvent evt) {
+						if(evt.getEventType() == HyperlinkEvent.EventType.ACTIVATED && Desktop.isDesktopSupported()){
+							final Desktop dt = Desktop.getDesktop();
+							if ( dt.isSupported( Desktop.Action.BROWSE ) ){	
+								try {
+									dt.browse( evt.getURL().toURI() );
+								} catch (IOException e) {
+									e.printStackTrace();
+								} catch (URISyntaxException e) {
+									e.printStackTrace();
+								}
+							}
+						}
+					}
+				});
+				//text.setHorizontalAlignment(JLabel.CENTER);
+				help.add(text);
+				help.setPreferredSize(new Dimension(400, 240));
+				help.pack();
+				Toolkit tk = help.getToolkit();
+				int x = (tk.getScreenSize().width - help.getWidth())/2;
+				int y = (tk.getScreenSize().height - help.getHeight())/2;
+				help.setLocation(x, y);
+				help.setVisible(true);
+			}
+		});
+		
+		toolbar.add(aide);
 		return toolbar;
 	}
 
