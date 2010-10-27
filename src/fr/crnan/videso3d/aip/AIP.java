@@ -48,7 +48,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
  */
 public class AIP extends FileParser{
 	
-	private final Integer numberFiles = 17;
+	private final Integer numberFiles = 18;
 	
 	/**
 	 * Le nom de la base de données.
@@ -70,7 +70,8 @@ public class AIP extends FileParser{
 	 */
 	private Document document=null;
 	
-	
+	//TODO pour diminuer la consommation de mémoire, on peut faire une requête sur la BDD au lieu de maintenir ces listes.
+	// Mais bien vérifier le fonctionnement de showObject avant de supprimer les listes (surtout pour les CTL).
 	private List<Couple<Integer,String>> TSAs;
 	private List<Couple<Integer,String>> SIVs;
 	private List<Couple<Integer,String>> CTRs;
@@ -92,7 +93,8 @@ public class AIP extends FileParser{
 	
 	public final static int Partie=0, TSA = 1, SIV = 2, CTR = 3, TMA = 4, R = 5, 
 							D = 6, FIR = 7, UIR = 8, LTA = 9, UTA = 10, CTA = 11, 
-							CTL = 12, Pje = 13, Aer = 14, Vol=15, Bal = 16, TrPla = 17;
+							CTL = 12, Pje = 13, Aer = 14, Vol=15, Bal = 16, TrPla = 17,
+							AWY = 20, PDR = 21, TAC = 23;
 	
 
 
@@ -142,7 +144,7 @@ public class AIP extends FileParser{
 			//TODO prendre en compte la possibilité qu'il n'y ait pas de bdd AIP
 			Statement aipDB = DatabaseManager.getCurrentAIP();
 			if(aipDB != null){
-				//on récupère toutes les TSA de la bdd.
+				//on récupère tous les volumes
 				ResultSet rSet = aipDB.executeQuery("select * from volumes");
 				while(rSet.next()){
 					Couple<Integer, String> id_name = new Couple<Integer, String>(rSet.getInt(2),rSet.getString(4));
@@ -188,6 +190,13 @@ public class AIP extends FileParser{
 		return this.numberFiles();
 	}
 	
+	/**
+	 * 
+	 * @return L'élément Situation, qui contient tous les objets qui nous intéressent.
+	 */
+	public Element getDocumentRoot(){
+		return document.getRootElement().getChild("Situation");
+	}
 	
 	
 	/**
@@ -268,16 +277,109 @@ public class AIP extends FileParser{
 		this.setFile("Treuils planeurs");
 		this.setProgress(16);
 		this.getZones(racineVolumes,"TrPla");
+		this.setFile("Routes");
 		this.setProgress(17);
+		this.getRoutes();
+		this.setProgress(18);
 		
 	}
+	
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	private void getRoutes(){
+		Element racineRoutes = document.getRootElement().getChild("Situation").getChild("RouteS");
+		List<Element> routes = racineRoutes.getChildren();
+		for(Element route : routes){
+			insertRoute(route);
+		}
+	}
+	
+	private void insertRoute(Element route){
+		String pkRoute = route.getAttributeValue("pk");
+		int routeID = Integer.parseInt(pkRoute);
+		String routeName = route.getChildText("Prefixe")+" "+route.getChildText("Numero");
+		String territoireID = route.getChild("Territoire").getAttributeValue("pk");
+		if( ! territoireID.equals("100")){
+			routeName += " - "+getTerritoireName(territoireID); 
+		}
+		PreparedStatement ps;
+		try {
+			ps = this.conn.prepareStatement("insert into routes (pk,type,nom) VALUES (?, ?, ?)");
+			ps.setInt(1, routeID);
+			ps.setString(2, route.getChildText("RouteType"));
+			ps.setString(3, routeName);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Element racineSegments = document.getRootElement().getChild("Situation").getChild("SegmentS");
+		List<Element> segments = findElementsByChildId(racineSegments, "Route", pkRoute);
+		try {
+			for(Element segment : segments){
+				int segmentID = Integer.parseInt(segment.getAttributeValue("pk"));
+				int sequence = Integer.parseInt(segment.getChildText("Sequence"));
+				ps = this.conn.prepareStatement("insert into segments (pk, pkRoute, sequence) VALUES (?, ?, ?)");
+				ps.setInt(1, segmentID);
+				ps.setInt(2, routeID);
+				ps.setInt(3, sequence);
+				ps.executeUpdate();	
+
+				//Insertion des centres traversés par la route : pour chaque segment, on ajoute le centre à la liste des centres traversés
+				String nomACC = segment.getChildText("Acc");
+				if(nomACC != null){
+					if(nomACC.contains(" ")){
+						String[] nomsACCs = nomACC.split(" ");
+						insertACCs(nomsACCs, pkRoute);
+					}else if(nomACC.contains("#")){
+						String[] nomsACCs = nomACC.split("#");
+						insertACCs(nomsACCs, pkRoute);
+					}else{
+						insertACC(nomACC, pkRoute);
+						
+					}
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	private void insertACCs(String[] nomsACCs, String pkRoute) throws SQLException{
+		for (String nom : nomsACCs){
+			insertACC(nom,pkRoute);
+		}
+	}
+
+	private void insertACC(String nomACC, String pkRoute) throws SQLException{
+		boolean insertACC = true;
+		PreparedStatement ps = this.conn.prepareStatement("select * from ACCTraverses where routes_pk = ?");
+		ps.setString(1, pkRoute);
+		ResultSet rs = ps.executeQuery();
+		while(rs.next()){
+			if(rs.getString(2).equals(nomACC)){
+				insertACC = false;
+				break;
+			}
+		}
+		if(insertACC){
+			ps = this.conn.prepareStatement("insert into ACCTraverses (routes_pk, nomACC) VALUES (?, ?)");
+			ps.setString(1, pkRoute);
+			ps.setString(2, nomACC);	
+			ps.executeUpdate();	
+		}
+	}
+
+	
 
 	/**
 	 * Cherche tous les éléments Volume qui sont des TSA, et insère leur nom dans la base de données
 	 */
 	private void getTSAs(Element racine) {
-		List<Element> cbaList = findElements(racine,"lk", "CBA");
-		List<Element> tsaList = findElements(racine, "lk","TSA");
+		List<Element> cbaList = findVolumes(racine,"lk", "CBA");
+		List<Element> tsaList = findVolumes(racine, "lk","TSA");
 		Iterator<Element> itCBA = cbaList.iterator();
 		Iterator<Element> itTSA = tsaList.iterator();
 		try {
@@ -300,7 +402,7 @@ public class AIP extends FileParser{
 	 * @param type
 	 */
 	private void getZones(Element racine, String type){
-		List<Element> zoneList = findElements(racine, "lk",type);
+		List<Element> zoneList = findVolumes(racine, "lk",type);
 		Iterator<Element> it1 = zoneList.iterator();
 		Iterator<Element> it2 = zoneList.iterator();
 		HashSet<String> sameNames = new HashSet<String>();
@@ -498,6 +600,12 @@ public class AIP extends FileParser{
 			return "Bal";
 		case TrPla:
 			return "TrPla";
+		case AWY :
+			return "AWY";
+		case PDR :
+			return "PDR";
+		case TAC :
+			return "TAC";
 		default:
 			return "";
 		}
@@ -555,8 +663,26 @@ public class AIP extends FileParser{
 		if (type.equals("TrPla")){
 			return TrPla;
 		}
+		if(type.equals("AWY")){
+			return AWY;
+		}
+		if(type.equals("PDR")){
+			return PDR;
+		}
+		if(type.equals("TAC")){
+			return TAC;
+		}
 		return -1;
 	}
+	
+	public String RouteType2AIPType(String routeName, fr.crnan.videso3d.graphics.Route.Type type){
+		if(routeName.startsWith("T")&& routeName.charAt(1)!=' '){
+			return "TAC";
+		}else{
+			return type.equals(fr.crnan.videso3d.graphics.Route.Type.FIR) ? "AWY" : "PDR";
+		}
+	}
+
 	
 	
 
@@ -575,16 +701,17 @@ public class AIP extends FileParser{
 	
 	
 	/**
-	 * Liste tous les éléments dont le champ fieldParam <b>commence</b> par la chaîne de caractères identityValue, parmi les fils de l'élément racine.
+	 * Liste tous les éléments dont le champ fieldParam <b>commence</b> par la chaîne de caractères "value", parmi les fils de l'élément racine.
+	 * <i>A n'utiliser que pour chercher des volumes par leur nom.</i>
 	 * @param root Le noeud contenant les éléments parmi lesquels on effectue la recherche
 	 * @param fieldParam Le champ sur lequel porte la recherche
-	 * @param identityValue La valeur du champ fieldParam
+	 * @param value La valeur du champ fieldParam
 	 * @return la liste des éléments répondant au critère.
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Element> findElements(Element root,String fieldParam,String identityValue){
+	public List<Element> findVolumes(Element root,String fieldParam,String value){
 		final String field = fieldParam;
-		final String identity = identityValue;
+		final String identity = value;
 		Filter f = new Filter(){
 			@Override
 			public boolean matches(Object o) {
@@ -621,7 +748,7 @@ public class AIP extends FileParser{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private Element findElement(Element racine, String idNumber){
+	public Element findElement(Element racine, String idNumber){
 		final String id = idNumber;
 		Filter f = new Filter(){
 			@Override
@@ -638,32 +765,65 @@ public class AIP extends FileParser{
 	}
 	
 	
-	/**
-	 * Renvoie l'élément de type Partie identifié par id.
-	 * @param id L'identifiant de la Partie (champ "pk").
-	 * @return La partie recherchée.
-	 */
-	public Element getPartie(String id){
-		return findElement(document.getRootElement().getChild("Situation").getChild("PartieS"), id);
+	
+	@SuppressWarnings("unchecked")
+	public List<Element> findElementsByChildId(Element root,String childParam,String value){
+		final String child = childParam;
+		final String childID = value;
+		Filter f = new Filter(){
+			@Override
+			public boolean matches(Object o) {
+				if(!(o instanceof Element)){return false;}
+				Element element = (Element)o;
+				String pkChild = element.getChild(child).getAttributeValue("pk");
+				if (pkChild.equals(childID)){
+					return true;
+				}
+				return false;
+			}
+		
+		};
+		return root.getContent(f);	
 	}
+	
 	
 	
 	public static String getID(int type, String name){
 		String pk=null;
-		String typeString=getTypeString(type);
-		try {
-			PreparedStatement st = DatabaseManager.prepareStatement(Type.AIP, "select * from volumes where type = ? AND nom = ?");
-			st.setString(1, typeString);
-			st.setString(2, name);
-			ResultSet rs = st.executeQuery();
-			if(rs.next()){
-				pk=rs.getString(2);
+		switch(type){
+		
+		case AIP.AWY :
+		case AIP.PDR :
+		case AIP.TAC :
+			try {
+				PreparedStatement st = DatabaseManager.prepareStatement(Type.AIP, "select pk from routes where nom = ?");
+				st.setString(1, name);
+				ResultSet rs = st.executeQuery();
+				if(rs.next()){
+					pk=rs.getString(1);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+			break;
+			
+		default :
+			String typeString=getTypeString(type);
+			try {
+				PreparedStatement st = DatabaseManager.prepareStatement(Type.AIP, "select * from volumes where type = ? AND nom = ?");
+				st.setString(1, typeString);
+				st.setString(2, name);
+				ResultSet rs = st.executeQuery();
+				if(rs.next()){
+					pk=rs.getString(2);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		return pk;
 	}
+	
 	
 	
 	public String getZoneAttributeValue(String zoneID, String attribute){
@@ -671,9 +831,26 @@ public class AIP extends FileParser{
 		return zone != null ? zone.getChildText(attribute) : null;
 	}
 
+	/**
+	 * Même chose que org.jdom.Element.getChildText mais renvoie null si l'enfant n'existe pas au lieu de lever une exception.
+	 * @param e
+	 * @param childName
+	 * @return
+	 */
+	public String getChildText(Element e, String childName){
+		Element child = e.getChild(childName);
+		return child != null ? child.getText() : null;
+	}
 	
 
 		
+	
+	
+	
+	public String getTerritoireName(String territoireID){
+		Element territoire = findElement(document.getRootElement().getChild("Situation").getChild("TerritoireS"), territoireID);
+		return territoire.getChildText("Nom");
+	}
 	
 	
 	

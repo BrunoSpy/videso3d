@@ -833,6 +833,19 @@ public final class DatabaseManager {
 				"type varchar(8),"+
 				"nom varchar(64)"+
 		")");
+		st.executeUpdate("create table routes (pk integer primary key," +
+				"type varchar(3),"+
+				"nom varchar(10)"+
+		")");
+		st.executeUpdate("create table segments (pk integer primary key," +
+				"pkRoute integer,"+
+				"sequence integer"+
+		")");
+		st.executeUpdate("create table ACCTraverses (routes_pk integer,"+
+				"nomACC varchar(10),"+
+				"PRIMARY KEY (routes_pk, nomACC),"+
+				"FOREIGN KEY (routes_pk) references routes(pk)"+
+		")");
 		st.close();
 		
 		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");

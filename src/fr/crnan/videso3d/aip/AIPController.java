@@ -17,12 +17,16 @@
 package fr.crnan.videso3d.aip;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.jdom.Element;
 
@@ -33,12 +37,18 @@ import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIP.Altitude;
+import fr.crnan.videso3d.graphics.Route;
+import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Secteur3D.Type;
+import fr.crnan.videso3d.layers.Routes2DLayer;
+import fr.crnan.videso3d.layers.Routes3DLayer;
 import gov.nasa.worldwind.avlist.AVKey;
+import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.util.Logging;
@@ -52,7 +62,14 @@ public class AIPController implements VidesoController {
 	{zonesLayer.setName("Zones");
 	zonesLayer.setEnableAntialiasing(true);}	
 	
-	private HashMap<String, Secteur3D> zones;	
+	/**
+	 * Layer contenant les routes
+	 */
+	private Routes2DLayer routes2D;
+	private Routes3DLayer routes3D;
+
+	
+	private HashMap<String, Secteur3D> zones;
 	
 	
 	
@@ -76,63 +93,75 @@ public class AIPController implements VidesoController {
 		try {
 			if(DatabaseManager.getCurrentAIP() != null) {
 				//création des nouveaux objets
-				this.toggleLayer(zonesLayer, true);
 				zones = new HashMap<String, Secteur3D>();				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		//Layers pour les routes
+		if(routes3D != null) {
+			routes3D.removeAllAirspaces();
+		} else {
+			routes3D = new Routes3DLayer("Routes AIP 3D");
+			this.toggleLayer(routes3D, false); //affichage en 2D par défaut
+		}
+		if(routes2D != null){
+			routes2D.removeAllRenderables();
+		} else {
+			routes2D = new Routes2DLayer("Routes AIP 2D");
+			this.toggleLayer(routes2D, true);
+		}
 		this.wwd.redraw();
 	}
 
 	
+	
 	public AirspaceLayer getZonesLayer(){
 		return zonesLayer;
 	}
-	
-	
-	
 	@Override
 	public void unHighlight(String name) {
 		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void addLayer(String name, Layer layer) {
 		// TODO Auto-generated method stub
-		
 	}
-
 	@Override
 	public void removeLayer(String name, Layer layer) {
 		// TODO Auto-generated method stub
 	}
-
 	@Override
 	public void removeAllLayers() {
 		// TODO Auto-generated method stub
-		
 	}
-
+	
+	
+	
 	@Override
 	public void toggleLayer(Layer layer, Boolean state) {
-		this.wwd.toggleLayer(zonesLayer, state);
-		
+		this.wwd.toggleLayer(layer, state);
 	}
 
+	
 	@Override
 	public void showObject(int type, String name) {
-		/*
-		 * si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
-		 * donc on va chercher les différents morceaux avec getCTLSecteurs et on les ajoute tous.
-		 */
-		if(type == AIP.CTL){
+		switch(type){
+		case AIP.AWY :
+		case AIP.PDR :
+		case AIP.TAC :
+			this.addRoute(name,type);
+			break;
+		case AIP.CTL :
+			// si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
+			// donc on va chercher les différents morceaux avec getCTLSecteurs et on les ajoute tous.
 			for(String nomPartieSecteur : getCTLSecteurs(name)){
 				if(!zones.containsKey(nomPartieSecteur))
 					this.addZone(type, nomPartieSecteur);
 			}
-		}else{
+			break;
+		default :
 			if(!zones.containsKey(name))
 				this.addZone(type,name);
 		}
@@ -140,19 +169,24 @@ public class AIPController implements VidesoController {
 
 	@Override
 	public void hideObject(int type, String name) {
-		/*
-		 * si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
-		 * donc on va chercher les différents morceaux avec getCTLSecteurs et on les enlève tous.
-		 */
-		if(type == AIP.CTL){
+		switch(type){
+		case AIP.AWY :
+		case AIP.PDR :
+		case AIP.TAC :
+			this.removeRoute(name, type);
+			break;
+			// si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
+			// donc on va chercher les différents morceaux avec getCTLSecteurs et on les enlève tous.
+		case AIP.CTL:
 			for(String nomPartieSecteur : getCTLSecteurs(name)){
 				this.removeZone(type,nomPartieSecteur);
 			}
-		}else{
+			break;
+		default :
 			this.removeZone(type,name);
 		}
 	}
-	
+
 	
 	public int string2type(String type){
 		return AIP.string2type(type);
@@ -270,7 +304,7 @@ public class AIPController implements VidesoController {
 		zone.setAnnotation("<p><b>"+name+"</b></p>"
 				+"<p>Plafond : "+niveaux.getSecond().getFullText()
 				+"<br />Plancher : "+niveaux.getFirst().getFullText()+"</p>");
-		ContourZone contour = new ContourZone(aip.getPartie(maZone.getChild("Partie").getAttributeValue("pk")));
+		Geometrie contour = new Geometrie(aip.findElement(aip.getDocumentRoot().getChild("PartieS"),maZone.getChild("Partie").getAttributeValue("pk")));
 		zone.setLocations(contour.getLocations());
 		String upperAltitudeRef, lowerAltitudeRef = null;
 
@@ -316,6 +350,65 @@ public class AIPController implements VidesoController {
 		}
 		this.wwd.redraw();
 	}
+	
+	
+
+	/**
+	 * Ajoute une route identifiée par son nom et son type à la vue 3D. Si les points d'une route ne sont pas définis dans le fichier SIA,
+	 * on représente la route seulement par un point situé à 48°N, 0°E .
+	 * @param routeName Le nom de la route à afficher.
+	 * @param type 
+	 */
+	public void addRoute(String routeName, int type){
+		String routeID = AIP.getID(type, routeName);
+		fr.crnan.videso3d.graphics.Route.Type RouteType;
+		if(type == AIP.PDR){
+			RouteType = fr.crnan.videso3d.graphics.Route.Type.UIR;
+		}else{
+			RouteType = fr.crnan.videso3d.graphics.Route.Type.FIR;
+		}
+		try {
+			Statement st = DatabaseManager.getCurrentAIP();
+			ResultSet segments = st.executeQuery("select pk from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
+			while(segments.next()){
+				Element segment = aip.findElement(aip.getDocumentRoot().getChild("SegmentS"), segments.getString(1));
+				String segmentName = buildSegmentName(routeName, segment.getChildText("Sequence"));
+				if(routes2D.getRoute(segmentName)==null){
+					LinkedList<LatLon> loc = new LinkedList<LatLon>();
+					Route2D segment2D = new Route2D(segmentName, RouteType);
+					Geometrie geometrieSegment = new Geometrie(segment);
+					loc.addAll(geometrieSegment.getLocations());
+					if(loc.get(0)==null){
+						loc.clear();
+						loc.add(LatLon.fromDegrees(48, 0));
+					}
+					segment2D.setLocations(loc);
+					segment2D.setAnnotation("Route "+segmentName);
+					routes2D.addRoute(segment2D, segmentName);
+				}
+				routes2D.displayRoute(segmentName);
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private void removeRoute(String routeName, int type){
+		String routeID = AIP.getID(type, routeName);
+		try {
+			Statement st = DatabaseManager.getCurrentAIP();
+			ResultSet rs = st.executeQuery("select sequence from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
+			while(rs.next()){
+				routes2D.hideRoute(buildSegmentName(routeName, rs.getString(1)));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
 
 	@Override
 	public void set2D(Boolean flat) {		
@@ -325,6 +418,8 @@ public class AIPController implements VidesoController {
 	public void reset() {
 		this.zones.clear();
 		this.zonesLayer.removeAllAirspaces();
+		this.routes2D.removeAllRenderables();
+		this.wwd.getAnnotationLayer().removeAllAnnotations();
 	}
 
 	
@@ -343,11 +438,53 @@ public class AIPController implements VidesoController {
 		if(name.startsWith(AIP.CTL+" ")){
 			//on passe en paramètre name.substring(3) car le nom qu'on a récupéré est précédé du chiffre correspondant au type de zone
 			highlightCTL(getCTLSecteurs(name.substring(3)));
+			//Si le nom commence par un 2, c'est une route
+		}else if(name.startsWith("2") && name.charAt(1)!=' '){
+			highlightRoute(getSegments(name.substring(3)));
 		}else{
 			Secteur3D zone = zones.get(name);
 			this.centerView(zone);
 		}
 	}
+	
+
+	
+	
+	/**
+	 * Centre la vue sur une route ou un secteur3D, avec le niveau de zoom approprié, et affiche l'annotation associée.
+	 * @param zone
+	 * @return La position sur laquelle la vue est centrée.
+	 */
+	public Position centerView(Object object){
+		wwd.getView().setValue(AVKey.ELEVATION, 1e11);
+		double[] eyePosition = this.wwd.computeBestEyePosition(object);
+		Position centerPosition = Position.fromDegrees(eyePosition[0], eyePosition[1]);
+		this.wwd.getView().goTo(centerPosition, eyePosition[2]);
+		showAnnotation(object, centerPosition);
+		return centerPosition;
+	}
+	
+	/**
+	 * Affiche une annotation pour l'objet obj à la position pos 
+	 * (pour l'instant, seuls les secteurs3D et les routes2D sont pris en charge).
+	 * @param obj
+	 * @param pos
+	 */
+	@SuppressWarnings("unchecked")
+	public void showAnnotation(Object obj, Position pos){
+		if(obj instanceof Secteur3D){
+			this.wwd.getAnnotationLayer().addAnnotation(((Secteur3D)obj).getAnnotation(pos));
+		}else if(obj instanceof List){
+			if(((List<?>)obj).get(0) instanceof Route){
+				String routeName = ((List<? extends Route>)obj).get(0).getName().split("-")[0].trim();
+				GlobeAnnotation routeAnnotation = new GlobeAnnotation(routeName, pos);
+				routeAnnotation.getAttributes().setLeaderGapWidth(10);
+				routeAnnotation.getAttributes().setDrawOffset(new Point(20,20));
+				this.wwd.getAnnotationLayer().addAnnotation(routeAnnotation);
+			}
+		}
+	}
+	
 	
 	/**
 	 * Centre la vue sur le premier morceau du secteur de contrôle, et affiche les annotations de tous les morceaux.
@@ -362,7 +499,8 @@ public class AIPController implements VidesoController {
 			}
 		}
 	}
-	
+
+
 	/**
 	 * Renvoie les noms des morceaux de secteur correspondant au secteur name.
 	 * @param name
@@ -372,7 +510,7 @@ public class AIPController implements VidesoController {
 		ArrayList<String> names = new ArrayList<String>();
 		try{
 			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet rs = st.executeQuery("select nom from volumes where type ='CTL' and nom LIKE '"+name+"%'");
+			ResultSet rs = st.executeQuery("select nom from volumes where type ='CTL' and (nom LIKE '"+name+" %' OR nom ='"+name+"')");
 			while(rs.next()){
 				names.add(rs.getString(1));
 			}
@@ -384,18 +522,153 @@ public class AIPController implements VidesoController {
 	
 	
 	/**
-	 * Centre la vue sur un secteur3D, avec le niveau de zoom approprié, et affiche l'annotation associée au secteur.
-	 * @param zone
-	 * @return La position sur laquelle la vue est centrée.
+	 * Centre la vue sur la route définie par les segments passés en paramètre.
+	 * @param segmentsNames Les noms des segments de la route
 	 */
-	public Position centerView(Secteur3D zone){
-		wwd.getView().setValue(AVKey.ELEVATION, 1e11);
-		double[] eyePosition = this.wwd.computeBestEyePosition(zone);
-		Position centerPosition = Position.fromDegrees(eyePosition[0], eyePosition[1]);
-		this.wwd.getView().goTo(centerPosition, eyePosition[2]);
-		this.wwd.getAnnotationLayer().addAnnotation(zone.getAnnotation(centerPosition));
-		return centerPosition;
+	private void highlightRoute(ArrayList<String> segmentsNames){
+		ArrayList<Route2D> segments2D = new ArrayList<Route2D>();
+		for(String s : segmentsNames){
+			segments2D.add((Route2D) routes2D.getRoute(s));
+		}
+		centerView(segments2D);
 	}
 	
+	
+	/**
+	 * 
+	 * @param routeName 
+	 * @return
+	 */
+	private ArrayList<String> getSegments(String routeName){
+		ArrayList<String> segmentsNames = new ArrayList<String>();
+		String routeID = AIP.getID(AIP.AWY, routeName);
+		try{
+			Statement st = DatabaseManager.getCurrentAIP();
+			ResultSet rs = st.executeQuery("select sequence from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
+			while(rs.next()){				
+				segmentsNames.add(buildSegmentName(routeName, rs.getString(1)));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return segmentsNames;
+	}
 
+	private String buildSegmentName(String routeName, String sequence){
+		return routeName.split("-")[0].trim().concat(" - ").concat(sequence);
+	}
+	
+	
+	public String getRouteIDFromSegmentName(String segmentName, String typeRoute) throws SQLException{
+		String route = segmentName.split("-")[0].trim();
+		
+		String pkRoute = null;
+		
+		PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from routes where nom = ? AND type = ?");
+		st.setString(1, route);
+		st.setString(2, typeRoute);
+		ResultSet rs = st.executeQuery();
+		if(rs.next()){
+			pkRoute=rs.getString(1);
+		}else{
+			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from routes where nom LIKE ? AND type = ?");
+			st.setString(1, route+" -%");
+			st.setString(2, typeRoute);
+			rs = st.executeQuery();
+			if(rs.next())
+				pkRoute=rs.getString(1);
+		}
+		return pkRoute;
+	}
+	
+	
+	/**
+	 * Renvoie le segment précédent (par le numéro de séquence) ou null s'il n'y en a pas.
+	 * @param routeName Le nom de la route (et pas le nom du segment)
+	 * @param segmentSequenceString le numéro de séquence  du segment
+	 * @param type le type de route (AWY, PDR ou TAC)
+	 * @return
+	 */
+	public Route2D getPrevious(String routeName, String segmentSequenceString, String type){
+		Route2D previousSegment = null;
+		String pkRoute = null;
+		int segmentSequence = Integer.parseInt(segmentSequenceString);
+		try{
+			pkRoute = getRouteIDFromSegmentName(routeName, type);
+			int previousSeq = getNearSequence(pkRoute, segmentSequence, -1);
+			if(previousSeq != 0){
+				previousSegment = (Route2D) routes2D.getRoute(routeName.split("-")[0].concat(" - "+previousSeq));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+		return previousSegment;
+	}
+	
+	/**
+	 * Renvoie le segment suivant (par le numéro de séquence) ou null s'il n'y en a pas.
+	 * @param routeName Le nom de la route (et pas le nom du segment)
+	 * @param segmentSequenceString le numéro de séquence  du segment
+	 * @param type le type de route (AWY, PDR ou TAC)
+	 * @return
+	 */
+	public Route2D getNext(String routeName, String segmentSequenceString, String type){
+		Route2D nextSegment = null;
+		String pkRoute = null;
+		int segmentSequence = Integer.parseInt(segmentSequenceString);
+		try{
+			pkRoute = getRouteIDFromSegmentName(routeName, type);
+			int nextSeq = getNearSequence(pkRoute, segmentSequence, 1);
+			if(nextSeq != 0){
+				nextSegment = (Route2D) routes2D.getRoute(routeName.split("-")[0].concat(" - "+nextSeq));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return nextSegment;
+	}
+	
+	
+	/**
+	 * Renvoie le numéro de séquence précédent ou suivant (selon nextOrPrevious) pour la même route, 
+	 * ou 0 s'il n'y a pas de segment précédent ou suivant.
+	 * @param pkRoute l'identifiant de la route
+	 * @param originalSequence le numéro de séquence de départ
+	 * @param nextOrPrevious doit être >0 si on cherche la séquence suivante, <=0 si on cherche la précédente.
+	 * @return Le numéro de séquence recherché ou 0.
+	 * @throws SQLException
+	 */
+	private int getNearSequence(String pkRoute, int originalSequence, int nextOrPrevious) throws SQLException{
+		PreparedStatement ps = null;
+		if(nextOrPrevious>0){
+			ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select sequence from segments where pkRoute = ? ORDER BY sequence DESC");
+		}else{
+			ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select sequence from segments where pkRoute = ? ORDER BY sequence ASC");
+		}
+		ps.setString(1, pkRoute);
+		ResultSet rs = ps.executeQuery();
+		int nearSeq = 0;
+		if(nextOrPrevious>0){
+			while(rs.next()){
+				int seq = rs.getInt(1);
+				if(seq > originalSequence){
+					nearSeq = seq;
+				}else{
+					break;
+				}
+			}
+		}else{
+			while(rs.next()){
+				int seq = rs.getInt(1);
+				if(seq < originalSequence){
+					nearSeq = seq;
+				}else{
+					break;
+				}
+			}
+		}
+		return nearSeq;
+	}
+	
 }

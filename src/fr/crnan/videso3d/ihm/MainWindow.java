@@ -96,6 +96,11 @@ public class MainWindow extends JFrame {
 	 */
 	private ContextPanel context;
 	/**
+	 * SplitPane qui contient la vue et le contextPanel.
+	 */
+	private JSplitPane splitPane;
+	
+	/**
 	 * Gestionnaire de bases de données
 	 */
 	private DatabaseManagerUI databaseUI;
@@ -230,7 +235,7 @@ public class MainWindow extends JFrame {
 		final AirspaceListener airspaceListener = new AirspaceListener(wwd, context, dataExplorer.getStipController());
 		wwd.addSelectListener(airspaceListener);
 		context.setMinimumSize(new Dimension(0,0)); //taille mini à 0 pour permettre la fermeture du panneau avec setDividerLocation
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, mainPane, context);
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, mainPane, context);
 	//	splitPane.setOneTouchExpandable(true); //en attendant de trouver mieux ...
 		splitPane.setResizeWeight(1.0);
 		
@@ -399,6 +404,7 @@ public class MainWindow extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				dataExplorer.resetView();
 				wwd.resetView();
+				splitPane.setDividerLocation(splitPane.getMaximumDividerLocation());
 			}
 		});
 		

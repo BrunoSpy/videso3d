@@ -38,6 +38,8 @@ import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
+import fr.crnan.videso3d.graphics.Route;
+import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
@@ -537,6 +539,25 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 
 
 	/**
+	 * Calcule l'altitude à laquelle doit se trouver la caméra pour voir correctement l'objet, 
+	 * et la position sur laquelle elle doit être centrée. 
+	 * @param object
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public double[] computeBestEyePosition(Object object){
+		if(object instanceof Secteur3D){
+			return computeBestEyePosition((Secteur3D)object);
+		}else if(object instanceof List){
+			//TODO voir si c'est une liste de secteurs3D
+			if(((List<?>)object).get(0) instanceof Route){
+				return computeBestEyePosition((List<? extends Route>)object);
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Calcule l'altitude à laquelle doit se trouver l'oeil pour voir correctement la zone.
 	 * @param zone
 	 * @return 
@@ -570,8 +591,39 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		double pr = this.getView().getGlobe().getPolarRadius();
 		double maxDistance = LatLon.ellipsoidalDistance(new LatLon(latMin,lonMin), new LatLon(latMax,lonMax), er, pr);
 
-		double elevation = -6e-7*maxDistance*maxDistance+2.3945*maxDistance+175836;
+		double elevation = computeBestElevation(maxDistance);
 		return new double[]{(latMin.degrees+latMax.degrees)/2,(lonMin.degrees+lonMax.degrees)/2, Math.min(elevation,2.5e6)};
+	}
+
+	
+	
+	
+	public double[] computeBestEyePosition(List<? extends Route> segments){
+		
+		if(segments.get(0) instanceof Route2D){
+			//Calcul de la hauteur idéale de la caméra
+			LatLon firstLocation = ((Route2D) segments.get(0)).getLocations().iterator().next();
+			LatLon secondLocation = ((Route2D) segments.get(segments.size()-1)).getLocations().iterator().next();
+			Angle lat1 = firstLocation.latitude;
+			Angle lon1 = firstLocation.longitude;
+			Angle lat2 = secondLocation.latitude;
+			Angle lon2 = secondLocation.longitude;
+			
+			double er = this.getView().getGlobe().getEquatorialRadius();
+			double pr = this.getView().getGlobe().getPolarRadius();
+			double distance = LatLon.ellipsoidalDistance(new LatLon(lat1,lon1), new LatLon(lat2,lon2), er, pr);
+			double elevation = computeBestElevation(distance);
+			LatLon middleSegmentLocation = ((Route2D) segments.get(segments.size()/2)).getLocations().iterator().next();
+
+			return new double[]{middleSegmentLocation.latitude.degrees, middleSegmentLocation.longitude.degrees, Math.min(elevation,2.5e6)};
+			
+		}
+		return null;
+		
+	}
+	
+	public double computeBestElevation(double distance){
+		return -6e-7*distance*distance+2.3945*distance+175836;
 	}
 
 	/**
