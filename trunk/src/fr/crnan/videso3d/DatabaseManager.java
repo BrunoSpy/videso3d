@@ -31,6 +31,8 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.event.SwingPropertyChangeSupport;
 
@@ -38,7 +40,7 @@ import javax.swing.event.SwingPropertyChangeSupport;
 /**
  * Gère la base de données
  * @author Bruno Spyckerelle
- * @version 0.8.0
+ * @version 0.8.1
  */
 public final class DatabaseManager {
 	
@@ -1253,6 +1255,62 @@ public final class DatabaseManager {
 			return Type.AIP;
 		}
 		return null;
+	}
+	
+	/**
+	 * Get a list of all displayables objects
+	 * @param type
+	 * @return
+	 * @throws SQLException
+	 */
+	public static List<String> getAllVisibleObjects(Type type) throws SQLException{
+		List<String> items = null;
+		Statement st;
+		ResultSet rs;
+		switch (type) {
+		case STIP:	
+			st = DatabaseManager.getCurrentStip();
+			if(st != null){
+				items = new LinkedList<String>();
+				rs = st.executeQuery("select name from balises UNION select name from routes UNION select nom from secteurs");
+				while(rs.next()){
+					items.add(rs.getString(1));
+				}
+			}
+			return items;
+		case AIP:
+			st = DatabaseManager.getCurrentAIP();
+			if(st != null){
+				//TODO a changer absolument
+				items = new LinkedList<String>();
+				rs = st.executeQuery("select nom from volumes UNION select nom from routes");
+				while(rs.next()){
+					items.add(rs.getString(1));
+				}
+			}
+			return items;
+		default:
+			return items;
+		}
+	}
+	
+	/**
+	 * Returns all selected databases but PAYS
+	 * @return
+	 */
+	public static List<Type> getSelectedDatabases(){
+		List<Type> bases = new LinkedList<DatabaseManager.Type>();
+		try {
+			Statement st = DatabaseManager.getCurrent(Type.Databases);
+			ResultSet rs = st.executeQuery("select type from databases where selected ='1'");
+			while(rs.next()){
+				Type t = DatabaseManager.stringToType(rs.getString(1));
+				if(! t.equals(Type.PAYS)) bases.add(DatabaseManager.stringToType(rs.getString(1)));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return bases;
 	}
 	
 	/**
