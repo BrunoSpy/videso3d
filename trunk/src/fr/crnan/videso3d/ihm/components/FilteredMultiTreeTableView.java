@@ -86,7 +86,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 		//éléments de l'IHM
 		JPanel tablePanel = new JPanel();
 		tablePanel.setLayout(new BorderLayout());
-		if(title != null && titlePanel != null){
+		if(title != null && titlePanel == null){
 			tablePanel.setBorder(BorderFactory.createTitledBorder(title));
 		}else{
 			tablePanel.setBorder(BorderFactory.createTitledBorder(""));

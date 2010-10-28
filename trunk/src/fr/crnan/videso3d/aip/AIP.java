@@ -869,6 +869,25 @@ public class AIP extends FileParser{
 		return new Couple<Altitude,Altitude>(plancher,plafond);
 	}
 	
+	/**
+	 * 
+	 * @return Une liste de couples dont le premier élément est le nom de la route et le deuxième son type.
+	 */
+	public List<Couple<String,String>> getRouteNamesFromDB(){
+		ArrayList<Couple<String,String>> routeNames = new ArrayList<Couple<String,String>>();
+		try {
+			this.getName();
+			this.conn = DatabaseManager.selectDB(Type.AIP, this.name);
+			PreparedStatement ps = this.conn.prepareStatement("select nom, type from routes");
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				routeNames.add(new Couple<String,String>(rs.getString(1),rs.getString(2)));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return routeNames;
+	}
 	
 	
 	
