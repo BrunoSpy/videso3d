@@ -30,6 +30,7 @@ import javax.swing.event.ChangeListener;
 
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.ObjectAnnotation;
+import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
@@ -376,12 +377,17 @@ public class AirspaceListener implements SelectListener {
 				String routeName = ((Route2D)o).getName();
 				//Les noms des routes AIP sont suivis d'un tiret et du numéro de séquence du segment
 				if(routeName.contains("-")){
-					this.context.showAIPRoute((Route2D) o);
+					this.context.showAIPRoute((Route) o);
 				}else{
 					this.context.showRoute(routeName);
 				}
 			} else if (o instanceof Route3D){
+				String routeName = ((Route3D)o).getName();
+				if(routeName.contains("-")){
+					this.context.showAIPRoute((Route) o);
+				}else{
 				this.context.showRoute(((Route3D)o).getName());
+				}
 			}
 		} else if (event.getEventAction() == SelectEvent.LEFT_CLICK){
 			if(event.getTopObject() != null){ 

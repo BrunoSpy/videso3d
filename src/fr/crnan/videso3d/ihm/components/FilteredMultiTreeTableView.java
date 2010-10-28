@@ -21,6 +21,8 @@ import java.awt.Color;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
@@ -77,14 +79,19 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 		this.add(panel);
 	}
 
-	public void addTableTree(final FilteredTreeTableModel model, String title){
+	public void addTableTree(final FilteredTreeTableModel model, String title, JPanel titlePanel){
 		
 		models.add(model);	
 		
 		//éléments de l'IHM
 		JPanel tablePanel = new JPanel();
 		tablePanel.setLayout(new BorderLayout());
-		if(title != null) tablePanel.setBorder(BorderFactory.createTitledBorder(title));
+		if(title != null && titlePanel != null){
+			tablePanel.setBorder(BorderFactory.createTitledBorder(title));
+		}else{
+			tablePanel.setBorder(BorderFactory.createTitledBorder(""));
+		}
+			
 		
 		final JXTreeTable treeTable = new JXTreeTable();
 		tables.add(treeTable);
@@ -122,8 +129,8 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 
 			}
 			
+			
 		});
-				
 		treeTable.setTableHeader(null);
 		treeTable.setRootVisible(false);
 		treeTable.setTreeTableModel(model);
@@ -147,6 +154,8 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 		JScrollPane scrollPane = new JScrollPane(treeTable);
 		scrollPane.setBorder(null);
 		tablePanel.add(scrollPane);
+		if(titlePanel!=null)
+			container.add(titlePanel);
 		container.add(tablePanel);
 		
 		
@@ -180,7 +189,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 			m.clearSelection();
 		}
 	}
-	
+
 	
 	
 }

@@ -64,6 +64,11 @@ public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
 		this.setType(type);
 		this.setDefaultMaterial();
 	}
+	
+	public Route3D(String name, Type type){
+		this(type);
+		this.setName(name);
+	}
 
 	/**
 	 * Type de la Route : UIR ou FIR
@@ -117,6 +122,15 @@ public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
 		this.locations.clear();
 		this.removeAllLegs();
 		this.addLocations(locations, sens);
+	}
+	
+	/**
+	 * 
+	 * @return Les coordonnées des tronçons de la route
+	 */
+	@Override
+	public Iterable<? extends LatLon> getLocations(){
+		return this.locations;
 	}
 
 	protected void addLocations(Iterable<? extends LatLon> newLocations, List<Integer> sens){

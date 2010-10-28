@@ -15,6 +15,8 @@
  */
 package fr.crnan.videso3d.graphics;
 
+import gov.nasa.worldwind.geom.LatLon;
+
 import java.util.List;
 
 /**
@@ -42,5 +44,7 @@ public interface Route {
 	public List<String> getBalises();
 	
 	public void highlight(boolean highlight);
+
+	Iterable<? extends LatLon> getLocations();
 
 }

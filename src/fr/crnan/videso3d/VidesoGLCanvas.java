@@ -40,6 +40,7 @@ import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
+import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
@@ -549,7 +550,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		if(object instanceof Secteur3D){
 			return computeBestEyePosition((Secteur3D)object);
 		}else if(object instanceof List){
-			//TODO voir si c'est une liste de secteurs3D
 			if(((List<?>)object).get(0) instanceof Route){
 				return computeBestEyePosition((List<? extends Route>)object);
 			}
@@ -600,10 +600,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	
 	public double[] computeBestEyePosition(List<? extends Route> segments){
 		
-		if(segments.get(0) instanceof Route2D){
 			//Calcul de la hauteur idéale de la caméra
-			LatLon firstLocation = ((Route2D) segments.get(0)).getLocations().iterator().next();
-			LatLon secondLocation = ((Route2D) segments.get(segments.size()-1)).getLocations().iterator().next();
+			LatLon firstLocation = ((Route) segments.get(0)).getLocations().iterator().next();
+			LatLon secondLocation = ((Route) segments.get(segments.size()-1)).getLocations().iterator().next();
 			Angle lat1 = firstLocation.latitude;
 			Angle lon1 = firstLocation.longitude;
 			Angle lat2 = secondLocation.latitude;
@@ -613,13 +612,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			double pr = this.getView().getGlobe().getPolarRadius();
 			double distance = LatLon.ellipsoidalDistance(new LatLon(lat1,lon1), new LatLon(lat2,lon2), er, pr);
 			double elevation = computeBestElevation(distance);
-			LatLon middleSegmentLocation = ((Route2D) segments.get(segments.size()/2)).getLocations().iterator().next();
+			LatLon middleSegmentLocation = ((Route) segments.get(segments.size()/2)).getLocations().iterator().next();
 
 			return new double[]{middleSegmentLocation.latitude.degrees, middleSegmentLocation.longitude.degrees, Math.min(elevation,2.5e6)};
 			
-		}
-		return null;
-		
 	}
 	
 	public double computeBestElevation(double distance){
