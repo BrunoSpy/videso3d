@@ -23,6 +23,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.ProgressMonitor;
@@ -598,11 +599,20 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	
 	
 	
+	@SuppressWarnings("unchecked")
 	public double[] computeBestEyePosition(List<? extends Route> segments){
 		
 			//Calcul de la hauteur idéale de la caméra
 			LatLon firstLocation = ((Route) segments.get(0)).getLocations().iterator().next();
-			LatLon secondLocation = ((Route) segments.get(segments.size()-1)).getLocations().iterator().next();
+			LatLon secondLocation = null;
+			if(segments.size()>1){
+				secondLocation = ((Route) segments.get(segments.size()-1)).getLocations().iterator().next();
+			}else{
+				Iterator<LatLon> it = (Iterator<LatLon>) ((Route) segments.get(0)).getLocations().iterator();
+				while(it.hasNext()){
+					secondLocation = it.next();
+				}
+			}
 			Angle lat1 = firstLocation.latitude;
 			Angle lon1 = firstLocation.longitude;
 			Angle lat2 = secondLocation.latitude;
@@ -613,7 +623,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			double distance = LatLon.ellipsoidalDistance(new LatLon(lat1,lon1), new LatLon(lat2,lon2), er, pr);
 			double elevation = computeBestElevation(distance);
 			LatLon middleSegmentLocation = ((Route) segments.get(segments.size()/2)).getLocations().iterator().next();
-
 			return new double[]{middleSegmentLocation.latitude.degrees, middleSegmentLocation.longitude.degrees, Math.min(elevation,2.5e6)};
 			
 	}

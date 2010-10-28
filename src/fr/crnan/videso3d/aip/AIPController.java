@@ -45,6 +45,7 @@ import fr.crnan.videso3d.graphics.Secteur3D.Type;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
 import gov.nasa.worldwind.avlist.AVKey;
+import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AirspaceLayer;
@@ -76,6 +77,8 @@ public class AIPController implements VidesoController {
 
 	
 	private HashMap<String, Secteur3D> zones;
+	
+	private HashMap<String, GlobeAnnotation> routesAnnotations;
 	
 	
 	
@@ -118,29 +121,31 @@ public class AIPController implements VidesoController {
 			routes2D = new Routes2DLayer("Routes AIP 2D");
 			this.toggleLayer(routes2D, true);
 		}
+		routesAnnotations = new HashMap<String, GlobeAnnotation>();
+		this.buildRoutes();
 		this.wwd.redraw();
 	}
 
+
 	
 	
-	public AirspaceLayer getZonesLayer(){
-		return zonesLayer;
-	}
 	@Override
 	public void unHighlight(String name) {
-		// TODO Auto-generated method stub
 	}
 	@Override
 	public void addLayer(String name, Layer layer) {
-		// TODO Auto-generated method stub
 	}
 	@Override
 	public void removeLayer(String name, Layer layer) {
-		// TODO Auto-generated method stub
 	}
 	@Override
 	public void removeAllLayers() {
-		// TODO Auto-generated method stub
+	}
+	
+	
+
+	public AirspaceLayer getZonesLayer(){
+		return zonesLayer;
 	}
 	
 	public Routes2DLayer getRoutes2DLayer(){
@@ -157,13 +162,28 @@ public class AIPController implements VidesoController {
 	}
 
 	
+	private void buildRoutes(){
+		List<Couple<String,String>> routeNamesAndTypes = aip.getRouteNamesFromDB();
+		for(Couple<String,String> nameAndType : routeNamesAndTypes){
+			String typeString = nameAndType.getSecond();
+			int type = AIP.AWY;
+			if(typeString.equals("PDR"))
+				type = AIP.PDR;
+			if(typeString.equals("TAC"))
+				type = AIP.TAC;
+			addRouteToLayer(nameAndType.getFirst(), type);
+		}
+	}
+	
+	
+	
 	@Override
 	public void showObject(int type, String name) {
 		switch(type){
 		case AIP.AWY :
 		case AIP.PDR :
 		case AIP.TAC :
-			this.addRoute(name,type);
+			this.showRoute(name,type);
 			break;
 		case AIP.CTL :
 			// si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
@@ -363,7 +383,24 @@ public class AIPController implements VidesoController {
 		this.wwd.redraw();
 	}
 	
-	
+	public void showRoute(String routeName, int type){
+		String routeID = AIP.getID(type, routeName);
+		try {
+			Statement st = DatabaseManager.getCurrentAIP();
+			ResultSet segments = st.executeQuery("select pk from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
+			while(segments.next()){
+				Element segment = aip.findElement(aip.getDocumentRoot().getChild("SegmentS"), segments.getString(1));
+				if(!segment.getChildText("Circulation").equals("(XxX)")){
+					String segmentName = buildSegmentName(routeName, segment.getChildText("Sequence"));
+					routes2D.displayRoute(segmentName);
+					routes3D.displayRoute(segmentName);
+				}
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		
+	}
 
 	/**
 	 * Ajoute une route identifiée par son nom et son type à la vue 3D. Si les points d'une route ne sont pas définis dans le fichier SIA,
@@ -371,7 +408,7 @@ public class AIPController implements VidesoController {
 	 * @param routeName Le nom de la route à afficher.
 	 * @param type 
 	 */
-	public void addRoute(String routeName, int type){
+	public void addRouteToLayer(String routeName, int type){
 		String routeID = AIP.getID(type, routeName);
 		fr.crnan.videso3d.graphics.Route.Type RouteType;
 		if(type == AIP.PDR){
@@ -386,39 +423,37 @@ public class AIPController implements VidesoController {
 				Element segment = aip.findElement(aip.getDocumentRoot().getChild("SegmentS"), segments.getString(1));
 				String segmentName = buildSegmentName(routeName, segment.getChildText("Sequence"));
 				if(routes2D.getRoute(segmentName)==null){
-					Couple<Altitude,Altitude> altis = aip.getLevels(segment);
-					
-					
-					LinkedList<LatLon> loc = new LinkedList<LatLon>();
-					Geometrie geometrieSegment = new Geometrie(segment);
-					loc.addAll(geometrieSegment.getLocations());
-					if(loc.get(0)==null){
-						loc.clear();
-						loc.add(LatLon.fromDegrees(48, 0));
-					}
-					Route2D segment2D = new Route2D(segmentName, RouteType);
-					segment2D.setLocations(loc);
-					segment2D.setAnnotation("Route "+segmentName);
-					routes2D.addRoute(segment2D, segmentName);
-					routes2D.displayRoute(segmentName);
-					
-					//TODO prendre en compte le sens de circulation... 
 					if(!segment.getChildText("Circulation").equals("(XxX)")){
-					Route3D segment3D = new Route3D(segmentName, RouteType);
-					segment3D.setLocations(loc);
-					boolean lowerTerrainConformant = false, upperTerrainConformant = false;
-					if(altis.getFirst().isTerrainConforming()){
-						lowerTerrainConformant = true;
-					}
-					if(altis.getSecond().isTerrainConforming()){
-						upperTerrainConformant=true;
-					}
-					segment3D.setTerrainConforming(lowerTerrainConformant, upperTerrainConformant);
-					segment3D.setAltitudes(altis.getFirst().getMeters(), altis.getSecond().getMeters());	
-					segment3D.setAnnotation("<html>Route "+segmentName+"<br/><b>Plancher :</b>"+altis.getFirst().getFullText()
-							+"<br/><b>Plafond :</b>"+altis.getSecond().getFullText()+"</html>");
-					routes3D.addRoute(segment3D, segmentName);
-					routes3D.displayRoute(segmentName);
+						Couple<Altitude,Altitude> altis = aip.getLevels(segment);
+						LinkedList<LatLon> loc = new LinkedList<LatLon>();
+						Geometrie geometrieSegment = new Geometrie(segment);
+						loc.addAll(geometrieSegment.getLocations());
+						if(loc.get(0)==null){
+							loc.clear();
+							loc.add(LatLon.fromDegrees(48, 0));
+						}
+						
+						Route2D segment2D = new Route2D(segmentName, RouteType);
+						segment2D.setLocations(loc);
+						segment2D.setAnnotation("<html>Route "+segmentName+"<br/><b>Plancher :</b>"+altis.getFirst().getFullText()
+								+"<br/><b>Plafond :</b>"+altis.getSecond().getFullText()+"</html>");
+						routes2D.addRoute(segment2D, segmentName);
+
+						//TODO prendre en compte le sens de circulation... 
+						Route3D segment3D = new Route3D(segmentName, RouteType);
+						segment3D.setLocations(loc);
+						boolean lowerTerrainConformant = false, upperTerrainConformant = false;
+						if(altis.getFirst().isTerrainConforming()){
+							lowerTerrainConformant = true;
+						}
+						if(altis.getSecond().isTerrainConforming()){
+							upperTerrainConformant=true;
+						}
+						segment3D.setTerrainConforming(lowerTerrainConformant, upperTerrainConformant);
+						segment3D.setAltitudes(altis.getFirst().getMeters(), altis.getSecond().getMeters());	
+						segment3D.setAnnotation("<html>Route "+segmentName+"<br/><b>Plancher :</b>"+altis.getFirst().getFullText()
+								+"<br/><b>Plafond :</b>"+altis.getSecond().getFullText()+"</html>");
+						routes3D.addRoute(segment3D, segmentName);
 					}
 				}
 			}
@@ -428,8 +463,16 @@ public class AIPController implements VidesoController {
 	}
 	
 	
+	
+	
 	private void removeRoute(String routeName, int type){
+		//TODO problème avec les routes qui ont le même nom (J 22 et J 22 Polynésie...) : quand on met l'annotation dans le hashmap 
+		//on ne connaît pas le territoire, donc quand on affiche les deux J 22 en même temps, on ne garde qu'une seule des deux annotations
+		//dans le hashmap. Du coup on ne peut plus enlever l'autre.
 		String routeID = AIP.getID(type, routeName);
+		if(routesAnnotations.containsKey(routeName.split("-")[0])){
+			routesAnnotations.get(routeName.split("-")[0]).getAttributes().setVisible(false);
+		}
 		try {
 			Statement st = DatabaseManager.getCurrentAIP();
 			ResultSet rs = st.executeQuery("select sequence from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
@@ -495,9 +538,12 @@ public class AIPController implements VidesoController {
 		wwd.getView().setValue(AVKey.ELEVATION, 1e11);
 		double[] eyePosition = this.wwd.computeBestEyePosition(object);
 		Position centerPosition = Position.fromDegrees(eyePosition[0], eyePosition[1]);
+		this.wwd.getView().setHeading(Angle.ZERO);
+		this.wwd.getView().setPitch(Angle.ZERO);
 		this.wwd.getView().goTo(centerPosition, eyePosition[2]);
 		showAnnotation(object, centerPosition);
 		return centerPosition;
+		
 	}
 	
 	/**
@@ -516,6 +562,7 @@ public class AIPController implements VidesoController {
 				GlobeAnnotation routeAnnotation = new GlobeAnnotation(routeName, pos);
 				routeAnnotation.getAttributes().setLeaderGapWidth(10);
 				routeAnnotation.getAttributes().setDrawOffset(new Point(20,20));
+				routesAnnotations.put(routeName, routeAnnotation);
 				this.wwd.getAnnotationLayer().addAnnotation(routeAnnotation);
 			}
 		}
@@ -568,7 +615,7 @@ public class AIPController implements VidesoController {
 			segments2D.add((Route2D) routes2D.getRoute(s));
 			segments3D.add((Route3D) routes3D.getRoute(s));
 		}
-		//TODO si c'est routes3D qui est activée, faire centerview sur segments3D
+		//On peut appeler centerView indiféremment sur une route2D ou une route3D puisqu'elles sont au même endroit.
 		centerView(segments2D);
 	}
 	

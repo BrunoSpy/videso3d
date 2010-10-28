@@ -23,6 +23,8 @@ import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route.Type;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.render.Annotation;
+import gov.nasa.worldwind.render.GlobeAnnotation;
 /**
  * 
  * @author Bruno Spyckerelle
@@ -125,7 +127,10 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 	@Override
 	public void hideRoute(String route) {
 		Route2D r = routes.get(route);
-		this.hideRoute(r);
+		if(r != null){
+			this.hideRoute(r);
+			r.getAnnotation(null).getAttributes().setVisible(false);
+		}
 	}
 
 	private void hideRoute(Route2D r){
