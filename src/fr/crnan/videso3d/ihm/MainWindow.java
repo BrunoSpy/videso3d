@@ -30,16 +30,12 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Hashtable;
-import java.util.LinkedList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
@@ -59,33 +55,32 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-
 import fr.crnan.videso3d.AirspaceListener;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.SplashScreen;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.formats.geo.GEOFileFilter;
 import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
 import fr.crnan.videso3d.formats.opas.OPASFileFilter;
-import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
+import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
+import fr.crnan.videso3d.stip.StipController;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.examples.util.ScreenShotAction;
-import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.util.Logging;
 
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3.4
+ * @version 0.3.5
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -103,6 +98,10 @@ public class MainWindow extends JFrame {
 	 * Panel contextuel
 	 */
 	private ContextPanel context;
+	/**
+	 * OmniBox
+	 */
+	private Omnibox omniBox;
 	/**
 	 * SplitPane qui contient la vue et le contextPanel.
 	 */
@@ -205,33 +204,15 @@ public class MainWindow extends JFrame {
 		//Fermeture de l'application
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		//Menu
-		//this.setJMenuBar(this.createMenuBar());
-
 		//Layout
 		this.setLayout(new BorderLayout());
 
-		//Barre d'actions
-		this.add(this.createToolBar(), BorderLayout.PAGE_START);
-
-		//Barre de statut
-		this.add(this.createStatusBar(), BorderLayout.SOUTH);
-
-
-
-		//Explorateur de données
-//		dataExplorer = new DataExplorer(wwd);
-		//		JDesktopPane desktop = new JDesktopPane();
-		//		JInternalFrame wwdFrame = new JInternalFrame("WorldWind", true, false, true, true);
-		//		wwdFrame.setSize(500, 300);
-		//		wwdFrame.add(wwd);
-		//		wwdFrame.setVisible(true);
-		//		desktop.add(wwdFrame);
-
+		//Panneau contextuel
 		context = new ContextPanel(wwd);
-		context.setStipController(dataExplorer.getStipController());
-		if(dataExplorer.getAIPController()!=null)
-			context.setAIPController(dataExplorer.getAIPController());
+		if(dataExplorer.getView(Type.STIP) != null)
+			context.setStipController((StipController) dataExplorer.getView(Type.STIP).getController());
+		if(dataExplorer.getView(Type.AIP) != null)
+			context.setAIPController((AIPController) dataExplorer.getView(Type.AIP).getController());
 		
 		JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, dataExplorer, wwd);
 		mainPane.setOneTouchExpandable(true);
@@ -240,7 +221,8 @@ public class MainWindow extends JFrame {
 		
 		
 		wwd.addSelectListener(context);
-		final AirspaceListener airspaceListener = new AirspaceListener(wwd, context, dataExplorer.getStipController());
+		final AirspaceListener airspaceListener = new AirspaceListener(wwd, context, null);
+		if(dataExplorer.getView(Type.STIP) != null) airspaceListener.setStipController((StipController) dataExplorer.getView(Type.STIP).getController());
 		wwd.addSelectListener(airspaceListener);
 		context.setMinimumSize(new Dimension(0,0)); //taille mini à 0 pour permettre la fermeture du panneau avec setDividerLocation
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, mainPane, context);
@@ -249,9 +231,19 @@ public class MainWindow extends JFrame {
 		
 		this.getContentPane().add(splitPane, BorderLayout.CENTER);
 
+		//initialisation omnibox
+		omniBox = new Omnibox(wwd, context);
+		for(Type t : DatabaseManager.getSelectedDatabases()){
+			try {
+				omniBox.addDatabase(t, dataExplorer.getView(t).getController(), DatabaseManager.getAllVisibleObjects(t));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		
 		//mises à jour en cas de changement de base
-		progressMonitor = new ProgressMonitor(this, "Mise à jour", "", 0, 6);
+		progressMonitor = new ProgressMonitor(this, "Mise à jour", "", 0, 7);
 		wwd.addPropertyChangeListener("step", new PropertyChangeListener() {
 			
 			@Override
@@ -264,6 +256,7 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void propertyChange(final PropertyChangeEvent evt) {
+				
 				//précréation des éléments 3D dans un SwingWorker avec ProgressMonitor
 				new SwingWorker<Integer, Integer>(){
 
@@ -281,19 +274,36 @@ public class MainWindow extends JFrame {
 
 					@Override
 					protected void done() {
-						if(DatabaseManager.Type.STIP.equals(evt.getNewValue())){
-							context.setStipController(dataExplorer.getStipController());
-							airspaceListener.setStipController(dataExplorer.getStipController());
-						} else if(DatabaseManager.Type.AIP.equals(evt.getNewValue())){
-							context.setAIPController(dataExplorer.getAIPController());
+						if(dataExplorer.getView((Type) evt.getNewValue()) != null) {
+							if(DatabaseManager.Type.STIP.equals(evt.getNewValue())){
+								context.setStipController((StipController) dataExplorer.getView(Type.STIP).getController());
+								airspaceListener.setStipController((StipController) dataExplorer.getView(Type.STIP).getController());
+							} else if(DatabaseManager.Type.AIP.equals(evt.getNewValue())){
+								context.setAIPController((AIPController) dataExplorer.getView(Type.AIP).getController());
+							}
 						}
-						
+						Type type = (Type) evt.getNewValue();
+						try {
+							if(dataExplorer.getView(type) == null){
+								omniBox.removeDatabase(type);
+							} else {
+								omniBox.addDatabase(type, dataExplorer.getView(type).getController(), DatabaseManager.getAllVisibleObjects(type));
+							}
+						} catch (SQLException e) {
+							e.printStackTrace();
+						}
 						progressMonitor.close();
 					}
 				}.execute();
 			}
 		});
+		
+		//Barre d'actions
+		this.add(this.createToolBar(), BorderLayout.PAGE_START);
 
+		//Barre de statut
+		this.add(this.createStatusBar(), BorderLayout.SOUTH);
+		
 		//suppression du splashscreen et affichage de la fenêtre
 		splashScreen.dispose();
 		this.pack();
@@ -304,86 +314,6 @@ public class MainWindow extends JFrame {
 		//ferme le panneau d'informations, doit être fait après l'affichage de la fenêtre
 		splitPane.setDividerLocation(1.0);
 	}
-
-//	/**
-//	 * Barre de menu de l'application
-//	 * @return {@link JMenuBar} Barre de menu
-//	 */
-//	private JMenuBar createMenuBar(){
-//		JMenu file = new JMenu("Fichier");
-//
-//		JMenuItem dbUI = new JMenuItem("Gestion des bases de données...");
-//		dbUI.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				databaseUI = new DatabaseManagerUI(db);
-//				databaseUI.setVisible(true);
-//				databaseUI.addPropertyChangeListener("baseChanged", new PropertyChangeListener() {		
-//					@Override
-//					public void propertyChange(PropertyChangeEvent evt) {
-//						final String type = (String)evt.getNewValue();
-//						//mises à jour en background
-//						new SwingWorker<String, Integer>(){
-//							@Override
-//							protected String doInBackground() throws Exception {
-//								try {
-//									if(type.equals("STIP")){
-//										//mise à jour de la vue 3D
-//										//TODO mettre à jour seulement si la base de données a changé
-//										wwd.buildStip();
-//										//mise à jour de l'explorateur de données
-//										dataExplorer.updateStipView();
-//									} else if (type.equals("EXSA")){
-//										//mise à jour de l'explorateur de données
-//										dataExplorer.updateStrView();
-//										//mise à jour de la vue 3D
-//										wwd.removeMosaiques();
-//										//suppression des radars
-//										wwd.removeRadars();
-//									} else if(type.equals("STPV")){
-//										dataExplorer.updateStpvView();
-//										wwd.removeMosaiques();
-//									} else if(type.equals("Edimap")){
-//										dataExplorer.updateEdimapView();
-//										wwd.removeAllEdimapLayers();
-//									}
-//								} catch (Exception e) {
-//									e.printStackTrace();
-//								}
-//								return null;
-//							}
-//						}.execute();
-//					}
-//				});
-//			}
-//		});
-//
-//		file.add(dbUI);
-//
-//		file.add(new JSeparator());
-//
-//		JMenuItem quit = new JMenuItem("Quitter");
-//		quit.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				db.closeAll();
-//				System.exit(0);
-//			}
-//		});
-//		file.add(quit);
-//
-//		JMenu affichage = new JMenu("Fenêtre");
-//
-//		JMenu help = new JMenu("Aide");
-//
-//		JMenuBar menuBar = new JMenuBar();
-//		menuBar.add(file);
-//		menuBar.add(affichage);
-//		menuBar.add(help);
-//		return menuBar;
-//	}
-
-
 
 	/**
 	 * Barre de status de l'application
@@ -651,80 +581,7 @@ public class MainWindow extends JFrame {
 		
 		
 		//recherche avec autocomplétion
-		
-		LinkedList<String> results = new LinkedList<String>();
-		results.add("");//utile pour supprimer l'élément de la vue
-		try {
-			Statement st = DatabaseManager.getCurrentStip();
-			if(st != null){
-				ResultSet rs = st.executeQuery("select name from balises UNION select name from routes UNION select nom from secteurs");
-				while(rs.next()){
-					results.add(rs.getString(1));
-				}
-			}
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-		final JComboBox search = new JComboBox(results.toArray());
-		search.setEditable(true);
-		search.setToolTipText("<html>Recherche universelle.<br />" +
-				"<ul><li>Si une base Stip est importée, permet de rechercher dans les éléments Stip (balises, secteurs, routes).</li>" +
-				"<li>Permet de centrer la vue sur des coordonnées. Syntaxe acceptée :" +
-				"<ul><li>45N 123W</li><li>+45.1234, -123.12</li><li>45.1234N 123.12W</li>" +
-				"<li>45° 30' 00\"N, 50° 30'W</li><li>45°30' -50°30'</li><li>45 30 N 50 30 W</li></ul></ul></html>");
-		AutoCompleteDecorator.decorate(search);
-		
-		search.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(e.getActionCommand().equals("comboBoxEdited")){
-					
-					String input = (String)((JComboBox)e.getSource()).getSelectedItem();
-					//try to convert into latlon first
-					LatLon coord = LatLonUtils.computeLatLonFromString(input);
-					if(coord != null) {
-						wwd.getView().goTo(new Position(coord, 0), 1e6);
-					} else {
-						if(!input.isEmpty())
-							context.showInfo(input);
-						//wwd.highlight(input);
-						if(dataExplorer.getStipController() != null)
-							dataExplorer.getStipController().highlight(input);
-					}
-				}
-			}
-		});
-
-		//Mise à jour du contenu en cas de changement de base de données Stip
-		DatabaseManager.addPropertyChangeListener(DatabaseManager.BASE_CHANGED, new PropertyChangeListener() {
-			
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				if(DatabaseManager.Type.STIP.equals(evt.getNewValue())){
-					search.removeAllItems();
-					search.addItem("");
-					try {
-						Statement st = DatabaseManager.getCurrentStip();
-						if(st != null){
-							search.setEnabled(true);
-							ResultSet rs = st.executeQuery("select name from balises UNION select name from routes UNION select nom from secteurs");
-							while(rs.next()){
-								search.addItem(rs.getString(1));
-							}
-						} else {
-							search.setEnabled(false);
-						}
-					} catch (SQLException e1) {
-						e1.printStackTrace();
-					} catch (Exception e){
-						e.printStackTrace();
-					}
-				}
-			}
-		});
-		
-		toolbar.add(search);
+		omniBox.addToToolbar(toolbar);
 
 		toolbar.addSeparator();
 	

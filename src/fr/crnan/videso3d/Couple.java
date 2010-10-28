@@ -53,7 +53,7 @@ public class Couple<T,U> {
 		this.second = second;
 	}
 	
-	public String toSring(){
+	public String toString(){
 		return "("+this.first.toString()+", "+this.second.toString()+")";
 	}
 }
