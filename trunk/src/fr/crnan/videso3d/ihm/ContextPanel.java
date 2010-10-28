@@ -48,6 +48,7 @@ import fr.crnan.videso3d.geom.Latitude;
 import fr.crnan.videso3d.geom.Longitude;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.ObjectAnnotation;
+import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Secteur3D.Type;
@@ -668,8 +669,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 		content.add(infos);
 	}
 	
-	
-	public void showAIPRoute(Route2D segment) {
+	public void showAIPRoute(Route segment) {
 		AIP aip = aipController.getAIP();
 		String route = segment.getName().split("-")[0].trim();
 		String sequence = segment.getName().split("-")[1].trim();
@@ -748,8 +748,13 @@ public class ContextPanel extends JPanel implements SelectListener {
 		if(rmq != null){
 			infosSegment.add(new JLabel("<html><b>Remarque</b> : " + rmq+"</html>"));
 		}
-		final Route2D segmentPrecedent = aipController.getPrevious(route, sequence, typeRoute); 
-		final Route2D segmentSuivant = aipController.getNext(route, sequence, typeRoute);
+		boolean route3D = true;
+		if(segment instanceof Route2D){
+			route3D = false;
+		}
+		final Route segmentPrecedent = aipController.getPrevious(route, sequence, typeRoute, route3D); 
+		final Route segmentSuivant = aipController.getNext(route, sequence, typeRoute, route3D);
+		
 		if(segmentPrecedent != null){
 			AbstractAction previous = new AbstractAction("<html><font color=\"blue\">&lt;&lt; Segment précédent</font></html>"){
 				@Override
@@ -776,7 +781,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 		content.add(infosSegment);
 	}
 	
-	private void displayAnnotationAndGoTo(Route2D segment){
+	private void displayAnnotationAndGoTo(Route segment){
 		Position annotationPosition = new Position(segment.getLocations().iterator().next(), 0);
 		wwd.getAnnotationLayer().addAnnotation(((ObjectAnnotation)segment).getAnnotation(annotationPosition));
 		wwd.getView().goTo(annotationPosition, wwd.getView().getEyePosition().elevation);

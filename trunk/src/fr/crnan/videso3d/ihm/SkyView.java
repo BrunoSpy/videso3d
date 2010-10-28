@@ -56,7 +56,7 @@ public class SkyView extends FilteredMultiTreeTableView {
 				this.fillRootNode(root);
 				FilteredTreeTableModel model = new FilteredTreeTableModel(root);
 
-				this.addTableTree(model, null);
+				this.addTableTree(model, null, null);
 				
 			}
 		} catch (SQLException e){

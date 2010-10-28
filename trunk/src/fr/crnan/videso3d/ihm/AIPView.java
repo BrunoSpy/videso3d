@@ -16,6 +16,8 @@
 
 package fr.crnan.videso3d.ihm;
 
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -24,6 +26,7 @@ import java.util.LinkedList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.Couple;
@@ -32,6 +35,7 @@ import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
+import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
 /**
  * 
  * @author Bruno Spyckerelle
@@ -51,12 +55,12 @@ public class AIPView extends FilteredMultiTreeTableView {
 				DefaultMutableTreeNode ZonesRoot = new DefaultMutableTreeNode("root");
 				this.fillZonesRootNode(ZonesRoot);
 				FilteredTreeTableModel ZonesModel = new FilteredTreeTableModel(ZonesRoot);
-				this.addTableTree(ZonesModel, "Zones");
+				this.addTableTree(ZonesModel, "Zones", null);
 				
 				DefaultMutableTreeNode RoutesRoot = new DefaultMutableTreeNode("root");
 				this.fillRoutesRootNode(RoutesRoot);
 				FilteredTreeTableModel RoutesModel = new FilteredTreeTableModel(RoutesRoot);
-				this.addTableTree(RoutesModel, "Routes");
+				this.addTableTree(RoutesModel, "", createTitleRoutes());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -132,6 +136,28 @@ public class AIPView extends FilteredMultiTreeTableView {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Titre du panel Routes.<br />
+	 * Contient un sélecteur pour choisir la méthode de représentation (2D/3D).
+	 * @return JPanel
+	 */
+	//TODO factoriser avec createTitleRoutes de StipView
+	private JPanel createTitleRoutes(){
+		
+		TitleTwoButtons titlePanel = new TitleTwoButtons("Routes", "2D", "3D", true);
+		titlePanel.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				Boolean state = e.getStateChange() == ItemEvent.SELECTED;
+				controller.toggleLayer(controller.getRoutes2DLayer(), state);
+				controller.toggleLayer(controller.getRoutes3DLayer(), !state);
+			}
+		});
+		
+		return titlePanel; 
 	}
 	
 	

@@ -924,6 +924,7 @@ public class AIP extends FileParser{
 				this.fullText="FL "+valueString;
 			}
 			if(refUnite.equals("UNL")){
+				originalValue = 660;
 				FL=660;
 				unite=Altitude.fl;
 				ref=Altitude.unl;
@@ -949,6 +950,20 @@ public class AIP extends FileParser{
 		
 		public String getFullText(){
 			return fullText;
+		}
+		
+		public boolean isTerrainConforming(){
+			if(ref == Altitude.asfc || ref == Altitude.refSFC) 
+				return true;
+			return false;
+		}
+		
+		public int getMeters(){
+			if(unite == Altitude.sfc)
+				return 0;
+			if(unite == Altitude.ft)
+				return (int) (((double) originalValue)/3.2808);
+			return (int) (((double) originalValue*100)/3.2808);
 		}
 	}
 

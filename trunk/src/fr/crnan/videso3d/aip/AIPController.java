@@ -39,6 +39,7 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIP.Altitude;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
+import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Secteur3D.Type;
 import fr.crnan.videso3d.layers.Routes2DLayer;
@@ -53,6 +54,11 @@ import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.util.Logging;
 
+/**
+ * Contrôle l'affichage et la construction des éléments AIP
+ * @author A. Vidal
+ *
+ */
 public class AIPController implements VidesoController {
 
 	private VidesoGLCanvas wwd;
@@ -137,7 +143,13 @@ public class AIPController implements VidesoController {
 		// TODO Auto-generated method stub
 	}
 	
+	public Routes2DLayer getRoutes2DLayer(){
+		return routes2D;
+	}
 	
+	public Routes3DLayer getRoutes3DLayer(){
+		return routes3D;
+	}
 	
 	@Override
 	public void toggleLayer(Layer layer, Boolean state) {
@@ -374,19 +386,41 @@ public class AIPController implements VidesoController {
 				Element segment = aip.findElement(aip.getDocumentRoot().getChild("SegmentS"), segments.getString(1));
 				String segmentName = buildSegmentName(routeName, segment.getChildText("Sequence"));
 				if(routes2D.getRoute(segmentName)==null){
+					Couple<Altitude,Altitude> altis = aip.getLevels(segment);
+					
+					
 					LinkedList<LatLon> loc = new LinkedList<LatLon>();
-					Route2D segment2D = new Route2D(segmentName, RouteType);
 					Geometrie geometrieSegment = new Geometrie(segment);
 					loc.addAll(geometrieSegment.getLocations());
 					if(loc.get(0)==null){
 						loc.clear();
 						loc.add(LatLon.fromDegrees(48, 0));
 					}
+					Route2D segment2D = new Route2D(segmentName, RouteType);
 					segment2D.setLocations(loc);
 					segment2D.setAnnotation("Route "+segmentName);
 					routes2D.addRoute(segment2D, segmentName);
+					routes2D.displayRoute(segmentName);
+					
+					//TODO prendre en compte le sens de circulation... 
+					if(!segment.getChildText("Circulation").equals("(XxX)")){
+					Route3D segment3D = new Route3D(segmentName, RouteType);
+					segment3D.setLocations(loc);
+					boolean lowerTerrainConformant = false, upperTerrainConformant = false;
+					if(altis.getFirst().isTerrainConforming()){
+						lowerTerrainConformant = true;
+					}
+					if(altis.getSecond().isTerrainConforming()){
+						upperTerrainConformant=true;
+					}
+					segment3D.setTerrainConforming(lowerTerrainConformant, upperTerrainConformant);
+					segment3D.setAltitudes(altis.getFirst().getMeters(), altis.getSecond().getMeters());	
+					segment3D.setAnnotation("<html>Route "+segmentName+"<br/><b>Plancher :</b>"+altis.getFirst().getFullText()
+							+"<br/><b>Plafond :</b>"+altis.getSecond().getFullText()+"</html>");
+					routes3D.addRoute(segment3D, segmentName);
+					routes3D.displayRoute(segmentName);
+					}
 				}
-				routes2D.displayRoute(segmentName);
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -401,6 +435,7 @@ public class AIPController implements VidesoController {
 			ResultSet rs = st.executeQuery("select sequence from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
 			while(rs.next()){
 				routes2D.hideRoute(buildSegmentName(routeName, rs.getString(1)));
+				routes3D.hideRoute(buildSegmentName(routeName, rs.getString(1)));
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -419,6 +454,7 @@ public class AIPController implements VidesoController {
 		this.zones.clear();
 		this.zonesLayer.removeAllAirspaces();
 		this.routes2D.removeAllRenderables();
+		this.routes3D.removeAllAirspaces();
 		this.wwd.getAnnotationLayer().removeAllAnnotations();
 	}
 
@@ -527,9 +563,12 @@ public class AIPController implements VidesoController {
 	 */
 	private void highlightRoute(ArrayList<String> segmentsNames){
 		ArrayList<Route2D> segments2D = new ArrayList<Route2D>();
+		ArrayList<Route3D> segments3D = new ArrayList<Route3D>();
 		for(String s : segmentsNames){
 			segments2D.add((Route2D) routes2D.getRoute(s));
+			segments3D.add((Route3D) routes3D.getRoute(s));
 		}
+		//TODO si c'est routes3D qui est activée, faire centerview sur segments3D
 		centerView(segments2D);
 	}
 	
@@ -589,20 +628,23 @@ public class AIPController implements VidesoController {
 	 * @param type le type de route (AWY, PDR ou TAC)
 	 * @return
 	 */
-	public Route2D getPrevious(String routeName, String segmentSequenceString, String type){
-		Route2D previousSegment = null;
+	public Route getPrevious(String routeName, String segmentSequenceString, String type, boolean route3D){
+		Route previousSegment = null;
 		String pkRoute = null;
 		int segmentSequence = Integer.parseInt(segmentSequenceString);
 		try{
 			pkRoute = getRouteIDFromSegmentName(routeName, type);
 			int previousSeq = getNearSequence(pkRoute, segmentSequence, -1);
 			if(previousSeq != 0){
-				previousSegment = (Route2D) routes2D.getRoute(routeName.split("-")[0].concat(" - "+previousSeq));
+				if(route3D){
+					previousSegment = (Route3D) routes3D.getRoute(routeName.split("-")[0].concat(" - "+previousSeq));
+				}else{
+					previousSegment = (Route2D) routes2D.getRoute(routeName.split("-")[0].concat(" - "+previousSeq));
+				}
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
-		
 		return previousSegment;
 	}
 	
@@ -613,15 +655,19 @@ public class AIPController implements VidesoController {
 	 * @param type le type de route (AWY, PDR ou TAC)
 	 * @return
 	 */
-	public Route2D getNext(String routeName, String segmentSequenceString, String type){
-		Route2D nextSegment = null;
+	public Route getNext(String routeName, String segmentSequenceString, String type, boolean route3D){
+		Route nextSegment = null;
 		String pkRoute = null;
 		int segmentSequence = Integer.parseInt(segmentSequenceString);
 		try{
 			pkRoute = getRouteIDFromSegmentName(routeName, type);
 			int nextSeq = getNearSequence(pkRoute, segmentSequence, 1);
 			if(nextSeq != 0){
-				nextSegment = (Route2D) routes2D.getRoute(routeName.split("-")[0].concat(" - "+nextSeq));
+				if(route3D){
+					nextSegment = (Route3D) routes3D.getRoute(routeName.split("-")[0].concat(" - "+nextSeq));
+				}else{
+					nextSegment = (Route2D) routes2D.getRoute(routeName.split("-")[0].concat(" - "+nextSeq));
+				}
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
