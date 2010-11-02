@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.jdom.Element;
 
@@ -516,15 +517,17 @@ public class AIPController implements VidesoController {
 	@Override
 	public void highlight(int type, String name) {
 	 	if(type == AIP.CTL){
-			//on passe en paramètre name.substring(3) car le nom qu'on a récupéré est précédé du chiffre correspondant au type de zone
-			highlightCTL(getCTLSecteurs(name.substring(3)));
+			highlightCTL(getCTLSecteurs(name));
 			//Si le type est supérieur à 20, c'est une route
 		}else if(type>=20 && type <30){
 			highlightRoute(getSegments(name.substring(3)));
-		//}else if(type>=30){
+		}else if(type>=30){
 		//	highlightNavFix(name);
 		}else{
-			Secteur3D zone = zones.get(name);
+			if(!zones.containsKey(type+" "+name)){
+				this.addZone(type, name);
+			}
+			Secteur3D zone = zones.get(type+" "+name);
 			this.centerView(zone);
 		}
 	}
