@@ -108,6 +108,7 @@ public class AIPController implements VidesoController {
 			e.printStackTrace();
 		}
 		
+		this.wwd.firePropertyChange("step", "", "Création des routes");
 		//Layers pour les routes
 		if(routes3D != null) {
 			routes3D.removeAllAirspaces();
@@ -130,7 +131,7 @@ public class AIPController implements VidesoController {
 	
 	
 	@Override
-	public void unHighlight(String name) {
+	public void unHighlight(int type, String name) {
 	}
 	@Override
 	public void addLayer(String name, Layer layer) {
@@ -513,13 +514,15 @@ public class AIPController implements VidesoController {
 	 * @param name
 	 */
 	@Override
-	public void highlight(String name) {
-		if(name.startsWith(AIP.CTL+" ")){
+	public void highlight(int type, String name) {
+	 	if(type == AIP.CTL){
 			//on passe en paramètre name.substring(3) car le nom qu'on a récupéré est précédé du chiffre correspondant au type de zone
 			highlightCTL(getCTLSecteurs(name.substring(3)));
-			//Si le nom commence par un 2, c'est une route
-		}else if(name.startsWith("2") && name.charAt(1)!=' '){
+			//Si le type est supérieur à 20, c'est une route
+		}else if(type>=20 && type <30){
 			highlightRoute(getSegments(name.substring(3)));
+		//}else if(type>=30){
+		//	highlightNavFix(name);
 		}else{
 			Secteur3D zone = zones.get(name);
 			this.centerView(zone);
