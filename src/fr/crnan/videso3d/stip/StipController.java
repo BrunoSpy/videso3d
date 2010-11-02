@@ -41,6 +41,7 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
@@ -48,7 +49,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage et la construction des éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class StipController implements VidesoController {
 
@@ -74,6 +75,8 @@ public class StipController implements VidesoController {
 	private AirspaceLayer secteursLayer = new AirspaceLayer();
 	{secteursLayer.setName("Secteurs");
 	secteursLayer.setEnableAntialiasing(true);}	
+	private RenderableLayer secteurs2D;
+	
 	
 	private HashMap<String, Secteur3D> secteurs = new HashMap<String, Secteur3D>();
 	/**
@@ -99,7 +102,7 @@ public class StipController implements VidesoController {
 	}
 
 	@Override
-	public void unHighlight(String name) {
+	public void unHighlight(int type, String name) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -135,6 +138,8 @@ public class StipController implements VidesoController {
 	
 	@Override
 	public void reset(){
+		this.balisesNP.setLocked(false);
+		this.balisesPub.setLocked(false);
 		this.balisesNP.removeAllBalises();
 		this.balisesPub.removeAllBalises();
 		this.secteurs.clear();
@@ -462,83 +467,57 @@ public class StipController implements VidesoController {
 	 * @param text Nom de l'objet à afficher
 	 */
 	@Override
-	public void highlight(String text) {
-//		if(text.trim().isEmpty()){
-//			if(highlight != null) {
-//				if((highlight instanceof Route3D) && lastAttrs != null){
-//					((Airspace)highlight).setAttributes((AirspaceAttributes) lastAttrs);
-//					selectedAirspaces.removeAllAirspaces();
-//				} else if (highlight instanceof String){ //cas des secteurs
-//					this.setAttributesToSecteur((String) highlight, (AirspaceAttributes) lastAttrs);
-//					this.removeSecteur3D((String) highlight);
-//				} else if(highlight instanceof Balise2D){
-//					((Balise2D) highlight).highlight(false);
-//					if(lastLayer != null) this.toggleLayer(lastLayer, false);
-//					lastLayer = null;
-//				}
-//				lastAttrs = null;
-//				highlight = null;
-//			}
-//		} else {
-			try {
-				Statement st = DatabaseManager.getCurrentStip();
-				//on recherche le type
-				ResultSet rs = st.executeQuery("select * from routes where routes.name = '"+text+"'");
-				if(rs.next()){
-					Route3D airspace = (Route3D) routes3D.getRoute(text);
-					
-					this.unHighlightPrevious(airspace);
-					
-					routes2D.highlight(text);
-					routes3D.highlight(text);
-					
-					//ajout des balises
-					balisesNP.showBalises(airspace.getBalises());
-					balisesPub.showBalises(airspace.getBalises());
-					
-					this.toggleLayer(balisesNP, true);
-					this.toggleLayer(balisesPub, true);
-					
-					this.wwd.getView().goTo(airspace.getReferencePosition(), 1e6);
-					
-					highlight = airspace;
-					
-					return;
-				}
-				rs = st.executeQuery("select * from secteurs where nom = '"+text+"'");
-				if(rs.next()){
-					if(!secteurs.containsKey(text+0)){
-						this.addSecteur3D(text);
-					}
-					this.unHighlightPrevious(text);
-					Secteur3D airspace = secteurs.get(text+0);
-					lastAttrs = airspace == null ? new BasicAirspaceAttributes() : airspace.getAttributes(); //nécessaire à cause des secteurs fictifs qui n'ont pas de dessin
-					AirspaceAttributes attrs = new BasicAirspaceAttributes((AirspaceAttributes) lastAttrs);
-					attrs.setOutlineMaterial(Material.YELLOW);
-					this.setAttributesToSecteur(text, attrs);
-					highlight = text;
-					if(airspace != null) this.wwd.getView().goTo(airspace.getReferencePosition(), 1e6);
-					return;
-				}
-				rs = st.executeQuery("select * from balises where name = '"+text+"'");
-				if(rs.next()){
-					Balise2D airspace = (Balise2D) balises.get(text);
-					airspace.highlight(true);
-					this.unHighlightPrevious(airspace);
-					highlight = airspace;
-					if (rs.getInt("publicated") == 1) {
-						balisesPub.showBalise(airspace);
-					}
-					if (rs.getInt("publicated") == 0) {
-						balisesNP.showBalise(airspace);
-					} 
-					this.wwd.getView().goTo(airspace.getPosition(), 4e5);
-					return;
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
+	public void highlight(int type, String text) {
+		switch (type) {
+		case ROUTES:
+			Route3D airspace = (Route3D) routes3D.getRoute(text);
+
+			this.unHighlightPrevious(airspace);
+
+			routes2D.highlight(text);
+			routes3D.highlight(text);
+
+			//ajout des balises
+			balisesNP.showBalises(airspace.getBalises());
+			balisesPub.showBalises(airspace.getBalises());
+
+			this.toggleLayer(balisesNP, true);
+			this.toggleLayer(balisesPub, true);
+
+			this.wwd.getView().goTo(airspace.getReferencePosition(), 1e6);
+
+			highlight = airspace;
+			break;
+		case SECTEUR:
+			if(!secteurs.containsKey(text+0)){
+				this.addSecteur3D(text);
 			}
-//		}
+			this.unHighlightPrevious(text);
+			Secteur3D secteur = secteurs.get(text+0);
+			lastAttrs = secteur == null ? new BasicAirspaceAttributes() : secteur.getAttributes(); //nécessaire à cause des secteurs fictifs qui n'ont pas de dessin
+			AirspaceAttributes attrs = new BasicAirspaceAttributes((AirspaceAttributes) lastAttrs);
+			attrs.setOutlineMaterial(Material.YELLOW);
+			this.setAttributesToSecteur(text, attrs);
+			highlight = text;
+			if(secteur != null) this.wwd.getView().goTo(secteur.getReferencePosition(), 1e6);
+			break;
+		case BALISES_NP:
+			Balise2D balise = (Balise2D) balises.get(text);
+			balise.highlight(true);
+			this.unHighlightPrevious(balise);
+			highlight = balise;
+			balisesNP.showBalise(balise);
+			this.wwd.getView().goTo(balise.getPosition(), 4e5);
+		case BALISES_PUB:
+			Balise2D balise1 = (Balise2D) balises.get(text);
+			balise1.highlight(true);
+			this.unHighlightPrevious(balise1);
+			highlight = balise1;
+			balisesPub.showBalise(balise1);
+			this.wwd.getView().goTo(balise1.getPosition(), 4e5);
+		default:
+			break;
+		}
 	}
 	
 	private void unHighlightPrevious(Object previous){

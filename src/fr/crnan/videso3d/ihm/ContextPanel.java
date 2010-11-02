@@ -18,7 +18,6 @@ package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -51,7 +50,7 @@ import fr.crnan.videso3d.graphics.ObjectAnnotation;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Secteur3D;
-import fr.crnan.videso3d.graphics.Secteur3D.Type;
+import fr.crnan.videso3d.graphics.Secteur.Type;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.stip.StipController;
@@ -61,7 +60,7 @@ import gov.nasa.worldwind.geom.Position;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public class ContextPanel extends JPanel implements SelectListener {
 
@@ -116,7 +115,6 @@ public class ContextPanel extends JPanel implements SelectListener {
 			}
 		}
 	}
-
 	
 
 	/**
@@ -152,10 +150,11 @@ public class ContextPanel extends JPanel implements SelectListener {
 			Longitude lon = new Longitude(coor.getLongitude().degrees);
 			final String latitude = lat.getDegres()+"°"+lat.getMinutes()+"\'"+lat.getSecondes()+"\" N";
 			final String longitude = Math.abs(lon.getDegres())+"°"+lon.getMinutes()+"\'"+lon.getSecondes()+"\""+ (lon.getDegres() < 0 ? "E" : "O");
-
+			
+			final boolean pub = rs.getBoolean(3);
 			JXTaskPane balise = new JXTaskPane();
 			balise.setTitle("Informations générales");
-			balise.add(new JLabel("<html><b>Publiée</b> : "+(rs.getBoolean(3)?"oui":"non")+"</html>"));
+			balise.add(new JLabel("<html><b>Publiée</b> : "+(pub?"oui":"non")+"</html>"));
 			balise.add(new JLabel("<html><b>Commentaires</b> : "+ rs.getString("definition")+"</html>"));
 			balise.add(new JLabel("<html><b>Cooordonnées</b> :</html>"));
 			balise.add(new AbstractAction() {
@@ -166,7 +165,11 @@ public class ContextPanel extends JPanel implements SelectListener {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if(stipController!=null){
-						stipController.highlight(name);
+						if(pub) {
+							stipController.highlight(StipController.BALISES_PUB, name);
+						} else {
+							stipController.highlight(StipController.BALISES_NP, name);
+						}
 					}
 				}
 			});
@@ -178,7 +181,11 @@ public class ContextPanel extends JPanel implements SelectListener {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if(stipController!=null){
-						stipController.highlight(name);
+						if(pub) {
+							stipController.highlight(StipController.BALISES_PUB, name);
+						} else {
+							stipController.highlight(StipController.BALISES_NP, name);
+						}
 					}
 				}
 			});
@@ -200,7 +207,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 							}
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								stipController.highlight(tSecteur);
+								stipController.highlight(StipController.SECTEUR, tSecteur);
 							}
 						});
 					}	
@@ -217,7 +224,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 					}
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						stipController.highlight(tSecteur);
+						stipController.highlight(StipController.SECTEUR, tSecteur);
 					}
 				});
 			}
@@ -513,7 +520,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 				}
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					stipController.highlight(name);
+					stipController.highlight(StipController.ROUTES, name);
 				}
 			});
 			vue.add(new AbstractAction() {

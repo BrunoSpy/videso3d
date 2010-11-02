@@ -21,7 +21,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * Controleur d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public interface VidesoController {
 
@@ -29,13 +29,13 @@ public interface VidesoController {
 	 * Mets en valeur l'élément <code>name</code>
 	 * @param name Nom de l'élément à mettre en valeur
 	 */
-	public void highlight(String name);
+	public void highlight(int type, String name);
 	
 	/**
 	 * Supprime le cas échéant la mise en valeur de l'élément <code>name</code>
 	 * @param name Nom de l'élément à remettre dans son état normal
 	 */
-	public void unHighlight(String name);
+	public void unHighlight(int type, String name);
 	
 	/**
 	 * Ajoute un calque. Le calque est affiché en même temps.
