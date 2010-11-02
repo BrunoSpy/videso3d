@@ -16,6 +16,8 @@
 
 package fr.crnan.videso3d;
 
+import fr.crnan.videso3d.aip.AIP;
+import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.util.Logging;
 
 import java.beans.PropertyChangeListener;
@@ -1263,29 +1265,36 @@ public final class DatabaseManager {
 	 * @return
 	 * @throws SQLException
 	 */
-	public static List<String> getAllVisibleObjects(Type type) throws SQLException{
-		List<String> items = null;
+	public static List<Couple<Integer, String>> getAllVisibleObjects(Type type) throws SQLException{
+		List<Couple<Integer, String>> items = null;
 		Statement st;
 		ResultSet rs;
 		switch (type) {
 		case STIP:	
 			st = DatabaseManager.getCurrentStip();
 			if(st != null){
-				items = new LinkedList<String>();
-				rs = st.executeQuery("select name from balises UNION select name from routes UNION select nom from secteurs");
+				items = new LinkedList<Couple<Integer, String>>();
+				rs = st.executeQuery("select name, publicated from balises");
 				while(rs.next()){
-					items.add(rs.getString(1));
+					items.add(new Couple<Integer, String>((rs.getBoolean(2) ? StipController.BALISES_PUB : StipController.BALISES_NP), rs.getString(1)));
+				}
+				rs = st.executeQuery("select name from routes");
+				while(rs.next()){
+					items.add(new Couple<Integer, String>(StipController.ROUTES, rs.getString(1)));
+				}
+				rs = st.executeQuery("select nom from secteurs");
+				while(rs.next()){
+					items.add(new Couple<Integer, String>(StipController.SECTEUR, rs.getString(1)));
 				}
 			}
 			return items;
 		case AIP:
 			st = DatabaseManager.getCurrentAIP();
 			if(st != null){
-				//TODO a changer absolument
-				items = new LinkedList<String>();
-				rs = st.executeQuery("select nom from volumes UNION select nom from routes");
+				items = new LinkedList<Couple<Integer, String>>();
+				rs = st.executeQuery("select nom, type from volumes UNION select nom, type from routes");
 				while(rs.next()){
-					items.add(rs.getString(1));
+					items.add(new Couple<Integer, String>(AIP.string2type(rs.getString(2)), rs.getString(1)));
 				}
 			}
 			return items;
