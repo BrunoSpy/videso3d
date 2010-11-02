@@ -41,7 +41,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * Gestion des données SkyView
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class SkyViewController implements VidesoController {
 
@@ -65,10 +65,10 @@ public class SkyViewController implements VidesoController {
 	}
 	
 	@Override
-	public void highlight(String name) {}
+	public void highlight(int type, String name) {}
 
 	@Override
-	public void unHighlight(String name) {}
+	public void unHighlight(int type, String name) {}
 
 	@Override
 	public void addLayer(String name, Layer layer) {}

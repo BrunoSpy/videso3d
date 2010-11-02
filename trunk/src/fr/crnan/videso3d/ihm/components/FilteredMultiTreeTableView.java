@@ -21,8 +21,6 @@ import java.awt.Color;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
@@ -46,7 +44,7 @@ import fr.crnan.videso3d.Couple;
 /**
  * Panel de sélection de données avec plusieurs panels filtrables
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public abstract class FilteredMultiTreeTableView extends JPanel implements DataView {
 
@@ -169,9 +167,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 						String type = ((Couple<String, Boolean>)((DefaultMutableTreeNode)path[1]).getUserObject()).getFirst();
 						String name = (String) treeTable.getValueAt(row, 0);
 						treeTable.setValueAt(true, row, 1);
-						//TODO problème avec les données AIP : il faut rajouter le type devant le nom car highlight ne prend pas le 
-						//type en paramètre.
-						getController().highlight(getController().string2type(type)+" "+name);
+						getController().highlight(getController().string2type(type),name);
 					}
 				}
 			}

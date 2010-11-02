@@ -25,7 +25,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * Contrôle l'affichage des éléments Edimap
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class EdimapController implements VidesoController {
 
@@ -71,10 +71,10 @@ public class EdimapController implements VidesoController {
 	}
 
 	@Override
-	public void highlight(String name) {}
+	public void highlight(int type, String name) {}
 
 	@Override
-	public void unHighlight(String name) {}
+	public void unHighlight(int type, String name) {}
 	
 	@Override
 	public void reset() {}

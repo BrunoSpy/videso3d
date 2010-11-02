@@ -47,13 +47,13 @@ public class StpvController implements VidesoController {
 	}
 	
 	@Override
-	public void highlight(String name) {
+	public void highlight(int type, String name) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void unHighlight(String name) {
+	public void unHighlight(int type, String name) {
 		// TODO Auto-generated method stub
 
 	}
