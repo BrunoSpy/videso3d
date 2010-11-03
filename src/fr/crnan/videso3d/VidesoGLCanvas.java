@@ -39,9 +39,8 @@ import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
+import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route;
-import fr.crnan.videso3d.graphics.Route2D;
-import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
@@ -550,6 +549,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public double[] computeBestEyePosition(Object object){
 		if(object instanceof Secteur3D){
 			return computeBestEyePosition((Secteur3D)object);
+		}else if (object instanceof Balise2D){
+			return computeBestEyePosition((Balise2D)object);
 		}else if(object instanceof List){
 			if(((List<?>)object).get(0) instanceof Route){
 				return computeBestEyePosition((List<? extends Route>)object);
@@ -626,6 +627,12 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			return new double[]{middleSegmentLocation.latitude.degrees, middleSegmentLocation.longitude.degrees, Math.min(elevation,2.5e6)};
 			
 	}
+	
+	
+	public double[] computeBestEyePosition(Balise2D navFix){
+		return new double[]{navFix.getPosition().latitude.degrees, navFix.getPosition().longitude.degrees, 2e5};
+	}
+	
 	
 	public double computeBestElevation(double distance){
 		return -6e-7*distance*distance+2.3945*distance+175836;

@@ -34,7 +34,7 @@ import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
-import fr.crnan.videso3d.graphics.Secteur3D.Type;
+import fr.crnan.videso3d.graphics.Secteur.Type;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.layers.VAnnotationLayer;

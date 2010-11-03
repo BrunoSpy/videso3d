@@ -205,4 +205,9 @@ public class BaliseLayer extends LayerSet {
 	public Boolean contains(String balise){
 		return balises.containsKey(balise);
 	}
+	
+	
+	public Balise2D getBalise(String balise){
+		return balises.get(balise);
+	}
 }

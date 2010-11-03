@@ -24,10 +24,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import org.jdom.Element;
 
@@ -38,11 +37,14 @@ import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIP.Altitude;
+import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.ObjectAnnotation;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Secteur.Type;
+import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
 import gov.nasa.worldwind.avlist.AVKey;
@@ -75,6 +77,8 @@ public class AIPController implements VidesoController {
 	 */
 	private Routes2DLayer routes2D;
 	private Routes3DLayer routes3D;
+	
+	private BaliseLayer navFixLayer;
 
 	
 	private HashMap<String, Secteur3D> zones;
@@ -113,7 +117,7 @@ public class AIPController implements VidesoController {
 		//Layers pour les routes
 		if(routes3D != null) {
 			routes3D.removeAllAirspaces();
-		} else {
+		}else{
 			routes3D = new Routes3DLayer("Routes AIP 3D");
 			this.toggleLayer(routes3D, false); //affichage en 2D par défaut
 		}
@@ -125,6 +129,13 @@ public class AIPController implements VidesoController {
 		}
 		routesAnnotations = new HashMap<String, GlobeAnnotation>();
 		this.buildRoutes();
+		this.wwd.firePropertyChange("step", "", "Création des balises");
+		if(navFixLayer != null){
+			navFixLayer.removeAllBalises();
+		}else{
+			navFixLayer = new BaliseLayer("NavFix AIP");	
+			this.toggleLayer(navFixLayer, true);
+		}
 		this.wwd.redraw();
 	}
 
@@ -165,6 +176,7 @@ public class AIPController implements VidesoController {
 
 	
 	private void buildRoutes(){
+		try{
 		List<Couple<String,String>> routeNamesAndTypes = aip.getRouteNamesFromDB();
 		for(Couple<String,String> nameAndType : routeNamesAndTypes){
 			String typeString = nameAndType.getSecond();
@@ -175,27 +187,27 @@ public class AIPController implements VidesoController {
 				type = AIP.TAC;
 			addRouteToLayer(nameAndType.getFirst(), type);
 		}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	
 	
 	@Override
 	public void showObject(int type, String name) {
-		switch(type){
-		case AIP.AWY :
-		case AIP.PDR :
-		case AIP.TAC :
+		if(type>=AIP.AWY && type<AIP.DMEATT){
 			this.showRoute(name,type);
-			break;
-		case AIP.CTL :
+		}else if(type == AIP.CTL){
 			// si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
 			// donc on va chercher les différents morceaux avec getCTLSecteurs et on les ajoute tous.
 			for(String nomPartieSecteur : getCTLSecteurs(name)){
 				if(!zones.containsKey(nomPartieSecteur))
 					this.addZone(type, nomPartieSecteur);
 			}
-			break;
-		default :
+		}else if(type>=AIP.DMEATT){
+			this.showNavFix(name);
+		}else{
 			if(!zones.containsKey(name))
 				this.addZone(type,name);
 		}
@@ -203,20 +215,18 @@ public class AIPController implements VidesoController {
 
 	@Override
 	public void hideObject(int type, String name) {
-		switch(type){
-		case AIP.AWY :
-		case AIP.PDR :
-		case AIP.TAC :
-			this.removeRoute(name, type);
-			break;
+		this.wwd.getView().stopMovement();
+		if(type>=AIP.AWY && type<AIP.DMEATT){
+			this.removeRoute(type, name);
+		}else if(type>=AIP.DMEATT){
+			this.removeNavFix(type, name);
+		}else if(type == AIP.CTL){
 			// si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
 			// donc on va chercher les différents morceaux avec getCTLSecteurs et on les enlève tous.
-		case AIP.CTL:
 			for(String nomPartieSecteur : getCTLSecteurs(name)){
 				this.removeZone(type,nomPartieSecteur);
 			}
-			break;
-		default :
+		}else{
 			this.removeZone(type,name);
 		}
 	}
@@ -226,27 +236,7 @@ public class AIPController implements VidesoController {
 		return AIP.string2type(type);
 	}
 
-	/**
-	 * Affiche tous les objets correspondant aux checkBox de la liste.
-	 * @param type Le type des objets à afficher
-	 */
-	public void displayAll(int type){
-		Iterator<Couple<Integer,String>> it = aip.getZones(type).iterator();
-		while(it.hasNext()){
-			showObject(type, it.next().getSecond());
-		}
-	}
-	/**
-	 * Enlève tous les objets correspondant aux checkBox de la liste.
-	 * @param type
-	 */
-	public void hideAll(int type){
-		Iterator<Couple<Integer,String>> it = aip.getZones(type).iterator();
-		while(it.hasNext()){
-			hideObject(type, it.next().getSecond());
-		}
-	}
-	
+
 	private void addZone(int type, String name) {
 		Type secteur3DType=null;
 		Color couleurZone=null;
@@ -467,7 +457,7 @@ public class AIPController implements VidesoController {
 	
 	
 	
-	private void removeRoute(String routeName, int type){
+	private void removeRoute(int type, String routeName){
 		//TODO problème avec les routes qui ont le même nom (J 22 et J 22 Polynésie...) : quand on met l'annotation dans le hashmap 
 		//on ne connaît pas le territoire, donc quand on affiche les deux J 22 en même temps, on ne garde qu'une seule des deux annotations
 		//dans le hashmap. Du coup on ne peut plus enlever l'autre.
@@ -488,6 +478,44 @@ public class AIPController implements VidesoController {
 	}
 	
 	
+	private void showNavFix(String name){
+		double latitude = 0;
+		double longitude = 0;
+		String type = "";
+		double freq = 0;
+		PreparedStatement ps;
+		try {
+			ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select lat, lon, type, frequence from NavFix where nom = ?");
+
+			ps.setString(1, name);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				latitude = rs.getDouble(1);
+				longitude = rs.getDouble(2);
+				type = rs.getString(3);
+				freq = rs.getDouble(4);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Balise2D navFix = new Balise2D(name, Position.fromDegrees(latitude, longitude));
+		String annotation = "<html><b>"+name+"</b><br/><i>Type : </i>"+type;
+		if(freq != 0){
+			annotation += "<br/><i>Fréq. : </i>"+freq;
+		}
+		annotation += "</html>";
+		navFix.setAnnotation(annotation);
+		navFixLayer.addBalise(navFix);
+		navFixLayer.showBalise(navFix);
+	}
+	
+	private void removeNavFix(int type, String name){
+		Balise2D navFix = navFixLayer.getBalise(name);
+		navFixLayer.hideBalise(navFix);
+		this.wwd.getAnnotationLayer().removeAnnotation(navFix.getAnnotation(null));
+		
+	}
+	
 	
 
 	@Override
@@ -500,6 +528,7 @@ public class AIPController implements VidesoController {
 		this.zonesLayer.removeAllAirspaces();
 		this.routes2D.removeAllRenderables();
 		this.routes3D.removeAllAirspaces();
+		this.navFixLayer.removeAllBalises();
 		this.wwd.getAnnotationLayer().removeAllAnnotations();
 	}
 
@@ -517,12 +546,14 @@ public class AIPController implements VidesoController {
 	@Override
 	public void highlight(int type, String name) {
 	 	if(type == AIP.CTL){
-			highlightCTL(getCTLSecteurs(name));
-			//Si le type est supérieur à 20, c'est une route
+			highlightCTL(name);
+			//Si le type est supérieur à 20 et inférieur à 30, c'est une route
 		}else if(type>=20 && type <30){
-			highlightRoute(getSegments(name.substring(3)));
+			highlightRoute(type, name);
+			//Si le type est supérieur ou égal à 30, c'est une balise
 		}else if(type>=30){
-		//	highlightNavFix(name);
+			highlightNavFix(type, name);
+			//Sinon c'est un volume
 		}else{
 			if(!zones.containsKey(type+" "+name)){
 				this.addZone(type, name);
@@ -541,6 +572,7 @@ public class AIPController implements VidesoController {
 	 * @return La position sur laquelle la vue est centrée.
 	 */
 	public Position centerView(Object object){
+		Logging.logger("center");
 		wwd.getView().setValue(AVKey.ELEVATION, 1e11);
 		double[] eyePosition = this.wwd.computeBestEyePosition(object);
 		Position centerPosition = Position.fromDegrees(eyePosition[0], eyePosition[1]);
@@ -560,8 +592,8 @@ public class AIPController implements VidesoController {
 	 */
 	@SuppressWarnings("unchecked")
 	public void showAnnotation(Object obj, Position pos){
-		if(obj instanceof Secteur3D){
-			this.wwd.getAnnotationLayer().addAnnotation(((Secteur3D)obj).getAnnotation(pos));
+		if(obj instanceof ObjectAnnotation){
+			this.wwd.getAnnotationLayer().addAnnotation(((ObjectAnnotation)obj).getAnnotation(pos));
 		}else if(obj instanceof List){
 			if(((List<?>)obj).get(0) instanceof Route){
 				String routeName = ((List<? extends Route>)obj).get(0).getName().split("-")[0].trim();
@@ -579,7 +611,13 @@ public class AIPController implements VidesoController {
 	 * Centre la vue sur le premier morceau du secteur de contrôle, et affiche les annotations de tous les morceaux.
 	 * @param names les noms des différents morceaux correspondant à un secteur.
 	 */
-	private void highlightCTL(ArrayList<String> names){
+	private void highlightCTL(String name){
+		ArrayList<String> names = getCTLSecteurs(name);
+		//on construit le secteur s'il n'existe pas encore
+		if(!zones.containsKey(AIP.CTL+" "+names.get(0))){
+			addZone(AIP.CTL, name);
+		}
+		//puis on le centre dans la vue
 		Position center = centerView(zones.get(AIP.CTL+" "+names.get(0)));
 		if(names.size()>1){
 			for(int i = 1; i<names.size(); i++){
@@ -610,14 +648,32 @@ public class AIPController implements VidesoController {
 	}
 	
 	
+	
+	
+	private void highlightNavFix(int type, String name){
+		if(!navFixLayer.contains(name)){
+			
+			showNavFix(name);
+		}
+		Balise2D navFix = navFixLayer.getBalise(name);
+		centerView(navFix);
+	}
+	
+	
+	
+	
 	/**
 	 * Centre la vue sur la route définie par les segments passés en paramètre.
 	 * @param segmentsNames Les noms des segments de la route
 	 */
-	private void highlightRoute(ArrayList<String> segmentsNames){
+	private void highlightRoute(int type, String name){
+		ArrayList<String> segmentsNames = getSegments(name);
+		if(!routes2D.hasKey(segmentsNames.get(0))){
+			showRoute(name, type);
+		}
 		ArrayList<Route2D> segments2D = new ArrayList<Route2D>();
 		ArrayList<Route3D> segments3D = new ArrayList<Route3D>();
-		for(String s : segmentsNames){
+				for(String s : segmentsNames){
 			segments2D.add((Route2D) routes2D.getRoute(s));
 			segments3D.add((Route3D) routes3D.getRoute(s));
 		}

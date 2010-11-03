@@ -850,6 +850,13 @@ public final class DatabaseManager {
 				"PRIMARY KEY (routes_pk, nomACC),"+
 				"FOREIGN KEY (routes_pk) references routes(pk)"+
 		")");
+		st.executeUpdate("create table NavFix (pk integer primary key," +
+				"type varchar(7),"+
+				"nom varchar(10),"+
+				"lat double,"+
+				"lon double,"+
+				"frequence double"+
+		")");
 		st.close();
 		
 		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
@@ -1292,7 +1299,7 @@ public final class DatabaseManager {
 			st = DatabaseManager.getCurrentAIP();
 			if(st != null){
 				items = new LinkedList<Couple<Integer, String>>();
-				rs = st.executeQuery("select nom, type from volumes UNION select nom, type from routes");
+				rs = st.executeQuery("select nom, type from volumes UNION select nom, type from routes UNION select nom, type from NavFix");
 				while(rs.next()){
 					items.add(new Couple<Integer, String>(AIP.string2type(rs.getString(2)), rs.getString(1)));
 				}

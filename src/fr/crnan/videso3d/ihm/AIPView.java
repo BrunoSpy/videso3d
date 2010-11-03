@@ -57,10 +57,17 @@ public class AIPView extends FilteredMultiTreeTableView {
 				FilteredTreeTableModel ZonesModel = new FilteredTreeTableModel(ZonesRoot);
 				this.addTableTree(ZonesModel, "Zones", null);
 				
+				DefaultMutableTreeNode NavFixRoot = new DefaultMutableTreeNode("root");
+				this.fillNavFixRootNode(NavFixRoot);
+				FilteredTreeTableModel NavFixModel = new FilteredTreeTableModel(NavFixRoot);
+				this.addTableTree(NavFixModel, "Navigation Fix", null);
+				
+				
 				DefaultMutableTreeNode RoutesRoot = new DefaultMutableTreeNode("root");
 				this.fillRoutesRootNode(RoutesRoot);
 				FilteredTreeTableModel RoutesModel = new FilteredTreeTableModel(RoutesRoot);
 				this.addTableTree(RoutesModel, "", createTitleRoutes());
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -138,6 +145,31 @@ public class AIPView extends FilteredMultiTreeTableView {
 		}
 	}
 	
+	
+	private void fillNavFixRootNode(DefaultMutableTreeNode root){
+		try{
+			Statement st = DatabaseManager.getCurrentAIP();
+			ResultSet rs = st.executeQuery("select distinct type from NavFix order by type");
+			LinkedList<String> types = new LinkedList<String>();
+			while(rs.next()){
+				types.add(rs.getString(1));
+			}
+			for(String t : types){
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(t, false));
+				root.add(node);
+				rs = st.executeQuery("select distinct nom from NavFix where type = '"+t+"' order by nom");
+				while(rs.next()){
+					node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+				}
+			}
+			rs.close();
+			st.close();
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+
 	/**
 	 * Titre du panel Routes.<br />
 	 * Contient un sélecteur pour choisir la méthode de représentation (2D/3D).
