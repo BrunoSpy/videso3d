@@ -48,7 +48,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
  */
 public class AIP extends FileParser{
 	
-	private final Integer numberFiles = 18;
+	private final Integer numberFiles = 19;
 	
 	/**
 	 * Le nom de la base de données.
@@ -94,7 +94,8 @@ public class AIP extends FileParser{
 	public final static int Partie=0, TSA = 1, SIV = 2, CTR = 3, TMA = 4, R = 5, 
 							D = 6, FIR = 7, UIR = 8, LTA = 9, UTA = 10, CTA = 11, 
 							CTL = 12, Pje = 13, Aer = 14, Vol=15, Bal = 16, TrPla = 17,
-							AWY = 20, PDR = 21, TAC = 23;
+							AWY = 20, PDR = 21, TAC = 23,
+							DMEATT = 30, L = 31, NDB = 32, PNP = 33, TACAN = 34, VFR = 35, VOR = 36, VORDME = 37, VORTAC = 38, WPT = 39;
 	
 
 
@@ -280,10 +281,56 @@ public class AIP extends FileParser{
 		this.setFile("Routes");
 		this.setProgress(17);
 		this.getRoutes();
+		this.setFile("Navigation Fix");
 		this.setProgress(18);
+		this.getBalises();
+		this.setProgress(19);
 		
 	}
 	
+	
+	@SuppressWarnings("unchecked")
+	private void getBalises(){
+		Element racineNavFix = document.getRootElement().getChild("Situation").getChild("NavFixS");
+		List<Element> navFix = racineNavFix.getChildren();
+		for(Element fix : navFix){
+			insertNavFix(fix);
+		}
+	}
+	
+	private void insertNavFix(Element navFix){
+		String pk = navFix.getAttributeValue("pk");
+		String type = navFix.getChildText("NavType"); 
+		String name = navFix.getChildText("Ident");
+		String territoireID = navFix.getChild("Territoire").getAttributeValue("pk");
+		double latitude = Double.parseDouble(navFix.getChildText("Latitude"));
+		double longitude = Double.parseDouble(navFix.getChildText("Longitude"));
+		if( ! territoireID.equals("100")){
+			name += " - "+getTerritoireName(territoireID); 
+		}
+		
+		double freq = 0;
+		if(!type.equals("VFR") && !type.equals("WPT") && ! type.equals("PNP")){
+			List<Element> elts = findElementsByChildId(document.getRootElement().getChild("Situation").getChild("RadioNavS"), "NavFix", pk);
+			if(elts.size()>0){
+				freq = Double.parseDouble(elts.get(0).getChildText("Frequence"));
+			}
+		}
+		
+		PreparedStatement ps;
+		try {
+			ps = this.conn.prepareStatement("insert into NavFix (pk, type, nom, lat, lon, frequence) VALUES (?, ?, ?, ?, ?, ?)");
+			ps.setInt(1, Integer.parseInt(pk));
+			ps.setString(2, type);
+			ps.setString(3, name);
+			ps.setDouble(4, latitude);
+			ps.setDouble(5, longitude);
+			ps.setDouble(6, freq);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	
 	
@@ -606,6 +653,26 @@ public class AIP extends FileParser{
 			return "PDR";
 		case TAC :
 			return "TAC";
+		case DMEATT :
+			return "DME-ATT";
+		case L :
+			return "L";
+		case NDB :
+			return "NDB";
+		case PNP : 
+			return "PNP";
+		case TACAN : 
+			return "TACAN";
+		case VFR :
+			return "VFR";
+		case VOR :
+			return "VOR";
+		case VORDME :
+			return "VOR-DME";
+		case VORTAC :
+			return "VORTAC";
+		case WPT :
+			return "WPT";
 		default:
 			return "";
 		}
@@ -671,6 +738,36 @@ public class AIP extends FileParser{
 		}
 		if(type.equals("TAC")){
 			return TAC;
+		}
+		if(type.equals("DME-ATT")){
+			return DMEATT;
+		}
+		if(type.equals("L")){
+			return L;
+		}
+		if(type.equals("NDB")){
+			return NDB;
+		}
+		if(type.equals("PNP")){
+			return PNP;
+		}
+		if(type.equals("TACAN")){
+			return TACAN;
+		}
+		if(type.equals("VFR")){
+			return VFR;
+		}
+		if(type.equals("VOR")){
+			return VOR;
+		}
+		if(type.equals("VOR-DME")){
+			return VORDME;
+		}
+		if(type.equals("VORTAC")){
+			return VORTAC;
+		}
+		if(type.equals("WPT")){
+			return WPT;
 		}
 		return -1;
 	}
@@ -787,16 +884,18 @@ public class AIP extends FileParser{
 	}
 	
 	
-	
+	/**
+	 * Renvoie l'identifiant de l'objet de type <code>type</code> et de nom <code>name</code>.
+	 * @param type le type de l'objet
+	 * @param name le nom de l'objet
+	 * @return L'attribut pk qui identifie l'objet dans le fichier xml.
+	 */
 	public static String getID(int type, String name){
 		String pk=null;
-		switch(type){
-		
-		case AIP.AWY :
-		case AIP.PDR :
-		case AIP.TAC :
+		if(type>=AIP.AWY){
+			String table = (type>=AIP.DMEATT) ? "NavFix" : "routes";
 			try {
-				PreparedStatement st = DatabaseManager.prepareStatement(Type.AIP, "select pk from routes where nom = ?");
+				PreparedStatement st = DatabaseManager.prepareStatement(Type.AIP, "select pk from "+table+" where nom = ?");
 				st.setString(1, name);
 				ResultSet rs = st.executeQuery();
 				if(rs.next()){
@@ -805,17 +904,15 @@ public class AIP extends FileParser{
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			break;
-			
-		default :
+		}else{
 			String typeString=getTypeString(type);
 			try {
-				PreparedStatement st = DatabaseManager.prepareStatement(Type.AIP, "select * from volumes where type = ? AND nom = ?");
+				PreparedStatement st = DatabaseManager.prepareStatement(Type.AIP, "select pk from volumes where type = ? AND nom = ?");
 				st.setString(1, typeString);
 				st.setString(2, name);
 				ResultSet rs = st.executeQuery();
 				if(rs.next()){
-					pk=rs.getString(2);
+					pk=rs.getString(1);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();

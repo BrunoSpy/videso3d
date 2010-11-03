@@ -184,6 +184,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 		for(FilteredTreeTableModel m : models){
 			m.clearSelection();
 		}
+		getController().reset();
 	}
 
 	
