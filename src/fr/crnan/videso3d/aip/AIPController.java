@@ -42,7 +42,7 @@ import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
-import fr.crnan.videso3d.graphics.Secteur3D.Type;
+import fr.crnan.videso3d.graphics.Secteur.Type;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
 import gov.nasa.worldwind.avlist.AVKey;
@@ -768,6 +768,12 @@ public class AIPController implements VidesoController {
 			}
 		}
 		return nearSeq;
+	}
+
+
+	@Override
+	public String type2string(int type) {
+		return AIP.getTypeString(type);
 	}
 	
 }

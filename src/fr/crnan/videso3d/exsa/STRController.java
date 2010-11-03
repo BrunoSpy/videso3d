@@ -43,7 +43,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage des éléments Exsa
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class STRController implements VidesoController {
 
@@ -377,5 +377,15 @@ public class STRController implements VidesoController {
 	public int string2type(String type) {
 		return 0;
 	}
+
+	/* (non-Javadoc)
+	 * @see fr.crnan.videso3d.VidesoController#type2string(int)
+	 */
+	@Override
+	public String type2string(int type) {
+		return null;
+	}
+	
+	
 
 }

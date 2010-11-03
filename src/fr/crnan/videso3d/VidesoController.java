@@ -21,7 +21,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * Controleur d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 public interface VidesoController {
 
@@ -83,6 +83,13 @@ public interface VidesoController {
 	 * @return
 	 */
 	public int string2type(String type);
+	
+	/**
+	 * Transforme un type en chaine conformément aux types gérés par le contrôleur
+	 * @param type
+	 * @return
+	 */
+	public String type2string(int type);
 	
 	/**
 	 * Affiche les objets en 2D

@@ -49,7 +49,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage et la construction des éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class StipController implements VidesoController {
 
@@ -543,5 +543,26 @@ public class StipController implements VidesoController {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	/* (non-Javadoc)
+	 * @see fr.crnan.videso3d.VidesoController#type2string(int)
+	 */
+	@Override
+	public String type2string(int type) {
+		switch (type) {
+		case ROUTES:
+			return "Routes";
+		case SECTEUR:
+			return "Secteur";
+		case BALISES_PUB:
+			return "Balise publiée";
+		case BALISES_NP:
+			return "Balise non publiée";
+		default:
+			break;
+		}
+		return null;
+	}
+	
 	
 }

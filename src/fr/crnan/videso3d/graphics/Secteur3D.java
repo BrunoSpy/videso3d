@@ -21,19 +21,13 @@ package fr.crnan.videso3d.graphics;
  * @author Bruno Spyckerelle
  * @version 0.3
  */
-public class Secteur3D extends PolygonAnnotation{
+public class Secteur3D extends PolygonAnnotation implements Secteur{
 
 	/*
 	 * Nom du secteur
 	 */
 	private String name;
-	
-	
-	/**
-	 * Type de zone
-	 */
-	public static enum Type {Secteur, TSA, SIV, CTR, TMA, R, D, FIR, UIR, LTA, UTA, CTA, CTL, Pje, Aer, Vol, Bal, TrPla};
-	
+
 	private Type type;
 	
 	/**

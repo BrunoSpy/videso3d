@@ -41,7 +41,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * Gestion des données SkyView
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class SkyViewController implements VidesoController {
 
@@ -284,4 +284,24 @@ public class SkyViewController implements VidesoController {
 		
 		return 0;
 	}
+
+	/* (non-Javadoc)
+	 * @see fr.crnan.videso3d.VidesoController#type2string(int)
+	 */
+	@Override
+	public String type2string(int type) {
+		switch (type) {
+		case TYPE_ROUTE:
+			return "Routes";
+		case TYPE_AIRPORT:
+			return "Airports";
+		case TYPE_WAYPOINT:
+			return "Waypoints";
+		default:
+			break;
+		}
+		return null;
+	}
+	
+	
 }

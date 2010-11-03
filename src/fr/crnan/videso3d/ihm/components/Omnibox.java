@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -45,7 +46,7 @@ import gov.nasa.worldwind.geom.Position;
 /**
  * Universal search box
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class Omnibox {
 	
@@ -55,7 +56,7 @@ public class Omnibox {
 	
 	private HashMap<Type, JRadioButtonMenuItem> buttons = new HashMap<DatabaseManager.Type, JRadioButtonMenuItem>();
 	
-	private DropDownToggleButton chooseButton;
+	private DropDownLabel chooseButton;
 	private ButtonGroup engines;
 	private JComboBox searchBox;
 	
@@ -68,8 +69,7 @@ public class Omnibox {
 	public Omnibox(final VidesoGLCanvas wwd, ContextPanel c){
 		this.context = c;
 
-		chooseButton = new DropDownToggleButton();
-		chooseButton.setIcon(new ImageIcon(getClass().getResource("/resources/zoom-original.png")));
+		chooseButton = new DropDownLabel(new ImageIcon(getClass().getResource("/resources/zoom-original.png")));
 		engines = new ButtonGroup();
 		JRadioButtonMenuItem allEngine = new JRadioButtonMenuItem("Toutes les données", true);
 		allEngine.addItemListener(new ItemListener() {
@@ -85,7 +85,7 @@ public class Omnibox {
 		engines.add(allEngine);		
 		chooseButton.getPopupMenu().add(allEngine);	
 		
-		searchBox = new JComboBox();
+		searchBox = new JComboBox(new SortedComboBoxModel(new ItemCoupleComparator()));
 		searchBox.setEditable(true);
 		searchBox.setToolTipText("<html>Recherche universelle.<br />" +
 				"<ul><li>Permet de rechercher dans les bases sélectionnées.</li>" +
@@ -164,7 +164,7 @@ public class Omnibox {
 	 */
 	private void update(){
 		searchBox.removeAllItems();
-		searchBox.addItem("");
+//		searchBox.addItem("");
 		if(selectedBase == null){
 			for(Couple<VidesoController, List<Couple<Integer, String>>> items : bases.values()){
 				for(Couple<Integer, String> item : items.getSecond()){
@@ -182,6 +182,14 @@ public class Omnibox {
 		searchBox.addActionListener(listener);
 	}
 	
+	private class ItemCoupleComparator implements Comparator<ItemCouple> {
+
+		@Override
+		public int compare(ItemCouple arg0, ItemCouple arg1) {
+			return arg0.getSecond().getSecond().compareTo(arg1.getSecond().getSecond());
+		}
+		
+	}
 	
 	private class ItemCouple extends Couple<VidesoController, Couple<Integer, String>>{
 
@@ -194,7 +202,7 @@ public class Omnibox {
 		 */
 		@Override
 		public String toString() {
-			return getSecond().getSecond().toString();
+			return getSecond().getSecond().toString()+" ("+getFirst().type2string(getSecond().getFirst())+")";
 		}
 		
 	}
