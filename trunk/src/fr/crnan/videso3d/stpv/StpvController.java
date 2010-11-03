@@ -31,6 +31,11 @@ import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 
+/**
+ * 
+ * @author Bruno Spyckerelle
+ * @version 0.1.2
+ */
 public class StpvController implements VidesoController {
 
 	public static final int MOSAIQUE = 0;
@@ -143,6 +148,12 @@ public class StpvController implements VidesoController {
 	public int string2type(String type) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public String type2string(int type) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
