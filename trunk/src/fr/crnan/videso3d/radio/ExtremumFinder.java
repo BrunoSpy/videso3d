@@ -18,7 +18,7 @@ package fr.crnan.videso3d.radio;
 
 /**
 * @author mickael papail
-* @version 0.2
+* @version 0.4
 **/
 
 import java.util.ArrayList;
@@ -26,7 +26,6 @@ import java.util.Iterator;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.Triplet;
-import gov.nasa.worldwind.geom.LatLon;
 
 public class ExtremumFinder {
 
@@ -37,10 +36,10 @@ public class ExtremumFinder {
 	public double minLon = 0;
 	public double maxLon = 0;
 	private boolean  newLat = true;	
-	private double averageLon = 0;
 	private double alt = 0;
 	private boolean debug = false;
-	private String antennaName;
+	
+
 	
 	private ArrayList<Triplet<Double,Double,Double>> tab = new ArrayList<Triplet<Double,Double,Double>>();		 
 	private ArrayList<Couple<Double,Double>> latLon = new ArrayList<Couple<Double,Double>>();	
@@ -57,11 +56,7 @@ public class ExtremumFinder {
 	public void setAlt(double alt) {
 		this.alt = alt;
 	}
-	
-	public void setAntennaName(String antennaName) {
-		this.antennaName = antennaName;
-	}
-		
+			
 	public void setLatMinMax(double currentLat) {
 		if (currentLat< minLat) minLat = currentLat;
 		if (currentLat>maxLat) maxLat = currentLat;
@@ -111,31 +106,30 @@ public class ExtremumFinder {
 		if (debug )System.out.println("taille du tableau :"+tab.size());
 	}
 	
-	public void computeAverageLon() {
-		double average = 0;
-		double size = averageLonTab.size();
+	public double  computeAverageLon() {
+		double averageLon = 0;
+		/*double size = averageLonTab.size();
 		for (int i=0;i<size;i++) {
 			average += averageLonTab.get(i);
 		}
-		this.averageLon = (average/size);
+		*/
+		//return average / size;
+		averageLon  = tab.get(0).getSecond()+tab.get(tab.size()-1).getSecond();
+		return (double) averageLon / 2;
 	}
 	
-	public double computeAverageDistance(int i) {
-		return 0;
+	
+	public double computeAverageLat() {
+		double averageLat = 0;
+		averageLat = tab.get(0).getFirst()+tab.get(tab.size()-1).getFirst();
+		return (double) averageLat / 2;
 	}
-	
-	
-	
+		
 	public void reduceToCouple() {
 		
 		int size = tab.size()-1;
 		this.computeAverageLon();
-		double lonInitMin =Math.abs(Math.sin(tab.get(0).getSecond()));
-		double lonInitMax = Math.abs(Math.sin(tab.get((int)(tab.size()-1)/2).getSecond()));
-		double lonInitMin2 =Math.abs(Math.sin(tab.get(0).getThird()));
-		double lonInitMax2 = Math.abs(Math.sin(tab.get(tab.size()-1).getThird()));
-		double dist = Math.abs(lonInitMin-lonInitMax);
-		double dist2 = Math.abs(lonInitMin2-lonInitMax2);
+
 		
 		for (int i=0;i<tab.size();i++) {
 			if (i == 0) {
@@ -144,32 +138,103 @@ public class ExtremumFinder {
 				couple.setSecond(tab.get(i).getSecond()); //lonMin
 				latLon.add(couple);
 			}
-			else {			
-					
+			else {																							
+				
 				// double avg = (tab.get((int)(tab.size()/2)).getSecond()-tab.get(0).getSecond())/2;
-				double avg = Math.abs(Math.abs(Math.sin(tab.get((int)(tab.size()/2)).getSecond()))-Math.abs(Math.sin(tab.get(0).getSecond())));
 				
 				if (i<tab.size()-2) {
 				
 				//if (Math.abs((tab.get(i).getSecond()-averageLon)) <= Math.abs((6*(tab.get(i-1).getSecond()-averageLon)))) { // Tolérance de 25% par rapport à la distance à la mediane  ( filtrage des données.)			
+							
 					
-					double distanceBorne = Math.abs(Math.abs(Math.sin( tab.get(i+2).getSecond())-Math.abs(Math.sin(tab.get(i+2).getThird()))) );
-					double distance = Math.abs(Math.abs(Math.sin( tab.get(i).getSecond())-Math.abs(Math.sin(tab.get(i-1).getSecond()))) );
-				
-					 if ( (tab.get(i).getSecond())<(tab.get(i-1).getSecond()) && ( distance<=(0.5*distanceBorne))   /*  (Math.abs(Math.abs(Math.sin(tab.get(i).getSecond()))-Math.abs(Math.sin(tab.get(i-1).getSecond())))<0.5*avg)*/)  {
-						//if ((tab.get(i).getSecond())<(tab.get(i-1).getSecond()) && (Math.abs(Math.abs(Math.sin(tab.get(i).getSecond()))-Math.abs(Math.sin(tab.get(i-1).getSecond())))< dist ) ) {
-						if (debug) System.out.println("longitude : "+tab.get(i).getSecond()+" longitude moyenne : "+averageLon);
-						Couple<Double,Double> couple = new Couple<Double,Double>();
-						couple.setFirst(tab.get(i).getFirst()); //lat
-						couple.setSecond(tab.get(i).getSecond()); //lonMin
-						latLon.add(couple);
-					}			
-			
+//					double distanceBorne = 0;
+//					if ((tab.get(i).getSecond() >=0 && tab.get(i-1).getSecond() >=0) ) {distanceBorne = Math.abs(Math.abs(Math.sin( tab.get(i+1).getSecond())-Math.abs(Math.sin(tab.get(i-1).getSecond()))) );} /* i et i+1 de même signe*/
+//					if ((tab.get(i).getSecond() >=0 && tab.get(i-1).getSecond() <=0) ) {distanceBorne = Math.abs(Math.abs(Math.sin( tab.get(i+1).getSecond())-Math.abs(Math.sin(tab.get(i-1).getSecond()))) );} /*i et i+1 de signe différent*/
+//					if ((tab.get(i).getSecond() <=0 && tab.get(i-1).getSecond() <=0) ) {distanceBorne = Math.abs(Math.abs(Math.sin( tab.get(i+1).getSecond())-Math.abs(Math.sin(tab.get(i-1).getSecond()))) );} /*i et i+1 de meme signe*/
+										
+					double distance = 0;
+					if ((tab.get(i).getSecond() >=0 && tab.get(i+1).getSecond() >=0) ) {distance = Math.abs(Math.abs(Math.sin( tab.get(i+1).getSecond())-Math.abs(Math.sin(tab.get(i).getSecond()))) );} /* i et i+1 de même signe*/
+					if ((tab.get(i).getSecond() >=0 && tab.get(i+1).getSecond() <=0) ) {distance = Math.abs(Math.abs(Math.sin( tab.get(i).getSecond())+Math.abs(Math.sin(tab.get(i+1).getSecond()))) );} /*i et i+1 de signe différent*/
+					if ((tab.get(i).getSecond() <=0 && tab.get(i+1).getSecond() <=0) ) {distance = Math.abs(Math.abs(Math.sin( tab.get(i+1).getSecond())-Math.abs(Math.sin(tab.get(i).getSecond()))) );} /*i et i+1 de meme signe*/
+									
+							
+					/*1er quadrant */
+					
+					 if (tab.get(i).getSecond() <0 &&  tab.get(i).getThird() >0 && tab.get(i).getFirst()>computeAverageLat()) {
+						/* if ( (tab.get(i-1).getSecond())>(tab.get(i).getSecond()) ){*/
+									  										  
+							 boolean test = true;
+							 for (int j=0;j<i;j++) {										
+							if (tab.get(j).getSecond() < tab.get(i).getSecond() ) { test = false; }
+//							 for (int j=i;j<tab.size();j++) {										
+//								 if (tab.get(j).getSecond() > tab.get(i).getSecond() ) { test = false; }
+							 }									 
+							 if (test == true) {
+								 Couple<Double,Double> couple = new Couple<Double,Double>();
+								 couple.setFirst(tab.get(i).getFirst()); //lat
+								 couple.setSecond(tab.get(i).getSecond()); //lonMin
+								 latLon.add(couple);
+							}									 
+					 /*	}*/
+					}	
+					 							 
+					 if (tab.get(i).getSecond() >0 &&  tab.get(i).getThird() >0 && tab.get(i).getFirst()>computeAverageLat()) {
+							/* if ( (tab.get(i-1).getSecond())>(tab.get(i).getSecond()) ){*/
+										  										  
+								 boolean test = true;
+								 for (int j=0;j<i;j++) {										
+								if (tab.get(j).getSecond() < tab.get(i).getSecond() ) { test = false; }
+//								 for (int j=i;j<tab.size();j++) {										
+//									 if (tab.get(j).getSecond() > tab.get(i).getSecond() ) { test = false; }
+								 }									 
+								 if (test == true) {
+									 Couple<Double,Double> couple = new Couple<Double,Double>();
+									 couple.setFirst(tab.get(i).getFirst()); //lat
+									 couple.setSecond(tab.get(i).getSecond()); //lonMin
+									 latLon.add(couple);
+								}									 
+						 /*	}*/
+						}						 																
+														
+					/*Deuxieme quadrant*/											
+						
+						/* 1er quart du deuxième quadrant.*/
+						
+							 if (tab.get(i).getSecond() <0 && tab.get(i).getThird() >0 && tab.get(i).getFirst()<=computeAverageLat()  && tab.get(i).getSecond()<tab.get(i).getThird() && Math.abs(Math.abs(Math.sin(tab.get(i).getSecond()))-Math.abs(Math.sin(tab.get(i-1).getSecond())))<10*distance) { // derniere condition = filtre anti-crenelage sur le quadrant
+								 if ( (tab.get(i-1).getSecond())>=(tab.get(i).getSecond()) ){														  										  
+											 boolean test = true;
+											 for (int j=i;j<tab.size();j++) {
+												 if (tab.get(i).getSecond() < tab.get(j).getSecond() ) { test = false; }														 
+												 	if (test == true) {
+												 		Couple<Double,Double> couple = new Couple<Double,Double>();
+												 		couple.setFirst(tab.get(i).getFirst()); //lat
+												 		couple.setSecond(tab.get(i).getSecond()); //lonMin
+												 		latLon.add(couple);
+												 	}
+											 }	
+									 }						
+						 }							 							
+						 											 						
+						 //// deuxième quadrant  2ème quart.
+						
+						 if (tab.get(i).getSecond() >=0 && tab.get(i).getThird() >=0 && tab.get(i-1).getSecond() >=0 && tab.get(i+1).getSecond()>=0 && tab.get(i).getSecond()<tab.get(i).getThird() && tab.get(i).getFirst()<=computeAverageLat()) {
+										
+								 boolean test = true;
+								 for (int j=i;j<tab.size();j++) {
+									 if (tab.get(i).getSecond() > tab.get(j).getSecond()) { test = false; }
+								 }								 
+								 if (test == true) {
+									 Couple<Double,Double> couple = new Couple<Double,Double>();
+									 couple.setFirst(tab.get(i).getFirst()); //lat
+									 couple.setSecond(tab.get(i).getSecond()); //lonMin
+									 latLon.add(couple);
+								 }								 				
+					}										 						
+						 						 
 				}	
 			}
 		}
 					
-
 		for (int i=0;i<tab.size();i++) {			
 			if (i==0) {
 				Couple<Double,Double> couple = new Couple<Double,Double>();
@@ -177,39 +242,35 @@ public class ExtremumFinder {
 				couple.setSecond(tab.get(size).getThird()); //lonMin
 				latLon.add(couple);
 			}
-			else {
-				
-				if (size - i - 2 >=0  ) { // sinon exception !
+			else {				
+				if (size - i - 2 >=0  ) { // sinon exception déclenchée !
 								
 					double distanceBorne = Math.abs(Math.abs(Math.sin( tab.get(size-i+1).getThird())-Math.abs(Math.sin(tab.get(size-i-1).getThird()))) );
 					double distance = Math.abs(Math.abs(Math.sin( tab.get(size-i).getThird())-Math.abs(Math.sin(tab.get(size-i+1).getThird()))) );
-					double average = (tab.get(size-i-1).getSecond() + tab.get(size-i-2).getSecond() )/2;
-					
-					//if ((tab.get(i).getSecond())<(tab.get(i-1).getSecond()) && (Math.abs(Math.abs(Math.sin(tab.get(i+1).getThird()))-Math.abs(Math.sin(tab.get(i).getThird())))> 2*dist ) ) {
-					if ( (tab.get(size-i).getThird())>(tab.get(size-i+1).getThird()) && ( distance<=(3*distanceBorne))  /*&& (tab.get(size-i).getThird()>0)*/	
-					
-					/*if ( (tab.get(size-i).getSecond())>(tab.get(size-i+1).getSecond()) && ( distance<=(3*distanceBorne)) && (tab.get(size-i).getSecond()>4) && ((tab.get(size-i-1).getSecond())<=(tab.get(size-i+1)).getSecond()) && (tab.get(size-i).getSecond()<3*average)*/ )  {			// longitude positive only
-						
-						//  if ( (tab.get(size-i).getSecond() <=0) && (tab.get(size-i).getThird() <=0) && ((tab.get(size-i).getThird())>(tab.get(size-i).getSecond()))) {
-					
+										
+					if ( (tab.get(size-i).getThird())>(tab.get(size-i+1).getThird()) && ( distance<=(3*distanceBorne)) ){  																							
 							Couple<Double,Double> couple = new Couple<Double,Double>();
 							couple.setFirst(tab.get(size-i).getFirst()); //lat
 							couple.setSecond(tab.get(size-i).getThird()); //lonMax
-							latLon.add(couple);
-							if (debug) System.out.println("ajout du couple "+couple);
+							latLon.add(couple);							
 					}
 				}
 			}	 
 		} 
-
 		
 		/*rebouclage du dernier element sur le premier*/
 		Couple<Double,Double> couple = new Couple<Double,Double>();
 		couple.setFirst(tab.get(0).getFirst());
-		couple.setSecond(tab.get(0).getThird()); //lonMax
+		couple.setSecond(tab.get(0).getSecond()); //lonMax
 		latLon.add(couple);
 		
 	}
+	
+/*
+	private double computeDist(double a,double b) {
+		return Math.abs(Math.abs(Math.sin(b))-Math.abs(Math.sin(a)));
+	}
+*/
 			
 	public String toString() {
 		String s="";
