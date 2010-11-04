@@ -679,7 +679,8 @@ public class ContextPanel extends JPanel implements SelectListener {
 	public void showAIPRoute(Route segment) {
 		AIP aip = aipController.getAIP();
 		String route = segment.getName().split("-")[0].trim();
-		String sequence = segment.getName().split("-")[1].trim();
+		String[] splittedSegmentName = segment.getName().split("-");
+		String sequence = splittedSegmentName[splittedSegmentName.length-1].trim();
 		fr.crnan.videso3d.graphics.Route.Type type = segment.getType();
 		String pkRoute = null;
 		String typeRoute = aip.RouteType2AIPType(route, type);
@@ -720,6 +721,23 @@ public class ContextPanel extends JPanel implements SelectListener {
 		if(rmqRoute != null){
 			infosRoute.add(new JLabel("<html><b>Remarque</b> : " + rmqRoute+"</html>"));
 		}
+		final String pkRouteFinal = pkRoute;
+		infosRoute.add(new AbstractAction("Afficher les balises"){
+			boolean afficher = true;
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(afficher){
+					displayNavFix(pkRouteFinal, true);
+					putValue(Action.NAME, "Cacher les balises");
+					afficher = false;
+				}else{
+					displayNavFix(pkRouteFinal, false);
+					putValue(Action.NAME, "Afficher les balises");
+					afficher = true;
+				}
+				
+			}
+		});
 		
 		JXTaskPane infosSegment = new JXTaskPane();
 		infosSegment.setTitle("Informations sur le segment");
@@ -794,6 +812,37 @@ public class ContextPanel extends JPanel implements SelectListener {
 		wwd.getView().goTo(annotationPosition, wwd.getView().getEyePosition().elevation);
 		wwd.redraw();
 	}
+	
+	private void displayNavFix(String pkRoute, boolean display){
+		LinkedList<String> navFixExtremites = new LinkedList<String>();
+		try {
+			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nom from NavFix, segments where segments.pkRoute = ? AND segments.navFixExtremite = NavFix.pk");
+			st.setString(1, pkRoute);
+			ResultSet rs = st.executeQuery();
+			while(rs.next()){
+				navFixExtremites.add(rs.getString(1));
+			}
+			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select NavFix.nom from NavFix, routes where routes.pk = ? AND routes.navFixExtremite = NavFix.pk");
+			st.setString(1, pkRoute);
+			rs = st.executeQuery();
+			if(rs.next()){
+				navFixExtremites.add(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if(display){
+			for(String navFix : navFixExtremites){
+				aipController.showObject(AIP.DMEATT, navFix);
+			}
+		}else{
+			for(String navFix : navFixExtremites){
+				aipController.hideObject(AIP.DMEATT, navFix);
+			}	
+		}
+	}
+
+	
 	
 	
 	

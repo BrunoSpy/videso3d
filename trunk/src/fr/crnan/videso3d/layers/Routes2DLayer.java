@@ -23,8 +23,6 @@ import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route.Type;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.RenderableLayer;
-import gov.nasa.worldwind.render.Annotation;
-import gov.nasa.worldwind.render.GlobeAnnotation;
 /**
  * 
  * @author Bruno Spyckerelle
@@ -154,6 +152,7 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 		Route2D r = (Route2D) this.getRoute(name);
 		r.highlight(false);
 	}
+
 
 
 }

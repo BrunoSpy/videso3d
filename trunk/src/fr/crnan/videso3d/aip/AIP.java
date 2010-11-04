@@ -353,10 +353,12 @@ public class AIP extends FileParser{
 		}
 		PreparedStatement ps;
 		try {
-			ps = this.conn.prepareStatement("insert into routes (pk,type,nom) VALUES (?, ?, ?)");
+			int navFixExtremite = Integer.parseInt(route.getChild("Origine").getAttributeValue("pk"));
+			ps = this.conn.prepareStatement("insert into routes (pk,type,nom, navFixExtremite) VALUES (?, ?, ?, ?)");
 			ps.setInt(1, routeID);
 			ps.setString(2, route.getChildText("RouteType"));
 			ps.setString(3, routeName);
+			ps.setInt(4, navFixExtremite);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -367,10 +369,12 @@ public class AIP extends FileParser{
 			for(Element segment : segments){
 				int segmentID = Integer.parseInt(segment.getAttributeValue("pk"));
 				int sequence = Integer.parseInt(segment.getChildText("Sequence"));
-				ps = this.conn.prepareStatement("insert into segments (pk, pkRoute, sequence) VALUES (?, ?, ?)");
+				int navFixExtremite = Integer.parseInt(segment.getChild("NavFixExtremite").getAttributeValue("pk"));
+				ps = this.conn.prepareStatement("insert into segments (pk, pkRoute, sequence, navFixExtremite) VALUES (?, ?, ?, ?)");
 				ps.setInt(1, segmentID);
 				ps.setInt(2, routeID);
 				ps.setInt(3, sequence);
+				ps.setInt(4, navFixExtremite);
 				ps.executeUpdate();	
 
 				//Insertion des centres traversés par la route : pour chaque segment, on ajoute le centre à la liste des centres traversés

@@ -40,6 +40,8 @@ public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 	
 	private Type type;
 	
+	private Sens sens;
+	
 	private String name;
 	
 	private List<String> balises;
@@ -83,7 +85,21 @@ public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 			}
 			break;
 		case UIR:
-			attrs.setOutlineMaterial(Material.BLACK);
+			if(sens!=null){
+				switch (sens){
+				case RED :
+					attrs.setOutlineMaterial(Material.RED);
+					break;
+				case GREEN :
+					attrs.setOutlineMaterial(Material.GREEN);
+					break;
+				case BLUE :
+					attrs.setOutlineMaterial(Material.BLUE);
+					break;
+				}
+			}else{
+				attrs.setOutlineMaterial(Material.BLACK);
+			}
 			break;
 		default:
 			break;
@@ -126,6 +142,13 @@ public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 		String temp = this.name;
 		this.name = name;
 		if(this.name != temp && this.type != null) this.setColor(this.name);
+	}
+	
+	public void setSens(Sens sens){
+		Sens temp = this.sens;
+		this.sens = sens;
+		if(this.sens != temp && this.name != null) this.setColor(this.name);
+		
 	}
 
 	@Override

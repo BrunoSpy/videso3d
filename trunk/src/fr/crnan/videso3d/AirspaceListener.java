@@ -167,6 +167,7 @@ public class AirspaceListener implements SelectListener {
 					Point point = event.getPickPoint();
 					if(event.getTopObject() instanceof ObjectAnnotation){
 						Annotation a = ((ObjectAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5)); //décalage de 5 pixels pour éviter le clignotement
+						a.getAttributes().setVisible(true);
 						if(!((VAnnotationLayer)this.wwd.getAnnotationLayer()).contains(a)){
 							//on ne modifie lastAnnotation que si l'annotation n'a pas déjà été ajoutée
 							//(notamment lors d'un clic gauche)
