@@ -150,6 +150,8 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 		Route3D r = this.routes.get(name);
 		r.highlight(false);
 	}
+	
+	
 
 	
 

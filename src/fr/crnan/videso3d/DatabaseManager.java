@@ -839,11 +839,13 @@ public final class DatabaseManager {
 		")");
 		st.executeUpdate("create table routes (pk integer primary key," +
 				"type varchar(3),"+
-				"nom varchar(10)"+
+				"nom varchar(10),"+
+				"navFixExtremite integer"+
 		")");
 		st.executeUpdate("create table segments (pk integer primary key," +
 				"pkRoute integer,"+
-				"sequence integer"+
+				"sequence integer,"+
+				"navFixExtremite integer"+
 		")");
 		st.executeUpdate("create table ACCTraverses (routes_pk integer,"+
 				"nomACC varchar(10),"+

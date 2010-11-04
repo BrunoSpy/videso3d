@@ -31,6 +31,8 @@ public interface Route {
 	 */
 	public static enum Type {FIR, UIR};
 	
+	public static enum Sens{RED, GREEN, BLUE};
+	
 	public void setType(Type type);
 	
 	public Type getType();
