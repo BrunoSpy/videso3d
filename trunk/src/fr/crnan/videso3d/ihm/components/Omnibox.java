@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.ihm.components;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -31,6 +32,7 @@ import javax.swing.JComboBox;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToolBar;
 
+import org.jdesktop.swingx.autocomplete.AutoCompleteComboBoxEditor;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import fr.crnan.videso3d.Couple;
@@ -92,6 +94,7 @@ public class Omnibox {
 				"<li>Permet de centrer la vue sur des coordonnées. Syntaxe acceptée :" +
 				"<ul><li>45N 123W</li><li>+45.1234, -123.12</li><li>45.1234N 123.12W</li>" +
 				"<li>45° 30' 00\"N, 50° 30'W</li><li>45°30' -50°30'</li><li>45 30 N 50 30 W</li></ul></ul></html>");
+		searchBox.setPreferredSize(new Dimension(300,25));
 		AutoCompleteDecorator.decorate(searchBox);
 		
 		//gestion des coordonnées
