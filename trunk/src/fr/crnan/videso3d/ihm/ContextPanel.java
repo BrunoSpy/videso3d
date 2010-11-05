@@ -602,13 +602,17 @@ public class ContextPanel extends JPanel implements SelectListener {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if(show){
-						stipController.getBalisesNPLayer().showBalises(balises);
-						stipController.getBalisesPubLayer().showBalises(balises);
+						for(String name : balises){
+							stipController.showObject(StipController.BALISES_NP, name);
+							stipController.showObject(StipController.BALISES_PUB, name);
+						}
 						putValue(Action.NAME, "Cacher les "+balises.size()+" balises.");
 						show = false;
 					} else {
-						stipController.getBalisesNPLayer().hideBalises(balises);
-						stipController.getBalisesPubLayer().hideBalises(balises);
+						for(String name : balises){
+							stipController.hideObject(StipController.BALISES_NP, name);
+							stipController.hideObject(StipController.BALISES_PUB, name);
+						}
 						putValue(Action.NAME, "Afficher les "+balises.size()+" balises.");
 						show = true;
 					}

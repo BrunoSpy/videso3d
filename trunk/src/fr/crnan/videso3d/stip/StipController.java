@@ -41,7 +41,6 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
-import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
@@ -49,7 +48,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage et la construction des éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class StipController implements VidesoController {
 
@@ -74,9 +73,7 @@ public class StipController implements VidesoController {
 	 */
 	private AirspaceLayer secteursLayer = new AirspaceLayer();
 	{secteursLayer.setName("Secteurs");
-	secteursLayer.setEnableAntialiasing(true);}	
-	private RenderableLayer secteurs2D;
-	
+	secteursLayer.setEnableAntialiasing(true);}		
 	
 	private HashMap<String, Secteur3D> secteurs = new HashMap<String, Secteur3D>();
 	/**
@@ -102,22 +99,13 @@ public class StipController implements VidesoController {
 	}
 
 	@Override
-	public void unHighlight(int type, String name) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void unHighlight(int type, String name) {}
 
 	@Override
-	public void addLayer(String name, Layer layer) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void addLayer(String name, Layer layer) {}
 
 	@Override
-	public void removeLayer(String name, Layer layer) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void removeLayer(String name, Layer layer) {}
 
 	@Override
 	public void toggleLayer(Layer layer, Boolean state) {
@@ -125,16 +113,10 @@ public class StipController implements VidesoController {
 	}
 
 	@Override
-	public void removeAllLayers() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void removeAllLayers() {}
 	
 	@Override
-	public void set2D(Boolean flat) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void set2D(Boolean flat) {}
 	
 	@Override
 	public void reset(){
@@ -152,13 +134,14 @@ public class StipController implements VidesoController {
 	public void showObject(int type, String name) {
 		switch (type) {
 		case 0://Route
-			
+			this.routes2D.displayRoute(name);
+			this.routes3D.displayRoute(name);
 			break;
 		case 1://Balises Pub
-			
+			this.balisesPub.showBalise(name);
 			break;
 		case 2://Balises NP
-
+			this.balisesNP.showBalise(name);
 			break;
 		case 3://secteur
 			if(!secteurs.containsKey(name+0)){//n'afficher le secteur que s'il n'est pas déjà affiché
@@ -174,13 +157,14 @@ public class StipController implements VidesoController {
 	public void hideObject(int type, String name) {
 		switch (type) {
 		case 0://Routes
-			
+			this.routes2D.hideRoute(name);
+			this.routes3D.hideRoute(name);
 			break;
 		case 1://Balises Pub
-
+			this.balisesPub.hideBalise(name);
 			break;
 		case 2://Balises NP
-
+			this.balisesNP.hideBalise(name);
 			break;
 		case 3://secteur
 			this.removeSecteur3D(name);
@@ -246,13 +230,6 @@ public class StipController implements VidesoController {
 			e.printStackTrace();
 		}
 		
-	}
-	
-	public BaliseLayer getBalisesPubLayer(){
-		return balisesPub;
-	}
-	public BaliseLayer getBalisesNPLayer(){
-		return balisesNP;
 	}
 	
 	/*--------------------------------------------------------------*/
@@ -540,7 +517,13 @@ public class StipController implements VidesoController {
 
 	@Override
 	public int string2type(String type) {
-		// TODO Auto-generated method stub
+		if(type.equals("Publiées") || type.equals("Balise publiée")){
+			return BALISES_PUB;
+		} else if (type.equals("Non publiées") || type.equals("Balise non publiée")){
+			return BALISES_NP;
+		} else if(type.equals("AWY") || type.equals("PDR") || type.equals("Routes")) {
+			return ROUTES;
+		}
 		return 0;
 	}
 
