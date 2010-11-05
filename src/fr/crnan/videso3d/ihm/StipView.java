@@ -16,12 +16,6 @@
 
 package fr.crnan.videso3d.ihm;
 
-import it.cnr.imaa.essi.lablib.gui.checkboxtree.CheckboxTree;
-import it.cnr.imaa.essi.lablib.gui.checkboxtree.DefaultCheckboxTreeCellRenderer;
-import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingEvent;
-import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingListener;
-
-import java.awt.BorderLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.ResultSet;
@@ -39,34 +33,29 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.ihm.components.DataView;
+import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
+import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
 import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
-import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.stip.StipController;
 /**
  * Sélecteur d'objets Stip
  * @author Bruno Spyckerelle
- * @version 0.4.1
+ * @version 0.5.0
  */
 @SuppressWarnings("serial")
-public class StipView extends JPanel implements DataView{
+public class StipView extends FilteredMultiTreeTableView{
 
 	/**
 	 * Arbre des routes et balises
 	 */
 	private JPanel routes = new JPanel();
 
-	private JPanel balises = new JPanel();
-
-	private JCheckBox balisesNPChk;
-	private JCheckBox balisesPubChk;
 	/**
 	 * Choix des secteurs à afficher
 	 */
 	private JTabbedPane secteurs = new JTabbedPane();	
-
-	private ItemCheckBoxListener itemCheckBoxListener = new ItemCheckBoxListener();
 
 	private ItemSecteurListener itemSecteurListener = new ItemSecteurListener();
 
@@ -76,7 +65,6 @@ public class StipView extends JPanel implements DataView{
 	 * Liste des checkbox de la vue, afin de pouvoir tous les désélectionner facilement
 	 */
 	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
-	private CheckboxTree routesTree;
 	
 	public StipView(StipController controller){
 
@@ -86,15 +74,22 @@ public class StipView extends JPanel implements DataView{
 
 
 		routes.setBorder(BorderFactory.createTitledBorder(""));
-		balises.setBorder(BorderFactory.createTitledBorder("Balises"));
 		secteurs.setBorder(BorderFactory.createTitledBorder("Secteurs"));
 
 		try {
 			if(DatabaseManager.getCurrentStip() != null) { //si pas de bdd, ne pas créer la vue
-				this.add(this.buildBalisesPanel());
-				this.buildTreePanel();
-				this.add(this.createTitleRoutes());
-				this.add(routes);
+				
+				//Balises
+				DefaultMutableTreeNode balisesRoot = new DefaultMutableTreeNode("root");
+				this.fillBalisesRootNode(balisesRoot);
+				this.addTableTree(new FilteredTreeTableModel(balisesRoot), "Balises", null);
+				
+				//Routes
+				DefaultMutableTreeNode routesRoot = new DefaultMutableTreeNode("root");
+				this.fillRoutesRootNode(routesRoot);
+				this.addTableTree(new FilteredTreeTableModel(routesRoot), "Routes", this.createTitleRoutes());
+				
+				
 				this.add(this.buildSecteursPanel());
 			}
 		} catch (SQLException e) {
@@ -107,6 +102,53 @@ public class StipView extends JPanel implements DataView{
 	@Override
 	public StipController getController(){
 		return controller;
+	}
+	
+	private void fillRoutesRootNode(DefaultMutableTreeNode root){
+		try{
+			Statement st = DatabaseManager.getCurrentStip();
+			
+			DefaultMutableTreeNode awy = new DefaultMutableTreeNode(new Couple<String, Boolean>("AWY", false));
+			root.add(awy);
+			ResultSet rs = st.executeQuery("select name from routes where espace='F' order by name");
+			while(rs.next()){
+				awy.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+			}
+			DefaultMutableTreeNode pdr = new DefaultMutableTreeNode(new Couple<String, Boolean>("PDR", false));
+			root.add(pdr);
+			rs = st.executeQuery("select name from routes where espace='U' order by name");
+			while(rs.next()){
+				pdr.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+			}
+			rs.close();
+			
+			st.close();
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+	}
+	
+	private void fillBalisesRootNode(DefaultMutableTreeNode root){
+		try{
+			Statement st = DatabaseManager.getCurrentStip();
+			
+			DefaultMutableTreeNode pub = new DefaultMutableTreeNode(new Couple<String, Boolean>("Publiées", false));
+			root.add(pub);
+			ResultSet rs = st.executeQuery("select name from balises where publicated='1' order by name");
+			while(rs.next()){
+				pub.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+			}
+			DefaultMutableTreeNode np = new DefaultMutableTreeNode(new Couple<String, Boolean>("Non publiées", false));
+			root.add(np);
+			rs = st.executeQuery("select name from balises where publicated='0' order by name");
+			while(rs.next()){
+				np.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+			}
+			rs.close();
+			st.close();
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -128,26 +170,6 @@ public class StipView extends JPanel implements DataView{
 		});
 		
 		return titlePanel; 
-	}
-
-	private JPanel buildBalisesPanel(){
-		balises.setLayout(new BoxLayout(balises, BoxLayout.X_AXIS));
-
-		balisesNPChk = new JCheckBox("Non publiées");
-		checkBoxList.add(balisesNPChk);
-		balisesNPChk.addItemListener(this.itemCheckBoxListener);
-
-		balisesPubChk = new JCheckBox("Publiées");
-		checkBoxList.add(balisesPubChk);
-		balisesPubChk.addItemListener(this.itemCheckBoxListener);
-
-		balises.add(Box.createHorizontalGlue());
-		balises.add(balisesPubChk);
-		balises.add(Box.createHorizontalGlue());
-		balises.add(balisesNPChk);
-		balises.add(Box.createHorizontalGlue());
-
-		return balises;
 	}
 
 	private JTabbedPane buildSecteursPanel() {
@@ -192,58 +214,8 @@ public class StipView extends JPanel implements DataView{
 			e.printStackTrace();
 		}
 
-
-
-
 		return scrollPane;
 	}
-	/**
-	 * Construit et renvoit le {@link JPanel} permettant l'affichage des routes
-	 * @return {@link JPanel} 
-	 */
-	private void buildTreePanel(){
-		routes.setLayout(new BorderLayout());
-
-		DefaultMutableTreeNode route = new DefaultMutableTreeNode("routes");
-		DefaultMutableTreeNode awy = new DefaultMutableTreeNode("AWY");
-		this.addNodes("routes", "F", awy);
-		route.add(awy);
-		DefaultMutableTreeNode pdr = new DefaultMutableTreeNode("PDR");
-		this.addNodes("routes", "U", pdr);
-		route.add(pdr);
-		routesTree = new CheckboxTree(route);
-		routesTree.setRootVisible(false);
-		routesTree.setCellRenderer(new TreeCellNimbusRenderer());
-		routesTree.setOpaque(false);
-		routesTree.addTreeCheckingListener(new StipTreeListener());
-
-		JScrollPane scrollRouteTree = new JScrollPane(routesTree);
-		scrollRouteTree.setBorder(null);
-
-		routes.add(scrollRouteTree, BorderLayout.CENTER);
-
-	}
-
-	/**
-	 * Ajoute à <code>root</code> les noeuds correspondants
-	 * @param type Type des noeuds à ajouter (routes, balises)
-	 * @param classe Classe des noeuds à ajouter (FIR, UIR, Publiées, ...)
-	 * @param root Noeud recevant
-	 */
-	private void addNodes(String type, String classe, DefaultMutableTreeNode root){
-		try {
-			Statement st = DatabaseManager.getCurrentStip();
-			String where = type.equals("routes")? "espace" : "publicated";
-			ResultSet rs = st.executeQuery("select * from "+type+" where "+ where +" ='"+classe+"'");
-			while(rs.next()){
-				root.add(new DefaultMutableTreeNode(rs.getString("name")));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-	}
-
 
 	public JTabbedPane getSecteurs() {
 		return secteurs;
@@ -252,95 +224,16 @@ public class StipView extends JPanel implements DataView{
 	
 	@Override
 	public void reset() {
-		this.controller.reset();
+		super.reset();
 		for(JCheckBox c : checkBoxList){
 			if(c.isSelected()){
 				c.setSelected(false);
 			}
 		}
-		routesTree.clearChecking();
 	}
 	
 	/*--------------------------------------------------*/
 	/*------------------ Listeners ---------------------*/
-
-	/**
-	 * Listener de la checkbox AWY
-	 * @author Bruno Spyckerelle
-	 */
-	private class ItemCheckBoxListener implements ItemListener {
-		@Override
-		public void itemStateChanged(ItemEvent e) {
-			Object source = e.getItemSelectable();
-			if(e.getStateChange() == ItemEvent.SELECTED ) {
-				if(source == balisesPubChk){
-					((BaliseLayer)controller.getBalisesPubLayer()).showAll();
-					((BaliseLayer)controller.getBalisesPubLayer()).setLocked(true);
-				} else if(source == balisesNPChk){
-					((BaliseLayer)controller.getBalisesNPLayer()).showAll();
-					((BaliseLayer)controller.getBalisesNPLayer()).setLocked(true);
-				}
-			} else {
-				if(source == balisesPubChk){
-					((BaliseLayer)controller.getBalisesPubLayer()).setLocked(false);
-					((BaliseLayer)controller.getBalisesPubLayer()).removeAllBalises();
-				} else if(source == balisesNPChk){
-					((BaliseLayer)controller.getBalisesNPLayer()).setLocked(false);
-					((BaliseLayer)controller.getBalisesNPLayer()).removeAllBalises();
-				}
-			}
-		}      
-	}
-
-	/**
-	 * @author Bruno Spyckerelle
-	 * @version 0.1
-	 */
-	private class StipTreeListener implements TreeCheckingListener{
-
-		@Override
-		public void valueChanged(TreeCheckingEvent e) {
-			DefaultMutableTreeNode c = (DefaultMutableTreeNode) e.getPath().getLastPathComponent();
-			String name = (String)c.getUserObject();
-			if(name.equals("routes")){
-				if(e.isCheckedPath()){
-					controller.getRoutes2DLayer().displayAllRoutes();
-					controller.getRoutes3DLayer().displayAllRoutes();
-				} else  {
-					controller.getRoutes2DLayer().hideAllRoutes();
-					controller.getRoutes3DLayer().hideAllRoutes();
-				}
-			} else if (name.equals("AWY")){
-				if(e.isCheckedPath()){
-					controller.getRoutes2DLayer().displayAllRoutesAwy();
-					controller.getRoutes3DLayer().displayAllRoutesAwy();
-				} else  {
-					controller.getRoutes2DLayer().hideAllRoutesAWY();
-					controller.getRoutes3DLayer().hideAllRoutesAWY();
-				}
-			} else if(name.equals("PDR")) {
-				if(e.isCheckedPath()){
-					controller.getRoutes2DLayer().displayAllRoutesPDR();
-					controller.getRoutes3DLayer().displayAllRoutesPDR();
-				} else  {
-					controller.getRoutes2DLayer().hideAllRoutesPDR();
-					controller.getRoutes3DLayer().hideAllRoutesPDR();
-				}
-				//TODO corriger la condition
-			} else if (((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("AWY") ||
-					((String)((DefaultMutableTreeNode)c.getParent()).getUserObject()).equals("PDR")) {
-				if(e.isCheckedPath()){
-					controller.getRoutes2DLayer().displayRoute(name);
-					controller.getRoutes3DLayer().displayRoute(name);
-				} else {
-					controller.getRoutes2DLayer().hideRoute(name);
-					controller.getRoutes3DLayer().hideRoute(name);
-					controller.hideRoutesBalises(name);
-				}
-			} 
-		}
-
-	}
 
 	/**
 	 * Listener des checkbox secteurs
@@ -359,21 +252,5 @@ public class StipView extends JPanel implements DataView{
 		}
 
 	}
-
-	/**
-	 * Classe temporaire pour corriger un bug de rendu avec le style Nimbus
-	 * @author Bruno Spyckerelle
-	 */
-	private class TreeCellNimbusRenderer extends DefaultCheckboxTreeCellRenderer {
-
-		public TreeCellNimbusRenderer(){
-			this.setOpaque(false);
-			add(this.checkBox);
-			add(this.label);
-		}
-
-
-	}
-
 
 }
