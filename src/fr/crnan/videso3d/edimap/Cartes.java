@@ -198,6 +198,7 @@ public class Cartes extends FileParser {
 			cartes.setPath(this.path+"/"+this.carac_jeu);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			this.cancel(true);
 		}
 		cartes.doInBackground();
 		this.setFile("cartes dynamiques");
@@ -221,7 +222,6 @@ public class Cartes extends FileParser {
 		this.setProgress(6);
 		this.getFromFiles();
 		this.setProgress(7);
-		this.firePropertyChange("done", false, true);
 		return this.numberFiles();
 	}
 
@@ -368,7 +368,9 @@ public class Cartes extends FileParser {
 	@Override
 	public void done() {
 		if(this.isCancelled()){
-
+			this.firePropertyChange("done", true, false);
+		} else {
+			this.firePropertyChange("done", false, true);
 		}
 	}
 

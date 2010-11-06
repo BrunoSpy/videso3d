@@ -18,7 +18,6 @@ package fr.crnan.videso3d.stpv;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -67,8 +66,8 @@ public class Stpv extends FileParser{
 	
 	@Override
 	public Integer doInBackground() {
-		this.getName();
 		try {
+			this.getName();
 			//on crée la connection à la db
 			this.conn = DatabaseManager.selectDB(Type.STPV, this.name);
 			this.conn.setAutoCommit(false);
@@ -82,6 +81,10 @@ public class Stpv extends FileParser{
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			this.cancel(true);
+		} catch (IOException e) {
+			e.printStackTrace();
+			this.cancel(true);
 		}
 		return this.numberFiles();
 	}
@@ -94,15 +97,19 @@ public class Stpv extends FileParser{
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			firePropertyChange("done", true, false);
+		} else {
+			firePropertyChange("done", false, true);
 		}
-		firePropertyChange("done", false, true);
 	}
 	
 	/**
 	 * Lance les parseurs spécifiques à chaque fichier
+	 * @throws SQLException 
+	 * @throws IOException 
 	 */
 	@Override
-	protected void getFromFiles() {
+	protected void getFromFiles() throws IOException, SQLException {
 
 		this.setFile("LIEU");
 		this.setProgress(0);
@@ -119,22 +126,16 @@ public class Stpv extends FileParser{
 	/**
 	 * Parse le fichier SECT
 	 * @param path
+	 * @throws SQLException 
+	 * @throws IOException 
 	 */
-	private void setSect(String path){
-		try{
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-			while (in.ready()){
-				String line = in.readLine();
-				if(line.startsWith("SECT 5") || line.startsWith("SECT 8")){
-					this.insertSect(line);
-				}
+	private void setSect(String path) throws IOException, SQLException{
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+		while (in.ready()){
+			String line = in.readLine();
+			if(line.startsWith("SECT 5") || line.startsWith("SECT 8")){
+				this.insertSect(line);
 			}
-		} catch (FileNotFoundException e){
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -159,9 +160,10 @@ public class Stpv extends FileParser{
 	/**
 	 * Parse le fichier RADR
 	 * @param path {@link String} Chemin vers le fichier RADR
+	 * @throws SQLException 
+	 * @throws IOException 
 	 */
-	private void setRadr(String path) {
-		try {
+	private void setRadr(String path) throws IOException, SQLException {
 			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while (in.ready()){
 				String line = in.readLine();
@@ -169,13 +171,6 @@ public class Stpv extends FileParser{
 					this.insertMosaique(line);
 				}
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 
@@ -193,9 +188,9 @@ public class Stpv extends FileParser{
 	
 	/**
 	 * Récupère le nom de la BDS
+	 * @throws IOException 
 	 */
-	private void getName(){
-		try {
+	private void getName() throws IOException{
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path+"/RESULTAT")));
 			Boolean nameFound = false;
 			while (in.ready() || !nameFound){
@@ -206,45 +201,34 @@ public class Stpv extends FileParser{
 					nameFound = true;
 				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	/**
 	 * Parse le fichier LIEU<br />
 	 * Prend en compte les LIEU 20, 26, 27, 6, 8 et 91
 	 * @param path Chemin vers le fichier LIEU
+	 * @throws SQLException 
+	 * @throws IOException 
 	 */
-	private void setLieu(String path) {
-		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-			while(in.ready()){
-				String line = in.readLine();
-				if(line.startsWith("LIEU 20")){
-					this.insertLieu20(line);
-				} else if(line.startsWith("LIEU 26") || line.startsWith("LIEU 26B")){
-					this.insertLieu26(line);
-				}  else if(line.startsWith("LIEU 27") || line.startsWith("LIEU 27B")){
-					this.insertLieu27(line);
-				} else if(line.startsWith("LIEU 6")) {
-					this.insertLieu6(line);
-				} else if (line.startsWith("LIEU 8")) {
-					this.insertLieu8(line);
-				} else if(line.startsWith("LIEU 91") && !line.startsWith("LIEU 91S")) {
-					this.insertLieu91(line);
-				} else if(line.startsWith("LIEU 91S")){
-					this.addLieu91S(line);
-				}
+	private void setLieu(String path) throws IOException, SQLException {
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+		while(in.ready()){
+			String line = in.readLine();
+			if(line.startsWith("LIEU 20")){
+				this.insertLieu20(line);
+			} else if(line.startsWith("LIEU 26") || line.startsWith("LIEU 26B")){
+				this.insertLieu26(line);
+			}  else if(line.startsWith("LIEU 27") || line.startsWith("LIEU 27B")){
+				this.insertLieu27(line);
+			} else if(line.startsWith("LIEU 6")) {
+				this.insertLieu6(line);
+			} else if (line.startsWith("LIEU 8")) {
+				this.insertLieu8(line);
+			} else if(line.startsWith("LIEU 91") && !line.startsWith("LIEU 91S")) {
+				this.insertLieu91(line);
+			} else if(line.startsWith("LIEU 91S")){
+				this.addLieu91S(line);
 			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 

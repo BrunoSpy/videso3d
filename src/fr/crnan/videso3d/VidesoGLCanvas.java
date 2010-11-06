@@ -22,7 +22,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileFilter;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -49,7 +48,6 @@ import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.util.VMeasureTool;
-import fr.crnan.videso3d.layers.RadioCovLayer;
 
 import gov.nasa.worldwind.BasicFactory;
 import gov.nasa.worldwind.Factory;
@@ -68,7 +66,6 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.globes.Globe;
-import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.AnnotationLayer;
 import gov.nasa.worldwind.layers.LatLonGraticuleLayer;
 import gov.nasa.worldwind.layers.Layer;
@@ -76,7 +73,6 @@ import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
-import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.util.DataConfigurationFilter;
 import gov.nasa.worldwind.util.DataConfigurationUtils;
@@ -92,8 +88,6 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
-
-
 
 	/**
 	 * Layer contenant les annotations
@@ -113,15 +107,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Outil de mesure (alidade)
 	 */
 	private VMeasureTool measureTool;	
-
-	/**
-	 * Liste des layers couvertures radios
-	 */
-	private RadioCovLayer radioCovLayer;
-
-
-	//	private Layer lastLayer;
-	private AirspaceLayer selectedAirspaces = new AirspaceLayer();
 
 	/**
 	 * Initialise les différents objets graphiques
@@ -145,9 +130,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		firePropertyChange("step", "", "Ajout des layers installés");
 		this.updateWWI();
 
-		//layer d'accueil des objets séléctionnés
-		this.getModel().getLayers().add(selectedAirspaces);
-
 		if (isFlatGlobe())
 		{
 			this.flatGlobe = (FlatGlobeCautra)this.getModel().getGlobe();
@@ -158,9 +140,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			this.flatGlobe = new EarthFlatCautra();
 			this.roundGlobe = this.getModel().getGlobe();
 		}
-
-		//Layer des radio couv
-		radioCovLayer = new RadioCovLayer("Radio Coverage",this);
 
 		//position de départ centrée sur la France
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));
@@ -420,37 +399,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	}
 
 	/*-------------------------------------------------------------------*/
-	/*----------------- Gestion des couvertures radios ------------------*/
+	/*----------------- Gestion des trajectoires       ------------------*/
 	/*-------------------------------------------------------------------*/    
 
-	public void addRadioCov(String antennaName) {    	
-		radioCovLayer.addVisibleRadioCov(antennaName);
-		this.redraw();
-	}
-
-	public void removeRadioCov(String antennaName) {    
-		radioCovLayer.removeVisibleRadioCov(antennaName);
-		this.redraw();
-	}
-
-	public void hideAllRadioCovLayers() {
-		radioCovLayer.hideAllRadioCovLayers();
-		this.redraw();    
-	}
-
-	public void removeAllRadioCovLayers() {
-		radioCovLayer.removeAllRadioCovLayers();
-		this.redraw();
-	}
-
-	public void insertAllRadioCovLayers() {
-		radioCovLayer.insertAllRadioCovLayers();
-		this.redraw();
-	}
-	public void insertAllRadioCovLayers(ArrayList<Airspace> airspaces) {
-		radioCovLayer.insertAllRadioCovLayers(airspaces);
-		this.redraw();
-	}
+	
 
 	/**
 	 * Ajoute les trajectoires à la vue

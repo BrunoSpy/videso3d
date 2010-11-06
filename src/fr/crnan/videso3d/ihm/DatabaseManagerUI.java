@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,6 +36,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
@@ -166,72 +168,79 @@ public class DatabaseManagerUI extends JDialog {
 	
 	
 	private void addDatabase(File file){
-		if(file.isFile()){
-			int index = file.getName().lastIndexOf(".");
-			String suffix = index == -1 ? "" : file.getName().substring(index);
-			if(suffix.equalsIgnoreCase(".lst") || suffix.equalsIgnoreCase(".txt")){
-				//import données EXSA
-				Exsa exsa = new Exsa(file.getAbsolutePath());
-				this.getDatas(exsa, "Import des données EXSA", "EXSA");
-				return;
-			} else if (suffix.equalsIgnoreCase(".mdb")) { //base SkyView
-				DatabaseManager.createSkyView(file.getName(), file.getAbsolutePath());
-				DatabaseManager.importFinished(Type.SkyView);
-				((DBTableModel)table.getModel()).update();
-				return;			
-			} else if (suffix.equalsIgnoreCase(".xml")){ //export des données SIA, base AIP
-				//on copie le fichier pour éviter de le perdre
-				File aipFile = FileManager.copyFile(file);
-				AIP aip = new AIP("./"+aipFile.getName());
-				this.getDatas(aip, "Import des données AIP", "AIP");
-			} else {
-				file = file.getParentFile();
+		try {
+			if(file.isFile()){
+				int index = file.getName().lastIndexOf(".");
+				String suffix = index == -1 ? "" : file.getName().substring(index);
+				if(suffix.equalsIgnoreCase(".lst") || suffix.equalsIgnoreCase(".txt")){
+					//import données EXSA
+					Exsa exsa = new Exsa(file.getAbsolutePath());
+					this.getDatas(exsa, "Import des données EXSA", "EXSA");
+					return;
+				} else if (suffix.equalsIgnoreCase(".mdb")) { //base SkyView
+					DatabaseManager.createSkyView(file.getName(), file.getAbsolutePath());
+					DatabaseManager.importFinished(Type.SkyView);
+					((DBTableModel)table.getModel()).update();
+					return;			
+				} else if (file.getName().endsWith("n.xml")){ //TODO trouver une autre méthode
+					//export des données SIA, base AIP
+					//on copie le fichier pour éviter de le perdre
+					File aipFile = FileManager.copyFile(file);
+					AIP aip = new AIP("./"+aipFile.getName());
+					this.getDatas(aip, "Import des données AIP", "AIP");
+				} else {
+					file = file.getParentFile();
+				}
 			}
-		}
-		if(file.isDirectory()){
-			List<File> files = Arrays.asList(file.listFiles());
-			if(files.contains(new File(file.getAbsolutePath()+"/LIEUX"))){//une méthode comme une autre pour vérifier que le dossier est une dossier de données STIP
-				Stip stip = new Stip(file.getAbsolutePath());
-				this.getDatas(stip, "Import des données STIP", "STIP");
-			} else if(files.contains(new File(file.getAbsolutePath()+"/LIEU"))//une méthode comme une autre pour vérifier que le dossier est une dossier de données STPV
-					|| files.contains(new File(file.getAbsolutePath()+"/LIEU.txt"))) { //Bordeaux a des fichiers Stpv qui finissent par un .txt
-				Stpv stpv = new Stpv(file.getAbsolutePath());
-				this.getDatas(stpv, "Import des données STPV", "STPV");
-			} else if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))
-					|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))
-					|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) {
-				//TODO trouver une meilleure gestion des extensions
-				String caracJeuPath = "";
-				if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))) caracJeuPath = "carac_jeu";
-				if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))) caracJeuPath = "carac_jeu.nct";
-				if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) caracJeuPath = "carac_jeu.NCT";
-				Cartes cartes = new Cartes(file.getAbsolutePath(),caracJeuPath);
-				this.getDatas(cartes, "Import des données EDIMAP", "Edimap");
-			} else if(files.contains(new File(file.getAbsolutePath()+"/PAYS"))) {
-				Pays pays = new Pays(file.getAbsolutePath());
-				this.getDatas(pays, "Import des contours des pays", "PAYS");
-			} else if(files.contains(new File(file.getAbsoluteFile()+"/radioOutput.xml"))){
-				System.out.println("(DatabaseManagerUI.java) - ouverture du répertoire :" + file.getAbsolutePath());
-				// Radio radio = new Radio();
-				RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
-				// Radio radio = new Radio(file.getAbsolutePath());
-				this.getDatas(radioDataManager,"Import des données radio","RadioCov");			
-				//RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
-				//radioDataManager.loadData();			
-			}
-			else {
-				Logging.logger().warning("Pas de fichier de base de données trouvé");
-			}
+			if(file.isDirectory()){
+				List<File> files = Arrays.asList(file.listFiles());
+				if(files.contains(new File(file.getAbsolutePath()+"/LIEUX"))){//une méthode comme une autre pour vérifier que le dossier est une dossier de données STIP
+					Stip stip = new Stip(file.getAbsolutePath());
+					this.getDatas(stip, "Import des données STIP", "STIP");
+				} else if(files.contains(new File(file.getAbsolutePath()+"/LIEU"))//une méthode comme une autre pour vérifier que le dossier est une dossier de données STPV
+						|| files.contains(new File(file.getAbsolutePath()+"/LIEU.txt"))) { //Bordeaux a des fichiers Stpv qui finissent par un .txt
+					Stpv stpv = new Stpv(file.getAbsolutePath());
+					this.getDatas(stpv, "Import des données STPV", "STPV");
+				} else if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))
+						|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))
+						|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) {
+					//TODO trouver une meilleure gestion des extensions
+					String caracJeuPath = "";
+					if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))) caracJeuPath = "carac_jeu";
+					if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))) caracJeuPath = "carac_jeu.nct";
+					if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) caracJeuPath = "carac_jeu.NCT";
+					Cartes cartes = new Cartes(file.getAbsolutePath(),caracJeuPath);
+					this.getDatas(cartes, "Import des données EDIMAP", "Edimap");
+				} else if(files.contains(new File(file.getAbsolutePath()+"/PAYS"))) {
+					Pays pays = new Pays(file.getAbsolutePath());
+					this.getDatas(pays, "Import des contours des pays", "PAYS");
+				} else if(files.contains(new File(file.getAbsoluteFile()+"/radioOutput.xml"))){
+					System.out.println("(DatabaseManagerUI.java) - ouverture du répertoire :" + file.getAbsolutePath());
+					// Radio radio = new Radio();
+					RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
+					// Radio radio = new Radio(file.getAbsolutePath());
+					this.getDatas(radioDataManager,"Import des données radio","RadioCov");			
+					//RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
+					//radioDataManager.loadData();			
+				}
+				else {
+					throw new FileNotFoundException();
+				}
+			} 
+		} catch(FileNotFoundException e){
+			JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
+					"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+			Logging.logger().warning("Pas de fichier de base de données trouvé");
 		}
 	}
-	
+
 	/**
-     * Parses files and displays a progress window
+	 * Parses files and displays a progress window
      * @param fileParser File parser to be launched
      * @param title Title of the progress window
      * @param type Type of the database
      */
-    private void getDatas(final FileParser fileParser, String title, final String type){
+    private void getDatas(final FileParser fileParser, String title, final String type) {
     	
     	progressMonitor = new ProgressMonitor(this, title, "", 1, fileParser.numberFiles());
     	progressMonitor.setMillisToDecideToPopup(0);
@@ -243,8 +252,16 @@ public class DatabaseManagerUI extends JDialog {
 				if(evt.getPropertyName().equals("done")){
 					if((Boolean) evt.getNewValue()) {
 						DatabaseManager.importFinished(type);
+					} else {
+						//done = false, on affiche une boite de dialogue d'erreur
+						//sauf si l'annulation provient du progressmonitor
+						if(!progressMonitor.isCanceled()) {
+							JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
+									"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+							Logging.logger().warning("Pas de fichier de base de données trouvé");
+						}
 					}
-					((DBTableModel)table.getModel()).update();
+					((DBTableModel)table.getModel()).update();	
 					//suppression des fichiers temporaires si besoin
 					FileManager.removeTempFiles();
 				} else if(evt.getPropertyName().equals("progress")){

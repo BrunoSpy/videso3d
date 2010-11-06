@@ -33,6 +33,7 @@ import fr.crnan.videso3d.radio.RadioDataManager;
 // import fr.crnan.videso3d.radio.RadioDirectoryReader;
 import fr.crnan.videso3d.VidesoGLCanvas;
 
+import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
@@ -68,6 +69,7 @@ public class RadioCovLayer extends AirspaceLayer{
 				airspace.setVisible(true);
 			}
 		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	/**Recherche une couverture radio dans la liste, et la rend invisible*/
@@ -77,6 +79,7 @@ public class RadioCovLayer extends AirspaceLayer{
 				airspace.setVisible(false);
 			}
 		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 		
 	/** Toutes les couvertures radio sont visibles */
@@ -86,6 +89,7 @@ public class RadioCovLayer extends AirspaceLayer{
 				airspace.setVisible(true);
 			}
 		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	/**Rend toutes les couvertures radios sont invisibles*/
@@ -95,6 +99,7 @@ public class RadioCovLayer extends AirspaceLayer{
 				airspace.setVisible(false);
 			}
 		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	public void insertAllRadioCovLayers(ArrayList <Airspace> airspacesParam){
@@ -115,7 +120,8 @@ public class RadioCovLayer extends AirspaceLayer{
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-		}																
+		}		
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 
@@ -202,7 +208,8 @@ public class RadioCovLayer extends AirspaceLayer{
 		airspaceLayer.setName(radioCov);
 		activeRadioCov=airspaceLayer;
 		layers=wwd.getModel().getLayers();
-		layers.add(activeRadioCov);						
+		layers.add(activeRadioCov);		
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	/** Vidage de les liste des couvertures radios du layer radioCovLayer, et suppression du radioCovLayer */
@@ -216,6 +223,7 @@ public class RadioCovLayer extends AirspaceLayer{
 						}								
 			}
 		}	
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	public void removeAllAirspaces() {

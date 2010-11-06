@@ -44,22 +44,22 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 /**
  * Lecteur des exports en xml du SIA
  * @author Adrien Vidal
- * @version 0.3
+ * @version 0.3.1
  */
 public class AIP extends FileParser{
-	
+
 	private final Integer numberFiles = 19;
-	
+
 	/**
 	 * Le nom de la base de données.
 	 */
 	private String name;
-	
+
 	/**
 	 * Le chemin du fichier xml utilisé
 	 */
 	private String filePath;
-	
+
 	/**
 	 * Connection à la base de données
 	 */
@@ -69,7 +69,7 @@ public class AIP extends FileParser{
 	 * Le <code>document</code> construit à partir du fichier xml.
 	 */
 	private Document document=null;
-	
+
 	//TODO pour diminuer la consommation de mémoire, on peut faire une requête sur la BDD au lieu de maintenir ces listes.
 	// Mais bien vérifier le fonctionnement de showObject avant de supprimer les listes (surtout pour les CTL).
 	private List<Couple<Integer,String>> TSAs;
@@ -89,14 +89,14 @@ public class AIP extends FileParser{
 	private List<Couple<Integer,String>> Vols;
 	private List<Couple<Integer,String>> Bals;
 	private List<Couple<Integer,String>> TrPlas;
-	
-	
+
+
 	public final static int Partie=0, TSA = 1, SIV = 2, CTR = 3, TMA = 4, R = 5, 
-							D = 6, FIR = 7, UIR = 8, LTA = 9, UTA = 10, CTA = 11, 
-							CTL = 12, Pje = 13, Aer = 14, Vol=15, Bal = 16, TrPla = 17,
-							AWY = 20, PDR = 21, TAC = 23,
-							DMEATT = 30, L = 31, NDB = 32, PNP = 33, TACAN = 34, VFR = 35, VOR = 36, VORDME = 37, VORTAC = 38, WPT = 39;
-	
+	D = 6, FIR = 7, UIR = 8, LTA = 9, UTA = 10, CTA = 11, 
+	CTL = 12, Pje = 13, Aer = 14, Vol=15, Bal = 16, TrPla = 17,
+	AWY = 20, PDR = 21, TAC = 23,
+	DMEATT = 30, L = 31, NDB = 32, PNP = 33, TACAN = 34, VFR = 35, VOR = 36, VORDME = 37, VORTAC = 38, WPT = 39;
+
 
 
 	public AIP(String path) {
@@ -131,7 +131,7 @@ public class AIP extends FileParser{
 		this.Vols = new LinkedList<Couple<Integer,String>>();
 		this.Bals = new LinkedList<Couple<Integer,String>>();
 		this.TrPlas = new LinkedList<Couple<Integer,String>>();
-		
+
 		SAXBuilder sxb = new SAXBuilder();
 		try {
 			//on récupère le chemin d'accès au fichier xml à parser
@@ -164,9 +164,9 @@ public class AIP extends FileParser{
 
 	@Override
 	public Integer doInBackground() {
-		//récupération du nom de la base à créer
-		this.getName();
 		try {
+			//récupération du nom de la base à créer
+			this.getName();
 			//création de la connection à la base de données
 			this.conn = DatabaseManager.selectDB(Type.AIP, this.name);
 			this.conn.setAutoCommit(false); //fixes performance issue
@@ -176,21 +176,16 @@ public class AIP extends FileParser{
 				//parsing des fichiers et stockage en base
 				this.getFromFiles();
 				this.setProgress(1);
-				try {
-					this.conn.commit();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				this.conn.commit();
 				this.setProgress(this.numberFiles());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} catch (Exception e){
-			e.printStackTrace();
+			this.cancel(true);
 		}
 		return this.numberFiles();
 	}
-	
+
 	/**
 	 * 
 	 * @return L'élément Situation, qui contient tous les objets qui nous intéressent.
@@ -198,8 +193,8 @@ public class AIP extends FileParser{
 	public Element getDocumentRoot(){
 		return document.getRootElement().getChild("Situation");
 	}
-	
-	
+
+
 	/**
 	 * Crée le nom de la base : AIP_date de publication
 	 */
@@ -208,7 +203,7 @@ public class AIP extends FileParser{
 	}
 
 	@Override
-	protected void getFromFiles() {
+	protected void getFromFiles() throws SQLException {
 		Element racineVolumes = document.getRootElement().getChild("Situation").getChild("VolumeS");
 		this.TSAs = new LinkedList<Couple<Integer,String>>();
 		this.SIVs = new LinkedList<Couple<Integer,String>>();
@@ -285,20 +280,20 @@ public class AIP extends FileParser{
 		this.setProgress(18);
 		this.getBalises();
 		this.setProgress(19);
-		
+
 	}
-	
-	
+
+
 	@SuppressWarnings("unchecked")
-	private void getBalises(){
+	private void getBalises() throws SQLException{
 		Element racineNavFix = document.getRootElement().getChild("Situation").getChild("NavFixS");
 		List<Element> navFix = racineNavFix.getChildren();
 		for(Element fix : navFix){
 			insertNavFix(fix);
 		}
 	}
-	
-	private void insertNavFix(Element navFix){
+
+	private void insertNavFix(Element navFix) throws SQLException{
 		String pk = navFix.getAttributeValue("pk");
 		String type = navFix.getChildText("NavType"); 
 		String name = navFix.getChildText("Ident");
@@ -308,7 +303,7 @@ public class AIP extends FileParser{
 		if( ! territoireID.equals("100")){
 			name += " - "+getTerritoireName(territoireID); 
 		}
-		
+
 		double freq = 0;
 		if(!type.equals("VFR") && !type.equals("WPT") && ! type.equals("PNP")){
 			List<Element> elts = findElementsByChildId(document.getRootElement().getChild("Situation").getChild("RadioNavS"), "NavFix", pk);
@@ -316,34 +311,29 @@ public class AIP extends FileParser{
 				freq = Double.parseDouble(elts.get(0).getChildText("Frequence"));
 			}
 		}
-		
-		PreparedStatement ps;
-		try {
-			ps = this.conn.prepareStatement("insert into NavFix (pk, type, nom, lat, lon, frequence) VALUES (?, ?, ?, ?, ?, ?)");
-			ps.setInt(1, Integer.parseInt(pk));
-			ps.setString(2, type);
-			ps.setString(3, name);
-			ps.setDouble(4, latitude);
-			ps.setDouble(5, longitude);
-			ps.setDouble(6, freq);
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+
+		PreparedStatement ps  = this.conn.prepareStatement("insert into NavFix (pk, type, nom, lat, lon, frequence) VALUES (?, ?, ?, ?, ?, ?)");
+		ps.setInt(1, Integer.parseInt(pk));
+		ps.setString(2, type);
+		ps.setString(3, name);
+		ps.setDouble(4, latitude);
+		ps.setDouble(5, longitude);
+		ps.setDouble(6, freq);
+		ps.executeUpdate();
 	}
-	
-	
-	
+
+
+
 	@SuppressWarnings("unchecked")
-	private void getRoutes(){
+	private void getRoutes() throws SQLException{
 		Element racineRoutes = document.getRootElement().getChild("Situation").getChild("RouteS");
 		List<Element> routes = racineRoutes.getChildren();
 		for(Element route : routes){
 			insertRoute(route);
 		}
 	}
-	
-	private void insertRoute(Element route){
+
+	private void insertRoute(Element route) throws SQLException{
 		String pkRoute = route.getAttributeValue("pk");
 		int routeID = Integer.parseInt(pkRoute);
 		String routeName = route.getChildText("Prefixe")+" "+route.getChildText("Numero");
@@ -352,51 +342,43 @@ public class AIP extends FileParser{
 			routeName += " - "+getTerritoireName(territoireID); 
 		}
 		PreparedStatement ps;
-		try {
-			int navFixExtremite = Integer.parseInt(route.getChild("Origine").getAttributeValue("pk"));
-			ps = this.conn.prepareStatement("insert into routes (pk,type,nom, navFixExtremite) VALUES (?, ?, ?, ?)");
-			ps.setInt(1, routeID);
-			ps.setString(2, route.getChildText("RouteType"));
-			ps.setString(3, routeName);
-			ps.setInt(4, navFixExtremite);
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		int navFixExtremite = Integer.parseInt(route.getChild("Origine").getAttributeValue("pk"));
+		ps = this.conn.prepareStatement("insert into routes (pk,type,nom, navFixExtremite) VALUES (?, ?, ?, ?)");
+		ps.setInt(1, routeID);
+		ps.setString(2, route.getChildText("RouteType"));
+		ps.setString(3, routeName);
+		ps.setInt(4, navFixExtremite);
+		ps.executeUpdate();
 		Element racineSegments = document.getRootElement().getChild("Situation").getChild("SegmentS");
 		List<Element> segments = findElementsByChildId(racineSegments, "Route", pkRoute);
-		try {
-			for(Element segment : segments){
-				int segmentID = Integer.parseInt(segment.getAttributeValue("pk"));
-				int sequence = Integer.parseInt(segment.getChildText("Sequence"));
-				int navFixExtremite = Integer.parseInt(segment.getChild("NavFixExtremite").getAttributeValue("pk"));
-				ps = this.conn.prepareStatement("insert into segments (pk, pkRoute, sequence, navFixExtremite) VALUES (?, ?, ?, ?)");
-				ps.setInt(1, segmentID);
-				ps.setInt(2, routeID);
-				ps.setInt(3, sequence);
-				ps.setInt(4, navFixExtremite);
-				ps.executeUpdate();	
+		for(Element segment : segments){
+			int segmentID = Integer.parseInt(segment.getAttributeValue("pk"));
+			int sequence = Integer.parseInt(segment.getChildText("Sequence"));
+			navFixExtremite = Integer.parseInt(segment.getChild("NavFixExtremite").getAttributeValue("pk"));
+			ps = this.conn.prepareStatement("insert into segments (pk, pkRoute, sequence, navFixExtremite) VALUES (?, ?, ?, ?)");
+			ps.setInt(1, segmentID);
+			ps.setInt(2, routeID);
+			ps.setInt(3, sequence);
+			ps.setInt(4, navFixExtremite);
+			ps.executeUpdate();	
 
-				//Insertion des centres traversés par la route : pour chaque segment, on ajoute le centre à la liste des centres traversés
-				String nomACC = segment.getChildText("Acc");
-				if(nomACC != null){
-					if(nomACC.contains(" ")){
-						String[] nomsACCs = nomACC.split(" ");
-						insertACCs(nomsACCs, pkRoute);
-					}else if(nomACC.contains("#")){
-						String[] nomsACCs = nomACC.split("#");
-						insertACCs(nomsACCs, pkRoute);
-					}else{
-						insertACC(nomACC, pkRoute);
-						
-					}
+			//Insertion des centres traversés par la route : pour chaque segment, on ajoute le centre à la liste des centres traversés
+			String nomACC = segment.getChildText("Acc");
+			if(nomACC != null){
+				if(nomACC.contains(" ")){
+					String[] nomsACCs = nomACC.split(" ");
+					insertACCs(nomsACCs, pkRoute);
+				}else if(nomACC.contains("#")){
+					String[] nomsACCs = nomACC.split("#");
+					insertACCs(nomsACCs, pkRoute);
+				}else{
+					insertACC(nomACC, pkRoute);
+
 				}
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 	}
-	
+
 
 	private void insertACCs(String[] nomsACCs, String pkRoute) throws SQLException{
 		for (String nom : nomsACCs){
@@ -423,65 +405,58 @@ public class AIP extends FileParser{
 		}
 	}
 
-	
+
 
 	/**
 	 * Cherche tous les éléments Volume qui sont des TSA, et insère leur nom dans la base de données
+	 * @throws SQLException 
 	 */
-	private void getTSAs(Element racine) {
+	private void getTSAs(Element racine) throws SQLException {
 		List<Element> cbaList = findVolumes(racine,"lk", "CBA");
 		List<Element> tsaList = findVolumes(racine, "lk","TSA");
 		Iterator<Element> itCBA = cbaList.iterator();
 		Iterator<Element> itTSA = tsaList.iterator();
-		try {
-			while(itCBA.hasNext()){
-				this.insertZone(itCBA.next(),false,"TSA");
-			}
-			while(itTSA.hasNext()){
-				this.insertZone(itTSA.next(),false,"TSA");
-			}	
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}	
+		while(itCBA.hasNext()){
+			this.insertZone(itCBA.next(),false,"TSA");
+		}
+		while(itTSA.hasNext()){
+			this.insertZone(itTSA.next(),false,"TSA");
+		}
 	}
-	
 
-	
+
+
 	/**
 	 * 
 	 * @param racine
 	 * @param type
+	 * @throws SQLException 
 	 */
-	private void getZones(Element racine, String type){
+	private void getZones(Element racine, String type) throws SQLException{
 		List<Element> zoneList = findVolumes(racine, "lk",type);
 		Iterator<Element> it1 = zoneList.iterator();
 		Iterator<Element> it2 = zoneList.iterator();
 		HashSet<String> sameNames = new HashSet<String>();
 		ArrayList<String> names = new ArrayList<String>();
-		try{
-			while(it1.hasNext()){
-				Element zone = it1.next();
-				String zoneName = getVolumeName(zone.getAttributeValue("lk"));
-				if(!names.contains(zoneName)){
-					names.add(zoneName);
-				}else{
-					sameNames.add(zoneName);
-				}
+		while(it1.hasNext()){
+			Element zone = it1.next();
+			String zoneName = getVolumeName(zone.getAttributeValue("lk"));
+			if(!names.contains(zoneName)){
+				names.add(zoneName);
+			}else{
+				sameNames.add(zoneName);
 			}
-			while(it2.hasNext()){
-				Element zoneElement = it2.next();
-				if(sameNames.contains(getVolumeName(zoneElement.getAttributeValue("lk")))){
-					this.insertZone(zoneElement,true,type);
-				}else{
-					this.insertZone(zoneElement,false,type);
-				}
+		}
+		while(it2.hasNext()){
+			Element zoneElement = it2.next();
+			if(sameNames.contains(getVolumeName(zoneElement.getAttributeValue("lk")))){
+				this.insertZone(zoneElement,true,type);
+			}else{
+				this.insertZone(zoneElement,false,type);
 			}
-			
-		}catch(Exception e){
-			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Insère dans la base de données la zone passée en paramètre
 	 * @param zone Le secteur (ou zone...) à insérer dans la base.
@@ -511,7 +486,7 @@ public class AIP extends FileParser{
 		ps.setString(3, removeType(zoneName));
 		ps.executeUpdate();
 	}
-	
+
 
 	/**
 	 * Récupère le nom du volume en enlevant les [] et les caractères inutiles.
@@ -538,8 +513,8 @@ public class AIP extends FileParser{
 		usualName = partie.getChildText("NomUsuel");
 		return usualName;
 	}
-	
-	
+
+
 	/**
 	 * Vérifie si le nom de la zone commence par le type (CTR, TMA,...)
 	 * @param name Le nom à vérifier
@@ -563,17 +538,17 @@ public class AIP extends FileParser{
 			lettersToRemove = 4;
 		}
 		if(name.startsWith("TrPla"))
-				lettersToRemove = 6;
+			lettersToRemove = 6;
 		return name.substring(lettersToRemove);
 	}
-	
-	
+
+
 	@Override
 	public int numberFiles() {
 		return this.numberFiles;
 	}
 
-	
+
 	public List<Couple<Integer,String>> getZones(int type){
 		switch(type){
 		case TSA:
@@ -613,8 +588,8 @@ public class AIP extends FileParser{
 		}
 		return null;
 	}
-	
-	
+
+
 	public static String getTypeString(int type){
 		switch(type){
 		case TSA:
@@ -681,7 +656,7 @@ public class AIP extends FileParser{
 			return "";
 		}
 	}
-	
+
 	public static int string2type(String type){
 		if (type.equals("TSA")){
 			return TSA;
@@ -775,7 +750,7 @@ public class AIP extends FileParser{
 		}
 		return -1;
 	}
-	
+
 	public String RouteType2AIPType(String routeName, fr.crnan.videso3d.graphics.Route.Type type){
 		if(routeName.startsWith("T")&& routeName.charAt(1)!=' '){
 			return "TAC";
@@ -784,8 +759,8 @@ public class AIP extends FileParser{
 		}
 	}
 
-	
-	
+
+
 
 	@Override
 	public void done() {
@@ -795,12 +770,14 @@ public class AIP extends FileParser{
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			firePropertyChange("done", true, false);
+		} else {
+			firePropertyChange("done", false, true);
 		}
-		firePropertyChange("done", false, true);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Liste tous les éléments dont le champ fieldParam <b>commence</b> par la chaîne de caractères "value", parmi les fils de l'élément racine.
 	 * <i>A n'utiliser que pour chercher des volumes par leur nom.</i>
@@ -824,12 +801,12 @@ public class AIP extends FileParser{
 				}
 				return false;
 			}
-		
+
 		};
 		return root.getContent(f);	
 	}
-	
-	
+
+
 	/**
 	 * Permet de trouver un élément par son nom et son type (TMA, CTA,...)
 	 * @param type
@@ -840,8 +817,8 @@ public class AIP extends FileParser{
 		Element racine = document.getRootElement().getChild("Situation").getChild("VolumeS");
 		return findElement(racine, getID(type,name));
 	}
-	
-	
+
+
 	/**
 	 * Renvoie l'élément dont l'attribut "pk" correspond à <code>idNumber</code> parmi les fils de l'élément <code>racine</code>
 	 * @param racine 
@@ -864,9 +841,9 @@ public class AIP extends FileParser{
 		};
 		return ((List<Element>) racine.getContent(f)).get(0);
 	}
-	
-	
-	
+
+
+
 	@SuppressWarnings("unchecked")
 	public List<Element> findElementsByChildId(Element root,String childParam,String value){
 		final String child = childParam;
@@ -882,12 +859,12 @@ public class AIP extends FileParser{
 				}
 				return false;
 			}
-		
+
 		};
 		return root.getContent(f);	
 	}
-	
-	
+
+
 	/**
 	 * Renvoie l'identifiant de l'objet de type <code>type</code> et de nom <code>name</code>.
 	 * @param type le type de l'objet
@@ -924,9 +901,9 @@ public class AIP extends FileParser{
 		}
 		return pk;
 	}
-	
-	
-	
+
+
+
 	public String getZoneAttributeValue(String zoneID, String attribute){
 		Element zone = findElement(document.getRootElement().getChild("Situation").getChild("VolumeS"),zoneID);
 		return zone != null ? zone.getChildText(attribute) : null;
@@ -942,21 +919,21 @@ public class AIP extends FileParser{
 		Element child = e.getChild(childName);
 		return child != null ? child.getText() : null;
 	}
-	
 
-		
-	
-	
-	
+
+
+
+
+
 	public String getTerritoireName(String territoireID){
 		Element territoire = findElement(document.getRootElement().getChild("Situation").getChild("TerritoireS"), territoireID);
 		return territoire.getChildText("Nom");
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	/**
 	 * Renvoie les niveaux plancher et plafond d'une zone, sous forme de couple d'<code>Altitude</code>. 
 	 * Attention : Ne teste pas si l'élément contient bien un champ plafond et un champ plancher.
@@ -969,7 +946,7 @@ public class AIP extends FileParser{
 		Altitude plafond = new Altitude(e.getChild("PlafondRefUnite").getValue(), Integer.parseInt(e.getChild("Plafond").getValue()));
 		return new Couple<Altitude,Altitude>(plancher,plafond);
 	}
-	
+
 	/**
 	 * 
 	 * @return Une liste de couples dont le premier élément est le nom de la route et le deuxième son type.
@@ -989,12 +966,12 @@ public class AIP extends FileParser{
 		}
 		return routeNames;
 	}
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
 	/**
 	 * Classe conservant l'unité et la référence (AMSL,ASFC...) d'un plafond ou plancher fourni pour un Volume, et qui permet d'avoir l'équivalent en FL. 
 	 * @author VIDAL Adrien
@@ -1006,10 +983,10 @@ public class AIP extends FileParser{
 		private int originalValue;
 		private int FL;
 		private String fullText;
-		
+
 		static final int sfc=0,ft=1,fl=2;
 		static final int refSFC=0,amsl=1,asfc=2,qnh=3,unl=4;
-		
+
 		public Altitude(String refUnite, int value){
 			originalValue=value;
 			if(refUnite.startsWith("ft")){
@@ -1051,33 +1028,33 @@ public class AIP extends FileParser{
 				this.fullText="ILLIMITÉ";
 			}
 		}
-		
+
 		public int getUnite(){
 			return unite;
 		}
-		
+
 		public int getRef(){
 			return ref;
 		}
-		
+
 		public int getOriginalValue(){
 			return originalValue;
 		}
-		
+
 		public int getFL(){
 			return FL;
 		}
-		
+
 		public String getFullText(){
 			return fullText;
 		}
-		
+
 		public boolean isTerrainConforming(){
 			if(ref == Altitude.asfc || ref == Altitude.refSFC) 
 				return true;
 			return false;
 		}
-		
+
 		public int getMeters(){
 			if(unite == Altitude.sfc)
 				return 0;
