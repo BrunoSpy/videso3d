@@ -134,7 +134,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 		treeTable.setTreeTableModel(model);
 		treeTable.setOpaque(false);
 		treeTable.setBackground(new Color(214, 217, 223));
-		treeTable.getColumnExt(1).setMaxWidth(10);
+		treeTable.getColumnExt(1).setMaxWidth(15);
 				
 		//Ajout du filtre
 		filtre.addActionListener(new ActionListener() {

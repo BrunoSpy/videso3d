@@ -223,7 +223,8 @@ public class RadioDataManager extends FileParser {
 				// /this.getFromFiles();				
 				// this.setProgress(12);
 				
-				try {this.conn.commit();
+				try {
+					this.conn.commit();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -251,8 +252,10 @@ public class RadioDataManager extends FileParser {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			firePropertyChange("done", true, false);
+		} else {
+			firePropertyChange("done", false, true);
 		}
-		firePropertyChange("done", false, true);
 	}
 	
 	@Override

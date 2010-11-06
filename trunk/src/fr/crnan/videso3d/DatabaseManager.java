@@ -945,9 +945,9 @@ public final class DatabaseManager {
 		}
 
 		//suppression du fichier correspondant seulement si ce n'est pas une base SkyView
-		if(type.compareTo(Type.SkyView) != 0) {
+		if(type.compareTo(Type.SkyView) != 0 && name != null) {
 			File file = new File(name);
-			if(!file.delete()) {	
+			if(file.exists() && !file.delete()) {	
 				try {
 					//on vide le fichier si on arrive pas à le supprimer
 					//c'est moche, mais c'est comme ça sous windows
@@ -1180,11 +1180,11 @@ public final class DatabaseManager {
 	public static ArrayList<String> getCurrentRadioCovPath() throws SQLException {
 		ArrayList <String> pathTab = new ArrayList<String>();
 		Statement st = DatabaseManager.getCurrentRadioCov();
-	/*	ResultSet rs = st.executeQuery("select radio.path from radio");
+		ResultSet rs = st.executeQuery("select radio.path from radio");
 		while (rs.next()) {
 		    pathTab.add(rs.getString(1));
 			// System.out.println("(databaseManager /  getCurrentRadioCovPath) "+ rs.getString(1)+ "///" + rs.getString(2));
-		}*/
+		}
 		return pathTab;
 	}
 	

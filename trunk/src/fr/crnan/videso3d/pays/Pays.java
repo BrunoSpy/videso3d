@@ -17,7 +17,6 @@ package fr.crnan.videso3d.pays;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
@@ -39,7 +38,7 @@ import gov.nasa.worldwind.geom.LatLon;
  * Ces fichiers nécessitent un traitement spécial car ils ne sont pas distribués avec les autres fichiers CA lors d'une livraison par le CESNAC.
  * Il s'agit des fichiers PAYS, CONTPAYS, et POINPAYS
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 public class Pays extends FileParser {
 
@@ -68,7 +67,7 @@ public class Pays extends FileParser {
 	}
 	
 	@Override
-	protected void getFromFiles() {
+	protected void getFromFiles() throws SQLException, IOException {
 		this.setProgress(0);
 		this.setFile("PAYS");
 		this.setPays(this.path + "/PAYS");
@@ -84,28 +83,22 @@ public class Pays extends FileParser {
 	/**
 	 * Lecteur de fichier POINPAYS
 	 * @param path Chemin vers le fichier POINPAYS
+	 * @throws SQLException 
+	 * @throws IOException 
 	 */
-	private void setPoinPays(String path) {
-		try {
-			PreparedStatement insert = this.conn.prepareStatement("insert into poinpays (ref, latitude, longitude) " +
+	private void setPoinPays(String path) throws SQLException, IOException {
+		PreparedStatement insert = this.conn.prepareStatement("insert into poinpays (ref, latitude, longitude) " +
 		"values (?, ?, ?)");
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-			while (in.ready()){
-				String line = in.readLine();
-				if(line.startsWith("PTP")){
-					PoinPays point = new PoinPays(line); 
-					this.insertPoinPays(point, insert);
-				}
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+		while (in.ready()){
+			String line = in.readLine();
+			if(line.startsWith("PTP")){
+				PoinPays point = new PoinPays(line); 
+				this.insertPoinPays(point, insert);
 			}
-			insert.executeBatch();
-			insert.close();
-		} catch (SQLException e){
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
+		insert.executeBatch();
+		insert.close();
 	}
 	/**
 	 * Insère dans la table PoinPays
@@ -122,30 +115,24 @@ public class Pays extends FileParser {
 	/**
 	 * Lecteur de fichier CONTPAYS
 	 * @param path Chemin vers le fichier CONTPAYS
+	 * @throws SQLException 
+	 * @throws IOException 
 	 */
-	private void setContPays(String path) {
-		try {
-			PreparedStatement insert = this.conn.prepareStatement("insert into contpays (refcontour, refpoint) " +
+	private void setContPays(String path) throws SQLException, IOException {
+		PreparedStatement insert = this.conn.prepareStatement("insert into contpays (refcontour, refpoint) " +
 		"values (?, ?)");
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-			String contName = new String();
-			while (in.ready()){
-				String line = in.readLine();
-				if(line.startsWith("CTR")){
-					contName = line.substring(4,9).trim();
-				} else if(line.startsWith("PTC")){
-						this.insertContPays(contName, line.substring(4, 10).trim(), insert);
-				}
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+		String contName = new String();
+		while (in.ready()){
+			String line = in.readLine();
+			if(line.startsWith("CTR")){
+				contName = line.substring(4,9).trim();
+			} else if(line.startsWith("PTC")){
+				this.insertContPays(contName, line.substring(4, 10).trim(), insert);
 			}
-			insert.executeBatch();
-			insert.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
+		insert.executeBatch();
+		insert.close();
 	}
 	/**
 	 * INsère une ligne dans la table contpays.
@@ -161,32 +148,26 @@ public class Pays extends FileParser {
 	/**
 	 * Lecteur de fichier Pays
 	 * @param path Chemin vers le fichier PAYS
+	 * @throws SQLException 
+	 * @throws IOException 
 	 */
-	private void setPays(String path) {
-		try {
-			PreparedStatement insert = this.conn.prepareStatement("insert into pays (pays, contour, refcontour) " +
+	private void setPays(String path) throws SQLException, IOException {
+		PreparedStatement insert = this.conn.prepareStatement("insert into pays (pays, contour, refcontour) " +
 		"values (?, ?, ?)");
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-			String pays = new String();
-			String contName = new String();
-			while (in.ready()){
-				String line = in.readLine();
-				if(line.startsWith("PAY")){
-					pays = line.substring(4, 34).trim();
-					contName = line.substring(35, 65).trim();
-				} else if(line.startsWith("CTR")){
-					this.insertPays(pays, contName, line.substring(4, 9).trim(), insert);
-				}
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+		String pays = new String();
+		String contName = new String();
+		while (in.ready()){
+			String line = in.readLine();
+			if(line.startsWith("PAY")){
+				pays = line.substring(4, 34).trim();
+				contName = line.substring(35, 65).trim();
+			} else if(line.startsWith("CTR")){
+				this.insertPays(pays, contName, line.substring(4, 9).trim(), insert);
 			}
-			insert.executeBatch();
-			insert.close();
-		} catch(SQLException e){
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
+		insert.executeBatch();
+		insert.close();
 	}
 	/**
 	 * INsère une ligne dans la table pays
@@ -206,12 +187,12 @@ public class Pays extends FileParser {
 	public int numberFiles() {
 		return this.numberFiles;
 	}
-	
+
 	@Override
 	public Integer doInBackground() {
-		//récupération du nom de la base à créer
-		this.getName();
 		try {
+			//récupération du nom de la base à créer
+			this.getName();
 			this.conn = DatabaseManager.selectDB(Type.PAYS, this.name);
 			this.conn.setAutoCommit(false);
 			if(!DatabaseManager.databaseExists(this.name)){
@@ -222,6 +203,10 @@ public class Pays extends FileParser {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			this.cancel(true);
+		} catch (IOException e) {
+			e.printStackTrace();
+			this.cancel(true);
 		}
 		return this.numberFiles();
 	}
@@ -233,30 +218,26 @@ public class Pays extends FileParser {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			firePropertyChange("done", true, false);
 		} else {
 			try {
 				this.conn.commit();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
+			firePropertyChange("done", false, true);
 		}
-		firePropertyChange("done", false, true);
 	}
 	
 	/**
 	 * Forge le nom de la base de données
 	 * = PAYS.date_CA
+	 * @throws IOException 
 	 */
-	private void getName() {
-		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path + "/PAYS")));
-			String line = in.readLine();
-			this.name = "PAYS." + line.substring(33,41);
-		} catch(FileNotFoundException e){
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	private void getName() throws IOException {
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path + "/PAYS")));
+		String line = in.readLine();
+		this.name = "PAYS." + line.substring(33,41);
 	}
 
 	/**

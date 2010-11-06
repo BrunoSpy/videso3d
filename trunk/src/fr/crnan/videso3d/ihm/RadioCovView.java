@@ -47,7 +47,10 @@ import javax.swing.JScrollPane;
 //import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.graphics.RadioCovPolygon;
+import fr.crnan.videso3d.ihm.components.DataView;
+import fr.crnan.videso3d.radio.RadioCovController;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 
 import gov.nasa.worldwind.layers.AirspaceLayer;
@@ -55,7 +58,7 @@ import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 
-public class RadioCovView extends JPanel {//implements ItemListener{
+public class RadioCovView extends JPanel implements DataView {
 	
 	private Boolean DEBUG = false;	
 	private JPanel jPanel1= new JPanel();
@@ -64,15 +67,17 @@ public class RadioCovView extends JPanel {//implements ItemListener{
 	private ItemAntennaListener itemAntennaListener = new ItemAntennaListener();	
 	//tabbedPane1.setBorder(BorderFactory.createTitledBorder("couvertures radio"));
 	
-	private VidesoGLCanvas wwd;
-	private Layer layer;
-	private AirspaceLayer radioCovAirspaces=(AirspaceLayer)layer;
-	private LayerList layers;
-				
-	public RadioCovView(VidesoGLCanvas wwd) {		
+
+//	private Layer layer;
+	private AirspaceLayer radioCovAirspaces;
+//	private LayerList layers;
+			
+	private RadioCovController controller;
 	
-		this.wwd = wwd;			
-		layers = wwd.getModel().getLayers();					
+	public RadioCovView(RadioCovController c) {		
+	
+		this.controller = c;
+						
 		try {			
 			if(DatabaseManager.getCurrentRadioCov() != null) { 									
 				initGUI();
@@ -100,14 +105,13 @@ public class RadioCovView extends JPanel {//implements ItemListener{
 	 * Recherche du layer contenant les couvertures radio à partir de la Layer List.
 	 */
 	public boolean initRadioCovAirspaces() {
-		if (layers != null) {
-			for (Layer layer : layers) {				
-						if (layer instanceof AirspaceLayer && layer.getName()=="Radio Coverage") {						
-							radioCovAirspaces = (AirspaceLayer)layer;
-							return true;
-						}								
-			}
-		}	
+		for (Layer layer : controller.getLayers()) {				
+			if (layer instanceof AirspaceLayer && layer.getName()=="Radio Coverage") {						
+				radioCovAirspaces = (AirspaceLayer)layer;
+				return true;
+			}								
+		}
+
 		return false;
 	}
 		
@@ -140,10 +144,16 @@ public class RadioCovView extends JPanel {//implements ItemListener{
 		public void itemStateChanged(ItemEvent e) {
 			String antennaName= ((JCheckBox)e.getSource()).getText();
 			if (e.getStateChange() == ItemEvent.SELECTED) {
-				wwd.addRadioCov(antennaName);
+				controller.addRadioCov(antennaName);
 			}
-			else {wwd.removeRadioCov(antennaName);}
+			else {controller.removeRadioCov(antennaName);}
 		}
+	}
+
+
+	@Override
+	public VidesoController getController() {
+		return controller;
 	}			
 }	
 

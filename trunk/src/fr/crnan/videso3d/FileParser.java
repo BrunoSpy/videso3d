@@ -16,6 +16,10 @@
 
 package fr.crnan.videso3d;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+
 import javax.swing.SwingWorker;
 import javax.swing.event.EventListenerList;
 
@@ -25,10 +29,10 @@ import javax.swing.event.EventListenerList;
  * L'import des données doit être fait dans la méthode doInBackground() afin d'être fait dans un thread secondaire.
  * doInBackground() renvoit le nombre de fichiers traités et publie le nom des fichiers traités
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 public abstract class FileParser extends SwingWorker<Integer, String>{
-
+	
 	/**
 	 * Liste des listeners
 	 */
@@ -54,8 +58,11 @@ public abstract class FileParser extends SwingWorker<Integer, String>{
 	/**
 	 * Récupère les données des différents fichiers
 	 * Envoit les évènements FileParserEvent
+	 * @throws SQLException 
+	 * @throws IOException 
+	 * @throws ParseException 
 	 */
-	protected abstract void getFromFiles();
+	protected abstract void getFromFiles() throws IOException, SQLException, ParseException;
 
 	/**
 	 * Donne le nombre de fichiers que le parser gère
@@ -67,10 +74,12 @@ public abstract class FileParser extends SwingWorker<Integer, String>{
 
 	/**
 	 * Doit au moins contenir le code suivant pour prévenir les autres composants que l'import est terminé :</br>
-	 * <code>firePropertyChange("done", false, true);</code>
+	 * <code>firePropertyChange("done", boolean oldValue, boolean newValue);</code><br />
+	 * <code>newValue</code> est vrai si le parsing s'est correctement déroulé.
 	 */
 	public abstract void done();
 	
+
 	/**
 	 * @return the file
 	 */
