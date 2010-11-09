@@ -85,6 +85,10 @@ public class Cartes extends FileParser {
 	 */
 	HashMap<String, Carte> cartes = new HashMap<String, Carte>();
 
+	public static final int EDIMAP_STATIC = 0;
+	public static final int EDIMAP_DYNAMIC = 1;
+	public static final int EDIMAP_SECTOR = 2;
+	public static final int EDIMAP_VOLUME = 3;
 
 	/**
 	 * Récupère les données du fichier carac_jeu
@@ -374,5 +378,33 @@ public class Cartes extends FileParser {
 		}
 	}
 
+	public static int string2type(String type) {
+		if(type.equals("dynamique") || type.equals("Carte dynamique")) {
+			return EDIMAP_DYNAMIC;
+		} else if(type.equals("statique") || type.equals("Carte statique")) {
+			return EDIMAP_STATIC;
+		} else if(type.equals("secteur") || type.equals("Carte secteur")) {
+			return EDIMAP_SECTOR;
+		} else if(type.equals("volume") || type.equals("Volume de sécurité/intérêt")) {
+			return EDIMAP_VOLUME;
+		}
+		return -1;
+	}
 
+	
+	public static String type2string(int type) {
+		switch (type) {
+		case EDIMAP_DYNAMIC:
+			return "dynamique";
+		case EDIMAP_SECTOR:
+			return "secteur";
+		case EDIMAP_VOLUME:
+			return "volume";
+		case EDIMAP_STATIC:
+			return "statique";
+		default:
+			break;
+		}
+		return null;
+	}
 }

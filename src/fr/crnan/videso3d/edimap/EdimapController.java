@@ -16,12 +16,17 @@
 
 package fr.crnan.videso3d.edimap;
 
+import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.util.Logging;
 /**
  * Contrôle l'affichage des éléments Edimap
  * @author Bruno Spyckerelle
@@ -36,8 +41,11 @@ public class EdimapController implements VidesoController {
 	 */
 	private List<Layer> layers = new LinkedList<Layer>();
 	
+	private Cartes cartes;
+	
 	public EdimapController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
+		cartes = new Cartes();
 	}
 	
 	@Override
@@ -71,7 +79,9 @@ public class EdimapController implements VidesoController {
 	}
 
 	@Override
-	public void highlight(int type, String name) {}
+	public void highlight(int type, String name) {
+		this.showObject(type, name);
+	}
 
 	@Override
 	public void unHighlight(int type, String name) {}
@@ -80,23 +90,48 @@ public class EdimapController implements VidesoController {
 	public void reset() {}
 
 	@Override
-	public void showObject(int type, String name) {}
+	public void showObject(int type, String name) {
+		Carte carte = null;
+		try {
+			carte = cartes.getCarte(name, type2string(type));
+		} catch (FileNotFoundException e) {
+			Logging.logger().severe("La carte "+e.getMessage()+" est inexistante.");
+			JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />La carte demandée n'a pas pû être trouvée.<br /><br />" +
+					"<b>Solution :</b><br />Supprimez la base des cartes et réimportez là.</html>", "Erreur", JOptionPane.ERROR_MESSAGE);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.addLayer(name, carte);
+		this.toggleLayer(carte, true);
+	}
 
 	@Override
-	public void hideObject(int type, String name) {}
+	public void hideObject(int type, String name) {
+		Carte carte = null;
+		try {
+			carte = cartes.getCarte(name, type2string(type));
+		} catch (FileNotFoundException e) {
+			Logging.logger().severe("La carte "+e.getMessage()+" est inexistante.");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.toggleLayer(carte, false);
+	}
 
 	@Override
 	public void set2D(Boolean flat) {}
 
 	@Override
 	public int string2type(String type) {
-		return 0;
+		return Cartes.string2type(type);
 	}
 
 	@Override
 	public String type2string(int type) {
-		// TODO Auto-generated method stub
-		return null;
+		return Cartes.type2string(type);
 	}
+
+
 
 }
