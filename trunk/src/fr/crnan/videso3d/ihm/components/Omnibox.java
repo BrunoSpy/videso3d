@@ -65,8 +65,9 @@ public class Omnibox {
 	private ContextPanel context;
 	
 	/**
-	 * Creates an omnibox and adds it to the toolbar
-	 * @param toolbar
+	 * Creates an omnibox
+	 * @param wwd
+	 * @param c 
 	 */
 	public Omnibox(final VidesoGLCanvas wwd, ContextPanel c){
 		this.context = c;
@@ -125,6 +126,12 @@ public class Omnibox {
 		toolbar.add(searchBox);
 	}
 
+	/**
+	 * Adds items with their controller and type
+	 * @param type Database type of the items
+	 * @param controller Controller of the items
+	 * @param items
+	 */
 	public void addDatabase(final DatabaseManager.Type type, VidesoController controller, List<Couple<Integer, String>> items){
 		if(items == null) {
 			if(bases.containsKey(type)) removeDatabase(type);
@@ -152,6 +159,10 @@ public class Omnibox {
 		update();
 	}
 	
+	/**
+	 * Removes all items of the specified database
+	 * @param type
+	 */
 	public void removeDatabase(DatabaseManager.Type type){
 		if(bases.containsKey(type)) {
 			buttons.get(type).setSelected(false);
@@ -185,6 +196,7 @@ public class Omnibox {
 		searchBox.addActionListener(listener);
 	}
 	
+	
 	private class ItemCoupleComparator implements Comparator<ItemCouple> {
 
 		@Override
@@ -194,6 +206,11 @@ public class Omnibox {
 		
 	}
 	
+	/**
+	 * Item of the Combobox
+	 * @author Bruno Spyckerelle
+	 * @version 0.1
+	 */
 	private class ItemCouple extends Couple<VidesoController, Couple<Integer, String>>{
 
 		public ItemCouple(VidesoController first, Couple<Integer, String> item) {

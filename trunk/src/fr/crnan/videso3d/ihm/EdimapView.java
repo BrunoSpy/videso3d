@@ -19,7 +19,6 @@ package fr.crnan.videso3d.ihm;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,23 +28,20 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoController;
-import fr.crnan.videso3d.edimap.Carte;
 import fr.crnan.videso3d.edimap.Cartes;
 import fr.crnan.videso3d.edimap.EdimapController;
 import fr.crnan.videso3d.edimap.Entity;
 import fr.crnan.videso3d.ihm.components.DataView;
-import gov.nasa.worldwind.util.Logging;
 
 /**
  * Sélecteur de cartes edimap
  * @author Bruno Spyckerelle
- * @version 0.3.0
+ * @version 0.3.1
  */
 @SuppressWarnings("serial")
 public class EdimapView extends JPanel implements DataView{
@@ -68,8 +64,6 @@ public class EdimapView extends JPanel implements DataView{
 	private JPanel volumes = new JPanel();
 	
 	private EdimapController controller;
-	
-	private Cartes cartes;
 	 
 	private ItemCheckListener itemCheckListener = new ItemCheckListener();
 	
@@ -90,7 +84,7 @@ public class EdimapView extends JPanel implements DataView{
 		volumes.setBorder(BorderFactory.createTitledBorder("Cartes volumes"));
 		try {
 			if(DatabaseManager.getCurrentEdimap() != null) {
-				cartes = new Cartes();
+				Cartes cartes = new Cartes();
 				this.add(this.buildPanel(secteurs, cartes.getSecteurs()));
 				if(!cartes.getVolumes().isEmpty()) this.add(this.buildPanel(volumes, cartes.getVolumes()));
 				this.add(this.buildPanel(statiques, cartes.getCartesStatiques()));
@@ -142,30 +136,22 @@ public class EdimapView extends JPanel implements DataView{
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			String name = ((JCheckBox)e.getSource()).getText();
-			String type = "";
+			int type = -1;
 			if(dynamiques.isAncestorOf((Component) e.getSource())){
-				type = "dynamique";
+				type = Cartes.EDIMAP_DYNAMIC;
 			} else if (statiques.isAncestorOf((Component) e.getSource())){
-				type = "statique";
+				type = Cartes.EDIMAP_STATIC;
 			} else if (secteurs.isAncestorOf((Component) e.getSource())){
-				type = "secteur";
+				type = Cartes.EDIMAP_SECTOR;
 			} else if (volumes.isAncestorOf((Component) e.getSource())){
-				type = "volume";
+				type = Cartes.EDIMAP_VOLUME;
 			} 
-			Carte carte = null;
-			try {
-				carte = cartes.getCarte(name, type);
-			} catch (FileNotFoundException e1) {
-				Logging.logger().severe("La carte "+e1.getMessage()+" est inexistante.");
-				if(e.getStateChange() == ItemEvent.SELECTED){//ne pas envoyer deux fois le message d'erreur
-					JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />La carte demandée n'a pas pû être trouvée.<br /><br />" +
-							"<b>Solution :</b><br />Supprimez la base des cartes et réimportez là.</html>", "Erreur", JOptionPane.ERROR_MESSAGE);
-				}
-			} catch (SQLException e1) {
-				e1.printStackTrace();
+			
+			if(e.getStateChange() == ItemEvent.SELECTED){
+				controller.showObject(type, name);
+			} else {
+				controller.hideObject(type, name);
 			}
-			controller.addLayer(name, carte);
-			controller.toggleLayer(carte, e.getStateChange() == ItemEvent.SELECTED);
 		}
 	}
 

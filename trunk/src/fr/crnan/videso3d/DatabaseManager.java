@@ -17,6 +17,7 @@
 package fr.crnan.videso3d;
 
 import fr.crnan.videso3d.aip.AIP;
+import fr.crnan.videso3d.edimap.Cartes;
 import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.util.Logging;
 
@@ -1304,6 +1305,16 @@ public final class DatabaseManager {
 				rs = st.executeQuery("select nom, type from volumes UNION select nom, type from routes UNION select nom, type from NavFix");
 				while(rs.next()){
 					items.add(new Couple<Integer, String>(AIP.string2type(rs.getString(2)), rs.getString(1)));
+				}
+			}
+			return items;
+		case Edimap:
+			st = DatabaseManager.getCurrentEdimap();
+			if(st != null){
+				items = new LinkedList<Couple<Integer, String>>();
+				rs = st.executeQuery("select name, type from cartes");
+				while(rs.next()) {
+					items.add(new Couple<Integer, String>(Cartes.string2type(rs.getString(2)), rs.getString(1)));
 				}
 			}
 			return items;
