@@ -216,11 +216,6 @@ public class StipView extends FilteredMultiTreeTableView{
 
 		return scrollPane;
 	}
-
-	public JTabbedPane getSecteurs() {
-		return secteurs;
-	}	
-
 	
 	@Override
 	public void reset() {
