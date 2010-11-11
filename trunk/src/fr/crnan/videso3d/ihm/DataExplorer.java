@@ -16,7 +16,6 @@
 
 package fr.crnan.videso3d.ihm;
 
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -90,7 +89,12 @@ public class DataExplorer extends JPanel {
 		
 	}	
 
+	/**
+	 * Mise à jour de la vue, crée le panneau de contrôle correspondant et supprime le précédent si besoin.
+	 * @param type Type de base données changée
+	 */
 	public void updateView(final Type type){
+		if(type.equals(Type.PAYS)) return; //Pas de vue de contrôle pour une base PAYS
 		if(!panels.containsKey(type)){
 			try {
 				if(DatabaseManager.getCurrent(type) != null){
@@ -187,74 +191,6 @@ public class DataExplorer extends JPanel {
 		tabs.setTabComponentAt(tabs.indexOfComponent(content), buttonTab);
 		tabs.setSelectedIndex(tabs.getTabCount()-1);
 	}
-	
-	/**
-	 *  Ajoute un tab de sélection des couvertures radio
-	 */
-//	public void updateRadioCovView() {	
-//
-//		if(radioCov == null){
-//			try {
-//				if(DatabaseManager.getCurrentRadioCov() != null) {
-//						ArrayList<String> radioCovPathTab = new ArrayList<String>();
-//						radioCovPathTab = DatabaseManager.getCurrentRadioCovPath();
-//						for (int i=0;i<radioCovPathTab.size();i++) {
-//
-//						this.wwd.firePropertyChange("step", "", "Création des données radio");
-//						RadioDataManager radioDataManager = new RadioDataManager(radioCovPathTab.get(i));				
-//						wwd.insertAllRadioCovLayers(radioDataManager.loadData());			
-//						
-//						}	
-//												
-//					radioCov = new RadioCovView(wwd);
-//			
-//					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
-//					buttonTab.getButton().addActionListener(new ActionListener() {					
-//						@Override
-//						public void actionPerformed(ActionEvent e) {
-//							try {
-//								DatabaseManager.unselectDatabase(Type.RadioCov);
-//							} 
-//							catch (SQLException e1) {
-//								e1.printStackTrace();
-//							}
-//						}
-//					});
-//					tabs.addTab("Antennes", radioCov);
-//					tabs.setTabComponentAt(tabs.indexOfComponent(radioCov), buttonTab);
-//					tabs.setSelectedIndex(tabs.getTabCount()-1);
-//				}
-////				else {System.out.println("(DataExplorer)  getCurrentRadio est nul");}
-//			} 
-//			catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//			catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		
-//		} 
-//		else {
-//			try {
-//				if(DatabaseManager.getCurrentRadioCov() != null){
-//					int i = tabs.indexOfComponent(radioCov);
-//					wwd.removeAllRadioCovLayers();
-//					radioCov = new RadioCovView(wwd);
-//					tabs.setComponentAt(i, radioCov);
-//					tabs.setSelectedIndex(i);
-//				} 
-//				else {
-//					/* On supprime une ligne radioCov dans la liste du databaseManagerUI  */									
-//					wwd.removeAllRadioCovLayers();					
-//					tabs.remove(radioCov);
-//					radioCov = null;											
-//				}
-//			} 
-//			catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}	
 		
 	private DataView createView(Type type){
 		switch (type) {
@@ -285,7 +221,6 @@ public class DataExplorer extends JPanel {
 	
 	/**
 	 * Remet à zéro les différentes sélections
-	 * TODO : prendre en charge le sélecteur Stpv et Radio
 	 */
 	public void resetView() {
 		for(DataView view : panels.values()){
