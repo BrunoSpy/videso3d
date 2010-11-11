@@ -29,7 +29,7 @@ import gov.nasa.worldwind.render.airspaces.Airspace;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class RadioCovController implements VidesoController {
 
@@ -145,16 +145,7 @@ public class RadioCovController implements VidesoController {
 		radioCovLayer.removeVisibleRadioCov(antennaName);
 		this.wwd.redrawNow();
 	}
-
-	public void hideAllRadioCovLayers() {
-		radioCovLayer.hideAllRadioCovLayers();
-		this.wwd.redrawNow();
-	}
-
-	public void insertAllRadioCovLayers() {
-		radioCovLayer.insertAllRadioCovLayers();
-		this.wwd.redrawNow();
-	}
+	
 	public void insertAllRadioCovLayers(ArrayList<Airspace> airspaces) {
 		radioCovLayer.insertAllRadioCovLayers(airspaces);
 		this.wwd.redrawNow();
