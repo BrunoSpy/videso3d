@@ -51,11 +51,12 @@ public class RadioCovController implements VidesoController {
 				ArrayList<String> radioCovPathTab = new ArrayList<String>();
 				radioCovPathTab = DatabaseManager.getCurrentRadioCovPath();
 				for (int i=0;i<radioCovPathTab.size();i++) {
-
 					this.wwd.firePropertyChange("step", "", "Création des données radio");
-					RadioDataManager radioDataManager = new RadioDataManager(radioCovPathTab.get(i));				
-					this.insertAllRadioCovLayers(radioDataManager.loadData());			
-
+					RadioDataManager radioDataManager = new RadioDataManager(radioCovPathTab.get(i));							
+					this.insertAllRadioCovLayers(radioDataManager.loadData());		
+					for (int j=0;j<radioCovPathTab.size();j++) {
+					}
+					
 				}	
 			}
 		} catch (SQLException e) {
@@ -136,22 +137,27 @@ public class RadioCovController implements VidesoController {
 	}
 
 	public void addRadioCov(String antennaName) {    	
-		radioCovLayer.addVisibleRadioCov(antennaName);
+		radioCovLayer.addVisibleRadioCov(antennaName);		
+		this.wwd.redrawNow();
 	}
 
 	public void removeRadioCov(String antennaName) {    
 		radioCovLayer.removeVisibleRadioCov(antennaName);
+		this.wwd.redrawNow();
 	}
 
 	public void hideAllRadioCovLayers() {
 		radioCovLayer.hideAllRadioCovLayers();
+		this.wwd.redrawNow();
 	}
 
 	public void insertAllRadioCovLayers() {
 		radioCovLayer.insertAllRadioCovLayers();
+		this.wwd.redrawNow();
 	}
 	public void insertAllRadioCovLayers(ArrayList<Airspace> airspaces) {
 		radioCovLayer.insertAllRadioCovLayers(airspaces);
+		this.wwd.redrawNow();
 	}
 
 	public List<Layer> getLayers() {

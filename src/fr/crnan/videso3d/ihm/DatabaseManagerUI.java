@@ -214,7 +214,7 @@ public class DatabaseManagerUI extends JDialog {
 				} else if(files.contains(new File(file.getAbsolutePath()+"/PAYS"))) {
 					Pays pays = new Pays(file.getAbsolutePath());
 					this.getDatas(pays, "Import des contours des pays", "PAYS");
-				} else if(files.contains(new File(file.getAbsoluteFile()+"/radioOutput.xml"))){
+				} else if(files.contains(new File(file.getAbsoluteFile()+"/radioCoverageXSL.xsl"))){
 					System.out.println("(DatabaseManagerUI.java) - ouverture du répertoire :" + file.getAbsolutePath());
 					// Radio radio = new Radio();
 					RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
