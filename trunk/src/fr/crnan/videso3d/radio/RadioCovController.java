@@ -40,6 +40,8 @@ public class RadioCovController implements VidesoController {
 	 */
 	private RadioCovLayer radioCovLayer;
 	
+	public static final int ANTENNE = 0; 
+	
 	public RadioCovController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
 		
@@ -102,14 +104,15 @@ public class RadioCovController implements VidesoController {
 
 	@Override
 	public void showObject(int type, String name) {
-		// TODO Auto-generated method stub
-
+		//un seul type ...
+		radioCovLayer.addVisibleRadioCov(name);		
+		this.wwd.redrawNow();
 	}
 
 	@Override
 	public void hideObject(int type, String name) {
-		// TODO Auto-generated method stub
-
+		radioCovLayer.removeVisibleRadioCov(name);
+		this.wwd.redrawNow();
 	}
 
 	@Override
@@ -132,19 +135,9 @@ public class RadioCovController implements VidesoController {
 
 	@Override
 	public void reset() {
-		// TODO Auto-generated method stub
-
+		this.removeAllLayers();
 	}
 
-	public void addRadioCov(String antennaName) {    	
-		radioCovLayer.addVisibleRadioCov(antennaName);		
-		this.wwd.redrawNow();
-	}
-
-	public void removeRadioCov(String antennaName) {    
-		radioCovLayer.removeVisibleRadioCov(antennaName);
-		this.wwd.redrawNow();
-	}
 	
 	public void insertAllRadioCovLayers(ArrayList<Airspace> airspaces) {
 		radioCovLayer.insertAllRadioCovLayers(airspaces);

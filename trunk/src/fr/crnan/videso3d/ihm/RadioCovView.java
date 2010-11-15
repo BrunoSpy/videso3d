@@ -16,61 +16,48 @@
 
 package fr.crnan.videso3d.ihm;
 
-/**  
- * @author mickaël PAPAIL
- * Interface de sélection des couvertures radios.
- */
-
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.ResultSet;
+import java.util.LinkedList;
+import java.util.List;
 
-//import java.awt.BorderLayout;
 import java.awt.Dimension;
-//import java.awt.Font;
-//import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-//import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
-//import javax.swing.JLabel;
 import javax.swing.JPanel;
-//import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-//import javax.swing.JTabbedPane;
-//import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.graphics.RadioCovPolygon;
 import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.radio.RadioCovController;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.VidesoController;
-import fr.crnan.videso3d.VidesoGLCanvas;
 
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
-import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 
+/**  
+ * @author Mickaël Papail
+ * @author Bruno Spyckerelle
+ * @version 0.2
+ * Interface de sélection des couvertures radios.
+ */
 public class RadioCovView extends JPanel implements DataView {
 	
-	private Boolean DEBUG = false;	
 	private JPanel jPanel1= new JPanel();
 	private Box box = Box.createVerticalBox();
 	
-	private ItemAntennaListener itemAntennaListener = new ItemAntennaListener();	
-	//tabbedPane1.setBorder(BorderFactory.createTitledBorder("couvertures radio"));
+	private List<JCheckBox> checkboxes = new LinkedList<JCheckBox>();
 	
+	private ItemAntennaListener itemAntennaListener = new ItemAntennaListener();	
 
-//	private Layer layer;
 	private AirspaceLayer radioCovAirspaces;
-//	private LayerList layers;
 			
 	private RadioCovController controller;
 	
@@ -125,14 +112,21 @@ public class RadioCovView extends JPanel implements DataView {
 				JCheckBox check = new JCheckBox(((RadioCovPolygon) airspace).getName());
 				check.setAlignmentX(LEFT_ALIGNMENT);
 				box.add(check);
+				checkboxes.add(check);
 				box.add(Box.createVerticalStrut(5));
 				check.addItemListener(itemAntennaListener);
 			}
 		}
 	}
 		
-	/** TODO Gestion des checkboxes */
-	public void reset() {		
+	@Override
+	public void reset() {	
+		for(JCheckBox check : checkboxes){
+			if(check.isSelected()){
+				check.setSelected(false);
+			}
+		}
+		controller.reset();
 	}
 	
 	
@@ -144,9 +138,11 @@ public class RadioCovView extends JPanel implements DataView {
 		public void itemStateChanged(ItemEvent e) {
 			String antennaName= ((JCheckBox)e.getSource()).getText();
 			if (e.getStateChange() == ItemEvent.SELECTED) {
-				controller.addRadioCov(antennaName);
+				controller.showObject(RadioCovController.ANTENNE, antennaName);
 			}
-			else {controller.removeRadioCov(antennaName);}
+			else {
+				controller.hideObject(RadioCovController.ANTENNE, antennaName);
+			}
 		}
 	}
 
