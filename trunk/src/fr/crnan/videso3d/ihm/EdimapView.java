@@ -120,6 +120,8 @@ public class EdimapView extends JPanel implements DataView{
 				c.setSelected(false);
 			}
 		}
+		//cacher les objets qui ont été activés sans passer par la vue
+		this.controller.reset();
 	}
 	
 	@Override

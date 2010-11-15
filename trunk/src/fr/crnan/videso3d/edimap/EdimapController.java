@@ -87,7 +87,11 @@ public class EdimapController implements VidesoController {
 	public void unHighlight(int type, String name) {}
 	
 	@Override
-	public void reset() {}
+	public void reset() {
+		for(Layer l : layers){
+			this.toggleLayer(l, false);
+		}
+	}
 
 	@Override
 	public void showObject(int type, String name) {
