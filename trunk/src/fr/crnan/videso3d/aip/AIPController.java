@@ -845,4 +845,7 @@ public class AIPController implements VidesoController {
 		return AIP.getTypeString(type);
 	}
 	
+	public String toString(){
+		return "AIP";
+	}
 }

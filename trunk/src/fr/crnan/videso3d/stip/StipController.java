@@ -554,5 +554,7 @@ public class StipController implements VidesoController {
 		return null;
 	}
 	
-	
+	public String toString(){
+		return "Stip";
+	}
 }

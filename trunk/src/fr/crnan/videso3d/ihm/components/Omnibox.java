@@ -32,7 +32,6 @@ import javax.swing.JComboBox;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToolBar;
 
-import org.jdesktop.swingx.autocomplete.AutoCompleteComboBoxEditor;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import fr.crnan.videso3d.Couple;
@@ -222,7 +221,7 @@ public class Omnibox {
 		 */
 		@Override
 		public String toString() {
-			return getSecond().getSecond().toString()+" ("+getFirst().type2string(getSecond().getFirst())+")";
+			return getSecond().getSecond().toString()+" ("+getFirst().toString()+" "+getFirst().type2string(getSecond().getFirst())+")";
 		}
 		
 	}
