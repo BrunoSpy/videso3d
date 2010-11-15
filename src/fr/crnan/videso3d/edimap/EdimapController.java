@@ -136,6 +136,8 @@ public class EdimapController implements VidesoController {
 		return Cartes.type2string(type);
 	}
 
-
+	public String toString(){
+		return "Edimap";
+	}
 
 }
