@@ -52,7 +52,8 @@ public interface VidesoController {
 	public void removeLayer(String name, Layer layer);
 	
 	/**
-	 * Supprime tous les calques
+	 * Supprime tous les calques <br />
+	 * Ne supprime pas nécessairement les éléments contenus par ces calques.
 	 */
 	public void removeAllLayers();
 	

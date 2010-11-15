@@ -94,9 +94,6 @@ public class STRController implements VidesoController {
 			this.wwd.removeLayer(l);
 		}
 		mosaiquesLayer.clear();
-		//suppression des radars
-		this.radars.clear();
-		this.radarsLayer.removeAllRenderables();
 		this.wwd.removeLayer(radarsLayer);
 	}
 

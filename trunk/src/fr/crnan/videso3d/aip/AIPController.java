@@ -153,6 +153,10 @@ public class AIPController implements VidesoController {
 	}
 	@Override
 	public void removeAllLayers() {
+		this.wwd.removeLayer(routes2D);
+		this.wwd.removeLayer(routes3D);
+		this.wwd.removeLayer(navFixLayer);
+		this.wwd.removeLayer(zonesLayer);
 	}
 	
 	

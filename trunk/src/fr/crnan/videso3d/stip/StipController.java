@@ -59,6 +59,7 @@ public class StipController implements VidesoController {
 	 */
 	private Routes3DLayer routes3D;
 	private Routes2DLayer routes2D;
+
 	/**
 	 * 
 	 * Layers pour les balises publiées
@@ -113,7 +114,13 @@ public class StipController implements VidesoController {
 	}
 
 	@Override
-	public void removeAllLayers() {}
+	public void removeAllLayers() {
+		this.wwd.removeLayer(routes2D);
+		this.wwd.removeLayer(routes3D);
+		this.wwd.removeLayer(balisesNP);
+		this.wwd.removeLayer(balisesPub);
+		this.wwd.removeLayer(secteursLayer);
+	}
 	
 	@Override
 	public void set2D(Boolean flat) {}

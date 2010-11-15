@@ -131,7 +131,10 @@ public class DataExplorer extends JPanel {
 					tabs.setComponentAt(i, (Component) panels.get(type));
 					tabs.setSelectedIndex(i);
 				} else {
-					((DataView)panels.get(type)).reset();
+					//la vue est supprimée, on supprime tous les calques
+					//contrairement aux autres cas, il faut supprimer les calques afin de ne pas les avoir en double
+					//à la prochaine importation de données
+					((DataView)panels.get(type)).getController().removeAllLayers();
 					int i = tabs.indexOfComponent((Component) panels.get(type));
 					if(i>=0){
 						tabs.removeTabAt(i);

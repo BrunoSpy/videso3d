@@ -30,6 +30,7 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfacePolyline;
 import gov.nasa.worldwind.render.UserFacingText;
@@ -140,6 +141,7 @@ public class MosaiqueLayer extends LayerSet {
 				line.add(start);
 				line.add(stop);
 				SurfacePolyline ligne = new SurfacePolyline(line);
+				ligne.setAttributes(new BasicShapeAttributes());
 				ligne.setClosed(false);
 				this.grilleLayer.addRenderable(ligne);
 			}
@@ -154,6 +156,7 @@ public class MosaiqueLayer extends LayerSet {
 				line.add(start);
 				line.add(stop);
 				SurfacePolyline col = new SurfacePolyline(line);
+				col.setAttributes(new BasicShapeAttributes());
 				col.setClosed(false);
 				this.grilleLayer.addRenderable(col);
 			}
