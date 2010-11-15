@@ -44,6 +44,7 @@ import fr.crnan.videso3d.ihm.components.ButtonTabComponent;
 import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.radio.RadioCovController;
+import fr.crnan.videso3d.skyview.SkyViewController;
 import fr.crnan.videso3d.stip.StipController;
 import fr.crnan.videso3d.stpv.StpvController;
 import gov.nasa.worldwind.util.Logging;
@@ -117,6 +118,8 @@ public class DataExplorer extends JPanel {
 				}
 			} catch (SQLException e){
 				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		} else {
 			try {
@@ -128,7 +131,7 @@ public class DataExplorer extends JPanel {
 					tabs.setComponentAt(i, (Component) panels.get(type));
 					tabs.setSelectedIndex(i);
 				} else {
-					((DataView)panels.get(type)).getController().reset();
+					((DataView)panels.get(type)).reset();
 					int i = tabs.indexOfComponent((Component) panels.get(type));
 					if(i>=0){
 						tabs.removeTabAt(i);
@@ -136,6 +139,8 @@ public class DataExplorer extends JPanel {
 					panels.remove(type);
 				}
 			} catch (SQLException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -192,7 +197,7 @@ public class DataExplorer extends JPanel {
 		tabs.setSelectedIndex(tabs.getTabCount()-1);
 	}
 		
-	private DataView createView(Type type){
+	private DataView createView(Type type) throws Exception{
 		switch (type) {
 		case STIP:
 			return new StipView(new StipController(wwd));
@@ -206,8 +211,10 @@ public class DataExplorer extends JPanel {
 			return new AIPView(new AIPController(wwd));
 		case RadioCov:
 			return new RadioCovView(new RadioCovController(wwd));
+		case SkyView:
+			return new SkyView(new SkyViewController(wwd));
 		default:
-			return null;
+			throw new Exception("Type "+type+" inconnu");
 		}
 	}
 

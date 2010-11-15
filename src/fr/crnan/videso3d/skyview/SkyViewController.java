@@ -65,7 +65,9 @@ public class SkyViewController implements VidesoController {
 	}
 	
 	@Override
-	public void highlight(int type, String name) {}
+	public void highlight(int type, String name) {
+		this.showObject(type, name);
+	}
 
 	@Override
 	public void unHighlight(int type, String name) {}
