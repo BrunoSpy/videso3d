@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.jdom.Element;
 
 
@@ -85,7 +87,7 @@ public class AIPController implements VidesoController {
 	
 	private HashMap<String, GlobeAnnotation> routesAnnotations;
 	
-	
+	private RoutesSegments routesSegments = new RoutesSegments();
 	
 	public AIPController(VidesoGLCanvas wwd) {
 		this.wwd = wwd;
@@ -128,7 +130,6 @@ public class AIPController implements VidesoController {
 			this.toggleLayer(routes2D, true);
 		}
 		routesAnnotations = new HashMap<String, GlobeAnnotation>();
-		this.buildRoutes();
 		this.wwd.firePropertyChange("step", "", "Création des balises");
 		if(navFixLayer != null){
 			navFixLayer.removeAllBalises();
@@ -179,20 +180,6 @@ public class AIPController implements VidesoController {
 	}
 
 	
-	private void buildRoutes(){
-		List<Couple<String,String>> routeNamesAndTypes = aip.getRouteNamesFromDB();
-		for(Couple<String,String> nameAndType : routeNamesAndTypes){
-			String typeString = nameAndType.getSecond();
-			int type = AIP.AWY;
-			if(typeString.equals("PDR"))
-				type = AIP.PDR;
-			if(typeString.equals("TAC"))
-				type = AIP.TAC;
-			addRouteToLayer(nameAndType.getFirst(), type);
-		}
-	}
-	
-	
 	
 	@Override
 	public void showObject(int type, String name) {
@@ -200,7 +187,7 @@ public class AIPController implements VidesoController {
 			this.showRoute(name,type);
 		}else if(type == AIP.CTL){
 			// si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
-			// donc on va chercher les différents morceaux avec getCTLSecteurs et on les ajoute tous.
+			// donc on va chercher les différents morceaux avec getCTLSecteurs et on les affiche tous.
 			for(String nomPartieSecteur : getCTLSecteurs(name)){
 				if(!zones.containsKey(nomPartieSecteur))
 					this.addZone(type, nomPartieSecteur);
@@ -376,22 +363,19 @@ public class AIPController implements VidesoController {
 	}
 	
 	public void showRoute(String routeName, int type){
-		String routeID = AIP.getID(type, routeName);
-		try {
-			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet segments = st.executeQuery("select pk from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
-			while(segments.next()){
-				Element segment = aip.findElement(aip.getDocumentRoot().getChild("SegmentS"), segments.getString(1));
-				if(!segment.getChildText("Circulation").equals("(XxX)")){
-					String segmentName = buildSegmentName(routeName, segment.getChildText("Sequence"));
-					routes2D.displayRoute(segmentName);
-					routes3D.displayRoute(segmentName);
+		LinkedList<String> segments = routesSegments.getSegmentsOfRoute(routeName);
+		if(segments==null){
+			addRouteToLayer(routeName, type, true);
+		}else{
+			if(segments.getFirst().equals("false")){
+				routesSegments.setRouteVisible(routeName, true);
+				segments.removeFirst();
+				for(String s : segments){
+					routes2D.displayRoute(s);
+					routes3D.displayRoute(s);
 				}
 			}
-		}catch(SQLException e){
-			e.printStackTrace();
 		}
-		
 	}
 
 	/**
@@ -399,8 +383,9 @@ public class AIPController implements VidesoController {
 	 * on représente la route seulement par un point situé à 48°N, 0°E .
 	 * @param routeName Le nom de la route à afficher.
 	 * @param type 
+	 * @param display true pour afficher la route immédiatement, false sinon
 	 */
-	public void addRouteToLayer(String routeName, int type){
+	public void addRouteToLayer(String routeName, int type, boolean display){
 		String routeID = AIP.getID(type, routeName);
 		fr.crnan.videso3d.graphics.Route.Type routeType;
 		if(type == AIP.PDR){
@@ -411,12 +396,14 @@ public class AIPController implements VidesoController {
 		try {
 			Statement st = DatabaseManager.getCurrentAIP();
 			ResultSet segments = st.executeQuery("select pk from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
+			boolean segmentsEmpty = true;
 			while(segments.next()){
-				//PB : plus d'affichage après ce point pour 877
+				segmentsEmpty = false;
 				Element segment = aip.findElement(aip.getDocumentRoot().getChild("SegmentS"), segments.getString(1));
 				String segmentName = buildSegmentName(routeName, segment.getChildText("Sequence"));
 				if(routes2D.getRoute(segmentName)==null){
 					if(!segment.getChildText("Circulation").equals("(XxX)")){
+						routesSegments.addSegment(segmentName, routeName, display);
 						Couple<Altitude,Altitude> altis = aip.getLevels(segment);
 						LinkedList<LatLon> loc = new LinkedList<LatLon>();
 						Geometrie geometrieSegment = new Geometrie(segment);
@@ -443,8 +430,6 @@ public class AIPController implements VidesoController {
 						segment2D.setAnnotation("<html>Route "+segmentName+"<br/><b>Plancher :</b>"+altis.getFirst().getFullText()
 								+"<br/><b>Plafond :</b>"+altis.getSecond().getFullText()+"</html>");
 						routes2D.addRoute(segment2D, segmentName);
-
-						//TODO prendre en compte le sens de circulation... 
 						Route3D segment3D = new Route3D(segmentName, routeType);
 						segment3D.setLocations(loc);
 						boolean lowerTerrainConformant = false, upperTerrainConformant = false;
@@ -459,8 +444,16 @@ public class AIPController implements VidesoController {
 						segment3D.setAnnotation("<html>Route "+segmentName+"<br/><b>Plancher :</b>"+altis.getFirst().getFullText()
 								+"<br/><b>Plafond :</b>"+altis.getSecond().getFullText()+"</html>");
 						routes3D.addRoute(segment3D, segmentName);
+						if(display){
+							routes2D.displayRoute(segmentName);
+							routes3D.displayRoute(segmentName);
+						}
 					}
 				}
+			}
+			if(segmentsEmpty){
+				new JOptionPane("<html><b>Les points de la route <font color=\"red\">"+routeName+"</font> sont inconnus !</b></html>", 
+						JOptionPane.WARNING_MESSAGE).createDialog("Route "+routeName).setVisible(true);
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -474,19 +467,19 @@ public class AIPController implements VidesoController {
 		//TODO problème avec les routes qui ont le même nom (J 22 et J 22 Polynésie...) : quand on met l'annotation dans le hashmap 
 		//on ne connaît pas le territoire, donc quand on affiche les deux J 22 en même temps, on ne garde qu'une seule des deux annotations
 		//dans le hashmap. Du coup on ne peut plus enlever l'autre.
-		String routeID = AIP.getID(type, routeName);
 		if(routesAnnotations.containsKey(routeName.split("-")[0].trim())){
 			routesAnnotations.get(routeName.split("-")[0].trim()).getAttributes().setVisible(false);
 		}
-		try {
-			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet rs = st.executeQuery("select sequence from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
-			while(rs.next()){
-				routes2D.hideRoute(buildSegmentName(routeName, rs.getString(1)));
-				routes3D.hideRoute(buildSegmentName(routeName, rs.getString(1)));
+		LinkedList<String> segments = routesSegments.getSegmentsOfRoute(routeName);
+		if(segments!=null){
+			if(segments.getFirst().equals("true")){
+				routesSegments.setRouteVisible(routeName, false);
+				segments.removeFirst();
+				for(String s : segments){
+					routes2D.hideRoute(s);
+					routes3D.hideRoute(s);
+				}
 			}
-		}catch(SQLException e){
-			e.printStackTrace();
 		}
 	}
 	
@@ -663,9 +656,7 @@ public class AIPController implements VidesoController {
 	
 	
 	private void highlightNavFix(int type, String name){
-	//	System.out.println("highlight");
 		if(!navFixLayer.contains(name)){
-		//	System.out.println("show");
 			showNavFix(name);
 		}
 		Balise2D navFix = navFixLayer.getBalise(name);
@@ -674,46 +665,30 @@ public class AIPController implements VidesoController {
 	
 	
 	
-	
+
 	/**
-	 * Centre la vue sur la route définie par les segments passés en paramètre.
-	 * @param segmentsNames Les noms des segments de la route
+	 * Centre la vue sur la route
+	 * @param type Le type de la route
+	 * @param name Le nom de la route
 	 */
 	private void highlightRoute(int type, String name){
-		ArrayList<String> segmentsNames = getSegments(name);
-		if(!routes2D.hasKey(segmentsNames.get(0))){
-			showRoute(name, type);
-		}
+		showRoute(name, type);
 		ArrayList<Route2D> segments2D = new ArrayList<Route2D>();
-		ArrayList<Route3D> segments3D = new ArrayList<Route3D>();
-				for(String s : segmentsNames){
-			segments2D.add((Route2D) routes2D.getRoute(s));
-			segments3D.add((Route3D) routes3D.getRoute(s));
-		}
-		//On peut appeler centerView indiféremment sur une route2D ou une route3D puisqu'elles sont au même endroit.
-		centerView(segments2D);
-	}
-	
-	
-	/**
-	 * 
-	 * @param routeName 
-	 * @return
-	 */
-	private ArrayList<String> getSegments(String routeName){
-		ArrayList<String> segmentsNames = new ArrayList<String>();
-		String routeID = AIP.getID(AIP.AWY, routeName);
-		try{
-			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet rs = st.executeQuery("select sequence from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
-			while(rs.next()){				
-				segmentsNames.add(buildSegmentName(routeName, rs.getString(1)));
+		LinkedList<String> segmentsNames = routesSegments.getSegmentsOfRoute(name);
+		if(segmentsNames != null){
+			segmentsNames.removeFirst();
+			for(String s : segmentsNames){
+				segments2D.add((Route2D) routes2D.getRoute(s));
 			}
-		}catch(SQLException e){
-			e.printStackTrace();
+			//On peut appeler centerView indiféremment sur une route2D ou une route3D puisqu'elles sont au même endroit.
+			centerView(segments2D);
+		}else{
+			//TODO
+			
 		}
-		return segmentsNames;
 	}
+	
+
 
 	private String buildSegmentName(String routeName, String sequence){
 		return routeName.concat(" - ").concat(sequence);

@@ -221,8 +221,9 @@ public class MainWindow extends JFrame {
 		
 		
 		wwd.addSelectListener(context);
-		final AirspaceListener airspaceListener = new AirspaceListener(wwd, context, null);
+		final AirspaceListener airspaceListener = new AirspaceListener(wwd, context, null, null);
 		if(dataExplorer.getView(Type.STIP) != null) airspaceListener.setStipController((StipController) dataExplorer.getView(Type.STIP).getController());
+		if(dataExplorer.getView(Type.AIP) != null) airspaceListener.setAIPController((AIPController) dataExplorer.getView(Type.AIP).getController());
 		wwd.addSelectListener(airspaceListener);
 		context.setMinimumSize(new Dimension(0,0)); //taille mini à 0 pour permettre la fermeture du panneau avec setDividerLocation
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, mainPane, context);
