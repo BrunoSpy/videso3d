@@ -57,6 +57,7 @@ import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.Annotation;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
@@ -71,6 +72,8 @@ public class ContextPanel extends JPanel implements SelectListener {
 	private VidesoGLCanvas wwd = null;	
 	private StipController stipController;
 	private AIPController aipController;
+	
+	private Annotation lastSegmentAnnotation;
 	
 	public ContextPanel(){
 		super();
@@ -812,7 +815,12 @@ public class ContextPanel extends JPanel implements SelectListener {
 	
 	private void displayAnnotationAndGoTo(Route segment){
 		Position annotationPosition = new Position(segment.getLocations().iterator().next(), 0);
-		wwd.getAnnotationLayer().addAnnotation(((ObjectAnnotation)segment).getAnnotation(annotationPosition));
+		Annotation annotation = ((ObjectAnnotation)segment).getAnnotation(annotationPosition);
+		if(lastSegmentAnnotation != null)
+			lastSegmentAnnotation.getAttributes().setVisible(false);
+		lastSegmentAnnotation = annotation;
+		annotation.getAttributes().setVisible(true);
+		wwd.getAnnotationLayer().addAnnotation(annotation);
 		wwd.getView().goTo(annotationPosition, wwd.getView().getEyePosition().elevation);
 		wwd.redraw();
 	}

@@ -28,11 +28,14 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import fr.crnan.videso3d.aip.AIP;
+import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.ObjectAnnotation;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
+import fr.crnan.videso3d.graphics.Secteur;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.Secteur.Type;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
@@ -80,14 +83,21 @@ public class AirspaceListener implements SelectListener {
 
 	private StipController stipController;
 	
-	public AirspaceListener(VidesoGLCanvas wwd, ContextPanel context, StipController stipController){
+	private AIPController aipController;
+	
+	public AirspaceListener(VidesoGLCanvas wwd, ContextPanel context, StipController stipController, AIPController aipController){
 		this.wwd = wwd;
 		this.context = context;
 		this.stipController = stipController;
+		this.aipController = aipController;
 	}
 
 	public void setStipController(StipController stipController){
 		this.stipController = stipController;
+	}
+	
+	public void setAIPController(AIPController aipController){
+		this.aipController = aipController;
 	}
 	
 	/* (non-Javadoc)
@@ -227,7 +237,12 @@ public class AirspaceListener implements SelectListener {
 
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								context.showSecteur(((Secteur3D)event.getTopObject()).getName());
+								Secteur3D secteur = (Secteur3D)event.getTopObject();
+								if(secteur.getType()==Secteur.Type.Secteur){
+									context.showSecteur(secteur.getName());
+								}else{
+									context.showAIPZone(secteur);
+								}
 								context.open();
 							}
 						});
@@ -237,7 +252,12 @@ public class AirspaceListener implements SelectListener {
 
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								stipController.hideObject(StipController.SECTEUR, ((Secteur3D)event.getTopObject()).getName());
+								Secteur3D secteur = (Secteur3D)event.getTopObject();
+								if(secteur.getType() == Secteur.Type.Secteur){
+									stipController.hideObject(StipController.SECTEUR, secteur.getName());
+								}else{
+									aipController.hideObject(AIP.secteurType2AIPType(secteur.getType()), secteur.getName());
+								}
 							}
 						});
 					} else if(event.getTopObject() instanceof Route3D) {
@@ -247,7 +267,12 @@ public class AirspaceListener implements SelectListener {
 
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								context.showRoute(((Route3D)event.getTopObject()).getName());
+								Route3D route = (Route3D) event.getTopObject();
+								if(route.getName().contains("-")){
+									context.showAIPRoute(route);
+								}else{
+									context.showRoute(route.getName());
+								}
 								context.open();
 							}
 						});
@@ -258,8 +283,12 @@ public class AirspaceListener implements SelectListener {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								Route3D r = (Route3D) event.getTopObject();
-								stipController.getRoutes3DLayer().hideRoute(r.getName());
-								stipController.hideRoutesBalises(r.getName());
+								if(r.getName().contains("-")){
+									aipController.hideObject(AIP.AWY, r.getName().split("-")[0]);
+								}else{
+									stipController.getRoutes3DLayer().hideRoute(r.getName());
+									stipController.hideRoutesBalises(r.getName());
+								}
 							}
 						});
 					}
@@ -296,7 +325,12 @@ public class AirspaceListener implements SelectListener {
 
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								context.showRoute(((Route2D)event.getTopObject()).getName());
+								Route2D route = (Route2D)event.getTopObject();
+								if(route.getName().contains("-")){
+									context.showAIPRoute(route);
+								}else{
+									context.showRoute(route.getName());
+								}
 								context.open();
 							}
 						});

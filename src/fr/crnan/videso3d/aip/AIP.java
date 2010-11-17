@@ -40,6 +40,7 @@ import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.graphics.Secteur;
 
 /**
  * Lecteur des exports en xml du SIA
@@ -749,6 +750,47 @@ public class AIP extends FileParser{
 			return WPT;
 		}
 		return -1;
+	}
+	
+	public static int secteurType2AIPType(Secteur.Type typeSect){
+		switch(typeSect){
+		case Aer :
+			return AIP.Aer;
+		case Bal :
+			return AIP.Bal;
+		case CTA :
+			return AIP.CTA;
+		case CTL :
+			return AIP.CTL;
+		case CTR :
+			return AIP.CTR;
+		case D :
+			return AIP.D;
+		case FIR :
+			return AIP.FIR;
+		case LTA :
+			return AIP.LTA;
+		case Pje : 
+			return AIP.Pje;
+		case R :
+			return AIP.R;
+		case SIV :
+			return AIP.SIV;
+		case TMA :
+			return AIP.TMA;
+		case TrPla :
+			return AIP.TrPla;
+		case TSA :
+			return AIP.TSA;
+		case UIR :
+			return AIP.UIR;
+		case UTA :
+			return AIP.UTA;
+		case Vol :
+			return AIP.Vol;
+		}
+		return -1;
+		
 	}
 
 	public String RouteType2AIPType(String routeName, fr.crnan.videso3d.graphics.Route.Type type){
