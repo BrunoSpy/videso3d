@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -37,14 +36,15 @@ import fr.crnan.videso3d.edimap.Cartes;
 import fr.crnan.videso3d.edimap.EdimapController;
 import fr.crnan.videso3d.edimap.Entity;
 import fr.crnan.videso3d.ihm.components.DataView;
+import fr.crnan.videso3d.ihm.components.MultipleSplitPanes;
 
 /**
  * Sélecteur de cartes edimap
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 @SuppressWarnings("serial")
-public class EdimapView extends JPanel implements DataView{
+public class EdimapView extends MultipleSplitPanes implements DataView{
 
 	/**
 	 * Cartes statiques
@@ -76,7 +76,7 @@ public class EdimapView extends JPanel implements DataView{
 		
 		this.controller = controller;
 		
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+	//	this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		statiques.setBorder(BorderFactory.createTitledBorder("Cartes statiques"));
 		dynamiques.setBorder(BorderFactory.createTitledBorder("Cartes dynamiques"));
@@ -85,11 +85,11 @@ public class EdimapView extends JPanel implements DataView{
 		try {
 			if(DatabaseManager.getCurrentEdimap() != null) {
 				Cartes cartes = new Cartes();
-				this.add(this.buildPanel(secteurs, cartes.getSecteurs()));
-				if(!cartes.getVolumes().isEmpty()) this.add(this.buildPanel(volumes, cartes.getVolumes()));
-				this.add(this.buildPanel(statiques, cartes.getCartesStatiques()));
-				this.add(this.buildPanel(dynamiques, cartes.getCartesDynamiques()));
-				this.add(Box.createVerticalGlue());
+				this.addLayer(this.buildPanel(dynamiques, cartes.getCartesDynamiques()));
+				this.addLayer(this.buildPanel(statiques, cartes.getCartesStatiques()));
+				if(!cartes.getVolumes().isEmpty()) this.addLayer(this.buildPanel(volumes, cartes.getVolumes()));
+				this.addLayer(this.buildPanel(secteurs, cartes.getSecteurs()));
+	//			this.add(Box.createVerticalGlue());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
