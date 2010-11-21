@@ -31,13 +31,15 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.exsa.STRController;
 import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
 /**
  * Sélecteur de données STR
  * @author Bruno Spyckerelle
- * @version 0.2.4
+ * @version 0.2.5
  */
 @SuppressWarnings("serial")
 public class StrView extends JPanel implements DataView{
@@ -73,11 +75,8 @@ public class StrView extends JPanel implements DataView{
 	 * Liste des checkbox de la vue, afin de pouvoir tous les désélectionner facilement
 	 */
 	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
-	
-	private STRController controller;
 		
-	public StrView( final STRController controller) {
-		this.controller = controller;
+	public StrView() {
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -94,7 +93,7 @@ public class StrView extends JPanel implements DataView{
 			
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				controller.set2D(e.getStateChange() == ItemEvent.SELECTED);
+				getController().set2D(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
 		style.setBorder(BorderFactory.createTitledBorder(" "));
@@ -117,7 +116,7 @@ public class StrView extends JPanel implements DataView{
 	
 	@Override
 	public STRController getController(){
-		return this.controller;
+		return (STRController) DatasManager.getController(Type.EXSA);
 	}
 	
 	private JPanel buildPanel(JPanel panel, String query){
@@ -159,31 +158,31 @@ public class StrView extends JPanel implements DataView{
 			Object parent = ((JCheckBox)e.getSource()).getParent();
 			if(e.getStateChange() == ItemEvent.SELECTED) {
 				if(mosaiques.equals(parent)){
-					controller.showObject(STRController.MOSAIQUE, ((JCheckBox)e.getSource()).getText());
+					getController().showObject(STRController.MOSAIQUE, ((JCheckBox)e.getSource()).getText());
 				} else if (capa.equals(parent)){
-					controller.showObject(STRController.MOSAIQUE_CAPA, ((JCheckBox)e.getSource()).getText());
+					getController().showObject(STRController.MOSAIQUE_CAPA, ((JCheckBox)e.getSource()).getText());
 				} else if (dyn.equals(parent)){
-					controller.showObject(STRController.MOSAIQUE_DYN, ((JCheckBox)e.getSource()).getText());
+					getController().showObject(STRController.MOSAIQUE_DYN, ((JCheckBox)e.getSource()).getText());
 				}else if (zocc.equals(parent)){
-					controller.showObject(STRController.MOSAIQUE_ZOCC, ((JCheckBox)e.getSource()).getText());
+					getController().showObject(STRController.MOSAIQUE_ZOCC, ((JCheckBox)e.getSource()).getText());
 				}else if (vvf.equals(parent)){
-					controller.showObject(STRController.MOSAIQUE_VVF, ((JCheckBox)e.getSource()).getText());
+					getController().showObject(STRController.MOSAIQUE_VVF, ((JCheckBox)e.getSource()).getText());
 				} else if(radars.equals(parent)){
-					controller.showObject(STRController.RADAR,((JCheckBox)e.getSource()).getText());
+					getController().showObject(STRController.RADAR,((JCheckBox)e.getSource()).getText());
 				}
 			} else {
 				if(mosaiques.equals(parent)){
-					controller.hideObject(STRController.MOSAIQUE, ((JCheckBox)e.getSource()).getText());
+					getController().hideObject(STRController.MOSAIQUE, ((JCheckBox)e.getSource()).getText());
 				} else if (capa.equals(parent)){
-					controller.hideObject(STRController.MOSAIQUE_CAPA, ((JCheckBox)e.getSource()).getText());
+					getController().hideObject(STRController.MOSAIQUE_CAPA, ((JCheckBox)e.getSource()).getText());
 				} else if (dyn.equals(parent)){
-					controller.hideObject(STRController.MOSAIQUE_DYN, ((JCheckBox)e.getSource()).getText());
+					getController().hideObject(STRController.MOSAIQUE_DYN, ((JCheckBox)e.getSource()).getText());
 				}else if (zocc.equals(parent)){
-					controller.hideObject(STRController.MOSAIQUE_ZOCC, ((JCheckBox)e.getSource()).getText());
+					getController().hideObject(STRController.MOSAIQUE_ZOCC, ((JCheckBox)e.getSource()).getText());
 				}else if (vvf.equals(parent)){
-					controller.hideObject(STRController.MOSAIQUE_VVF, ((JCheckBox)e.getSource()).getText());
+					getController().hideObject(STRController.MOSAIQUE_VVF, ((JCheckBox)e.getSource()).getText());
 				} else if(radars.equals(parent)){
-					controller.hideObject(STRController.RADAR, ((JCheckBox)e.getSource()).getText());
+					getController().hideObject(STRController.RADAR, ((JCheckBox)e.getSource()).getText());
 				}
 			}
 		}

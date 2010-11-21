@@ -1286,7 +1286,7 @@ public final class DatabaseManager {
 				items = new LinkedList<Couple<Integer, String>>();
 				rs = st.executeQuery("select name, publicated from balises");
 				while(rs.next()){
-					items.add(new Couple<Integer, String>((rs.getBoolean(2) ? StipController.BALISES_PUB : StipController.BALISES_NP), rs.getString(1)));
+					items.add(new Couple<Integer, String>(StipController.BALISES, rs.getString(1)));
 				}
 				rs = st.executeQuery("select name from routes");
 				while(rs.next()){

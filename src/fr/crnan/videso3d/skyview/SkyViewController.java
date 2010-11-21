@@ -26,6 +26,7 @@ import java.util.List;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.geom.LatLonUtils;
@@ -112,7 +113,9 @@ public class SkyViewController implements VidesoController {
 					ResultSet rs = st.executeQuery("select * from airport where ident='"+name+"'");
 					if(rs.next()){
 						Balise2D airport = new Balise2D(name, 
-												new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(8), rs.getString(9)), 0));
+												new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(8), rs.getString(9)), 0), 
+												DatabaseManager.Type.SkyView,
+												SkyViewController.TYPE_AIRPORT);
 						airport.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
 						airports.addBalise(airport);
 					}
@@ -129,7 +132,9 @@ public class SkyViewController implements VidesoController {
 					Statement st = DatabaseManager.getCurrentSkyView();
 					ResultSet rs = st.executeQuery("select * from waypoint where ident='"+name+"'");
 					if(rs.next()){
-						Balise2D waypoint = new Balise2D(name, new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(7), rs.getString(8)), 0));
+						Balise2D waypoint = new Balise2D(name, new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(7), rs.getString(8)), 0),
+								DatabaseManager.Type.SkyView,
+								SkyViewController.TYPE_WAYPOINT);
 						waypoint.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
 						waypoints.addBalise(waypoint);
 					}
@@ -217,7 +222,9 @@ public class SkyViewController implements VidesoController {
 			routes.add((LinkedList<Couple<String, String>>) points.clone());
 			//puis on crée les routes 2D
 			for(LinkedList<Couple<String, String>> route : routes){
-				Route2D r = new Route2D(ident, type.equals("H")? Route.Type.UIR : Route.Type.FIR);
+				Route2D r = new Route2D(ident, type.equals("H")? Route.Space.UIR : Route.Space.FIR,
+						Type.SkyView,
+						SkyViewController.TYPE_ROUTE);
 				LinkedList<LatLon> loc = new LinkedList<LatLon>();
 				LinkedList<String> balises = new LinkedList<String>();
 				for(Couple<String, String> p : route){

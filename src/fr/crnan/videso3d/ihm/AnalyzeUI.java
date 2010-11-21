@@ -33,6 +33,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
@@ -48,6 +49,7 @@ import fr.crnan.videso3d.graphs.ItiPanel;
 import fr.crnan.videso3d.graphs.RoutePanel;
 import fr.crnan.videso3d.graphs.TrajetPanel;
 import fr.crnan.videso3d.ihm.components.ButtonTabComponent;
+import fr.crnan.videso3d.stip.StipController;
 /**
  * Fenêtre d'analyse des données Stip et Stpv.<br />
  * Cette classe est un singleton afin de n'être ouverte qu'une fois maximum.
@@ -110,7 +112,7 @@ public final class AnalyzeUI extends JFrame {
 		if(type.equals("balise")){
 			try {
 				if(DatabaseManager.getCurrentStip().executeQuery("select * from balises where name = '"+balise1+"'").next()) {
-					getInstance().context.showBalise(balise1);
+					getInstance().context.showInfo(Type.STIP, StipController.BALISES, balise1);
 				} 
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -292,15 +294,18 @@ public final class AnalyzeUI extends JFrame {
 		statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
 		JLabel stip = new JLabel("Version Stip : " + versionStip);
 		statusBar.add(stip);
-		statusBar.add(new JLabel(" | "));
+		statusBar.add(new JSeparator());
 		statusBar.add(new JLabel("Version Stpv : " + versionStpv));
 
-		statusBar.add(new JLabel(" | "));
+		statusBar.add(new JSeparator());
 		statusBar.add(new JLabel("Nombre de résultats : "));
 		statusBar.add(nombreResultats);
 
 		return statusBar;
 	}
 
-
+	public static ContextPanel getContextPanel(){
+		return getInstance().context;
+	}
+	
 }

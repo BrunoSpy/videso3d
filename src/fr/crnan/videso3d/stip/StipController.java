@@ -29,11 +29,12 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.Route.Space;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
-import fr.crnan.videso3d.graphics.Route.Type;
 import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
@@ -48,7 +49,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage et la construction des éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.1.4
  */
 public class StipController implements VidesoController {
 
@@ -89,10 +90,11 @@ public class StipController implements VidesoController {
 	 * Constantes
 	 */
 	public final static int ROUTES = 0;
-	public final static int BALISES_PUB = 1;
-	public final static int BALISES_NP = 2;
-	public final static int SECTEUR = 3;
-	
+	public final static int BALISES = 1;
+	public final static int SECTEUR = 2;
+	public final static int ITI = 3;
+	public final static int CONNEXION = 4;
+	public final static int TRAJET = 5;
 	
 	public StipController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
@@ -140,17 +142,15 @@ public class StipController implements VidesoController {
 	@Override
 	public void showObject(int type, String name) {
 		switch (type) {
-		case 0://Route
+		case ROUTES://Route
 			this.routes2D.displayRoute(name);
 			this.routes3D.displayRoute(name);
 			break;
-		case 1://Balises Pub
+		case BALISES://Balises
 			this.balisesPub.showBalise(name);
-			break;
-		case 2://Balises NP
 			this.balisesNP.showBalise(name);
 			break;
-		case 3://secteur
+		case SECTEUR://secteur
 			if(!secteurs.containsKey(name+0)){//n'afficher le secteur que s'il n'est pas déjà affiché
 				this.addSecteur3D(name);
 			}
@@ -163,17 +163,15 @@ public class StipController implements VidesoController {
 	@Override
 	public void hideObject(int type, String name) {
 		switch (type) {
-		case 0://Routes
+		case ROUTES://Routes
 			this.routes2D.hideRoute(name);
 			this.routes3D.hideRoute(name);
 			break;
-		case 1://Balises Pub
+		case BALISES://Balises Pub
 			this.balisesPub.hideBalise(name);
-			break;
-		case 2://Balises NP
 			this.balisesNP.hideBalise(name);
 			break;
-		case 3://secteur
+		case SECTEUR://secteur
 			this.removeSecteur3D(name);
 			break;
 		default:
@@ -203,7 +201,7 @@ public class StipController implements VidesoController {
 			Statement st = DatabaseManager.getCurrentStip();
 			ResultSet rs = st.executeQuery("select * from balises where publicated = " + publicated);
 			while(rs.next()){
-				Balise2D balise = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0));
+				Balise2D balise = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), Type.STIP, StipController.BALISES);
 				String annotation = "<p><b>Balise "+rs.getString("name") +"</b></p>";
 				annotation += "<p>Commentaire : "+rs.getString("definition")+"<br />";
 				int plafond = -1;
@@ -260,7 +258,7 @@ public class StipController implements VidesoController {
 			attrs.setOutlineOpacity(0.9);
 			attrs.setOutlineWidth(1.5);
 			while(rs.next()){
-				Secteur3D secteur3D = new Secteur3D(name, rs.getInt("flinf"), rs.getInt("flsup"),fr.crnan.videso3d.graphics.Secteur3D.Type.Secteur);
+				Secteur3D secteur3D = new Secteur3D(name, rs.getInt("flinf"), rs.getInt("flsup"),StipController.SECTEUR, DatabaseManager.Type.STIP);
 				Secteur secteur = new Secteur(name, rs.getInt("numero"), DatabaseManager.getCurrentStip());
 				secteur.setConnectionPays(DatabaseManager.getCurrent(DatabaseManager.Type.PAYS));
 				secteur3D.setLocations(secteur.getContour(rs.getInt("flsup")));
@@ -333,14 +331,14 @@ public class StipController implements VidesoController {
 			while(iterator.hasNext()){
 				String name = iterator.next();
 				Route3D route3D = new Route3D();
-				Route2D route2D = new Route2D();
+				Route2D route2D = new Route2D(DatabaseManager.Type.STIP, StipController.ROUTES);
 				if(type.equals("F")) {
-					route3D.setType(Type.FIR);
-					route2D.setType(Type.FIR);
+					route3D.setSpace(Space.FIR);
+					route2D.setSpace(Space.FIR);
 				}
 				if(type.equals("U")) {
-					route3D.setType(Type.UIR);
-					route2D.setType(Type.UIR);
+					route3D.setSpace(Space.UIR);
+					route2D.setSpace(Space.UIR);
 				}
 				ResultSet rs = st.executeQuery("select * from routebalise, balises where route = '"+name+"' and routebalise.balise = balises.name and appartient = 1");
 				LinkedList<LatLon> loc = new LinkedList<LatLon>();
@@ -485,20 +483,14 @@ public class StipController implements VidesoController {
 			highlight = text;
 			if(secteur != null) this.wwd.getView().goTo(secteur.getReferencePosition(), 1e6);
 			break;
-		case BALISES_NP:
+		case BALISES:
 			Balise2D balise = (Balise2D) balises.get(text);
 			balise.highlight(true);
 			this.unHighlightPrevious(balise);
 			highlight = balise;
 			balisesNP.showBalise(balise);
+			balisesPub.showBalise(balise);
 			this.wwd.getView().goTo(balise.getPosition(), 4e5);
-		case BALISES_PUB:
-			Balise2D balise1 = (Balise2D) balises.get(text);
-			balise1.highlight(true);
-			this.unHighlightPrevious(balise1);
-			highlight = balise1;
-			balisesPub.showBalise(balise1);
-			this.wwd.getView().goTo(balise1.getPosition(), 4e5);
 		default:
 			break;
 		}
@@ -524,10 +516,9 @@ public class StipController implements VidesoController {
 
 	@Override
 	public int string2type(String type) {
-		if(type.equals("Publiées") || type.equals("Balise publiée")){
-			return BALISES_PUB;
-		} else if (type.equals("Non publiées") || type.equals("Balise non publiée")){
-			return BALISES_NP;
+		if(type.equals("Balise") || type.equals("Publiées") || type.equals("Balise publiée") ||
+				type.equals("Non publiées") || type.equals("Balise non publiée")){
+			return BALISES;
 		} else if(type.equals("AWY") || type.equals("PDR") || type.equals("Routes")) {
 			return ROUTES;
 		}
@@ -544,10 +535,8 @@ public class StipController implements VidesoController {
 			return "Routes";
 		case SECTEUR:
 			return "Secteur";
-		case BALISES_PUB:
-			return "Balise publiée";
-		case BALISES_NP:
-			return "Balise non publiée";
+		case BALISES:
+			return "Balise";
 		default:
 			break;
 		}

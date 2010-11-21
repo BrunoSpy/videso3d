@@ -22,6 +22,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import fr.crnan.videso3d.Configuration;
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
@@ -36,13 +37,11 @@ import gov.nasa.worldwind.render.markers.Marker;
  * Balise 2D projetée sur le terrain.<br />
  * A ajouter à un BaliseLayer pour être affichée sur le globe.
  * @author Bruno Spyckerelle
- * @version 0.5.1
+ * @version 0.5.2
  */
 public class Balise2D extends MarkerAnnotation {
 		
 	private UserFacingText text;
-	
-	private String name;
 	
 	/**
 	 * Crée une balise 2D
@@ -50,9 +49,11 @@ public class Balise2D extends MarkerAnnotation {
 	 * @param position Position de la balise
 	 * @param annotation Annotation associée
 	 */
-	public Balise2D(CharSequence name, Position position, String annotation){
+	public Balise2D(CharSequence name, Position position, String annotation, DatabaseManager.Type base, int type){
 		super(position, new BasicMarkerAttributes());
-		this.name = (String) name;
+		this.setDatabaseType(base);
+		this.setType(type);
+		this.setName((String) name);
 		this.getAttributes().setMarkerPixels(3);
 		this.getAttributes().setMaterial(new Material(Pallet.getColorBaliseMarker()));
 		
@@ -84,8 +85,8 @@ public class Balise2D extends MarkerAnnotation {
 	 * @param name Nom de la balise
 	 * @param position {@link LatLon} Position de la balise
 	 */
-	public Balise2D(CharSequence name, Position position){
-		this(name, position, null);
+	public Balise2D(CharSequence name, Position position, DatabaseManager.Type base, int type){
+		this(name, position, null, base, type);
 	}
 	
 	public UserFacingText getUserFacingText(){
@@ -108,10 +109,6 @@ public class Balise2D extends MarkerAnnotation {
 			this.getAttributes().setMaterial(Material.WHITE);
 			this.text.setColor(Color.WHITE);
 		}
-	}
-
-	public String getName() {
-		return this.name;
 	}
 	
 }

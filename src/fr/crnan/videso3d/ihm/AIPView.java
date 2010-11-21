@@ -31,7 +31,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.VidesoController;
+import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
@@ -39,14 +40,11 @@ import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 public class AIPView extends FilteredMultiTreeTableView {
 
-	private AIPController controller;
-
-	public AIPView(AIPController aipController) {
-		this.controller = aipController;
+	public AIPView() {
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		try {
@@ -77,8 +75,8 @@ public class AIPView extends FilteredMultiTreeTableView {
 
 
 	@Override
-	public VidesoController getController() {
-		return controller;
+	public AIPController getController() {
+		return (AIPController) DatasManager.getController(Type.AIP);
 	}
 	
 	private void fillZonesRootNode(DefaultMutableTreeNode root){
@@ -184,8 +182,8 @@ public class AIPView extends FilteredMultiTreeTableView {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				Boolean state = e.getStateChange() == ItemEvent.SELECTED;
-				controller.toggleLayer(controller.getRoutes2DLayer(), state);
-				controller.toggleLayer(controller.getRoutes3DLayer(), !state);
+				getController().toggleLayer(getController().getRoutes2DLayer(), state);
+				getController().toggleLayer(getController().getRoutes3DLayer(), !state);
 			}
 		});
 		

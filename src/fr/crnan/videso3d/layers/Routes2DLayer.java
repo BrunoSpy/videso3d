@@ -19,8 +19,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import fr.crnan.videso3d.graphics.Route;
+import fr.crnan.videso3d.graphics.Route.Space;
 import fr.crnan.videso3d.graphics.Route2D;
-import fr.crnan.videso3d.graphics.Route.Type;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.RenderableLayer;
 /**
@@ -64,10 +64,10 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
-	private void displayAllRoutes(Type t){
+	private void displayAllRoutes(Space t){
 		for(Route2D r : routes.values()){
 			if(!displayedRoutes.contains(r)){
-				if(r.getType().compareTo(t) == 0) {
+				if(r.getSpace().compareTo(t) == 0) {
 					this.displayRoute(r);
 				}
 			}
@@ -76,12 +76,12 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 	
 	@Override
 	public void displayAllRoutesAwy() {
-		this.displayAllRoutes(Type.FIR);
+		this.displayAllRoutes(Space.FIR);
 	}
 	
 	@Override
 	public void displayAllRoutesPDR() {
-		this.displayAllRoutes(Type.UIR);
+		this.displayAllRoutes(Space.UIR);
 	}
 	
 	@Override
@@ -101,10 +101,10 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
-	private void hideAllRoutes(Type t) {
+	private void hideAllRoutes(Space t) {
 		HashSet<Route2D> temp = new HashSet<Route2D>(this.displayedRoutes);
 		for(Route2D r : temp){
-			if(r.getType().compareTo(t) == 0){
+			if(r.getSpace().compareTo(t) == 0){
 				this.displayedRoutes.remove(r);
 				this.removeRenderable(r);
 			}
@@ -114,12 +114,12 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 
 	@Override
 	public void hideAllRoutesPDR() {
-		this.hideAllRoutes(Type.UIR);
+		this.hideAllRoutes(Space.UIR);
 	}
 	
 	@Override
 	public void hideAllRoutesAWY() {
-		this.hideAllRoutes(Type.FIR);
+		this.hideAllRoutes(Space.FIR);
 	}
 
 	@Override

@@ -17,16 +17,15 @@ package fr.crnan.videso3d.graphics;
 /**
  * Représentation graphique d'un secteur
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
-public interface Secteur {
+public interface Secteur extends VidesoObject{
 
 	/**
 	 * Type de zone
 	 */
-	public static enum Type {Secteur, TSA, SIV, CTR, TMA, R, D, FIR, UIR, LTA, UTA, CTA, CTL, Pje, Aer, Vol, Bal, TrPla};
+//	public static enum Type {Secteur, TSA, SIV, CTR, TMA, R, D, FIR, UIR, LTA, UTA, CTA, CTL, Pje, Aer, Vol, Bal, TrPla};
 	
 	public String getName();
 	
-	public void setType(Type t);
 }

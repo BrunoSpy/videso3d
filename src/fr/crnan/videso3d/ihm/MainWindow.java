@@ -58,10 +58,10 @@ import javax.swing.event.HyperlinkListener;
 import fr.crnan.videso3d.AirspaceListener;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.SplashScreen;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.VidesoGLCanvas;
-import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.formats.geo.GEOFileFilter;
 import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
 import fr.crnan.videso3d.formats.opas.OPASFileFilter;
@@ -70,7 +70,6 @@ import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
 import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
-import fr.crnan.videso3d.stip.StipController;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
@@ -175,6 +174,9 @@ public class MainWindow extends JFrame {
 			protected String doInBackground() {
 				try {
 					wwd.initialize();
+					for(Type t : DatabaseManager.getSelectedDatabases()) {
+						DatasManager.createDatas(t, wwd);
+					}
 					dataExplorer = new DataExplorer(wwd);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -186,6 +188,7 @@ public class MainWindow extends JFrame {
 				//une fois terminé, on lance l'application
 				try {
 					launchVideso3D();
+					AnalyzeUI.setWWD(wwd);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}	
@@ -209,21 +212,15 @@ public class MainWindow extends JFrame {
 
 		//Panneau contextuel
 		context = new ContextPanel(wwd);
-		if(dataExplorer.getView(Type.STIP) != null)
-			context.setStipController((StipController) dataExplorer.getView(Type.STIP).getController());
-		if(dataExplorer.getView(Type.AIP) != null)
-			context.setAIPController((AIPController) dataExplorer.getView(Type.AIP).getController());
-		
+				
 		JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, dataExplorer, wwd);
 		mainPane.setOneTouchExpandable(true);
 		mainPane.setBorder(null);
 		mainPane.setPreferredSize(new Dimension(600, 0));
 		
 		
-		wwd.addSelectListener(context);
-		final AirspaceListener airspaceListener = new AirspaceListener(wwd, context, null, null);
-		if(dataExplorer.getView(Type.STIP) != null) airspaceListener.setStipController((StipController) dataExplorer.getView(Type.STIP).getController());
-		if(dataExplorer.getView(Type.AIP) != null) airspaceListener.setAIPController((AIPController) dataExplorer.getView(Type.AIP).getController());
+//		wwd.addSelectListener(context);
+		final AirspaceListener airspaceListener = new AirspaceListener(wwd, context);
 		wwd.addSelectListener(airspaceListener);
 		context.setMinimumSize(new Dimension(0,0)); //taille mini à 0 pour permettre la fermeture du panneau avec setDividerLocation
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, mainPane, context);
@@ -232,11 +229,13 @@ public class MainWindow extends JFrame {
 		
 		this.getContentPane().add(splitPane, BorderLayout.CENTER);
 
-		//initialisation omnibox
+		//initialisation omnibox et contextpanel
 		omniBox = new Omnibox(wwd, context);
 		for(Type t : DatabaseManager.getSelectedDatabases()){
 			try {
-				omniBox.addDatabase(t, dataExplorer.getView(t).getController(), DatabaseManager.getAllVisibleObjects(t));
+				omniBox.addDatabase(t, DatasManager.getController(t), DatabaseManager.getAllVisibleObjects(t));
+				context.addTaskPane(DatasManager.getContext(t), t);
+				AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(t), t);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -269,25 +268,23 @@ public class MainWindow extends JFrame {
 						} catch (Exception e){
 							e.printStackTrace();
 						}
-						dataExplorer.updateView((DatabaseManager.Type)evt.getNewValue());
+						DatabaseManager.Type type = (Type) evt.getNewValue();
+						DatasManager.createDatas(type, wwd);
+						dataExplorer.updateView(type);
 						return null;
 					}
 
 					@Override
 					protected void done() {
-						if(dataExplorer.getView((Type) evt.getNewValue()) != null) {
-							if(DatabaseManager.Type.STIP.equals(evt.getNewValue())){
-								context.setStipController((StipController) dataExplorer.getView(Type.STIP).getController());
-								airspaceListener.setStipController((StipController) dataExplorer.getView(Type.STIP).getController());
-							} else if(DatabaseManager.Type.AIP.equals(evt.getNewValue())){
-								context.setAIPController((AIPController) dataExplorer.getView(Type.AIP).getController());
-							}
-						}
 						Type type = (Type) evt.getNewValue();
 						try {
 							if(dataExplorer.getView(type) == null){
 								omniBox.removeDatabase(type);
+								context.removeTaskPane(type);
+								AnalyzeUI.getContextPanel().removeTaskPane(type);
 							} else {
+								context.addTaskPane(DatasManager.getContext(type), type);
+								AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(type), type);
 								omniBox.addDatabase(type, dataExplorer.getView(type).getController(), DatabaseManager.getAllVisibleObjects(type));
 							}
 						} catch (SQLException e) {

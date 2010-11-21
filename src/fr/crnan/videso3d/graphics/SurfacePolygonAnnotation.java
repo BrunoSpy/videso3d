@@ -19,6 +19,7 @@ package fr.crnan.videso3d.graphics;
 import java.awt.Color;
 import java.util.List;
 
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.Position;
@@ -30,9 +31,15 @@ import gov.nasa.worldwind.render.SurfacePolygon;
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class SurfacePolygonAnnotation extends SurfacePolygon implements ObjectAnnotation {
+public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoObject {
 
 	private GlobeAnnotation annotation;
+	
+	private DatabaseManager.Type base;
+	
+	private int type;
+	
+	private String name;
 	
 	public SurfacePolygonAnnotation(List<LatLonCautra> locations) {
 		super(locations);
@@ -56,4 +63,33 @@ public class SurfacePolygonAnnotation extends SurfacePolygon implements ObjectAn
 		return annotation;
 	}
 	
+	@Override
+	public DatabaseManager.Type getDatabaseType() {
+		return this.base;
+	}
+
+	@Override
+	public void setDatabaseType(DatabaseManager.Type type) {
+		this.base = type;
+	}
+	
+	@Override
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	@Override
+	public int getType() {
+		return this.type;
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
 }

@@ -39,6 +39,10 @@ import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 public class StpvController implements VidesoController {
 
 	public static final int MOSAIQUE = 0;
+
+	public static final int BALISE = 1;
+
+	public static final int SECTEUR = 2;
 	
 	/**
 	 * Liste des layers Mosaiques

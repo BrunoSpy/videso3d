@@ -28,16 +28,11 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import fr.crnan.videso3d.aip.AIP;
-import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.graphics.Balise2D;
-import fr.crnan.videso3d.graphics.ObjectAnnotation;
-import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
-import fr.crnan.videso3d.graphics.Secteur;
 import fr.crnan.videso3d.graphics.Secteur3D;
-import fr.crnan.videso3d.graphics.Secteur.Type;
+import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
@@ -80,24 +75,10 @@ public class AirspaceListener implements SelectListener {
 	final private VidesoGLCanvas wwd;
 
 	final private ContextPanel context;
-
-	private StipController stipController;
 	
-	private AIPController aipController;
-	
-	public AirspaceListener(VidesoGLCanvas wwd, ContextPanel context, StipController stipController, AIPController aipController){
+	public AirspaceListener(VidesoGLCanvas wwd, ContextPanel context){
 		this.wwd = wwd;
 		this.context = context;
-		this.stipController = stipController;
-		this.aipController = aipController;
-	}
-
-	public void setStipController(StipController stipController){
-		this.stipController = stipController;
-	}
-	
-	public void setAIPController(AIPController aipController){
-		this.aipController = aipController;
 	}
 	
 	/* (non-Javadoc)
@@ -175,8 +156,8 @@ public class AirspaceListener implements SelectListener {
 				if(lastToolTip == null) {
 					lastToolTip = o;
 					Point point = event.getPickPoint();
-					if(event.getTopObject() instanceof ObjectAnnotation){
-						Annotation a = ((ObjectAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5)); //décalage de 5 pixels pour éviter le clignotement
+					if(event.getTopObject() instanceof VidesoObject){
+						Annotation a = ((VidesoObject)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5)); //décalage de 5 pixels pour éviter le clignotement
 						a.getAttributes().setVisible(true);
 						if(!((VAnnotationLayer)this.wwd.getAnnotationLayer()).contains(a)){
 							//on ne modifie lastAnnotation que si l'annotation n'a pas déjà été ajoutée
@@ -231,6 +212,7 @@ public class AirspaceListener implements SelectListener {
 						}
 					});
 					if(event.getTopObject() instanceof Secteur3D){
+						
 						JMenuItem contextItem = new JMenuItem("Informations...");				
 						menu.add(contextItem);
 						contextItem.addActionListener(new ActionListener() {
@@ -238,11 +220,7 @@ public class AirspaceListener implements SelectListener {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								Secteur3D secteur = (Secteur3D)event.getTopObject();
-								if(secteur.getType()==Secteur.Type.Secteur){
-									context.showSecteur(secteur.getName());
-								}else{
-									context.showAIPZone(secteur);
-								}
+								context.showInfo(secteur.getDatabaseType(), secteur.getType(), secteur.getName());
 								context.open();
 							}
 						});
@@ -253,11 +231,7 @@ public class AirspaceListener implements SelectListener {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								Secteur3D secteur = (Secteur3D)event.getTopObject();
-								if(secteur.getType() == Secteur.Type.Secteur){
-									stipController.hideObject(StipController.SECTEUR, secteur.getName());
-								}else{
-									aipController.hideObject(AIP.secteurType2AIPType(secteur.getType()), secteur.getName());
-								}
+								DatasManager.getController(secteur.getDatabaseType()).hideObject(secteur.getType(), secteur.getName());
 							}
 						});
 					} else if(event.getTopObject() instanceof Route3D) {
@@ -268,11 +242,7 @@ public class AirspaceListener implements SelectListener {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								Route3D route = (Route3D) event.getTopObject();
-								if(route.getName().contains("-")){
-									context.showAIPRoute(route);
-								}else{
-									context.showRoute(route.getName());
-								}
+								context.showInfo(route.getDatabaseType(), route.getType(), route.getName());
 								context.open();
 							}
 						});
@@ -283,12 +253,7 @@ public class AirspaceListener implements SelectListener {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								Route3D r = (Route3D) event.getTopObject();
-								if(r.getName().contains("-")){
-									aipController.hideObject(AIP.AWY, r.getName().split("-")[0]);
-								}else{
-									stipController.getRoutes3DLayer().hideRoute(r.getName());
-									stipController.hideRoutesBalises(r.getName());
-								}
+								DatasManager.getController(r.getDatabaseType()).hideObject(r.getType(), r.getName());
 							}
 						});
 					}
@@ -325,12 +290,8 @@ public class AirspaceListener implements SelectListener {
 
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								Route2D route = (Route2D)event.getTopObject();
-								if(route.getName().contains("-")){
-									context.showAIPRoute(route);
-								}else{
-									context.showRoute(route.getName());
-								}
+								Route2D route = (Route2D) event.getTopObject();
+								context.showInfo(route.getDatabaseType(), route.getType(), route.getName());
 								context.open();
 							}
 						});
@@ -341,8 +302,7 @@ public class AirspaceListener implements SelectListener {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								Route2D r = (Route2D) event.getTopObject();
-								stipController.getRoutes2DLayer().hideRoute(r.getName());
-								stipController.hideRoutesBalises(r.getName());
+								DatasManager.getController(r.getDatabaseType()).hideObject(r.getType(), r.getName());
 							}
 						});
 					}
@@ -354,7 +314,7 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							context.showBalise(((Balise2D)event.getTopObject()).getName());
+							context.showInfo(fr.crnan.videso3d.DatabaseManager.Type.STIP, StipController.BALISES, ((Balise2D)event.getTopObject()).getName());
 							context.open();
 						}
 					});
@@ -402,34 +362,15 @@ public class AirspaceListener implements SelectListener {
 			}			
 		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){ //ouverture du contexte
 			Object o = event.getTopObject();
-			if(o instanceof Secteur3D){
-				if(((Secteur3D)o).getType()==Type.Secteur){
-					this.context.showSecteur(((Secteur3D)event.getTopObject()).getName());
-				}else{
-					this.context.showAIPZone((Secteur3D)event.getTopObject());
-				}
-			} else if (o instanceof Route2D){
-				String routeName = ((Route2D)o).getName();
-				//Les noms des routes AIP sont suivis d'un tiret et du numéro de séquence du segment
-				if(routeName.contains("-")){
-					this.context.showAIPRoute((Route) o);
-				}else{
-					this.context.showRoute(routeName);
-				}
-			} else if (o instanceof Route3D){
-				String routeName = ((Route3D)o).getName();
-				if(routeName.contains("-")){
-					this.context.showAIPRoute((Route) o);
-				}else{
-				this.context.showRoute(((Route3D)o).getName());
-				}
+			if(o instanceof VidesoObject){
+				this.context.showInfo(((VidesoObject) o).getDatabaseType(), ((VidesoObject) o).getType(), ((VidesoObject) o).getName());
 			}
 		} else if (event.getEventAction() == SelectEvent.LEFT_CLICK){
 			if(event.getTopObject() != null){ 
 				Object o = event.getTopObject();
-				if(o instanceof ObjectAnnotation){ //affichage du tooltip
+				if(o instanceof VidesoObject){ //affichage du tooltip
 					Point point = event.getPickPoint();
-					this.wwd.getAnnotationLayer().addAnnotation(((ObjectAnnotation)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5)));
+					this.wwd.getAnnotationLayer().addAnnotation(((VidesoObject)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5)));
 					this.wwd.redraw();
 				} else if (o instanceof GlobeAnnotation){ //suppression de l'annotation
 					this.wwd.getAnnotationLayer().removeAnnotation((GlobeAnnotation)o);

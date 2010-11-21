@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -36,7 +37,7 @@ import gov.nasa.worldwind.util.RestorableSupport;
  * @author Bruno Spyckerelle
  * @version 0.2.1
  */
-public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
+public class Route3D extends TrackAirspace implements VidesoObject, Route {
 
 	public static final int LEG_FORBIDDEN = 0;
 	public static final int LEG_AUTHORIZED = 1;
@@ -46,9 +47,13 @@ public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
 
 	private GlobeAnnotation annotation;
 	
-	private Type type;
+	private Space space;
+	
+	private int type;
 	
 	private List<String> balises;
+	
+	private DatabaseManager.Type base;
 	
 	/**
 	 * Nom de la route
@@ -60,22 +65,33 @@ public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
 		this.setDefaultMaterial();
 	}
 
-	public Route3D(Type type){
-		this.setType(type);
+	public Route3D(Space type){
+		this.setSpace(type);
 		this.setDefaultMaterial();
 	}
 	
-	public Route3D(String name, Type type){
+	public Route3D(String name, Space type){
 		this(type);
 		this.setName(name);
 	}
 
+	@Override
+	public DatabaseManager.Type getDatabaseType() {
+		return this.base;
+	}
+
+	@Override
+	public void setDatabaseType(DatabaseManager.Type type) {
+		this.base = type;
+	}
+	
 	/**
 	 * Type de la Route : UIR ou FIR
-	 * @param type {@link Type}
+	 * @param type {@link Espace}
 	 */
-	public void setType(Type type){
-		this.type = type;
+	@Override
+	public void setSpace(Space type){
+		this.space = type;
 		switch (type) {
 		case FIR:
 			this.setAltitudes(0, 5943); //FL0 à FL195, en mètres
@@ -285,8 +301,18 @@ public class Route3D extends TrackAirspace implements ObjectAnnotation, Route {
 	}
 
 	@Override
-	public Type getType() {
-		return type;
+	public Space getSpace() {
+		return this.space;
+	}
+	
+	@Override
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	@Override
+	public int getType() {
+		return this.type;
 	}
 	
 	public double getWidth()
