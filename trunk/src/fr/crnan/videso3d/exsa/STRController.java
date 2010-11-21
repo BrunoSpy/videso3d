@@ -126,7 +126,8 @@ public class STRController implements VidesoController {
 					Statement st = DatabaseManager.getCurrentExsa();
 					ResultSet rs = st.executeQuery("select * from radrgener, radrtechn where radrgener.name = radrtechn.name and radrgener.name ='"+name+"'");
 					if(rs.next()){
-						Radar radar = new Radar(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")), rs.getInt("portee"));
+						Radar radar = new Radar(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")), rs.getInt("portee"), 
+								DatabaseManager.Type.EXSA, STRController.RADAR);
 						radar.setAnnotation("<html><b>Radar : "+name+"</b><br /><br />" +
 								"Portée : "+rs.getInt("portee")+"NM<br />" +
 								"Numéro : "+rs.getInt("numero")+"<br />" +

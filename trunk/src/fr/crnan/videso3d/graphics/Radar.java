@@ -18,7 +18,9 @@ package fr.crnan.videso3d.graphics;
 
 import java.awt.Color;
 
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -32,9 +34,15 @@ import gov.nasa.worldwind.render.SurfaceCircle;
  * @author Bruno Spyckerelle
  * @version 0.1.1
  */
-public class Radar extends SurfaceCircle implements ObjectAnnotation {
+public class Radar extends SurfaceCircle implements VidesoObject {
 	
 	private GlobeAnnotation annotation;
+	
+	private DatabaseManager.Type base;
+	
+	private int type;
+	
+	private String name;
 	
 	/**
 	 * Construit un radar
@@ -42,7 +50,7 @@ public class Radar extends SurfaceCircle implements ObjectAnnotation {
 	 * @param pos Position du radar
 	 * @param portee Portee du radar
 	 */
-	public Radar(String name, LatLon pos, Integer portee){
+	public Radar(String name, LatLon pos, Integer portee, DatabaseManager.Type base, int type){
 		this.setCenter(pos);
 		this.setRadius(portee*LatLonCautra.NM);
 		this.setAnnotation("Radar "+name+"\nPortée : "+portee+" NM.");
@@ -50,6 +58,9 @@ public class Radar extends SurfaceCircle implements ObjectAnnotation {
 		attrs.setInteriorMaterial(Material.BLUE);
 		attrs.setInteriorOpacity(0.5);
 		this.setAttributes(attrs);
+		this.setName(name);
+		this.setDatabaseType(base);
+		this.setType(type);
 	}
 	
 	
@@ -75,4 +86,38 @@ public class Radar extends SurfaceCircle implements ObjectAnnotation {
 		annotation.setPosition(pos);
 		return annotation;
 	}
+	
+	@Override
+	public Type getDatabaseType() {
+		return this.base;
+	}
+
+	@Override
+	public void setDatabaseType(Type type) {
+		this.base = type;
+	}
+	
+	@Override
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	@Override
+	public int getType() {
+		return this.type;
+	}
+	
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
+	}
 }
+
+
+
+

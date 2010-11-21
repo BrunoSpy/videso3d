@@ -18,6 +18,8 @@ package fr.crnan.videso3d.graphics;
 
 import java.awt.Color;
 
+import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Annotation;
@@ -29,11 +31,17 @@ import gov.nasa.worldwind.render.markers.MarkerAttributes;
 /**
  * {@link BasicMarker} avec {@link GlobeAnnotation} intégré
  * @author  Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
-public class MarkerAnnotation extends BasicMarker implements ObjectAnnotation {
+public class MarkerAnnotation extends BasicMarker implements VidesoObject {
 
 	private GlobeAnnotation annotation;
+	
+	private DatabaseManager.Type base;
+	
+	private int type;
+	
+	private String name;
 	
 	public MarkerAnnotation(Position position, MarkerAttributes attrs) {
 		super(position, attrs);
@@ -62,6 +70,36 @@ public class MarkerAnnotation extends BasicMarker implements ObjectAnnotation {
 	public GlobeAnnotation getAnnotation(Position pos){
 		annotation.setPosition(pos);
 		return annotation;
+	}
+
+	@Override
+	public Type getDatabaseType() {
+		return this.base;
+	}
+
+	@Override
+	public void setDatabaseType(Type type) {
+		this.base = type;
+	}
+
+	@Override
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	@Override
+	public int getType() {
+		return this.type;
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

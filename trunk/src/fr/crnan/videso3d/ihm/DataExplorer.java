@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.ihm;
 
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -31,11 +32,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.aip.AIPController;
-import fr.crnan.videso3d.edimap.EdimapController;
-import fr.crnan.videso3d.exsa.STRController;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
@@ -43,16 +42,12 @@ import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.ihm.components.ButtonTabComponent;
 import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
-import fr.crnan.videso3d.radio.RadioCovController;
-import fr.crnan.videso3d.skyview.SkyViewController;
-import fr.crnan.videso3d.stip.StipController;
-import fr.crnan.videso3d.stpv.StpvController;
 import gov.nasa.worldwind.util.Logging;
 
 /**
  * Panel de configuration des objets affichés sur le globe
  * @author Bruno Spyckerelle
- * @version 0.5.0
+ * @version 0.5.1
  */
 @SuppressWarnings("serial")
 public class DataExplorer extends JPanel {
@@ -99,7 +94,7 @@ public class DataExplorer extends JPanel {
 		if(!panels.containsKey(type)){
 			try {
 				if(DatabaseManager.getCurrent(type) != null){
-					panels.put(type, this.createView(type));
+					panels.put(type, this.getView(type));
 					tabs.add(type.toString(), (Component) panels.get(type));
 					ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 					buttonTab.getButton().addActionListener(new ActionListener() {
@@ -127,7 +122,7 @@ public class DataExplorer extends JPanel {
 					int i = tabs.indexOfComponent((Component) panels.get(type));
 					panels.get(type).reset();
 					panels.remove(type);
-					panels.put(type, this.createView(type));
+					panels.put(type, this.getView(type));
 					tabs.setComponentAt(i, (Component) panels.get(type));
 					tabs.setSelectedIndex(i);
 				} else {
@@ -199,34 +194,9 @@ public class DataExplorer extends JPanel {
 		tabs.setTabComponentAt(tabs.indexOfComponent(content), buttonTab);
 		tabs.setSelectedIndex(tabs.getTabCount()-1);
 	}
-		
-	private DataView createView(Type type) throws Exception{
-		switch (type) {
-		case STIP:
-			return new StipView(new StipController(wwd));
-		case STPV:
-			return new StpvView(new StpvController(wwd));
-		case EXSA:
-			return new StrView(new STRController(wwd));
-		case Edimap:
-			return new EdimapView(new EdimapController(wwd));
-		case AIP:
-			return new AIPView(new AIPController(wwd));
-		case RadioCov:
-			return new RadioCovView(new RadioCovController(wwd));
-		case SkyView:
-			return new SkyView(new SkyViewController(wwd));
-		default:
-			throw new Exception("Type "+type+" inconnu");
-		}
-	}
-
+	
 	public DataView getView(Type type){
-		if(panels.containsKey(type)){
-			return (DataView) panels.get(type);
-		} else {
-			return null;
-		}
+		return DatasManager.getView(type);
 	}
 	
 	/**

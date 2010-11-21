@@ -36,7 +36,8 @@ import fr.crnan.videso3d.graphics.RadioCovPolygon;
 import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.radio.RadioCovController;
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.VidesoController;
+import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
 
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
@@ -45,7 +46,7 @@ import gov.nasa.worldwind.render.airspaces.Airspace;
 /**  
  * @author Mickaël Papail
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  * Interface de sélection des couvertures radios.
  */
 public class RadioCovView extends JPanel implements DataView {
@@ -58,12 +59,8 @@ public class RadioCovView extends JPanel implements DataView {
 	private ItemAntennaListener itemAntennaListener = new ItemAntennaListener();	
 
 	private AirspaceLayer radioCovAirspaces;
-			
-	private RadioCovController controller;
 	
-	public RadioCovView(RadioCovController c) {		
-	
-		this.controller = c;
+	public RadioCovView() {		
 						
 		try {			
 			if(DatabaseManager.getCurrentRadioCov() != null) { 									
@@ -92,7 +89,7 @@ public class RadioCovView extends JPanel implements DataView {
 	 * Recherche du layer contenant les couvertures radio à partir de la Layer List.
 	 */
 	public boolean initRadioCovAirspaces() {
-		for (Layer layer : controller.getLayers()) {				
+		for (Layer layer : getController().getLayers()) {				
 			if (layer instanceof AirspaceLayer && layer.getName()=="Radio Coverage") {						
 				radioCovAirspaces = (AirspaceLayer)layer;
 				return true;
@@ -126,7 +123,7 @@ public class RadioCovView extends JPanel implements DataView {
 				check.setSelected(false);
 			}
 		}
-		controller.reset();
+		getController().reset();
 	}
 	
 	
@@ -138,18 +135,18 @@ public class RadioCovView extends JPanel implements DataView {
 		public void itemStateChanged(ItemEvent e) {
 			String antennaName= ((JCheckBox)e.getSource()).getText();
 			if (e.getStateChange() == ItemEvent.SELECTED) {
-				controller.showObject(RadioCovController.ANTENNE, antennaName);
+				getController().showObject(RadioCovController.ANTENNE, antennaName);
 			}
 			else {
-				controller.hideObject(RadioCovController.ANTENNE, antennaName);
+				getController().hideObject(RadioCovController.ANTENNE, antennaName);
 			}
 		}
 	}
 
 
 	@Override
-	public VidesoController getController() {
-		return controller;
+	public RadioCovController getController() {
+		return (RadioCovController) DatasManager.getController(Type.RadioCov);
 	}			
 }	
 

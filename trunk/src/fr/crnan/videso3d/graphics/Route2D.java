@@ -20,8 +20,8 @@ import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
-import fr.crnan.videso3d.graphics.Route.Type;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
@@ -32,38 +32,56 @@ import gov.nasa.worldwind.render.SurfacePolyline;
  * Route en 2D.<br />
  * Couleurs respectant le codage SIA
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.2
  */
-public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
+public class Route2D extends SurfacePolyline implements Route{
 
 	private GlobeAnnotation annotation;
 	
-	private Type type;
+	private Space space;
 	
 	private Sens sens;
+	
+	private int type;
 	
 	private String name;
 	
 	private List<String> balises;
 	
-	public Route2D(String name, Type type){
+	private DatabaseManager.Type base;
+	
+	public Route2D(String name, Space s, DatabaseManager.Type base, int type){
 		this.setAnnotation("Route "+name);
-		this.setType(type);
+		this.setSpace(s);
 		this.setName(name);
+		this.setDatabaseType(base);
+		this.setType(type);
 	}
 	
-	public Route2D() {
+	public Route2D(DatabaseManager.Type base, int type) {
 		super();
+		this.setDatabaseType(base);
+		this.setType(type);
 	}
 
+	@Override
+	public DatabaseManager.Type getDatabaseType() {
+		return this.base;
+	}
+
+	@Override
+	public void setDatabaseType(DatabaseManager.Type type) {
+		this.base = type;
+	}
+	
 	/**
 	 * Affecte la couleur de la route suivant le codage SIA
 	 * @param name Nom de la route
-	 * @param type {@link Type} de la route
+	 * @param type {@link Espace} de la route
 	 */
 	private void setColor(String name) {
 		BasicShapeAttributes attrs = new BasicShapeAttributes();
-		switch (type) {
+		switch (space) {
 		case FIR:
 			Character c = name.charAt(0);
 			switch (c) {
@@ -132,16 +150,21 @@ public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 	}
 
 	@Override
-	public void setType(Type type) {
-		Type temp = this.type;
-		this.type = type;
-		if(this.type != temp && this.name != null) this.setColor(this.name);
+	public void setSpace(Space s) {
+		Space temp = this.space;
+		this.space = s;
+		if(this.space != temp && this.name != null) this.setColor(this.name);
 	}
 
+	@Override
+	public Space getSpace(){
+		return this.space;
+	}
+	
 	public void setName(String name) {
 		String temp = this.name;
 		this.name = name;
-		if(this.name != temp && this.type != null) this.setColor(this.name);
+		if(this.name != temp && this.space != null) this.setColor(this.name);
 	}
 	
 	public void setSens(Sens sens){
@@ -157,10 +180,15 @@ public class Route2D extends SurfacePolyline implements ObjectAnnotation, Route{
 	}
 
 	@Override
-	public Type getType() {
-		return type;
+	public void setType(int type) {
+		this.type = type;
 	}
 
+	@Override
+	public int getType() {
+		return this.type;
+	}
+	
 	@Override
 	public void highlight(boolean highlight) {
 		if(highlight){

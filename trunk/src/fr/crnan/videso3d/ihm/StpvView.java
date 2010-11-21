@@ -32,13 +32,14 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.VidesoController;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.stpv.StpvController;
 /**
  * Sélecteur de données STPV
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 @SuppressWarnings("serial")
 public class StpvView extends JPanel implements DataView{
@@ -52,11 +53,8 @@ public class StpvView extends JPanel implements DataView{
 	
 	private List<JCheckBox> chkList = new LinkedList<JCheckBox>();
 	
-	private VidesoController controller;
-	
-	public StpvView(VidesoController controller){
-		this.controller = controller;
-		
+	public StpvView(){
+
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
 		mosaique.setBorder(BorderFactory.createTitledBorder("Mosaique"));
@@ -72,8 +70,8 @@ public class StpvView extends JPanel implements DataView{
 	}
 
 	@Override
-	public VidesoController getController(){
-		return controller;
+	public StpvController getController() {
+		return (StpvController) DatasManager.getController(Type.STPV);
 	}
 	
 	private JPanel buildPanel(JPanel panel, String query){
@@ -116,11 +114,11 @@ public class StpvView extends JPanel implements DataView{
 			Object parent = ((JCheckBox)e.getSource()).getParent();
 			if(e.getStateChange() == ItemEvent.SELECTED) {
 				if(mosaique.equals(parent)){
-					controller.showObject(StpvController.MOSAIQUE, ((JCheckBox)e.getSource()).getText());
+					getController().showObject(StpvController.MOSAIQUE, ((JCheckBox)e.getSource()).getText());
 				} 
 			} else {
 				if(mosaique.equals(parent)){
-					controller.hideObject(StpvController.MOSAIQUE, ((JCheckBox)e.getSource()).getText());
+					getController().hideObject(StpvController.MOSAIQUE, ((JCheckBox)e.getSource()).getText());
 				}
 			}
 		}

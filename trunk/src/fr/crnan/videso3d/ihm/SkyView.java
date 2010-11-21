@@ -27,21 +27,20 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.VidesoController;
+import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
+import fr.crnan.videso3d.skyview.SkyViewController;
 
 /**
  * Interface de sélection de données SkyView
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 public class SkyView extends FilteredMultiTreeTableView {
 
-	private VidesoController controller;
-
-	public SkyView(VidesoController controller){
-		this.controller = controller;
+	public SkyView(){
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -67,8 +66,8 @@ public class SkyView extends FilteredMultiTreeTableView {
 	}
 
 	@Override
-	public VidesoController getController() {
-		return this.controller;
+	public SkyViewController getController() {
+		return (SkyViewController) DatasManager.getController(Type.SkyView);
 	}
 
 

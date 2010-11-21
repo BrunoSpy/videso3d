@@ -21,7 +21,7 @@ import java.util.HashSet;
 
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route3D;
-import fr.crnan.videso3d.graphics.Route.Type;
+import fr.crnan.videso3d.graphics.Route.Space;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 /**
@@ -56,10 +56,10 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 		}
 	}
 
-	private void displayAllRoutes(Type t){
+	private void displayAllRoutes(Space t){
 		for(Route3D r : routes.values()){
 			if(!displayedRoutes.contains(r)){
-				if(r.getType().compareTo(t) == 0) {
+				if(r.getSpace().compareTo(t) == 0) {
 					this.displayRoute(r);
 				}
 			}
@@ -68,12 +68,12 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 	
 	@Override
 	public void displayAllRoutesAwy() {
-		this.displayAllRoutes(Type.FIR);
+		this.displayAllRoutes(Space.FIR);
 	}
 
 	@Override
 	public void displayAllRoutesPDR() {
-		this.displayAllRoutes(Type.UIR);
+		this.displayAllRoutes(Space.UIR);
 	}
 
 	private void displayRoute(Route3D r){
@@ -110,12 +110,12 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
-	private void hideAllRoutes(Type t){
+	private void hideAllRoutes(Space t){
 		//copie temporaire pour pouvoir modifier displayedRoutes
 		//sinon on a un accès concurrent impossible
 		HashSet<Route3D> temp = new HashSet<Route3D>(this.displayedRoutes);
 		for(Route3D r : temp){
-			if(r.getType().compareTo(t) == 0){
+			if(r.getSpace().compareTo(t) == 0){
 				this.displayedRoutes.remove(r);
 				this.removeAirspace(r);
 			}
@@ -125,12 +125,12 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 	
 	@Override
 	public void hideAllRoutesAWY() {
-		this.hideAllRoutes(Type.FIR);
+		this.hideAllRoutes(Space.FIR);
 	}
 
 	@Override
 	public void hideAllRoutesPDR() {
-		this.hideAllRoutes(Type.UIR);
+		this.hideAllRoutes(Space.UIR);
 	}
 
 	@Override

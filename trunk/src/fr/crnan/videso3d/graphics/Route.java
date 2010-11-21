@@ -22,20 +22,17 @@ import java.util.List;
 /**
  * Représentation graphique d'une route
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
-public interface Route {
+public interface Route extends VidesoObject{
 
-	/**
-	 * Type de la route
-	 */
-	public static enum Type {FIR, UIR};
+	public static enum Space {FIR, UIR};
 	
-	public static enum Sens{RED, GREEN, BLUE};
+	public static enum Sens {RED, GREEN, BLUE};
 	
-	public void setType(Type type);
+	public void setSpace(Space type);
 	
-	public Type getType();
+	public Space getSpace();
 	
 	public String getName();
 	

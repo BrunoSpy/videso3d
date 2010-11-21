@@ -15,14 +15,20 @@
  */
 package fr.crnan.videso3d.graphics;
 
+import fr.crnan.videso3d.DatabaseManager;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Annotation;
 /**
- * Objet WorldWind (Renderable, Airspace, ...) avec annotation intégrée.<br />
+ * Un objet graphique pour Videso comprend 5 éléments :
+ * <ul><li>l'objet en lui-même (renderable, airspace, ...)</li>
+ * <li>une annotation</li>
+ * <li>la base de données dont il fait partie (stip, str, ...)</li>
+ * <li>le type de données qu'il représente (géré par le controleur)</li>
+ * <li>un nom</li></ul>
  * @author Bruno Spyckerelle
- * @version 1.0
+ * @version 2.0
  */
-public interface ObjectAnnotation{
+public interface VidesoObject{
 	
 	/**
 	 * Enregistre le texte de l'annotation
@@ -36,5 +42,33 @@ public interface ObjectAnnotation{
 	 * @return
 	 */
 	public Annotation getAnnotation(Position pos);
+	
+	/**
+	 * Base de données que l'objet représente
+	 * @return
+	 */
+	public DatabaseManager.Type getDatabaseType();
+	
+	/**
+	 * 
+	 * @param type Type de base de données
+	 */
+	public void setDatabaseType(DatabaseManager.Type type);
 
+	/**
+	 * 
+	 * @param type Type de données représenté, utilisé par VidesoController.showObject(int, name)
+	 */
+	public void setType(int type);
+	
+	/**
+	 * 
+	 * @return Type de données représenté
+	 */
+	public int getType();
+	
+	public String getName();
+	
+	public void setName(String name);
+	
 }

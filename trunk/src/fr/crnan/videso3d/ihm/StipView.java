@@ -35,6 +35,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
 import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
@@ -59,16 +61,12 @@ public class StipView extends FilteredMultiTreeTableView{
 
 	private ItemSecteurListener itemSecteurListener = new ItemSecteurListener();
 
-	private StipController controller;
-
 	/**
 	 * Liste des checkbox de la vue, afin de pouvoir tous les désélectionner facilement
 	 */
 	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
 	
-	public StipView(StipController controller){
-
-		this.controller = controller;
+	public StipView(){
 		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
@@ -101,7 +99,7 @@ public class StipView extends FilteredMultiTreeTableView{
 	
 	@Override
 	public StipController getController(){
-		return controller;
+		return (StipController) DatasManager.getController(Type.STIP);
 	}
 	
 	private void fillRoutesRootNode(DefaultMutableTreeNode root){
@@ -164,8 +162,8 @@ public class StipView extends FilteredMultiTreeTableView{
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				Boolean state = e.getStateChange() == ItemEvent.SELECTED;
-				controller.toggleLayer(controller.getRoutes2DLayer(), state);
-				controller.toggleLayer(controller.getRoutes3DLayer(), !state);
+				getController().toggleLayer(getController().getRoutes2DLayer(), state);
+				getController().toggleLayer(getController().getRoutes3DLayer(), !state);
 			}
 		});
 		
@@ -239,10 +237,10 @@ public class StipView extends FilteredMultiTreeTableView{
 		public void itemStateChanged(ItemEvent e) {
 			String name = ((JCheckBox)e.getSource()).getText();
 			if(e.getStateChange() == ItemEvent.SELECTED){
-				controller.showObject(StipController.SECTEUR, name);
+				getController().showObject(StipController.SECTEUR, name);
 			}
 			else {
-				controller.hideObject(StipController.SECTEUR, name);
+				getController().hideObject(StipController.SECTEUR, name);
 			}
 		}
 

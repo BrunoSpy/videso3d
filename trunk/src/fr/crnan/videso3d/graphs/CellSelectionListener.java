@@ -15,12 +15,19 @@
  */
 package fr.crnan.videso3d.graphs;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraph;
 
+import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.ihm.ContextPanel;
+import fr.crnan.videso3d.stip.StipController;
 /**
  * Listener de cellule JGraph.<br />
  * Permet de mettre à jour la fenêtre contextuelle en fonction de la cellule sélectionnée
@@ -52,13 +59,21 @@ public class CellSelectionListener implements mxIEventListener {
 		if(cell != null && cell.getValue() instanceof CellContent){
 			CellContent content = (CellContent) cell.getValue();
 			if(content.getType().equals(CellContent.TYPE_BALISE)){
-				context.showBalise(((CellContent)cell.getValue()).getName());
+				context.showInfo(Type.STIP, StipController.BALISES, ((CellContent)cell.getValue()).getName());
 			} else if(content.getType().equals(CellContent.TYPE_ITI)){
 				context.showIti(((CellContent)cell.getValue()).getId());
 			} else if(content.getType().equals(CellContent.TYPE_TRAJET) || content.getType().equals(CellContent.TYPE_TRAJET_GROUPE)){
 				context.showTrajet(((CellContent)cell.getValue()).getId());
 			} else if(content.getType().equals(CellContent.TYPE_ROUTE)){
-				context.showRoute(((CellContent)cell.getValue()).getId());
+				int id = ((CellContent)cell.getValue()).getId();
+				try {
+					Statement st = DatabaseManager.getCurrentStip();
+					ResultSet rs  = st.executeQuery("select * from routes where id='"+id+"'");
+					String name = rs.getString(2);
+					context.showInfo(Type.STIP, StipController.ROUTES, name);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			} else if(content.getType().equals(CellContent.TYPE_CONNEXION)){
 				context.showConnexion(((CellContent)cell.getValue()).getId());
 			}

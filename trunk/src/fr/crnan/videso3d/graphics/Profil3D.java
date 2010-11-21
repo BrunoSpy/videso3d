@@ -19,7 +19,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.Pallet;
+import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
@@ -27,7 +29,8 @@ import gov.nasa.worldwind.render.Polyline;
 import gov.nasa.worldwind.render.SurfacePolyline;
 /**
  * Profil d'un vol avec affichage des couples balise/niveau.<br />
- * Le profil est à la fois dessiné en 3D et en projeté sur le sol.
+ * Le profil est à la fois dessiné en 3D et en projeté sur le sol.<br />
+ * Requiert une base de données STIP sélectionnée.
  * @author Bruno Spyckerelle
  * @version 0.2
  */
@@ -96,11 +99,11 @@ public class Profil3D {
 	}
 	
 	public void addBalise(String balise, Position position){
-		this.balises.add(new Balise2D(balise, position));
+		this.balises.add(new Balise2D(balise, position, Type.STIP, StipController.BALISES));
 	}
 	
 	public void addBalise(String balise, String annotation, Position position){
-		this.balises.add(new Balise2D(balise, position));
+		this.balises.add(new Balise2D(balise, position, Type.STIP, StipController.BALISES));
 	}
 	
 	public void setBalises(List<String> balises, List<String> annotations, Iterable<? extends Position> positions){

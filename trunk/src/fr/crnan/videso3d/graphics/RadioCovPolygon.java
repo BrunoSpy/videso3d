@@ -23,9 +23,12 @@ package fr.crnan.videso3d.graphics;
  *
  */
 
+import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import gov.nasa.worldwind.geom.*;
 import gov.nasa.worldwind.globes.Globe;
 //import gov.nasa.worldwind.globes.Globe;
+import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.util.Logging;
 //import gov.nasa.worldwind.util.RestorableSupport;
@@ -37,8 +40,11 @@ import java.util.Collection;
 import java.util.List;
 
 
-public class RadioCovPolygon extends AbstractAirspace {
+public class RadioCovPolygon extends AbstractAirspace implements VidesoObject{
 
+	private int type;
+	private DatabaseManager.Type base;
+	
 	private boolean DEBUG = false;
 	private ArrayList<Curtain> curtains = new ArrayList<Curtain>();
 	private ArrayList<double[]> refAltitudes = new ArrayList<double[]>(); //reference altitudes, en cas de mofification des valeurs min et max de chaque curtain.
@@ -295,8 +301,39 @@ public class RadioCovPolygon extends AbstractAirspace {
 			return null;
 		}
 
+
 	    //**************************************************************//
 	    //********************  END Geometry Rendering  ****************//
 	    //**************************************************************//
-	    
+	   
+		@Override
+		public void setAnnotation(String text) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public Annotation getAnnotation(Position pos) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public DatabaseManager.Type getDatabaseType() {
+			return this.base;
+		}
+
+		@Override
+		public void setDatabaseType(DatabaseManager.Type type) {
+			this.base = type;
+		}
+		
+		@Override
+		public void setType(int type) {
+			this.type = type;
+		}
+
+		@Override
+		public int getType() {
+			return this.type;
+		}
 }

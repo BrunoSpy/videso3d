@@ -19,7 +19,9 @@ package fr.crnan.videso3d.graphics;
 import java.awt.Color;
 import java.util.List;
 
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Annotation;
@@ -30,10 +32,16 @@ import gov.nasa.worldwind.render.airspaces.Polygon;
  * @author Bruno Spyckerelle
  * @version 0.2
  */
-public class PolygonAnnotation extends Polygon implements ObjectAnnotation{
+public class PolygonAnnotation extends Polygon implements VidesoObject{
 
 	private GlobeAnnotation annotation;
 
+	private DatabaseManager.Type base;
+	
+	private String name;
+	
+	private int type;
+	
 	public PolygonAnnotation(){
 		super();
 	}
@@ -57,6 +65,36 @@ public class PolygonAnnotation extends Polygon implements ObjectAnnotation{
 	public GlobeAnnotation getAnnotation(Position pos){
 		annotation.setPosition(pos);
 		return annotation;
+	}
+	
+	@Override
+	public Type getDatabaseType() {
+		return this.base;
+	}
+
+	@Override
+	public void setDatabaseType(Type type) {
+		this.base = type;
+	}
+	
+	@Override
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	@Override
+	public int getType() {
+		return this.type;
+	}
+	
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

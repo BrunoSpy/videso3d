@@ -31,7 +31,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.VidesoController;
+import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.edimap.Cartes;
 import fr.crnan.videso3d.edimap.EdimapController;
 import fr.crnan.videso3d.edimap.Entity;
@@ -62,8 +63,6 @@ public class EdimapView extends MultipleSplitPanes implements DataView{
 	 * Cartes volumes
 	 */
 	private JPanel volumes = new JPanel();
-	
-	private EdimapController controller;
 	 
 	private ItemCheckListener itemCheckListener = new ItemCheckListener();
 	
@@ -72,9 +71,7 @@ public class EdimapView extends MultipleSplitPanes implements DataView{
 	 */
 	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
 	
-	public EdimapView(EdimapController controller){
-		
-		this.controller = controller;
+	public EdimapView(){
 		
 	//	this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		
@@ -121,12 +118,12 @@ public class EdimapView extends MultipleSplitPanes implements DataView{
 			}
 		}
 		//cacher les objets qui ont été activés sans passer par la vue
-		this.controller.reset();
+		this.getController().reset();
 	}
 	
 	@Override
-	public VidesoController getController(){
-		return controller;
+	public EdimapController getController(){
+		return (EdimapController) DatasManager.getController(Type.Edimap);
 	}
 	
 	/**
@@ -150,9 +147,9 @@ public class EdimapView extends MultipleSplitPanes implements DataView{
 			} 
 			
 			if(e.getStateChange() == ItemEvent.SELECTED){
-				controller.showObject(type, name);
+				getController().showObject(type, name);
 			} else {
-				controller.hideObject(type, name);
+				getController().hideObject(type, name);
 			}
 		}
 	}

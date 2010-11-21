@@ -556,7 +556,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public double[] computeBestEyePosition(List<? extends Route> segments){
 		
 			//Calcul de la hauteur idéale de la caméra
-			LatLon firstLocation = ((Route) segments.get(0)).getLocations().iterator().next();
+			LatLon firstLocation = (LatLon) ((Route) segments.get(0)).getLocations().iterator().next();
 			LatLon secondLocation = null;
 			if(segments.size()>1){
 				secondLocation = ((Route) segments.get(segments.size()-1)).getLocations().iterator().next();
