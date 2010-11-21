@@ -33,6 +33,7 @@ import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.event.SelectEvent;
@@ -42,7 +43,7 @@ import gov.nasa.worldwind.event.SelectListener;
  * @author Bruno Spyckerelle
  * @version 0.4.0
  */
-public class ContextPanel extends JPanel {
+public class ContextPanel extends JPanel implements SelectListener {
 
 	private JXTaskPaneContainer content = new JXTaskPaneContainer();	
 	
@@ -78,6 +79,17 @@ public class ContextPanel extends JPanel {
 			} else {
 				((JSplitPane)this.getParent()).setDividerLocation(this.getParent().getWidth()-250);
 			}
+		}
+	}
+
+	@Override
+	public void selected(SelectEvent event) {
+		if(event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){
+			this.open();
+			if(event.getTopObject() instanceof VidesoObject){
+				VidesoObject o = (VidesoObject) event.getTopObject();
+				this.showInfo(o.getDatabaseType(), o.getType(), o.getName());
+			} 
 		}
 	}
 	
