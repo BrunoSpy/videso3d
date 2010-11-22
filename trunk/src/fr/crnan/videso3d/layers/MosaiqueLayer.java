@@ -22,6 +22,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.crnan.videso3d.Couple;
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.PolygonAnnotation;
 import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
@@ -39,7 +40,7 @@ import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
  * Affiche une mosaique (STR ou STPV) en 2D ou en 3D</br>
  * Permet de colorier certains carrés et sous-carrés
  * @author Bruno Spyckerelle
- * @version 0.4.1
+ * @version 0.4.2
  */
 @SuppressWarnings("serial")
 public class MosaiqueLayer extends LayerSet {
@@ -103,7 +104,9 @@ public class MosaiqueLayer extends LayerSet {
 	 * @param squares {@link List} Liste de (carré, sous-carré) à colorier. Si sous-carré == 0, on colorie tout le carré.
 	 * @param altitudes {@link List} Liste de (plancher, plafond) associée à la liste des carrés précédente. En mètres. 
 	 * @param numbers {@link Boolean} Affichage des numéros des carrés
-	 * @param attr {@link ShapeAttributes} Attributs pour le coloriage des carrés.
+	 * @param attr {@link ShapeAttributes} Attributs pour le coloriage des carrés
+	 * @param base Base données d'origine
+	 * @param type type de la mosaïque
 	 */
 	public MosaiqueLayer(String annotationTitle,
 			Boolean grille, 
@@ -118,7 +121,9 @@ public class MosaiqueLayer extends LayerSet {
 			List<Couple<Double, Double>> altitudes,
 			Boolean numbers,
 			ShapeAttributes attr,
-			AirspaceAttributes airspaceAttr){
+			AirspaceAttributes airspaceAttr, 
+			DatabaseManager.Type base, 
+			int type){
 
 		this.add(textLayer);
 		this.add(shapeLayer);
@@ -205,7 +210,7 @@ public class MosaiqueLayer extends LayerSet {
 					annotation += "<br />Plafond : "+String.format("%3.0f", altitude.getSecond()/30.48)+
 								  "<br />Plancher : "+String.format("%3.0f", altitude.getFirst()/30.48)+"</p>";
 				}
-				this.colorieCarre(annotation, origine, square.getFirst(), square.getSecond(), width, height, size, altitude.getFirst(), altitude.getSecond(), hsens, vsens, numSens, attr, airspaceAttr);
+				this.colorieCarre(annotation, origine, square.getFirst(), square.getSecond(), width, height, size, altitude.getFirst(), altitude.getSecond(), hsens, vsens, numSens, attr, airspaceAttr, base, type);
 			}
 		}
 	}
@@ -236,7 +241,9 @@ public class MosaiqueLayer extends LayerSet {
 			Double plafond,
 			int hsens, 
 			int vsens, 
-			int numSens, ShapeAttributes attr, AirspaceAttributes airspaceAttr){
+			int numSens, ShapeAttributes attr, AirspaceAttributes airspaceAttr,
+			DatabaseManager.Type base,
+			int type){
 		int colonne, ligne; //colonne et ligne du carré. Débute à 0.
 		if(numSens == VERTICAL_FIRST) {
 			colonne = carre / height;
@@ -265,11 +272,15 @@ public class MosaiqueLayer extends LayerSet {
 
 			
 				SurfacePolygonAnnotation polygon = new SurfacePolygonAnnotation(locations);
+				polygon.setDatabaseType(base);
+				polygon.setType(type);
 				if(attr != null) polygon.setAttributes(attr);
 				if(annotation != null) polygon.setAnnotation(annotation);
 				this.shapeLayer.addRenderable(polygon);
 		
 				PolygonAnnotation polyg = new PolygonAnnotation(locations);
+				polyg.setDatabaseType(base);
+				polyg.setType(type);
 				polyg.setAltitudes(plancher, plafond);
 				if(annotation != null) polyg.setAnnotation(annotation);
 				if(airspaceAttr != null) polyg.setAttributes(airspaceAttr);
@@ -292,11 +303,15 @@ public class MosaiqueLayer extends LayerSet {
 
 	
 				SurfacePolygonAnnotation polygon = new SurfacePolygonAnnotation(locations);
+				polygon.setDatabaseType(base);
+				polygon.setType(type);
 				if(attr != null) polygon.setAttributes(attr);
 				if(annotation != null) polygon.setAnnotation(annotation);
 				this.shapeLayer.addRenderable(polygon);
 		
 				PolygonAnnotation polyg = new PolygonAnnotation(locations);
+				polyg.setDatabaseType(base);
+				polyg.setType(type);
 				polyg.setAltitudes(plancher, plafond);
 				if(airspaceAttr != null) polyg.setAttributes(airspaceAttr);
 				if(annotation != null) polyg.setAnnotation(annotation);

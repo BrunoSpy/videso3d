@@ -23,6 +23,7 @@ import java.util.List;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.geom.LatLonCautra;
@@ -127,7 +128,10 @@ public class StpvController implements VidesoController {
 				e.printStackTrace();
 			}
 
-			MosaiqueLayer mLayer = new MosaiqueLayer(annotationTitle, grille, origine, width, height, size, hSens, vSens, numSens, squares, altitudes, numbers, attr, airspaceAttr);
+			MosaiqueLayer mLayer = new MosaiqueLayer(annotationTitle, grille, origine, 
+												width, height, size, hSens, vSens, numSens, 
+												squares, altitudes, numbers, attr, airspaceAttr, 
+												Type.STPV, MOSAIQUE);
 			mosaiquesLayer.put(type+name, mLayer);
 			mLayer.setName("Mosaïque "+type+" "+name);
 			mLayer.set3D(false);

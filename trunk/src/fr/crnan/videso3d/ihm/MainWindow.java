@@ -188,7 +188,6 @@ public class MainWindow extends JFrame {
 				//une fois terminé, on lance l'application
 				try {
 					launchVideso3D();
-					AnalyzeUI.setWWD(wwd);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}	
@@ -211,7 +210,7 @@ public class MainWindow extends JFrame {
 		this.setLayout(new BorderLayout());
 
 		//Panneau contextuel
-		context = new ContextPanel(wwd);
+		context = new ContextPanel();
 				
 		JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, dataExplorer, wwd);
 		mainPane.setOneTouchExpandable(true);
@@ -366,7 +365,6 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AnalyzeUI.showAnalyzeUI();
-				AnalyzeUI.setWWD(wwd);
 			}
 		});
 		toolbar.add(analyze);
