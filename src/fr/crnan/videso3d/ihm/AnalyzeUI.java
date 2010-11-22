@@ -42,7 +42,6 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Videso3D;
-import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphs.ConnexPanel;
 import fr.crnan.videso3d.graphs.ItiPanel;
@@ -77,10 +76,6 @@ public final class AnalyzeUI extends JFrame {
 
 	public static void showAnalyzeUI(){
 		getInstance().setVisible(true);
-	}
-
-	public static void setWWD(VidesoGLCanvas wwd){
-		getInstance().context.setWWD(wwd);
 	}
 
 	/**

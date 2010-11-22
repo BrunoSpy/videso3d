@@ -473,7 +473,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * @return int
 	 */
 	public int getNumberInitSteps() {
-		return 6;
+		return 7;
 	}
 
 	/**

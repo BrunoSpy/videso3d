@@ -32,7 +32,6 @@ import org.jdesktop.swingx.JXTaskPaneContainer;
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.stip.StipController;
@@ -50,10 +49,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 	private TitledPanel titleAreaPanel = new TitledPanel("Informations");
 
 	private HashMap<DatabaseManager.Type, Context> taskpanes = new HashMap<DatabaseManager.Type, Context>();
-	
-	private VidesoGLCanvas wwd = null;	
-	
-	
+		
 	public ContextPanel(){
 		super();
 		this.setPreferredSize(new Dimension(300, 0));
@@ -62,11 +58,6 @@ public class ContextPanel extends JPanel implements SelectListener {
 		this.add(titleAreaPanel, BorderLayout.NORTH);
 
 		this.add(content, BorderLayout.CENTER);
-	}
-
-	public ContextPanel(VidesoGLCanvas wwd){
-		this();
-		this.wwd = wwd;
 	}
 	
 	/**
@@ -111,33 +102,35 @@ public class ContextPanel extends JPanel implements SelectListener {
 	 * @param name Nom de l'objet
 	 */
 	public void showInfo(DatabaseManager.Type base, int type, String name){
-		titleAreaPanel.setTitle("Informations sur "+name);
 		content.removeAll();
-		switch (base) {
-		case STIP:
-			switch (type) {
-			case StipController.ROUTES:
-				this.addTaskpanes(Type.STIP, type, name);
+		if(base != null) {
+			titleAreaPanel.setTitle("Informations sur "+name);
+			switch (base) {
+			case STIP:
+				switch (type) {
+				case StipController.ROUTES:
+					this.addTaskpanes(Type.STIP, type, name);
+					break;
+				case StipController.SECTEUR:
+					this.addTaskpanes(Type.STIP, type, name);
+					this.addTaskpanes(Type.STPV, type, name);
+					break;
+				case StipController.BALISES:
+					this.addTaskpanes(Type.STIP, type, name);
+					this.addTaskpanes(Type.STPV, type, name);
+					break;
+				case StipController.ITI:				
+					break;
+				case StipController.CONNEXION:
+					break;
+				case StipController.TRAJET:
+					break;
+				}
 				break;
-			case StipController.SECTEUR:
-				this.addTaskpanes(Type.STIP, type, name);
-				this.addTaskpanes(Type.STPV, type, name);
-				break;
-			case StipController.BALISES:
-				this.addTaskpanes(Type.STIP, type, name);
-				this.addTaskpanes(Type.STPV, type, name);
-				break;
-			case StipController.ITI:				
-				break;
-			case StipController.CONNEXION:
-				break;
-			case StipController.TRAJET:
+
+			default:
 				break;
 			}
-			break;
-			
-		default:
-			break;
 		}
 		content.validate();
 	}
@@ -252,10 +245,5 @@ public class ContextPanel extends JPanel implements SelectListener {
 			e.printStackTrace();
 		}
 	}
-
-	public void setWWD(VidesoGLCanvas wwd2) {
-		this.wwd = wwd;
-	}
-
 	
 }

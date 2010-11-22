@@ -34,7 +34,6 @@ import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.geom.Latitude;
 import fr.crnan.videso3d.geom.Longitude;
@@ -45,8 +44,6 @@ import fr.crnan.videso3d.ihm.AnalyzeUI;
  * @version 0.1
  */
 public class StipContext extends Context {
-
-	private VidesoGLCanvas wwd;
 
 	private StipController getController(){
 		return (StipController) DatasManager.getController(Type.STIP);
@@ -211,9 +208,6 @@ public class StipContext extends Context {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						AnalyzeUI.showResults("route", name, "");
-						if(wwd!=null){
-							AnalyzeUI.setWWD(wwd);
-						}
 					}
 				});
 
@@ -224,9 +218,6 @@ public class StipContext extends Context {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						AnalyzeUI.showResults("iti", name, "");
-						if(wwd!=null){
-							AnalyzeUI.setWWD(wwd);
-						}
 					}
 				});
 
@@ -237,9 +228,6 @@ public class StipContext extends Context {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						AnalyzeUI.showResults("trajet", name, "");
-						if(wwd!=null){
-							AnalyzeUI.setWWD(wwd);
-						}
 					}
 				});
 
@@ -251,9 +239,6 @@ public class StipContext extends Context {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						AnalyzeUI.showResults("connexion", name, "");
-						if(wwd!=null){
-							AnalyzeUI.setWWD(wwd);
-						}
 					}
 				});
 
@@ -264,9 +249,6 @@ public class StipContext extends Context {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						AnalyzeUI.showResults("balise", name, "");
-						if(wwd!=null){
-							AnalyzeUI.setWWD(wwd);
-						}
 					}
 				});
 
@@ -277,9 +259,6 @@ public class StipContext extends Context {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						AnalyzeUI.showResults("balise", name, "");
-						if(wwd!=null){
-							AnalyzeUI.setWWD(wwd);
-						}
 					}
 				});
 			} catch(SQLException e) {
