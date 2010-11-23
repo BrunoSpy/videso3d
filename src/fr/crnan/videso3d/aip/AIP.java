@@ -71,8 +71,7 @@ public class AIP extends FileParser{
 	 */
 	private Document document=null;
 
-	//TODO pour diminuer la consommation de mémoire, on peut faire une requête sur la BDD au lieu de maintenir ces listes.
-	// Mais bien vérifier le fonctionnement de showObject avant de supprimer les listes (surtout pour les CTL).
+
 	private List<Couple<Integer,String>> TSAs;
 	private List<Couple<Integer,String>> SIVs;
 	private List<Couple<Integer,String>> CTRs;

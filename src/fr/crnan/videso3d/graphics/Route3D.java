@@ -65,16 +65,28 @@ public class Route3D extends TrackAirspace implements VidesoObject, Route {
 		this.setDefaultMaterial();
 	}
 
-	public Route3D(Space type){
-		this.setSpace(type);
+	public Route3D(Space s){
+		this.setSpace(s);
 		this.setDefaultMaterial();
 	}
 	
-	public Route3D(String name, Space type){
-		this(type);
+	public Route3D(String name, Space s){
+		this(s);
 		this.setName(name);
 	}
+	
+	public Route3D(String name, Space s, DatabaseManager.Type base, int type){
+		this(name, s);
+		this.setDatabaseType(base);
+		this.setType(type);
+	}
 
+	public Route3D(DatabaseManager.Type base, int type) {
+		super();
+		this.setDatabaseType(base);
+		this.setType(type);
+	}
+	
 	@Override
 	public DatabaseManager.Type getDatabaseType() {
 		return this.base;

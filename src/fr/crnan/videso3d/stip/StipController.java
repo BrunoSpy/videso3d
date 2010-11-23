@@ -330,7 +330,7 @@ public class StipController implements VidesoController {
 			Iterator<String> iterator = routesNames.iterator();
 			while(iterator.hasNext()){
 				String name = iterator.next();
-				Route3D route3D = new Route3D();
+				Route3D route3D = new Route3D(DatabaseManager.Type.STIP, StipController.ROUTES);
 				Route2D route2D = new Route2D(DatabaseManager.Type.STIP, StipController.ROUTES);
 				if(type.equals("F")) {
 					route3D.setSpace(Space.FIR);
