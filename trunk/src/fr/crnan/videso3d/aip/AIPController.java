@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import org.jdom.Element;
 
 
@@ -37,6 +39,7 @@ import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIP.Altitude;
+import fr.crnan.videso3d.aip.RoutesSegments.Segment;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route.Sens;
@@ -53,6 +56,7 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
@@ -85,7 +89,7 @@ public class AIPController implements VidesoController {
 	
 	private HashMap<String, GlobeAnnotation> routesAnnotations;
 	
-	
+	private RoutesSegments routesSegments = new RoutesSegments();
 	
 	public AIPController(VidesoGLCanvas wwd) {
 		this.wwd = wwd;
@@ -128,7 +132,6 @@ public class AIPController implements VidesoController {
 			this.toggleLayer(routes2D, true);
 		}
 		routesAnnotations = new HashMap<String, GlobeAnnotation>();
-		this.buildRoutes();
 		this.wwd.firePropertyChange("step", "", "Création des balises");
 		if(navFixLayer != null){
 			navFixLayer.removeAllBalises();
@@ -173,24 +176,16 @@ public class AIPController implements VidesoController {
 		return routes3D;
 	}
 	
+	public RoutesSegments.Route getSegmentsOfRoute(int pkRoute){
+		return routesSegments.getSegmentsOfRoute(pkRoute);
+	}
+	
 	@Override
 	public void toggleLayer(Layer layer, Boolean state) {
 		this.wwd.toggleLayer(layer, state);
 	}
 
 	
-	private void buildRoutes(){
-		List<Couple<String,String>> routeNamesAndTypes = aip.getRouteNamesFromDB();
-		for(Couple<String,String> nameAndType : routeNamesAndTypes){
-			String typeString = nameAndType.getSecond();
-			int type = AIP.AWY;
-			if(typeString.equals("PDR"))
-				type = AIP.PDR;
-			if(typeString.equals("TAC"))
-				type = AIP.TAC;
-			addRouteToLayer(nameAndType.getFirst(), type);
-		}
-	}
 	
 	
 	
@@ -358,23 +353,35 @@ public class AIPController implements VidesoController {
 	}
 	
 	public void showRoute(String routeName, int type){
-		String routeID = AIP.getID(type, routeName);
-		try {
-			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet segments = st.executeQuery("select pk from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
-			while(segments.next()){
-				Element segment = aip.findElement(aip.getDocumentRoot().getChild("SegmentS"), segments.getString(1));
-				if(!segment.getChildText("Circulation").equals("(XxX)")){
-					String segmentName = buildSegmentName(routeName, segment.getChildText("Sequence"));
-					routes2D.displayRoute(segmentName);
-					routes3D.displayRoute(segmentName);
+		RoutesSegments.Route route = routesSegments.getSegmentsOfRoute(routeName);
+		if(route==null){
+			addRouteToLayer(routeName, type, true);
+		}else{
+			if(!route.isVisible()){
+				route.setVisible(true);
+				for(Segment s : route){
+					routes2D.displayRoute(s.getName());
+					routes3D.displayRoute(s.getName());
+					String routeID = AIP.getID(type, routeName);
+					try {
+						Statement st = DatabaseManager.getCurrentAIP();
+						ResultSet segments = st.executeQuery("select pk from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
+						while(segments.next()){
+							Element segment = aip.findElement(aip.getDocumentRoot().getChild("SegmentS"), segments.getString(1));
+							if(!segment.getChildText("Circulation").equals("(XxX)")){
+								String segmentName = buildSegmentName(routeName, segment.getChildText("Sequence"));
+								routes2D.displayRoute(segmentName);
+								routes3D.displayRoute(segmentName);
+							}
+						}
+					}catch(SQLException e){
+						e.printStackTrace();
+					}	
 				}
 			}
-		}catch(SQLException e){
-			e.printStackTrace();
 		}
-		
 	}
+
 
 	/**
 	 * Ajoute une route identifiée par son nom et son type à la vue 3D. Si les points d'une route ne sont pas définis dans le fichier SIA,
@@ -382,7 +389,7 @@ public class AIPController implements VidesoController {
 	 * @param routeName Le nom de la route à afficher.
 	 * @param type 
 	 */
-	public void addRouteToLayer(String routeName, int type){
+	public void addRouteToLayer(String routeName, int type, boolean display){
 		String routeID = AIP.getID(type, routeName);
 		Route.Space routeType;
 		if(type == AIP.PDR){
@@ -391,14 +398,26 @@ public class AIPController implements VidesoController {
 			routeType = Route.Space.FIR;
 		}
 		try {
-			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet segments = st.executeQuery("select pk from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
+			String previousNavFix = null;
+			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select NavFix.nom from NavFix, routes where routes.pk = ? AND routes.navFixExtremite = NavFix.pk");
+			st.setString(1, routeID);
+			ResultSet rs = st.executeQuery();
+			if(rs.next()){
+				previousNavFix = rs.getString(1);
+			}
+			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP,"select segments.pk, NavFix.nom from segments, NavFix where pkRoute = ? AND NavFix.pk = segments.navFixExtremite ORDER BY sequence");
+			st.setString(1, routeID);
+			ResultSet segments = st.executeQuery();
+			boolean segmentsEmpty = true;
 			while(segments.next()){
-				//PB : plus d'affichage après ce point pour 877
+				segmentsEmpty = false;
 				Element segment = aip.findElement(aip.getDocumentRoot().getChild("SegmentS"), segments.getString(1));
+				String navFixExtremite = segments.getString(2);
 				String segmentName = buildSegmentName(routeName, segment.getChildText("Sequence"));
 				if(routes2D.getRoute(segmentName)==null){
 					if(!segment.getChildText("Circulation").equals("(XxX)")){
+						routesSegments.addSegment(segmentName, previousNavFix, navFixExtremite, routeName, Integer.parseInt(routeID), display);
+						previousNavFix = navFixExtremite;
 						Couple<Altitude,Altitude> altis = aip.getLevels(segment);
 						LinkedList<LatLon> loc = new LinkedList<LatLon>();
 						Geometrie geometrieSegment = new Geometrie(segment);
@@ -426,8 +445,8 @@ public class AIPController implements VidesoController {
 								+"<br/><b>Plafond :</b>"+altis.getSecond().getFullText()+"</html>");
 						routes2D.addRoute(segment2D, segmentName);
 
-						//TODO prendre en compte le sens de circulation... 
-						Route3D segment3D = new Route3D(segmentName, routeType);
+						//TODO prendre en compte le sens de circulation pour les routes 3D... 
+						Route3D segment3D = new Route3D(segmentName, routeType, Type.AIP, AIP.AWY);
 						segment3D.setLocations(loc);
 						boolean lowerTerrainConformant = false, upperTerrainConformant = false;
 						if(altis.getFirst().isTerrainConforming()){
@@ -441,17 +460,27 @@ public class AIPController implements VidesoController {
 						segment3D.setAnnotation("<html>Route "+segmentName+"<br/><b>Plancher :</b>"+altis.getFirst().getFullText()
 								+"<br/><b>Plafond :</b>"+altis.getSecond().getFullText()+"</html>");
 						routes3D.addRoute(segment3D, segmentName);
+						
+						if(display){
+							routes3D.displayRoute(segmentName);
+							routes2D.displayRoute(segmentName);
+						}
 					}
 				}
+			}
+		
+			if(segmentsEmpty){
+				new JOptionPane("<html><b>Le tracé de la route <font color=\"red\">"+routeName+"</font> est inconnu !</b></html>", 
+						JOptionPane.INFORMATION_MESSAGE).createDialog("Route "+routeName).setVisible(true);
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
 	}
 	
-	
-	
-	
+
+
+
 	private void removeRoute(int type, String routeName){
 		//TODO problème avec les routes qui ont le même nom (J 22 et J 22 Polynésie...) : quand on met l'annotation dans le hashmap 
 		//on ne connaît pas le territoire, donc quand on affiche les deux J 22 en même temps, on ne garde qu'une seule des deux annotations
@@ -460,15 +489,59 @@ public class AIPController implements VidesoController {
 		if(routesAnnotations.containsKey(routeName.split("-")[0].trim())){
 			routesAnnotations.get(routeName.split("-")[0].trim()).getAttributes().setVisible(false);
 		}
-		try {
-			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet rs = st.executeQuery("select sequence from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
-			while(rs.next()){
-				routes2D.hideRoute(buildSegmentName(routeName, rs.getString(1)));
-				routes3D.hideRoute(buildSegmentName(routeName, rs.getString(1)));
+		RoutesSegments.Route route = routesSegments.getSegmentsOfRoute(routeName);
+		if(route!=null){
+			if(route.isVisible()){
+				route.setVisible(false);
+				for(Segment s : route){
+					routes2D.hideRoute(s.getName());
+					routes3D.hideRoute(s.getName());
+				}
+				try {
+					Statement st = DatabaseManager.getCurrentAIP();
+					ResultSet rs = st.executeQuery("select sequence from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
+					while(rs.next()){
+						routes2D.hideRoute(buildSegmentName(routeName, rs.getString(1)));
+						routes3D.hideRoute(buildSegmentName(routeName, rs.getString(1)));
+					}
+				}catch(SQLException e){
+					e.printStackTrace();
+				}
 			}
-		}catch(SQLException e){
+		}
+	}
+
+
+	public void displayRouteNavFixs(int pkRoute, boolean display){
+		
+	}
+	
+	public void displayRouteNavFixs(String pkRoute, boolean display){
+		LinkedList<String> navFixExtremites = new LinkedList<String>();
+		try {
+			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nom from NavFix, segments where segments.pkRoute = ? AND segments.navFixExtremite = NavFix.pk");
+			st.setString(1, pkRoute);
+			ResultSet rs = st.executeQuery();
+			while(rs.next()){
+				navFixExtremites.add(rs.getString(1));
+			}
+			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select NavFix.nom from NavFix, routes where routes.pk = ? AND routes.navFixExtremite = NavFix.pk");
+			st.setString(1, pkRoute);
+			rs = st.executeQuery();
+			if(rs.next()){
+				navFixExtremites.add(rs.getString(1));
+			}
+		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		if(display){
+			for(String navFix : navFixExtremites){
+				showObject(AIP.DMEATT, navFix);
+			}
+		}else{
+			for(String navFix : navFixExtremites){
+				hideObject(AIP.DMEATT, navFix);
+			}	
 		}
 	}
 	
@@ -663,40 +736,23 @@ public class AIPController implements VidesoController {
 	 * @param segmentsNames Les noms des segments de la route
 	 */
 	private void highlightRoute(int type, String name){
-		ArrayList<String> segmentsNames = getSegments(name);
-		if(!routes2D.hasKey(segmentsNames.get(0))){
+	//	ArrayList<String> segmentsNames = getSegments(name);
+		//if(!routes2D.hasKey(segmentsNames.get(0))){
 			showRoute(name, type);
-		}
-		ArrayList<Route2D> segments2D = new ArrayList<Route2D>();
-		ArrayList<Route3D> segments3D = new ArrayList<Route3D>();
-				for(String s : segmentsNames){
-			segments2D.add((Route2D) routes2D.getRoute(s));
-			segments3D.add((Route3D) routes3D.getRoute(s));
-		}
-		//On peut appeler centerView indiféremment sur une route2D ou une route3D puisqu'elles sont au même endroit.
-		centerView(segments2D);
-	}
-	
-	
-	/**
-	 * 
-	 * @param routeName 
-	 * @return
-	 */
-	private ArrayList<String> getSegments(String routeName){
-		ArrayList<String> segmentsNames = new ArrayList<String>();
-		String routeID = AIP.getID(AIP.AWY, routeName);
-		try{
-			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet rs = st.executeQuery("select sequence from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
-			while(rs.next()){				
-				segmentsNames.add(buildSegmentName(routeName, rs.getString(1)));
+	//	}
+		RoutesSegments.Route route = routesSegments.getSegmentsOfRoute(name);
+		if(route != null){
+			ArrayList<Route2D> segments2D = new ArrayList<Route2D>();
+			ArrayList<Route3D> segments3D = new ArrayList<Route3D>();
+			for(Segment s : route){
+				segments2D.add((Route2D) routes2D.getRoute(s.getName()));
+				segments3D.add((Route3D) routes3D.getRoute(s.getName()));
 			}
-		}catch(SQLException e){
-			e.printStackTrace();
+			centerView(segments2D);
 		}
-		return segmentsNames;
 	}
+	
+	
 
 	private String buildSegmentName(String routeName, String sequence){
 		return routeName.concat(" - ").concat(sequence);
@@ -822,7 +878,54 @@ public class AIPController implements VidesoController {
 		return nearSeq;
 	}
 
-
+//TODO voir si ça doit rester private
+	private void displayNavFix(String pkRoute, boolean display){
+		LinkedList<String> navFixExtremites = new LinkedList<String>();
+		try {
+			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nom from NavFix, segments where segments.pkRoute = ? AND segments.navFixExtremite = NavFix.pk");
+			st.setString(1, pkRoute);
+			ResultSet rs = st.executeQuery();
+			while(rs.next()){
+				navFixExtremites.add(rs.getString(1));
+			}
+			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select NavFix.nom from NavFix, routes where routes.pk = ? AND routes.navFixExtremite = NavFix.pk");
+			st.setString(1, pkRoute);
+			rs = st.executeQuery();
+			if(rs.next()){
+				navFixExtremites.add(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if(display){
+			for(String navFix : navFixExtremites){
+				showObject(AIP.DMEATT, navFix);
+			}
+		}else{
+			for(String navFix : navFixExtremites){
+				hideObject(AIP.DMEATT, navFix);
+			}	
+		}
+	}
+	
+	
+	//TODO voir si ça doit rester private et mettre lastSegmentAnnotation en haut
+	Annotation lastSegmentAnnotation;
+	public void displayAnnotationAndGoTo(Route segment){
+		Position annotationPosition = new Position(segment.getLocations().iterator().next(), 0);
+		Annotation annotation = ((VidesoObject)segment).getAnnotation(annotationPosition);
+		if(lastSegmentAnnotation != null)
+			lastSegmentAnnotation.getAttributes().setVisible(false);
+		lastSegmentAnnotation = annotation;
+		annotation.getAttributes().setVisible(true);
+		wwd.getAnnotationLayer().addAnnotation(annotation);
+		wwd.getView().goTo(annotationPosition, wwd.getView().getEyePosition().elevation);
+		wwd.redraw();
+	}
+	
+	
+	
+	
 	@Override
 	public String type2string(int type) {
 		return AIP.getTypeString(type);

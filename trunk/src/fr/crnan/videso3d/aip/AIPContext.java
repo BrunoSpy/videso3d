@@ -59,21 +59,19 @@ public class AIPContext extends Context {
 	public List<JXTaskPane> getTaskPanes(int type, String name) {
 		JXTaskPane taskPane = new JXTaskPane();
 		taskPane.setTitle("Eléments AIP");
-		switch (type) {
-		case AIP.CTL:
-			
-			break;
-
-		default:
-			break;
+		if(type<20){
+			return showAIPZoneInfos(type, name);
+		}else if(type>=20 && type <30){
+			return showAIPRoute(getController().getRoutes2DLayer().getRoute(name));
+		}else if(type>=30 && type<40){
+			//showNavFix
 		}
 		return null;
 	}
 
-	public void showAIPZone(Secteur3D zone) {
-		String zoneID = AIP.getID(AIP.string2type(zone.getType().toString()), zone.getName());
-		content.removeAll();
-		titleAreaPanel.setTitle(zone.getName());
+	//TODO voir si on peut pas se contenter du nom de la zone (on a besoin que de l'ID et du type).
+	public List<JXTaskPane> showAIPZoneInfos(int type, String name) {
+		String zoneID = AIP.getID(type, name);
 		
 		JXTaskPane infos = new JXTaskPane();
 		infos.setTitle("Informations diverses");
@@ -85,7 +83,7 @@ public class AIPContext extends Context {
 		if(classe != null){
 			infos.add(new JLabel("<html><b>Classe</b> : " + classe+"</html>"));
 		}
-		if(zone.getType()==Secteur3D.Type.R){
+		if(type == AIP.R){
 			if(getController().getAIP().getZoneAttributeValue(zoneID, "Rtba")!=null)
 				infos.add(new JLabel("<html><b>RTBA</b></html>"));
 		}
@@ -99,15 +97,17 @@ public class AIPContext extends Context {
 			infos.add(new JLabel("<html><b>Remarques</b> : " + rmq.replaceAll("#", "<br/>")+"</html>"));
 		}
 		
-		content.add(infos);
+		LinkedList<JXTaskPane> taskPanesList = new LinkedList<JXTaskPane>();
+		taskPanesList.add(infos);
+		return taskPanesList;
 	}
 	
-	public void showAIPRoute(Route segment) {
+	public List<JXTaskPane> showAIPRoute(Route segment) {
 		AIP aip = getController().getAIP();
 		String route = segment.getName().split("-")[0].trim();
 		String[] splittedSegmentName = segment.getName().split("-");
 		String sequence = splittedSegmentName[splittedSegmentName.length-1].trim();
-		fr.crnan.videso3d.graphics.Route.Espace type = segment.getType();
+		fr.crnan.videso3d.graphics.Route.Space type = segment.getSpace();
 		String pkRoute = null;
 		String typeRoute = aip.RouteType2AIPType(route, type);
 		StringBuilder ACCTraverses = new StringBuilder();
@@ -123,8 +123,6 @@ public class AIPContext extends Context {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		content.removeAll();
-		titleAreaPanel.setTitle("Route "+route+" - Segment "+sequence);
 		List<Element> segmentsXML = aip.findElementsByChildId(aip.getDocumentRoot().getChild("SegmentS"), "Route", pkRoute);
 		Element monSegmentXML = null;
 		for(Element segmentXML : segmentsXML){
@@ -153,11 +151,11 @@ public class AIPContext extends Context {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(afficher){
-					displayNavFix(pkRouteFinal, true);
+					getController().displayRouteNavFixs(pkRouteFinal, true);
 					putValue(Action.NAME, "Cacher les balises");
 					afficher = false;
 				}else{
-					displayNavFix(pkRouteFinal, false);
+					getController().displayRouteNavFixs(pkRouteFinal, false);
 					putValue(Action.NAME, "Afficher les balises");
 					afficher = true;
 				}
@@ -210,10 +208,9 @@ public class AIPContext extends Context {
 			AbstractAction previous = new AbstractAction("<html><font color=\"blue\">&lt;&lt; Segment précédent</font></html>"){
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					displayAnnotationAndGoTo(segmentPrecedent);
+					getController().displayAnnotationAndGoTo(segmentPrecedent);
 					showAIPRoute(segmentPrecedent);
 				}
-
 			};
 			infosSegment.add(previous);
 		}
@@ -221,55 +218,19 @@ public class AIPContext extends Context {
 			AbstractAction next = new AbstractAction("<html><font color=\"blue\">Segment suivant &gt;&gt;</font></html>"){
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					displayAnnotationAndGoTo(segmentSuivant);
+					getController().displayAnnotationAndGoTo(segmentSuivant);
 					showAIPRoute(segmentSuivant);
 				}
-
 			};
 			infosSegment.add(next);
 		}
-		content.add(infosRoute);
-		content.add(infosSegment);
+		LinkedList<JXTaskPane> taskPanesList = new LinkedList<JXTaskPane>();
+		taskPanesList.add(infosRoute);
+		taskPanesList.add(infosSegment);
+		return taskPanesList;
 	}
 	
-	private void displayAnnotationAndGoTo(Route segment){
-		Position annotationPosition = new Position(segment.getLocations().iterator().next(), 0);
-		Annotation annotation = ((VidesoObject)segment).getAnnotation(annotationPosition);
-		if(lastSegmentAnnotation != null)
-			lastSegmentAnnotation.getAttributes().setVisible(false);
-		lastSegmentAnnotation = annotation;
-		annotation.getAttributes().setVisible(true);
-		wwd.getAnnotationLayer().addAnnotation(annotation);
-		wwd.getView().goTo(annotationPosition, wwd.getView().getEyePosition().elevation);
-		wwd.redraw();
-	}
 	
-	private void displayNavFix(String pkRoute, boolean display){
-		LinkedList<String> navFixExtremites = new LinkedList<String>();
-		try {
-			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nom from NavFix, segments where segments.pkRoute = ? AND segments.navFixExtremite = NavFix.pk");
-			st.setString(1, pkRoute);
-			ResultSet rs = st.executeQuery();
-			while(rs.next()){
-				navFixExtremites.add(rs.getString(1));
-			}
-			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select NavFix.nom from NavFix, routes where routes.pk = ? AND routes.navFixExtremite = NavFix.pk");
-			st.setString(1, pkRoute);
-			rs = st.executeQuery();
-			if(rs.next()){
-				navFixExtremites.add(rs.getString(1));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		if(display){
-			for(String navFix : navFixExtremites){
-				getController().showObject(AIP.DMEATT, navFix);
-			}
-		}else{
-			for(String navFix : navFixExtremites){
-				getController().hideObject(AIP.DMEATT, navFix);
-			}	
-		}
-	}
+	
+
 }
