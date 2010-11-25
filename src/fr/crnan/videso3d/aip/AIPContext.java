@@ -100,15 +100,21 @@ public class AIPContext extends Context {
 	
 	public List<JXTaskPane> showRouteInfos(Route segment) {
 		AIP aip = getController().getAIP();
-		String route = segment.getName().split("-")[0].trim();
 		String[] splittedSegmentName = segment.getName().split("-");
+		String routeName = "";
+		if(splittedSegmentName.length >2){
+			routeName = (splittedSegmentName[0]+"-"+splittedSegmentName[1]).trim();
+		}else{
+			routeName = splittedSegmentName[0].trim();
+		}
+
 		String sequence = splittedSegmentName[splittedSegmentName.length-1].trim();
 		fr.crnan.videso3d.graphics.Route.Space type = segment.getSpace();
 		String pkRoute = null;
-		String typeRoute = aip.RouteType2AIPType(route, type);
+		String typeRoute = aip.RouteType2AIPType(routeName, type);
 		StringBuilder ACCTraverses = new StringBuilder();
 		try {
-			pkRoute = getController().getRouteIDFromSegmentName(route, typeRoute);
+			pkRoute = getController().getRouteIDFromSegmentName(routeName, typeRoute);
 			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nomACC from ACCTraverses where routes_pk = ?");
 			st.setString(1, pkRoute);
 			ResultSet rs = st.executeQuery();
@@ -197,8 +203,8 @@ public class AIPContext extends Context {
 		if(segment instanceof Route2D){
 			route3D = false;
 		}
-		final Route segmentPrecedent = getController().getPrevious(route, sequence, typeRoute, route3D); 
-		final Route segmentSuivant = getController().getNext(route, sequence, typeRoute, route3D);
+		final Route segmentPrecedent = getController().getPrevious(routeName, sequence, typeRoute, route3D); 
+		final Route segmentSuivant = getController().getNext(routeName, sequence, typeRoute, route3D);
 		
 		if(segmentPrecedent != null){
 			AbstractAction previous = new AbstractAction("<html><font color=\"blue\">&lt;&lt; Segment précédent</font></html>"){

@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -59,6 +60,7 @@ import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.util.Logging;
 
@@ -784,7 +786,7 @@ public class AIPController implements VidesoController {
 	 * @param routeName Le nom de la route (et pas le nom du segment)
 	 * @param segmentSequenceString le numéro de séquence  du segment
 	 * @param type le type de route (AWY, PDR ou TAC)
-	 * @return
+	 * @return null si le segment 
 	 */
 	public Route getPrevious(String routeName, String segmentSequenceString, String type, boolean route3D){
 		Route previousSegment = null;
@@ -795,9 +797,9 @@ public class AIPController implements VidesoController {
 			int previousSeq = getNearSequence(pkRoute, segmentSequence, -1);
 			if(previousSeq != 0){
 				if(route3D){
-					previousSegment = (Route3D) routes3D.getRoute(routeName.split("-")[0].concat(" - "+previousSeq));
+					previousSegment = (Route3D) routes3D.getRoute(routeName.concat(" - "+previousSeq));
 				}else{
-					previousSegment = (Route2D) routes2D.getRoute(routeName.split("-")[0].concat(" - "+previousSeq));
+					previousSegment = (Route2D) routes2D.getRoute(routeName.concat(" - "+previousSeq));
 				}
 			}
 		}catch(SQLException e){
@@ -822,9 +824,9 @@ public class AIPController implements VidesoController {
 			int nextSeq = getNearSequence(pkRoute, segmentSequence, 1);
 			if(nextSeq != 0){
 				if(route3D){
-					nextSegment = (Route3D) routes3D.getRoute(routeName.split("-")[0].concat(" - "+nextSeq));
+					nextSegment = (Route3D) routes3D.getRoute(routeName.concat(" - "+nextSeq));
 				}else{
-					nextSegment = (Route2D) routes2D.getRoute(routeName.split("-")[0].concat(" - "+nextSeq));
+					nextSegment = (Route2D) routes2D.getRoute(routeName.concat(" - "+nextSeq));
 				}
 			}
 		}catch(SQLException e){
