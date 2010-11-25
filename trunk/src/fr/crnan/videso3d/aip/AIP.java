@@ -809,7 +809,7 @@ public class AIP extends FileParser{
 
 
 	/**
-	 * Permet de trouver un élément par son nom et son type (TMA, CTA,...)
+	 * Permet de trouver un volume par son nom et son type (TMA, CTA,...)
 	 * @param type
 	 * @param name
 	 * @return l'élément recherché.
@@ -824,7 +824,7 @@ public class AIP extends FileParser{
 	 * Renvoie l'élément dont l'attribut "pk" correspond à <code>idNumber</code> parmi les fils de l'élément <code>racine</code>
 	 * @param racine 
 	 * @param idNumber
-	 * @return
+	 * @return L'élément demandé ou <code>null</code> si celui-ci n'a pas été trouvé.
 	 */
 	@SuppressWarnings("unchecked")
 	public Element findElement(Element racine, String idNumber){
@@ -840,7 +840,12 @@ public class AIP extends FileParser{
 				return false;
 			}
 		};
-		return ((List<Element>) racine.getContent(f)).get(0);
+		List<Element> elements = racine.getContent(f);
+		if(elements!=null){
+			if(elements.size()>0)
+				return elements.get(0);
+		}
+		return null;
 	}
 
 
@@ -865,6 +870,25 @@ public class AIP extends FileParser{
 		return root.getContent(f);	
 	}
 
+	
+	public Element findNavFixInfosByName(String name){
+		PreparedStatement st;
+		String pk="";
+		try {
+			st = DatabaseManager.prepareStatement(Type.AIP, "select pk from NavFix where nom = ?");
+			st.setString(1, name);
+			ResultSet rs = st.executeQuery();
+			if(rs.next()){
+				pk = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		if(pk.equals("")){
+			return null;
+		}
+		return findElement(getDocumentRoot().getChild("RadioNavS"), pk);
+	}
 
 	/**
 	 * Renvoie l'identifiant de l'objet de type <code>type</code> et de nom <code>name</code>.
