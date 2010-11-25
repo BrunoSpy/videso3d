@@ -37,10 +37,6 @@ import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.aip.AIP.Altitude;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
-import fr.crnan.videso3d.graphics.Secteur3D;
-import fr.crnan.videso3d.graphics.VidesoObject;
-import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.Annotation;
 /**
  * 
  * @author Bruno Spyckerelle	
@@ -48,7 +44,6 @@ import gov.nasa.worldwind.render.Annotation;
  */
 public class AIPContext extends Context {
 
-	private Annotation lastSegmentAnnotation;
 	
 	private AIPController getController(){
 		return (AIPController) DatasManager.getController(Type.AIP);
@@ -60,17 +55,17 @@ public class AIPContext extends Context {
 		JXTaskPane taskPane = new JXTaskPane();
 		taskPane.setTitle("Eléments AIP");
 		if(type<20){
-			return showAIPZoneInfos(type, name);
+			return showZoneInfos(type, name);
 		}else if(type>=20 && type <30){
-			return showAIPRoute(getController().getRoutes2DLayer().getRoute(name));
+			return showRouteInfos(getController().getRoutes2DLayer().getRoute(name));
 		}else if(type>=30 && type<40){
-			//showNavFix
+			return showNavFixInfos(type, name);
 		}
 		return null;
 	}
 
-	//TODO voir si on peut pas se contenter du nom de la zone (on a besoin que de l'ID et du type).
-	public List<JXTaskPane> showAIPZoneInfos(int type, String name) {
+	
+	public List<JXTaskPane> showZoneInfos(int type, String name) {
 		String zoneID = AIP.getID(type, name);
 		
 		JXTaskPane infos = new JXTaskPane();
@@ -102,7 +97,8 @@ public class AIPContext extends Context {
 		return taskPanesList;
 	}
 	
-	public List<JXTaskPane> showAIPRoute(Route segment) {
+	
+	public List<JXTaskPane> showRouteInfos(Route segment) {
 		AIP aip = getController().getAIP();
 		String route = segment.getName().split("-")[0].trim();
 		String[] splittedSegmentName = segment.getName().split("-");
@@ -209,7 +205,7 @@ public class AIPContext extends Context {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					getController().displayAnnotationAndGoTo(segmentPrecedent);
-					showAIPRoute(segmentPrecedent);
+					showRouteInfos(segmentPrecedent);
 				}
 			};
 			infosSegment.add(previous);
@@ -219,7 +215,7 @@ public class AIPContext extends Context {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					getController().displayAnnotationAndGoTo(segmentSuivant);
-					showAIPRoute(segmentSuivant);
+					showRouteInfos(segmentSuivant);
 				}
 			};
 			infosSegment.add(next);
@@ -229,8 +225,98 @@ public class AIPContext extends Context {
 		taskPanesList.add(infosSegment);
 		return taskPanesList;
 	}
-	
-	
+
+
+	private List<JXTaskPane> showNavFixInfos(int type, String name){
+		LinkedList<JXTaskPane> taskPanesList = new LinkedList<JXTaskPane>();
+		JXTaskPane infosNavFix = new JXTaskPane();
+		AIP aip = getController().getAIP();
+
+		float latitude = 0, longitude = 0;
+		try {
+			PreparedStatement ps = DatabaseManager.prepareStatement(Type.AIP, "select lat, lon from NavFix where nom=?");
+			ps.setString(1, name);
+			ResultSet rs = ps.executeQuery();
+			latitude = rs.getFloat(1);
+			longitude = rs.getFloat(2);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}	
+		String nordSud = "";
+		String estOuest = "";
+		if(latitude>=0){
+			nordSud = "N";
+		}else{
+			nordSud = "S";
+		}
+		if(longitude>=0){
+			estOuest = "E";
+		}else{
+			estOuest = "W";
+		}
+		infosNavFix.add(new JLabel("<html><b>Position</b> :"+latitude+"°"+nordSud+", "+longitude+"°"+estOuest));
+	//	if(type != AIP.WPT && type != AIP.VFR && type != AIP.PNP){
+
+			Element navFixXML = aip.findNavFixInfosByName(name);
+			if(navFixXML != null){
+				String nomPhraseo = navFixXML.getChildText("NomPhraseo");
+				String freq = navFixXML.getChildText("Frequence");
+				String station = navFixXML.getChildText("Station");
+				String LatDme = navFixXML.getChildText("LatDme");
+				String LonDme = navFixXML.getChildText("LongDme");
+				String alti = navFixXML.getChildText("AltitudeFt");
+				String situation = navFixXML.getChildText("Situation");
+				String ad = null;//TODO à compléter lorsque les aérodromes seront implémentés.
+				String horCode = navFixXML.getChildText("HorCode");
+				String usage = navFixXML.getChildText("Usage");
+				String portee = navFixXML.getChildText("Portee");
+				String flPortee = navFixXML.getChildText("FlPorteeVert");
+				String couverture = navFixXML.getChildText("Couverture");
+				if(nomPhraseo != null){
+					infosNavFix.add(new JLabel("<html><b>Nom phraseo</b> : " + nomPhraseo+"</html>"));
+				}
+				if(freq != null){
+					infosNavFix.add(new JLabel("<html><b>Fréquence</b> : " + freq+"</html>"));
+				}
+				if(station != null){
+					infosNavFix.add(new JLabel("<html><b>Station</b> : " + station+"</html>"));
+				}
+				if(LatDme != null){
+					infosNavFix.add(new JLabel("<html><b>Lat. Dme</b> : " + LatDme+"</html>"));
+				}
+				if(LonDme != null){
+					infosNavFix.add(new JLabel("<html><b>Lon. Dme</b> : " + LonDme+"</html>"));
+				}
+				if(alti != null){
+					infosNavFix.add(new JLabel("<html><b>Altitude</b> : " + alti+" ft</html>"));
+				}
+				if(situation != null){
+					infosNavFix.add(new JLabel("<html><b>Situation</b> : " + situation+"</html>"));
+				}
+				if(ad != null){
+					infosNavFix.add(new JLabel("<html><b>Aérodrome</b> : " + ad+"</html>"));
+				}
+				if(horCode != null){
+					infosNavFix.add(new JLabel("<html><b>Code horaire</b> : " + horCode+"</html>"));
+				}
+				if(usage != null){
+					infosNavFix.add(new JLabel("<html><b>Usage</b> : " + usage+"</html>"));
+				}
+				if(portee != null){
+					infosNavFix.add(new JLabel("<html><b>Portée</b> : " + portee+"</html>"));
+				}
+				if(flPortee != null){
+					infosNavFix.add(new JLabel("<html><b>Portée verticale</b> : FL" + flPortee+"</html>"));
+				}
+				if(couverture != null){
+					infosNavFix.add(new JLabel("<html><b>Couverture</b> : " + couverture+"</html>"));
+				}
+		//	}
+		}
+		taskPanesList.add(infosNavFix);
+		return taskPanesList;
+	}
+
 	
 
 }

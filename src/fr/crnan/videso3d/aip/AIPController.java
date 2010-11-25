@@ -91,6 +91,8 @@ public class AIPController implements VidesoController {
 	
 	private RoutesSegments routesSegments = new RoutesSegments();
 	
+	private Annotation lastSegmentAnnotation;
+	
 	public AIPController(VidesoGLCanvas wwd) {
 		this.wwd = wwd;
 		this.buildAIP();
@@ -201,7 +203,7 @@ public class AIPController implements VidesoController {
 					this.addZone(type, nomPartieSecteur);
 			}
 		}else if(type>=AIP.DMEATT){
-			this.showNavFix(name);
+			this.showNavFix(type, name);
 		}else{
 			if(!zones.containsKey(name))
 				this.addZone(type,name);
@@ -546,10 +548,10 @@ public class AIPController implements VidesoController {
 	}
 	
 	
-	private void showNavFix(String name){
+	private void showNavFix(int type, String name){
 		double latitude = 0;
 		double longitude = 0;
-		String type = "";
+		String typeString = "";
 		double freq = 0;
 		PreparedStatement ps;
 		try {
@@ -560,15 +562,15 @@ public class AIPController implements VidesoController {
 			while(rs.next()){
 				latitude = rs.getDouble(1);
 				longitude = rs.getDouble(2);
-				type = rs.getString(3);
+				typeString = rs.getString(3);
 				freq = rs.getDouble(4);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		//TODO Mieux gérer le type de balise
-		Balise2D navFix = new Balise2D(name, Position.fromDegrees(latitude, longitude), Type.AIP, AIP.DMEATT);
-		String annotation = "<html><b>"+name+"</b><br/><i>Type : </i>"+type;
+		Balise2D navFix = new Balise2D(name, Position.fromDegrees(latitude, longitude), Type.AIP, type);
+		String annotation = "<html><b>"+name+"</b><br/><i>Type : </i>"+typeString;
 		if(freq != 0){
 			annotation += "<br/><i>Fréq. : </i>"+freq;
 		}
@@ -719,10 +721,8 @@ public class AIPController implements VidesoController {
 	
 	
 	private void highlightNavFix(int type, String name){
-	//	System.out.println("highlight");
 		if(!navFixLayer.contains(name)){
-		//	System.out.println("show");
-			showNavFix(name);
+			showNavFix(type, name);
 		}
 		Balise2D navFix = navFixLayer.getBalise(name);
 		centerView(navFix);
@@ -736,10 +736,7 @@ public class AIPController implements VidesoController {
 	 * @param segmentsNames Les noms des segments de la route
 	 */
 	private void highlightRoute(int type, String name){
-	//	ArrayList<String> segmentsNames = getSegments(name);
-		//if(!routes2D.hasKey(segmentsNames.get(0))){
 			showRoute(name, type);
-	//	}
 		RoutesSegments.Route route = routesSegments.getSegmentsOfRoute(name);
 		if(route != null){
 			ArrayList<Route2D> segments2D = new ArrayList<Route2D>();
@@ -878,8 +875,8 @@ public class AIPController implements VidesoController {
 		return nearSeq;
 	}
 
-//TODO voir si ça doit rester private
-	private void displayNavFix(String pkRoute, boolean display){
+	
+/*	private void displayNavFix(String pkRoute, boolean display){
 		LinkedList<String> navFixExtremites = new LinkedList<String>();
 		try {
 			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nom from NavFix, segments where segments.pkRoute = ? AND segments.navFixExtremite = NavFix.pk");
@@ -906,11 +903,9 @@ public class AIPController implements VidesoController {
 				hideObject(AIP.DMEATT, navFix);
 			}	
 		}
-	}
+	}*/
 	
 	
-	//TODO voir si ça doit rester private et mettre lastSegmentAnnotation en haut
-	Annotation lastSegmentAnnotation;
 	public void displayAnnotationAndGoTo(Route segment){
 		Position annotationPosition = new Position(segment.getLocations().iterator().next(), 0);
 		Annotation annotation = ((VidesoObject)segment).getAnnotation(annotationPosition);
