@@ -101,7 +101,6 @@ public class ContextPanel extends JPanel implements SelectListener {
 	 * Affiche les infos pertinentes pour l'objet en fonction de son type et de son nom
 	 * @param name Nom de l'objet
 	 */
-	//TODO : pour les infos STIP (secteur et balise) , le contextPanel ne marche pas quand il n'y a pas de base STPV.
 	public void showInfo(DatabaseManager.Type base, int type, String name){
 		content.removeAll();
 		if(base != null) {
@@ -137,10 +136,18 @@ public class ContextPanel extends JPanel implements SelectListener {
 			content.validate();
 		}
 	}
-	int i =0;
+	/**
+	 * Ajoute les {@link JXTaskPane} demandés.<br />
+	 * Prends en compte l'existence de la base demandée.
+	 * @param base
+	 * @param type
+	 * @param name
+	 */
 	private void addTaskpanes(DatabaseManager.Type base, int type, String name){
-		for(JXTaskPane pane : taskpanes.get(base).getTaskPanes(type, name)){
-			content.add(pane);
+		if(taskpanes.get(base) != null) {
+			for(JXTaskPane pane : taskpanes.get(base).getTaskPanes(type, name)){
+				content.add(pane);
+			}
 		}
 	}
 

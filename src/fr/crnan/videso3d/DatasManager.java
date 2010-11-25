@@ -106,7 +106,11 @@ public final class DatasManager {
 			DatasManager.addDatas(type, new AIPController(wwd), new AIPContext(), new AIPView());
 			break;
 		case RadioCov:
-			DatasManager.addDatas(type, new RadioCovController(wwd), new RadioCovContext(), new RadioCovView());
+			//la vue radio a besoin du controlleur ...
+			//d'où obligation d'enregistrer le controleur
+			instance.controllers.put(type, new RadioCovController(wwd));
+			instance.contexts.put(type, new RadioCovContext());
+			instance.views.put(type, new RadioCovView());
 			break;
 		case SkyView:
 			DatasManager.addDatas(type, new SkyViewController(wwd), new SkyViewContext(), new SkyView());
