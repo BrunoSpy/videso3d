@@ -264,6 +264,7 @@ public class StipContext extends Context {
 			} catch(SQLException e) {
 				e.printStackTrace();
 			}
+			taskpanes.add(taskpane2);
 			break;
 		case StipController.ROUTES:
 			taskpane1 = new JXTaskPane();

@@ -123,7 +123,7 @@ public class RadioCovView extends JPanel implements DataView {
 				check.setSelected(false);
 			}
 		}
-		getController().reset();
+	//	getController().reset();
 	}
 	
 	
