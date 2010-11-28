@@ -308,6 +308,83 @@ public class StipContext extends Context {
 			}
 			taskpanes.add(taskpane1);
 			break;
+		case StipController.ITI:
+			int id = new Integer(name);
+			taskpane1 = new JXTaskPane();
+			try {
+				Statement st = DatabaseManager.getCurrentStip();
+				final ResultSet rs = st.executeQuery("select * from itis where id ='"+id+"'");
+
+			
+				taskpane1.setTitle("Informations générales");
+
+				taskpane1.add(new JLabel("<html><b>Entrée</b> : "+rs.getString(2)+"</html>"));
+				taskpane1.add(new JLabel("<html><b>Sortie</b> : "+rs.getString(3)+"</html>"));
+				taskpane1.add(new JLabel("<html><b>Plancher</b> : "+rs.getString(4)+"</html>"));
+				taskpane1.add(new JLabel("<html><b>Plafond</b> : "+rs.getString(5)+"</html>"));
+
+				rs.close();
+				st.close();
+			} catch (SQLException e){
+				e.printStackTrace();
+			}
+			taskpanes.add(taskpane1);
+			break;
+		case StipController.CONNEXION:
+			id = new Integer(name);
+			taskpane1 = new JXTaskPane();
+			try {
+				Statement st = DatabaseManager.getCurrentStip();
+				final ResultSet rs = st.executeQuery("select * from connexions where id ='"+id+"'");
+				taskpane1.setTitle("Informations générales");
+				taskpane1.add(new JLabel("<html><b>Type</b> : "+rs.getString(4)+"</html>"));
+				taskpane1.add(new JLabel("<html><b>Plafond</b> : "+rs.getString(7)+"</html>"));
+				taskpane1.add(new JLabel("<html><b>Plancher</b> : "+rs.getString(6)+"</html>"));
+				taskpane1.add(new JLabel("<html><b>Balise de connexion</b> : "+rs.getString(3)+"</html>"));
+				if(rs.getString(9).compareTo("0") != 0){
+					taskpane1.add(new JLabel("<html><b>Vitesse</b> : "+rs.getString(8)+rs.getString(9)+"</html>"));
+				}
+				rs.close();
+				st.close();
+			} catch (SQLException e){
+				e.printStackTrace();
+			} 
+			taskpanes.add(taskpane1);
+			break;
+		case StipController.TRAJET:
+			id = new Integer(name);
+			try {
+				Statement st = DatabaseManager.getCurrentStip();
+				ResultSet rs = st.executeQuery("select * from trajets where id='"+id+"'");
+				int ecl_id = rs.getInt(3);
+				int rac_id = rs.getInt(5);
+				rs = st.executeQuery("select * from trajets where eclatement_id='"+ecl_id+"' and raccordement_id = '"+rac_id+"'");
+
+				int count = 1;
+				while(rs.next()){
+					JXTaskPane trajet = new JXTaskPane();
+					trajet.setTitle("Trajet "+count);
+
+					trajet.add(new JLabel("<html><b>Type</b> : "+rs.getString(6)));
+					trajet.add(new JLabel("<html><b>Plafond</b> : "+rs.getString(7)));
+					trajet.add(new JLabel("<html><b>Condition 1</b> : "+rs.getString(8)+" "+rs.getString(9)));
+
+					if(rs.getString(10) != null){
+						trajet.add(new JLabel("<html><b>Condition 2</b> : "+rs.getString(10)+" "+rs.getString(11)));
+					}
+					if(rs.getString(12) != null){
+						trajet.add(new JLabel("<html><b>Condition 3</b> : "+rs.getString(12)+" "+rs.getString(13)));
+					}
+					if(rs.getString(14) != null){
+						trajet.add(new JLabel("<html><b>Condition 4</b> : "+rs.getString(14)+" "+rs.getString(15)));
+					}
+					taskpanes.add(trajet);
+					count++;
+				}
+			} catch (SQLException e){
+				e.printStackTrace();
+			}
+			break;
 		default:
 			break;
 		}
