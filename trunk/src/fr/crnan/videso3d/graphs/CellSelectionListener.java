@@ -32,7 +32,7 @@ import fr.crnan.videso3d.stip.StipController;
  * Listener de cellule JGraph.<br />
  * Permet de mettre à jour la fenêtre contextuelle en fonction de la cellule sélectionnée
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class CellSelectionListener implements mxIEventListener {
 
@@ -61,9 +61,11 @@ public class CellSelectionListener implements mxIEventListener {
 			if(content.getType().equals(CellContent.TYPE_BALISE)){
 				context.showInfo(Type.STIP, StipController.BALISES, ((CellContent)cell.getValue()).getName());
 			} else if(content.getType().equals(CellContent.TYPE_ITI)){
-				context.showIti(((CellContent)cell.getValue()).getId());
+				context.showInfo(Type.STIP, StipController.ITI, new Integer(((CellContent)cell.getValue()).getId()).toString());
+				context.setTitle("Informations sur "+((CellContent)cell.getValue()).getName());
 			} else if(content.getType().equals(CellContent.TYPE_TRAJET) || content.getType().equals(CellContent.TYPE_TRAJET_GROUPE)){
-				context.showTrajet(((CellContent)cell.getValue()).getId());
+				context.showInfo(Type.STIP, StipController.TRAJET, new Integer(((CellContent)cell.getValue()).getId()).toString());
+				context.setTitle("Informations sur "+((CellContent)cell.getValue()).getName());
 			} else if(content.getType().equals(CellContent.TYPE_ROUTE)){
 				int id = ((CellContent)cell.getValue()).getId();
 				try {
@@ -75,7 +77,8 @@ public class CellSelectionListener implements mxIEventListener {
 					e.printStackTrace();
 				}
 			} else if(content.getType().equals(CellContent.TYPE_CONNEXION)){
-				context.showConnexion(((CellContent)cell.getValue()).getId());
+				context.showInfo(Type.STIP, StipController.CONNEXION, new Integer(((CellContent)cell.getValue()).getId()).toString());
+				context.setTitle("Informations sur "+((CellContent)cell.getValue()).getName());
 			}
 		}
 	}

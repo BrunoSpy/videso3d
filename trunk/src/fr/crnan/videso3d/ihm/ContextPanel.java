@@ -18,11 +18,7 @@ package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
@@ -119,11 +115,14 @@ public class ContextPanel extends JPanel implements SelectListener {
 					this.addTaskpanes(Type.STIP, type, name);
 					this.addTaskpanes(Type.STPV, type, name);
 					break;
-				case StipController.ITI:				
+				case StipController.ITI:
+					this.addTaskpanes(Type.STIP, type, name);
 					break;
 				case StipController.CONNEXION:
+					this.addTaskpanes(Type.STIP, type, name);
 					break;
 				case StipController.TRAJET:
+					this.addTaskpanes(Type.STIP, type, name);
 					break;
 				}
 				break;
@@ -143,6 +142,10 @@ public class ContextPanel extends JPanel implements SelectListener {
 	 * @param type
 	 * @param name
 	 */
+	public void setTitle(String title) {
+		this.titleAreaPanel.setTitle(title);
+	}
+	
 	private void addTaskpanes(DatabaseManager.Type base, int type, String name){
 		if(taskpanes.get(base) != null) {
 			for(JXTaskPane pane : taskpanes.get(base).getTaskPanes(type, name)){
@@ -150,110 +153,6 @@ public class ContextPanel extends JPanel implements SelectListener {
 			}
 		}
 	}
-
-	/**
-	 * Affiche les infos de l'iti <code>id</code>
-	 * @param id
-	 */
-	public void showIti(int id){
-		content.removeAll();
-		try {
-			Statement st = DatabaseManager.getCurrentStip();
-			final ResultSet rs = st.executeQuery("select * from itis where id ='"+id+"'");
-			String name = rs.getString(2)+"->"+rs.getString(3);
-			titleAreaPanel.setTitle("Iti : "+name);	
-			
-			JXTaskPane infos = new JXTaskPane();
-			infos.setTitle("Informations générales");
-			
-			infos.add(new JLabel("<html><b>Entrée</b> : "+rs.getString(2)+"</html>"));
-			infos.add(new JLabel("<html><b>Sortie</b> : "+rs.getString(3)+"</html>"));
-			infos.add(new JLabel("<html><b>Plancher</b> : "+rs.getString(4)+"</html>"));
-			infos.add(new JLabel("<html><b>Plafond</b> : "+rs.getString(5)+"</html>"));
-			content.add(infos);
-			content.validate(); //corrige un bug d'affichage
-			rs.close();
-			st.close();
-		} catch (SQLException e){
-			e.printStackTrace();
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Affiche les infos de la connexion
-	 * @param id
-	 */
-	public void showConnexion(int id){
-		content.removeAll();
-		try {
-			Statement st = DatabaseManager.getCurrentStip();
-			final ResultSet rs = st.executeQuery("select * from connexions where id ='"+id+"'");
-			String name = rs.getString(2);
-			titleAreaPanel.setTitle("Connexion : "+name);	
-			
-			JXTaskPane infos = new JXTaskPane();
-			infos.setTitle("Informations générales");
-			
-			infos.add(new JLabel("<html><b>Type</b> : "+rs.getString(4)+"</html>"));
-			infos.add(new JLabel("<html><b>Plafond</b> : "+rs.getString(7)+"</html>"));
-			infos.add(new JLabel("<html><b>Plancher</b> : "+rs.getString(6)+"</html>"));
-			infos.add(new JLabel("<html><b>Balise de connexion</b> : "+rs.getString(3)+"</html>"));
-			if(rs.getString(9).compareTo("0") != 0){
-				infos.add(new JLabel("<html><b>Vitesse</b> : "+rs.getString(8)+rs.getString(9)+"</html>"));
-			}
-			content.add(infos);
-			rs.close();
-			st.close();
-		} catch (SQLException e){
-			e.printStackTrace();
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		content.validate();
-	}
 	
-	/**
-	 * Affiche les infos du trajet <code>id</code>
-	 * @param id
-	 */
-	public void showTrajet(int id){
-		content.removeAll();
-		try {
-			Statement st = DatabaseManager.getCurrentStip();
-			ResultSet rs = st.executeQuery("select * from trajets where id='"+id+"'");
-			int ecl_id = rs.getInt(3);
-			int rac_id = rs.getInt(5);
-			rs = st.executeQuery("select * from trajets where eclatement_id='"+ecl_id+"' and raccordement_id = '"+rac_id+"'");
-			String name = rs.getString(2)+"->"+rs.getString(4);
-			titleAreaPanel.setTitle("Trajet : "+name);	
-						
-			int count = 1;
-			while(rs.next()){
-				JXTaskPane trajet = new JXTaskPane();
-				trajet.setTitle("Trajet "+count);
-				
-				trajet.add(new JLabel("<html><b>Type</b> : "+rs.getString(6)));
-				trajet.add(new JLabel("<html><b>Plafond</b> : "+rs.getString(7)));
-				trajet.add(new JLabel("<html><b>Condition 1</b> : "+rs.getString(8)+" "+rs.getString(9)));
-				
-				if(rs.getString(10) != null){
-					trajet.add(new JLabel("<html><b>Condition 2</b> : "+rs.getString(10)+" "+rs.getString(11)));
-				}
-				if(rs.getString(12) != null){
-					trajet.add(new JLabel("<html><b>Condition 3</b> : "+rs.getString(12)+" "+rs.getString(13)));
-				}
-				if(rs.getString(14) != null){
-					trajet.add(new JLabel("<html><b>Condition 4</b> : "+rs.getString(14)+" "+rs.getString(15)));
-				}
-				content.add(trajet);
-				count++;
-			}
-			content.validate();
-		} catch (SQLException e){
-			e.printStackTrace();
-		}
-	}
 	
 }
