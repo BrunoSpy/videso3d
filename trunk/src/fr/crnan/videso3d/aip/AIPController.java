@@ -95,6 +95,9 @@ public class AIPController implements VidesoController {
 	
 	private Annotation lastSegmentAnnotation;
 	
+	private Balise2D lastHighlighted;
+	private Annotation lastNavFixAnnotation;
+	
 	public AIPController(VidesoGLCanvas wwd) {
 		this.wwd = wwd;
 		this.buildAIP();
@@ -512,13 +515,12 @@ public class AIPController implements VidesoController {
 					e.printStackTrace();
 				}
 			}
+			if(route.areNavFixsVisible()){
+				displayRouteNavFixs(routeID, false);
+			}
 		}
 	}
 
-
-	public void displayRouteNavFixs(int pkRoute, boolean display){
-		
-	}
 	
 	public void displayRouteNavFixs(String pkRoute, boolean display){
 		LinkedList<String> navFixExtremites = new LinkedList<String>();
@@ -542,10 +544,12 @@ public class AIPController implements VidesoController {
 			for(String navFix : navFixExtremites){
 				showObject(AIP.DMEATT, navFix);
 			}
+			routesSegments.getSegmentsOfRoute(Integer.parseInt(pkRoute)).setNavFixsVisible(true);
 		}else{
 			for(String navFix : navFixExtremites){
 				hideObject(AIP.DMEATT, navFix);
 			}	
+			routesSegments.getSegmentsOfRoute(Integer.parseInt(pkRoute)).setNavFixsVisible(false);
 		}
 	}
 	
@@ -557,9 +561,9 @@ public class AIPController implements VidesoController {
 		double freq = 0;
 		PreparedStatement ps;
 		try {
-			ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select lat, lon, type, frequence from NavFix where nom = ?");
-
+			ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select lat, lon, type, frequence from NavFix where nom = ? and type = ?");
 			ps.setString(1, name);
+			ps.setString(2, AIP.getTypeString(type));
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				latitude = rs.getDouble(1);
@@ -727,6 +731,15 @@ public class AIPController implements VidesoController {
 			showNavFix(type, name);
 		}
 		Balise2D navFix = navFixLayer.getBalise(name);
+		navFix.highlight(true);
+		if(lastHighlighted!=null){
+			lastHighlighted.highlight(false);
+		}
+		if(lastNavFixAnnotation!=null){
+			lastNavFixAnnotation.getAttributes().setVisible(false);
+		}
+		lastHighlighted = navFix;
+		lastNavFixAnnotation = navFix.getAnnotation(null);
 		centerView(navFix);
 	}
 	

@@ -37,6 +37,7 @@ import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.aip.AIP.Altitude;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
+import fr.crnan.videso3d.ihm.ContextPanel;
 /**
  * 
  * @author Bruno Spyckerelle	
@@ -165,7 +166,7 @@ public class AIPContext extends Context {
 			}
 		});
 		
-		JXTaskPane infosSegment = new JXTaskPane();
+		final JXTaskPane infosSegment = new JXTaskPane();
 		infosSegment.setTitle("Informations sur le segment");
 		String CR = aip.getChildText(monSegmentXML, "CompteRendu");
 		String circul = aip.getChildText(monSegmentXML, "Circulation");
@@ -211,7 +212,7 @@ public class AIPContext extends Context {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					getController().displayAnnotationAndGoTo(segmentPrecedent);
-					showRouteInfos(segmentPrecedent);
+					((ContextPanel)infosSegment.getParent().getParent()).showInfo(Type.AIP, AIP.AWY, segmentPrecedent.getName());
 				}
 			};
 			infosSegment.add(previous);
@@ -221,7 +222,7 @@ public class AIPContext extends Context {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					getController().displayAnnotationAndGoTo(segmentSuivant);
-					showRouteInfos(segmentSuivant);
+					((ContextPanel)infosSegment.getParent().getParent()).showInfo(Type.AIP, AIP.AWY, segmentSuivant.getName());
 				}
 			};
 			infosSegment.add(next);
@@ -240,8 +241,9 @@ public class AIPContext extends Context {
 
 		float latitude = 0, longitude = 0;
 		try {
-			PreparedStatement ps = DatabaseManager.prepareStatement(Type.AIP, "select lat, lon from NavFix where nom=?");
+			PreparedStatement ps = DatabaseManager.prepareStatement(Type.AIP, "select lat, lon from NavFix where nom=? and type = ?");
 			ps.setString(1, name);
+			ps.setString(2, AIP.getTypeString(type));
 			ResultSet rs = ps.executeQuery();
 			latitude = rs.getFloat(1);
 			longitude = rs.getFloat(2);
