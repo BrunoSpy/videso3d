@@ -860,6 +860,25 @@ public final class DatabaseManager {
 				"lon double,"+
 				"frequence double"+
 		")");
+		st.executeUpdate("create table aerodromes (pk integer primary key,"+
+				"code varchar(6),"+
+				"nom varchar(30),"+
+				"type int,"+			// type=0 : ras; type=1 : altisurface; type=2 : privé. 
+				"latRef double,"+
+				"lonRef double"+
+				")");
+		st.executeUpdate("create table runways (pk integer primary key,"+
+				"pk_ad integer,"+
+				"nom varchar(7),"+
+				"orientation integer,"+
+				"longueur integer,"+
+				"largeur integer,"+
+				"lat1 double,"+
+				"lon1 double,"+
+				"lat2 double,"+
+				"lon2 double,"+
+				"FOREIGN KEY (pk_ad) references aerodromes(pk)"+
+				")");
 		st.close();
 		
 		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");

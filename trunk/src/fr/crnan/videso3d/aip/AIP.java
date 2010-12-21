@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.jdom.Document;
 import org.jdom.Element;
@@ -49,7 +50,7 @@ import fr.crnan.videso3d.graphics.Route;
  */
 public class AIP extends FileParser{
 
-	private final Integer numberFiles = 19;
+	private final Integer numberFiles = 20;
 
 	/**
 	 * Le nom de la base de données.
@@ -95,7 +96,9 @@ public class AIP extends FileParser{
 	D = 6, FIR = 7, UIR = 8, LTA = 9, UTA = 10, CTA = 11, 
 	CTL = 12, Pje = 13, Aer = 14, Vol=15, Bal = 16, TrPla = 17,
 	AWY = 20, PDR = 21, TAC = 23,
-	DMEATT = 30, L = 31, NDB = 32, PNP = 33, TACAN = 34, VFR = 35, VOR = 36, VORDME = 37, VORTAC = 38, WPT = 39;
+	DMEATT = 30, L = 31, NDB = 32, PNP = 33, TACAN = 34, VFR = 35, VOR = 36, VORDME = 37, VORTAC = 38, WPT = 39,
+	AERODROME = 40, ALTI = 41, PRIVE = 42;
+	
 
 
 
@@ -204,6 +207,7 @@ public class AIP extends FileParser{
 
 	@Override
 	protected void getFromFiles() throws SQLException {
+		int progress = 0;
 		Element racineVolumes = document.getRootElement().getChild("Situation").getChild("VolumeS");
 		this.TSAs = new LinkedList<Couple<Integer,String>>();
 		this.SIVs = new LinkedList<Couple<Integer,String>>();
@@ -222,67 +226,162 @@ public class AIP extends FileParser{
 		this.Vols = new LinkedList<Couple<Integer,String>>();
 		this.Bals = new LinkedList<Couple<Integer,String>>();
 		this.TrPlas = new LinkedList<Couple<Integer,String>>();
+		this.setFile("Aerodromes");
+		this.setProgress(progress);
+		this.getAerodromes();
 		this.setFile("TSA");
-		this.setProgress(0);
+		this.setProgress(progress++);
 		this.getTSAs(racineVolumes);
 		this.setFile("SIV");
-		this.setProgress(1);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"SIV");
 		this.setFile("CTR");
-		this.setProgress(2);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"CTR");
 		this.setFile("TMA");
-		this.setProgress(3);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"TMA");
 		this.setFile("R");
-		this.setProgress(4);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"R");
 		this.setFile("D");
-		this.setProgress(5);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"D");
 		this.setFile("FIR");
-		this.setProgress(6);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"FIR");
 		this.setFile("UIR");
-		this.setProgress(7);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"UIR");
 		this.setFile("LTA");
-		this.setProgress(8);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"LTA");
 		this.setFile("UTA");
-		this.setProgress(9);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"UTA");
 		this.setFile("CTA");
-		this.setProgress(10);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"CTA");
 		this.setFile("CTL");
-		this.setProgress(11);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"CTL");
 		this.setFile("Parachutages");
-		this.setProgress(12);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"Pje");
 		this.setFile("Aer");
-		this.setProgress(13);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"Aer");
 		this.setFile("Voltige");
-		this.setProgress(14);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"Vol");
 		this.setFile("Ballons");
-		this.setProgress(15);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"Bal");
 		this.setFile("Treuils planeurs");
-		this.setProgress(16);
+		this.setProgress(progress++);
 		this.getZones(racineVolumes,"TrPla");
 		this.setFile("Routes");
-		this.setProgress(17);
+		this.setProgress(progress++);
 		this.getRoutes();
 		this.setFile("Navigation Fix");
-		this.setProgress(18);
+		this.setProgress(progress++);
 		this.getBalises();
-		this.setProgress(19);
+		this.setProgress(progress++);
 
 	}
 
+	
+	@SuppressWarnings("unchecked")
+	private void getAerodromes() throws SQLException{
+		try{
+		Element racineAds = getDocumentRoot().getChild("AdS");
+		List<Element> ads = racineAds.getChildren();
+		for(Element ad : ads){
+			if(!ad.getChildText("AdStatut").equals("OFF"))
+				insertAerodrome(ad);
+		}
+		Element racineRwys = getDocumentRoot().getChild("RwyS");
+		List<Element> rwys = racineRwys.getChildren();
+		for(Element rwy : rwys){
+			insertRunway(rwy);
+		}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	private void insertAerodrome(Element ad) throws SQLException{
+		int pk = Integer.parseInt(ad.getAttributeValue("pk"));
+		String code = ad.getAttributeValue("lk").replaceAll("\\p{Punct}", "").toUpperCase(Locale.ENGLISH);
+		String nom = ad.getChildText("AdNomComplet");
+		int type = code.matches("[A-Z]{4}")? 0 : (code.matches("LF[0-9]{2}")? 2 : 1);
+		double latRef = Double.parseDouble(ad.getChildText("ArpLat"));
+		double lonRef = Double.parseDouble(ad.getChildText("ArpLong"));
+		PreparedStatement ps  = this.conn.prepareStatement("insert into aerodromes (pk, code, nom, type, latRef, lonRef) VALUES (?, ?, ?, ?, ?, ?)");
+		ps.setInt(1, pk);
+		ps.setString(2, code);
+		ps.setString(3, nom);
+		ps.setInt(4, type);
+		ps.setDouble(5, latRef);
+		ps.setDouble(6, lonRef);
+		ps.executeUpdate();
+	}
+	
+	private void insertRunway(Element rwy) throws SQLException{
+		int pk = Integer.parseInt(rwy.getAttributeValue("pk"));
+		int pkAerodrome = Integer.parseInt(rwy.getChild("Ad").getAttributeValue("pk"));
+		String rwyName = rwy.getChildText("Rwy");
+		int orientation = getRunwayOrientation(rwyName);
+		String largeurString = rwy.getChildText("Largeur");
+		int largeur=-1;
+		if(largeurString!=null)
+			largeur = Integer.parseInt(largeurString);
+		String longueurString = rwy.getChildText("Longueur");
+		int longueur=-1;
+		if(longueurString!=null)
+			longueur = Integer.parseInt(longueurString);
+		
+		PreparedStatement ps  = this.conn.prepareStatement("insert into runways (pk, pk_ad, nom, orientation, longueur, largeur) VALUES (?, ?, ?, ?, ?, ?)");
+		ps.setInt(1, pk);
+		ps.setInt(2, pkAerodrome);
+		ps.setString(3, rwyName);
+		ps.setInt(4, orientation);
+		ps.setInt(5, longueur);
+		ps.setInt(6, largeur);
+		ps.executeUpdate();
+		
+		String latThr1 = rwy.getChildText("LatThr1");
+		String lonThr1 = rwy.getChildText("LongThr1");
+		String latThr2 = rwy.getChildText("LatThr2");
+		String lonThr2 = rwy.getChildText("LongThr2");
+		
+		if(latThr1 != null && latThr2 != null){
+			PreparedStatement ps2  = this.conn.prepareStatement("update runways set lat1=?, lon1=?,lat2=?,lon2=? where pk=?");
+			ps2.setDouble(1, Double.parseDouble(latThr1));
+			ps2.setDouble(2, Double.parseDouble(lonThr1));
+			ps2.setDouble(3, Double.parseDouble(latThr2));
+			ps2.setDouble(4, Double.parseDouble(lonThr2));
+			ps2.setInt(5, pk);			
+			ps2.executeUpdate();
+		}
+		
+		
+	}
+	
+	private int getRunwayOrientation(String rwyName){
+		String firstQFU = rwyName.split("/")[0];
+		if(firstQFU.equals("NW")){
+			return 45;
+		}
+		if(firstQFU.endsWith("R") || firstQFU.endsWith("L") || firstQFU.endsWith("C")){
+			firstQFU = firstQFU.substring(0, firstQFU.length()-1);
+		}
+		if(firstQFU.equals("XX")){
+			return -1;
+		}
+		return Integer.parseInt(firstQFU);
+	}
+	
 
 	@SuppressWarnings("unchecked")
 	private void getBalises() throws SQLException{
@@ -652,6 +751,12 @@ public class AIP extends FileParser{
 			return "VORTAC";
 		case WPT :
 			return "WPT";
+		case AERODROME : 
+			return "Aerodromes";
+		case ALTI :
+			return "Altisurfaces";
+		case PRIVE :
+			return "Terrains privés";
 		default:
 			return "";
 		}
@@ -747,6 +852,15 @@ public class AIP extends FileParser{
 		}
 		if(type.equals("WPT")){
 			return WPT;
+		}
+		if(type.equals("Aérodromes")){
+			return AERODROME;
+		}
+		if(type.equals("Altisurfaces")){
+			return ALTI;
+		}
+		if(type.equals("Terrains privés")){
+			return PRIVE;
 		}
 		return -1;
 	}

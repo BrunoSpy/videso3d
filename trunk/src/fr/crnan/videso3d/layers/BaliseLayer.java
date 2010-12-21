@@ -105,7 +105,7 @@ public class BaliseLayer extends LayerSet {
 	/**
 	 * Affiche une balise.<br />
 	 * Cett balise doit d'abord être ajoutée grâce à <code>addBalise(Balise2D balise)</code>
-	 * @param b Balise à affichers
+	 * @param b Balise à afficher
 	 */
 	public void showBalise(Balise2D b){
 		if(!balisesActives.contains(b)){

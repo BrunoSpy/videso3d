@@ -61,6 +61,8 @@ public class AIPContext extends Context {
 			return showRouteInfos(getController().getRoutes2DLayer().getRoute(name));
 		}else if(type>=30 && type<40){
 			return showNavFixInfos(type, name);
+		}else if(type>=40){
+			return showAirportInfos(type, name);
 		}
 		return null;
 	}
@@ -236,7 +238,7 @@ public class AIPContext extends Context {
 
 	private List<JXTaskPane> showNavFixInfos(int type, String name){
 		LinkedList<JXTaskPane> taskPanesList = new LinkedList<JXTaskPane>();
-		JXTaskPane infosNavFix = new JXTaskPane();
+		JXTaskPane infosNavFix = new JXTaskPane(name);
 		AIP aip = getController().getAIP();
 
 		float latitude = 0, longitude = 0;
@@ -282,6 +284,7 @@ public class AIPContext extends Context {
 				String couverture = navFixXML.getChildText("Couverture");
 				if(nomPhraseo != null){
 					infosNavFix.add(new JLabel("<html><b>Nom phraseo</b> : " + nomPhraseo+"</html>"));
+					infosNavFix.setTitle(nomPhraseo);
 				}
 				if(freq != null){
 					infosNavFix.add(new JLabel("<html><b>Fréquence</b> : " + freq+"</html>"));
@@ -326,5 +329,142 @@ public class AIPContext extends Context {
 	}
 
 	
+	@SuppressWarnings("unchecked")
+	private List<JXTaskPane> showAirportInfos(int type, String name){
+		LinkedList<JXTaskPane> taskPanesList = new LinkedList<JXTaskPane>();
+		JXTaskPane infosGen = new JXTaskPane("Infos générales");
+		JXTaskPane infosHor = new JXTaskPane("Horaires");
+		JXTaskPane infosSvc = new JXTaskPane("Services");
+		JXTaskPane infosMet = new JXTaskPane("Météo");
+		JXTaskPane divers = new JXTaskPane("Divers");
+		AIP aip = getController().getAIP();
+
+		int pkAd = -1;
+		List<Integer> pkPistes = new LinkedList<Integer>();
+		try {
+			PreparedStatement ps=null;
+			if(type == AIP.AERODROME){
+				ps = DatabaseManager.prepareStatement(Type.AIP, "select pk from aerodromes where upper(code)=?");
+				ps.setString(1, name.split("--")[0].trim());
+				ResultSet rs = ps.executeQuery();
+				pkAd = rs.getInt(1);
+			}else{
+				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from aerodromes where nom = ?");
+				ps.setString(1, name);
+				ResultSet rs = ps.executeQuery();
+				pkAd = rs.getInt(1);
+			}
+			ps = DatabaseManager.prepareStatement(Type.AIP, "select pk from runways where pk_ad = ?");
+			ps.setInt(1, pkAd);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()){
+				pkPistes.add(rs.getInt(1));
+			}
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}	
+		Element airportXML = aip.findElement(aip.getDocumentRoot().getChild("AdS"), ""+pkAd);
+		if(airportXML!=null){
+			for(Element e : (List<Element>)airportXML.getChildren()){
+				String nom = espacer(e.getName());
+				String texte = e.getText().replaceAll("#", "<br/>");
+				if(  nom.startsWith("Ad") 	&& ! ( nom.equals("AdCode") || nom.equals("AdAd2") || nom.equals("AdGeoUnd") )   ){
+					infosGen.add(new JLabel("<html><b>"+nom.substring(3)+"</b> : "+texte+"</html>"));
+				}else if( nom.startsWith("Arp")){
+					infosGen.add(new JLabel("<html><b>"+nom.substring(4)+"</b> : "+texte+"</html>"));
+				}else if(nom.startsWith("Tfc")){
+					infosGen.add(new JLabel("<html><b>"+nom+"</b> : "+texte+"</html>"));					
+				}else if(nom.equals("Ctr")){
+					//TODO
+				}else if(nom.startsWith("Hor")){
+					infosHor.add(new JLabel("<html><b>"+nom.substring(4).replaceAll("Txt", "")+"</b> : "+texte+"</html>"));
+				}else if(nom.startsWith("Svc")){ 
+					infosSvc.add(new JLabel("<html><b>"+nom.substring(4)+"</b> : "+texte+"</html>"));
+				}else if( nom.startsWith("Sslia") || nom.startsWith("Neige")){
+					infosSvc.add(new JLabel("<html><b>"+nom+"</b> : "+texte+"</html>"));
+				}else if(nom.startsWith("Met")){
+					infosMet.add(new JLabel("<html><b>"+nom.substring(4)+"</b> : "+texte+"</html>"));
+				}else if(!(nom.startsWith("Ad") || nom.equals("Wgs84") || nom.equals("Geometrie") || nom.equals("Territoire"))){
+					divers.add(new JLabel("<html><b>"+nom+"</b> : "+texte+"</html>"));
+				}
+			}
+		}
+		taskPanesList.add(infosGen);
+		taskPanesList.add(infosHor);
+		taskPanesList.add(infosSvc);
+		taskPanesList.add(infosMet);
+		taskPanesList.add(divers);
+
+		for(JXTaskPane infos : taskPanesList){
+			if(infos.getContentPane().getComponentCount()==0){
+				JLabel noInfo = new JLabel("<html><i>Aucune info.</i></html>");
+				infos.add(noInfo);
+			}else{
+				infos.setCollapsed(true);
+			}
+		}
+		infosGen.setCollapsed(false);
+		if(pkPistes.size()>0){
+			for (int pkPiste : pkPistes){
+				Element pisteXML = aip.findElement(aip.getDocumentRoot().getChild("RwyS"), ""+pkPiste);
+				String orientation = pisteXML.getChildText("Rwy");
+				JXTaskPane piste = new JXTaskPane("Piste "+orientation);
+				piste.add(new JLabel("<html><b><i>Généralités</i></b><html>"));
+				piste.add(new JLabel("\n"));
+				piste.add(new JLabel("<html><b>Orientation :</b> "+orientation));
+
+				List<JLabel> gen = new LinkedList<JLabel>();
+				List<JLabel> dist = new LinkedList<JLabel>();
+				List<JLabel> thr = new LinkedList<JLabel>();
+
+				for(Element e : (List<Element>)pisteXML.getChildren()){
+					String nom = espacer(e.getName());
+					String texte = e.getText().replaceAll("#", "<br/>");
+					if(nom.contains("Thr")){
+						thr.add(new JLabel("<html><b>"+nom+"</b> : "+texte));
+					}else if(nom.contains("Cwy") || nom.contains("Swy") || nom.contains("Lda") || nom.contains("Dist")){
+						dist.add(new JLabel("<html><b>"+nom+"</b> : "+texte));
+					}else if(!(nom.equals("Ad") || nom.equals("Rwy") || nom.equals("Geometrie") || nom.equals("Extension"))){
+						gen.add(new JLabel("<html><b>"+nom+"</b> : "+texte));
+					}
+				}
+				for(JLabel jl : gen){
+					piste.add(jl);
+				}
+				piste.add(new JLabel("\n"));
+				piste.add(new JLabel("<html><b><i>Distances</i></b><html>"));
+				piste.add(new JLabel("\n"));
+				for(JLabel jl : dist){
+					piste.add(jl);
+				}
+				piste.add(new JLabel("\n"));
+				piste.add(new JLabel("<html><b><i>Coordonnées</i></b><html>"));
+				piste.add(new JLabel("\n"));
+				for(JLabel jl : thr){
+					piste.add(jl);
+				}
+				piste.setCollapsed(true);
+				taskPanesList.add(piste);
+			}
+		}
+		return taskPanesList;
+	}
+	
+	/**
+	 * @param txt une chaîne de caractères de longueur non nulle.
+	 * @return Le même texte avec un espace avant chaque majuscule.
+	 */
+	private String espacer(String txt){
+		String resultat = "";
+		int debutMot = 0;
+		for(int i=1; i<txt.length();i++){
+			if(txt.charAt(i)>='A' && txt.charAt(i)<='Z' ){
+					resultat = resultat.concat(txt.substring(debutMot, i)+" ");
+					debutMot=i;				
+			}
+		}
+		resultat = resultat.concat(txt.substring(debutMot));
+		return resultat;
+	}
 
 }
