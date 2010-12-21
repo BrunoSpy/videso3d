@@ -42,6 +42,10 @@ public class Geometrie{
 		String geometrie = elt.getChild("Geometrie").getValue();
 		locations = parseLocations(geometrie);
 	}
+	
+	public Geometrie(String geometrie){
+		locations = parseLocations(geometrie);
+	}
 
 	/**
 	 * Transforme la description textuelle du contour de la zone en liste de LatLon.   
@@ -107,7 +111,6 @@ public class Geometrie{
 	 * @param l2
 	 * @return Renvoie la distance entre l1 et l2.
 	 * 
-	 * @since Visualisation_de_flotte 1.0
 	 */
     public static double getDistance(LatLon l1, LatLon l2){
         return LatLon.greatCircleDistance(l1, l2).radians*Earth.WGS84_EQUATORIAL_RADIUS;

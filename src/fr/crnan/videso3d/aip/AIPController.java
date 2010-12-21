@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,10 +44,13 @@ import fr.crnan.videso3d.aip.RoutesSegments.Segment;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route.Sens;
+import fr.crnan.videso3d.graphics.MarqueurAerodrome;
+import fr.crnan.videso3d.graphics.PisteAerodrome;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VidesoObject;
+import fr.crnan.videso3d.layers.AirportLayer;
 import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
@@ -56,13 +60,9 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
-import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.Annotation;
-import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
-import gov.nasa.worldwind.render.ShapeAttributes;
-import gov.nasa.worldwind.render.SurfacePolygon;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.util.Logging;
 
@@ -88,9 +88,11 @@ public class AIPController implements VidesoController {
 	
 	private BaliseLayer navFixLayer;
 
-	private RenderableLayer adLayer;
+	private AirportLayer arptLayer;
 	
 	private HashMap<String, Secteur3D> zones;
+	
+	private HashSet<String> balises;
 	
 	private HashMap<String, GlobeAnnotation> routesAnnotations;
 	
@@ -121,7 +123,8 @@ public class AIPController implements VidesoController {
 		try {
 			if(DatabaseManager.getCurrentAIP() != null) {
 				//création des nouveaux objets
-				zones = new HashMap<String, Secteur3D>();				
+				zones = new HashMap<String, Secteur3D>();	
+				balises = new HashSet<String>();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -149,13 +152,12 @@ public class AIPController implements VidesoController {
 			navFixLayer = new BaliseLayer("NavFix AIP");	
 			this.toggleLayer(navFixLayer, true);
 		}
-		if(adLayer != null){
-			adLayer.removeAllRenderables();
-			this.toggleLayer(adLayer, true);
+		if(arptLayer != null){
+			arptLayer.removeAllAirports();
+			this.toggleLayer(arptLayer, true);
 		}else{
-			adLayer = new RenderableLayer();
-			adLayer.setName("Aérodromes AIP");
-			this.toggleLayer(adLayer, true);
+			arptLayer = new AirportLayer("Aérodromes AIP");
+			this.toggleLayer(arptLayer, true);
 		}
 		this.wwd.redraw();
 	}
@@ -178,7 +180,7 @@ public class AIPController implements VidesoController {
 		this.wwd.removeLayer(routes3D);
 		this.wwd.removeLayer(navFixLayer);
 		this.wwd.removeLayer(zonesLayer);
-		this.wwd.removeLayer(adLayer);
+		this.wwd.removeLayer(arptLayer);
 	}
 	
 	
@@ -224,7 +226,7 @@ public class AIPController implements VidesoController {
 		}else if(type>=AIP.AERODROME){
 			this.showAerodrome(type, name);
 		}else{
-			if(!zones.containsKey(name))
+			if(!zones.containsKey(type+" "+name))				
 				this.addZone(type,name);
 		}
 	}
@@ -356,7 +358,7 @@ public class AIPController implements VidesoController {
 
 	private void removeZone(int type, String name) {
 		this.removeFromZonesLayer(zones.get(type+" "+name));
-		zones.remove(name);
+		zones.remove(type+" "+name);
 	}
 
 
@@ -572,50 +574,55 @@ public class AIPController implements VidesoController {
 	
 	
 	private void showNavFix(int type, String name){
-		double latitude = 0;
-		double longitude = 0;
-		String typeString = "";
-		double freq = 0;
-		PreparedStatement ps;
-		try {
-			ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select lat, lon, type, frequence from NavFix where nom = ? and type = ?");
-			ps.setString(1, name);
-			ps.setString(2, AIP.getTypeString(type));
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()){
-				latitude = rs.getDouble(1);
-				longitude = rs.getDouble(2);
-				typeString = rs.getString(3);
-				freq = rs.getDouble(4);
+		if(!balises.contains(type+" "+name)){
+			double latitude = 0;
+			double longitude = 0;
+			String typeString = "";
+			double freq = 0;
+			PreparedStatement ps;
+			try {
+				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select lat, lon, type, frequence from NavFix where nom = ? and type = ?");
+				ps.setString(1, name);
+				ps.setString(2, AIP.getTypeString(type));
+				ResultSet rs = ps.executeQuery();
+				while(rs.next()){
+					latitude = rs.getDouble(1);
+					longitude = rs.getDouble(2);
+					typeString = rs.getString(3);
+					freq = rs.getDouble(4);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+			Balise2D navFix = new Balise2D(name, Position.fromDegrees(latitude, longitude), Type.AIP, type);
+			String annotation = "<html><b>"+name+"</b><br/><i>Type : </i>"+typeString;
+			if(freq != 0){
+				annotation += "<br/><i>Fréq. : </i>"+freq;
+			}
+			annotation += "</html>";
+			navFix.setAnnotation(annotation);
+			navFixLayer.addBalise(navFix);
+			navFixLayer.showBalise(navFix);
+			balises.add(type+" "+name);
 		}
-		//TODO Mieux gérer le type de balise
-		Balise2D navFix = new Balise2D(name, Position.fromDegrees(latitude, longitude), Type.AIP, type);
-		String annotation = "<html><b>"+name+"</b><br/><i>Type : </i>"+typeString;
-		if(freq != 0){
-			annotation += "<br/><i>Fréq. : </i>"+freq;
-		}
-		annotation += "</html>";
-		navFix.setAnnotation(annotation);
-		navFixLayer.addBalise(navFix);
-		navFixLayer.showBalise(navFix);
 	}
 	
 	private void removeNavFix(int type, String name){
-		Balise2D navFix = navFixLayer.getBalise(name);
-		navFixLayer.hideBalise(navFix);
-		this.wwd.getAnnotationLayer().removeAnnotation(navFix.getAnnotation(null));
-		
+		if(balises.contains(type+" "+name)){
+			Balise2D navFix = navFixLayer.getBalise(name);
+			navFixLayer.hideBalise(navFix);
+			this.wwd.getAnnotationLayer().removeAnnotation(navFix.getAnnotation(null));
+			balises.remove(type+" "+name);
+		}
 	}
 	
 	
-	
+
 	private void showAerodrome(int type, String nom){
 		int pk = -1;
-		String code, nomComplet;
-		
+		String code="";
+		double latRef =0, lonRef=0;
+
 		ResultSet rs;
 		PreparedStatement ps;
 		try{
@@ -630,47 +637,40 @@ public class AIPController implements VidesoController {
 				ps.setString(1, nom);
 				rs = ps.executeQuery();
 			}
-		if(rs.next()){
-			pk = rs.getInt("pk");
-			code = rs.getString("code");
-			nomComplet = rs.getString("nom");
-		}
-		
-		ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select * from runways where pk_ad=?");
-		ps.setInt(1, pk);
-		ResultSet rs2 = ps.executeQuery();
-		while(rs2.next()){
-			SurfacePolygon piste = new SurfacePolygon();
-			List<LatLon> locations = new LinkedList<LatLon>();
-			if(rs2.getDouble("lat4")!=0){
-				locations.add(LatLon.fromDegrees(rs2.getDouble("lat1"), rs2.getDouble("lon1")));
-				locations.add(LatLon.fromDegrees(rs2.getDouble("lat2"), rs2.getDouble("lon2")));
-				locations.add(LatLon.fromDegrees(rs2.getDouble("lat3"), rs2.getDouble("lon3")));
-				locations.add(LatLon.fromDegrees(rs2.getDouble("lat4"), rs2.getDouble("lon4")));
-			}else if(rs2.getDouble("lat3")!=0){
-				locations.add(LatLon.fromDegrees(rs2.getDouble("lat1"), rs2.getDouble("lon1")));
-				locations.add(LatLon.fromDegrees(rs2.getDouble("lat3"), rs2.getDouble("lon3")));
-				computeRwyLocations(locations, rs2.getInt("orientation"), rs2.getInt("longueur"), rs2.getInt("largeur"));
-			}else if(rs2.getDouble("lat2")!=0){
-				locations.add(LatLon.fromDegrees(rs2.getDouble("lat1"), rs2.getDouble("lon1")));
-				locations.add(LatLon.fromDegrees(rs2.getDouble("lat2"), rs2.getDouble("lon2")));
-				computeRwyLocations(locations, rs2.getInt("orientation"), rs2.getInt("longueur"), rs2.getInt("largeur"));
-			}else{
-				locations = computeRwyLocations(rs.getDouble("latRef"),rs.getDouble("lonRef"), rs2.getInt("orientation"), rs2.getInt("longueur"), rs2.getInt("largeur"));
+			if(rs.next()){
+				pk = rs.getInt("pk");
+				code = rs.getString("code");
+				latRef = rs.getDouble("latRef");
+				lonRef = rs.getDouble("lonRef");
 			}
-			piste.setLocations(locations);
-			ShapeAttributes attrs = new BasicShapeAttributes();
-			attrs.setInteriorMaterial(new Material(new Color(255,0,100)));
-			attrs.setInteriorOpacity(0.7);
-			attrs.setDrawInterior(true);
-			attrs.setDrawOutline(true);
-			attrs.setOutlineMaterial(new Material(Color.BLACK));
-			attrs.setOutlineWidth(1);
-			piste.setAttributes(attrs);
-			adLayer.addRenderable(piste);
-			piste.setVisible(true);
-		}
-		
+
+			ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select * from runways where pk_ad=?");
+			ps.setInt(1, pk);
+			ResultSet rs2 = ps.executeQuery();
+			boolean runwayExists = false;
+			while(rs2.next()){
+				runwayExists = true;
+				String nomPiste = rs2.getString("nom");
+				if(rs2.getInt("largeur")>0 && rs2.getDouble("lat1")!=0){
+					double lat1 = rs2.getDouble("lat1");
+					double lon1 = rs2.getDouble("lon1");
+					double lat2 = rs2.getDouble("lat2");
+					double lon2 = rs2.getDouble("lon2");
+					double largeur = rs2.getDouble("largeur");
+					String annotation = "<b>"+code+"</b><br/>Piste "+ nomPiste;
+					PisteAerodrome piste = new PisteAerodrome(type, nom, annotation, lat1, lon1, lat2, lon2, largeur, Position.fromDegrees(latRef, lonRef));
+					arptLayer.addAirport(piste, nomPiste);
+				}else{
+					String annotation = "<b>"+code+"</b><br/>Piste "+ nomPiste;
+					MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), annotation, DatabaseManager.Type.AIP);
+					arptLayer.addAirport(airportBalise, nomPiste);
+				}
+			}
+			if(!runwayExists){
+				String annotation = "<b>"+code+"</b><br/>Pistes inconnues";
+				MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), annotation, DatabaseManager.Type.AIP);
+				arptLayer.addAirport(airportBalise, "");
+			}
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
@@ -678,7 +678,40 @@ public class AIPController implements VidesoController {
 	
 	
 	private void removeAerodrome(int type, String nom){
-		
+		List<String> nomsPistes = new LinkedList<String>();
+		int pk=-1;
+		ResultSet rs;
+		PreparedStatement ps;
+		try{
+			if(type == AIP.AERODROME){
+
+				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from aerodromes where upper(code) = ?");
+				ps.setString(1, nom.split("--")[0].trim());
+				rs = ps.executeQuery();
+			}else{
+				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from aerodromes where nom = ?");
+				ps.setString(1, nom);
+				rs = ps.executeQuery();
+			}
+			if(rs.next()){
+				pk = rs.getInt(1);
+			}
+			ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nom from runways where pk_ad = ?");
+			ps.setInt(1, pk);
+			rs = ps.executeQuery();
+			while(rs.next()){
+				nomsPistes.add(rs.getString(1));
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		if(nomsPistes.size()>0){
+			for(String nomPiste : nomsPistes){
+				arptLayer.hideAirport(nom,nomPiste);
+			}
+		}else{
+			arptLayer.hideAirport(nom,"");
+		}
 	}
 	
 	
@@ -696,7 +729,7 @@ public class AIPController implements VidesoController {
 		this.routes2D.hideAllRoutes();
 		this.routes3D.hideAllRoutes();
 		this.navFixLayer.eraseAllBalises();
-		this.adLayer.removeAllRenderables();
+		this.arptLayer.removeAllAirports();
 	}
 
 	
@@ -717,9 +750,12 @@ public class AIPController implements VidesoController {
 			//Si le type est supérieur à 20 et inférieur à 30, c'est une route
 		}else if(type>=20 && type <30){
 			highlightRoute(type, name);
-			//Si le type est supérieur ou égal à 30, c'est une balise
+			//Si le type est supérieur ou égal à 30 et inférieur à 40, c'est une balise
 		}else if(type>=30 && type <40){
 			highlightNavFix(type, name);
+			//Si le type est supérieur ou égal à 40, c'est un aérodrome
+		}else if(type>=40){
+			highlightAirport(type,name);
 			//Sinon c'est un volume
 		}else{
 			if(!zones.containsKey(type+" "+name)){
@@ -815,7 +851,9 @@ public class AIPController implements VidesoController {
 	}
 	
 	
-	
+	private void highlightAirport(int type, String name){
+		//TODO 
+	}
 	
 	private void highlightNavFix(int type, String name){
 		if(!navFixLayer.contains(name)){
@@ -982,13 +1020,11 @@ public class AIPController implements VidesoController {
 	}
 	
 	
-	private List<LatLon> computeRwyLocations(double latRef, double lonRef, int orientation, int longueur, int largeur){
+/*	private List<LatLon> computeRwyLocations(double latRef, double lonRef, int orientation, int longueur, int largeur){
 		return null;
 	}
 	
-	private void computeRwyLocations(List<LatLon> locations, int orientation, int longueur, int largeur){
-		
-	}
+	*/
 	
 	public void displayAnnotationAndGoTo(Route segment){
 		Position annotationPosition = new Position(segment.getLocations().iterator().next(), 0);

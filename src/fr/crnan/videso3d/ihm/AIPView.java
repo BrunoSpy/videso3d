@@ -53,7 +53,7 @@ public class AIPView extends FilteredMultiTreeTableView {
 				DefaultMutableTreeNode ZonesRoot = new DefaultMutableTreeNode("root");
 				this.fillZonesRootNode(ZonesRoot);
 				FilteredTreeTableModel ZonesModel = new FilteredTreeTableModel(ZonesRoot);
-				this.addTableTree(ZonesModel, "Zones", null);
+				this.addTableTree(ZonesModel, "Espaces", null);
 				
 				DefaultMutableTreeNode NavFixRoot = new DefaultMutableTreeNode("root");
 				this.fillNavFixRootNode(NavFixRoot);
@@ -66,6 +66,10 @@ public class AIPView extends FilteredMultiTreeTableView {
 				FilteredTreeTableModel RoutesModel = new FilteredTreeTableModel(RoutesRoot);
 				this.addTableTree(RoutesModel, "", createTitleRoutes());
 				
+				DefaultMutableTreeNode AerodromesRoot = new DefaultMutableTreeNode("root");
+				this.fillAerodromesRootNode(AerodromesRoot);
+				FilteredTreeTableModel AerodromesModel = new FilteredTreeTableModel(AerodromesRoot);
+				this.addTableTree(AerodromesModel, "Terrains", null);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -166,7 +170,37 @@ public class AIPView extends FilteredMultiTreeTableView {
 			e.printStackTrace();
 		}
 	}
-	
+
+	private void fillAerodromesRootNode(DefaultMutableTreeNode root){
+		try{
+			Statement st = DatabaseManager.getCurrentAIP();
+			DefaultMutableTreeNode aerodromes = new DefaultMutableTreeNode(new Couple<String, Boolean>("Aérodromes",false));
+			DefaultMutableTreeNode alti = new DefaultMutableTreeNode(new Couple<String, Boolean>("Altisurfaces",false));
+			DefaultMutableTreeNode prive = new DefaultMutableTreeNode(new Couple<String, Boolean>("Terrains privés",false));
+
+			ResultSet rs0 = st.executeQuery("select code, nom from Aerodromes where type=0 order by code");
+			while(rs0.next()){
+				aerodromes.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs0.getString(1)+" -- "+rs0.getString(2), false)));
+			}
+			ResultSet rs1 = st.executeQuery("select nom from Aerodromes where type=1 order by nom");
+			while(rs1.next()){
+				alti.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs1.getString(1), false)));
+			}
+			ResultSet rs2 = st.executeQuery("select nom from Aerodromes where type=2 order by nom");
+			while(rs2.next()){
+				prive.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs2.getString(1), false)));
+			}
+			
+			rs0.close();rs1.close();rs2.close();
+			st.close();
+			root.add(aerodromes);
+			root.add(alti);
+			root.add(prive);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+	}
+
 
 	/**
 	 * Titre du panel Routes.<br />
