@@ -76,6 +76,7 @@ public class RadioCovView extends JPanel implements DataView {
 	}	
 													
 	public void initGUI() {
+		int height = 0;
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));					
 		box.add(Box.createVerticalStrut(10));
 		box.setPreferredSize(new Dimension(150,150));		
@@ -91,7 +92,7 @@ public class RadioCovView extends JPanel implements DataView {
 	public boolean initRadioCovAirspaces() {
 		for (Layer layer : getController().getLayers()) {				
 			if (layer instanceof AirspaceLayer && layer.getName()=="Radio Coverage") {						
-				radioCovAirspaces = (AirspaceLayer)layer;
+				radioCovAirspaces = (AirspaceLayer)layer;								
 				return true;
 			}								
 		}
@@ -104,6 +105,7 @@ public class RadioCovView extends JPanel implements DataView {
 	 */
 	public void feedPanel() {		
 		//JScrollPane scrollPane = new JScrollPane(jPanel1);		
+		int height = 0;
 		for (Airspace airspace : radioCovAirspaces.getAirspaces()) {
 			if ((airspace  instanceof RadioCovPolygon)) {
 				JCheckBox check = new JCheckBox(((RadioCovPolygon) airspace).getName());
@@ -112,7 +114,9 @@ public class RadioCovView extends JPanel implements DataView {
 				checkboxes.add(check);
 				box.add(Box.createVerticalStrut(5));
 				check.addItemListener(itemAntennaListener);
+				height +=30;
 			}
+		box.setPreferredSize(new Dimension(150,height));
 		}
 	}
 		
@@ -129,8 +133,7 @@ public class RadioCovView extends JPanel implements DataView {
 	
 	/**
 	 * Listener de sélection des couvertures.
-	 */
-		
+	 */		
 	public class ItemAntennaListener implements ItemListener {
 		public void itemStateChanged(ItemEvent e) {
 			String antennaName= ((JCheckBox)e.getSource()).getText();

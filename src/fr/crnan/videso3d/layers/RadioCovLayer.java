@@ -92,22 +92,24 @@ public class RadioCovLayer extends AirspaceLayer{
 			}
 		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
-	}
-	
+	}	
 	public void insertAllRadioCovLayers(ArrayList <Airspace> airspacesParam){
-		try {									
+	try {									
 			
-			AirspaceLayer airspaceLayer = new AirspaceLayer();			
-			airspaces = airspacesParam;								
+
+		RadioCovPolygon poly = new RadioCovPolygon(); // permet dobtenir la Memory cache pour les objets contenus dans l'ArrayList<Airspaces> ( sinon pas de mémoire cache allouée, et pas d'objet 3d visible après désérialisation)
 			
-			airspaceLayer.addAirspaces(airspaces);
+			AirspaceLayer airspaceLayer = new AirspaceLayer();						
+			airspaces = new ArrayList<Airspace>();				
+			airspaces.addAll(airspacesParam);	            	            
+	        airspaceLayer.addAirspaces(airspaces);
 			airspaceLayer.setName(radioCov);
 			activeRadioCov = airspaceLayer;
 			layers=wwd.getModel().getLayers();				
 			layers.add(activeRadioCov);				
 		}
 		catch(Exception e) {
-			e.printStackTrace();
+			e.printStackTrace();			
 		}		
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
@@ -126,9 +128,8 @@ public class RadioCovLayer extends AirspaceLayer{
 		}	
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
-	
 	public void removeAllAirspaces() {
 		super.removeAllAirspaces();		
 	}
-		
+	
 }
