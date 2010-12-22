@@ -38,6 +38,7 @@ import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
+import fr.crnan.videso3d.graphics.Aerodrome;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Secteur3D;
@@ -503,6 +504,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			return computeBestEyePosition((Secteur3D)object);
 		}else if (object instanceof Balise2D){
 			return computeBestEyePosition((Balise2D)object);
+		}else if(object instanceof Aerodrome){
+			Position ref = ((Aerodrome) object).getRefPosition();
+			return new double[]{ref.latitude.degrees, ref.longitude.degrees, 50000};
 		}else if(object instanceof List){
 			if(((List<?>)object).get(0) instanceof Route){
 				return computeBestEyePosition((List<? extends Route>)object);

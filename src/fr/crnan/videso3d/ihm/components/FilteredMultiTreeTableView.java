@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -50,7 +49,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 
 	private JTextField filtre = new JTextField(20);
 
-	private JPanel container = new JPanel();
+	private MultipleSplitPanes container = new MultipleSplitPanes();
 
 	private List<JXTreeTable> tables = new LinkedList<JXTreeTable>();
 	private List<FilteredTreeTableModel> models = new LinkedList<FilteredTreeTableModel>();
@@ -64,15 +63,14 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 		//ajout d'un filtre
 		JPanel filterPanel = new JPanel();
 		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
-		filterPanel.add(Box.createVerticalGlue());
+		//filterPanel.add(Box.createVerticalGlue());
 		filterPanel.add(new Label("Filtre : "));
 		filterPanel.add(filtre);
 		
 		panel.add(filterPanel, BorderLayout.NORTH);
 		
 		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-		
-		panel.add(container);
+		panel.add(container, BorderLayout.CENTER);
 		
 		this.add(panel);
 	}
@@ -115,8 +113,8 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 			public void treeNodesInserted(TreeModelEvent e) {}
 
 			@Override
+			@SuppressWarnings("unchecked")
 			public void treeNodesChanged(TreeModelEvent e) {
-				@SuppressWarnings("unchecked")
 				String type = ((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[1])).getUserObject()).getFirst();
 				Couple<String, Boolean> source = (Couple<String, Boolean>) ((DefaultMutableTreeNode)e.getTreePath().getLastPathComponent()).getUserObject();
 				if(source.getSecond()){
@@ -152,9 +150,15 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 		JScrollPane scrollPane = new JScrollPane(treeTable);
 		scrollPane.setBorder(null);
 		tablePanel.add(scrollPane);
-		if(titlePanel!=null)
-			container.add(titlePanel);
-		container.add(tablePanel);
+		if(titlePanel!=null){
+			JPanel titledPanel = new JPanel();
+			titledPanel.setLayout(new BorderLayout());
+			titledPanel.add(titlePanel, BorderLayout.NORTH);
+			titledPanel.add(tablePanel, BorderLayout.CENTER);
+			container.addLayer(titledPanel);
+		}else{
+			container.addLayer(tablePanel);
+		}
 		
 		
 		treeTable.addMouseListener(new MouseAdapter(){
@@ -164,6 +168,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 					int row = treeTable.rowAtPoint(e.getPoint());  
 					Object[] path = treeTable.getPathForRow(row).getPath();
 					if(path.length>2){
+						@SuppressWarnings("unchecked")
 						String type = ((Couple<String, Boolean>)((DefaultMutableTreeNode)path[1]).getUserObject()).getFirst();
 						String name = (String) treeTable.getValueAt(row, 0);
 						treeTable.setValueAt(true, row, 1);

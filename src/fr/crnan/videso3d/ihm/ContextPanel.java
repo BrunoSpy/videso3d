@@ -20,6 +20,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.HashMap;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 import org.jdesktop.swingx.JXTaskPane;
@@ -53,7 +54,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 
 		this.add(titleAreaPanel, BorderLayout.NORTH);
 
-		this.add(content, BorderLayout.CENTER);
+		this.add(new JScrollPane(content), BorderLayout.CENTER);
 	}
 	
 	/**

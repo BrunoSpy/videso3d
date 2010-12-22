@@ -21,12 +21,14 @@ import java.awt.Font;
 import java.util.LinkedList;
 import java.util.List;
 
-import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
+import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfacePolygon;
@@ -41,13 +43,13 @@ public class PisteAerodrome implements Aerodrome{
 
 	private SurfacePolygonAnnotation inner, outer;
 	private String name;
-	private String annotationText;
+	private GlobeAnnotation annotation;
 	private UserFacingText text;
 	private Position refPosition;
 	
-	public PisteAerodrome(int type, String name, String annotation, double lat1, double lon1, double lat2, double lon2, double largeur, Position ref){
-		this.name = name;
-		this.annotationText = annotation;
+	public PisteAerodrome(int type, String name, String annotationText, double lat1, double lon1, double lat2, double lon2, double largeur, Position ref){
+		this.name = name.split("--")[0].trim();
+		this.setAnnotation(annotationText);
 		this.refPosition = ref;
 		
 		computeRectangles(lat1, lon1, lat2, lon2, largeur);
@@ -55,7 +57,7 @@ public class PisteAerodrome implements Aerodrome{
 		innerAttrs.setInteriorMaterial(new Material(Color.WHITE));
 		innerAttrs.setInteriorOpacity(0.8);
 		this.inner.setAttributes(innerAttrs);
-		this.inner.setAnnotation(annotation);
+		this.inner.setAnnotation(annotationText);
 		this.inner.setDatabaseType(DatabaseManager.Type.AIP);
 		this.inner.setType(type);
 		this.inner.setName(name);
@@ -66,12 +68,12 @@ public class PisteAerodrome implements Aerodrome{
 		outerAttrs.setOutlineOpacity(1);
 		outerAttrs.setDrawOutline(true);
 		this.outer.setAttributes(outerAttrs);
-		this.outer.setAnnotation(annotation);
+		this.outer.setAnnotation(annotationText);
 		this.outer.setDatabaseType(DatabaseManager.Type.AIP);
 		this.outer.setType(type);
 		this.outer.setName(name);
 
-		this.text = new UserFacingText(name, ref.add(Position.fromDegrees(-0.015, 0)));
+		this.text = new UserFacingText(name.split("--")[0].trim(), ref.add(Position.fromDegrees(-0.015, 0)));
 		this.text.setFont(new Font("Sans Serif", Font.PLAIN, 9));
 		this.text.setColor(Pallet.getColorBaliseText());
 	}
@@ -80,12 +82,7 @@ public class PisteAerodrome implements Aerodrome{
 	public String getName(){
 		return name;
 	}
-	
-	@Override
-	public String getAnnotationText(){
-		return annotationText;
-	}
-	
+		
 	@Override
 	public UserFacingText getUserFacingText(){
 		return text;
@@ -105,7 +102,6 @@ public class PisteAerodrome implements Aerodrome{
 	}
 	
 	private void computeRectangles(double lat1Temp, double lon1Temp, double lat2Temp, double lon2Temp, double largeur){
-		//TODO passer ces calculs dans géométrie
 		double aTemp = lon2Temp-lon1Temp;
 		double bTemp = lat1Temp-lat2Temp;
 		double longueurVecteur = Math.sqrt(aTemp*aTemp+bTemp*bTemp);
@@ -139,6 +135,70 @@ public class PisteAerodrome implements Aerodrome{
 		rectExterieur.add(pe3);
 		rectExterieur.add(pe4);
 		this.outer = new SurfacePolygonAnnotation(rectExterieur,0);
+	}
+
+
+	@Override
+	public void setAnnotation(String text) {
+		if(annotation == null) {
+			annotation = new GlobeAnnotation(text, Position.ZERO);
+			annotation.setAlwaysOnTop(true);
+			annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
+			annotation.getAttributes().setBorderColor(Color.BLACK);
+			annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
+		} else {
+			annotation.setText(text);
+		}
+	}
+
+	
+	@Override
+	public GlobeAnnotation getAnnotation(Position pos) {
+		annotation.setPosition(pos);
+		return annotation;
+	}
+
+	
+	@Override
+	public Type getDatabaseType() {
+		return DatabaseManager.Type.AIP;
+	}
+
+	/**
+	 * Non implémenté
+	 */
+	@Override
+	public void setDatabaseType(Type type) {
+	}
+
+	/**
+	 * Non implémenté
+	 */
+	@Override
+	public void setType(int type) {
+	}
+
+	/**
+	 * Non implémenté
+	 */
+	@Override
+	public int getType() {
+		return 0;
+	}
+
+	/**
+	 * Non implémenté
+	 */
+	@Override
+	public void setName(String name) {
+	}
+
+	@Override
+	public String getAnnotationText() {
+		if(annotation!=null){
+			return annotation.getText();
+		}
+		return null;
 	}
 
 	

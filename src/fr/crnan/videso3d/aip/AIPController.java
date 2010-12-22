@@ -41,6 +41,7 @@ import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIP.Altitude;
 import fr.crnan.videso3d.aip.RoutesSegments.Segment;
+import fr.crnan.videso3d.graphics.Aerodrome;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route.Sens;
@@ -65,6 +66,7 @@ import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.util.Logging;
+import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 
 /**
  * Contrôle l'affichage et la construction des éléments AIP
@@ -620,28 +622,25 @@ public class AIPController implements VidesoController {
 
 	private void showAerodrome(int type, String nom){
 		int pk = -1;
-		String code="";
 		double latRef =0, lonRef=0;
-
+		
 		ResultSet rs;
 		PreparedStatement ps;
 		try{
 			if(type == AIP.AERODROME){
-
-				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select * from aerodromes where upper(code) = ?");
+				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk, latRef, lonRef from aerodromes where upper(code) = ?");
 				ps.setString(1, nom.split("--")[0].trim());
 				rs = ps.executeQuery();
 
 			}else{
-				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select * from aerodromes where nom = ?");
+				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk, latRef, lonRef from aerodromes where nom = ?");
 				ps.setString(1, nom);
 				rs = ps.executeQuery();
 			}
 			if(rs.next()){
-				pk = rs.getInt("pk");
-				code = rs.getString("code");
-				latRef = rs.getDouble("latRef");
-				lonRef = rs.getDouble("lonRef");
+				pk = rs.getInt(1);
+				latRef = rs.getDouble(2);
+				lonRef = rs.getDouble(3);
 			}
 
 			ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select * from runways where pk_ad=?");
@@ -657,19 +656,19 @@ public class AIPController implements VidesoController {
 					double lat2 = rs2.getDouble("lat2");
 					double lon2 = rs2.getDouble("lon2");
 					double largeur = rs2.getDouble("largeur");
-					String annotation = "<b>"+code+"</b><br/>Piste "+ nomPiste;
+					String annotation = "<b>"+nom+"</b><br/>Piste "+ nomPiste;
 					PisteAerodrome piste = new PisteAerodrome(type, nom, annotation, lat1, lon1, lat2, lon2, largeur, Position.fromDegrees(latRef, lonRef));
 					arptLayer.addAirport(piste, nomPiste);
 				}else{
-					String annotation = "<b>"+code+"</b><br/>Piste "+ nomPiste;
+					String annotation = "<b>"+nom+"</b><br/>Piste "+ nomPiste;
 					MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), annotation, DatabaseManager.Type.AIP);
 					arptLayer.addAirport(airportBalise, nomPiste);
 				}
 			}
 			if(!runwayExists){
-				String annotation = "<b>"+code+"</b><br/>Pistes inconnues";
+				String annotation = "<b>"+nom+"</b><br/>Pistes inconnues";
 				MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), annotation, DatabaseManager.Type.AIP);
-				arptLayer.addAirport(airportBalise, "");
+				arptLayer.addAirport(airportBalise, "XX");
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -684,7 +683,6 @@ public class AIPController implements VidesoController {
 		PreparedStatement ps;
 		try{
 			if(type == AIP.AERODROME){
-
 				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from aerodromes where upper(code) = ?");
 				ps.setString(1, nom.split("--")[0].trim());
 				rs = ps.executeQuery();
@@ -707,10 +705,10 @@ public class AIPController implements VidesoController {
 		}
 		if(nomsPistes.size()>0){
 			for(String nomPiste : nomsPistes){
-				arptLayer.hideAirport(nom,nomPiste);
+				arptLayer.hideAirport(nom.split("--")[0].trim(),nomPiste);
 			}
 		}else{
-			arptLayer.hideAirport(nom,"");
+			arptLayer.hideAirport(nom.split("--")[0].trim(),"");
 		}
 	}
 	
@@ -759,6 +757,7 @@ public class AIPController implements VidesoController {
 			//Sinon c'est un volume
 		}else{
 			if(!zones.containsKey(type+" "+name)){
+				System.out.println("zone name : "+name);
 				this.addZone(type, name);
 			}
 			Secteur3D zone = zones.get(type+" "+name);
@@ -781,7 +780,9 @@ public class AIPController implements VidesoController {
 		Position centerPosition = Position.fromDegrees(eyePosition[0], eyePosition[1]);
 		this.wwd.getView().setHeading(Angle.ZERO);
 		this.wwd.getView().setPitch(Angle.ZERO);
-		this.wwd.getView().goTo(centerPosition, eyePosition[2]);
+		BasicOrbitView bov = (BasicOrbitView) this.wwd.getView();
+		bov.addPanToAnimator(centerPosition, bov.getHeading(), bov.getPitch(), eyePosition[2], 2000, true);
+		bov.firePropertyChange(AVKey.VIEW, null, bov);
 		showAnnotation(object, centerPosition);
 		return centerPosition;
 		
@@ -852,7 +853,10 @@ public class AIPController implements VidesoController {
 	
 	
 	private void highlightAirport(int type, String name){
-		//TODO 
+		if(!arptLayer.containsAirport(name)){
+			showAerodrome(type, name);
+		}
+		centerView(arptLayer.getAirport(name));
 	}
 	
 	private void highlightNavFix(int type, String name){
@@ -1034,7 +1038,9 @@ public class AIPController implements VidesoController {
 		lastSegmentAnnotation = annotation;
 		annotation.getAttributes().setVisible(true);
 		wwd.getAnnotationLayer().addAnnotation(annotation);
-		wwd.getView().goTo(annotationPosition, wwd.getView().getEyePosition().elevation);
+		BasicOrbitView bov = (BasicOrbitView) wwd.getView();
+		bov.addPanToAnimator(annotationPosition, bov.getHeading(), bov.getPitch(), bov.getEyePosition().elevation, 2000, true);
+		bov.firePropertyChange(AVKey.VIEW, null, bov);
 		wwd.redraw();
 	}
 	

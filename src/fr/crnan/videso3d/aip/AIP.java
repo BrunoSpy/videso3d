@@ -763,6 +763,15 @@ public class AIP extends FileParser{
 	}
 
 	public static int string2type(String type){
+		if(type.equals("0")){
+			return AERODROME;
+		}
+		if(type.equals("1")){
+			return ALTI;
+		}
+		if(type.equals("2")){
+			return PRIVE;
+		}
 		if (type.equals("TSA")){
 			return TSA;
 		}
