@@ -77,16 +77,15 @@ public class StipView extends FilteredMultiTreeTableView{
 		try {
 			if(DatabaseManager.getCurrentStip() != null) { //si pas de bdd, ne pas créer la vue
 				
-				//Balises
-				DefaultMutableTreeNode balisesRoot = new DefaultMutableTreeNode("root");
-				this.fillBalisesRootNode(balisesRoot);
-				this.addTableTree(new FilteredTreeTableModel(balisesRoot), "Balises", null);
-				
 				//Routes
 				DefaultMutableTreeNode routesRoot = new DefaultMutableTreeNode("root");
 				this.fillRoutesRootNode(routesRoot);
 				this.addTableTree(new FilteredTreeTableModel(routesRoot), "Routes", this.createTitleRoutes());
 				
+				//Balises
+				DefaultMutableTreeNode balisesRoot = new DefaultMutableTreeNode("root");
+				this.fillBalisesRootNode(balisesRoot);
+				this.addTableTree(new FilteredTreeTableModel(balisesRoot), "Balises", null);
 				
 				this.add(this.buildSecteursPanel());
 			}

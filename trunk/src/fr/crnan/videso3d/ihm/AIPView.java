@@ -49,27 +49,27 @@ public class AIPView extends FilteredMultiTreeTableView {
 
 		try {
 			if(DatabaseManager.getCurrentAIP() != null) { //si pas de bdd, ne pas créer la vue
-				
-				DefaultMutableTreeNode ZonesRoot = new DefaultMutableTreeNode("root");
-				this.fillZonesRootNode(ZonesRoot);
-				FilteredTreeTableModel ZonesModel = new FilteredTreeTableModel(ZonesRoot);
-				this.addTableTree(ZonesModel, "Espaces", null);
-				
-				DefaultMutableTreeNode NavFixRoot = new DefaultMutableTreeNode("root");
-				this.fillNavFixRootNode(NavFixRoot);
-				FilteredTreeTableModel NavFixModel = new FilteredTreeTableModel(NavFixRoot);
-				this.addTableTree(NavFixModel, "Navigation Fix", null);
-				
+
+				DefaultMutableTreeNode AerodromesRoot = new DefaultMutableTreeNode("root");
+				this.fillAerodromesRootNode(AerodromesRoot);
+				FilteredTreeTableModel AerodromesModel = new FilteredTreeTableModel(AerodromesRoot);
+				this.addTableTree(AerodromesModel, "Terrains", null);
 				
 				DefaultMutableTreeNode RoutesRoot = new DefaultMutableTreeNode("root");
 				this.fillRoutesRootNode(RoutesRoot);
 				FilteredTreeTableModel RoutesModel = new FilteredTreeTableModel(RoutesRoot);
 				this.addTableTree(RoutesModel, "", createTitleRoutes());
+
+				DefaultMutableTreeNode NavFixRoot = new DefaultMutableTreeNode("root");
+				this.fillNavFixRootNode(NavFixRoot);
+				FilteredTreeTableModel NavFixModel = new FilteredTreeTableModel(NavFixRoot);
+				this.addTableTree(NavFixModel, "Navigation Fix", null);
+
+				DefaultMutableTreeNode ZonesRoot = new DefaultMutableTreeNode("root");
+				this.fillZonesRootNode(ZonesRoot);
+				FilteredTreeTableModel ZonesModel = new FilteredTreeTableModel(ZonesRoot);
+				this.addTableTree(ZonesModel, "Espaces", null);
 				
-				DefaultMutableTreeNode AerodromesRoot = new DefaultMutableTreeNode("root");
-				this.fillAerodromesRootNode(AerodromesRoot);
-				FilteredTreeTableModel AerodromesModel = new FilteredTreeTableModel(AerodromesRoot);
-				this.addTableTree(AerodromesModel, "Terrains", null);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

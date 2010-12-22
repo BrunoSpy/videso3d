@@ -18,7 +18,9 @@ package fr.crnan.videso3d.layers;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
+import fr.crnan.videso3d.graphics.Aerodrome;
 import fr.crnan.videso3d.graphics.MarqueurAerodrome;
 import fr.crnan.videso3d.graphics.PisteAerodrome;
 import gov.nasa.worldwind.avlist.AVKey;
@@ -38,7 +40,7 @@ public class AirportLayer extends LayerSet {
 	
 	private HashSet<String> texts = new HashSet<String>();
 	
-	private HashMap<String,Object> activeAirports = new HashMap<String, Object>();
+	private HashMap<String,Aerodrome> activeAirports = new HashMap<String, Aerodrome>();
 	/**
 	 * Crée un nouveau calque d'aéroports
 	 * @param name Nom du calque
@@ -102,6 +104,27 @@ public class AirportLayer extends LayerSet {
 		markerLayer.setMarkers(null);
 		airportsLayer.removeAllRenderables();
 		activeAirports.clear();
+	}
+	
+	public boolean containsAirport(String name){
+		boolean contains = false;
+		Iterator<String> it = activeAirports.keySet().iterator();
+		while(it.hasNext()){
+			if(it.next().startsWith(name.split("--")[0].trim()))
+				contains = true;
+		}
+		return contains;
+	}
+	
+	
+	public Aerodrome getAirport(String name){
+		Iterator<String> it = activeAirports.keySet().iterator();
+		while(it.hasNext()){
+			String next = it.next();
+			if(next.startsWith(name.split("--")[0].trim()))
+				return activeAirports.get(next);
+		}
+		return null;
 	}
 	
 }

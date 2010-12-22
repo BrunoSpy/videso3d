@@ -1321,9 +1321,25 @@ public final class DatabaseManager {
 			st = DatabaseManager.getCurrentAIP();
 			if(st != null){
 				items = new LinkedList<Couple<Integer, String>>();
-				rs = st.executeQuery("select nom, type from volumes UNION select nom, type from routes UNION select nom, type from NavFix");
+				rs = st.executeQuery("select nom, type from volumes " +
+								"UNION select nom, type from routes " +
+								"UNION select nom, type from NavFix " +
+								"UNION select nom, type from aerodromes");
 				while(rs.next()){
-					items.add(new Couple<Integer, String>(AIP.string2type(rs.getString(2)), rs.getString(1)));
+					try{
+					int typeInt = AIP.string2type(rs.getString(2));
+					String nom = rs.getString(1);
+					if(typeInt == AIP.AERODROME){
+						PreparedStatement ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select code from aerodromes where nom=?");
+						ps.setString(1, nom);
+						ResultSet rs2 = ps.executeQuery();
+						items.add(new Couple<Integer, String>(typeInt, rs2.getString(1)+" -- "+nom));
+					}else{
+						items.add(new Couple<Integer, String>(typeInt, nom));
+					}
+					}catch(Exception e){
+						e.printStackTrace();
+					}
 				}
 			}
 			return items;

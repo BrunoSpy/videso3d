@@ -8,7 +8,7 @@ public class MarqueurAerodrome extends Balise2D implements Aerodrome {
 
 	
 	public MarqueurAerodrome(int type, CharSequence name, Position position,String annotation, Type base) {
-		super(name, position, annotation, base, type);
+		super(((String)name).split("--")[0].trim(), position, annotation, base, type);
 		this.setDatabaseType(DatabaseManager.Type.AIP);
 		this.setType(type);
 	}

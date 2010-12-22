@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -214,7 +215,7 @@ public class AIPContext extends Context {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					getController().displayAnnotationAndGoTo(segmentPrecedent);
-					((ContextPanel)infosSegment.getParent().getParent()).showInfo(Type.AIP, AIP.AWY, segmentPrecedent.getName());
+					((ContextPanel)infosSegment.getParent().getParent().getParent().getParent()).showInfo(Type.AIP, AIP.AWY, segmentPrecedent.getName());
 				}
 			};
 			infosSegment.add(previous);
@@ -224,7 +225,7 @@ public class AIPContext extends Context {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					getController().displayAnnotationAndGoTo(segmentSuivant);
-					((ContextPanel)infosSegment.getParent().getParent()).showInfo(Type.AIP, AIP.AWY, segmentSuivant.getName());
+					((ContextPanel)infosSegment.getParent().getParent().getParent().getParent()).showInfo(Type.AIP, AIP.AWY, segmentSuivant.getName());
 				}
 			};
 			infosSegment.add(next);
@@ -238,7 +239,7 @@ public class AIPContext extends Context {
 
 	private List<JXTaskPane> showNavFixInfos(int type, String name){
 		LinkedList<JXTaskPane> taskPanesList = new LinkedList<JXTaskPane>();
-		JXTaskPane infosNavFix = new JXTaskPane(name);
+		final JXTaskPane infosNavFix = new JXTaskPane(name);
 		AIP aip = getController().getAIP();
 
 		float latitude = 0, longitude = 0;
@@ -276,7 +277,12 @@ public class AIPContext extends Context {
 				String LonDme = navFixXML.getChildText("LongDme");
 				String alti = navFixXML.getChildText("AltitudeFt");
 				String situation = navFixXML.getChildText("Situation");
-				String ad = null;//TODO à compléter lorsque les aérodromes seront implémentés.
+				String pkAd = navFixXML.getChild("Ad").getAttributeValue("pk");
+				Element adXML = aip.findElement(aip.getDocumentRoot().getChild("AdS"), pkAd);
+				String finCode = adXML.getChildText("AdCode");
+				String territoire = adXML.getChild("Territoire").getAttributeValue("lk").substring(1, 3);
+				final String adCode = territoire+finCode;
+				String adName = adXML.getChildText("AdNomComplet");
 				String horCode = navFixXML.getChildText("HorCode");
 				String usage = navFixXML.getChildText("Usage");
 				String portee = navFixXML.getChildText("Portee");
@@ -304,8 +310,16 @@ public class AIPContext extends Context {
 				if(situation != null){
 					infosNavFix.add(new JLabel("<html><b>Situation</b> : " + situation+"</html>"));
 				}
-				if(ad != null){
-					infosNavFix.add(new JLabel("<html><b>Aérodrome</b> : " + ad+"</html>"));
+				if(adCode != null && adName != null){
+					AbstractAction adLink = new AbstractAction("<html><b>Aérodrome</b> :<font color=\"blue\">"+adCode+" -- "+adName+"</font></html>"){
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							//TODO vérifier si le type AIP.AERODROME suffit pour highlight
+							getController().highlight(AIP.AERODROME, adCode);
+							((ContextPanel)infosNavFix.getParent().getParent().getParent().getParent()).showInfo(Type.AIP, AIP.AERODROME, adCode);
+						}
+					};
+					infosNavFix.add(adLink);
 				}
 				if(horCode != null){
 					infosNavFix.add(new JLabel("<html><b>Code horaire</b> : " + horCode+"</html>"));
@@ -332,7 +346,7 @@ public class AIPContext extends Context {
 	@SuppressWarnings("unchecked")
 	private List<JXTaskPane> showAirportInfos(int type, String name){
 		LinkedList<JXTaskPane> taskPanesList = new LinkedList<JXTaskPane>();
-		JXTaskPane infosGen = new JXTaskPane("Infos générales");
+		final JXTaskPane infosGen = new JXTaskPane("Infos générales");
 		JXTaskPane infosHor = new JXTaskPane("Horaires");
 		JXTaskPane infosSvc = new JXTaskPane("Services");
 		JXTaskPane infosMet = new JXTaskPane("Météo");
@@ -368,14 +382,35 @@ public class AIPContext extends Context {
 			for(Element e : (List<Element>)airportXML.getChildren()){
 				String nom = espacer(e.getName());
 				String texte = e.getText().replaceAll("#", "<br/>");
-				if(  nom.startsWith("Ad") 	&& ! ( nom.equals("AdCode") || nom.equals("AdAd2") || nom.equals("AdGeoUnd") )   ){
+				if(  nom.startsWith("Ad") 	&& ! ( nom.equals("Ad Code") || nom.equals("Ad Ad2") || nom.equals("Ad Geo Und") )   ){
 					infosGen.add(new JLabel("<html><b>"+nom.substring(3)+"</b> : "+texte+"</html>"));
 				}else if( nom.startsWith("Arp")){
 					infosGen.add(new JLabel("<html><b>"+nom.substring(4)+"</b> : "+texte+"</html>"));
 				}else if(nom.startsWith("Tfc")){
 					infosGen.add(new JLabel("<html><b>"+nom+"</b> : "+texte+"</html>"));					
 				}else if(nom.equals("Ctr")){
-					//TODO
+					String pkCTR = e.getAttributeValue("pk");
+					Element espaceCTR = aip.findElement(aip.getDocumentRoot().getChild("EspaceS"), pkCTR);
+					final String nomCTR = espaceCTR.getChildText("Nom");
+					
+					AbstractAction ctrAction = new AbstractAction("<html><b>CTR</b> :<font color=\"blue\">"+nomCTR+"</font></html>"){
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							try {
+								Statement st = DatabaseManager.getCurrentAIP();
+								ResultSet rs = st.executeQuery("select nom from volumes where type ='CTR' and (nom LIKE '"+nomCTR+" %' OR nom ='"+nomCTR+"')");
+								String lastCTR = null;
+								while(rs.next()){
+									lastCTR = rs.getString(1);
+									getController().showObject(AIP.CTR, lastCTR);
+								}
+								getController().highlight(AIP.CTR, lastCTR);
+							} catch (SQLException e1) {
+								e1.printStackTrace();
+							}
+						}
+					};
+					infosGen.add(ctrAction);
 				}else if(nom.startsWith("Hor")){
 					infosHor.add(new JLabel("<html><b>"+nom.substring(4).replaceAll("Txt", "")+"</b> : "+texte+"</html>"));
 				}else if(nom.startsWith("Svc")){ 
@@ -399,9 +434,8 @@ public class AIPContext extends Context {
 			if(infos.getContentPane().getComponentCount()==0){
 				JLabel noInfo = new JLabel("<html><i>Aucune info.</i></html>");
 				infos.add(noInfo);
-			}else{
-				infos.setCollapsed(true);
 			}
+			infos.setCollapsed(true);
 		}
 		infosGen.setCollapsed(false);
 		if(pkPistes.size()>0){
