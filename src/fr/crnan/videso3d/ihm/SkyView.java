@@ -21,8 +21,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.Couple;
@@ -36,17 +34,17 @@ import fr.crnan.videso3d.skyview.SkyViewController;
 /**
  * Interface de sélection de données SkyView
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public class SkyView extends FilteredMultiTreeTableView {
 
 	public SkyView(){
 
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+	//	this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		//		panel.setBorder(BorderFactory.createTitledBorder(""));
 
-		this.add(Box.createVerticalGlue());
+//		this.add(Box.createVerticalGlue());
 		try{
 			if(DatabaseManager.getCurrentSkyView() != null){
 				

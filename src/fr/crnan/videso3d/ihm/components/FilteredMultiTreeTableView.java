@@ -43,35 +43,34 @@ import fr.crnan.videso3d.Couple;
 /**
  * Panel de sélection de données avec plusieurs panels filtrables
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public abstract class FilteredMultiTreeTableView extends JPanel implements DataView {
 
 	private JTextField filtre = new JTextField(20);
-
-	private MultipleSplitPanes container = new MultipleSplitPanes();
+	
+	private VerticalMultipleSplitPanes splitPanes = new VerticalMultipleSplitPanes();
 
 	private List<JXTreeTable> tables = new LinkedList<JXTreeTable>();
 	private List<FilteredTreeTableModel> models = new LinkedList<FilteredTreeTableModel>();
 	
+	private int numberTables = 0;
+	private JPanel panel = new JPanel();
+	
 	public FilteredMultiTreeTableView(){
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		JPanel panel = new JPanel();
+		
 		panel.setLayout(new BorderLayout());
 
 		//ajout d'un filtre
 		JPanel filterPanel = new JPanel();
 		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
-		//filterPanel.add(Box.createVerticalGlue());
 		filterPanel.add(new Label("Filtre : "));
 		filterPanel.add(filtre);
 		
 		panel.add(filterPanel, BorderLayout.NORTH);
-		
-		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-		panel.add(container, BorderLayout.CENTER);
-		
+				
 		this.add(panel);
 	}
 
@@ -90,8 +89,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 			
 		
 		final JXTreeTable treeTable = new JXTreeTable();
-		tables.add(treeTable);
-
+		tables.add(new JXTreeTable());
 		
 		
 		model.addTreeModelListener(new TreeModelListener() {
@@ -127,6 +125,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 			
 			
 		});
+		
 		treeTable.setTableHeader(null);
 		treeTable.setRootVisible(false);
 		treeTable.setTreeTableModel(model);
@@ -155,9 +154,27 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 			titledPanel.setLayout(new BorderLayout());
 			titledPanel.add(titlePanel, BorderLayout.NORTH);
 			titledPanel.add(tablePanel, BorderLayout.CENTER);
-			container.addLayer(titledPanel);
+			if(numberTables == 0) { //un JXMultiSplitPanes ne peux pas avoir qu'un seul élément
+				panel.add(titledPanel, BorderLayout.CENTER);
+			} else {
+				if(numberTables == 1) {
+					splitPanes.add(panel.getComponent(1));
+				}
+				panel.add(splitPanes, BorderLayout.CENTER);
+				splitPanes.add(titledPanel);
+			}
+			
 		}else{
-			container.addLayer(tablePanel);
+			if(numberTables == 0) {
+				panel.add(tablePanel, BorderLayout.CENTER);
+			} else {
+				if(numberTables == 1) {
+					splitPanes.add(panel.getComponent(1));
+				}
+				panel.add(splitPanes, BorderLayout.CENTER);
+				splitPanes.add(tablePanel);
+			}
+			
 		}
 		
 		
@@ -177,9 +194,10 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 				}
 			}
 		});
-	
+		
+		numberTables++;
 	}
-
+	
 	@Override
 	public void reset() {
 		filtre.setText("");

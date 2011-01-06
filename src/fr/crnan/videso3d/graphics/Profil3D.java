@@ -39,7 +39,7 @@ public class Profil3D {
 	/**
 	 * Balises
 	 */
-	private List<Balise2D> balises = new ArrayList<Balise2D>();
+	private List<Balise> balises = new ArrayList<Balise>();
 
 	/**
 	 * Profil
@@ -152,7 +152,7 @@ public class Profil3D {
 		return this.projected;
 	}
 	
-	public List<Balise2D> getBalises(){
+	public List<Balise> getBalises(){
 		return this.balises;
 	}
 	

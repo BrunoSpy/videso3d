@@ -31,11 +31,13 @@ import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.Route.Space;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
-import fr.crnan.videso3d.layers.BaliseLayer;
+import fr.crnan.videso3d.layers.Balise2DLayer;
+import fr.crnan.videso3d.layers.Balise3DLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
 import gov.nasa.worldwind.geom.LatLon;
@@ -65,11 +67,13 @@ public class StipController implements VidesoController {
 	 * 
 	 * Layers pour les balises publiées
 	 */
-	private BaliseLayer balisesPub = new BaliseLayer("Balises publiées");
+	private Balise3DLayer balisesPub3D = new Balise3DLayer("Balises publiées");
+	private Balise2DLayer balisesPub2D = new Balise2DLayer("Balises publiées");
 	/**
 	 * Layers pour les balises non publiées
 	 */
-	private BaliseLayer balisesNP = new BaliseLayer("Balises non publiées");
+	private Balise2DLayer balisesNP2D = new Balise2DLayer("Balises non publiées");
+	private Balise3DLayer balisesNP3D = new Balise3DLayer("Balises non publiées");
 	/**
 	 * Layer contenant les secteurs
 	 */
@@ -81,7 +85,9 @@ public class StipController implements VidesoController {
 	/**
 	 * Liste nominale des balises
 	 */
-	private HashMap<String, Balise2D> balises = new HashMap<String, Balise2D>();
+	private HashMap<String, Balise2D> balises2D = new HashMap<String, Balise2D>();
+	private HashMap<String, Balise3D> balises3D = new HashMap<String, Balise3D>();
+	
 	//Attributs pour le highlight
 	private Object highlight;
 	private Object lastAttrs;
@@ -119,8 +125,10 @@ public class StipController implements VidesoController {
 	public void removeAllLayers() {
 		this.wwd.removeLayer(routes2D);
 		this.wwd.removeLayer(routes3D);
-		this.wwd.removeLayer(balisesNP);
-		this.wwd.removeLayer(balisesPub);
+		this.wwd.removeLayer(balisesNP2D);
+		this.wwd.removeLayer(balisesPub2D);
+		this.wwd.removeLayer(balisesNP3D);
+		this.wwd.removeLayer(balisesPub3D);
 		this.wwd.removeLayer(secteursLayer);
 	}
 	
@@ -129,10 +137,14 @@ public class StipController implements VidesoController {
 	
 	@Override
 	public void reset(){
-		this.balisesNP.setLocked(false);
-		this.balisesPub.setLocked(false);
-		this.balisesNP.removeAllBalises();
-		this.balisesPub.removeAllBalises();
+		this.balisesNP2D.setLocked(false);
+		this.balisesPub2D.setLocked(false);
+		this.balisesNP2D.removeAllBalises();
+		this.balisesPub2D.removeAllBalises();
+//		this.balisesNP3D.setLocked(false);
+//		this.balisesPub3D.setLocked(false);
+		this.balisesNP3D.removeAllBalises();
+		this.balisesPub3D.removeAllBalises();
 		this.secteurs.clear();
 		this.secteursLayer.removeAllAirspaces();
 		this.routes2D.hideAllRoutes();
@@ -147,8 +159,11 @@ public class StipController implements VidesoController {
 			this.routes3D.displayRoute(name);
 			break;
 		case BALISES://Balises
-			this.balisesPub.showBalise(name);
-			this.balisesNP.showBalise(name);
+			this.createBalise(name);
+			this.balisesPub3D.showBalise(name);
+			this.balisesNP3D.showBalise(name);
+			this.balisesPub2D.showBalise(name);
+			this.balisesNP2D.showBalise(name);
 			break;
 		case SECTEUR://secteur
 			if(!secteurs.containsKey(name+0)){//n'afficher le secteur que s'il n'est pas déjà affiché
@@ -168,8 +183,10 @@ public class StipController implements VidesoController {
 			this.routes3D.hideRoute(name);
 			break;
 		case BALISES://Balises Pub
-			this.balisesPub.hideBalise(name);
-			this.balisesNP.hideBalise(name);
+			this.balisesPub2D.hideBalise(name);
+			this.balisesNP2D.hideBalise(name);
+			this.balisesPub3D.hideBalise(name);
+			this.balisesNP3D.hideBalise(name);
 			break;
 		case SECTEUR://secteur
 			this.removeSecteur3D(name);
@@ -197,44 +214,111 @@ public class StipController implements VidesoController {
 			this.wwd.firePropertyChange("step", "", "Création des balises non publiées");
 			break;
 		}
-		try {
-			Statement st = DatabaseManager.getCurrentStip();
-			ResultSet rs = st.executeQuery("select * from balises where publicated = " + publicated);
-			while(rs.next()){
-				Balise2D balise = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), Type.STIP, StipController.BALISES);
-				String annotation = "<p><b>Balise "+rs.getString("name") +"</b></p>";
-				annotation += "<p>Commentaire : "+rs.getString("definition")+"<br />";
-				int plafond = -1;
-				String secteur = null;
-				for(int i = 9; i>= 1; i--){
-					int plancher = rs.getInt("limit"+i);
-					if(plancher != -1){
-						if(secteur!=null){
-							annotation += "\nDu "+plafond+" au "+plancher+" : "+secteur+"<br />";
-						}	
-						plafond = plancher;
-						secteur = rs.getString("sect"+i);
+//		try {
+//			Statement st = DatabaseManager.getCurrentStip();
+//			ResultSet rs = st.executeQuery("select * from balises where publicated = " + publicated);
+//			
+//			fr.crnan.videso3d.graphics.Balise balise = null;
+//
+//			while(rs.next()){
+//
+//				String annotation = "<p><b>Balise "+rs.getString("name") +"</b></p>";
+//				annotation += "<p>Commentaire : "+rs.getString("definition")+"<br />";
+//				int plafond = -1;
+//				int plafondMax = 10;
+//				String secteur = null;
+//				for(int i = 9; i>= 1; i--){
+//					int plancher = rs.getInt("limit"+i);
+//					if(plancher != -1){
+//						if(secteur!=null){
+//							annotation += "\nDu "+plafond+" au "+plancher+" : "+secteur+"<br />";
+//						}	
+//						if (plafond > plafondMax) plafondMax = plafond;
+//						plafond = plancher;
+//						secteur = rs.getString("sect"+i);
+//					}
+//				}
+//				if(secteur != null) annotation += "\nDu "+plafond+" au "+0+" : "+secteur+"<br />";
+//				annotation += "</p>";
+//
+//				if(publicated == 1) {
+//					balise = new Balise3D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), plafondMax*30.48), annotation, Type.STIP, StipController.BALISES);
+//					balisesPub3D.addBalise(balise);
+//				} else {
+//					balise = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), annotation, Type.STIP, StipController.BALISES);
+//					balisesNP2D.addBalise(balise);	
+//				}
+//				//lien nominal
+//				this.balises2D.put(rs.getString("name"), balise);
+//			}
+//			
+//			st.close();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
+	}
+	
+	private void createBalise(String name){
+		if(!balises2D.containsKey(name)) {
+			try {
+				Statement st = DatabaseManager.getCurrentStip();
+				ResultSet rs = st.executeQuery("select * from balises where name = '" + name+"'");
+				
+				Balise2D balise2d = null;
+				Balise3D balise3d = null;
+				
+				if(rs.next()){
+					
+					String annotation = "<p><b>Balise "+rs.getString("name") +"</b></p>";
+					annotation += "<p>Commentaire : "+rs.getString("definition")+"<br />";
+					int plafond = -1;
+					int plafondMax = 10;
+					String secteur = null;
+					for(int i = 9; i>= 1; i--){
+						int plancher = rs.getInt("limit"+i);
+						if(plancher != -1){
+							if(secteur!=null){
+								annotation += "\nDu "+plafond+" au "+plancher+" : "+secteur+"<br />";
+							}	
+							if (plafond > plafondMax) plafondMax = plafond;
+							plafond = plancher;
+							secteur = rs.getString("sect"+i);
+						}
 					}
+					if(secteur != null) annotation += "\nDu "+plafond+" au "+0+" : "+secteur+"<br />";
+					annotation += "</p>";
+
+					if(rs.getBoolean("publicated")) {
+						System.out.println(name);
+						balise3d = new Balise3D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), plafondMax*30.48), annotation, Type.STIP, StipController.BALISES);
+						balisesPub3D.addBalise(balise3d);
+						balise2d = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), annotation, Type.STIP, StipController.BALISES);
+						balisesPub2D.addBalise(balise2d);	
+					} else {
+						balise3d = new Balise3D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), plafondMax*30.48), annotation, Type.STIP, StipController.BALISES);
+						balisesNP3D.addBalise(balise3d);
+						balise2d = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), annotation, Type.STIP, StipController.BALISES);
+						balisesNP2D.addBalise(balise2d);
+					}
+					//lien nominal
+					this.balises2D.put(rs.getString("name"), balise2d);
+					this.balises3D.put(rs.getString("name"), balise3d);
+					
 				}
-				if(secteur != null) annotation += "\nDu "+plafond+" au "+0+" : "+secteur+"<br />";
-				annotation += "</p>";
-				balise.setAnnotation(annotation);
-				if(publicated == 1){
-					balisesPub.addBalise(balise);
-				} else {
-					balisesNP.addBalise(balise);
-				}
-				//lien nominal
-				this.balises.put(rs.getString("name"), balise);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 			
-			st.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		
+	}
+	
+	private void createBalise(List<String> names){
+		for(String name : names){
+			this.createBalise(name);
+		}
 	}
 	
 	/*--------------------------------------------------------------*/
@@ -381,14 +465,19 @@ public class StipController implements VidesoController {
 	 */
 	public void showRoutesBalises(String name){
 		List<String> balises = routes3D.getRoute(name).getBalises();
-		balisesNP.showBalises(balises);
-		balisesPub.showBalises(balises);
+		this.createBalise(balises);
+		balisesNP3D.showBalises(balises);
+		balisesPub3D.showBalises(balises);
+		balisesNP2D.showBalises(balises);
+		balisesPub2D.showBalises(balises);
 	}
 	
 	public void hideRoutesBalises(String name){
 		List<String> balises = routes3D.getRoute(name).getBalises();
-		balisesNP.hideBalises(balises);
-		balisesPub.hideBalises(balises);
+		balisesNP2D.hideBalises(balises);
+		balisesPub2D.hideBalises(balises);
+		balisesNP3D.hideBalises(balises);
+		balisesPub3D.hideBalises(balises);
 	}
 	
 	/**
@@ -411,13 +500,21 @@ public class StipController implements VidesoController {
 			routes2D = new Routes2DLayer("Routes Stip 2D");
 			this.toggleLayer(routes2D, true);
 		}
-		if(balisesPub != null) {
-			this.toggleLayer(balisesPub, true);
-			balisesPub.removeAllBalises();
+		if(balisesPub2D != null) {
+			this.toggleLayer(balisesPub2D, true);
+			balisesPub2D.removeAllBalises();
 		}
-		if(balisesNP != null) {
-			this.toggleLayer(balisesNP, true);
-			balisesNP.removeAllBalises();
+		if(balisesNP2D != null) {
+			this.toggleLayer(balisesNP2D, true);
+			balisesNP2D.removeAllBalises();
+		}
+		if(balisesPub3D != null) {
+			this.toggleLayer(balisesPub3D, false);
+			balisesPub3D.removeAllBalises();
+		}
+		if(balisesNP3D != null) {
+			this.toggleLayer(balisesNP3D, false);
+			balisesNP3D.removeAllBalises();
 		}
 		if(secteursLayer != null) {
 			secteursLayer.removeAllAirspaces();
@@ -459,12 +556,8 @@ public class StipController implements VidesoController {
 			routes2D.highlight(text);
 			routes3D.highlight(text);
 
-			//ajout des balises
-			balisesNP.showBalises(airspace.getBalises());
-			balisesPub.showBalises(airspace.getBalises());
-
-			this.toggleLayer(balisesNP, true);
-			this.toggleLayer(balisesPub, true);
+			//création des balises si besoin
+			this.showRoutesBalises(text);			
 
 			this.wwd.getView().goTo(airspace.getReferencePosition(), 1e6);
 
@@ -484,12 +577,16 @@ public class StipController implements VidesoController {
 			if(secteur != null) this.wwd.getView().goTo(secteur.getReferencePosition(), 1e6);
 			break;
 		case BALISES:
-			Balise2D balise = (Balise2D) balises.get(text);
+			Balise2D balise = (Balise2D) balises2D.get(text);
+			Balise3D balise3d = (Balise3D) balises3D.get(text);
 			balise.highlight(true);
 			this.unHighlightPrevious(balise);
+			this.unHighlightPrevious(balise3d);
 			highlight = balise;
-			balisesNP.showBalise(balise);
-			balisesPub.showBalise(balise);
+			balisesNP2D.showBalise(balise);
+			balisesPub2D.showBalise(balise);
+			balisesNP3D.showBalise(balise3d);
+			balisesPub3D.showBalise(balise3d);
 			this.wwd.getView().goTo(balise.getPosition(), 4e5);
 		default:
 			break;
@@ -507,8 +604,8 @@ public class StipController implements VidesoController {
 			} else if(highlight instanceof String){
 				this.setAttributesToSecteur((String) highlight, (AirspaceAttributes) lastAttrs);
 				highlight = null;
-			} else if(highlight instanceof Balise2D){
-				((Balise2D)highlight).highlight(false);
+			} else if(highlight instanceof fr.crnan.videso3d.graphics.Balise){
+				((fr.crnan.videso3d.graphics.Balise)highlight).highlight(false);
 				highlight = null;
 			}
 		}
@@ -545,5 +642,12 @@ public class StipController implements VidesoController {
 	
 	public String toString(){
 		return "Stip";
+	}
+
+	public void setBalisesLayer3D(Boolean state) {
+		this.toggleLayer(balisesNP2D, !state);
+		this.toggleLayer(balisesPub2D, !state);
+		this.toggleLayer(balisesNP3D, state);
+		this.toggleLayer(balisesPub3D, state);
 	}
 }
