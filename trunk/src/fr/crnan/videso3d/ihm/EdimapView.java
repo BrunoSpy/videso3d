@@ -30,6 +30,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.jdesktop.swingx.JXMultiSplitPane;
+
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.DatasManager;
@@ -37,7 +39,7 @@ import fr.crnan.videso3d.edimap.Cartes;
 import fr.crnan.videso3d.edimap.EdimapController;
 import fr.crnan.videso3d.edimap.Entity;
 import fr.crnan.videso3d.ihm.components.DataView;
-import fr.crnan.videso3d.ihm.components.MultipleSplitPanes;
+import fr.crnan.videso3d.ihm.components.VerticalMultipleSplitPanes;
 
 /**
  * Sélecteur de cartes edimap
@@ -45,7 +47,7 @@ import fr.crnan.videso3d.ihm.components.MultipleSplitPanes;
  * @version 0.3.2
  */
 @SuppressWarnings("serial")
-public class EdimapView extends MultipleSplitPanes implements DataView{
+public class EdimapView extends JPanel implements DataView{
 
 	/**
 	 * Cartes statiques
@@ -70,10 +72,14 @@ public class EdimapView extends MultipleSplitPanes implements DataView{
 	 * Liste des checkbox de la vue, afin de pouvoir tous les désélectionner facilement
 	 */
 	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
+		
+	private JXMultiSplitPane container = new VerticalMultipleSplitPanes();
 	
 	public EdimapView(){
 		
-	//	this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+		this.add(container);
 		
 		statiques.setBorder(BorderFactory.createTitledBorder("Cartes statiques"));
 		dynamiques.setBorder(BorderFactory.createTitledBorder("Cartes dynamiques"));
@@ -82,15 +88,16 @@ public class EdimapView extends MultipleSplitPanes implements DataView{
 		try {
 			if(DatabaseManager.getCurrentEdimap() != null) {
 				Cartes cartes = new Cartes();
-				this.addLayer(this.buildPanel(dynamiques, cartes.getCartesDynamiques()));
-				this.addLayer(this.buildPanel(statiques, cartes.getCartesStatiques()));
-				if(!cartes.getVolumes().isEmpty()) this.addLayer(this.buildPanel(volumes, cartes.getVolumes()));
-				this.addLayer(this.buildPanel(secteurs, cartes.getSecteurs()));
-	//			this.add(Box.createVerticalGlue());
+				
+				container.add(this.buildPanel(statiques, cartes.getCartesStatiques()));
+				if(!cartes.getVolumes().isEmpty()) container.add(this.buildPanel(volumes, cartes.getVolumes()));
+				container.add(this.buildPanel(secteurs, cartes.getSecteurs()));
+				container.add(this.buildPanel(dynamiques, cartes.getCartesDynamiques()));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 	private Component buildPanel(JPanel panel, List<Entity> liste) {

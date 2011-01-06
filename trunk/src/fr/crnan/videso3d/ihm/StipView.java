@@ -25,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -49,10 +48,6 @@ import fr.crnan.videso3d.stip.StipController;
 @SuppressWarnings("serial")
 public class StipView extends FilteredMultiTreeTableView{
 
-	/**
-	 * Arbre des routes et balises
-	 */
-	private JPanel routes = new JPanel();
 
 	/**
 	 * Choix des secteurs à afficher
@@ -68,31 +63,26 @@ public class StipView extends FilteredMultiTreeTableView{
 	
 	public StipView(){
 		
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-
-		routes.setBorder(BorderFactory.createTitledBorder(""));
 		secteurs.setBorder(BorderFactory.createTitledBorder("Secteurs"));
 
 		try {
 			if(DatabaseManager.getCurrentStip() != null) { //si pas de bdd, ne pas créer la vue
-				
+								
 				//Routes
 				DefaultMutableTreeNode routesRoot = new DefaultMutableTreeNode("root");
 				this.fillRoutesRootNode(routesRoot);
 				this.addTableTree(new FilteredTreeTableModel(routesRoot), "Routes", this.createTitleRoutes());
-				
+
 				//Balises
 				DefaultMutableTreeNode balisesRoot = new DefaultMutableTreeNode("root");
 				this.fillBalisesRootNode(balisesRoot);
-				this.addTableTree(new FilteredTreeTableModel(balisesRoot), "Balises", null);
+				this.addTableTree(new FilteredTreeTableModel(balisesRoot), "Balises", this.createTitleBalises());
 				
 				this.add(this.buildSecteursPanel());
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.add(Box.createVerticalGlue());
 
 	}
 	
@@ -169,6 +159,26 @@ public class StipView extends FilteredMultiTreeTableView{
 		return titlePanel; 
 	}
 
+	/**
+	 * Titre du panel Routes.<br />
+	 * Contient un sélecteur pour choisir la méthode de représentation (2D/3D).
+	 * @return JPanel
+	 */
+	private JPanel createTitleBalises(){
+		
+		TitleTwoButtons titlePanel = new TitleTwoButtons("Balises", "2D", "3D", true);
+		titlePanel.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				Boolean state = e.getStateChange() == ItemEvent.SELECTED;
+				getController().setBalisesLayer3D(!state);
+			}
+		});
+		
+		return titlePanel; 
+	}
+	
 	private JTabbedPane buildSecteursPanel() {
 
 		secteurs.addTab("Paris", this.buildTabSecteur("PARI"));

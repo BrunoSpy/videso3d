@@ -52,7 +52,7 @@ import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.layers.AirportLayer;
-import fr.crnan.videso3d.layers.BaliseLayer;
+import fr.crnan.videso3d.layers.Balise2DLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
 import gov.nasa.worldwind.avlist.AVKey;
@@ -88,7 +88,7 @@ public class AIPController implements VidesoController {
 	private Routes2DLayer routes2D;
 	private Routes3DLayer routes3D;
 	
-	private BaliseLayer navFixLayer;
+	private Balise2DLayer navFixLayer;
 
 	private AirportLayer arptLayer;
 	
@@ -151,7 +151,7 @@ public class AIPController implements VidesoController {
 		if(navFixLayer != null){
 			navFixLayer.removeAllBalises();
 		}else{
-			navFixLayer = new BaliseLayer("NavFix AIP");	
+			navFixLayer = new Balise2DLayer("NavFix AIP");	
 			this.toggleLayer(navFixLayer, true);
 		}
 		if(arptLayer != null){

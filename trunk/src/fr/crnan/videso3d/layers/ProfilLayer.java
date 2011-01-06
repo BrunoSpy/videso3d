@@ -28,7 +28,7 @@ public class ProfilLayer extends LayerSet {
 	/**
 	 * Texte des couples balise/niveau
 	 */
-	private BaliseLayer baliseLayer = new BaliseLayer("Balises", true);
+	private Balise2DLayer baliseLayer = new Balise2DLayer("Balises", true);
 	/**
 	 * Dessins
 	 */

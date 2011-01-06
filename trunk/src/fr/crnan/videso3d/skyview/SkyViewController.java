@@ -33,7 +33,7 @@ import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
-import fr.crnan.videso3d.layers.BaliseLayer;
+import fr.crnan.videso3d.layers.Balise2DLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -49,8 +49,8 @@ public class SkyViewController implements VidesoController {
 	private VidesoGLCanvas wwd;
 	
 	private Routes2DLayer routes = new Routes2DLayer("Routes SkyView");
-	private BaliseLayer airports = new BaliseLayer("Aéroports SkyView");
-	private BaliseLayer waypoints = new BaliseLayer("Balises SkyView");
+	private Balise2DLayer airports = new Balise2DLayer("Aéroports SkyView");
+	private Balise2DLayer waypoints = new Balise2DLayer("Balises SkyView");
 	
 	private HashSet<String> routesList = new HashSet<String>();
 	

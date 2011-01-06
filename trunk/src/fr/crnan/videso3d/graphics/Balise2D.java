@@ -39,7 +39,7 @@ import gov.nasa.worldwind.render.markers.Marker;
  * @author Bruno Spyckerelle
  * @version 0.5.2
  */
-public class Balise2D extends MarkerAnnotation {
+public class Balise2D extends MarkerAnnotation implements Balise{
 		
 	private UserFacingText text;
 	
@@ -101,7 +101,7 @@ public class Balise2D extends MarkerAnnotation {
 	 * Met en valeur la balise
 	 * @param bool
 	 */
-	public void highlight(Boolean bool){
+	public void highlight(boolean bool){
 		if(bool) {
 			this.getAttributes().setMaterial(Material.YELLOW);
 			this.text.setColor(Color.YELLOW);

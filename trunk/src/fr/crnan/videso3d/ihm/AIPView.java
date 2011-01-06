@@ -24,8 +24,6 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -37,44 +35,45 @@ import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
 import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
+
 /**
- * 
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public class AIPView extends FilteredMultiTreeTableView {
 
 	public AIPView() {
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		try {
 			if(DatabaseManager.getCurrentAIP() != null) { //si pas de bdd, ne pas créer la vue
-
-				DefaultMutableTreeNode AerodromesRoot = new DefaultMutableTreeNode("root");
-				this.fillAerodromesRootNode(AerodromesRoot);
-				FilteredTreeTableModel AerodromesModel = new FilteredTreeTableModel(AerodromesRoot);
-				this.addTableTree(AerodromesModel, "Terrains", null);
-				
-				DefaultMutableTreeNode RoutesRoot = new DefaultMutableTreeNode("root");
-				this.fillRoutesRootNode(RoutesRoot);
-				FilteredTreeTableModel RoutesModel = new FilteredTreeTableModel(RoutesRoot);
-				this.addTableTree(RoutesModel, "", createTitleRoutes());
-
-				DefaultMutableTreeNode NavFixRoot = new DefaultMutableTreeNode("root");
-				this.fillNavFixRootNode(NavFixRoot);
-				FilteredTreeTableModel NavFixModel = new FilteredTreeTableModel(NavFixRoot);
-				this.addTableTree(NavFixModel, "Navigation Fix", null);
 
 				DefaultMutableTreeNode ZonesRoot = new DefaultMutableTreeNode("root");
 				this.fillZonesRootNode(ZonesRoot);
 				FilteredTreeTableModel ZonesModel = new FilteredTreeTableModel(ZonesRoot);
 				this.addTableTree(ZonesModel, "Espaces", null);
 				
+				DefaultMutableTreeNode RoutesRoot = new DefaultMutableTreeNode("root");
+				this.fillRoutesRootNode(RoutesRoot);
+				FilteredTreeTableModel RoutesModel = new FilteredTreeTableModel(RoutesRoot);
+				this.addTableTree(RoutesModel, "", createTitleRoutes());
+				
+				DefaultMutableTreeNode AerodromesRoot = new DefaultMutableTreeNode("root");
+				this.fillAerodromesRootNode(AerodromesRoot);
+				FilteredTreeTableModel AerodromesModel = new FilteredTreeTableModel(AerodromesRoot);
+				this.addTableTree(AerodromesModel, "Terrains", null);
+
+				DefaultMutableTreeNode NavFixRoot = new DefaultMutableTreeNode("root");
+				this.fillNavFixRootNode(NavFixRoot);
+				FilteredTreeTableModel NavFixModel = new FilteredTreeTableModel(NavFixRoot);
+				this.addTableTree(NavFixModel, "Navigation Fix", null);
+
+				
+				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.add(Box.createVerticalGlue());
+		
 	}
 
 
