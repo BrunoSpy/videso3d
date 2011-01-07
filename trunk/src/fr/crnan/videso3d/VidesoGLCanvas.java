@@ -48,6 +48,7 @@ import fr.crnan.videso3d.layers.LPLNTracksLayer;
 import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
+import fr.crnan.videso3d.layers.VerticalScaleBar;
 import fr.crnan.videso3d.util.VMeasureTool;
 
 import gov.nasa.worldwind.BasicFactory;
@@ -109,6 +110,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 */
 	private VMeasureTool measureTool;	
 
+	private VerticalScaleBar scale;
+	
 	/**
 	 * Initialise les différents objets graphiques
 	 */
@@ -143,8 +146,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 
 		//position de départ centrée sur la France
-		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));
-
+		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));		
 	}
 
 	public AnnotationLayer getAnnotationLayer(){
@@ -403,6 +405,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/*----------------- Gestion des trajectoires       ------------------*/
 	/*-------------------------------------------------------------------*/    
 
+	//TODO créer le controleur correspondant
+	
 	
 
 	/**
@@ -723,4 +727,19 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		task.execute();
 	}
 
+	public void activateVerticalScaleBar(Boolean state){
+		if(scale == null){
+			scale = new VerticalScaleBar(this);
+			this.addSelectListener(scale);
+		}
+		
+		if(state){
+			scale.initializePosition(this.getView().getGlobe().computePositionFromPoint(this.getView().getCenterPoint()));
+			this.toggleLayer(scale, true);
+			this.addSelectListener(scale);
+		} else {
+			this.toggleLayer(scale, false);
+		}
+	}
+	
 }

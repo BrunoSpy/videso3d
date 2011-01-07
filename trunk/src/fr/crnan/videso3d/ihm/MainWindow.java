@@ -439,6 +439,18 @@ public class MainWindow extends JFrame {
 		toolbar.add(datas);
 		toolbar.addSeparator();
 
+		//échelle verticale
+		
+		final JToggleButton verticalScaleBar = new JToggleButton("Echelle");
+		verticalScaleBar.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				wwd.activateVerticalScaleBar(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+		toolbar.add(verticalScaleBar);
+	
 		//fond de la France
 		final JToggleButton fond = new JToggleButton("Fond");
 		fond.addItemListener(new ItemListener() {
