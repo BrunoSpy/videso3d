@@ -141,8 +141,8 @@ public class StipController implements VidesoController {
 		this.balisesPub2D.setLocked(false);
 		this.balisesNP2D.removeAllBalises();
 		this.balisesPub2D.removeAllBalises();
-//		this.balisesNP3D.setLocked(false);
-//		this.balisesPub3D.setLocked(false);
+		this.balisesNP3D.setLocked(false);
+		this.balisesPub3D.setLocked(false);
 		this.balisesNP3D.removeAllBalises();
 		this.balisesPub3D.removeAllBalises();
 		this.secteurs.clear();
@@ -213,52 +213,7 @@ public class StipController implements VidesoController {
 		case 1:
 			this.wwd.firePropertyChange("step", "", "Création des balises non publiées");
 			break;
-		}
-//		try {
-//			Statement st = DatabaseManager.getCurrentStip();
-//			ResultSet rs = st.executeQuery("select * from balises where publicated = " + publicated);
-//			
-//			fr.crnan.videso3d.graphics.Balise balise = null;
-//
-//			while(rs.next()){
-//
-//				String annotation = "<p><b>Balise "+rs.getString("name") +"</b></p>";
-//				annotation += "<p>Commentaire : "+rs.getString("definition")+"<br />";
-//				int plafond = -1;
-//				int plafondMax = 10;
-//				String secteur = null;
-//				for(int i = 9; i>= 1; i--){
-//					int plancher = rs.getInt("limit"+i);
-//					if(plancher != -1){
-//						if(secteur!=null){
-//							annotation += "\nDu "+plafond+" au "+plancher+" : "+secteur+"<br />";
-//						}	
-//						if (plafond > plafondMax) plafondMax = plafond;
-//						plafond = plancher;
-//						secteur = rs.getString("sect"+i);
-//					}
-//				}
-//				if(secteur != null) annotation += "\nDu "+plafond+" au "+0+" : "+secteur+"<br />";
-//				annotation += "</p>";
-//
-//				if(publicated == 1) {
-//					balise = new Balise3D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), plafondMax*30.48), annotation, Type.STIP, StipController.BALISES);
-//					balisesPub3D.addBalise(balise);
-//				} else {
-//					balise = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), annotation, Type.STIP, StipController.BALISES);
-//					balisesNP2D.addBalise(balise);	
-//				}
-//				//lien nominal
-//				this.balises2D.put(rs.getString("name"), balise);
-//			}
-//			
-//			st.close();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		
+		}		
 	}
 	
 	private void createBalise(String name){
@@ -292,7 +247,6 @@ public class StipController implements VidesoController {
 					annotation += "</p>";
 
 					if(rs.getBoolean("publicated")) {
-						System.out.println(name);
 						balise3d = new Balise3D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), plafondMax*30.48), annotation, Type.STIP, StipController.BALISES);
 						balisesPub3D.addBalise(balise3d);
 						balise2d = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), annotation, Type.STIP, StipController.BALISES);

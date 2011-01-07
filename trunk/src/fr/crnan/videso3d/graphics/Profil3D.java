@@ -39,7 +39,7 @@ public class Profil3D {
 	/**
 	 * Balises
 	 */
-	private List<Balise> balises = new ArrayList<Balise>();
+	private List<Balise3D> balises = new ArrayList<Balise3D>();
 
 	/**
 	 * Profil
@@ -99,11 +99,11 @@ public class Profil3D {
 	}
 	
 	public void addBalise(String balise, Position position){
-		this.balises.add(new Balise2D(balise, position, Type.STIP, StipController.BALISES));
+		this.balises.add(new Balise3D(balise, position, Type.STIP, StipController.BALISES));
 	}
 	
 	public void addBalise(String balise, String annotation, Position position){
-		this.balises.add(new Balise2D(balise, position, Type.STIP, StipController.BALISES));
+		this.balises.add(new Balise3D(balise, position, Type.STIP, StipController.BALISES));
 	}
 	
 	public void setBalises(List<String> balises, List<String> annotations, Iterable<? extends Position> positions){
@@ -152,7 +152,7 @@ public class Profil3D {
 		return this.projected;
 	}
 	
-	public List<Balise> getBalises(){
+	public List<Balise3D> getBalises(){
 		return this.balises;
 	}
 	

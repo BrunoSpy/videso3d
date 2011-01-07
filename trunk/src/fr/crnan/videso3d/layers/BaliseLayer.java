@@ -34,7 +34,7 @@ public interface BaliseLayer extends Layer {
 	 * Utiliser <code>showAll</code> ou <b>showBalise</b> pour rendre visible la balise.
 	 * @param balise Balise à ajouter
 	 */
-	public void addBalises(Iterable<Balise> balises);
+	public void addBalises(Iterable<? extends Balise> balises);
 	
 	/**
 	 * Affiche toutes les balises

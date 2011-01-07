@@ -52,11 +52,13 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 	}
 
 	@Override
-	public void addBalises(Iterable<Balise> balises) {
-		// TODO Auto-generated method stub
-
+	public void addBalises(Iterable<? extends Balise> balises) {
+		for(Balise b : balises){
+			this.addBalise(b);
+		}
 	}
-
+	
+	
 	@Override
 	public void showAll() {
 		for(Balise3D b : balises.values()){
@@ -73,7 +75,6 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 	@Override
 	public void showBalise(Balise b) {
 		if(!balisesActives.contains(b)){
-			if(b == null) System.out.println("Pb");
 			balisesActives.add((Balise3D) b);
 			this.addRenderable((Balise3D) b);
 			this.firePropertyChange(AVKey.LAYER, null, this);
