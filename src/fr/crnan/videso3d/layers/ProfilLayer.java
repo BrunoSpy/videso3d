@@ -20,7 +20,7 @@ import gov.nasa.worldwind.layers.RenderableLayer;
 /**
  * Layer d'accueil pour des {@link Profil3D}
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 @SuppressWarnings("serial")
 public class ProfilLayer extends LayerSet {
@@ -28,7 +28,7 @@ public class ProfilLayer extends LayerSet {
 	/**
 	 * Texte des couples balise/niveau
 	 */
-	private Balise2DLayer baliseLayer = new Balise2DLayer("Balises", true);
+	private Balise3DLayer baliseLayer = new Balise3DLayer("Balises");
 	/**
 	 * Dessins
 	 */

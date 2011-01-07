@@ -58,11 +58,18 @@ public class Balise3D extends PointPlacemark implements Balise {
 		ppa.setLineMaterial(Material.WHITE);
 		ppa.setUsePointAsDefaultImage(true);
 		ppa.setLabelScale(0.7);
-		
-		this.setAnnotation(annotation);
+		if(annotation == null){
+			this.setAnnotation((String) name);
+		} else {
+			this.setAnnotation(annotation);
+		}
 		this.setAttributes(ppa);
 	}
 	
+	public Balise3D(String balise, Position position, Type base, int type) {
+		this(balise,  position, null, base, type);
+	}
+
 	@Override
 	public String getName() {
 		return this.getLabelText();

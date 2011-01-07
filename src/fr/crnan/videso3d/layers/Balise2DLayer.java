@@ -79,7 +79,7 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	 * @param balise Balise à ajouter
 	 */
 	@Override
-	public void addBalises(Iterable<Balise> balises) {
+	public void addBalises(Iterable<? extends Balise> balises) {
 		for(Balise b : balises){
 			this.balises.put(b.getName(), (Balise2D) b);
 		}
