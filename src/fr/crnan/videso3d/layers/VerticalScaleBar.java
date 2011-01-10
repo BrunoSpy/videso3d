@@ -69,7 +69,8 @@ public class VerticalScaleBar extends RenderableLayer implements SelectListener 
 	public VerticalScaleBar(VidesoGLCanvas wd){
 
 		this.wwd = wd;
-
+		
+		
 		top = new MovablePointPlacemark(new Position(LatLon.ZERO, 600*30.48));
 		top.setAltitudeMode(WorldWind.ABSOLUTE);
 		top.setApplyVerticalExaggeration(true);
@@ -144,6 +145,7 @@ public class VerticalScaleBar extends RenderableLayer implements SelectListener 
 			throw new IllegalArgumentException(msg);
 		}
 
+		
 		if (event.getEventAction().equals(SelectEvent.DRAG_END))
 		{
 			this.dragging = false;
@@ -152,14 +154,17 @@ public class VerticalScaleBar extends RenderableLayer implements SelectListener 
 		{
 			DragSelectEvent dragEvent = (DragSelectEvent) event;
 			Object topObject = dragEvent.getTopObject();
-			if (topObject == null)
+			if (topObject == null){
 				return;
+			}
 
-			if(topObject != top && !hundreds.contains(topObject) && !tens.contains(topObject))
+			if(topObject != top && !hundreds.contains(topObject) && !tens.contains(topObject)) {
 				return;
+			}
 			
-			if (!(topObject instanceof Movable))
+			if (!(topObject instanceof Movable)) {
 				return;
+			}
 			
 
 			Movable dragObject = (Movable) topObject;
