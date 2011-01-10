@@ -20,8 +20,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.Pallet;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
+import fr.crnan.videso3d.graphics.VidesoObject;
 import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.Annotation;
+import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
@@ -30,12 +37,74 @@ import gov.nasa.worldwind.render.airspaces.Polygon;
 /**
  * Représentation 3D des mosaiques ODS (volume d'interet, de sécurité, ..)
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class MosaiqueEntity extends LinkedList<Airspace>{
 	
 	private Double plancher = new Double(0);
 	private Double plafond = new Double(660);
+	
+	private class Volume extends Polygon implements VidesoObject {
+		
+		private GlobeAnnotation annotation;
+		
+		private DatabaseManager.Type base;
+		
+		private int type;
+		
+		private String name;
+		
+		@Override
+		public void setAnnotation(String text){
+			if(annotation == null) {
+				annotation = new GlobeAnnotation(text, Position.ZERO);
+				annotation.setAlwaysOnTop(true);
+				annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
+				annotation.getAttributes().setBorderColor(Color.BLACK);
+				annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
+			} else {
+				annotation.setText(text);
+			}
+		}
+		
+		@Override
+		public GlobeAnnotation getAnnotation(Position pos){
+			annotation.setPosition(pos);
+			return annotation;
+		}
+
+		@Override
+		public Type getDatabaseType() {
+			return this.base;
+		}
+
+		@Override
+		public void setDatabaseType(Type type) {
+			this.base = type;
+		}
+
+		@Override
+		public void setType(int type) {
+			this.type = type;
+		}
+
+		@Override
+		public int getType() {
+			return this.type;
+		}
+
+		@Override
+		public String getName() {
+			return this.name;
+		}
+
+		@Override
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+	}
+	
 	
 	public MosaiqueEntity(Entity entity, HashMap<String, LatLonCautra> pointsRef) {
 		plancher = new Double(entity.getValue("value_min"))*30.48;
@@ -45,31 +114,57 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 
 	private void createAirspaces(LinkedList<Entity> value) {
 		LatLonCautra p = null;
-		BasicAirspaceAttributes attrs = new BasicAirspaceAttributes(new Material(Color.BLUE), 0.30);
+		
+		int i = 0;
+		Double step = 4.0; //pas de la mosaïque en NM
+
+		boolean interet = false;
+		
+		BasicAirspaceAttributes attrsI = new BasicAirspaceAttributes(new Material(Color.BLUE), 0.30);
+		BasicAirspaceAttributes attrs = new BasicAirspaceAttributes(new Material(Color.RED), 0.30);
+		
 		for(Entity e : value){
-			if(e.getKeyword().equals("nautical_mile")) {
-				String[] temp = ((String) e.getValue()).split("\\s+");
-				if(!temp[4].equals("0")) { 
-					p = PointEdimap.fromEntity(e);
-				} else {
-					p = null;
-				}
-			} else if (e.getKeyword().equals("distance")){
-				if(p != null) {
-					Double distance = new Double(((String)e.getValue()).split("\\s+")[1]) / 64;
-					List<LatLon> locations = new LinkedList<LatLon>();
-					locations.add(p);
-					locations.add(LatLonCautra.fromCautra(p.getCautra()[0] + distance, p.getCautra()[1]));
-					locations.add(LatLonCautra.fromCautra(p.getCautra()[0] + distance, p.getCautra()[1] + 2));
-					locations.add(LatLonCautra.fromCautra(p.getCautra()[0], p.getCautra()[1] + 2));
-					Polygon polygon = new Polygon();
-					polygon.setAltitudes(plancher, plafond);
-					polygon.setLocations(locations);
-					polygon.setAttributes(attrs);
-					this.add(polygon);
+			if(i == 0){//la première ligne ne sert à rien (centre de la mosaïque)			
+				i++;
+			} else if (i == 1) {//la deuxième ligne donne le pas de la mosaïque
+				step = new Double(((String)e.getValue()).split("\\s+")[1]) / 64;
+				i++;
+			} else {
+				if(e.getKeyword().equals("nautical_mile")) {
+					String[] temp = ((String) e.getValue()).split("\\s+");
+					if(!temp[4].equals("0")) { 
+						interet = temp[4].equals("2");
+						p = PointEdimap.fromEntity(e);
+					} else {
+						p = null;
+					}
+				} else if (e.getKeyword().equals("distance")){
+					if(p != null) {
+						Double distance = new Double(((String)e.getValue()).split("\\s+")[1]) / 64;
+
+						
+						Volume volume = new Volume();
+						volume.setAltitudes(plancher, plafond);
+						
+						List<LatLon> locations = new LinkedList<LatLon>();
+						
+						locations.add(p);
+						locations.add(LatLonCautra.fromCautra(p.getCautra()[0] + distance, p.getCautra()[1]));
+						locations.add(LatLonCautra.fromCautra(p.getCautra()[0] + distance, p.getCautra()[1] + step));
+						locations.add(LatLonCautra.fromCautra(p.getCautra()[0], p.getCautra()[1] + step));
+						
+						if(interet) {
+							volume.setAttributes(attrsI);
+						} else {
+							volume.setAttributes(attrs);
+						}
+						volume.setLocations(locations);
+						this.add(volume);
+						
+					}
 				}
 			}
 		}
 	}
-
+	
 }

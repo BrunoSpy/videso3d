@@ -441,7 +441,8 @@ public class MainWindow extends JFrame {
 
 		//échelle verticale
 		
-		final JToggleButton verticalScaleBar = new JToggleButton("Echelle");
+		final JToggleButton verticalScaleBar = new JToggleButton(new ImageIcon(getClass().getResource("/resources/scale_22_2.png")));
+		verticalScaleBar.setToolTipText("Afficher une échelle verticale");
 		verticalScaleBar.addItemListener(new ItemListener() {
 			
 			@Override
