@@ -103,13 +103,15 @@ public class Profil3D {
 	}
 	
 	public void addBalise(String balise, String annotation, Position position){
-		this.balises.add(new Balise3D(balise, position, Type.STIP, StipController.BALISES));
+		this.balises.add(new Balise3D(balise, position, annotation, Type.STIP, StipController.BALISES));
+		
 	}
 	
 	public void setBalises(List<String> balises, List<String> annotations, Iterable<? extends Position> positions){
 		int i = 0;
 		for(Position position : positions){
-			this.addBalise(balises.get(i), annotations.get(i), position);
+			if(balises.get(i)!=null)
+				this.addBalise(balises.get(i), annotations.get(i), position);
 			i++;
 		}
 		profil.setPositions(positions);
@@ -120,7 +122,8 @@ public class Profil3D {
 	public void setBalises(List<String> balises, Iterable<? extends Position> positions){
 		int i = 0;
 		for(Position position : positions){
-			this.addBalise(balises.get(i), position);
+			if(balises.get(i)!=null)
+				this.addBalise(balises.get(i), position);
 			i++;
 		}
 		profil.setPositions(positions);
@@ -157,11 +160,14 @@ public class Profil3D {
 	}
 	
 	public void highlight(Boolean b) {
-		if(b){
-			curtain.setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 0.4f)));
-		} else {
-			curtain.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
-		}
+		Color c = curtain.getColor();
+			curtain.setColor(Pallet.makeBrighter(new Color(255-c.getRed(), 255-c.getGreen(), 255-c.getBlue(), 100)));
+		
+	}
+	
+	public void setColor(Color c){
+		curtain.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 100));
+		profil.setColor(c);
 	}
 
 }

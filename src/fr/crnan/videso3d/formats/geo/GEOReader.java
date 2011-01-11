@@ -52,7 +52,8 @@ public class GEOReader extends TrackFilesReader{
 					new FileInputStream(file)));
 			int count = 0; //nombre de lignes lues
 			while(in.ready() && !geo && count < 10){//on ne lit que les 10 premières lignes pour détecter le type de fichier
-				if(in.readLine().startsWith("!	Version") || in.readLine().startsWith("!	voie")){
+				String line = in.readLine();
+				if(line.startsWith("!	Version") || line.startsWith("!	voie")){
 					geo = true;
 				}
 				count++;

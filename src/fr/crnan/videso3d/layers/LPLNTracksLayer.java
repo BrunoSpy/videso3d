@@ -107,7 +107,7 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		this.showTrack(track);
 	}
 	
-	private void showTrack(LPLNTrack track){
+	protected void showTrack(LPLNTrack track){
 		if(profils.containsKey(track)){
 			this.layer.addProfil3D(profils.get(track));
 		} else {
@@ -176,7 +176,8 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		tracks.put((LPLNTrack) track, b);
 		this.update();
 	}
-
+	
+	
 	@Override
 	public Boolean isTrackHideable() {
 		return true;
@@ -242,4 +243,10 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		
 	}
 	
+	protected HashMap<LPLNTrack, Profil3D> getProfils(){
+		return profils;
+	}
+	protected ProfilLayer getLayer(){
+		return layer;
+	}
 }

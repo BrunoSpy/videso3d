@@ -50,6 +50,10 @@ public class LPLNTrackPoint implements TrackPoint{
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public LPLNTrackPoint() {
+	}
 
 	@Override
 	public double getElevation() {

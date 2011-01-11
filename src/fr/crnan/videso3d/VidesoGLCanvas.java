@@ -33,6 +33,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
@@ -42,6 +43,7 @@ import fr.crnan.videso3d.graphics.Aerodrome;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.layers.FPLTracksLayer;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
 import fr.crnan.videso3d.layers.LPLNTracksLayer;
@@ -420,6 +422,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			return this.addTrajectoires((GEOReader)reader);
 		} else if(reader instanceof OPASReader){
 			return this.addTrajectoires((OPASReader)reader);
+		} else if(reader instanceof FPLReader){
+			return this.addTrajectoires((FPLReader)reader);
 		}
 		return null;
 	}
@@ -472,7 +476,22 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 		return trajLayer;
 	}
-
+	
+	/**
+	 * Ajoute les trajectoires plan de vol
+	 * @param opasReader
+	 */
+	public TrajectoriesLayer addTrajectoires(FPLReader fplR) {
+		FPLTracksLayer trajLayer = new FPLTracksLayer();
+		trajLayer.setName(fplR.getName());
+		this.toggleLayer(trajLayer, true);
+		for(Track track : fplR.getTracks()){
+			trajLayer.addTrack(track);
+		}
+		return trajLayer;
+	}
+	
+	
 	/**
 	 * Nombre d'étapes de l'initialisation (utile pour le splashscreen)
 	 * @return int
