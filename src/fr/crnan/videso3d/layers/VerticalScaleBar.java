@@ -19,6 +19,7 @@ import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -27,6 +28,7 @@ import java.util.Set;
 import fr.crnan.videso3d.DraggerListener;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.graphics.MovablePointPlacemark;
+import fr.crnan.videso3d.graphics.VidesoObject;
 import gov.nasa.worldwind.Movable;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.WorldWindow;
@@ -143,6 +145,10 @@ public class VerticalScaleBar extends DraggerListener implements Layer {
 		}
 	}
 
+	@Override
+	public Boolean isDraggable(Object o){
+		return o.equals(top) || hundreds.contains(o) || tens.contains(o);
+	}
 
 	public void initializePosition(Position position){
 		this.movePointPlacemarks(position);
@@ -151,7 +157,8 @@ public class VerticalScaleBar extends DraggerListener implements Layer {
 
 	@Override
 	protected void doMove(Position pos, Movable o){
-		this.movePointPlacemarks(pos);
+		if(isDraggable(o))
+			this.movePointPlacemarks(pos);
 	}
 	
 	@Override

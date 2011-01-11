@@ -43,7 +43,7 @@ import gov.nasa.worldwind.util.RayCastingSupport;
  */
 public class DraggerListener implements SelectListener {
 	
-	private Set<VidesoObject> draggables = new HashSet<VidesoObject>();
+	private Set<Movable> draggables = new HashSet<Movable>();
 	
 	private boolean dragging = false;
 
@@ -63,12 +63,8 @@ public class DraggerListener implements SelectListener {
 	 * Allows this object to be dragged
 	 * @param o
 	 */
-	public void addDraggableObject(VidesoObject o){
-		if(o instanceof Movable) {
-			this.draggables.add(o);
-		} else {
-			Logging.logger().warning("Trying to add a non movable object");
-		}
+	public void addDraggableObject(Movable o){
+		this.draggables.add(o);
 	}
 	
 	@Override
@@ -93,7 +89,7 @@ public class DraggerListener implements SelectListener {
 				return;
 			}
 
-			if(!draggables.contains(topObject) && !(topObject instanceof GlobeAnnotation)) {
+			if(!this.isDraggable(topObject) && !(topObject instanceof GlobeAnnotation)) {
 				return;
 			}
 			
@@ -178,5 +174,8 @@ public class DraggerListener implements SelectListener {
         return this.dragging;
     }
 
+    public Boolean isDraggable(Object o){
+    	return this.draggables.contains(o);
+    }
 	
 }
