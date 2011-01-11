@@ -35,9 +35,9 @@ import gov.nasa.worldwind.render.SurfacePolygon;
 import gov.nasa.worldwind.render.UserFacingText;
 
 /**
- * 
+ * Représentation d'un aérodrome avec ses pistes
  * @author Adrien Vidal
- *
+ * @version 0.1.1
  */
 public class PisteAerodrome implements Aerodrome{
 
@@ -46,8 +46,13 @@ public class PisteAerodrome implements Aerodrome{
 	private GlobeAnnotation annotation;
 	private UserFacingText text;
 	private Position refPosition;
+	private DatabaseManager.Type base;
+	private int type;
 	
-	public PisteAerodrome(int type, String name, String annotationText, double lat1, double lon1, double lat2, double lon2, double largeur, Position ref){
+	public PisteAerodrome(int type, String name, String annotationText, double lat1, double lon1, double lat2, double lon2, double largeur, Position ref, DatabaseManager.Type base){
+		this.setDatabaseType(base);
+		this.setType(type);
+		
 		this.name = name.split("--")[0].trim();
 		this.setAnnotation(annotationText);
 		this.refPosition = ref;
@@ -58,7 +63,7 @@ public class PisteAerodrome implements Aerodrome{
 		innerAttrs.setInteriorOpacity(0.8);
 		this.inner.setAttributes(innerAttrs);
 		this.inner.setAnnotation(annotationText);
-		this.inner.setDatabaseType(DatabaseManager.Type.AIP);
+		this.inner.setDatabaseType(base);
 		this.inner.setType(type);
 		this.inner.setName(name);
 		ShapeAttributes outerAttrs = new BasicShapeAttributes();
@@ -69,7 +74,7 @@ public class PisteAerodrome implements Aerodrome{
 		outerAttrs.setDrawOutline(true);
 		this.outer.setAttributes(outerAttrs);
 		this.outer.setAnnotation(annotationText);
-		this.outer.setDatabaseType(DatabaseManager.Type.AIP);
+		this.outer.setDatabaseType(base);
 		this.outer.setType(type);
 		this.outer.setName(name);
 
@@ -161,14 +166,15 @@ public class PisteAerodrome implements Aerodrome{
 	
 	@Override
 	public Type getDatabaseType() {
-		return DatabaseManager.Type.AIP;
+		return this.base;
 	}
 
 	/**
 	 * Non implémenté
 	 */
 	@Override
-	public void setDatabaseType(Type type) {
+	public void setDatabaseType(Type base) {
+		this.base = base;
 	}
 
 	/**
@@ -176,6 +182,7 @@ public class PisteAerodrome implements Aerodrome{
 	 */
 	@Override
 	public void setType(int type) {
+		this.type = type;
 	}
 
 	/**
@@ -183,7 +190,7 @@ public class PisteAerodrome implements Aerodrome{
 	 */
 	@Override
 	public int getType() {
-		return 0;
+		return this.type;
 	}
 
 	/**

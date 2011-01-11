@@ -18,6 +18,7 @@ package fr.crnan.videso3d;
 
 import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.edimap.Cartes;
+//import fr.crnan.videso3d.skyview.SkyViewController;
 import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.util.Logging;
 
@@ -1353,6 +1354,24 @@ public final class DatabaseManager {
 				}
 			}
 			return items;
+//		case SkyView:
+//			st = DatabaseManager.getCurrentSkyView();
+//			if(st != null){
+//				items = new LinkedList<Couple<Integer, String>>();
+//				rs = st.executeQuery("select ident from waypoint");
+//				while(rs.next()){
+//					items.add(new Couple<Integer, String>(SkyViewController.TYPE_WAYPOINT, rs.getString(1)));
+//				}
+//				rs = st.executeQuery("select ident from airport");
+//				while(rs.next()){
+//					items.add(new Couple<Integer, String>(SkyViewController.TYPE_AIRPORT, rs.getString(1)));
+//				}
+//				rs = st.executeQuery("select ident from airway");
+//				while(rs.next()){
+//					items.add(new Couple<Integer, String>(SkyViewController.TYPE_ROUTE, rs.getString(1)));
+//				}
+//			}
+//			return items;
 		default:
 			return items;
 		}
