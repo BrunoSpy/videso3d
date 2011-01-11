@@ -65,6 +65,7 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.geo.GEOFileFilter;
 import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
 import fr.crnan.videso3d.formats.opas.OPASFileFilter;
+import fr.crnan.videso3d.formats.fpl.FPLFileFilter;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
 import fr.crnan.videso3d.ihm.components.Omnibox;
@@ -406,6 +407,7 @@ public class MainWindow extends JFrame {
 				fileChooser.addChoosableFileFilter(new OPASFileFilter());
 				fileChooser.addChoosableFileFilter(new LPLNFileFilter());
 				fileChooser.addChoosableFileFilter(new GEOFileFilter());
+				fileChooser.addChoosableFileFilter(new FPLFileFilter());
 				if(fileChooser.showOpenDialog(trajectoires) == VFileChooser.APPROVE_OPTION){
 
 					new SwingWorker<String, Integer>(){

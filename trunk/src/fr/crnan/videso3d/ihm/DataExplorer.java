@@ -36,6 +36,7 @@ import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
@@ -153,7 +154,7 @@ public class DataExplorer extends JPanel {
 		Vector<File> opasFile = new Vector<File>();
 		Vector<File> geoFile = new Vector<File>();
 		Vector<File> lplnFile = new Vector<File>();
-		
+		Vector<File> fplFile = new Vector<File>();
 		for(File f : files){
 			if(OPASReader.isOpasFile(f)) {
 				opasFile.add(f);
@@ -161,6 +162,8 @@ public class DataExplorer extends JPanel {
 				lplnFile.add(f);
 			} else if(GEOReader.isGeoFile(f)) {
 				geoFile.add(f);
+			} else if (FPLReader.isLPLNFile(f)){
+				fplFile.add(f);
 			}
 		}
 		
@@ -173,11 +176,15 @@ public class DataExplorer extends JPanel {
 		if(lplnFile.size()>0){
 			this.addTrajectoriesView(new LPLNReader(lplnFile));
 		}
-		if(opasFile.size() == 0 && geoFile.size() == 0 && lplnFile.size() == 0){
+		if(fplFile.size()>0){
+			this.addTrajectoriesView(new FPLReader(fplFile));
+		}
+		if(opasFile.size() == 0 && geoFile.size() == 0 && lplnFile.size() == 0 && fplFile.size()==0){
 			Logging.logger().warning("Aucun fichier trajectoire trouvé.");
 			JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucun fichier trajectoire trouvé.<br /><br />" +
 					"<b>Solution :</b><br />Vérifiez que les fichiers sélectionnés sont bien dans un format pris en compte.</html>", "Erreur", JOptionPane.ERROR_MESSAGE);
 		}
+	
 	}
 	
 	private void addTrajectoriesView(TrackFilesReader reader){
