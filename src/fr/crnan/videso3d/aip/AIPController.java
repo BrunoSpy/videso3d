@@ -28,10 +28,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import org.jdom.Element;
-
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
@@ -41,7 +38,6 @@ import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIP.Altitude;
 import fr.crnan.videso3d.aip.RoutesSegments.Segment;
-import fr.crnan.videso3d.graphics.Aerodrome;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route.Sens;
@@ -214,6 +210,7 @@ public class AIPController implements VidesoController {
 	
 	@Override
 	public void showObject(int type, String name) {
+		System.out.println("show Object : "+name);
 		if(type>=AIP.AWY && type<AIP.DMEATT){
 			this.showRoute(name,type);
 		}else if(type == AIP.CTL){
@@ -350,8 +347,10 @@ public class AIPController implements VidesoController {
 			upperAltitudeRef = AVKey.ABOVE_MEAN_SEA_LEVEL;
 		}
 		zone.setAltitudeDatum(lowerAltitudeRef, upperAltitudeRef);
-		zones.put(type+" "+name, zone);
-		this.addToZonesLayer(zone);
+		if(!zones.containsKey(type+" "+name)){
+			zones.put(type+" "+name, zone);
+			this.addToZonesLayer(zone);
+		}
 	}
 
 
@@ -436,9 +435,9 @@ public class AIPController implements VidesoController {
 			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP,"select segments.pk, NavFix.nom from segments, NavFix where pkRoute = ? AND NavFix.pk = segments.navFixExtremite ORDER BY sequence");
 			st.setString(1, routeID);
 			ResultSet segments = st.executeQuery();
-			boolean segmentsEmpty = true;
+//			boolean segmentsEmpty = true;
 			while(segments.next()){
-				segmentsEmpty = false;
+//				segmentsEmpty = false;
 				Element segment = aip.findElement(aip.getDocumentRoot().getChild("SegmentS"), segments.getString(1));
 				String navFixExtremite = segments.getString(2);
 				String segmentName = buildSegmentName(routeName, segment.getChildText("Sequence"));
@@ -497,10 +496,10 @@ public class AIPController implements VidesoController {
 				}
 			}
 		
-			if(segmentsEmpty){
-				new JOptionPane("<html><b>Le tracé de la route <font color=\"red\">"+routeName+"</font> est inconnu !</b></html>", 
-						JOptionPane.INFORMATION_MESSAGE).createDialog("Route "+routeName).setVisible(true);
-			}
+//			if(segmentsEmpty){
+//				new JOptionPane("<html><b>Le tracé de la route <font color=\"red\">"+routeName+"</font> est inconnu !</b></html>", 
+//						JOptionPane.INFORMATION_MESSAGE).createDialog("Route "+routeName).setVisible(true);
+//			}
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
@@ -677,6 +676,7 @@ public class AIPController implements VidesoController {
 	
 	
 	private void removeAerodrome(int type, String nom){
+		String splittedName = nom.split("--")[0].trim();
 		List<String> nomsPistes = new LinkedList<String>();
 		int pk=-1;
 		ResultSet rs;
@@ -684,7 +684,7 @@ public class AIPController implements VidesoController {
 		try{
 			if(type == AIP.AERODROME){
 				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from aerodromes where upper(code) = ?");
-				ps.setString(1, nom.split("--")[0].trim());
+				ps.setString(1, splittedName);
 				rs = ps.executeQuery();
 			}else{
 				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from aerodromes where nom = ?");
@@ -705,10 +705,10 @@ public class AIPController implements VidesoController {
 		}
 		if(nomsPistes.size()>0){
 			for(String nomPiste : nomsPistes){
-				arptLayer.hideAirport(nom.split("--")[0].trim(),nomPiste);
+				arptLayer.hideAirport(splittedName,nomPiste);
 			}
 		}else{
-			arptLayer.hideAirport(nom.split("--")[0].trim(),"");
+			arptLayer.hideAirport(splittedName,"XX");
 		}
 	}
 	
