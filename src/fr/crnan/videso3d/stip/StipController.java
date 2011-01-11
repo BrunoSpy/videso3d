@@ -216,6 +216,10 @@ public class StipController implements VidesoController {
 		}		
 	}
 	
+	/**
+	 * Crée les balises 2D et 3D si besoin
+	 * @param name Nom dela balise à créer
+	 */
 	private void createBalise(String name){
 		if(!balises2D.containsKey(name)) {
 			try {
@@ -531,6 +535,7 @@ public class StipController implements VidesoController {
 			if(secteur != null) this.wwd.getView().goTo(secteur.getReferencePosition(), 1e6);
 			break;
 		case BALISES:
+			this.createBalise(text);
 			Balise2D balise = (Balise2D) balises2D.get(text);
 			Balise3D balise3d = (Balise3D) balises3D.get(text);
 			balise.highlight(true);

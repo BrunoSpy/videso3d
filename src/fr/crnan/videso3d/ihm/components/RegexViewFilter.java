@@ -51,7 +51,7 @@ public class RegexViewFilter implements ViewFilter {
 	
 	@Override
 	public boolean isShown(DefaultMutableTreeNode node) {
-		return pattern.matcher(((Couple<String, Boolean>)node.getUserObject()).getFirst()).matches() || ((Couple<String, Boolean>)node.getUserObject()).getSecond();
+		return pattern.matcher(((Couple<String, Boolean>)node.getUserObject()).getFirst()).matches() /*|| ((Couple<String, Boolean>)node.getUserObject()).getSecond()*/;
 	}
 
 }

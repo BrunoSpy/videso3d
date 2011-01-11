@@ -67,7 +67,7 @@ import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 /**
  * Contrôle l'affichage et la construction des éléments AIP
  * @author A. Vidal
- *
+ * @version 0.3.2
  */
 public class AIPController implements VidesoController {
 
@@ -210,7 +210,6 @@ public class AIPController implements VidesoController {
 	
 	@Override
 	public void showObject(int type, String name) {
-		System.out.println("show Object : "+name);
 		if(type>=AIP.AWY && type<AIP.DMEATT){
 			this.showRoute(name,type);
 		}else if(type == AIP.CTL){
@@ -656,7 +655,7 @@ public class AIPController implements VidesoController {
 					double lon2 = rs2.getDouble("lon2");
 					double largeur = rs2.getDouble("largeur");
 					String annotation = "<b>"+nom+"</b><br/>Piste "+ nomPiste;
-					PisteAerodrome piste = new PisteAerodrome(type, nom, annotation, lat1, lon1, lat2, lon2, largeur, Position.fromDegrees(latRef, lonRef));
+					PisteAerodrome piste = new PisteAerodrome(type, nom, annotation, lat1, lon1, lat2, lon2, largeur, Position.fromDegrees(latRef, lonRef), Type.AIP);
 					arptLayer.addAirport(piste, nomPiste);
 				}else{
 					String annotation = "<b>"+nom+"</b><br/>Piste "+ nomPiste;
@@ -757,7 +756,6 @@ public class AIPController implements VidesoController {
 			//Sinon c'est un volume
 		}else{
 			if(!zones.containsKey(type+" "+name)){
-				System.out.println("zone name : "+name);
 				this.addZone(type, name);
 			}
 			Secteur3D zone = zones.get(type+" "+name);
