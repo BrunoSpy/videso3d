@@ -18,37 +18,34 @@ package fr.crnan.videso3d.layers;
 import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import fr.crnan.videso3d.DraggerListener;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.graphics.MovablePointPlacemark;
 import gov.nasa.worldwind.Movable;
-import gov.nasa.worldwind.View;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.avlist.AVKey;
-import gov.nasa.worldwind.event.DragSelectEvent;
-import gov.nasa.worldwind.event.SelectEvent;
-import gov.nasa.worldwind.event.SelectListener;
-import gov.nasa.worldwind.geom.Intersection;
+import gov.nasa.worldwind.avlist.AVList;
 import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.geom.Line;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.geom.Vec4;
-import gov.nasa.worldwind.globes.Globe;
+import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.PointPlacemark;
 import gov.nasa.worldwind.render.PointPlacemarkAttributes;
-import gov.nasa.worldwind.util.Logging;
-import gov.nasa.worldwind.util.RayCastingSupport;
 /**
  * Vertical scalebar in FL, movable
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
-public class VerticalScaleBar extends RenderableLayer implements SelectListener {
+public class VerticalScaleBar extends DraggerListener implements Layer {
 
 	private PointPlacemark top;
 
@@ -57,20 +54,16 @@ public class VerticalScaleBar extends RenderableLayer implements SelectListener 
 	private List<PointPlacemark> tens = new LinkedList<PointPlacemark>();
 
 	private final WorldWindow wwd;
-	private boolean dragging = false;
 
-	private Point dragRefCursorPoint;
-	private Vec4 dragRefObjectPoint;
-
-	private double dragRefAltitude;
+	private RenderableLayer layer = new RenderableLayer();
 
 	private boolean detailed = false;
-	
-	public VerticalScaleBar(VidesoGLCanvas wd){
 
+	public VerticalScaleBar(VidesoGLCanvas wd){
+		super(wd);
 		this.wwd = wd;
-		
-		
+
+
 		top = new MovablePointPlacemark(new Position(LatLon.ZERO, 600*30.48));
 		top.setAltitudeMode(WorldWind.ABSOLUTE);
 		top.setApplyVerticalExaggeration(true);
@@ -115,16 +108,16 @@ public class VerticalScaleBar extends RenderableLayer implements SelectListener 
 
 		//changement de l'affichage en fonction du zoom
 		this.wwd.getSceneController().addPropertyChangeListener(AVKey.VERTICAL_EXAGGERATION, new PropertyChangeListener() {
-			
+
 			@Override
 			public void propertyChange(PropertyChangeEvent arg0) {
-			
+
 				if(wwd.getSceneController().getVerticalExaggeration() >= 4.0){
 					if(!detailed){
 						addRenderables(tens);
 						detailed = true;
 					}
-					
+
 				} else {
 					for(PointPlacemark p : tens){
 						removeRenderable(p);
@@ -132,108 +125,13 @@ public class VerticalScaleBar extends RenderableLayer implements SelectListener 
 					detailed = false;
 				}
 			}
+
+
 		});
-		
+
 	}
 
-	@Override
-	public void selected(SelectEvent event) {
-		if (event == null)
-		{
-			String msg = Logging.getMessage("nullValue.EventIsNull");
-			Logging.logger().severe(msg);
-			throw new IllegalArgumentException(msg);
-		}
 
-		
-		if (event.getEventAction().equals(SelectEvent.DRAG_END))
-		{
-			this.dragging = false;
-		}
-		else if (event.getEventAction().equals(SelectEvent.DRAG))
-		{
-			DragSelectEvent dragEvent = (DragSelectEvent) event;
-			Object topObject = dragEvent.getTopObject();
-			if (topObject == null){
-				return;
-			}
-
-			if(topObject != top && !hundreds.contains(topObject) && !tens.contains(topObject)) {
-				return;
-			}
-			
-			if (!(topObject instanceof Movable)) {
-				return;
-			}
-			
-
-			Movable dragObject = (Movable) topObject;
-			View view = wwd.getView();
-			Globe globe = wwd.getModel().getGlobe();
-
-			// Compute dragged object ref-point in model coordinates.
-			// Use the Icon and Annotation logic of elevation as offset above ground when below max elevation.
-			Position refPos = dragObject.getReferencePosition();
-			if (refPos == null)
-				return;
-
-			Vec4 refPoint = null;
-			if (refPos.getElevation() < globe.getMaxElevation())
-				refPoint = wwd.getSceneController().getTerrain().getSurfacePoint(refPos);
-			if (refPoint == null)
-				refPoint = globe.computePointFromPosition(refPos);
-
-			if (!this.isDragging())   // Dragging started
-			{
-				// Save initial reference points for object and cursor in screen coordinates
-				// Note: y is inverted for the object point.
-				this.dragRefObjectPoint = view.project(refPoint);
-				// Save cursor position
-				this.dragRefCursorPoint = dragEvent.getPreviousPickPoint();
-                // Save start altitude
-                this.dragRefAltitude = globe.computePositionFromPoint(refPoint).getElevation();
-			}
-
-			// Compute screen-coord delta since drag started.
-			int dx = dragEvent.getPickPoint().x - this.dragRefCursorPoint.x;
-			int dy = dragEvent.getPickPoint().y - this.dragRefCursorPoint.y;
-
-			// Find intersection of screen coord (refObjectPoint + delta) with globe.
-			double x = this.dragRefObjectPoint.x + dx;
-			double y = event.getMouseEvent().getComponent().getSize().height - this.dragRefObjectPoint.y + dy - 1;
-			Line ray = view.computeRayFromScreenPoint(x, y);
-			Position pickPos = null;
-			if (view.getEyePosition().getElevation() < globe.getMaxElevation() * 10)
-			{
-				// Use ray casting below some altitude
-				// Try ray intersection with current terrain geometry
-				Intersection[] intersections = wwd.getSceneController().getTerrain().intersect(ray);
-				if (intersections != null && intersections.length > 0)
-					pickPos = globe.computePositionFromPoint(intersections[0].getIntersectionPoint());
-				else
-					// Fallback on raycasting using elevation data
-					pickPos = RayCastingSupport.intersectRayWithTerrain(globe, ray.getOrigin(), ray.getDirection(),
-							200, 20);
-			}
-			if (pickPos == null)
-			{
-				// Use intersection with sphere at reference altitude.
-				Intersection inters[] = globe.intersect(ray, this.dragRefAltitude);
-				if (inters != null)
-					pickPos = globe.computePositionFromPoint(inters[0].getIntersectionPoint());
-			}
-
-			if (pickPos != null)
-			{
-				// Intersection with globe. Move reference point to the intersection point,
-				// but maintain current altitude.
-		//		Position p = new Position(pickPos, dragObject.getReferencePosition().getElevation());
-		//		dragObject.moveTo(p);
-				this.movePointPlacemarks(pickPos);
-			}
-			this.dragging = true;
-		}
-	}
 
 	private void movePointPlacemarks(LatLon latlon){
 		top.setPosition(new Position(latlon, top.getPosition().getElevation()));
@@ -244,15 +142,261 @@ public class VerticalScaleBar extends RenderableLayer implements SelectListener 
 			p.setPosition(new Position(latlon, p.getPosition().getElevation()));
 		}
 	}
-	
-    public boolean isDragging()
-    {
-        return this.dragging;
-    }
 
-    public void initializePosition(Position position){
-    	this.movePointPlacemarks(position);
-    	this.firePropertyChange(AVKey.LAYER, null, true);
-    }
-    
+
+	public void initializePosition(Position position){
+		this.movePointPlacemarks(position);
+		this.firePropertyChange(AVKey.LAYER, null, true);
+	}
+
+	@Override
+	protected void doMove(Position pos, Movable o){
+		this.movePointPlacemarks(pos);
+	}
+	
+	@Override
+	public Object setValue(String key, Object value) {
+		return this.layer.setValue(key, value);
+	}
+
+	@Override
+	public AVList setValues(AVList avList) {
+		return this.layer.setValues(avList);
+	}
+
+	@Override
+	public Object getValue(String key) {
+		return this.layer.getValue(key);
+	}
+
+	@Override
+	public Collection<Object> getValues() {
+		return this.layer.getValues();
+	}
+
+	@Override
+	public String getStringValue(String key) {
+		return this.layer.getStringValue(key);
+	}
+
+	@Override
+	public Set<Entry<String, Object>> getEntries() {
+		return this.layer.getEntries();
+	}
+
+	@Override
+	public boolean hasKey(String key) {
+		return this.layer.hasKey(key);
+	}
+
+	@Override
+	public Object removeKey(String key) {
+		return this.layer.removeKey(key);
+	}
+
+	@Override
+	public void addPropertyChangeListener(String propertyName,
+			PropertyChangeListener listener) {
+		this.layer.addPropertyChangeListener(propertyName, listener);
+	}
+
+	@Override
+	public void removePropertyChangeListener(String propertyName,
+			PropertyChangeListener listener) {
+		this.layer.removePropertyChangeListener(propertyName, listener);
+	}
+
+	@Override
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		this.layer.addPropertyChangeListener(listener);
+	}
+
+	@Override
+	public void removePropertyChangeListener(PropertyChangeListener listener) {
+		this.layer.removePropertyChangeListener(listener);
+	}
+
+	@Override
+	public void firePropertyChange(String propertyName, Object oldValue,
+			Object newValue) {
+		this.layer.firePropertyChange(propertyName, oldValue, newValue);
+	}
+
+	@Override
+	public void firePropertyChange(PropertyChangeEvent propertyChangeEvent) {
+		this.layer.firePropertyChange(propertyChangeEvent);
+	}
+
+	@Override
+	public AVList copy() {
+		return this.layer.copy();
+	}
+
+	@Override
+	public AVList clearList() {
+		return this.layer.clearList();
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent p) {
+		this.layer.propertyChange(p);
+	}
+
+	@Override
+	public void dispose() {
+		this.layer.dispose();
+	}
+
+	@Override
+	public String getRestorableState() {
+		return this.layer.getRestorableState();
+	}
+
+	@Override
+	public void restoreState(String stateInXml) {
+		this.layer.restoreState(stateInXml);
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return this.layer.isEnabled();
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		this.layer.setEnabled(enabled);
+	}
+
+	@Override
+	public String getName() {
+		return this.layer.getName();
+	}
+
+	@Override
+	public void setName(String name) {
+		this.layer.setName(name);
+	}
+
+	@Override
+	public double getOpacity() {
+		return this.layer.getOpacity();
+	}
+
+	@Override
+	public void setOpacity(double opacity) {
+		this.layer.setOpacity(opacity);
+	}
+
+	@Override
+	public boolean isPickEnabled() {
+		return this.layer.isPickEnabled();
+	}
+
+	@Override
+	public void setPickEnabled(boolean isPickable) {
+		this.layer.setPickEnabled(isPickable);
+	}
+
+	@Override
+	public void preRender(DrawContext dc) {
+		this.layer.preRender(dc);
+	}
+
+	@Override
+	public void render(DrawContext dc) {
+		this.layer.render(dc);
+	}
+
+	@Override
+	public void pick(DrawContext dc, Point pickPoint) {
+		this.layer.pick(dc, pickPoint);
+	}
+
+	@Override
+	public boolean isAtMaxResolution() {
+		return this.layer.isAtMaxResolution();
+	}
+
+	@Override
+	public boolean isMultiResolution() {
+		return this.layer.isMultiResolution();
+	}
+
+	@Override
+	public double getScale() {
+		return this.layer.getScale();
+	}
+
+	@Override
+	public boolean isNetworkRetrievalEnabled() {
+		return this.layer.isNetworkRetrievalEnabled();
+	}
+
+	@Override
+	public void setNetworkRetrievalEnabled(boolean networkRetrievalEnabled) {
+		this.layer.setNetworkRetrievalEnabled(networkRetrievalEnabled);
+	}
+
+	@Override
+	public void setExpiryTime(long expiryTime) {
+		this.layer.setExpiryTime(expiryTime);
+	}
+
+	@Override
+	public long getExpiryTime() {
+		return this.layer.getExpiryTime();
+	}
+
+	@Override
+	public double getMinActiveAltitude() {
+		return this.getMinActiveAltitude();
+	}
+
+	@Override
+	public void setMinActiveAltitude(double minActiveAltitude) {
+		this.layer.setMinActiveAltitude(minActiveAltitude);
+	}
+
+	@Override
+	public double getMaxActiveAltitude() {
+		return this.layer.getMaxActiveAltitude();
+	}
+
+	@Override
+	public void setMaxActiveAltitude(double maxActiveAltitude) {
+		this.layer.setMaxActiveAltitude(maxActiveAltitude);
+	}
+
+	@Override
+	public boolean isLayerInView(DrawContext dc) {
+		return this.layer.isLayerInView(dc);
+	}
+
+	@Override
+	public boolean isLayerActive(DrawContext dc) {
+		return this.layer.isLayerActive(dc);
+	}
+
+	@Override
+	public Double getMaxEffectiveAltitude(Double radius) {
+		return this.layer.getMaxEffectiveAltitude(radius);
+	}
+
+	@Override
+	public Double getMinEffectiveAltitude(Double radius) {
+		return this.layer.getMinEffectiveAltitude(radius);
+	}
+
+	private void addRenderables(List<PointPlacemark> tens) {
+		this.layer.addRenderables(tens);
+	}
+
+	private void addRenderable(PointPlacemark renderable) {
+		this.layer.addRenderable(renderable);
+	}
+
+	private void removeRenderable(PointPlacemark renderable) {
+		this.layer.removeRenderable(renderable);
+	}
+
 }

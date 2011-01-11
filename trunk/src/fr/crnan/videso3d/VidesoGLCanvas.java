@@ -114,6 +114,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 
 	private VerticalScaleBar scale;
 	
+	private DraggerListener dragger;
+	
 	/**
 	 * Initialise les différents objets graphiques
 	 */
@@ -127,6 +129,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		latlon.setEnabled(false);
 		this.getModel().getLayers().add(latlon);
 
+		//dragger
+		this.dragger = new DraggerListener(this);
+		this.addSelectListener(dragger);
+		
 		//on screen layer manager
 		LayerManagerLayer layerManager = new LayerManagerLayer(this);
 		layerManager.setEnabled(false); //réduit par défaut
@@ -746,6 +752,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		task.execute();
 	}
 
+	public DraggerListener getDraggerListener(){
+		return this.dragger;
+	}
+	
 	public void activateVerticalScaleBar(Boolean state){
 		if(scale == null){
 			scale = new VerticalScaleBar(this);
@@ -758,6 +768,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			this.addSelectListener(scale);
 		} else {
 			this.toggleLayer(scale, false);
+			this.removeSelectListener(scale);
 		}
 	}
 	

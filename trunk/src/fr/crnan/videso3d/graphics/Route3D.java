@@ -66,6 +66,7 @@ public class Route3D extends TrackAirspace implements VidesoObject, Route {
 	}
 
 	public Route3D(Space s){
+		super();
 		this.setSpace(s);
 		this.setDefaultMaterial();
 	}
@@ -83,6 +84,7 @@ public class Route3D extends TrackAirspace implements VidesoObject, Route {
 
 	public Route3D(DatabaseManager.Type base, int type) {
 		super();
+		this.setDefaultMaterial();
 		this.setDatabaseType(base);
 		this.setType(type);
 	}
