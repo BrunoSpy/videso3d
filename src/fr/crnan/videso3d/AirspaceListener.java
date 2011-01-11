@@ -38,8 +38,13 @@ import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.stip.StipController;
+import gov.nasa.worldwind.View;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
+import gov.nasa.worldwind.geom.Intersection;
+import gov.nasa.worldwind.geom.Line;
+import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.GlobeAnnotation;
@@ -47,10 +52,14 @@ import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.AbstractAirspace;
+import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
+import gov.nasa.worldwind.render.airspaces.Polygon;
+import gov.nasa.worldwind.render.airspaces.TrackAirspace;
 import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
 import gov.nasa.worldwind.render.markers.MarkerAttributes;
+import gov.nasa.worldwind.util.RayCastingSupport;
 
 /**
  * Listener d'évènements sur les airspaces et shapes
@@ -158,7 +167,16 @@ public class AirspaceListener implements SelectListener {
 					lastToolTip = o;
 					Point point = event.getPickPoint();
 					if(event.getTopObject() instanceof VidesoObject){
-						Annotation a = ((VidesoObject)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5)); //décalage de 5 pixels pour éviter le clignotement
+						Position pos = null;
+						if(o instanceof Polygon) {
+							pos = new Position(((Polygon) o).getReferencePosition(), ((Airspace) o).getAltitudes()[1]);
+						} else if( o instanceof TrackAirspace) {
+							pos = new Position(((TrackAirspace) o).getReferencePosition(), ((TrackAirspace) o).getAltitudes()[1]);
+						} else {
+							pos = this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5);//décalage de 5 pixels pour éviter le clignotement
+						}
+						
+						Annotation a = ((VidesoObject)o).getAnnotation(pos); 
 						a.getAttributes().setVisible(true);
 						if(!((VAnnotationLayer)this.wwd.getAnnotationLayer()).contains(a)){
 							//on ne modifie lastAnnotation que si l'annotation n'a pas déjà été ajoutée
@@ -371,7 +389,15 @@ public class AirspaceListener implements SelectListener {
 				Object o = event.getTopObject();
 				if(o instanceof VidesoObject){ //affichage du tooltip
 					Point point = event.getPickPoint();
-					this.wwd.getAnnotationLayer().addAnnotation(((VidesoObject)o).getAnnotation(this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5)));
+					Position pos = null;
+					if(o instanceof Polygon) {
+						pos = new Position(((Polygon) o).getReferencePosition(), ((Airspace) o).getAltitudes()[1]);
+					} else if( o instanceof TrackAirspace) {
+						pos = new Position(((TrackAirspace) o).getReferencePosition(), ((TrackAirspace) o).getAltitudes()[1]);
+					} else {
+						pos = this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5);//décalage de 5 pixels pour éviter le clignotement
+					}
+					this.wwd.getAnnotationLayer().addAnnotation(((VidesoObject)o).getAnnotation(pos));
 					this.wwd.redraw();
 				} else if (o instanceof GlobeAnnotation){ //suppression de l'annotation
 					this.wwd.getAnnotationLayer().removeAnnotation((GlobeAnnotation)o);
