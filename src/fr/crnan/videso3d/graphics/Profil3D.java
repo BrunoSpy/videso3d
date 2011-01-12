@@ -158,15 +158,19 @@ public class Profil3D {
 	public List<Balise3D> getBalises(){
 		return this.balises;
 	}
-	
+
 	public void highlight(Boolean b) {
-		Color c = curtain.getColor();
-			curtain.setColor(Pallet.makeBrighter(new Color(255-c.getRed(), 255-c.getGreen(), 255-c.getBlue(), 100)));
-		
+		if(b){
+			curtain.setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 0.4f)));
+			curtain.setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 0.4f)));
+		} else {
+			curtain.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+			curtain.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+		}
 	}
 	
+
 	public void setColor(Color c){
-		curtain.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 100));
 		profil.setColor(c);
 	}
 
