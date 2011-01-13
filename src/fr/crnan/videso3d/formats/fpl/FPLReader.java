@@ -159,7 +159,7 @@ public class FPLReader extends TrackFilesReader {
 					elevation = Double.parseDouble(e.substring(6))*30.48;
 				}else if(e.matches("[KMN]\\d+S\\d+")){
 					elevation = Double.parseDouble(e.substring(6))*10;
-				}else if (e.matches("[A-Z]{1,2}\\d+")){
+				}else if (e.matches("[A-Z]{1,2}\\d+")){ //|| e.equals("DCT")){
 					route = e;
 				}else if(!e.equals("DCT") && !(e.equals(""))){
 					try {
@@ -171,8 +171,10 @@ public class FPLReader extends TrackFilesReader {
 				}
 			}
 		}	
-		trackLost = 0;
 		addAirportToTrack(track, arrivee);
+		if(trackLost>0)
+			track.setSegmentIncertain(arrivee);
+		trackLost = 0;
 		if(track.getNumPoints()>0)
 			this.getTracks().add(track);
 	}
@@ -271,6 +273,7 @@ public class FPLReader extends TrackFilesReader {
 				}
 			}
 			balisePrecedente = balise;
+			trackLost = 0;
 		}else{
 			trackLost+=1;
 			balisePrecedente = null;

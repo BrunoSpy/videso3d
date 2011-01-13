@@ -85,14 +85,12 @@ public class FPLTracksLayer extends LPLNTracksLayer {
 						balises.add(lastBalise);
 						annotations.clear();
 						annotations.add(lastAnnotation);
-												
-						segmentIncertain = segmentsIncertains.contains(nom);
 					}
+					segmentIncertain = segmentsIncertains.contains(nom);
 					positions.add(point.getPosition());
 					balises.add(nom);
 					int niveau = (int)(Math.ceil(point.getElevation()/30.48));
 					annotations.add("Balise "+nom+"\nFL"+niveau);
-
 				}
 				if(positions.size()>1){ //only add a line if there's enough points
 					Profil3D profil = buildProfil(balises, annotations, positions, segmentIncertain);
