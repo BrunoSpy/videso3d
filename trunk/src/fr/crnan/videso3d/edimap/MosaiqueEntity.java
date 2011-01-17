@@ -37,7 +37,7 @@ import gov.nasa.worldwind.render.airspaces.Polygon;
 /**
  * Représentation 3D des mosaiques ODS (volume d'interet, de sécurité, ..)
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class MosaiqueEntity extends LinkedList<Airspace>{
 	
@@ -53,6 +53,15 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 		private int type;
 		
 		private String name;
+		
+		public Volume(int type, double plancher, double plafond){
+			super();
+			this.type = type;
+			this.setAltitudes(plancher, plafond);
+			this.setAnnotation("<html><b>Volume " + (type==1?"de sécurité.":"d'intérêt.")+"</b><br />" +
+					"<b>Plafond : </b>" + (int) (plafond/30.48) + "<br />" +
+					"<b>Plancher : </b>" + (int) (plancher/30.48) );
+		}
 		
 		@Override
 		public void setAnnotation(String text){
@@ -143,8 +152,7 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 						Double distance = new Double(((String)e.getValue()).split("\\s+")[1]) / 64;
 
 						
-						Volume volume = new Volume();
-						volume.setAltitudes(plancher, plafond);
+						Volume volume = new Volume(interet?2:1, plancher, plafond);
 						
 						List<LatLon> locations = new LinkedList<LatLon>();
 						
