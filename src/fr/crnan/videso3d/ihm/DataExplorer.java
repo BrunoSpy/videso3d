@@ -31,6 +31,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import org.jdesktop.swingx.plaf.nimbus.NimbusMultiSliderUI;
+
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -40,6 +42,7 @@ import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
+import fr.crnan.videso3d.ihm.components.AltitudeRangeSlider;
 import fr.crnan.videso3d.ihm.components.ButtonTabComponent;
 import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
@@ -82,6 +85,11 @@ public class DataExplorer extends JPanel {
 			this.updateView(base);
 		}
 
+		AltitudeRangeSlider rangeSlider = new AltitudeRangeSlider(wwd);
+		rangeSlider.setUI(new NimbusMultiSliderUI(rangeSlider));
+		
+		add(rangeSlider, BorderLayout.EAST);
+		
 		add(tabs, BorderLayout.CENTER);		
 		
 	}	
