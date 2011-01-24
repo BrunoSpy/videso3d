@@ -20,6 +20,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Iterator;
 
 import javax.swing.JToolTip;
 import javax.swing.Popup;
@@ -31,7 +32,9 @@ import org.jdesktop.swingx.multislider.JXMultiSlider;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
+import fr.crnan.videso3d.layers.LayerSet;
 import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.layers.LayerList;
 
 /**
  * 
@@ -64,12 +67,7 @@ public class AltitudeRangeSlider extends JXMultiSlider {
 				setToolTipText("<html><b>Plafond : </b>"+getOuterValue()+
 						"<br /><b>Plancher : </b>"+getInnerValue());
 				showTooltip(e);
-				for(Layer l : wwd.getModel().getLayers()){
-					if(l instanceof AltitudeFilterableLayer){
-						((AltitudeFilterableLayer) l).setMaximumViewableAltitude(getOuterValue()*30.47);
-						((AltitudeFilterableLayer) l).setMinimumViewableAltitude(getInnerValue()*30.47);
-					}
-				}
+				filterLayers(wwd.getModel().getLayers());
 			}
 		});
 
@@ -95,6 +93,19 @@ public class AltitudeRangeSlider extends JXMultiSlider {
 		});
 	}
 
+	private void filterLayers(Iterable<Layer> layer){
+		Iterator<Layer> iterator = layer.iterator();
+		while(iterator.hasNext()){
+			Layer l = iterator.next();
+			if(l instanceof AltitudeFilterableLayer){
+				((AltitudeFilterableLayer) l).setMaximumViewableAltitude(getOuterValue()*30.47);
+				((AltitudeFilterableLayer) l).setMinimumViewableAltitude(getInnerValue()*30.47);
+			} else if(l instanceof LayerSet) {
+				filterLayers((LayerList)l);
+			}
+		}
+	}
+	
 	private void showTooltip(MouseEvent event){
 		toolTip.setTipText( getToolTipText(event) );
 		Point toolTipLocation = new Point(event.getXOnScreen(), event.getYOnScreen());
