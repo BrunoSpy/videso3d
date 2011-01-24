@@ -19,7 +19,6 @@ import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -28,7 +27,6 @@ import java.util.Set;
 import fr.crnan.videso3d.DraggerListener;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.graphics.MovablePointPlacemark;
-import fr.crnan.videso3d.graphics.VidesoObject;
 import gov.nasa.worldwind.Movable;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.WorldWindow;
@@ -107,7 +105,7 @@ public class VerticalScaleBar extends DraggerListener implements Layer {
 				tens.add(p);
 			}
 		}
-
+		
 		//changement de l'affichage en fonction du zoom
 		this.wwd.getSceneController().addPropertyChangeListener(AVKey.VERTICAL_EXAGGERATION, new PropertyChangeListener() {
 
@@ -130,7 +128,7 @@ public class VerticalScaleBar extends DraggerListener implements Layer {
 
 
 		});
-
+		wwd.getSceneController().firePropertyChange(AVKey.VERTICAL_EXAGGERATION, null, null);
 	}
 
 
