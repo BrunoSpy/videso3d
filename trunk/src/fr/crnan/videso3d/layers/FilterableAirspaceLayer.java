@@ -31,7 +31,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Airspace layer whose elements are filterable depending on max and min altitudes.
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class FilterableAirspaceLayer extends AbstractLayer implements AltitudeFilterableLayer{
 
@@ -44,8 +44,7 @@ public class FilterableAirspaceLayer extends AbstractLayer implements AltitudeFi
 	private Set<Airspace> displayed = null;;
 	
     private AirspaceRenderer airspaceRenderer = new AirspaceRenderer();
-	
-
+    
 	public void addAirspace(Airspace airspace) {
 		if (airspace == null)
         {
@@ -54,6 +53,9 @@ public class FilterableAirspaceLayer extends AbstractLayer implements AltitudeFi
             throw new IllegalArgumentException(msg);
         }
 		this.full.add(airspace);
+		this.displayed = null;
+		this.setMaximumViewableAltitude(maxAltitude);
+		this.setMinimumViewableAltitude(minAltitude);
 	}
 
 	public void addAirspaces(Iterable<Airspace> airspaces) {
@@ -64,10 +66,11 @@ public class FilterableAirspaceLayer extends AbstractLayer implements AltitudeFi
             throw new IllegalArgumentException(msg);
         }
 		for(Airspace a : airspaces){
-			this.full.add(a);
+			this.addAirspace(a);
 		}
 	}
 
+	
 
 	public Iterable<Airspace> getAirspaces() {
 		if(displayed == null){
@@ -90,12 +93,13 @@ public class FilterableAirspaceLayer extends AbstractLayer implements AltitudeFi
 		while(iterator.hasNext()){
 			this.full.add(iterator.next());
 		}
+		this.displayed = null;
+		this.setMaximumViewableAltitude(maxAltitude);
+		this.setMinimumViewableAltitude(minAltitude);
 	}
 
 	@Override
 	public void setMaximumViewableAltitude(double altitude) {
-		if(altitude == maxAltitude)
-			return;
 		LinkedList<Airspace> airspaces = new LinkedList<Airspace>();
 		Iterator<Airspace> iterator;
 		if(altitude < maxAltitude){
