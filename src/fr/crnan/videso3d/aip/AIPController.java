@@ -49,13 +49,13 @@ import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.layers.AirportLayer;
 import fr.crnan.videso3d.layers.Balise2DLayer;
+import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.GlobeAnnotation;
@@ -74,7 +74,7 @@ public class AIPController implements VidesoController {
 	private VidesoGLCanvas wwd;
 	private AIP aip = new AIP();
 	
-	private AirspaceLayer zonesLayer = new AirspaceLayer();
+	private FilterableAirspaceLayer zonesLayer = new FilterableAirspaceLayer();
 	{zonesLayer.setName("Zones");
 	zonesLayer.setEnableAntialiasing(true);}	
 	
@@ -113,7 +113,7 @@ public class AIPController implements VidesoController {
 			zonesLayer.removeAllAirspaces();
 			this.toggleLayer(zonesLayer, true);
 		} else {
-			zonesLayer = new AirspaceLayer();
+			zonesLayer = new FilterableAirspaceLayer();
 			zonesLayer.setName("Zones");
 			zonesLayer.setEnableAntialiasing(true);
 			this.toggleLayer(zonesLayer, true);
@@ -183,7 +183,7 @@ public class AIPController implements VidesoController {
 	
 	
 
-	public AirspaceLayer getZonesLayer(){
+	public FilterableAirspaceLayer getZonesLayer(){
 		return zonesLayer;
 	}
 	

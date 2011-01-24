@@ -20,7 +20,6 @@ import java.awt.Point;
 import java.util.HashSet;
 import java.util.Set;
 
-import fr.crnan.videso3d.graphics.VidesoObject;
 import gov.nasa.worldwind.Movable;
 import gov.nasa.worldwind.View;
 import gov.nasa.worldwind.event.DragSelectEvent;

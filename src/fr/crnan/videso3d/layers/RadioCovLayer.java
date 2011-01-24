@@ -33,10 +33,10 @@ import gov.nasa.worldwind.render.airspaces.Airspace;
  * @author Mickael Papail
  * @version 0.2
  */
-public class RadioCovLayer extends AirspaceLayer{
+public class RadioCovLayer extends FilterableAirspaceLayer{
 
 	
-	private AirspaceLayer activeRadioCov = new AirspaceLayer();
+	private FilterableAirspaceLayer activeRadioCov = new FilterableAirspaceLayer();
 	private ArrayList<Airspace> airspaces;
 	private LayerList layers;
 	private Boolean DEBUG = false;
@@ -99,7 +99,7 @@ public class RadioCovLayer extends AirspaceLayer{
 
 		RadioCovPolygon poly = new RadioCovPolygon(); // permet dobtenir la Memory cache pour les objets contenus dans l'ArrayList<Airspaces> ( sinon pas de mémoire cache allouée, et pas d'objet 3d visible après désérialisation)
 			
-			AirspaceLayer airspaceLayer = new AirspaceLayer();						
+			FilterableAirspaceLayer airspaceLayer = new FilterableAirspaceLayer();						
 			airspaces = new ArrayList<Airspace>();				
 			airspaces.addAll(airspacesParam);	            	            
 	        airspaceLayer.addAirspaces(airspaces);
@@ -120,7 +120,7 @@ public class RadioCovLayer extends AirspaceLayer{
 		if (DEBUG) System.out.println("Liste des layers avant la boucle :+layers");
 		if (layers != null) {
 			for (Layer layer : layers) {				
-						if (layer instanceof AirspaceLayer && layer.getName()==radioCov) {						
+						if (layer instanceof FilterableAirspaceLayer && layer.getName()==radioCov) {						
 							layer.clearList();							
 							layers.remove(layer);							
 						}								

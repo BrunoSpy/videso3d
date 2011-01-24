@@ -34,19 +34,19 @@ import javax.swing.JPanel;
 
 import fr.crnan.videso3d.graphics.RadioCovPolygon;
 import fr.crnan.videso3d.ihm.components.DataView;
+import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.radio.RadioCovController;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.DatasManager;
 
-import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 
 /**  
  * @author Mickaël Papail
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  * Interface de sélection des couvertures radios.
  */
 public class RadioCovView extends JPanel implements DataView {
@@ -58,7 +58,7 @@ public class RadioCovView extends JPanel implements DataView {
 	
 	private ItemAntennaListener itemAntennaListener = new ItemAntennaListener();	
 
-	private AirspaceLayer radioCovAirspaces;
+	private FilterableAirspaceLayer radioCovAirspaces;
 	
 	public RadioCovView() {		
 						
@@ -91,8 +91,8 @@ public class RadioCovView extends JPanel implements DataView {
 	 */
 	public boolean initRadioCovAirspaces() {
 		for (Layer layer : getController().getLayers()) {				
-			if (layer instanceof AirspaceLayer && layer.getName()=="Radio Coverage") {						
-				radioCovAirspaces = (AirspaceLayer)layer;								
+			if (layer instanceof FilterableAirspaceLayer && layer.getName()=="Radio Coverage") {						
+				radioCovAirspaces = (FilterableAirspaceLayer)layer;								
 				return true;
 			}								
 		}

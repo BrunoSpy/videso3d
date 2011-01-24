@@ -29,7 +29,6 @@ import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
 
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.ShapeAttributes;
@@ -40,7 +39,7 @@ import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
  * Affiche une mosaique (STR ou STPV) en 2D ou en 3D</br>
  * Permet de colorier certains carrés et sous-carrés
  * @author Bruno Spyckerelle
- * @version 0.4.2
+ * @version 0.4.3
  */
 @SuppressWarnings("serial")
 public class MosaiqueLayer extends LayerSet {
@@ -77,7 +76,7 @@ public class MosaiqueLayer extends LayerSet {
 	/**
 	 * Layer pour les mosaiques 3D
 	 */
-	private AirspaceLayer airspaceLayer = new AirspaceLayer();
+	private FilterableAirspaceLayer airspaceLayer = new FilterableAirspaceLayer();
 	/**
 	 * Layer pour les mosaiques 2D
 	 */
