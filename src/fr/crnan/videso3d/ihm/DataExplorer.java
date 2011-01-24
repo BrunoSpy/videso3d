@@ -174,7 +174,7 @@ public class DataExplorer extends JPanel {
 				lplnFile.add(f);
 			} else if(GEOReader.isGeoFile(f)) {
 				geoFile.add(f);
-			} else if (FPLReader.isLPLNFile(f)){
+			} else if (FPLReader.isFPLFile(f)){
 				fplFile.add(f);
 			}
 		}

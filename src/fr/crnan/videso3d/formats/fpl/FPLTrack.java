@@ -18,6 +18,7 @@ package fr.crnan.videso3d.formats.fpl;
 import java.util.LinkedList;
 
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
+import fr.crnan.videso3d.formats.lpln.LPLNTrackPoint;
 
 /**
  * 
@@ -39,6 +40,24 @@ public class FPLTrack extends LPLNTrack {
 	 */
 	public void setSegmentIncertain(String balise){
 		segmentsIncertains.add(balise);
+	}
+	
+	/**
+	 * Indique que la route affichée n'est pas forcément celle déposée dans le plan de  vol entre la balise passée en paramètre et 
+	 * la balise suivante
+	 * @param balise
+	 */
+	public void setNextSegmentIncertain(String balise){
+		int baliseIndex=-1;
+		for(int i = 0; i < super.trackPoints.size(); i++){
+			if(trackPoints.get(i).getName().equals(balise))
+				baliseIndex = i;
+		}
+		if(baliseIndex<super.trackPoints.size()-1 && baliseIndex>=0){
+			LPLNTrackPoint nextBalise = super.trackPoints.get(baliseIndex+1);
+			if(nextBalise!=null)
+				segmentsIncertains.add(nextBalise.getName());
+		}
 	}
 	
 	public LinkedList<String> getSegmentsIncertains(){

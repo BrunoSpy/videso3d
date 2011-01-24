@@ -29,7 +29,7 @@ public class LPLNTrack implements Track{
 
 	private String name;
 	
-	private List<LPLNTrackPoint> trackPoints = new LinkedList<LPLNTrackPoint>();
+	protected List<LPLNTrackPoint> trackPoints = new LinkedList<LPLNTrackPoint>();
 
 	/**
 	 * Indicatif du vol

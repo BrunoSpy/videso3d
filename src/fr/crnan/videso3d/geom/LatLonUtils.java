@@ -119,7 +119,7 @@ public class LatLonUtils {
     /**
      * Extract a {@link LatLon} from a SkyView string
      * @author Bruno Spyckerelle
-     * @param lat the latitude input strinf
+     * @param lat the latitude input string
      * @param lon the longitude input string
      * @return the corresponding {@link LatLon}
      */
@@ -147,6 +147,8 @@ public class LatLonUtils {
     	
     	return new LatLon(latitude, longitude);
     }
+    
+    
     
     
     /**
