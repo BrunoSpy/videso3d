@@ -16,9 +16,14 @@
 
 package fr.crnan.videso3d.ihm.components;
 
+import java.awt.Point;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.JToolTip;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
 import javax.swing.SwingConstants;
 
 import org.jdesktop.swingx.multislider.JXMultiBoundedRangeModel;
@@ -27,14 +32,18 @@ import org.jdesktop.swingx.multislider.JXMultiSlider;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
 import gov.nasa.worldwind.layers.Layer;
+
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2.0
  */
 public class AltitudeRangeSlider extends JXMultiSlider {
 
 	private final VidesoGLCanvas wwd;
+	
+	private JToolTip toolTip;
+	private Popup popup;
 	
 	public AltitudeRangeSlider(VidesoGLCanvas wd){
 		this.wwd = wd;
@@ -42,15 +51,19 @@ public class AltitudeRangeSlider extends JXMultiSlider {
 		this.setMinorTickSpacing(5);
 		this.setSnapToTicks(true);
 		this.setOrientation(SwingConstants.VERTICAL);
+		
+		toolTip = this.createToolTip();
+		
 		this.addMouseMotionListener(new MouseMotionListener() {
 			
 			@Override
-			public void mouseMoved(MouseEvent e) {}
+			public void mouseMoved(MouseEvent arg0) {}
 			
 			@Override
 			public void mouseDragged(MouseEvent e) {
 				setToolTipText("<html><b>Plafond : </b>"+getOuterValue()+
-								"<br /><b>Plancher : </b>"+getInnerValue());
+						"<br /><b>Plancher : </b>"+getInnerValue());
+				showTooltip(e);
 				for(Layer l : wwd.getModel().getLayers()){
 					if(l instanceof AltitudeFilterableLayer){
 						((AltitudeFilterableLayer) l).setMaximumViewableAltitude(getOuterValue()*30.47);
@@ -59,6 +72,38 @@ public class AltitudeRangeSlider extends JXMultiSlider {
 				}
 			}
 		});
+
+
+		this.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {	}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {	}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				if(popup != null) popup.hide();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {}
+		});
 	}
 
+	private void showTooltip(MouseEvent event){
+		toolTip.setTipText( getToolTipText(event) );
+		Point toolTipLocation = new Point(event.getXOnScreen(), event.getYOnScreen());
+
+		if (popup != null) popup.hide();
+
+		PopupFactory factory = PopupFactory.getSharedInstance();
+		popup = factory.getPopup(this, toolTip, toolTipLocation.x, toolTipLocation.y);
+		popup.show();
+	}
+	
 }
