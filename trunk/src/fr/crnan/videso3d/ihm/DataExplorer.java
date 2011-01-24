@@ -81,6 +81,10 @@ public class DataExplorer extends JPanel {
 
 		tabs.setPreferredSize(new Dimension(300, 0));		
 		
+		this.setPreferredSize(new Dimension(300, 0));
+		
+		this.setMaximumSize(new Dimension(320, 0));
+		
 		for(Type base : DatabaseManager.getSelectedDatabases()){
 			this.updateView(base);
 		}
@@ -90,7 +94,7 @@ public class DataExplorer extends JPanel {
 		
 		add(rangeSlider, BorderLayout.EAST);
 		
-		add(tabs, BorderLayout.CENTER);		
+		add(tabs, BorderLayout.CENTER);
 		
 	}	
 

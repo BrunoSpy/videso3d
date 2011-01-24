@@ -38,11 +38,11 @@ import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.layers.Balise2DLayer;
 import fr.crnan.videso3d.layers.Balise3DLayer;
+import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
@@ -51,7 +51,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage et la construction des éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.1.4
+ * @version 0.1.5
  */
 public class StipController implements VidesoController {
 
@@ -77,7 +77,7 @@ public class StipController implements VidesoController {
 	/**
 	 * Layer contenant les secteurs
 	 */
-	private AirspaceLayer secteursLayer = new AirspaceLayer();
+	private FilterableAirspaceLayer secteursLayer = new FilterableAirspaceLayer();
 	{secteursLayer.setName("Secteurs");
 	secteursLayer.setEnableAntialiasing(true);}		
 	
@@ -478,7 +478,7 @@ public class StipController implements VidesoController {
 			secteursLayer.removeAllAirspaces();
 			this.toggleLayer(secteursLayer, true);
 		} else {
-			secteursLayer = new AirspaceLayer();
+			secteursLayer = new FilterableAirspaceLayer();
 			secteursLayer.setName("Secteurs");
 			secteursLayer.setEnableAntialiasing(true);
 			this.toggleLayer(secteursLayer, true);
