@@ -38,13 +38,9 @@ import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.stip.StipController;
-import gov.nasa.worldwind.View;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
-import gov.nasa.worldwind.geom.Intersection;
-import gov.nasa.worldwind.geom.Line;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.GlobeAnnotation;
@@ -59,12 +55,11 @@ import gov.nasa.worldwind.render.airspaces.Polygon;
 import gov.nasa.worldwind.render.airspaces.TrackAirspace;
 import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
 import gov.nasa.worldwind.render.markers.MarkerAttributes;
-import gov.nasa.worldwind.util.RayCastingSupport;
 
 /**
  * Listener d'évènements sur les airspaces et shapes
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public class AirspaceListener implements SelectListener {
 
@@ -86,6 +81,8 @@ public class AirspaceListener implements SelectListener {
 
 	final private ContextPanel context;
 	
+	private boolean lock = false;
+	
 	public AirspaceListener(VidesoGLCanvas wwd, ContextPanel context){
 		this.wwd = wwd;
 		this.context = context;
@@ -96,7 +93,8 @@ public class AirspaceListener implements SelectListener {
 	 */
 	@Override
 	public void selected(final SelectEvent event) {
-
+		
+		
 		//suppression de la surbrillance
 		if (lastHighlit != null
 				&& (event.getTopObject() == null || !event.getTopObject().equals(lastHighlit)))
@@ -123,74 +121,33 @@ public class AirspaceListener implements SelectListener {
 			}
 			lastToolTip = null;
 		}
-
+		
+		//ne rien faire si locké
+		if(lock)
+			return;
+		
+		if(event.getTopObject() == null)
+			return;
+		
 		if(event.getEventAction() == SelectEvent.ROLLOVER){ //Hightlight object
-			if(event.getTopObject() != null) {
-				Object o = event.getTopObject();
-				if (lastHighlit == o)
-					return; 
-				if (lastHighlit == null)
-				{
-					if(event.getTopObject() instanceof AbstractAirspace) {
-						lastHighlit = (AbstractAirspace)o;
-						lastAttrs = ((AbstractAirspace)lastHighlit).getAttributes();
-						BasicAirspaceAttributes highliteAttrs = new BasicAirspaceAttributes((AirspaceAttributes) lastAttrs);
-						highliteAttrs.setMaterial(new Material(Pallet.makeBrighter(((AirspaceAttributes)lastAttrs).getMaterial().getDiffuse())));
-						((AbstractAirspace) lastHighlit).setAttributes(highliteAttrs);
-
-					} else if (event.getTopObject() instanceof SurfaceShape) {
-						lastHighlit = (SurfaceShape)o;
-						lastAttrs = ((SurfaceShape)lastHighlit).getAttributes();
-						BasicShapeAttributes highliteAttrs = new BasicShapeAttributes((ShapeAttributes) lastAttrs);
-						highliteAttrs.setInteriorMaterial(new Material(Pallet.makeBrighter(((ShapeAttributes)lastAttrs).getInteriorMaterial().getDiffuse())));
-						highliteAttrs.setOutlineMaterial(new Material(Pallet.makeBrighter(((ShapeAttributes)lastAttrs).getOutlineMaterial().getDiffuse())));
-						highliteAttrs.setOutlineWidth(2.0);
-						((SurfaceShape) lastHighlit).setAttributes(highliteAttrs);
-					} else if(event.getTopObject() instanceof Balise2D) {
-						lastHighlit = (Balise2D)o;
-						lastAttrs = ((Balise2D)lastHighlit).getAttributes();
-						BasicMarkerAttributes  highliteAttrs = new BasicMarkerAttributes((BasicMarkerAttributes) lastAttrs);
-						highliteAttrs.setMaterial(new Material(Pallet.makeBrighter(((MarkerAttributes)lastAttrs).getMaterial().getDiffuse())));
-						((Balise2D)lastHighlit).setAttributes(highliteAttrs);
-					} else {
-						lastHighlit = null;
-						lastAttrs = null;
-					}
-				}
-			}
+				this.doRollOver(event.getTopObject());
 		} else if(event.getEventAction() == SelectEvent.HOVER){ //popup tooltip
-			if(event.getTopObject() != null){
-				Object o = event.getTopObject();
-				if(lastToolTip == o)
-					return;
-				if(lastToolTip == null) {
-					lastToolTip = o;
-					Point point = event.getPickPoint();
-					if(event.getTopObject() instanceof VidesoObject){
-						Position pos = null;
-						if(o instanceof Polygon) {
-							pos = new Position(((Polygon) o).getReferencePosition(), ((Airspace) o).getAltitudes()[1]);
-						} else if( o instanceof TrackAirspace) {
-							pos = new Position(((TrackAirspace) o).getReferencePosition(), ((TrackAirspace) o).getAltitudes()[1]);
-						} else {
-							pos = this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5);//décalage de 5 pixels pour éviter le clignotement
-						}
-						
-						Annotation a = ((VidesoObject)o).getAnnotation(pos); 
-						a.getAttributes().setVisible(true);
-						if(!((VAnnotationLayer)this.wwd.getAnnotationLayer()).contains(a)){
-							//on ne modifie lastAnnotation que si l'annotation n'a pas déjà été ajoutée
-							//(notamment lors d'un clic gauche)
-							lastAnnotation = a;
-						}
-					} 
-					if(lastAnnotation != null) this.wwd.getAnnotationLayer().addAnnotation(lastAnnotation);
-					this.wwd.redraw();
-				}
-			}
+				this.doHover(event.getTopObject(),event.getPickPoint());
 		} else if(event.getEventAction() == SelectEvent.RIGHT_CLICK){
 			if(lastAttrs != null) {
-				final JPopupMenu menu = new JPopupMenu("Menu");
+				final JPopupMenu menu = new JPopupMenu("Menu"){
+
+					/* (non-Javadoc)
+					 * @see javax.swing.JPopupMenu#setVisible(boolean)
+					 */
+					@Override
+					public void setVisible(boolean arg0) {
+						super.setVisible(arg0);
+						lock = arg0;
+					}
+
+					
+				};
 				JMenuItem colorItem = new JMenuItem("Couleur...");
 				
 
@@ -204,8 +161,6 @@ public class AirspaceListener implements SelectListener {
 				slider.setPaintLabels(true);
 				slider.setPaintTicks(true);
 				opacityItem.add(slider);
-				
-
 
 				//Ajout des listeners en fonction du type d'objet
 				if(lastAttrs instanceof AirspaceAttributes){
@@ -376,40 +331,103 @@ public class AirspaceListener implements SelectListener {
 					analyseItem.add(analyseRoute);
 					menu.add(analyseItem);
 				}
-
 				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 			}			
 		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){ //ouverture du contexte
-			Object o = event.getTopObject();
-			if(o instanceof VidesoObject){
-				this.context.showInfo(((VidesoObject) o).getDatabaseType(), ((VidesoObject) o).getType(), ((VidesoObject) o).getName());
-			}
+			this.doDoubleClick(event.getTopObject());
 		} else if (event.getEventAction() == SelectEvent.LEFT_CLICK){
-			if(event.getTopObject() != null){ 
-				Object o = event.getTopObject();
-				if(o instanceof VidesoObject){ //affichage du tooltip
-					Point point = event.getPickPoint();
-					Position pos = null;
-					if(o instanceof Polygon) {
-						pos = new Position(((Polygon) o).getReferencePosition(), ((Airspace) o).getAltitudes()[1]);
-					} else if( o instanceof TrackAirspace) {
-						pos = new Position(((TrackAirspace) o).getReferencePosition(), ((TrackAirspace) o).getAltitudes()[1]);
-					} else {
-						pos = this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5);//décalage de 5 pixels pour éviter le clignotement
-					}
-					this.wwd.getAnnotationLayer().addAnnotation(((VidesoObject)o).getAnnotation(pos));
-					this.wwd.redraw();
-				} else if (o instanceof GlobeAnnotation){ //suppression de l'annotation
-					this.wwd.getAnnotationLayer().removeAnnotation((GlobeAnnotation)o);
-					this.wwd.redraw();
-				}
-			}
+				this.doLeftClick(event.getTopObject(), event.getPickPoint());
 		} else if (event.getEventAction() == SelectEvent.DRAG){
 			if(!(event.getTopObject() instanceof Annotation) &&  //ne pas transférer l'évènement pour les annotations
 				!(this.wwd.getMeasureTool().isArmed()) && //pas de transfert si l'alidad est activé
 			 	!(event.getTopObject() instanceof MovablePointPlacemark)){
 				this.wwd.getView().getViewInputHandler().mouseDragged(event.getMouseEvent());
 			}
+		}
+	}
+	
+	private void doLeftClick(Object o, Point point){
+		if(o instanceof VidesoObject){ //affichage du tooltip
+			Position pos = null;
+			if(o instanceof Polygon) {
+				pos = new Position(((Polygon) o).getReferencePosition(), ((Airspace) o).getAltitudes()[1]);
+			} else if( o instanceof TrackAirspace) {
+				pos = new Position(((TrackAirspace) o).getReferencePosition(), ((TrackAirspace) o).getAltitudes()[1]);
+			} else {
+				pos = this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5);//décalage de 5 pixels pour éviter le clignotement
+			}
+			this.wwd.getAnnotationLayer().addAnnotation(((VidesoObject)o).getAnnotation(pos));
+			this.wwd.redraw();
+		} else if (o instanceof GlobeAnnotation){ //suppression de l'annotation
+			this.wwd.getAnnotationLayer().removeAnnotation((GlobeAnnotation)o);
+			this.wwd.redraw();
+		}
+	}
+
+	private void doRollOver(Object o){
+		if (lastHighlit == o)
+			return; 
+		if (lastHighlit == null)
+		{
+			if(o instanceof AbstractAirspace) {
+				lastHighlit = (AbstractAirspace)o;
+				lastAttrs = ((AbstractAirspace)lastHighlit).getAttributes();
+				BasicAirspaceAttributes highliteAttrs = new BasicAirspaceAttributes((AirspaceAttributes) lastAttrs);
+				highliteAttrs.setMaterial(new Material(Pallet.makeBrighter(((AirspaceAttributes)lastAttrs).getMaterial().getDiffuse())));
+				((AbstractAirspace) lastHighlit).setAttributes(highliteAttrs);
+
+			} else if (o instanceof SurfaceShape) {
+				lastHighlit = (SurfaceShape)o;
+				lastAttrs = ((SurfaceShape)lastHighlit).getAttributes();
+				BasicShapeAttributes highliteAttrs = new BasicShapeAttributes((ShapeAttributes) lastAttrs);
+				highliteAttrs.setInteriorMaterial(new Material(Pallet.makeBrighter(((ShapeAttributes)lastAttrs).getInteriorMaterial().getDiffuse())));
+				highliteAttrs.setOutlineMaterial(new Material(Pallet.makeBrighter(((ShapeAttributes)lastAttrs).getOutlineMaterial().getDiffuse())));
+				highliteAttrs.setOutlineWidth(2.0);
+				((SurfaceShape) lastHighlit).setAttributes(highliteAttrs);
+			} else if(o instanceof Balise2D) {
+				lastHighlit = (Balise2D)o;
+				lastAttrs = ((Balise2D)lastHighlit).getAttributes();
+				BasicMarkerAttributes  highliteAttrs = new BasicMarkerAttributes((BasicMarkerAttributes) lastAttrs);
+				highliteAttrs.setMaterial(new Material(Pallet.makeBrighter(((MarkerAttributes)lastAttrs).getMaterial().getDiffuse())));
+				((Balise2D)lastHighlit).setAttributes(highliteAttrs);
+			} else {
+				lastHighlit = null;
+				lastAttrs = null;
+			}
+		}
+	}
+
+	private void doDoubleClick(Object o){
+		if(o instanceof VidesoObject){
+			this.context.showInfo(((VidesoObject) o).getDatabaseType(), ((VidesoObject) o).getType(), ((VidesoObject) o).getName());
+		}
+	}
+
+	private void doHover(Object o, Point point){
+		if(lastToolTip == o)
+			return;
+		if(lastToolTip == null) {
+			lastToolTip = o;
+			if(o instanceof VidesoObject){
+				Position pos = null;
+				if(o instanceof Polygon) {
+					pos = new Position(((Polygon) o).getReferencePosition(), ((Airspace) o).getAltitudes()[1]);
+				} else if( o instanceof TrackAirspace) {
+					pos = new Position(((TrackAirspace) o).getReferencePosition(), ((TrackAirspace) o).getAltitudes()[1]);
+				} else {
+					pos = this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5);//décalage de 5 pixels pour éviter le clignotement
+				}
+
+				Annotation a = ((VidesoObject)o).getAnnotation(pos); 
+				a.getAttributes().setVisible(true);
+				if(!((VAnnotationLayer)this.wwd.getAnnotationLayer()).contains(a)){
+					//on ne modifie lastAnnotation que si l'annotation n'a pas déjà été ajoutée
+					//(notamment lors d'un clic gauche)
+					lastAnnotation = a;
+				}
+			} 
+			if(lastAnnotation != null) this.wwd.getAnnotationLayer().addAnnotation(lastAnnotation);
+			this.wwd.redraw();
 		}
 	}
 }
