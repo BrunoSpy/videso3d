@@ -192,6 +192,7 @@ public class FPLReader extends TrackFilesReader {
 		double elevation = 0;
 		String airway = null;
 		String balisePrecedente = "";
+		LinkedList<String> elementsList = new LinkedList<String>();
 		for(int i = 0; i<route.size(); i++){
 			//Si deux balises consécutives sont inconnues du STIP et de SkyView, on abandonne et on arrête la route ici.
 			if(trackLost>2 && track.getNumPoints()>1)
@@ -200,35 +201,50 @@ public class FPLReader extends TrackFilesReader {
 			if(line.startsWith("-")){
 				line = line.substring(1);
 			}
-			String[] elements = line.split(" |/");
+			String[] elements = line.split("\\s+");
 			for(String e : elements){
-				if(trackLost>2 && track.getNumPoints()>1){
-					break;
-				}
-				if(e.matches("[KMN]\\d+F\\d+")){
-					elevation = Double.parseDouble(e.substring(6))*30.48;
-				}else if(e.matches("[KMN]\\d+S\\d+")){
-					elevation = Double.parseDouble(e.substring(6))*10;
-				}else if(e.matches("F\\d{3}")){
-					elevation = Double.parseDouble(e.substring(1))*30.48;
-				}else if (e.matches("[A-Z]{1,2}\\d+")){
-					airway = e;
-				}else if(e.matches("\\d{1,3}([\\.,]\\d{2,})?[NS]\\d{1,3}([\\.,]\\d{2,})?[EW]") 
-						|| e.matches("\\d{1,3}[dD](\\s*\\d{2}')?(\\s*\\d{2}\")?\\s*[NnSs],\\d{1,3}[dD](\\s*\\d{2}')?(\\s*\\d{2}\")?\\s*[EeWw]")){
-					addGeographicPoint(track, e, elevation);
-					airway = null;
-				}else if(!e.equals("DCT") && !(e.equals(""))){
-					try {
-						balisePrecedente = addBalisesToTrack(track, e, balisePrecedente, airway, elevation);
-					} catch (SQLException exc) {
-						exc.printStackTrace();
-					}
-					airway = null;
-				}
+				elementsList.add(e);
 			}
 		}	
+		parseElements(elementsList, track, elevation, "",balisePrecedente, airway);
 		for(String b : balisesIntermediairesInconnues){
 			track.setNextSegmentIncertain(b);
+		}
+	}
+	
+	private void parseElements(LinkedList<String> elements, FPLTrack track, double elevation, String elevationChangeOnWpt, String balisePrecedente, String airway){
+		if(elements.isEmpty())
+			return;
+		String e = elements.getFirst();
+		if(trackLost>2 && track.getNumPoints()>1)
+			return;	
+		if(e.matches("\\p{Alpha}{2,5}/([KMN]\\d+)?[SF]\\d+")){
+			elements.removeFirst();
+			String[] subElements = e.split("/");
+			elements.addFirst(subElements[0]);
+			elements.addFirst(subElements[1]);
+			parseElements(elements, track, elevation, subElements[0], balisePrecedente, airway);
+		}else{
+			if(e.matches("([KMN]\\d+)?F\\d+")){
+				elevation = Double.parseDouble(e.substring(e.indexOf("F")+1))*30.48;
+			}else if(e.matches("([KMN]\\d+)?S\\d+")){
+				elevation = Double.parseDouble(e.substring(e.indexOf("S")+1))*10;
+			}else if (e.matches("[A-Z]{1,2}\\d+")){
+				airway = e;
+			}else if(e.matches("\\d{1,3}([\\.,]\\d{2,})?[NS]\\d{1,3}([\\.,]\\d{2,})?[EW]") 
+					|| e.matches("\\d{1,3}[dD](\\s*\\d{2}')?(\\s*\\d{2}\")?\\s*[NnSs],\\d{1,3}[dD](\\s*\\d{2}')?(\\s*\\d{2}\")?\\s*[EeWw]")){
+				addGeographicPoint(track, e, elevation);
+				airway = null;
+			}else if(!e.equals("DCT") && !(e.equals(""))){
+				try {
+					balisePrecedente = addBalisesToTrack(track, e, balisePrecedente, airway, elevation, elevationChangeOnWpt);
+				} catch (SQLException exc) {
+					exc.printStackTrace();
+				}
+				airway = null;
+			}
+			elements.removeFirst();
+			parseElements(elements, track, elevation, elevationChangeOnWpt, balisePrecedente, airway);
 		}
 	}
 	
@@ -297,10 +313,16 @@ public class FPLReader extends TrackFilesReader {
 	 * @param balisePrecedente
 	 * @param route
 	 * @param elevation
+	 * @param 
 	 * @return la nouvelle valeur de balisePrecedente
 	 * @throws SQLException 
 	 */
-	private String addBalisesToTrack(FPLTrack track, String balise, String balisePrecedente, String route, double elevation) throws SQLException{
+	private String addBalisesToTrack(FPLTrack track, String balise, String balisePrecedente, String route, double elevation, String elevationChangeOnWpt) throws SQLException{
+		double newElevation = -1;
+		if(elevationChangeOnWpt.equals(balise)){
+			newElevation = elevation;
+			elevation = track.getTrackPoints().get(track.getNumPoints()-1).getElevation();
+		}
 		LPLNTrackPoint point = baliseName2TrackPoint(balise, elevation);
 		boolean skyViewPoint = false;
 		if(point == null && DatabaseManager.getCurrentSkyView() != null){
@@ -330,16 +352,21 @@ public class FPLReader extends TrackFilesReader {
 				}else{
 					points = getPointsBetween(balisePrecedente, balise, route, elevation);
 				}
+				if(trackLost>0 && !points.isEmpty())
+					track.setSegmentIncertain(points.getFirst().getName());
 				for(LPLNTrackPoint p : points){
 					track.addPoint(p);
 				}
 			}
+			if(newElevation >-1){
+				track.getTrackPoints().get(track.getNumPoints()-1).setElevation(newElevation);
+			}
 			balisePrecedente = balise;
 			if(trackLost<=2)
 				trackLost = 0;
-		}else{
+		}else{			
 				trackLost+=1;
-				balisePrecedente = null;
+				balisePrecedente = balise;
 		}
 		return balisePrecedente;
 	}
@@ -389,7 +416,12 @@ public class FPLReader extends TrackFilesReader {
 				Collections.reverse(pointList);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}				
+		}		
+		String lastBalise = pointList.getLast().getName();
+		if(!lastBalise.equals(b2)){
+			LinkedList<LPLNTrackPoint> secondPointList  =getSkyViewPointsBetween(lastBalise, b2, route, elevation);
+			pointList.addAll(secondPointList);
+		}
 		return pointList;		
 	}
 	
@@ -439,6 +471,13 @@ public class FPLReader extends TrackFilesReader {
 				String query = "select ";
 				if(fromSEQ < toSEQ && !fromIsLast && !toIsFirst){
 					query += "TO_FIX_IDENT from AIRWAY WHERE IDENT ='"+route+"' AND SEQ >="+fromSEQ+" AND SEQ <="+toSEQ+" ORDER BY SEQ ASC";
+				}else if(fromSEQ==toSEQ){
+					if(fromIsLast || toIsFirst){
+						query+= "FROM_FIX_IDENT "; 
+					}else{
+						query+= "TO_FIX_IDENT ";
+					}
+					query+= "from AIRWAY WHERE IDENT ='"+route+"' AND SEQ = "+toSEQ+" ";
 				}else{
 					query += "FROM_FIX_IDENT from AIRWAY WHERE IDENT='"+route+"' ";
 					if(!fromIsLast && !toIsFirst){
@@ -453,8 +492,7 @@ public class FPLReader extends TrackFilesReader {
 				ResultSet rs5 = st.executeQuery(query);
 				LinkedList<String> balises = new LinkedList<String>();
 				while(rs5.next()){
-					String bname = rs5.getString(1);
-					balises.add(bname);
+					balises.add(rs5.getString(1));
 				}
 				String balisePrecedente = b1;
 				for (int i = 0; i<balises.size(); i++){
