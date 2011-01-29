@@ -64,6 +64,11 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	
 	private String name = "Trajectoires GEO";
 	
+	/**
+	 * Drops point if the previous is less <code>precision</code> far from the previous point
+	 */
+	private double precision = 0.0;
+	
 	public GEOTracksLayer(){
 		super();
 		this.add(layer);
@@ -89,8 +94,10 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 			if(!(point.getLatitude() == position.latitude.degrees  //only add a position if different from the previous position
 					&& point.getLongitude() == position.longitude.degrees
 					&& point.getElevation() == position.elevation)) {
-				positions.add(point.getPosition());
-				position = point.getPosition();
+				if(precision == 0.0 || Position.greatCircleDistance(position, point.getPosition()).degrees > this.getPrecision()) {
+					positions.add(point.getPosition());
+					position = point.getPosition();
+				}
 			}
 		}
 		if(positions.size()>1){ //only add a line if there's enough points
@@ -107,6 +114,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 				line.setPlain(false);
 				if(colors.containsKey(track)){
 					line.setShadedColors(false);
+					line.setPathType(VPolyline.LINEAR);
 					line.setColor(colors.get(track));
 				} else {
 					line.setShadedColors(true);
@@ -344,6 +352,21 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	@Override
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * In degrees
+	 * @param precision the precision to set
+	 */
+	public void setPrecision(double precision) {
+		this.precision = precision;
+	}
+
+	/**
+	 * @return the precision (in degrees)
+	 */
+	public double getPrecision() {
+		return precision;
 	}
 	
 }

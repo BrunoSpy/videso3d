@@ -208,10 +208,51 @@ public class ConfigurationUI extends JFrame {
 		});
 		trajecto.add(valChevelus);
 		
+		
+		
+		JPanel trajecto2 = new JPanel();
+		trajecto2.setLayout(new BoxLayout(trajecto2, BoxLayout.LINE_AXIS));
+		trajecto2.add(new JLabel("Simplifier les tracés à partir de : "));
+		trajecto2.add(Box.createHorizontalGlue());
+		final JTextField seuilPrecision = new JTextField(20);
+		seuilPrecision.setText(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "100"));
+		trajecto2.add(seuilPrecision);
+		JButton valSeuilPrecision = new JButton("Valider");
+		valSeuilPrecision.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Configuration.setProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, seuilPrecision.getText());
+			}
+		});
+		trajecto2.add(valSeuilPrecision);
+		
+		JPanel trajecto3 = new JPanel();
+		trajecto3.setLayout(new BoxLayout(trajecto3, BoxLayout.LINE_AXIS));
+		trajecto3.add(new JLabel("Précision (en degrés) : "));
+		trajecto3.add(Box.createHorizontalGlue());
+		final JTextField precision = new JTextField(20);
+		precision.setText(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.02"));
+		trajecto3.add(precision);
+		JButton valPrecision = new JButton("Valider");
+		valPrecision.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Configuration.setProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, precision.getText());
+			}
+		});
+		trajecto3.add(valPrecision);
+		
 		all.add(trajecto);
+		all.add(trajecto2);
+		all.add(trajecto3);
 		
 		all.add(new Box.Filler(new Dimension(0, Short.MAX_VALUE), new Dimension(0, Short.MAX_VALUE), new Dimension(0, Short.MAX_VALUE)));
-		this.setSize(new Dimension(500, 300));
+		
+		
+		
+		this.setSize(new Dimension(500, 350));
 	}
 	
 }
