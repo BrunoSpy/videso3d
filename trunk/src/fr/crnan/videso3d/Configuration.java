@@ -44,6 +44,8 @@ public final class Configuration {
 	public static final String DEFAULT_REP = "fr.crnan.videso3d.files.defaultrep";
 	
 	public static final String TRAJECTOGRAPHIE_SEUIL = "fr.crnan.videso3d.trajectographie.seuil";
+	public static final String TRAJECTOGRAPHIE_SEUIL_PRECISION = "fr.crnan.videso3d.trajectographie.seuilprecision";
+	public static final String TRAJECTOGRAPHIE_PRECISION = "fr.crnan.videso3d.trajectographie.precision";
 	
 	private static Configuration instance = new Configuration();
 
