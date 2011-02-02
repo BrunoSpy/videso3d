@@ -18,7 +18,6 @@ package fr.crnan.videso3d.ihm;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -26,11 +25,8 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -46,6 +42,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.JXTaskPane;
+import org.jdesktop.swingx.JXTaskPaneContainer;
 
 import fr.crnan.videso3d.Triplet;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -53,7 +51,6 @@ import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
-import fr.crnan.videso3d.ihm.components.ColumnControl;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
 import fr.crnan.videso3d.layers.LPLNTracksLayer;
 import fr.crnan.videso3d.layers.OPASTracksLayer;
@@ -64,11 +61,13 @@ import gov.nasa.worldwind.tracks.Track;
 /**
  * Panel de sélection des trajectoires affichées
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.4
  */
 @SuppressWarnings("serial")
 public class TrajectoriesView extends JPanel {
 
+	private JXTaskPaneContainer content = new JXTaskPaneContainer();
+	
 	private List<Triplet<String, String, Color>> colorFilters;
 	
 	private TrajectoriesLayer layer;
@@ -79,14 +78,87 @@ public class TrajectoriesView extends JPanel {
 		this.layer = wwd.addTrajectoires(reader);
 		this.wwd = wwd;
 		
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setLayout(new BorderLayout());
+		this.add(content, BorderLayout.CENTER);		
+		
+		JXTaskPane table = new JXTaskPane("Trajectoires affichées");
+		final JXTable pistes = new JXTable(new TrackTableModel());
+		//listener pour le highlight des lignes sélectionnées
+		pistes.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				if(!e.getValueIsAdjusting()){
+					if(e.getFirstIndex() != -1){
+						for(int i = e.getFirstIndex(); i <= e.getLastIndex(); i++){
+							layer.highlightTrack(
+									(Track)((TrackTableModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(i)),
+									pistes.isRowSelected(i));
+						}
+					}
+				}
+			}
+		});
+		pistes.setColumnControlVisible(true);			
+		
 
-		this.add(this.createTitleSwitch());
+		if(layer instanceof LPLNTracksLayer){
+			pistes.getColumnExt("IAF").setVisible(false);
+		} else if (layer instanceof GEOTracksLayer) {
+			pistes.getColumnExt("IAF").setVisible(false);
+		} else if (layer instanceof OPASTracksLayer) {
+			pistes.getColumnExt("Type").setVisible(false);
+		}
+		pistes.getColumnExt("Affiché").setVisible(layer.isTrackHideable());
+		pistes.packAll();
+		
+		JScrollPane scrollPane = new JScrollPane(pistes);
+		scrollPane.setBorder(null);
+		table.add(scrollPane);
+				
+		content.add(this.createStylePane(), null);
+		content.add(this.createFilterPane(), null);
+		content.add(this.createColorFilterPane(), null);
+		content.add(table, null);
+
+	}
+
+	private JXTaskPane createStylePane(){
+		JXTaskPane stylePane = new JXTaskPane("Style des trajectoires");
+		stylePane.setCollapsed(true);
+		
+		return stylePane;
+	}
+	
+	private JXTaskPane createColorFilterPane(){
+		JXTaskPane colorFilterPane = new JXTaskPane("Filtres de couleurs");
+		colorFilterPane.setCollapsed(true);
+		
+		//Gestion des couleurs
+		final TrajectoriesColorsDialog colors = new TrajectoriesColorsDialog(colorFilters);
+		colors.addPropertyChangeListener("valuesChanged", new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(PropertyChangeEvent p) {
+				layer.resetFilterColor();
+				for(Triplet<String, String, Color> filter : (List<Triplet<String, String, Color>>)p.getNewValue()){
+					layer.addFilterColor(TrajectoriesLayer.string2type(filter.getFirst()), filter.getSecond(), filter.getThird());
+				}
+			}
+		});
+		colorFilterPane.add(colors);
+		
+		return colorFilterPane;
+	}
+	
+	private JXTaskPane createFilterPane(){
+		JXTaskPane filterPane = new JXTaskPane("Filtres");
+		filterPane.setCollapsed(true);
+		
+		filterPane.add(this.createTitleSwitch());
 		
 		JPanel filtres = new JPanel();
-		filtres.setLayout(new BoxLayout(filtres, BoxLayout.Y_AXIS));
-		filtres.setBorder(BorderFactory.createTitledBorder(""));
-		
+		filtres.setLayout(new BoxLayout(filtres, BoxLayout.Y_AXIS));		
 
 		JPanel indicatif = new JPanel();
 		indicatif.setLayout(new BoxLayout(indicatif, BoxLayout.X_AXIS));
@@ -101,7 +173,7 @@ public class TrajectoriesView extends JPanel {
 		
 		JPanel aDep = new JPanel();
 		aDep.setLayout(new BoxLayout(aDep, BoxLayout.X_AXIS));
-		JLabel aDepLabel = new JLabel("Aéroport de départ : ");
+		JLabel aDepLabel = new JLabel("Aéroport départ : ");
 		final JTextField aDepField = new JTextField(10);
 		aDepField.setMaximumSize(new Dimension(100, 30));
 		aDep.add(aDepLabel);
@@ -112,7 +184,7 @@ public class TrajectoriesView extends JPanel {
 
 		JPanel aDest = new JPanel();
 		aDest.setLayout(new BoxLayout(aDest, BoxLayout.X_AXIS));
-		JLabel aDestLabel = new JLabel("Aéroport d'arrivée : ");
+		JLabel aDestLabel = new JLabel("Aéroport arrivée : ");
 		final JTextField aDestField = new JTextField(10);
 		aDestField.setMaximumSize(new Dimension(100, 30));
 		aDest.add(aDestLabel);
@@ -184,80 +256,10 @@ public class TrajectoriesView extends JPanel {
 			}
 		});
 		filtres.add(validate);
-		this.add(filtres);
-
-		JPanel table = new JPanel(new BorderLayout());
-		table.setBorder(BorderFactory.createTitledBorder("Pistes affichées"));
-		final JXTable pistes = new JXTable(new TrackTableModel());
-		//listener pour le highlight des lignes sélectionnées
-		pistes.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if(!e.getValueIsAdjusting()){
-					if(e.getFirstIndex() != -1){
-						for(int i = e.getFirstIndex(); i <= e.getLastIndex(); i++){
-							layer.highlightTrack(
-									(Track)((TrackTableModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(i)),
-									pistes.isRowSelected(i));
-						}
-					}
-				}
-			}
-		});
-		pistes.setColumnControlVisible(true);			
-
-		//Gestion des couleurs
-		final TrajectoriesColorsDialog colors = new TrajectoriesColorsDialog(colorFilters);
-		colors.addPropertyChangeListener("valuesChanged", new PropertyChangeListener() {
-
-			@Override
-			public void propertyChange(PropertyChangeEvent p) {
-				layer.resetFilterColor();
-				for(Triplet<String, String, Color> filter : (List<Triplet<String, String, Color>>)p.getNewValue()){
-					layer.addFilterColor(TrajectoriesLayer.string2type(filter.getFirst()), filter.getSecond(), filter.getThird());
-				}
-			}
-		});
-		
-		//Ajoute un contrôle pour modifier les couleurs
-		Action couleur = new AbstractAction(){
-			{
-				putValue(Action.NAME, "Modifier les couleurs...");
-			}
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				colors.setVisible(true);
-			}
-
-		};
-		List<Action> actions = new LinkedList<Action>();
-		actions.add(couleur);
-		
-		
-		ColumnControl control = new ColumnControl(pistes);
-		control.addActions(actions);
-		
-		pistes.setColumnControl(control);
-		
-		if(layer instanceof LPLNTracksLayer){
-			pistes.getColumnExt("IAF").setVisible(false);
-		} else if (layer instanceof GEOTracksLayer) {
-			pistes.getColumnExt("IAF").setVisible(false);
-		} else if (layer instanceof OPASTracksLayer) {
-			pistes.getColumnExt("Type").setVisible(false);
-		}
-		pistes.getColumnExt("Affiché").setVisible(layer.isTrackHideable());
-		pistes.packAll();
-		JScrollPane scrollPane = new JScrollPane(pistes);
-		scrollPane.setBorder(null);
-		table.add(scrollPane);
-		this.add(table);
-
-		this.add(Box.createVerticalGlue());
-
+		filterPane.add(filtres);		
+		return filterPane;
 	}
-
+	
 	/**
 	 * Crée la zone de titre avec un switch et/ou
 	 * @return JPanel
@@ -266,10 +268,6 @@ public class TrajectoriesView extends JPanel {
 		JPanel titre = new JPanel();
 		titre.setLayout(new BoxLayout(titre, BoxLayout.X_AXIS));
 		titre.setBorder(BorderFactory.createEmptyBorder(0, 17, 1, 3));
-		
-		JLabel titreLabel = new JLabel("Filtres");
-		titreLabel.setFont(titreLabel.getFont().deriveFont(Font.BOLD));
-		titre.add(titreLabel);
 		
 		JRadioButton et = new JRadioButton("Et");
 		et.addItemListener(new ItemListener() {

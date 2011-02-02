@@ -175,9 +175,9 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	
 	
 	public static int string2type(String type){
-		if("Aéroport de départ".equals(type)){
+		if("Départ".equals(type)){
 			return FIELD_ADEP;
-		} else if("Aéroport de destination".equals(type)){
+		} else if("Arrivée".equals(type)){
 			return FIELD_ADEST;
 		} else if("IAF".equals(type)){
 			return FIELD_IAF;
@@ -191,9 +191,9 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	
 	public static String type2string(int type){
 		if(type == FIELD_ADEP){
-			return "Aéroport de départ";
+			return "Départ";
 		} else if (type == FIELD_ADEST){
-			return "Aéroport de destination";
+			return "Arrivée";
 		} else if (type == FIELD_IAF){
 			return "IAF";
 		} else if (type == FIELD_INDICATIF){
