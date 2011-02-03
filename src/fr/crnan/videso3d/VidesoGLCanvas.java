@@ -33,6 +33,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.formats.VidesoTrack;
+import fr.crnan.videso3d.formats.fpl.FPLReader_OLD;
 import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
@@ -524,11 +526,25 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	}
 
 
+	
+	public Position centerView(Object object){
+		getView().setValue(AVKey.ELEVATION, 1e11);
+		double[] eyePosition = this.computeBestEyePosition(object);
+		Position centerPosition = Position.fromDegrees(eyePosition[0], eyePosition[1]);
+		getView().setHeading(Angle.ZERO);
+		getView().setPitch(Angle.ZERO);
+		BasicOrbitView bov = (BasicOrbitView) getView();
+		bov.addPanToAnimator(centerPosition, bov.getHeading(), bov.getPitch(), eyePosition[2], 2000, true);
+		bov.firePropertyChange(AVKey.VIEW, null, bov);
+		return centerPosition;
+	}
+	
+	
 	/**
 	 * Calcule l'altitude à laquelle doit se trouver la caméra pour voir correctement l'objet, 
 	 * et la position sur laquelle elle doit être centrée. 
 	 * @param object
-	 * @return
+	 * @return un tableau contenant dans l'ordre : la latitude, la longitude et l'altitude et l'inclinaison de la caméra (pitch).
 	 */
 	@SuppressWarnings("unchecked")
 	public double[] computeBestEyePosition(Object object){
@@ -539,6 +555,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}else if(object instanceof Aerodrome){
 			Position ref = ((Aerodrome) object).getRefPosition();
 			return new double[]{ref.latitude.degrees, ref.longitude.degrees, 50000};
+		}else if(object instanceof VidesoTrack){
+			return computeBestEyePosition((VidesoTrack)object);
 		}else if(object instanceof List){
 			if(((List<?>)object).get(0) instanceof Route){
 				return computeBestEyePosition((List<? extends Route>)object);
@@ -585,47 +603,63 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		return new double[]{(latMin.degrees+latMax.degrees)/2,(lonMin.degrees+lonMax.degrees)/2, Math.min(elevation,2.5e6)};
 	}
 
+	/**
+	 * Renvoie l'altitude à laquelle doit se trouver l'oeil pour voir correctement la balise.
+	 * @param navFix
+	 * @return
+	 */
+	public double[] computeBestEyePosition(Balise2D navFix){
+		return new double[]{navFix.getPosition().latitude.degrees, navFix.getPosition().longitude.degrees, 2e5};
+	}
 	
-	
-	
+	/**
+	 * Calcule l'altitude à laquelle doit se trouver l'oeil pour voir correctement la route.
+	 * @param segments
+	 * @return 
+	 */
 	@SuppressWarnings("unchecked")
 	public double[] computeBestEyePosition(List<? extends Route> segments){
 		
 			//Calcul de la hauteur idéale de la caméra
 			LatLon firstLocation = (LatLon) ((Route) segments.get(0)).getLocations().iterator().next();
-			LatLon secondLocation = null;
+			LatLon lastLocation = null;
 			if(segments.size()>1){
-				secondLocation = ((Route) segments.get(segments.size()-1)).getLocations().iterator().next();
+				lastLocation = ((Route) segments.get(segments.size()-1)).getLocations().iterator().next();
 			}else{
 				Iterator<LatLon> it = (Iterator<LatLon>) ((Route) segments.get(0)).getLocations().iterator();
 				while(it.hasNext()){
-					secondLocation = it.next();
+					lastLocation = it.next();
 				}
 			}
-			Angle lat1 = firstLocation.latitude;
-			Angle lon1 = firstLocation.longitude;
-			Angle lat2 = secondLocation.latitude;
-			Angle lon2 = secondLocation.longitude;
-			
-			double er = this.getView().getGlobe().getEquatorialRadius();
-			double pr = this.getView().getGlobe().getPolarRadius();
-			double distance = LatLon.ellipsoidalDistance(new LatLon(lat1,lon1), new LatLon(lat2,lon2), er, pr);
-			double elevation = computeBestElevation(distance);
 			LatLon middleSegmentLocation = ((Route) segments.get(segments.size()/2)).getLocations().iterator().next();
+			
+			double elevation = computeBestElevation(firstLocation, lastLocation);
 			return new double[]{middleSegmentLocation.latitude.degrees, middleSegmentLocation.longitude.degrees, Math.min(elevation,2.5e6)};
 			
 	}
 	
-	
-	public double[] computeBestEyePosition(Balise2D navFix){
-		return new double[]{navFix.getPosition().latitude.degrees, navFix.getPosition().longitude.degrees, 2e5};
+	public double[] computeBestEyePosition(VidesoTrack track){
+		Position p1 = track.getTrackPointsList().getFirst().getPosition();
+		Position p2 = track.getTrackPointsList().getLast().getPosition();
+		Position middle = track.getTrackPointsList().get(track.getNumPoints()/2).getPosition();
+		double elevation = computeBestElevation(p1, p2);
+		return new double[]{middle.latitude.degrees, middle.longitude.degrees, Math.min(elevation, 6e8)};
 	}
+	
+	private double computeBestElevation(LatLon firstLocation, LatLon lastLocation){
+		double er = this.getView().getGlobe().getEquatorialRadius();
+		double pr = this.getView().getGlobe().getPolarRadius();
+		double distance = LatLon.ellipsoidalDistance(firstLocation, lastLocation, er, pr);
+		return computeBestElevation(distance);
+	}
+	
 	
 	
 	public double computeBestElevation(double distance){
-		return -6e-7*distance*distance+2.3945*distance+175836;
+		return -2e-6*distance*distance+2.3945*distance+175836;
 	}
 
+	
 	/**
 	 * Import GEOTiff image or a directory containing GEOTiff images.<br />
 	 * Images have to be projected in latlon/WGS84.

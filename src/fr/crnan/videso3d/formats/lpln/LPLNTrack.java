@@ -18,14 +18,15 @@ package fr.crnan.videso3d.formats.lpln;
 import java.util.LinkedList;
 import java.util.List;
 
-import gov.nasa.worldwind.tracks.Track;
+import fr.crnan.videso3d.formats.VidesoTrack;
+import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.tracks.TrackSegment;
 /**
  * Track provenant d'un LPLN
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class LPLNTrack implements Track{
+public class LPLNTrack extends VidesoTrack {
 
 	private String name;
 	
@@ -63,6 +64,12 @@ public class LPLNTrack implements Track{
 
 	public List<LPLNTrackPoint> getTrackPoints(){
 		return trackPoints;
+	}
+	
+	public LinkedList<TrackPoint> getTrackPointsList(){
+		LinkedList<TrackPoint> trackPointsList = new LinkedList<TrackPoint>();
+		trackPointsList.addAll(trackPoints);
+		return trackPointsList;
 	}
 	
 	@Override

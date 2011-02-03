@@ -18,14 +18,16 @@ package fr.crnan.videso3d.formats.geo;
 import java.util.LinkedList;
 import java.util.List;
 
+import fr.crnan.videso3d.formats.VidesoTrack;
 import gov.nasa.worldwind.tracks.Track;
+import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.tracks.TrackSegment;
 /**
  * Track provenant d'un fichier Elvira GEO.
  * @author Bruno Spyckerelle
  * @version 0.1.1
  */
-public class GEOTrack implements Track {
+public class GEOTrack extends VidesoTrack {
 
 	private String indicatif;
 	private String depart = "";
@@ -94,5 +96,12 @@ public class GEOTrack implements Track {
 
 	public Integer getNumTraj(){
 		return numTraj;
+	}
+
+	@Override
+	public LinkedList<TrackPoint> getTrackPointsList() {
+		LinkedList<TrackPoint> trackPointsList = new LinkedList<TrackPoint>();
+		trackPointsList.addAll(trackPoints);
+		return trackPointsList;
 	}
 }

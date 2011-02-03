@@ -59,7 +59,7 @@ public class RoutesSegments{
 	 * @param routeName Le nom de la route.
 	 * @return La liste des <code>Segment</code> qui composent la route.
 	 */
-	public Route getSegmentsOfRoute(String routeName){
+	public Route getSegmentOfRoute(String routeName){
 		for(Route r : routes){
 			if(r.getName().equals(routeName)){
 				return r;
@@ -73,7 +73,7 @@ public class RoutesSegments{
 	 * @param pkRoute L'identifiant de la route.
 	 * @return La liste des <code>Segment</code> qui composent la route.
 	 */
-	public Route getSegmentsOfRoute(int pkRoute){
+	public Route getSegmentOfRoute(int pkRoute){
 		for(Route r : routes){
 			if(r.getPk()==pkRoute){
 				return r;

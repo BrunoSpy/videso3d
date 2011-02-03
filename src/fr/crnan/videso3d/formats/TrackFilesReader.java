@@ -38,6 +38,10 @@ public abstract class TrackFilesReader {
 	
 	private List<Track> tracks = new LinkedList<Track>();
 	
+	public TrackFilesReader(){
+	}
+	
+	
 	public TrackFilesReader(Vector<File> files) {
 		for(File f : files){
 			try {
@@ -85,7 +89,7 @@ public abstract class TrackFilesReader {
 		this.doReadStream(fis);
 	}
 	
-	private void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 

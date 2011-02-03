@@ -18,6 +18,7 @@ package fr.crnan.videso3d.layers;
 import java.awt.Color;
 import java.util.Collection;
 
+import fr.crnan.videso3d.formats.VidesoTrack;
 import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer contenant des trajectoires et permettant un affichage sélectif.
@@ -119,7 +120,7 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 */
 	public abstract void update();
 	
-	public abstract Collection<? extends Track> getSelectedTracks();
+	public abstract Collection<? extends VidesoTrack> getSelectedTracks();
 	
 	/**
 	 * Returns true or false wether the track is displayed on the globe or not
