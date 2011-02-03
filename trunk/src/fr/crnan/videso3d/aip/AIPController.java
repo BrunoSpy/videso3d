@@ -53,7 +53,6 @@ import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
 import gov.nasa.worldwind.avlist.AVKey;
-import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.Layer;
@@ -196,7 +195,7 @@ public class AIPController implements VidesoController {
 	}
 	
 	public RoutesSegments.Route getSegmentsOfRoute(int pkRoute){
-		return routesSegments.getSegmentsOfRoute(pkRoute);
+		return routesSegments.getSegmentOfRoute(pkRoute);
 	}
 	
 	@Override
@@ -379,7 +378,7 @@ public class AIPController implements VidesoController {
 	}
 	
 	public void showRoute(String routeName, int type){
-		RoutesSegments.Route route = routesSegments.getSegmentsOfRoute(routeName);
+		RoutesSegments.Route route = routesSegments.getSegmentOfRoute(routeName);
 		if(route==null){
 			addRouteToLayer(routeName, type, true);
 		}else{
@@ -434,9 +433,7 @@ public class AIPController implements VidesoController {
 			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP,"select segments.pk, NavFix.nom from segments, NavFix where pkRoute = ? AND NavFix.pk = segments.navFixExtremite ORDER BY sequence");
 			st.setString(1, routeID);
 			ResultSet segments = st.executeQuery();
-//			boolean segmentsEmpty = true;
 			while(segments.next()){
-//				segmentsEmpty = false;
 				Element segment = aip.findElement(aip.getDocumentRoot().getChild("SegmentS"), segments.getString(1));
 				String navFixExtremite = segments.getString(2);
 				String segmentName = buildSegmentName(routeName, segment.getChildText("Sequence"));
@@ -515,7 +512,7 @@ public class AIPController implements VidesoController {
 		if(routesAnnotations.containsKey(routeName.split("-")[0].trim())){
 			routesAnnotations.get(routeName.split("-")[0].trim()).getAttributes().setVisible(false);
 		}
-		RoutesSegments.Route route = routesSegments.getSegmentsOfRoute(routeName);
+		RoutesSegments.Route route = routesSegments.getSegmentOfRoute(routeName);
 		if(route!=null){
 			if(route.isVisible()){
 				route.setVisible(false);
@@ -563,12 +560,12 @@ public class AIPController implements VidesoController {
 			for(Couple<String,String> navFix : navFixExtremites){			
 				showObject(AIP.string2type(navFix.getSecond()), navFix.getFirst());
 			}
-			routesSegments.getSegmentsOfRoute(Integer.parseInt(pkRoute)).setNavFixsVisible(true);
+			routesSegments.getSegmentOfRoute(Integer.parseInt(pkRoute)).setNavFixsVisible(true);
 		}else{
 			for(Couple<String,String> navFix : navFixExtremites){			
 				hideObject(AIP.string2type(navFix.getSecond()), navFix.getFirst());
 			}
-			routesSegments.getSegmentsOfRoute(Integer.parseInt(pkRoute)).setNavFixsVisible(false);
+			routesSegments.getSegmentOfRoute(Integer.parseInt(pkRoute)).setNavFixsVisible(false);
 		}
 	}
 	
@@ -772,15 +769,7 @@ public class AIPController implements VidesoController {
 	 * @return La position sur laquelle la vue est centrée.
 	 */
 	public Position centerView(Object object){
-		Logging.logger("center");
-		wwd.getView().setValue(AVKey.ELEVATION, 1e11);
-		double[] eyePosition = this.wwd.computeBestEyePosition(object);
-		Position centerPosition = Position.fromDegrees(eyePosition[0], eyePosition[1]);
-		this.wwd.getView().setHeading(Angle.ZERO);
-		this.wwd.getView().setPitch(Angle.ZERO);
-		BasicOrbitView bov = (BasicOrbitView) this.wwd.getView();
-		bov.addPanToAnimator(centerPosition, bov.getHeading(), bov.getPitch(), eyePosition[2], 2000, true);
-		bov.firePropertyChange(AVKey.VIEW, null, bov);
+		Position centerPosition = this.wwd.centerView(object);		
 		showAnnotation(object, centerPosition);
 		return centerPosition;
 		
@@ -883,7 +872,7 @@ public class AIPController implements VidesoController {
 	 */
 	private void highlightRoute(int type, String name){
 			showRoute(name, type);
-		RoutesSegments.Route route = routesSegments.getSegmentsOfRoute(name);
+		RoutesSegments.Route route = routesSegments.getSegmentOfRoute(name);
 		if(route != null){
 			ArrayList<Route2D> segments2D = new ArrayList<Route2D>();
 			ArrayList<Route3D> segments3D = new ArrayList<Route3D>();
