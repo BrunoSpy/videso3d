@@ -38,7 +38,6 @@ import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.formats.TrackFilesReader;
-import fr.crnan.videso3d.formats.fpl.FPLReader_OLD;
 import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
