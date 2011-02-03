@@ -12,7 +12,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package fr.crnan.videso3d.formats.fpl;
 
 import java.io.BufferedReader;
@@ -55,12 +55,12 @@ import gov.nasa.worldwind.geom.Position;
 public class FPLReader extends TrackFilesReader {
 
 	private static enum Type{Balise, Point, Route}; 
-	
-	
+
+
 	public FPLReader() {
 	}
-	
-	
+
+
 	public FPLReader(File selectedFile) {
 		super(selectedFile);
 	}
@@ -68,9 +68,9 @@ public class FPLReader extends TrackFilesReader {
 	public FPLReader(Vector<File> files){
 		super(files);
 	}
-	
-	
-	
+
+
+
 	public static Boolean isFPLFile(File file){
 		Boolean fpl = false;
 		try {
@@ -98,7 +98,7 @@ public class FPLReader extends TrackFilesReader {
 			return true;
 		return false;
 	}
-	
+
 	public static String getIndicatif(LinkedList<String> fpl){
 		if(isIvanWeb(fpl))
 			return fpl.getFirst().split("-")[1];
@@ -141,16 +141,16 @@ public class FPLReader extends TrackFilesReader {
 			return;
 		}
 	}
-	
-	
+
+
 	public void parseFPL(LinkedList<String> fpl, String indicatif){
 		if(isIvanWeb(fpl))
 			parseIvanWebFPL(fpl);
 		else
 			parseFreeFPL(fpl, indicatif);
 	}
-	
-	
+
+
 	/**
 	 * Lit le plan de vol pour construire la trajectoire (<code>FPLTrack</code>) correspondante.
 	 * @param fpl Les lignes qui composent le plan de vol
@@ -175,7 +175,7 @@ public class FPLReader extends TrackFilesReader {
 			this.getTracks().add(track);
 		}
 	}
-	
+
 	public void parseFreeFPL(LinkedList<String> fpl, String indicatif){
 		FPLTrack track = new FPLTrack(indicatif);
 		track.setIndicatif(indicatif);
@@ -210,7 +210,7 @@ public class FPLReader extends TrackFilesReader {
 		}
 	}
 
-	
+
 	private void addKnownPointsListToTrack(LinkedList<LPLNTrackPoint> pointsList, FPLTrack track){
 		int i=0;
 		boolean incertain = false;
@@ -234,12 +234,12 @@ public class FPLReader extends TrackFilesReader {
 			track.setSegmentIncertain(segmentsIncertains);
 		}
 	}
-	
+
 	private void parseRoute(LinkedList<String> route, LinkedList<LPLNTrackPoint> track){
 		ArrayList<Triplet<String, Type, Double>> array = new ArrayList<Triplet<String, Type, Double>>();
 		double elevation = 0;
-		
-		
+
+
 		for(String line : route){
 			if(line.startsWith("-")){
 				line = line.substring(1);
@@ -248,14 +248,14 @@ public class FPLReader extends TrackFilesReader {
 			String[] elements = line.split("\\s+");
 			//On construit un tableau où pour chaque élément on indique le nom, le type d'élément et l'altitude.
 			for(String e : elements){
-					Triplet<String, Type, Double> typeElevation = findElementTypeAndElevation(e.toUpperCase(), elevation);
-					elevation = typeElevation.getThird();
-					if(typeElevation.getFirst()!=null && typeElevation.getSecond()!=null)
-						array.add(typeElevation);
+				Triplet<String, Type, Double> typeElevation = findElementTypeAndElevation(e.toUpperCase(), elevation);
+				elevation = typeElevation.getThird();
+				if(typeElevation.getFirst()!=null && typeElevation.getSecond()!=null)
+					array.add(typeElevation);
 			}
 		}
-		
-		
+
+
 		//On parcourt ensuite ce tableau pour extraire la route
 		for(int i = 0; i < array.size(); i++){
 			Triplet<String, Type, Double> t = array.get(i);
@@ -292,10 +292,10 @@ public class FPLReader extends TrackFilesReader {
 					track.add(p);
 			}
 		}
-		
+
 	}
-	
-	
+
+
 	/**
 	 * 
 	 * @param name
@@ -311,7 +311,7 @@ public class FPLReader extends TrackFilesReader {
 		}
 		return tp;
 	}
-	
+
 	/**
 	 * Cherche la balise <code>name</code> dans la base STIP, puis dans la base AIP si elle n'est pas dans le STIP où si la base STIP n'est pas 
 	 * configurée, et enfin dans la base SkyView si la balise n'a pas été trouvée dans l'AIP.
@@ -340,39 +340,40 @@ public class FPLReader extends TrackFilesReader {
 		}
 		return null;
 	}
-	
+
 	private LPLNTrackPoint getBaliseAIP(String name, double elevation){
 		LPLNTrackPoint p = new LPLNTrackPoint();
 		try{
 			if(DatabaseManager.getCurrentAIP()!=null){
 				Statement st = DatabaseManager.getCurrentAIP();
-				ResultSet rs = st.executeQuery("select lat, lon, type from NavFix where nom ='"+name+"'");
-				if(rs.next()){
-					//on cherche si on a une balise du type WPT, sinon on prend la dernière.
-					while(!rs.isLast()){
-						if(rs.getString(3).equals("WPT")){
-							p.setPosition(Position.fromDegrees(rs.getDouble(1), rs.getDouble(2), elevation));
-							break;
-						}
-						rs.next();
-					}
-					if(p.getPosition()==null){
+				ResultSet rs = st.executeQuery("select lat, lon, type from NavFix where nom ='"+name+"' OR nom LIKE '"+name+" - %'");
+
+				Position lastPosition = null;
+				//on cherche si on a une balise du type WPT, sinon on prend la dernière.
+				while(rs.next()){
+					if(rs.getString(3).equals("WPT")){
 						p.setPosition(Position.fromDegrees(rs.getDouble(1), rs.getDouble(2), elevation));
+						break;
 					}
-					p.setName(name);
-					return p;
-				}else{
+					lastPosition = Position.fromDegrees(rs.getDouble(1), rs.getDouble(2), elevation);
+				}
+				if(p.getPosition()==null && lastPosition != null){
+					p.setPosition(lastPosition);
+				}else if(p.getPosition()==null && lastPosition==null){					
 					return getBaliseSkyView(name, elevation);
 				}
+				p.setName(name);
+				return p;
+
 			}else{
 				return getBaliseSkyView(name, elevation);
-			}
+			}		
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * @param name
@@ -396,8 +397,8 @@ public class FPLReader extends TrackFilesReader {
 		}
 		return p;
 	}
-	
-	
+
+
 	private LPLNTrackPoint pointToLPLNPoint(String s, double elevation){
 		LPLNTrackPoint trackPoint = null;
 		LatLon latlon = LatLonUtils.computeLatLonFromString(s);
@@ -408,7 +409,7 @@ public class FPLReader extends TrackFilesReader {
 		}
 		return trackPoint;
 	}
-	
+
 	/**
 	 * 
 	 * @param b1
@@ -420,7 +421,7 @@ public class FPLReader extends TrackFilesReader {
 	private LinkedList<LPLNTrackPoint> getRouteBetween(String b1, String b2, String r, double elevation){	
 		return getRouteSTIPBetween(b1, b2, r, elevation);
 	}
-	
+
 	/**
 	 * 
 	 * @param b1
@@ -468,71 +469,74 @@ public class FPLReader extends TrackFilesReader {
 	private LinkedList<LPLNTrackPoint> getRouteSkyViewBetween(String b1, String b2, String r, double elevation){
 		LinkedList<LPLNTrackPoint> pointList = new LinkedList<LPLNTrackPoint>();
 		try{
-			Statement st = DatabaseManager.getCurrentSkyView();
-			int fromSEQ = -1; 
-			int toSEQ = -1;
-			boolean fromIsLast = false, toIsFirst = false;
-			ResultSet rs1 = st.executeQuery("select SEQ from AIRWAY where IDENT ='"+r+"'AND FROM_FIX_IDENT ='"+b1+"'");
-			if(rs1.next()){
-				fromSEQ = rs1.getInt(1);
-			}
-			ResultSet rs2 = st.executeQuery("select SEQ from AIRWAY where IDENT ='"+r+"'AND TO_FIX_IDENT ='"+b2+"'");
-			if(rs2.next()){
-				toSEQ = rs2.getInt(1);
-			}
-			if(fromSEQ==-1){
-				//Si b2 est la dernière balise de la route dans la table, elle n'apparaîtra pas dans FROM_FIX_IDENT.
-				ResultSet rs3 = st.executeQuery("select SEQ from AIRWAY where IDENT ='"+r+"'AND TO_FIX_IDENT ='"+b1+"'");
-				if(rs3.next()){
-					fromSEQ = rs3.getInt(1);
-					fromIsLast = true;
+			if(DatabaseManager.getCurrentSkyView() != null){
+				Statement st = DatabaseManager.getCurrentSkyView();
+				int fromSEQ = -1; 
+				int toSEQ = -1;
+				boolean fromIsLast = false, toIsFirst = false;
+				ResultSet rs1 = st.executeQuery("select SEQ from AIRWAY where IDENT ='"+r+"'AND FROM_FIX_IDENT ='"+b1+"'");
+				if(rs1.next()){
+					fromSEQ = rs1.getInt(1);
 				}
-			}
-			if(toSEQ==-1){
-				//Si b1 est la première balise de la route dans la table, elle n'apparaîtra pas dans TO_FIX_IDENT.
-				ResultSet rs4 = st.executeQuery("select SEQ from AIRWAY where IDENT ='"+r+"' AND FROM_FIX_IDENT ='"+b2+"'");
-				if(rs4.next()){
-					toSEQ = rs4.getInt(1);
-					toIsFirst = true;
+				ResultSet rs2 = st.executeQuery("select SEQ from AIRWAY where IDENT ='"+r+"'AND TO_FIX_IDENT ='"+b2+"'");
+				if(rs2.next()){
+					toSEQ = rs2.getInt(1);
 				}
-			}
-			if(fromSEQ != -1 && toSEQ!=-1){
-				String query = "select ";
-				if(fromSEQ < toSEQ && !fromIsLast && !toIsFirst){
-					query += "TO_FIX_IDENT from AIRWAY WHERE IDENT ='"+r+"' AND SEQ >="+fromSEQ+" AND SEQ <"+toSEQ+" ORDER BY SEQ ASC";
-				}else if(fromSEQ==toSEQ){
-					if(fromIsLast || toIsFirst){
-						query+= "FROM_FIX_IDENT "; 
+				if(fromSEQ==-1){
+					//Si b2 est la dernière balise de la route dans la table, elle n'apparaîtra pas dans FROM_FIX_IDENT.
+					ResultSet rs3 = st.executeQuery("select SEQ from AIRWAY where IDENT ='"+r+"'AND TO_FIX_IDENT ='"+b1+"'");
+					if(rs3.next()){
+						fromSEQ = rs3.getInt(1);
+						fromIsLast = true;
+					}
+				}
+				if(toSEQ==-1){
+					//Si b1 est la première balise de la route dans la table, elle n'apparaîtra pas dans TO_FIX_IDENT.
+					ResultSet rs4 = st.executeQuery("select SEQ from AIRWAY where IDENT ='"+r+"' AND FROM_FIX_IDENT ='"+b2+"'");
+					if(rs4.next()){
+						toSEQ = rs4.getInt(1);
+						toIsFirst = true;
+					}
+				}
+				if(fromSEQ != -1 && toSEQ!=-1){
+					String query = "select ";
+					if(fromSEQ < toSEQ && !fromIsLast && !toIsFirst){
+						query += "TO_FIX_IDENT from AIRWAY WHERE IDENT ='"+r+"' AND SEQ >="+fromSEQ+" AND SEQ <"+toSEQ+" ORDER BY SEQ ASC";
+					}else if(fromSEQ==toSEQ){
+						return pointList;
 					}else{
-						query+= "TO_FIX_IDENT ";
+						query += "FROM_FIX_IDENT from AIRWAY WHERE IDENT='"+r+"' ";
+						if(!fromIsLast && !toIsFirst){
+							query +="AND SEQ >"+toSEQ+" AND SEQ <"+fromSEQ+" ";
+						}else if(toIsFirst && ! fromIsLast){
+							query +="AND SEQ <"+fromSEQ+" ";
+						}else if(!toIsFirst && fromIsLast){
+							query +="AND SEQ >"+toSEQ+" ";
+						}
+						query+= "ORDER BY SEQ DESC";
 					}
-					query+= "from AIRWAY WHERE IDENT ='"+r+"' AND SEQ = "+toSEQ+" ";
+					ResultSet rs5 = st.executeQuery(query);
+					LinkedList<String> balises = new LinkedList<String>();
+					while(rs5.next()){
+						balises.add(rs5.getString(1));
+					}
+					for (int i = 0; i<balises.size(); i++){
+						String balise = balises.get(i);
+						LPLNTrackPoint point =  new LPLNTrackPoint();
+						ResultSet rs6 = st.executeQuery("select LATITUDE, LONGITUDE from WAYPOINT WHERE IDENT ='"+balise+"'");
+						if(rs6.next()){
+							point.setPosition(new Position(LatLonUtils.computeLatLonFromSkyviewString(rs6.getString(1), rs6.getString(2)), elevation));
+						}
+						point.setName(balise);
+						pointList.add(point);
+					}
 				}else{
-					query += "FROM_FIX_IDENT from AIRWAY WHERE IDENT='"+r+"' ";
-					if(!fromIsLast && !toIsFirst){
-						query +="AND SEQ >"+toSEQ+" AND SEQ <"+fromSEQ+" ";
-					}else if(toIsFirst && ! fromIsLast){
-						query +="AND SEQ <"+fromSEQ+" ";
-					}else if(!toIsFirst && fromIsLast){
-						query +="AND SEQ >"+toSEQ+" ";
-					}
-					query+= "ORDER BY SEQ DESC";
+					pointList.add(new LPLNTrackPoint());
+					return pointList;
 				}
-				ResultSet rs5 = st.executeQuery(query);
-				LinkedList<String> balises = new LinkedList<String>();
-				while(rs5.next()){
-					balises.add(rs5.getString(1));
-				}
-				for (int i = 0; i<balises.size(); i++){
-					String balise = balises.get(i);
-					LPLNTrackPoint point =  new LPLNTrackPoint();
-					ResultSet rs6 = st.executeQuery("select LATITUDE, LONGITUDE from WAYPOINT WHERE IDENT ='"+balise+"'");
-					if(rs6.next()){
-						point.setPosition(new Position(LatLonUtils.computeLatLonFromSkyviewString(rs6.getString(1), rs6.getString(2)), elevation));
-					}
-					point.setName(balise);
-					pointList.add(point);
-				}
+			}else{
+				pointList.add(new LPLNTrackPoint());
+				return pointList;
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -550,54 +554,55 @@ public class FPLReader extends TrackFilesReader {
 	 * @return true si la route est connue de la base <code>t</code> et contient les deux balises, false sinon.
 	 */
 	private boolean isRouteKnown(String b1, String b2, String r, DatabaseManager.Type t){
-			try{
-				if(DatabaseManager.getCurrent(t) != null){
-					Statement st = DatabaseManager.getCurrent(t);
-					if(t == DatabaseManager.Type.STIP){
-						ResultSet rs = st.executeQuery("select id from routebalise where route ='"+r+"'" +
-								" AND (balise='"+b1+"' OR balise='"+b2+"')");
+		try{
+			if(DatabaseManager.getCurrent(t) != null){
+				Statement st = DatabaseManager.getCurrent(t);
+				if(t == DatabaseManager.Type.STIP){
+					ResultSet rs = st.executeQuery("select id from routebalise where route ='"+r+"'" +
+							" AND (balise='"+b1+"' OR balise='"+b2+"')");
+					if(rs.next()){
+						if(rs.next())
+							return true;
+					}
+				}else if(t == DatabaseManager.Type.AIP){
+					int[] pk = findAIPRouteAndBalises(b1, b2, r);
+					if(pk[0]!=-1 && pk[1]!=-1 && pk[2]!=-1){
+						ResultSet rs = st.executeQuery("select navFixExtremite from segments where pkRoute ="+pk[0]+" " +
+								"AND ( navFixExtremite="+pk[1]+" OR navFixExtremite="+pk[2]+")");
 						if(rs.next()){
-							if(rs.next())
-								return true;
-						}
-					}else if(t == DatabaseManager.Type.AIP){
-						int[] pk = findAIPRouteAndBalises(b1, b2, r);
-						if(pk[0]!=-1 && pk[1]!=-1 && pk[2]!=-1){
-							ResultSet rs = st.executeQuery("select navFixExtremite from segments where pkRoute ="+pk[0]+" " +
-									"AND ( navFixExtremite="+pk[1]+" OR navFixExtremite="+pk[2]+")");
+							int navFixExtremite = rs.getInt(1);
 							if(rs.next()){
-								if(rs.next())
-									return true;
-								else{
-									int pkb = pk[1];
-									if(rs.getInt(1)==pk[1])
-										pkb=pk[2];
-									ResultSet rs2 = st.executeQuery("select pk from routes where pk='"+pk[0]+"'" +
-											" AND navFixExtremite="+pkb);	
-									if(rs2.next())
-										return true;
-								}
-							}
-								
-							
-						}
-					}else if(t == DatabaseManager.Type.SkyView){
-						ResultSet rs = st.executeQuery("select SEQ from AIRWAY where IDENT ='"+r+"'" +
-								" AND (FROM_FIX_IDENT='"+b1+"' OR TO_FIX_IDENT='"+b1+"')");
-						if(rs.next()){
-							ResultSet rs2 = st.executeQuery("select SEQ from AIRWAY where IDENT ='"+r+"'" +
-									" AND (FROM_FIX_IDENT='"+b2+"' OR TO_FIX_IDENT='"+b2+"')");
-							if(rs2.next())
 								return true;
+							}else{
+								int pkb = pk[1];
+								if(navFixExtremite==pk[1])
+									pkb=pk[2];
+								ResultSet rs2 = st.executeQuery("select pk from routes where pk='"+pk[0]+"'" +
+										" AND navFixExtremite="+pkb);	
+								if(rs2.next())
+									return true;
+							}
 						}
+
+
+					}
+				}else if(t == DatabaseManager.Type.SkyView){
+					ResultSet rs = st.executeQuery("select SEQ from AIRWAY where IDENT ='"+r+"'" +
+							" AND (FROM_FIX_IDENT='"+b1+"' OR TO_FIX_IDENT='"+b1+"')");
+					if(rs.next()){
+						ResultSet rs2 = st.executeQuery("select SEQ from AIRWAY where IDENT ='"+r+"'" +
+								" AND (FROM_FIX_IDENT='"+b2+"' OR TO_FIX_IDENT='"+b2+"')");
+						if(rs2.next())
+							return true;
 					}
 				}
-			}catch(SQLException e){
-				e.printStackTrace();
 			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 		return false;
 	}
-	
+
 	private LinkedList<LPLNTrackPoint> findKnownSTIPRoute(String b1, String b2, String r, double elevation){
 		LinkedList<LPLNTrackPoint> pointList = new LinkedList<LPLNTrackPoint>();
 		try {
@@ -640,20 +645,20 @@ public class FPLReader extends TrackFilesReader {
 			int[] pk = findAIPRouteAndBalises(b1, b2, r);
 			int seq1 = -1, seq2 = -1;
 			ResultSet rs = st.executeQuery("select sequence from segments where pkRoute ="+pk[0]+" " +
-					"AND navFixExtremite="+pk[1]);
+					" AND navFixExtremite="+pk[1]);
 			if(rs.next())
 				seq1 = rs.getInt(1);
 			ResultSet rs2 = st.executeQuery("select sequence from segments where pkRoute ="+pk[0]+" " +
-					"AND navFixExtremite="+pk[2]);
+					" AND navFixExtremite="+pk[2]);
 			if(rs2.next())
 				seq2 = rs2.getInt(1);
 			String query = null;
 			if(seq1<seq2)
 				query = "select NavFix.nom, NavFix.lat, NavFix.lon from segments, NavFix where pkRoute ="+pk[0]+
-				"AND NavFix.pk = segments.navFixExtremite AND sequence>seq1 AND sequence<seq2 ORDER BY sequence";
+				" AND NavFix.pk = segments.navFixExtremite AND sequence>"+seq1+" AND sequence<"+seq2+" ORDER BY sequence";
 			else
 				query = "select NavFix.nom, NavFix.lat, NavFix.lon from segments, NavFix where pkRoute ="+pk[0]+
-				"AND NavFix.pk = segments.navFixExtremite AND sequence>seq2 AND sequence<seq1 ORDER BY sequence DESC";	
+				" AND NavFix.pk = segments.navFixExtremite AND sequence>"+seq2+" AND sequence<"+seq1+" ORDER BY sequence DESC";	
 			ResultSet rs3 = st.executeQuery(query);
 			while(rs3.next()){
 				LPLNTrackPoint p = new LPLNTrackPoint();
@@ -663,7 +668,7 @@ public class FPLReader extends TrackFilesReader {
 			}		
 		}catch (SQLException e) {
 			e.printStackTrace();
-			}
+		}
 		return pointList;
 	}
 
@@ -681,10 +686,11 @@ public class FPLReader extends TrackFilesReader {
 		int pk1=-1, pk2=-1, pkr=-1;
 		try {
 			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet rs = st.executeQuery("select pk from NavFix where nom ='"+b1+"'");
+			ResultSet rs = st.executeQuery("select pk from NavFix where nom ='"+b1+"' OR nom LIKE '"+b1+" - %'");
+
 			if(rs.next()){
 				pk1 = rs.getInt(1);
-				ResultSet rs2 = st.executeQuery("select pk from NavFix where nom ='"+b2+"'");
+				ResultSet rs2 = st.executeQuery("select pk from NavFix where nom ='"+b2+"' OR nom LIKE '"+b2+" - %'");
 				if(rs2.next()){
 					pk2 = rs2.getInt(1);
 					String AIPRouteName = r.charAt(0)+"";
@@ -692,7 +698,7 @@ public class FPLReader extends TrackFilesReader {
 						AIPRouteName += r.charAt(1)+" "+r.substring(2);
 					else
 						AIPRouteName += " "+r.substring(1);
-					ResultSet rs3 = st.executeQuery("select pk from routes where nom LIKE'"+AIPRouteName+"%'");	
+					ResultSet rs3 = st.executeQuery("select pk from routes where nom='"+AIPRouteName+"' OR nom LIKE'"+AIPRouteName+" - %'");	
 					if(rs3.next()){
 						pkr = rs3.getInt(1);
 					}
@@ -703,7 +709,7 @@ public class FPLReader extends TrackFilesReader {
 		}
 		return new int[]{pkr,pk1,pk2};
 	}
-	
+
 	/**
 	 * 
 	 * @param e
@@ -739,7 +745,7 @@ public class FPLReader extends TrackFilesReader {
 		}
 		return triplet;
 	}
-	
+
 	/**
 	 * 
 	 * @param s
@@ -752,7 +758,7 @@ public class FPLReader extends TrackFilesReader {
 			return Double.parseDouble(s.substring(s.indexOf("S")+1))*10;
 		return -1;
 	}
-	
+
 	/**
 	 * Va chercher l'aéroport dans les données STIP d'abord, puis si nécessaire dans les données SkyView et ajoute un LPLNTrackPoint correspondant à 
 	 * l'aéroport à la trajectoire <code>track</code>.
@@ -786,5 +792,5 @@ public class FPLReader extends TrackFilesReader {
 		}
 		return false;
 	}
-	
+
 }

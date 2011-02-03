@@ -34,7 +34,6 @@ import org.w3c.dom.Element;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.VidesoTrack;
-import fr.crnan.videso3d.formats.fpl.FPLReader_OLD;
 import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
