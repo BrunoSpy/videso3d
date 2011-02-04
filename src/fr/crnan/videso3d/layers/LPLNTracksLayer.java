@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
@@ -44,6 +45,8 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	private Set<LPLNTrack> selectedTracks = null;
 	
 	private String name = "LPLN";
+	
+	private int style = TrajectoriesLayer.STYLE_PROFIL;
 	
 	public LPLNTracksLayer(){
 		super();
@@ -248,5 +251,70 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	}
 	protected ProfilLayer getLayer(){
 		return layer;
+	}
+
+	@Override
+	public Color getDefaultOutsideColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setDefaultOutsideColor(Color color) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Color getDefaultInsideColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setDefaultInsideColor(Color color) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getDefaultOpacity() {
+		// TODO Auto-generated method stub
+		return 0.0;
+	}
+
+	@Override
+	public void setDefaultOpacity(double opacity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getDefaultWidth() {
+		// TODO Auto-generated method stub
+		return 0.0;
+	}
+
+	@Override
+	public void setDefaultWidth(double width) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public int getStyle() {
+		return this.style;
+	}
+
+	@Override
+	public Boolean isTrackColorFiltrable() {
+		return false;
+	}
+
+	@Override
+	public List<Integer> getStylesAvailable() {
+		List<Integer> styles = new LinkedList<Integer>();
+		styles.add(TrajectoriesLayer.STYLE_PROFIL);
+		return styles;
 	}
 }

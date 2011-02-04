@@ -26,6 +26,7 @@ import java.util.*;
 /**
  * Extension de Polyline de façon à changer la couleur en fonction de l'altitude.<br />
  * Permet aussi de dessiner un polygone entre le sol et la polyligne.
+ * <b>Attention : </b>Préférer l'usage de Path, sauf si besoin d'un dégradé de couleur.
  * @author Bruno Spyckerelle
  * @version 0.4
  */

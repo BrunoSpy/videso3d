@@ -33,7 +33,7 @@ import gov.nasa.worldwind.tracks.TrackPoint;
 /**
  * Layer contenant des tracks OPAS et permettant un affichage sélectif
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 public class OPASTracksLayer extends TrajectoriesLayer {
 
@@ -44,6 +44,8 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 	private RenderableLayer layer = new RenderableLayer();
 	
 	private String name = "Trajectoires OPAS";
+	
+	private int style = TrajectoriesLayer.STYLE_SIMPLE;
 	
 	public OPASTracksLayer() {
 		super();
@@ -246,5 +248,70 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 	public void centerOnTrack(Track track) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Color getDefaultOutsideColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setDefaultOutsideColor(Color color) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Color getDefaultInsideColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setDefaultInsideColor(Color color) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getDefaultOpacity() {
+		// TODO Auto-generated method stub
+		return 0.0;
+	}
+
+	@Override
+	public void setDefaultOpacity(double opacity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getDefaultWidth() {
+		// TODO Auto-generated method stub
+		return 0.0;
+	}
+
+	@Override
+	public void setDefaultWidth(double width) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getStyle() {
+		return this.style;
+	}
+
+	@Override
+	public Boolean isTrackColorFiltrable() {
+		return false;
+	}
+
+	@Override
+	public List<Integer> getStylesAvailable() {
+		List<Integer> styles = new LinkedList<Integer>();
+		styles.add(TrajectoriesLayer.STYLE_SIMPLE);
+		return styles;
 	}
 }

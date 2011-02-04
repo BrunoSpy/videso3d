@@ -29,13 +29,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import fr.crnan.videso3d.Triplet;
-import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 /**
  * IHM de configuration des filtres de couleurs pour les chevelus
@@ -53,10 +50,6 @@ public class TrajectoriesColorsDialog extends JPanel {
 		
 	public TrajectoriesColorsDialog(List<Triplet<String, String, Color>> param){
 		this.setLayout(new BorderLayout());
-//		this.setTitle("Modifier les couleurs des trajectoires");
-//		this.setModal(true);
-		
-//		this.add(new TitledPanel("Filtres de couleur"), BorderLayout.NORTH);
 
 		this.container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
@@ -78,31 +71,39 @@ public class TrajectoriesColorsDialog extends JPanel {
 		
 		
 		//boutons
-		JButton ok = new JButton("Appliquer");
-//		JButton cancel = new JButton("Annuler");
+		JButton ok = new JButton("Valider");
+		ok.setToolTipText("Appliquer les filtres");
+		JButton cancel = new JButton("Supprimer");
+		cancel.setToolTipText("Supprimer tous les filtres");
 		
 		ok.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				valuesChanged();
-//				setVisible(false);
 			}
 		});
-//		cancel.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent arg0) {
-//				setVisible(false);
-//			}
-//		});
+		cancel.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				container.removeAll();
+				results.clear();
+				FiltrePanel filtre = new FiltrePanel();
+				results.add(filtre);
+				container.add(filtre);
+				container.validate();
+				valuesChanged();
+			}
+		});
 		JPanel boutons = new JPanel();
 		boutons.setLayout(new BoxLayout(boutons, BoxLayout.X_AXIS));
 		boutons.add(ok);
-//		boutons.add(cancel);
+		boutons.add(cancel);
 		
 		//ajout d'un filtre
-		JButton ajout = new JButton("Ajouter un filtre");
+		JButton ajout = new JButton("Ajouter");
+		ajout.setToolTipText("Ajouter un filtre supplémentaire");
 		ajout.addActionListener(new ActionListener() {
 			
 			@Override
@@ -111,7 +112,6 @@ public class TrajectoriesColorsDialog extends JPanel {
 				results.add(filtre);
 				container.add(filtre);
 				container.validate();
-//				pack();
 			}
 		});
 		boutons.add(Box.createHorizontalGlue());
@@ -135,13 +135,12 @@ public class TrajectoriesColorsDialog extends JPanel {
 	/**
 	 * Panel de choix d'un filtre
 	 * @author Bruno Spyckerelle
-	 * @version 0.1
+	 * @version 0.2
 	 */
 	private class FiltrePanel extends JPanel {
 		
 		private JComboBox champs;
 		private JTextField regexp;
-//		private JLabel couleur;
 		private JButton changeColor;
 		
 		public FiltrePanel(){
@@ -150,7 +149,7 @@ public class TrajectoriesColorsDialog extends JPanel {
 		
 		public FiltrePanel(Triplet<String, String, Color> param){
 			this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-//			this.add(new JLabel("Champ : "));
+
 			champs = new JComboBox();
 			for(int i=1;i<6;i++){
 				champs.addItem(TrajectoriesLayer.type2string(i));
@@ -158,15 +157,15 @@ public class TrajectoriesColorsDialog extends JPanel {
 			if(param.getFirst() != null) champs.setSelectedItem(param.getFirst());
 			this.add(champs);
 			regexp = new JTextField(15);
+			regexp.setToolTipText("<html><b>Exemples :</b><br/>" +
+					" - tous les terrains français : LF.*<br/>" +
+					" - LFPG ou LFPO : LFPG|LFPO<br />" +
+					" - tous les terrains anglais ou irlandais : EG.*|EI.* ou E[GI].*</html>");
 			if(param.getSecond() != null) regexp.setText(param.getSecond());
 			this.add(regexp);
-//			this.add(new JLabel("Couleur : "));
-//			couleur = new JLabel("          ");
-//			couleur.setOpaque(true);
-//			couleur.setBackground(param.getThird() == null ? Color.RED : param.getThird());
 
 			changeColor = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
-//			this.add(couleur);
+
 			changeColor.setBackground(param.getThird() == null ? Color.RED : param.getThird());
 			this.add(changeColor);
 			

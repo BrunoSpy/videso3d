@@ -18,6 +18,8 @@ package fr.crnan.videso3d.ihm;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -31,7 +33,10 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -79,7 +84,9 @@ public class TrajectoriesView extends JPanel {
 		this.wwd = wwd;
 		
 		this.setLayout(new BorderLayout());
-		this.add(content, BorderLayout.CENTER);		
+		JScrollPane scrollContent = new JScrollPane(content);
+		scrollContent.setBorder(null);
+		this.add(scrollContent, BorderLayout.CENTER);		
 		
 		JXTaskPane table = new JXTaskPane("Trajectoires affichées");
 		final JXTable pistes = new JXTable(new TrackTableModel());
@@ -118,7 +125,7 @@ public class TrajectoriesView extends JPanel {
 				
 		content.add(this.createStylePane(), null);
 		content.add(this.createFilterPane(), null);
-		content.add(this.createColorFilterPane(), null);
+		if(layer.isTrackColorFiltrable()) content.add(this.createColorFilterPane(), null);
 		content.add(table, null);
 
 	}
@@ -126,6 +133,146 @@ public class TrajectoriesView extends JPanel {
 	private JXTaskPane createStylePane(){
 		JXTaskPane stylePane = new JXTaskPane("Style des trajectoires");
 		stylePane.setCollapsed(true);
+		
+		stylePane.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = 0;
+		c.gridy = 0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1;
+		
+		stylePane.add(new JLabel("Style du tracé"), c);
+		
+		c.gridx = 1;
+		final JComboBox styles = new JComboBox();
+		for(Integer style : layer.getStylesAvailable()){
+			switch(style) {
+			case TrajectoriesLayer.STYLE_CURTAIN:
+				styles.addItem("Rideau");
+				break;
+			case TrajectoriesLayer.STYLE_PROFIL:
+				styles.addItem("Profil avec balises");
+				break;
+			case TrajectoriesLayer.STYLE_SHADED:
+				styles.addItem("Fil de fer dégradé");
+				break;
+			case TrajectoriesLayer.STYLE_SIMPLE:
+				styles.addItem("Fil de fer");
+				break;
+			}
+		}
+
+		switch(layer.getStyle()) {
+		case TrajectoriesLayer.STYLE_CURTAIN:
+			styles.setSelectedItem("Rideau");
+			break;
+		case TrajectoriesLayer.STYLE_PROFIL:
+			styles.setSelectedItem("Profil avec balises");
+			break;
+		case TrajectoriesLayer.STYLE_SHADED:
+			styles.setSelectedItem("Fil de fer dégradé");
+			break;
+		case TrajectoriesLayer.STYLE_SIMPLE:
+			styles.setSelectedItem("Fil de fer");
+			break;
+		}
+		
+		stylePane.add(styles, c);
+		
+		c.gridx = 0;
+		c.gridy = 1;
+		
+		stylePane.add(new JLabel("Couleur interne"), c);
+		
+		c.gridx = 1;
+		
+		final JButton changeColor1 = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
+		changeColor1.setBackground(layer.getDefaultInsideColor());
+		changeColor1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				changeColor1.setBackground(JColorChooser.showDialog(null, "Couleur", changeColor1.getBackground()));
+			}
+		});
+		stylePane.add(changeColor1, c);
+		
+		c.gridx = 0;
+		c.gridy = 2;
+		
+		stylePane.add(new JLabel("Couleur externe"), c);
+		
+		c.gridx = 1;
+		
+		final JButton changeColor2 = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
+		changeColor2.setBackground(layer.getDefaultOutsideColor());
+		changeColor2.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				changeColor2.setBackground(JColorChooser.showDialog(null, "Couleur", changeColor2.getBackground()));
+			}
+		});
+		stylePane.add(changeColor2, c);
+		
+		c.gridx = 0;
+		c.gridy = 3;
+		
+		stylePane.add(new JLabel("Opacité"), c);
+		
+		c.gridx = 1;
+		
+		final JTextField opacity = new JTextField(15);
+		opacity.setToolTipText("Valeur comprise entre 0 (transparent) et 100.");
+		opacity.setText(String.valueOf(layer.getDefaultOpacity()*100));
+		
+		stylePane.add(opacity, c);
+		
+		c.gridx = 0;
+		c.gridy = 4;
+		
+		stylePane.add(new JLabel("Largeur du tracé"), c);
+		
+		c.gridx = 1;
+		
+		final JTextField width = new JTextField(15);
+		width.setToolTipText("Valeur comprise entre 0 (transparent) et 100.");
+		width.setText(String.valueOf(layer.getDefaultWidth()));
+		
+		stylePane.add(width, c);
+		
+		c.gridx = 1;
+		c.gridy = 5;
+		
+		JButton validate = new JButton("Valider");
+		
+		validate.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				String itemSelected = (String) styles.getSelectedItem();
+				if(itemSelected.equals("Rideau")){
+					layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
+				} else if(itemSelected.equals("Fil de fer")){
+					layer.setStyle(TrajectoriesLayer.STYLE_SIMPLE);
+				} else if(itemSelected.equals("Fil de fer dégradé")){
+					layer.setStyle(TrajectoriesLayer.STYLE_SHADED);
+				} else if(itemSelected.equals("Profil")){
+					layer.setStyle(TrajectoriesLayer.STYLE_PROFIL);
+				}
+				
+				layer.setDefaultOutsideColor(changeColor2.getBackground());
+				layer.setDefaultInsideColor(changeColor1.getBackground());
+				layer.setDefaultWidth(Double.parseDouble(width.getText()));
+				layer.setDefaultOpacity(Double.parseDouble(opacity.getText())/100.0);
+				
+				layer.update();
+			}
+		});
+		
+		stylePane.add(validate, c);	
+
 		
 		return stylePane;
 	}
@@ -141,8 +288,10 @@ public class TrajectoriesView extends JPanel {
 			@Override
 			public void propertyChange(PropertyChangeEvent p) {
 				layer.resetFilterColor();
-				for(Triplet<String, String, Color> filter : (List<Triplet<String, String, Color>>)p.getNewValue()){
-					layer.addFilterColor(TrajectoriesLayer.string2type(filter.getFirst()), filter.getSecond(), filter.getThird());
+				if(p.getNewValue() != null) {
+					for(Triplet<String, String, Color> filter : (List<Triplet<String, String, Color>>)p.getNewValue()){
+						layer.addFilterColor(TrajectoriesLayer.string2type(filter.getFirst()), filter.getSecond(), filter.getThird());
+					}
 				}
 			}
 		});
@@ -247,12 +396,12 @@ public class TrajectoriesView extends JPanel {
 		cancel.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				indicField.setText("");
 				aDepField.setText("");
 				aDestField.setText("");
 				iafField.setText("");
 				typeField.setText("");
 				layer.removeFilter();
-				layer.update();
 			}
 		});
 		filtres.add(validate);

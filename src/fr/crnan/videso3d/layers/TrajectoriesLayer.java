@@ -17,13 +17,14 @@ package fr.crnan.videso3d.layers;
 
 import java.awt.Color;
 import java.util.Collection;
+import java.util.List;
 
 import fr.crnan.videso3d.formats.VidesoTrack;
 import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer contenant des trajectoires et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.4
  */
 public abstract class TrajectoriesLayer extends LayerSet {
 
@@ -39,7 +40,7 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	
 	//Les différents styles disponibles pour la représentation des trajectoires
 	/**
-	 * Une polyligne dont la couleur change en fonction de l'altitude
+	 * Une polyligne simple
 	 */
 	public final static int STYLE_SIMPLE = 1;
 	/**
@@ -50,6 +51,11 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 * Un style complexe, avec une ombre projectée au sol et la possibilité d'afficher des balises
 	 */
 	public final static int STYLE_PROFIL = 3;
+	/**
+	 * Une polyligne dont la couleur change en fonction de l'altitude
+	 */
+	public final static int STYLE_SHADED = 4;
+	
 	
 	private boolean disjunctive = true; //"or" by default
 	
@@ -148,6 +154,18 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	public abstract Boolean isTrackHideable();
 	
 	/**
+	 * Possibilité d'utiliser des filtres de couleur ?
+	 * @return
+	 */
+	public abstract Boolean isTrackColorFiltrable();
+	
+	/**
+	 * Liste des styles disponibles
+	 * @return
+	 */
+	public abstract List<Integer> getStylesAvailable();
+	
+	/**
 	 * Mettre à FALSE améliore généralement les performances
 	 * @param b
 	 */
@@ -160,10 +178,12 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	public abstract void setTracksHighlightable(Boolean b);
 	
 	/**
-	 * Change le style parmi <code>TrajectoriesLayer.STYLE_SIMPLE</code>, <code>TrajectoriesLayer.STYLE_CURTAIN</code> et <code>TrajectoriesLayer.STYLE_PROFIL</code>
+	 * Change le style parmi <code>TrajectoriesLayer.STYLE_SIMPLE</code>, <code>TrajectoriesLayer.STYLE_SHADED</code>, <code>TrajectoriesLayer.STYLE_CURTAIN</code> et <code>TrajectoriesLayer.STYLE_PROFIL</code>
 	 * @param style
 	 */
 	public abstract void setStyle(int style);
+	
+	public abstract int getStyle();
 	
 	/**
 	 * Nom du calque. Apparait dans le gestionnaire de calques
@@ -174,6 +194,21 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 */
 	public abstract String getName();
 	
+	public abstract Color getDefaultOutsideColor();
+	
+	public abstract void setDefaultOutsideColor(Color color);
+	
+	public abstract Color getDefaultInsideColor();
+	
+	public abstract void setDefaultInsideColor(Color color);
+	
+	public abstract double getDefaultOpacity();
+	
+	public abstract void setDefaultOpacity(double opacity);
+	
+	public abstract double getDefaultWidth();
+	
+	public abstract void setDefaultWidth(double width);
 	
 	public static int string2type(String type){
 		if("Départ".equals(type)){
