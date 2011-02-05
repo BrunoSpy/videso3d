@@ -80,7 +80,7 @@ public class TrajectoriesView extends JPanel {
 	private VidesoGLCanvas wwd;
 	
 	public TrajectoriesView(final VidesoGLCanvas wwd, TrackFilesReader reader){
-		this.layer = wwd.addTrajectoires(reader);
+		this.layer = reader.getLayer() == null ? wwd.addTrajectoires(reader) : reader.getLayer();
 		this.wwd = wwd;
 		
 		this.setLayout(new BorderLayout());
@@ -267,7 +267,7 @@ public class TrajectoriesView extends JPanel {
 				layer.setDefaultWidth(Double.parseDouble(width.getText()));
 				layer.setDefaultOpacity(Double.parseDouble(opacity.getText())/100.0);
 				
-				layer.update();
+			//	layer.update();
 			}
 		});
 		

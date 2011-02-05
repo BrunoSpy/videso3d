@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.formats;
 
+import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.util.Logging;
 
@@ -30,19 +31,20 @@ import java.util.Vector;
 /**
  * Lecteur de fichiers trace radar
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public abstract class TrackFilesReader {
 
 	private String name;
 	
+	private TrajectoriesLayer layer = null;
+	
 	private List<Track> tracks = new LinkedList<Track>();
 	
-	public TrackFilesReader(){
-	}
+	public TrackFilesReader(){}
 	
-	
-	public TrackFilesReader(Vector<File> files) {
+	public TrackFilesReader(Vector<File> files, TrajectoriesLayer layer) {
+		this.setLayer(layer);
 		for(File f : files){
 			try {
 				this.readFile(f.getAbsolutePath());
@@ -52,12 +54,21 @@ public abstract class TrackFilesReader {
 		}
 	}
 	
-	public TrackFilesReader(File selectedFile) {
+	public TrackFilesReader(File selectedFile, TrajectoriesLayer layer) {
+		this.setLayer(layer);
 		try {
 			this.readFile(selectedFile.getAbsolutePath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public TrackFilesReader(Vector<File> files) {
+		this(files, null);
+	}
+	
+	public TrackFilesReader(File selectedFile) {
+		this(selectedFile, null);
 	}
 	
 	/**
@@ -95,6 +106,14 @@ public abstract class TrackFilesReader {
 
 	public String getName() {
 		return name;
+	}
+	
+	public void setLayer(TrajectoriesLayer layer) {
+		this.layer = layer;
+	}
+
+	public TrajectoriesLayer getLayer() {
+		return this.layer;
 	}
 	
 	protected abstract void doReadStream(FileInputStream fis);

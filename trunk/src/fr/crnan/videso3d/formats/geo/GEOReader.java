@@ -16,6 +16,7 @@
 package fr.crnan.videso3d.formats.geo;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.layers.GEOTracksLayer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,9 +32,11 @@ import javax.swing.ProgressMonitorInputStream;
 /**
  * Lecteur de fichiers Elvira GEO.<br />
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class GEOReader extends TrackFilesReader{
+	
+	
 	
 	public GEOReader(Vector<File> files) {
 		super(files);
@@ -43,7 +46,14 @@ public class GEOReader extends TrackFilesReader{
 		super(selectedFile);
 	}
 
+	public GEOReader(File selectedFile, GEOTracksLayer layer) {
+		super(selectedFile, layer);
+	}
 	
+	public GEOReader(Vector<File> geoFile, GEOTracksLayer layer) {
+		super(geoFile, layer);
+	}
+
 	public static Boolean isGeoFile(File file){
 		Boolean geo = false;
 		try {
@@ -86,7 +96,14 @@ public class GEOReader extends TrackFilesReader{
         		{
         			if(!sentence.startsWith("!")  && !sentence.startsWith("Voie")){
         				if(track == null || track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0){
-        					if(track != null) this.getTracks().add(track);
+        					if(track != null) {
+        						//if layer is set, create immediately the track instead of memorizing it
+        		            	if(this.getLayer() != null) {
+        		            		this.getLayer().addTrack(track);
+        		            	} else {
+        		            		this.getTracks().add(track);
+        		            	}
+        					}
         					track = new GEOTrack(sentence);
         				} else {
         					track.addTrackPoint(sentence);
@@ -94,7 +111,15 @@ public class GEOReader extends TrackFilesReader{
         			}
         		} 
         	}
-        	if(track != null) this.getTracks().add(track);
+        	//last Track
+        	if(track != null){
+        		//if layer is set, create immediately the track instead of memorizing it
+            	if(this.getLayer() != null) {
+            		this.getLayer().addTrack(track);
+            	} else {
+            		this.getTracks().add(track);
+            	}
+        	}
         }
         catch (NoSuchElementException e)
         {
