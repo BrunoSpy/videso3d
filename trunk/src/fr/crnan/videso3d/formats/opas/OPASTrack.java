@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.crnan.videso3d.formats.VidesoTrack;
-import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.tracks.TrackSegment;
 
 /**
@@ -28,7 +27,7 @@ import gov.nasa.worldwind.tracks.TrackSegment;
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class OPASTrack extends VidesoTrack{
+public class OPASTrack implements VidesoTrack{
 
 	private String indicatif;
 	private String depart;
@@ -44,7 +43,7 @@ public class OPASTrack extends VidesoTrack{
 		this.iaf = iaf;
 	}
 
-	public void addPoint(OPASTrackPoint point){
+	public void addTrackPoint(OPASTrackPoint point){
 		this.points.add(point);
 	}
 	
@@ -64,7 +63,7 @@ public class OPASTrack extends VidesoTrack{
 		return null;
 	}
 
-
+	@Override
 	public List<OPASTrackPoint> getTrackPoints(){
 		return points;
 	}
@@ -103,10 +102,4 @@ public class OPASTrack extends VidesoTrack{
 		return iaf;
 	}
 
-	@Override
-	public LinkedList<TrackPoint> getTrackPointsList() {
-		LinkedList<TrackPoint> trackPointsList = new LinkedList<TrackPoint>();
-		trackPointsList.addAll(points);
-		return trackPointsList;
-	}
 }

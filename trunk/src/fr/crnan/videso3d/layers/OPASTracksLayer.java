@@ -20,122 +20,107 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
+import fr.crnan.videso3d.Configuration;
+import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
-import fr.crnan.videso3d.graphics.VPolyline;
 import gov.nasa.worldwind.avlist.AVKey;
-import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.layers.RenderableLayer;
-import gov.nasa.worldwind.render.Polyline;
-import gov.nasa.worldwind.tracks.Track;
-import gov.nasa.worldwind.tracks.TrackPoint;
+import gov.nasa.worldwind.render.BasicShapeAttributes;
+import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.Path;
+import gov.nasa.worldwind.util.Logging;
 /**
  * Layer contenant des tracks OPAS et permettant un affichage sélectif
  * @author Bruno Spyckerelle
  * @version 0.2.2
  */
-public class OPASTracksLayer extends TrajectoriesLayer {
+public class OPASTracksLayer extends GEOTracksLayer {
 
 	private List<OPASTrack> tracks = new LinkedList<OPASTrack>();
 	
-	private Set<OPASTrack> selectedTrack = null;
-	
-	private RenderableLayer layer = new RenderableLayer();
-	
-	private String name = "Trajectoires OPAS";
-	
-	private int style = TrajectoriesLayer.STYLE_SIMPLE;
-	
-	public OPASTracksLayer() {
-		super();
-		this.add(layer);
-	}
-
-	public void addTrack(OPASTrack track) {
-		this.tracks.add(track);
-		if( selectedTrack == null) selectedTrack = new HashSet<OPASTrack>(); 
-		this.selectedTrack.add(track);
+	@Override
+	public void addTrack(final VidesoTrack track) {
+		this.tracks.add((OPASTrack) track);
 		this.showTrack(track);
 	}
-
-	/**
-	 * Met à jour les trajectoires.<br />
-	 * Warning : très consommateur de ressources car recalcule toutes les trajectoires
-	 */
-	public void update(){
-		this.layer.removeAllRenderables();
-		for(OPASTrack track : (selectedTrack == null ? tracks : selectedTrack)){
-			this.showTrack(track);
-		}
-		this.firePropertyChange(AVKey.LAYER, null, this);
-	}
-	
-	private void showTrack(OPASTrack track){
-		LinkedList<Position> positions = new LinkedList<Position>();
-		for(TrackPoint point : track.getTrackPoints()){
-			positions.add(point.getPosition());
-		}
-		VPolyline line = new VPolyline();
-		line.setNumSubsegments(1);
-		line.setShadedColors(true);
-		line.setMaxElevation(400*30.48);
-		line.setMinElevation(50*30.48);
-		line.setAntiAliasHint(Polyline.ANTIALIAS_NICEST);
-		line.setPositions(positions);
-		this.layer.addRenderable(line);
-	}
 	
 	@Override
-	public void addTrack(Track track) {
-		if(!(track instanceof OPASTrack) ){
-			throw new ClassFormatError("OPASTrack class required");
-		} else {
-			this.addTrack((OPASTrack)track);
+	protected void applyFilters() {
+		if(filters.size() == 0)
+			return;
+		for(Path p : this.lines.values()){
+			p.setVisible(!this.isFilterDisjunctive());
 		}
-	}
-
-	
-	
-	@Override
-	public void addFilter(int field, String regexp) {
-		Collection<OPASTrack> tracks;
-		if(!this.isFilterDisjunctive()){
-			if(selectedTrack == null) {
-				tracks = this.tracks;
-			} else {
-				tracks = new HashSet<OPASTrack>(this.selectedTrack);
-				this.selectedTrack.clear();
-			}
-		} else {
-			tracks = this.tracks;
-		}
-		switch (field) {
+		
+		for(Entry<Integer, String> filter : filters.entrySet()) {
+		switch (filter.getKey()) {
 		case FIELD_ADEST:
 			for(OPASTrack track : tracks){
-				if(track.getArrivee().matches(regexp)){
-					this.addSelectedTrack(track);
+				if(track.getArrivee().matches(filter.getValue())){
+					if(this.isFilterDisjunctive()){
+						Path line = this.lines.get(track);
+						if(line != null)
+							line.setVisible(true);
+					}
+				} else {
+					if(!this.isFilterDisjunctive()){
+						Path line = this.lines.get(track);
+						if(line != null)
+							line.setVisible(false);
+					}
 				}
 			}
 			break;
 		case FIELD_IAF:
 			for(OPASTrack track : tracks){
-				if(track.getIaf().matches(regexp)){
-					this.addSelectedTrack(track);
+				if(track.getIaf().matches(filter.getValue())){
+					if(this.isFilterDisjunctive()){
+						Path line = this.lines.get(track);
+						if(line != null)
+							line.setVisible(true);
+					}
+				} else {
+					if(!this.isFilterDisjunctive()){
+						Path line = this.lines.get(track);
+						if(line != null)
+							line.setVisible(false);
+					}
 				}
 			}
 			break;
 		case FIELD_ADEP:
 			for(OPASTrack track : tracks){
-				if(track.getDepart().matches(regexp)){
-					this.addSelectedTrack(track);
+				if(track.getDepart().matches(filter.getValue())){
+					if(this.isFilterDisjunctive()){
+						Path line = this.lines.get(track);
+						if(line != null)
+							line.setVisible(true);
+					}
+				} else {
+					if(!this.isFilterDisjunctive()){
+						Path line = this.lines.get(track);
+						if(line != null)
+							line.setVisible(false);
+					}
 				}
 			}
 			break;	
 		case FIELD_INDICATIF:
 			for(OPASTrack track : tracks){
-				if(track.getIndicatif().matches(regexp)){
-					this.addSelectedTrack(track);
+				if(track.getIndicatif().matches(filter.getValue())){
+					if(this.isFilterDisjunctive()){
+						Path line = this.lines.get(track);
+						if(line != null)
+							line.setVisible(true);
+					}
+				} else {
+					if(!this.isFilterDisjunctive()){
+						Path line = this.lines.get(track);
+						if(line != null)
+							line.setVisible(false);
+					}
 				}
 			}
 			break;
@@ -145,173 +130,116 @@ public class OPASTracksLayer extends TrajectoriesLayer {
 		default:
 			break;
 		}
+		}
 	}
 
-	private void addSelectedTrack(OPASTrack track) {
-		if(selectedTrack == null) selectedTrack = new HashSet<OPASTrack>();
-		this.selectedTrack.add(track);
-	}
 
 	@Override
-	public void removeFilter() {
-		this.selectedTrack = null;
-	}
-
-	@Override
-	public Collection<OPASTrack> getSelectedTracks(){
-		return this.selectedTrack == null ? tracks : selectedTrack;
-	}
-
-	@Override
-	/**
-	 * Not implemented by this layer
-	 */
-	public void highlightTrack(Track track, Boolean b) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Boolean isVisible(Track track) {
-		return true;
-	}
-
-	@Override
-	/**
-	 * Not implemented by this layer
-	 */
-	public void setVisible(Boolean b, Track track) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Boolean isTrackHideable() {
-		return false;
-	}
-
-	@Override
-	public Boolean isTrackHighlightable() {
-		return false;
-	}
-
-	@Override
-	/**
-	 * Not implemented by this layer
-	 */
-	public void setTracksHideable(Boolean b) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	/**
-	 * Not implemented by this layer
-	 */
-	public void setTracksHighlightable(Boolean b) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	/**
-	 * Not implemented by this layer
-	 */
-	public void setStyle(int style) {
-		// TODO Auto-generated method stub
-		
+	public void addFilterColor(int field, String regexp, Color color){
+		BasicShapeAttributes attrs = new BasicShapeAttributes();
+		attrs.setOutlineWidth(this.getDefaultWidth());
+		attrs.setOutlineOpacity(this.getDefaultOpacity());
+		attrs.setInteriorOpacity(this.getDefaultOpacity());
+		attrs.setInteriorMaterial(new Material(color));
+		attrs.setOutlineMaterial(new Material(color));
+		this.colors.add(attrs);
+		switch (field) {
+		case FIELD_ADEST:
+			for(OPASTrack track : tracks){
+				if(track.getArrivee().matches(regexp)){
+					this.highlightTrack(track, false);
+					Path line = this.lines.get(track);
+					if(line != null) line.setAttributes(attrs);
+				}
+			}
+			break;
+		case FIELD_IAF:
+			for(OPASTrack track : tracks){
+				if(track.getIaf().matches(regexp)){
+					this.highlightTrack(track, false);
+					Path line = this.lines.get(track);
+					if(line != null) line.setAttributes(attrs);
+				}
+			}
+			break;
+		case FIELD_ADEP:
+			for(OPASTrack track : tracks){
+				if(track.getDepart().matches(regexp)){
+					this.highlightTrack(track, false);
+					Path line = this.lines.get(track);
+					if(line != null) line.setAttributes(attrs);
+				}
+			}
+			break;	
+		case FIELD_INDICATIF:
+			for(OPASTrack track : tracks){
+				if(track.getIndicatif().matches(regexp)){
+					this.highlightTrack(track, false);
+					Path line = this.lines.get(track);
+					if(line != null) line.setAttributes(attrs);
+				}
+			}
+			break;
+		case FIELD_TYPE_AVION:
+			break;
+		default:
+			break;
+		}
 	}
 	
 	@Override
-	public String getName() {
-		return this.name;
+	public void update() {
+		for(OPASTrack track : tracks){
+			this.showTrack(track);
+		}
+		this.applyFilters();
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
-
+	
 	@Override
-	public void setName(String name) {
-		this.name = name;
+	public Collection<VidesoTrack> getSelectedTracks(){
+		Set<VidesoTrack> selectedTracks = new HashSet<VidesoTrack>();
+		for(OPASTrack track : tracks){
+			Path line = lines.get(track);
+			if(line != null) {
+				if(line.isVisible()) selectedTracks.add(track);
+			}
+		}
+		return selectedTracks;
 	}
-
+	
 	@Override
-	public void addFilterColor(int field, String regexp, Color color) {
-		// TODO Auto-generated method stub
-		
+	/**
+	 * If number of track > Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION,<br />
+	 * doesn't change the style to prevent the app from crashing
+	 */
+	public void setStyle(int style) {
+		if(style != this.getStyle()) {
+			if(style == TrajectoriesLayer.STYLE_SIMPLE || this.tracks.size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) {
+				this.style = style;
+				{
+					//display bug when changing extrude -> delete and redraw lines
+					this.lines.clear();
+					this.layer.removeAllRenderables();
+				}
+				this.update();
+			} else {
+				Logging.logger().warning("Style inchangé car nombre de tracks trop important.");
+			}
+		}
 	}
-
-	@Override
-	public void resetFilterColor() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void centerOnTrack(Track track) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Color getDefaultOutsideColor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setDefaultOutsideColor(Color color) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Color getDefaultInsideColor() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setDefaultInsideColor(Color color) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public double getDefaultOpacity() {
-		// TODO Auto-generated method stub
-		return 0.0;
-	}
-
-	@Override
-	public void setDefaultOpacity(double opacity) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public double getDefaultWidth() {
-		// TODO Auto-generated method stub
-		return 0.0;
-	}
-
-	@Override
-	public void setDefaultWidth(double width) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int getStyle() {
-		return this.style;
-	}
-
-	@Override
-	public Boolean isTrackColorFiltrable() {
-		return false;
-	}
-
+	
 	@Override
 	public List<Integer> getStylesAvailable() {
 		List<Integer> styles = new LinkedList<Integer>();
+		if(this.tracks.size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) styles.add(TrajectoriesLayer.STYLE_CURTAIN);
 		styles.add(TrajectoriesLayer.STYLE_SIMPLE);
 		return styles;
 	}
+	
+	@Override
+	public List<? extends VidesoTrack> getTracks() {
+		return this.tracks;
+	}
+	
 }

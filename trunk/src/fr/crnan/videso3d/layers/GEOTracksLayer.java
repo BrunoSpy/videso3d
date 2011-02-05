@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import fr.crnan.videso3d.Configuration;
+import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
@@ -40,25 +41,25 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Layer contenant des tracks Elvira GEO et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.4.1
+ * @version 0.4.2
  */
 public class GEOTracksLayer extends TrajectoriesLayer {
 	
 	private List<GEOTrack> tracks = new LinkedList<GEOTrack>();
 	
-	private HashMap<Integer, String> filters = new HashMap<Integer, String>();
+	protected HashMap<Integer, String> filters = new HashMap<Integer, String>();
 	
 	/**
 	 * Ensemble des tracks surlignés
 	 */
-	private HashMap<GEOTrack, Path> lines = new HashMap<GEOTrack, Path>();
+	protected HashMap<VidesoTrack, Path> lines = new HashMap<VidesoTrack, Path>();
 	
 	/**
 	 * Couleurs des tracks
 	 */
-	private List<ShapeAttributes> colors = new LinkedList<ShapeAttributes>();
+	protected List<ShapeAttributes> colors = new LinkedList<ShapeAttributes>();
 	
-	private RenderableLayer layer = new RenderableLayer();
+	protected RenderableLayer layer = new RenderableLayer();
 		
 	private Boolean tracksHighlightable = true;
 	
@@ -66,7 +67,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	
 	private Boolean tracksColorFiltrable = true;
 	
-	private int style = TrajectoriesLayer.STYLE_CURTAIN;
+	protected int style = TrajectoriesLayer.STYLE_SIMPLE;
 	
 	private String name = "Trajectoires GEO";
 	
@@ -98,12 +99,12 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		this.showTrack(track);
 	}
 
-	private void showTrack(GEOTrack track){
+	protected void showTrack(VidesoTrack track){
 		if(this.lines.containsKey(track)){
 			Path line = this.lines.get(track);
 			if(line != null){
 				line.setExtrude(this.getStyle() == TrajectoriesLayer.STYLE_CURTAIN);
-	//			line.setDrawVerticals(!(this.getStyle() == TrajectoriesLayer.STYLE_CURTAIN));
+		//		line.setDrawVerticals(!(this.getStyle() == TrajectoriesLayer.STYLE_CURTAIN));
 			}
 		} else {
 			LinkedList<Position> positions = new LinkedList<Position>();
@@ -112,7 +113,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 				if(!(point.getLatitude() == position.latitude.degrees  //only add a position if different from the previous position
 						&& point.getLongitude() == position.longitude.degrees
 						&& point.getElevation() == position.elevation)) {
-					if(precision == 0.0 || Position.greatCircleDistance(position, point.getPosition()).degrees > this.getPrecision()) {
+					if(this.precision == 0.0 || Position.greatCircleDistance(position, point.getPosition()).degrees > this.getPrecision()) {
 						positions.add(point.getPosition());
 						position = point.getPosition();
 					}
@@ -136,7 +137,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	}
 
 	@Override
-	public void addTrack(Track track) {
+	public void addTrack(VidesoTrack track) {
 		this.addTrack((GEOTrack)track);
 	}
 
@@ -145,7 +146,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		this.filters.put(field, regexp);
 	}
 
-	private void applyFilters(){
+	protected void applyFilters(){
 		if(filters.size() == 0)
 			return;
 		for(Path p : this.lines.values()){
@@ -318,8 +319,8 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	}
 
 	@Override
-	public Collection<GEOTrack> getSelectedTracks(){
-		Set<GEOTrack> selectedTracks = new HashSet<GEOTrack>();
+	public Collection<VidesoTrack> getSelectedTracks(){
+		Set<VidesoTrack> selectedTracks = new HashSet<VidesoTrack>();
 		for(GEOTrack track : tracks){
 			Path line = lines.get(track);
 			if(line != null) {
@@ -329,10 +330,17 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		return selectedTracks;
 	}
 
+	
+	
+	@Override
+	public List<? extends VidesoTrack> getTracks() {
+		return this.tracks;
+	}
+
 	@Override
 	public void highlightTrack(Track track, Boolean b){
 		if(this.isTrackHighlightable()){
-			Path line = this.lines.get((GEOTrack)track);
+			Path line = this.lines.get((VidesoTrack)track);
 			if(line != null){
 				line.setHighlighted(b);
 				this.firePropertyChange(AVKey.LAYER, null, this);

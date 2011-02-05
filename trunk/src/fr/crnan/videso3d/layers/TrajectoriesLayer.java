@@ -24,7 +24,7 @@ import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer contenant des trajectoires et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.4
+ * @version 0.4.1
  */
 public abstract class TrajectoriesLayer extends LayerSet {
 
@@ -66,7 +66,7 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 * Ajoute un Track
 	 * @param track {@link Track}
 	 */
-	public abstract void addTrack(Track track);
+	public abstract void addTrack(VidesoTrack track);
 
 	/**
 	 * Filter tracks whose field matches regexp
@@ -127,6 +127,8 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	public abstract void update();
 	
 	public abstract Collection<? extends VidesoTrack> getSelectedTracks();
+	
+	public abstract List<? extends VidesoTrack> getTracks();
 	
 	/**
 	 * Returns true or false wether the track is displayed on the globe or not

@@ -18,14 +18,17 @@ package fr.crnan.videso3d.formats;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.tracks.TrackPoint;
 
-import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 
  * @author Adrien Vidal
- *
+ * @author Bruno Spyckerelle
+ * @version 0.2.0
  */
-public abstract class VidesoTrack implements Track{
+public interface VidesoTrack extends Track{
 
-	public abstract LinkedList<TrackPoint> getTrackPointsList();
+	public List<? extends TrackPoint> getTrackPoints();
+	
+	
 }

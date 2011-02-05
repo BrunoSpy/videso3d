@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrackPoint;
 import fr.crnan.videso3d.graphics.Profil3D;
@@ -129,7 +130,7 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	}
 	
 	@Override
-	public void addTrack(Track track) {
+	public void addTrack(VidesoTrack track) {
 		if(track instanceof LPLNTrack){
 			this.addTrack((LPLNTrack)track);
 		}
@@ -316,5 +317,12 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		List<Integer> styles = new LinkedList<Integer>();
 		styles.add(TrajectoriesLayer.STYLE_PROFIL);
 		return styles;
+	}
+
+	@Override
+	public List<? extends VidesoTrack> getTracks() {
+		List<LPLNTrack> tracksList = new LinkedList<LPLNTrack>();
+		tracksList.addAll(this.tracks.keySet());
+		return tracksList;
 	}
 }
