@@ -33,6 +33,7 @@ import javax.swing.JTabbedPane;
 
 import org.jdesktop.swingx.plaf.nimbus.NimbusMultiSliderUI;
 
+import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -46,6 +47,8 @@ import fr.crnan.videso3d.ihm.components.AltitudeRangeSlider;
 import fr.crnan.videso3d.ihm.components.ButtonTabComponent;
 import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
+import fr.crnan.videso3d.layers.GEOTracksLayer;
+import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import gov.nasa.worldwind.util.Logging;
 
 /**
@@ -183,7 +186,17 @@ public class DataExplorer extends JPanel {
 			this.addTrajectoriesView(new OPASReader(opasFile));
 		}
 		if(geoFile.size()>0){
-			this.addTrajectoriesView(new GEOReader(geoFile));
+			GEOTracksLayer layer = new GEOTracksLayer();
+			layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.02")));
+			layer.setStyle(TrajectoriesLayer.STYLE_SIMPLE);
+			this.wwd.toggleLayer(layer, true);
+			//lecture et création des tracks à la volée
+			GEOReader reader = new GEOReader(geoFile, layer);
+			//changement du style en fonction de la conf
+			if(reader.getTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
+				layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
+			}
+			this.addTrajectoriesView(reader);
 		}
 		if(lplnFile.size()>0){
 			this.addTrajectoriesView(new LPLNReader(lplnFile));

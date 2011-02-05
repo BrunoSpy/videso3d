@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
@@ -35,10 +36,11 @@ import gov.nasa.worldwind.render.Path;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.tracks.TrackPoint;
+import gov.nasa.worldwind.util.Logging;
 /**
  * Layer contenant des tracks Elvira GEO et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.4
+ * @version 0.4.1
  */
 public class GEOTracksLayer extends TrajectoriesLayer {
 	
@@ -117,16 +119,18 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 				}
 			}
 			if(positions.size()>1){ //only add a line if there's enough points
-				final Path line = new Path();
+				Path line = new Path();
 				line.setAttributes(normal);
 				line.setHighlightAttributes(highlight);
 				line.setNumSubsegments(1); //améliore les performances
-				line.setExtrude(style == TrajectoriesLayer.STYLE_CURTAIN);
+				line.setExtrude(this.style == TrajectoriesLayer.STYLE_CURTAIN);
+		//		line.setDrawVerticals(!(this.getStyle() == TrajectoriesLayer.STYLE_CURTAIN));
 				line.setAttributes(normal);
 				line.setAltitudeMode(WorldWind.ABSOLUTE);
 				line.setPositions(positions);
 				lines.put(track, line);
 				this.layer.addRenderable(line);
+				this.layer.firePropertyChange(AVKey.LAYER, null, this.layer);
 			}
 		}
 	}
@@ -381,8 +385,24 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	public void setTracksHighlightable(Boolean b) {}
 
 	@Override
+	/**
+	 * If number of track > Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION,<br />
+	 * doesn't change the style to prevent the app from crashing
+	 */
 	public void setStyle(int style) {
-		this.style = style;
+		if(style != this.style) {
+			if(style == TrajectoriesLayer.STYLE_SIMPLE || this.tracks.size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) {
+				this.style = style;
+				{
+					//display bug when changing extrude -> delete and redraw lines
+					this.lines.clear();
+					this.layer.removeAllRenderables();
+				}
+				this.update();
+			} else {
+				Logging.logger().warning("Style inchangé car nombre de tracks trop important.");
+			}
+		}
 	}
 
 	@Override
@@ -401,6 +421,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	 */
 	public void setPrecision(double precision) {
 		this.precision = precision;
+		
 	}
 
 	/**
@@ -431,6 +452,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	@Override
 	public void setDefaultOutsideColor(Color color) {
 		this.normal.setOutlineMaterial(new Material(color));
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
@@ -441,6 +463,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	@Override
 	public void setDefaultInsideColor(Color color) {
 		this.normal.setInteriorMaterial(new Material(color));
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
@@ -456,6 +479,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		}
 		this.normal.setInteriorOpacity(opacity);
 		this.normal.setOutlineOpacity(opacity);
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
@@ -469,6 +493,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 			attrs.setOutlineWidth(width);
 		}
 		this.normal.setOutlineWidth(width);
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
@@ -484,7 +509,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	@Override
 	public List<Integer> getStylesAvailable() {
 		List<Integer> styles = new LinkedList<Integer>();
-		styles.add(TrajectoriesLayer.STYLE_CURTAIN);
+		if(this.tracks.size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) styles.add(TrajectoriesLayer.STYLE_CURTAIN);
 		styles.add(TrajectoriesLayer.STYLE_SIMPLE);
 		return styles;
 	}
