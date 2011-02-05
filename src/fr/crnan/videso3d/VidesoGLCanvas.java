@@ -23,6 +23,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.ProgressMonitor;
@@ -78,7 +79,7 @@ import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
-import gov.nasa.worldwind.tracks.Track;
+import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.util.DataConfigurationFilter;
 import gov.nasa.worldwind.util.DataConfigurationUtils;
 import gov.nasa.worldwind.util.Logging;
@@ -443,7 +444,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		LPLNTracksLayer trajLayer = new LPLNTracksLayer();
 		trajLayer.setName(lpln.getName());
 		this.toggleLayer(trajLayer, true);
-		for(Track track : lpln.getTracks()){
+		for(VidesoTrack track : lpln.getTracks()){
 			trajLayer.addTrack(track);
 		}
 		return trajLayer;
@@ -466,7 +467,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 		this.toggleLayer(trajLayer, true);
 
-		for(Track track : geo.getTracks()){
+		for(VidesoTrack track : geo.getTracks()){
 			trajLayer.addTrack(track);
 		}
 		return trajLayer;
@@ -480,7 +481,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		OPASTracksLayer trajLayer = new OPASTracksLayer();
 		trajLayer.setName(opas.getName());
 		this.toggleLayer(trajLayer, true);
-		for(Track track : opas.getTracks()){
+		for(VidesoTrack track : opas.getTracks()){
 			trajLayer.addTrack(track);
 		}
 		return trajLayer;
@@ -494,7 +495,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		FPLTracksLayer trajLayer = new FPLTracksLayer();
 		trajLayer.setName(fplR.getName());
 		this.toggleLayer(trajLayer, true);
-		for(Track track : fplR.getTracks()){
+		for(VidesoTrack track : fplR.getTracks()){
 			trajLayer.addTrack(track);
 		}
 		return trajLayer;
@@ -637,9 +638,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	}
 	
 	public double[] computeBestEyePosition(VidesoTrack track){
-		Position p1 = track.getTrackPointsList().getFirst().getPosition();
-		Position p2 = track.getTrackPointsList().getLast().getPosition();
-		Position middle = track.getTrackPointsList().get(track.getNumPoints()/2).getPosition();
+		LinkedList<TrackPoint> points = new LinkedList<TrackPoint>();
+		points.addAll(track.getTrackPoints());
+		Position p1 = points.getFirst().getPosition();
+		Position p2 = points.getLast().getPosition();
+		Position middle = points.get(track.getNumPoints()/2).getPosition();
 		double elevation = computeBestElevation(p1, p2);
 		return new double[]{middle.latitude.degrees, middle.longitude.degrees, Math.min(elevation, 6e8)};
 	}

@@ -48,6 +48,7 @@ import fr.crnan.videso3d.ihm.components.ButtonTabComponent;
 import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
+import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import gov.nasa.worldwind.util.Logging;
 
@@ -183,12 +184,21 @@ public class DataExplorer extends JPanel {
 		}
 		
 		if(opasFile.size()>0){
-			this.addTrajectoriesView(new OPASReader(opasFile));
+			OPASTracksLayer layer = new OPASTracksLayer();
+			layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.02")));
+			this.wwd.toggleLayer(layer, true);
+			//lecture et création des tracks à la volée
+			OPASReader reader = new OPASReader(opasFile, layer);
+			//changement du style en fonction de la conf
+			if(reader.getTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
+				layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
+			}
+			
+			this.addTrajectoriesView(reader);
 		}
 		if(geoFile.size()>0){
 			GEOTracksLayer layer = new GEOTracksLayer();
 			layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.02")));
-			layer.setStyle(TrajectoriesLayer.STYLE_SIMPLE);
 			this.wwd.toggleLayer(layer, true);
 			//lecture et création des tracks à la volée
 			GEOReader reader = new GEOReader(geoFile, layer);

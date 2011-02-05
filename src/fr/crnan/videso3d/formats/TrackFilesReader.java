@@ -39,7 +39,7 @@ public abstract class TrackFilesReader {
 	
 	private TrajectoriesLayer layer = null;
 	
-	private List<Track> tracks = new LinkedList<Track>();
+	private List<VidesoTrack> tracks = new LinkedList<VidesoTrack>();
 	
 	public TrackFilesReader(){}
 	
@@ -118,7 +118,12 @@ public abstract class TrackFilesReader {
 	
 	protected abstract void doReadStream(FileInputStream fis);
 	
-	public List<Track> getTracks(){
+	public List<VidesoTrack> getTracks(){
+		if(this.tracks.isEmpty()){
+			if(this.layer != null){
+				return (List<VidesoTrack>) this.layer.getTracks();
+			}
+		}
 		return this.tracks;
 	}
 		

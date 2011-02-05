@@ -28,14 +28,23 @@ import java.util.Vector;
 import javax.swing.ProgressMonitorInputStream;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.layers.OPASTracksLayer;
 
 /**
  * Lecteur de fichier OPAS
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class OPASReader extends TrackFilesReader{
 		
+	public OPASReader(Vector<File> files, OPASTracksLayer layer){
+		super(files, layer);
+	}
+	
+	public OPASReader(File selectedFile, OPASTracksLayer layer) {
+		super(selectedFile, layer);
+	}
+	
 	public OPASReader(Vector<File> files){
 		super(files);
 	}
@@ -87,14 +96,28 @@ public class OPASReader extends TrackFilesReader{
 
         		if (sentence != null)
         		{
-        			if(sentence.startsWith("Simulation de")){
-        				if(track != null) this.getTracks().add(track);
+        			if(sentence.startsWith("Simulation de")){ //nouveau track
+        				if(track != null) {//on enregistre le précédent
+        					if(this.getLayer() != null) {
+        						this.getLayer().addTrack(track);
+        					} else {
+        						this.getTracks().add(track);
+        					}
+        				}
         				String[] words = sentence.split("\\s+");
         				track = new OPASTrack(words[2], (words[6].split(":"))[1], (words[7].split(":"))[1], (words[8].split(":"))[1]);
         			} else {
-        				if(!sentence.isEmpty() && track != null) track.addPoint(new OPASTrackPoint(sentence)); 
+        				if(!sentence.isEmpty() && track != null) track.addTrackPoint(new OPASTrackPoint(sentence)); 
         			}
         		} 
+        	}
+        	//last Track
+        	if(track != null) {
+        		if(this.getLayer() != null) {
+        			this.getLayer().addTrack(track);
+        		} else {
+        			this.getTracks().add(track);
+        		}
         	}
         }
         catch (NoSuchElementException e)

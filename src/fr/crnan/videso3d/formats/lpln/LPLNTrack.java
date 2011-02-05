@@ -19,14 +19,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.crnan.videso3d.formats.VidesoTrack;
-import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.tracks.TrackSegment;
 /**
  * Track provenant d'un LPLN
  * @author Bruno Spyckerelle
  * @version 0.1
  */
-public class LPLNTrack extends VidesoTrack {
+public class LPLNTrack implements VidesoTrack {
 
 	private String name;
 	
@@ -64,12 +63,6 @@ public class LPLNTrack extends VidesoTrack {
 
 	public List<LPLNTrackPoint> getTrackPoints(){
 		return trackPoints;
-	}
-	
-	public LinkedList<TrackPoint> getTrackPointsList(){
-		LinkedList<TrackPoint> trackPointsList = new LinkedList<TrackPoint>();
-		trackPointsList.addAll(trackPoints);
-		return trackPointsList;
 	}
 	
 	@Override
