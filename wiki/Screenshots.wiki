@@ -1,4 +1,5 @@
 #summary Captures d'écran
+#labels Featured
 
 = Version 0.8 =
 
