@@ -35,14 +35,19 @@ public class VidesoStatusBar extends StatusBar {
 	protected final JLabel xCautraDisplay = new JLabel("");
 	protected final JLabel yCautraDisplay = new JLabel("");
 	
+	protected final JLabel fpsDisplay = new JLabel("");
+	
 	public VidesoStatusBar(){
 		super();
 		
 		xCautraDisplay.setHorizontalAlignment(SwingConstants.CENTER);
 		yCautraDisplay.setHorizontalAlignment(SwingConstants.CENTER);
+		fpsDisplay.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		this.add(xCautraDisplay, 1);
 		this.add(yCautraDisplay, 2);
+		
+		this.add(fpsDisplay, 6);
 	}
 	
 	@Override
@@ -77,6 +82,9 @@ public class VidesoStatusBar extends StatusBar {
             xCautraDisplay.setText("");
             yCautraDisplay.setText("");
         }
+        
+        fpsDisplay.setText(String.format("FPS %3.0f",this.getEventSource().getSceneController().getFramesPerSecond()));
+        
     }
 	
 	protected String makeCautraDescription(String label, Double cautra)
