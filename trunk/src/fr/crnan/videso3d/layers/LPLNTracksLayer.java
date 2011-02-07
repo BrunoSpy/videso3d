@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrackPoint;
@@ -49,9 +50,15 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	
 	private int style = TrajectoriesLayer.STYLE_PROFIL;
 	
+	private Color defaultInsideColor = Pallet.makeBrighter(Color.BLUE);
+	
+	private Color defaultOutsideColor = Color.BLUE;
+	
 	public LPLNTracksLayer(){
 		super();
 		this.add(layer);
+		this.setDefaultInsideColor(defaultInsideColor);
+		this.setDefaultOutsideColor(this.defaultOutsideColor);
 	}
 	
 	@Override
@@ -59,12 +66,14 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		Collection<LPLNTrack> tracks;
 		if(!this.isFilterDisjunctive()){
 			if(selectedTracks == null) {
+				this.selectedTracks = new HashSet<LPLNTrack>();
 				tracks = this.tracks.keySet();
 			} else {
 				tracks = new HashSet<LPLNTrack>(this.selectedTracks);
 				this.selectedTracks.clear();
 			}
 		} else {
+			this.selectedTracks = new HashSet<LPLNTrack>();
 			tracks = this.tracks.keySet();
 		}
 		switch (field) {
@@ -107,7 +116,6 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 
 	private void addTrack(LPLNTrack track){
 		this.tracks.put(track, true);
-		this.addSelectedTrack(track);
 		this.showTrack(track);
 	}
 	
@@ -144,6 +152,7 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	@Override
 	public void removeFilter() {
 		this.selectedTracks = null;
+		this.update();
 	}
 
 	@Override
@@ -193,22 +202,11 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	}
 
 	@Override
-	/**
-	 * Not implemented by this layer
-	 */
-	public void setTracksHideable(Boolean b) {
-		// TODO Auto-generated method stub
-		
-	}
+
+	public void setTracksHideable(Boolean b) {}
 
 	@Override
-	/**
-	 * Not implemented by this layer
-	 */
-	public void setTracksHighlightable(Boolean b) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void setTracksHighlightable(Boolean b) {}
 
 	@Override
 	/**
@@ -256,26 +254,31 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 
 	@Override
 	public Color getDefaultOutsideColor() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.defaultOutsideColor;
 	}
 
 	@Override
 	public void setDefaultOutsideColor(Color color) {
-		// TODO Auto-generated method stub
-		
+		for(Profil3D p : profils.values()){
+			p.setOutsideColor(color);
+		}
+		this.defaultOutsideColor = color;
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
 	public Color getDefaultInsideColor() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.defaultInsideColor;
 	}
 
 	@Override
 	public void setDefaultInsideColor(Color color) {
-		// TODO Auto-generated method stub
-		
+		Color c = new Color(color.getRed(), color.getGreen(), color.getBlue(), this.getDefaultInsideColor().getAlpha());
+		for(Profil3D p : profils.values()){
+			p.setInsideColor(c);
+		}
+		this.defaultInsideColor = color;
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
@@ -286,8 +289,7 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 
 	@Override
 	public void setDefaultOpacity(double opacity) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -298,8 +300,6 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 
 	@Override
 	public void setDefaultWidth(double width) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
