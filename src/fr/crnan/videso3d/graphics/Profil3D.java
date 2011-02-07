@@ -32,7 +32,7 @@ import gov.nasa.worldwind.render.SurfacePolyline;
  * Le profil est à la fois dessiné en 3D et en projeté sur le sol.<br />
  * Requiert une base de données STIP sélectionnée.
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 public class Profil3D {
 
@@ -62,6 +62,10 @@ public class Profil3D {
 	 */
 	private Boolean withMarkers = true;
 	
+	private Color outsideColor = Color.BLUE;
+	
+	private Color insideColor = Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f));
+	
 	public Profil3D(){
 		BasicShapeAttributes attrs = new BasicShapeAttributes();
 		attrs.setOutlineStipplePattern((short) 0xAAAA);
@@ -69,8 +73,8 @@ public class Profil3D {
 		attrs.setOutlineWidth(3.0);
 		projected.setAttributes(attrs);
 		curtain.setPlain(true);
-		curtain.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
-		profil.setColor(Color.BLUE);
+		curtain.setColor(insideColor);
+		profil.setColor(outsideColor);
 		profil.setLineWidth(2.0);
 	}
 	/**
@@ -163,13 +167,26 @@ public class Profil3D {
 		if(b){
 			curtain.setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 0.4f)));
 		} else {
-			curtain.setColor(Pallet.makeBrighter(new Color(0.0f, 0.0f, 1.0f, 0.4f)));
+			curtain.setColor(insideColor);
 		}
 	}
 	
 
-	public void setColor(Color c){
-		profil.setColor(c);
+	public void setOutsideColor(Color c){
+		this.outsideColor = c;
+		this.profil.setColor(c);
 	}
 
+	public Color getOutsideColor(){
+		return this.outsideColor;
+	}
+	
+	public void setInsideColor(Color c){
+		this.insideColor = c;
+		this.curtain.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 60));
+	}
+
+	public Color getInsideColor(){
+		return this.insideColor;
+	}
 }
