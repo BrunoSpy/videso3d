@@ -86,7 +86,10 @@ public final class DatasManager {
 	 * @throws Exception 
 	 */
 	public static void createDatas(DatabaseManager.Type type, VidesoGLCanvas wwd) throws Exception{
-		if(instance.controllers.containsKey(type)) instance.controllers.remove(type);
+		if(instance.controllers.containsKey(type)) {
+			instance.controllers.get(type).removeAllLayers();
+			instance.controllers.remove(type);
+		}
 		if(instance.views.containsKey(type)) instance.views.remove(type);
 		if(instance.contexts.containsKey(type)) instance.contexts.remove(type);
 		switch (type) {
