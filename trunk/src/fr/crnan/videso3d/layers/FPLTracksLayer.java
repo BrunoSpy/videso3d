@@ -124,9 +124,10 @@ public class FPLTracksLayer extends LPLNTracksLayer {
 	private Profil3D buildProfil(List<String> balises, List<String> annotations, List<Position> positions, boolean incertain){
 		Profil3D p = new Profil3D( balises, annotations, positions);
 		//Si on n'est pas sûr de la route suivie, on met le profil en rouge
-		if(incertain)
+		if(incertain){
 			p.setInsideColor(Color.ORANGE);
 			p.setOutsideColor(Color.ORANGE);
+		}
 		return p;
 	}
 	
