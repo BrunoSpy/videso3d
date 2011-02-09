@@ -27,10 +27,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 import java.util.Vector;
 
-import javax.swing.ProgressMonitorInputStream;
+import javax.swing.JOptionPane;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Triplet;
@@ -58,6 +57,7 @@ public class FPLReader extends TrackFilesReader {
 
 
 	public FPLReader() {
+		this.setName("?");
 	}
 
 
@@ -108,42 +108,44 @@ public class FPLReader extends TrackFilesReader {
 	@Override
 	protected void doReadStream(FileInputStream stream) {
 		String line;
+        BufferedReader in = new BufferedReader(
+        		new InputStreamReader(
+        				new MyProgressMonitorInputStream(null, "Extraction du fichier plan de vol ...", stream)), 32);
 
-		BufferedReader in = new BufferedReader(
-				new InputStreamReader(
-						new ProgressMonitorInputStream(null, 
-								"Extraction du fichier FPL ...",
-								stream)));
-
-		try{
-			while(in.ready()){
-				line = in.readLine();
-				if(line.startsWith("(FPL")){
-					LinkedList<String> fpl = new LinkedList<String>();
-					boolean endOfFPL=false;
-					while( !endOfFPL ){
-						fpl.add(line);
-						if(line.matches(".*\\)\\s*")){
-							endOfFPL = true;
-						}else{
-							if(in.ready())
-								line = in.readLine();
-						}
-					}
-					parseFPL(fpl, "?");
-				}
-			}
-		}catch(NoSuchElementException e){
-			e.printStackTrace();
-			return;
-		}catch(IOException e){
-			e.printStackTrace();
-			return;
-		}
+        String msgErreur = "";
+        try{
+        	while(in.ready()){
+        		line = in.readLine();
+        		if(line.startsWith("(FPL")){
+        			LinkedList<String> fpl = new LinkedList<String>();
+        			boolean endOfFPL=false;
+        			while( !endOfFPL ){
+        				fpl.add(line);
+        				if(line.matches(".*\\)\\s*")){
+        					endOfFPL = true;
+        				}else{
+        					if(in.ready())
+        						line = in.readLine();
+        				}
+        			}
+        			try{
+        				parseFPL(fpl, "?");
+        			}catch(UnrecognizedFPLException e){
+        				msgErreur+=e.getMessage()+"\n";
+        			}
+        		}
+        	}
+        } catch (IOException e) {
+        	e.printStackTrace();
+        }
+        if(!msgErreur.isEmpty()){
+        	new JOptionPane(msgErreur, 
+        			JOptionPane.ERROR_MESSAGE).createDialog("Erreur lors de la lecture du plan de vol").setVisible(true);
+        }
 	}
 
 
-	public void parseFPL(LinkedList<String> fpl, String indicatif){
+	public void parseFPL(LinkedList<String> fpl, String indicatif) throws UnrecognizedFPLException{
 		if(isIvanWeb(fpl))
 			parseIvanWebFPL(fpl);
 		else
@@ -155,58 +157,75 @@ public class FPLReader extends TrackFilesReader {
 	 * Lit le plan de vol pour construire la trajectoire (<code>FPLTrack</code>) correspondante.
 	 * @param fpl Les lignes qui composent le plan de vol
 	 */
-	public void parseIvanWebFPL(LinkedList<String> fpl){
-		String indicatif = fpl.getFirst().split("-")[1];
-		String type = fpl.get(1).substring(1, 5);
-		String depart = fpl.get(2).substring(1,5);
-		int derniereLigneRoute = fpl.getLast().startsWith("-DOF")? fpl.size()-2 : fpl.size()-1;
-		String arrivee = fpl.get(derniereLigneRoute).substring(1,5);
-		FPLTrack track = new FPLTrack(indicatif);
-		track.setIndicatif(indicatif);
-		track.setType(type);
-		track.setDepart(depart);
-		track.setArrivee(arrivee);
-		LinkedList<LPLNTrackPoint> pointsList = new LinkedList<LPLNTrackPoint>();
-		addAirportToTrack(pointsList, depart);
-		parseRoute(new LinkedList<String>(fpl.subList(3,derniereLigneRoute)), pointsList);
-		addAirportToTrack(pointsList, arrivee);
-		addKnownPointsListToTrack(pointsList, track);
-		if(track.getNumPoints()>0){
+	public void parseIvanWebFPL(LinkedList<String> fpl) throws UnrecognizedFPLException{
+		FPLTrack track = null;
+		try{
+			String indicatif = fpl.getFirst().split("-")[1];
+			String type = fpl.get(1).substring(1, 5);
+			String depart = fpl.get(2).substring(1,5).toUpperCase();
+			int derniereLigneRoute = fpl.getLast().startsWith("-DOF")? fpl.size()-2 : fpl.size()-1;
+			String arrivee = fpl.get(derniereLigneRoute).substring(1,5).toUpperCase();
+			track = new FPLTrack(indicatif);
+			track.setIndicatif(indicatif);
+			track.setType(type);
+			track.setDepart(depart);
+			track.setArrivee(arrivee);
+			LinkedList<LPLNTrackPoint> pointsList = new LinkedList<LPLNTrackPoint>();
+			addAirportToTrack(pointsList, depart);
+			parseRoute(new LinkedList<String>(fpl.subList(3,derniereLigneRoute)), pointsList);
+			addAirportToTrack(pointsList, arrivee);
+			addKnownPointsListToTrack(pointsList, track);
+		}catch(Exception e){
+			throw new UnrecognizedFPLException(fpl.getFirst());
+		}
+		if(track.getNumPoints()>1){
 			this.getTracks().add(track);
+		}else{
+			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
 	}
 
-	public void parseFreeFPL(LinkedList<String> fpl, String indicatif){
+	public void parseFreeFPL(LinkedList<String> fpl, String indicatif) throws UnrecognizedFPLException{
 		FPLTrack track = new FPLTrack(indicatif);
 		track.setIndicatif(indicatif);
 		track.setType("?");
-		String firstLine = fpl.getFirst();
-		String firstElement = firstLine.split("\\s+")[1];
-		track.setDepart(firstElement);
-		LinkedList<LPLNTrackPoint> pointsList = new LinkedList<LPLNTrackPoint>();
-		boolean arptDepart = addAirportToTrack(pointsList, firstElement);
-		if(arptDepart){
+		try{
+			String firstLine = fpl.getFirst();
+			String firstElement = firstLine.split("\\s+")[1].trim().toUpperCase();
+			if(firstElement.matches("F\\d{3}"))
+				firstElement = "?";
 			track.setDepart(firstElement);
-			fpl.set(0, firstLine.substring(firstLine.indexOf(firstElement)+firstElement.length()));
-		}
-		fpl.set(fpl.size()-1, fpl.getLast().replace(")", "").trim());
-		parseRoute(fpl, pointsList);
-		String[] lastElements = fpl.getLast().split("\\s+");
-		int length = lastElements.length;
-		boolean arptArrivee = false;
-		String lastPoint = lastElements[length-1].toUpperCase();
-		track.setArrivee(lastPoint);
-		if(lastPoint.matches("\\p{Alpha}{4}")){
-			arptArrivee = addAirportToTrack(pointsList, lastPoint);
-			if(arptArrivee){
-				if(pointsList.get(pointsList.size()-2).getName().equals(lastPoint)){
-					pointsList.remove(pointsList.size()-2);
+			LinkedList<LPLNTrackPoint> pointsList = new LinkedList<LPLNTrackPoint>();
+			boolean arptDepart = false;
+			if(!firstElement.equals("?"))
+					addAirportToTrack(pointsList, firstElement);
+			if(arptDepart){
+				track.setDepart(firstElement);
+				fpl.set(0, firstLine.substring(firstLine.indexOf(firstElement)+firstElement.length()));
+			}
+			fpl.set(fpl.size()-1, fpl.getLast().replace(")", "").trim());
+			parseRoute(fpl, pointsList);
+			String[] lastElements = fpl.getLast().split("\\s+");
+			int length = lastElements.length;
+			boolean arptArrivee = false;
+			String lastPoint = lastElements[length-1].toUpperCase();
+			track.setArrivee(lastPoint);
+			if(lastPoint.matches("\\p{Alpha}{4}")){
+				arptArrivee = addAirportToTrack(pointsList, lastPoint);
+				if(arptArrivee){
+					if(pointsList.get(pointsList.size()-2).getName().equals(lastPoint)){
+						pointsList.remove(pointsList.size()-2);
+					}
 				}
 			}
+			addKnownPointsListToTrack(pointsList, track);
+		}catch(Exception e){
+			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
-		addKnownPointsListToTrack(pointsList, track);
 		if(track.getNumPoints()>0){
 			this.getTracks().add(track);
+		}else{
+			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
 	}
 
@@ -391,6 +410,7 @@ public class FPLReader extends TrackFilesReader {
 					p.setName(name);
 					p.setPosition(new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(1), rs.getString(2)), elevation));
 				}
+				st.close();
 			}
 		}catch (SQLException e) {
 			e.printStackTrace();
@@ -530,9 +550,10 @@ public class FPLReader extends TrackFilesReader {
 						point.setName(balise);
 						pointList.add(point);
 					}
+					st.close();
 				}else{
+					st.close();
 					pointList.add(new LPLNTrackPoint());
-					return pointList;
 				}
 			}else{
 				pointList.add(new LPLNTrackPoint());
@@ -540,7 +561,7 @@ public class FPLReader extends TrackFilesReader {
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
-		}
+		}		
 		return pointList;
 	}
 
@@ -782,6 +803,7 @@ public class FPLReader extends TrackFilesReader {
 					airport.setName(code);
 					airport.setPosition(new Position(LatLonUtils.computeLatLonFromSkyviewString(rs2.getString(1), rs2.getString(2)), 0));
 				}
+				st.close();
 			}
 		}catch(SQLException e){
 			e.printStackTrace();
@@ -793,4 +815,24 @@ public class FPLReader extends TrackFilesReader {
 		return false;
 	}
 
+	
+	public class UnrecognizedFPLException extends Exception{
+		
+		private String message = "<html>Plan de vol ";
+		
+		/**
+		 * 
+		 * @param firstLine la première ligne du plan de vol
+		 * @param type
+		 */
+		public UnrecognizedFPLException(String firstLine){
+			message += "<i><b><font color=\"#771111\">"+firstLine.replace("(FPL", "")+"</font></b></i> : <br/> " +
+					"Format incorrect ou route inconnue.</html>";
+		}
+		
+		public String getMessage(){
+			return message;
+		}
+	}
+	
 }
