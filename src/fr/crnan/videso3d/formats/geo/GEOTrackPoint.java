@@ -22,13 +22,14 @@ import gov.nasa.worldwind.tracks.TrackPoint;
  * Point d'une trajectoire Elvira GEO.<br />
  * Voir la description du format.
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.2.0
  */
 public class GEOTrackPoint implements TrackPoint {
 
 	private Position position;
 	private String time;
 	private Integer vitesse;
+	private Double timeD;
 	
 	public GEOTrackPoint(String sentence){
 		String[] words = sentence.split("\t");
@@ -43,7 +44,8 @@ public class GEOTrackPoint implements TrackPoint {
 		this.position = new Position(Angle.fromDegrees(new Double(words[4])),
 									Angle.fromDegrees(new Double(words[5])),
 									elev);
-		Integer time = new Double(words[3]).intValue();
+		this.timeD = new Double(words[3]);
+		Integer time = timeD.intValue();
 		int heure = time / 3600;
 		time -= heure * 3600;
 		int minutes = time / 60;
@@ -77,6 +79,10 @@ public class GEOTrackPoint implements TrackPoint {
 		return this.time;
 	}
 
+	public double getDecimalTime() {
+		return this.timeD;
+	}
+	
 	@Override
 	public void setElevation(double elevation) {
 		this.position = new Position(Angle.fromDegrees(this.getLatitude()), Angle.fromDegrees(this.getLongitude()), elevation);

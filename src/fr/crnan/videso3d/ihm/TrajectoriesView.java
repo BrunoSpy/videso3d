@@ -26,6 +26,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
@@ -37,11 +38,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -53,9 +57,13 @@ import org.jdesktop.swingx.JXTaskPaneContainer;
 import fr.crnan.videso3d.Triplet;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.formats.VidesoTrack;
+import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
+import fr.crnan.videso3d.formats.geo.GEOWriter;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
+import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
 import fr.crnan.videso3d.layers.LPLNTracksLayer;
 import fr.crnan.videso3d.layers.OPASTracksLayer;
@@ -79,7 +87,7 @@ public class TrajectoriesView extends JPanel {
 
 	private VidesoGLCanvas wwd;
 	
-	public TrajectoriesView(final VidesoGLCanvas wwd, TrackFilesReader reader){
+	public TrajectoriesView(final VidesoGLCanvas wwd, final TrackFilesReader reader){
 		this.layer = reader.getLayer() == null ? wwd.addTrajectoires(reader) : reader.getLayer();
 		this.wwd = wwd;
 		
@@ -127,6 +135,61 @@ public class TrajectoriesView extends JPanel {
 		content.add(this.createFilterPane(), null);
 		if(layer.isTrackColorFiltrable()) content.add(this.createColorFilterPane(), null);
 		content.add(table, null);
+		
+		if(reader instanceof GEOReader) {
+			final JButton save = new JButton("Sauver");
+			save.setToolTipText("Enregistrer les trajectoires affichées");
+			save.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					VFileChooser fileChooser = new VFileChooser();
+					if(fileChooser.showSaveDialog(save) == JFileChooser.APPROVE_OPTION){
+						final String file = fileChooser.getSelectedFile().getAbsolutePath();
+						if(!(new File(file).exists()) || 
+								(new File(file).exists() &&
+										JOptionPane.showConfirmDialog(null, "Le fichier existe déjà.\n\nSouhaitez-vous réellement l'écraser ?",
+												"Confirmer la suppression du fichier précédent",
+												JOptionPane.OK_CANCEL_OPTION,
+												JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION)) {
+
+							Collection<? extends VidesoTrack> tracks = layer.getSelectedTracks();
+							final javax.swing.ProgressMonitor progress = new javax.swing.ProgressMonitor(null, "Sauvegarde des trajectoires sélectionnées", "",
+									0, tracks.size()-1);
+							progress.setMillisToDecideToPopup(0);
+							progress.setMillisToPopup(0);
+							new SwingWorker<Integer, Integer>() {
+
+								@Override
+								protected Integer doInBackground()
+								throws Exception {
+									GEOWriter writer = new GEOWriter(file, true);
+									int i = 0;
+									for(VidesoTrack track : layer.getSelectedTracks()){
+										if(progress.isCanceled()){
+											writer.cancel();
+											return null;
+										}
+										i++;
+										progress.setProgress(i);
+										progress.setNote(i+" trajectoires sur "+progress.getMaximum());
+										writer.writeTrack((GEOTrack) track);
+									}
+									writer.close();
+									return null;
+								}
+
+
+							}.execute();
+
+							progress.close();
+
+						}
+					}
+				}
+			});
+			this.add(save, BorderLayout.SOUTH);
+		}
 
 	}
 
