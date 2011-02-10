@@ -16,6 +16,9 @@
 
 package fr.crnan.videso3d;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.logging.Level;
 
 import javax.swing.UIManager;
@@ -28,7 +31,7 @@ import gov.nasa.worldwind.util.Logging;
 
 /**
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.3.0
  */
 public class Videso3D {
 
@@ -58,11 +61,28 @@ public class Videso3D {
 					}
 				}
 
+				Logging.logger().setLevel(Level.ALL);
 
-				if(args.length > 0 && args[0].equals("analyze")) { 
-					AnalyzeUI.showAnalyzeUI();
+				if(args.length > 0) {
+					final String arg0 = args[0];
+					if(arg0.equals("analyze")){
+						AnalyzeUI.showAnalyzeUI();
+					} else {
+						if(new File(arg0).exists()){
+							//try to open the file
+							final MainWindow main = new MainWindow();
+							main.addPropertyChangeListener("done", new PropertyChangeListener() {
+								
+								@Override
+								public void propertyChange(PropertyChangeEvent e) {
+									File[] files = {new File(arg0)};
+									main.getDataExplorer().addTrajectoriesViews(files);
+								}
+							});
+							
+						}
+					}
 				} else {
-					Logging.logger().setLevel(Level.ALL);
 					new MainWindow();
 				}
 			}

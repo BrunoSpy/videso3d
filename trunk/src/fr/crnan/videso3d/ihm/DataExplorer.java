@@ -185,7 +185,7 @@ public class DataExplorer extends JPanel {
 		
 		if(opasFile.size()>0){
 			OPASTracksLayer layer = new OPASTracksLayer();
-			layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.02")));
+			layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
 			this.wwd.toggleLayer(layer, true);
 			//lecture et création des tracks à la volée
 			OPASReader reader = new OPASReader(opasFile, layer);
@@ -198,7 +198,7 @@ public class DataExplorer extends JPanel {
 		}
 		if(geoFile.size()>0){
 			GEOTracksLayer layer = new GEOTracksLayer();
-			layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.02")));
+			layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
 			this.wwd.toggleLayer(layer, true);
 			//lecture et création des tracks à la volée
 			GEOReader reader = new GEOReader(geoFile, layer);

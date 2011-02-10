@@ -232,7 +232,7 @@ public class ConfigurationUI extends JFrame {
 		trajecto3.add(new JLabel("Précision (en degrés) : "));
 		trajecto3.add(Box.createHorizontalGlue());
 		final JTextField precision = new JTextField(20);
-		precision.setText(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.02"));
+		precision.setText(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01"));
 		trajecto3.add(precision);
 		JButton valPrecision = new JButton("Valider");
 		valPrecision.addActionListener(new ActionListener() {

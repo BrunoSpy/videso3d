@@ -37,7 +37,7 @@ import gov.nasa.worldwind.event.SelectListener;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
- * @version 0.4.0
+ * @version 0.4.1
  */
 public class ContextPanel extends JPanel implements SelectListener {
 
@@ -150,7 +150,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 	private void addTaskpanes(DatabaseManager.Type base, int type, String name){
 		if(taskpanes.get(base) != null) {
 			for(JXTaskPane pane : taskpanes.get(base).getTaskPanes(type, name)){
-				content.add(pane);
+				content.add(pane, null);
 			}
 		}
 	}
