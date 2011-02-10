@@ -41,6 +41,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
@@ -67,6 +68,7 @@ import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
 import fr.crnan.videso3d.formats.opas.OPASFileFilter;
 import fr.crnan.videso3d.formats.fpl.FPLFileFilter;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
+import fr.crnan.videso3d.ihm.components.DropDownButton;
 import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
 import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
@@ -80,7 +82,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3.5
+ * @version 0.3.6
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -311,6 +313,8 @@ public class MainWindow extends JFrame {
 		
 		//ferme le panneau d'informations, doit être fait après l'affichage de la fenêtre
 		splitPane.setDividerLocation(1.0);
+		
+		firePropertyChange("done", null, true);
 	}
 
 	/**
@@ -395,7 +399,53 @@ public class MainWindow extends JFrame {
 		toolbar.add(dalle);
 		
 		//Ajouter trajectoires
-		final JButton trajectoires = new JButton(new ImageIcon(getClass().getResource("/resources/plus_traj_22.png")));
+		final DropDownButton trajectoires = new DropDownButton(new ImageIcon(getClass().getResource("/resources/plus_traj_22.png")));
+		
+		JMenuItem file = new JMenuItem("Fichier");
+		file.setToolTipText("Importer des trajectoires dans un fichier");
+		file.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				final VFileChooser fileChooser = new VFileChooser();
+				fileChooser.setFileSelectionMode(VFileChooser.FILES_ONLY);
+				fileChooser.setMultiSelectionEnabled(true);
+				fileChooser.addChoosableFileFilter(new OPASFileFilter());
+				fileChooser.addChoosableFileFilter(new LPLNFileFilter());
+				fileChooser.addChoosableFileFilter(new GEOFileFilter());
+				fileChooser.addChoosableFileFilter(new FPLFileFilter());
+				if(fileChooser.showOpenDialog(trajectoires) == VFileChooser.APPROVE_OPTION){
+
+					new SwingWorker<String, Integer>(){
+						@Override
+						protected String doInBackground() throws Exception {
+							try {
+								dataExplorer.addTrajectoriesViews(fileChooser.getSelectedFiles());
+							} catch(Exception e1){
+								e1.printStackTrace();
+							}
+							return null;
+						}
+					}.execute();
+
+				}
+
+			}
+		});
+		
+		
+		JMenuItem text = new JMenuItem("Texte");
+		text.setToolTipText("Importer des trajectoires par copier/coller");
+		text.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new FPLImportUI(dataExplorer).setVisible(true);
+			}
+		});
+		trajectoires.getPopupMenu().add(file);
+		trajectoires.getPopupMenu().add(text);
+		
 		trajectoires.setToolTipText("Importer des trajectoires");
 		trajectoires.addActionListener(new ActionListener() {
 
@@ -425,7 +475,8 @@ public class MainWindow extends JFrame {
 				}
 			}
 		});
-		toolbar.add(trajectoires);
+		trajectoires.addToToolBar(toolbar);
+		//toolbar.add(trajectoires);
 
 		//Ajouter données
 		JButton datas = new JButton(new ImageIcon(getClass().getResource("/resources/database_22.png")));
@@ -650,4 +701,7 @@ public class MainWindow extends JFrame {
 		return toolbar;
 	}
 
+	public DataExplorer getDataExplorer(){
+		return this.dataExplorer;
+	}
 }
