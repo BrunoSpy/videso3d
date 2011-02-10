@@ -258,6 +258,7 @@ public class FPLReader extends TrackFilesReader {
 	}
 
 	private void parseRoute(LinkedList<String> route, LinkedList<LPLNTrackPoint> track){
+		boolean premiereBaliseTrouvee = false;
 		ArrayList<Triplet<String, Type, Double>> array = new ArrayList<Triplet<String, Type, Double>>();
 		double elevation = 0;
 
@@ -277,7 +278,6 @@ public class FPLReader extends TrackFilesReader {
 			}
 		}
 
-
 		//On parcourt ensuite ce tableau pour extraire la route
 		for(int i = 0; i < array.size(); i++){
 			Triplet<String, Type, Double> t = array.get(i);
@@ -289,25 +289,34 @@ public class FPLReader extends TrackFilesReader {
 					Triplet<String, Type, Double> b = array.get(i-2);
 					if(r.getSecond()==Type.Route){
 						if(b.getSecond()==Type.Balise){
-							track.addAll(getRouteBetween(b.getFirst(), t.getFirst(), r.getFirst(), r.getThird()));
+							LinkedList<LPLNTrackPoint> liste = getRouteBetween(b.getFirst(), t.getFirst(), r.getFirst(), r.getThird());
+							int k = 0;
+							while(!premiereBaliseTrouvee && k<liste.size()){
+								if(liste.get(k).getPosition()!=null)
+									premiereBaliseTrouvee=true;
+								k++;
+							}
+							track.addAll(liste);
 						}
 					}
 				}
 				track.add(getBalise(t.getFirst(), t.getThird()));
 				int size = track.size();
 				//Si on a les 3 derniers points inconnus, on arrête.
-				boolean lost = true;
-				if(size>2){
-					for(int k = size-1; k>size-4; k--){
-						if(track.get(k).getPosition()!=null){
-							lost = false;
-							break;
+				if(premiereBaliseTrouvee){
+					boolean lost = true;
+					if(size>2){
+						for(int k = size-1; k>size-4; k--){
+							if(track.get(k).getPosition()!=null){
+								lost = false;
+								break;
+							}
 						}
-					}
-				}else
-					lost = false;
-				if(lost)
-					break;
+					}else
+						lost = false;
+					if(lost)
+						break;
+				}
 			}else if(t.getSecond()==Type.Point){
 				LPLNTrackPoint p = pointToLPLNPoint(t.getFirst(), t.getThird());
 				if(p!=null)
