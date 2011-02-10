@@ -217,7 +217,7 @@ public class DataExplorer extends JPanel {
 			if(!msgErreur.isEmpty())
 				JOptionPane.showMessageDialog(null, msgErreur, "Erreur lors de la lecture du plan de vol", JOptionPane.ERROR_MESSAGE);
 			if(fplR.getTracks().size()>0)
-				this.addTrajectoriesView(new FPLReader(fplFile));
+				this.addTrajectoriesView(fplR);
 		}
 		if(opasFile.size() == 0 && geoFile.size() == 0 && lplnFile.size() == 0 && fplFile.size()==0){
 			Logging.logger().warning("Aucun fichier trajectoire trouvé.");
