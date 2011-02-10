@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Vector;
 
-import javax.swing.JOptionPane;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Triplet;
@@ -55,6 +54,8 @@ public class FPLReader extends TrackFilesReader {
 
 	private static enum Type{Balise, Point, Route}; 
 
+	private static String msgErreur = "";
+
 
 	public FPLReader() {
 		this.setName("?");
@@ -69,7 +70,15 @@ public class FPLReader extends TrackFilesReader {
 		super(files);
 	}
 
-
+	/**
+	 * Renvoie le message d'erreur actuel et l'efface.
+	 * @return
+	 */
+	public String getErrorMessage(){
+		String erreur = msgErreur;
+		msgErreur = "";
+		return erreur;
+	}
 
 	public static Boolean isFPLFile(File file){
 		Boolean fpl = false;
@@ -106,42 +115,36 @@ public class FPLReader extends TrackFilesReader {
 	}
 
 	@Override
-	protected void doReadStream(FileInputStream stream) {
+	protected void doReadStream(FileInputStream stream){
 		String line;
-        BufferedReader in = new BufferedReader(
-        		new InputStreamReader(
-        				new MyProgressMonitorInputStream(null, "Extraction du fichier plan de vol ...", stream)), 32);
-
-        String msgErreur = "";
-        try{
-        	while(in.ready()){
-        		line = in.readLine();
-        		if(line.startsWith("(FPL")){
-        			LinkedList<String> fpl = new LinkedList<String>();
-        			boolean endOfFPL=false;
-        			while( !endOfFPL ){
-        				fpl.add(line);
-        				if(line.matches(".*\\)\\s*")){
-        					endOfFPL = true;
-        				}else{
-        					if(in.ready())
-        						line = in.readLine();
-        				}
-        			}
-        			try{
-        				parseFPL(fpl, "?");
-        			}catch(UnrecognizedFPLException e){
-        				msgErreur+=e.getMessage()+"\n";
-        			}
-        		}
-        	}
-        } catch (IOException e) {
-        	e.printStackTrace();
-        }
-        if(!msgErreur.isEmpty()){
-        	new JOptionPane(msgErreur, 
-        			JOptionPane.ERROR_MESSAGE).createDialog("Erreur lors de la lecture du plan de vol").setVisible(true);
-        }
+		BufferedReader in = new BufferedReader(
+				new InputStreamReader(
+						new MyProgressMonitorInputStream(null, "Extraction du fichier plan de vol ...", stream)), 32);
+		try{
+			while(in.ready()){
+				line = in.readLine();
+				if(line.startsWith("(FPL")){
+					LinkedList<String> fpl = new LinkedList<String>();
+					boolean endOfFPL=false;
+					while( !endOfFPL ){
+						fpl.add(line);
+						if(line.matches(".*\\)\\s*")){
+							endOfFPL = true;
+						}else{
+							if(in.ready())
+								line = in.readLine();
+						}
+					}
+					try{
+						parseFPL(fpl, "?");
+					}catch(UnrecognizedFPLException e){
+						msgErreur+=e.getMessage()+"\n";
+					}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 

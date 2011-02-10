@@ -17,7 +17,6 @@
 package fr.crnan.videso3d.formats;
 
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
-import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.util.Logging;
 
 import java.io.File;

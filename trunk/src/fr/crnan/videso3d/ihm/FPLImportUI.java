@@ -160,10 +160,10 @@ public class FPLImportUI extends JFrame implements ActionListener{
 						e.printStackTrace();
 					}
 					if(!msgErreur.isEmpty()){
-						new JOptionPane(msgErreur, 
-								JOptionPane.ERROR_MESSAGE).createDialog("Erreur lors de la lecture du plan de vol").setVisible(true);
+						JOptionPane.showMessageDialog(null, msgErreur, "Erreur lors de la lecture du plan de vol", JOptionPane.ERROR_MESSAGE);
 					}
-					dataExplorer.addTrajectoriesView(fplR);
+					if(fplR.getTracks().size()>0)
+						dataExplorer.addTrajectoriesView(fplR);
 				}
 				
 				private String parseFPL(LinkedList<String> pln){
