@@ -29,7 +29,7 @@ import org.jdesktop.swingx.MultiSplitLayout.Split;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class VerticalMultipleSplitPanes extends JXMultiSplitPane {
 
@@ -40,6 +40,7 @@ public class VerticalMultipleSplitPanes extends JXMultiSplitPane {
 	public VerticalMultipleSplitPanes() {
 		this.modelRoot.setRowLayout(false);
 		this.getMultiSplitLayout().setModel(modelRoot);
+		this.setDividerPainter(new BevelDividerPainter(this));
 	}
 
 	/* (non-Javadoc)
