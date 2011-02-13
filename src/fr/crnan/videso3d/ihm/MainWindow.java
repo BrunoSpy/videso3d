@@ -28,6 +28,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
@@ -77,12 +81,18 @@ import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.examples.util.ScreenShotAction;
+import gov.nasa.worldwind.examples.util.ShapeUtils;
+import gov.nasa.worldwind.geom.Angle;
+import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.globes.Globe;
+import gov.nasa.worldwind.render.airspaces.Polygon;
 import gov.nasa.worldwind.util.Logging;
 
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3.6
+ * @version 0.3.7
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -118,6 +128,7 @@ public class MainWindow extends JFrame {
 	
 	private ProgressMonitor progressMonitor;
 	
+	private AirspaceListener airspaceListener;
 	/**
 	 * Nombre d'étapes d'initialisation pour la barre de progression
 	 */
@@ -222,7 +233,7 @@ public class MainWindow extends JFrame {
 		
 		
 		wwd.addSelectListener(context);
-		final AirspaceListener airspaceListener = new AirspaceListener(wwd, context);
+		airspaceListener = new AirspaceListener(wwd, context);
 		wwd.addSelectListener(airspaceListener);
 		context.setMinimumSize(new Dimension(0,0)); //taille mini à 0 pour permettre la fermeture du panneau avec setDividerLocation
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, mainPane, context);
@@ -401,7 +412,7 @@ public class MainWindow extends JFrame {
 		//Ajouter trajectoires
 		final DropDownButton trajectoires = new DropDownButton(new ImageIcon(getClass().getResource("/resources/plus_traj_22.png")));
 		
-		JMenuItem file = new JMenuItem("Fichier");
+		final JMenuItem file = new JMenuItem("Fichier");
 		file.setToolTipText("Importer des trajectoires dans un fichier");
 		file.addActionListener(new ActionListener() {
 			
@@ -451,33 +462,87 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final VFileChooser fileChooser = new VFileChooser();
-				fileChooser.setFileSelectionMode(VFileChooser.FILES_ONLY);
-				fileChooser.setMultiSelectionEnabled(true);
-				fileChooser.addChoosableFileFilter(new OPASFileFilter());
-				fileChooser.addChoosableFileFilter(new LPLNFileFilter());
-				fileChooser.addChoosableFileFilter(new GEOFileFilter());
-				fileChooser.addChoosableFileFilter(new FPLFileFilter());
-				if(fileChooser.showOpenDialog(trajectoires) == VFileChooser.APPROVE_OPTION){
-
-					new SwingWorker<String, Integer>(){
-						@Override
-						protected String doInBackground() throws Exception {
-							try {
-								dataExplorer.addTrajectoriesViews(fileChooser.getSelectedFiles());
-							} catch(Exception e1){
-								e1.printStackTrace();
-							}
-							return null;
-						}
-					}.execute();
-
-				}
+				file.doClick();
 			}
 		});
 		trajectoires.addToToolBar(toolbar);
 		//toolbar.add(trajectoires);
 
+		final DropDownButton addAirspace = new DropDownButton(new ImageIcon(getClass().getResource("/resources/draw-polygon_22_1.png")));
+		
+		
+		final JMenuItem addPolygon = new JMenuItem("Nouveau");
+		addPolygon.setToolTipText("Nouveau polygone");
+		addPolygon.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent evt) {
+				 Polygon polygon = new Polygon();
+		         polygon.setAltitudes(0.0, 0.0);
+		         polygon.setTerrainConforming(true, false);
+				
+				Position position = ShapeUtils.getNewShapePosition(wwd);
+		        Angle heading = ShapeUtils.getNewShapeHeading(wwd, true);
+		        double sizeInMeters = ShapeUtils.getViewportScaleFactor(wwd);
+
+		        java.util.List<LatLon> locations = ShapeUtils.createSquareInViewport(wwd, position, heading, sizeInMeters);
+
+		        double maxElevation = -Double.MAX_VALUE;
+		        Globe globe = wwd.getModel().getGlobe();
+
+		        for (LatLon ll : locations)
+		        {
+		            double e = globe.getElevation(ll.getLatitude(), ll.getLongitude());
+		            if (e > maxElevation)
+		                maxElevation = e;
+		        }
+
+		        polygon.setAltitudes(0.0, maxElevation + sizeInMeters);
+		        polygon.setTerrainConforming(true, false);
+		        polygon.setLocations(locations);
+				
+		        wwd.editAirspace(polygon, true);
+			}
+		});
+        
+		JMenuItem addFromFile = new JMenuItem("Charger un fichier");
+		addFromFile.setToolTipText("Nouveau polygone depuis un fichier");
+		addFromFile.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				VFileChooser fileChooser = new VFileChooser();
+				fileChooser.setMultiSelectionEnabled(false);
+				if(fileChooser.showOpenDialog(null) == VFileChooser.APPROVE_OPTION){
+					File file = fileChooser.getSelectedFile();
+					//TODO prendre en charge d'autres formes
+					Polygon p = new Polygon();
+					try {
+						BufferedReader input = new BufferedReader(new FileReader(file));
+						String s = input.readLine();
+						p.restoreState(s);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					wwd.editAirspace(p, true);
+				}
+			}
+		});
+		
+		addAirspace.getPopupMenu().add(addPolygon);
+		addAirspace.getPopupMenu().add(addFromFile);
+		addAirspace.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addPolygon.doClick();
+			}
+		});
+		//toolbar.add(addPolygon);
+		addAirspace.addToToolBar(toolbar);
+		
 		//Ajouter données
 		JButton datas = new JButton(new ImageIcon(getClass().getResource("/resources/database_22.png")));
 		datas.setToolTipText("Ajouter/supprimer des données");
@@ -605,7 +670,7 @@ public class MainWindow extends JFrame {
 		});
 
 		toolbar.addSeparator();
-
+		
 		JLabel label = new JLabel("Exagération verticale : ");
 		toolbar.add(label);
 

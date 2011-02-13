@@ -22,6 +22,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileFilter;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,6 +46,9 @@ import fr.crnan.videso3d.graphics.Aerodrome;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.graphics.VidesoObject;
+import fr.crnan.videso3d.graphics.editor.AirspaceEditorController;
+import fr.crnan.videso3d.graphics.editor.PolygonEditor;
 import fr.crnan.videso3d.layers.FPLTracksLayer;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
@@ -72,6 +76,7 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.globes.Globe;
+import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.AnnotationLayer;
 import gov.nasa.worldwind.layers.LatLonGraticuleLayer;
 import gov.nasa.worldwind.layers.Layer;
@@ -79,6 +84,8 @@ import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
+import gov.nasa.worldwind.render.airspaces.Airspace;
+import gov.nasa.worldwind.render.airspaces.Polygon;
 import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.util.DataConfigurationFilter;
 import gov.nasa.worldwind.util.DataConfigurationUtils;
@@ -90,7 +97,7 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.8.1
+ * @version 0.9.0
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
@@ -117,6 +124,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	private VerticalScaleBar scale;
 	
 	private DraggerListener dragger;
+	
+	private AirspaceLayer editorLayer = new AirspaceLayer();
+	
+	private HashMap<Polygon, PolygonEditor> polygonEditors = new HashMap<Polygon, PolygonEditor>();
 	
 	/**
 	 * Initialise les différents objets graphiques
@@ -421,7 +432,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 
 	/**
 	 * Ajoute les trajectoires à la vue
-	 * @param file Fichier contenant les trajectoires
+	 * @param reader {@link TrackFilesReader}
 	 */
 	public TrajectoriesLayer addTrajectoires(TrackFilesReader reader){
 		if(reader instanceof LPLNReader){
@@ -475,7 +486,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 
 	/**
 	 * Ajoute les trajectoires au format OPAS
-	 * @param opasReader
+	 * @param opas
 	 */
 	public TrajectoriesLayer addTrajectoires(OPASReader opas) {
 		OPASTracksLayer trajLayer = new OPASTracksLayer();
@@ -489,7 +500,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	
 	/**
 	 * Ajoute les trajectoires plan de vol
-	 * @param opasReader
+	 * @param fplR
 	 */
 	public TrajectoriesLayer addTrajectoires(FPLReader fplR) {
 		FPLTracksLayer trajLayer = new FPLTracksLayer();
@@ -810,4 +821,43 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 	}
 	
+	/**
+	 * Enable editing of an airspace
+	 * @param airspace
+	 * @param orphan True : doesn't belong to an airspace
+	 */
+	public void editAirspace(Polygon airspace, boolean orphan){
+		if(orphan){
+			this.editorLayer.addAirspace(airspace);
+			this.toggleLayer(this.editorLayer, true);
+		}
+		PolygonEditor editor = new PolygonEditor();
+		editor.setPolygon(airspace);
+		editor.setUseRubberBand(true);
+		editor.setKeepControlPointsAboveTerrain(true);
+		editor.setArmed(true);
+		this.polygonEditors.put(airspace, editor);
+		this.toggleLayer(editor, true);
+		AirspaceEditorController controller = new AirspaceEditorController(this);
+		controller.setEditor(editor);
+	}
+	
+	public void deleteAirspace(Airspace airspace){
+		if(airspace instanceof VidesoObject){
+			DatasManager.getController(((VidesoObject) airspace).getDatabaseType()).hideObject(((VidesoObject) airspace).getType(), ((VidesoObject) airspace).getName());
+		} else {
+			for(Layer l : this.getModel().getLayers()){
+				if(l instanceof AirspaceLayer){
+					((AirspaceLayer) l).removeAirspace(airspace);
+				}
+			}
+			//si l'objet est en édition, supprimer l'éditeur
+			if(airspace instanceof Polygon){
+				if(polygonEditors.containsKey(airspace)){
+					this.removeLayer(polygonEditors.get(airspace));
+					polygonEditors.remove(airspace);
+				}
+			}
+		}
+	}
 }

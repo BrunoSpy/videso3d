@@ -31,11 +31,11 @@ import javax.swing.event.ChangeListener;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.MovablePointPlacemark;
 import fr.crnan.videso3d.graphics.Route2D;
-import fr.crnan.videso3d.graphics.Route3D;
-import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
+import fr.crnan.videso3d.ihm.components.AirspaceMenu;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.event.SelectEvent;
@@ -59,7 +59,7 @@ import gov.nasa.worldwind.render.markers.MarkerAttributes;
 /**
  * Listener d'évènements sur les airspaces et shapes
  * @author Bruno Spyckerelle
- * @version 0.3.2
+ * @version 0.4.0
  */
 public class AirspaceListener implements SelectListener {
 
@@ -93,7 +93,6 @@ public class AirspaceListener implements SelectListener {
 	 */
 	@Override
 	public void selected(final SelectEvent event) {
-		
 		
 		//suppression de la surbrillance
 		if (lastHighlit != null
@@ -135,203 +134,150 @@ public class AirspaceListener implements SelectListener {
 				this.doHover(event.getTopObject(),event.getPickPoint());
 		} else if(event.getEventAction() == SelectEvent.RIGHT_CLICK){
 			if(lastAttrs != null) {
-				final JPopupMenu menu = new JPopupMenu("Menu"){
-
-					/* (non-Javadoc)
-					 * @see javax.swing.JPopupMenu#setVisible(boolean)
-					 */
-					@Override
-					public void setVisible(boolean arg0) {
-						super.setVisible(arg0);
-						lock = arg0;
-					}
-
-					
-				};
-				JMenuItem colorItem = new JMenuItem("Couleur...");
-				
-
-				JMenu opacityItem = new JMenu("Opacité ...");
-				JSlider slider = new JSlider();
-				slider.setMaximum(100);
-				slider.setMinimum(0);
-				slider.setOrientation(JSlider.VERTICAL);
-				slider.setMinorTickSpacing(10);
-				slider.setMajorTickSpacing(20);
-				slider.setPaintLabels(true);
-				slider.setPaintTicks(true);
-				opacityItem.add(slider);
-
-				//Ajout des listeners en fonction du type d'objet
 				if(lastAttrs instanceof AirspaceAttributes){
-					menu.add(colorItem);
-					menu.add(opacityItem);
-					colorItem.addActionListener(new ActionListener() {
+					AirspaceMenu menu = new AirspaceMenu((Airspace)event.getTopObject(), (AirspaceAttributes)lastAttrs, context, wwd){
+
+						/* (non-Javadoc)
+						 * @see javax.swing.JPopupMenu#setVisible(boolean)
+						 */
 						@Override
-						public void actionPerformed(ActionEvent e) {
-							Color color = JColorChooser.showDialog(menu, "Couleur du secteur", ((AirspaceAttributes)lastAttrs).getMaterial().getDiffuse());
-							if(color != null) {
-								((AirspaceAttributes)lastAttrs).setMaterial(new Material(color));
-								((AirspaceAttributes)lastAttrs).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+						public void setVisible(boolean arg0) {
+							super.setVisible(arg0);
+							lock = arg0;
+						}						
+					};
+					menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
+				} else {
+					final JPopupMenu menu = new JPopupMenu("Menu"){
+
+						/* (non-Javadoc)
+						 * @see javax.swing.JPopupMenu#setVisible(boolean)
+						 */
+						@Override
+						public void setVisible(boolean arg0) {
+							super.setVisible(arg0);
+							lock = arg0;
+						}
+
+
+					};
+					JMenuItem colorItem = new JMenuItem("Couleur...");
+
+
+					JMenu opacityItem = new JMenu("Opacité ...");
+					JSlider slider = new JSlider();
+					slider.setMaximum(100);
+					slider.setMinimum(0);
+					slider.setOrientation(JSlider.VERTICAL);
+					slider.setMinorTickSpacing(10);
+					slider.setMajorTickSpacing(20);
+					slider.setPaintLabels(true);
+					slider.setPaintTicks(true);
+					opacityItem.add(slider);
+
+					//Ajout des listeners en fonction du type d'objet
+					if(lastAttrs instanceof ShapeAttributes){
+						menu.add(colorItem);
+						menu.add(opacityItem);
+						colorItem.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								Color color = JColorChooser.showDialog(menu, "Couleur du secteur", ((ShapeAttributes)lastAttrs).getInteriorMaterial().getDiffuse());
+								if(color != null) {
+									((ShapeAttributes)lastAttrs).setInteriorMaterial(new Material(color));
+									((ShapeAttributes)lastAttrs).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+									((SurfaceShape)event.getTopObject()).setAttributes((ShapeAttributes) lastAttrs);
+								}
 							}
+						});
+						slider.setValue((int)(((ShapeAttributes)lastAttrs).getInteriorOpacity()*100.0));
+						slider.addChangeListener(new ChangeListener() {
+							@Override
+							public void stateChanged(ChangeEvent e) {
+								JSlider source = (JSlider)e.getSource();
+								if(!source.getValueIsAdjusting()){
+									((ShapeAttributes)lastAttrs).setInteriorOpacity(source.getValue()/100.0);
+									((SurfaceShape)event.getTopObject()).setAttributes((ShapeAttributes) lastAttrs);
+									wwd.redraw();
+								}
+							}
+						});
+						if(event.getTopObject() instanceof Route2D){
+							JMenuItem contextItem = new JMenuItem("Informations...");				
+							menu.add(contextItem);
+							contextItem.addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									Route2D route = (Route2D) event.getTopObject();
+									context.showInfo(route.getDatabaseType(), route.getType(), route.getName());
+									context.open();
+								}
+							});
+							JMenuItem supprItem = new JMenuItem("Supprimer");				
+							menu.add(supprItem);
+							supprItem.addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									Route2D r = (Route2D) event.getTopObject();
+									DatasManager.getController(r.getDatabaseType()).hideObject(r.getType(), r.getName());
+								}
+							});
 						}
-					});
-					slider.setValue((int)(((AirspaceAttributes)lastAttrs).getOpacity()*100.0));
-					slider.addChangeListener(new ChangeListener() {
-						@Override
-						public void stateChanged(ChangeEvent e) {
-							JSlider source = (JSlider)e.getSource();
-							((AirspaceAttributes)lastAttrs).setOpacity(source.getValue()/100.0);
-							wwd.redraw();
-						}
-					});
-					if(event.getTopObject() instanceof Secteur3D){
-						
+
+					} else if(lastAttrs instanceof MarkerAttributes){
 						JMenuItem contextItem = new JMenuItem("Informations...");				
 						menu.add(contextItem);
 						contextItem.addActionListener(new ActionListener() {
 
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								Secteur3D secteur = (Secteur3D)event.getTopObject();
-								context.showInfo(secteur.getDatabaseType(), secteur.getType(), secteur.getName());
+								context.showInfo(fr.crnan.videso3d.DatabaseManager.Type.STIP, StipController.BALISES, ((Balise2D)event.getTopObject()).getName());
 								context.open();
 							}
 						});
-						JMenuItem supprItem = new JMenuItem("Supprimer");				
-						menu.add(supprItem);
-						supprItem.addActionListener(new ActionListener() {
+						JMenu analyseItem = new JMenu("Analyse");
+						JMenuItem analyseIti = new JMenuItem("Itinéraires");
+						JMenuItem analyseTrajet = new JMenuItem("Trajets");
+						JMenuItem analyseRoute = new JMenuItem("Routes");
+						JMenuItem analyseBalise = new JMenuItem("Balise");
+						analyseBalise.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								AnalyzeUI.showResults("balise", ((Balise2D)event.getTopObject()).getName());
+							}
+						});
+						analyseItem.add(analyseBalise);
+						analyseIti.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								AnalyzeUI.showResults("iti", ((Balise2D)event.getTopObject()).getName());
+							}
+						});
+						analyseItem.add(analyseIti);
+						analyseTrajet.addActionListener(new ActionListener() {
 
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								Secteur3D secteur = (Secteur3D)event.getTopObject();
-								DatasManager.getController(secteur.getDatabaseType()).hideObject(secteur.getType(), secteur.getName());
+								AnalyzeUI.showResults("trajet", ((Balise2D)event.getTopObject()).getName());
 							}
 						});
-					} else if(event.getTopObject() instanceof Route3D) {
-						JMenuItem contextItem = new JMenuItem("Informations...");				
-						menu.add(contextItem);
-						contextItem.addActionListener(new ActionListener() {
+						analyseItem.add(analyseTrajet);
+						analyseRoute.addActionListener(new ActionListener() {
 
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								Route3D route = (Route3D) event.getTopObject();
-								context.showInfo(route.getDatabaseType(), route.getType(), route.getName());
-								context.open();
+								AnalyzeUI.showResults("route", ((Balise2D)event.getTopObject()).getName());
 							}
 						});
-						JMenuItem supprItem = new JMenuItem("Supprimer");				
-						menu.add(supprItem);
-						supprItem.addActionListener(new ActionListener() {
-
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								Route3D r = (Route3D) event.getTopObject();
-								DatasManager.getController(r.getDatabaseType()).hideObject(r.getType(), r.getName());
-							}
-						});
+						analyseItem.add(analyseRoute);
+						menu.add(analyseItem);
 					}
-				} else if(lastAttrs instanceof ShapeAttributes){
-					menu.add(colorItem);
-					menu.add(opacityItem);
-					colorItem.addActionListener(new ActionListener() {
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							Color color = JColorChooser.showDialog(menu, "Couleur du secteur", ((ShapeAttributes)lastAttrs).getInteriorMaterial().getDiffuse());
-							if(color != null) {
-								((ShapeAttributes)lastAttrs).setInteriorMaterial(new Material(color));
-								((ShapeAttributes)lastAttrs).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
-								((SurfaceShape)event.getTopObject()).setAttributes((ShapeAttributes) lastAttrs);
-							}
-						}
-					});
-					slider.setValue((int)(((ShapeAttributes)lastAttrs).getInteriorOpacity()*100.0));
-					slider.addChangeListener(new ChangeListener() {
-						@Override
-						public void stateChanged(ChangeEvent e) {
-							JSlider source = (JSlider)e.getSource();
-							if(!source.getValueIsAdjusting()){
-								((ShapeAttributes)lastAttrs).setInteriorOpacity(source.getValue()/100.0);
-								((SurfaceShape)event.getTopObject()).setAttributes((ShapeAttributes) lastAttrs);
-								wwd.redraw();
-							}
-						}
-					});
-					if(event.getTopObject() instanceof Route2D){
-						JMenuItem contextItem = new JMenuItem("Informations...");				
-						menu.add(contextItem);
-						contextItem.addActionListener(new ActionListener() {
-
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								Route2D route = (Route2D) event.getTopObject();
-								context.showInfo(route.getDatabaseType(), route.getType(), route.getName());
-								context.open();
-							}
-						});
-						JMenuItem supprItem = new JMenuItem("Supprimer");				
-						menu.add(supprItem);
-						supprItem.addActionListener(new ActionListener() {
-
-							@Override
-							public void actionPerformed(ActionEvent e) {
-								Route2D r = (Route2D) event.getTopObject();
-								DatasManager.getController(r.getDatabaseType()).hideObject(r.getType(), r.getName());
-							}
-						});
-					}
-					
-				} else if(lastAttrs instanceof MarkerAttributes){
-					JMenuItem contextItem = new JMenuItem("Informations...");				
-					menu.add(contextItem);
-					contextItem.addActionListener(new ActionListener() {
-
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							context.showInfo(fr.crnan.videso3d.DatabaseManager.Type.STIP, StipController.BALISES, ((Balise2D)event.getTopObject()).getName());
-							context.open();
-						}
-					});
-					JMenu analyseItem = new JMenu("Analyse");
-					JMenuItem analyseIti = new JMenuItem("Itinéraires");
-					JMenuItem analyseTrajet = new JMenuItem("Trajets");
-					JMenuItem analyseRoute = new JMenuItem("Routes");
-					JMenuItem analyseBalise = new JMenuItem("Balise");
-					analyseBalise.addActionListener(new ActionListener() {
-						
-						@Override
-						public void actionPerformed(ActionEvent arg0) {
-							AnalyzeUI.showResults("balise", ((Balise2D)event.getTopObject()).getName());
-						}
-					});
-					analyseItem.add(analyseBalise);
-					analyseIti.addActionListener(new ActionListener() {
-
-						@Override
-						public void actionPerformed(ActionEvent arg0) {
-							AnalyzeUI.showResults("iti", ((Balise2D)event.getTopObject()).getName());
-						}
-					});
-					analyseItem.add(analyseIti);
-					analyseTrajet.addActionListener(new ActionListener() {
-
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("trajet", ((Balise2D)event.getTopObject()).getName());
-						}
-					});
-					analyseItem.add(analyseTrajet);
-					analyseRoute.addActionListener(new ActionListener() {
-
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("route", ((Balise2D)event.getTopObject()).getName());
-						}
-					});
-					analyseItem.add(analyseRoute);
-					menu.add(analyseItem);
+					menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 				}
-				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 			}			
 		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){ //ouverture du contexte
 			this.doDoubleClick(event.getTopObject());
@@ -341,15 +287,15 @@ public class AirspaceListener implements SelectListener {
 			if(!(event.getTopObject() instanceof Annotation) &&  //ne pas transférer l'évènement pour les annotations
 				!(this.wwd.getMeasureTool().isArmed()) && //pas de transfert si l'alidad est activé
 			 	!(event.getTopObject() instanceof MovablePointPlacemark)){
-				this.wwd.getView().getViewInputHandler().mouseDragged(event.getMouseEvent());
+			//	this.wwd.getView().getViewInputHandler().mouseDragged(event.getMouseEvent());
 			}
-		}
+		} 
 	}
-	
+
 	private void doLeftClick(Object o, Point point){
 		if(o instanceof VidesoObject){ //affichage du tooltip
 			Position pos = null;
-			if(o instanceof Polygon) {
+			if(o instanceof VPolygon) {
 				pos = new Position(((Polygon) o).getReferencePosition(), ((Airspace) o).getAltitudes()[1]);
 			} else if( o instanceof TrackAirspace) {
 				pos = new Position(((TrackAirspace) o).getReferencePosition(), ((TrackAirspace) o).getAltitudes()[1]);
@@ -430,4 +376,6 @@ public class AirspaceListener implements SelectListener {
 			this.wwd.redraw();
 		}
 	}
+	
+
 }
