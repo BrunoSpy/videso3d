@@ -367,14 +367,16 @@ public class AIPController implements VidesoController {
 	}
 	
 	private void removeFromZonesLayer(Secteur3D zone){
-		try{
-			this.wwd.getAnnotationLayer().removeAnnotation(zone.getAnnotation(null));
-			this.zonesLayer.removeAirspace(zone);
-		}catch(java.lang.IllegalArgumentException e){
-			e.printStackTrace();
-			Logging.logger().log(java.util.logging.Level.WARNING, "La zone à supprimer n'existe pas.");
+		if(zone != null) { //can be null if deleted by another way
+			try{
+				this.wwd.getAnnotationLayer().removeAnnotation(zone.getAnnotation(null));
+				this.zonesLayer.removeAirspace(zone);
+			}catch(java.lang.IllegalArgumentException e){
+				e.printStackTrace();
+				Logging.logger().log(java.util.logging.Level.WARNING, "La zone à supprimer n'existe pas.");
+			}
+			this.wwd.redraw();
 		}
-		this.wwd.redraw();
 	}
 	
 	public void showRoute(String routeName, int type){

@@ -26,13 +26,12 @@ import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.GlobeAnnotation;
-import gov.nasa.worldwind.render.airspaces.Polygon;
 /**
  * Polygon avec Annotation intégrée
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
-public class PolygonAnnotation extends Polygon implements VidesoObject{
+public class PolygonAnnotation extends VPolygon implements VidesoObject{
 
 	private GlobeAnnotation annotation;
 
