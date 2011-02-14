@@ -72,6 +72,7 @@ import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
 import fr.crnan.videso3d.formats.opas.OPASFileFilter;
 import fr.crnan.videso3d.formats.fpl.FPLFileFilter;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
+import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.components.DropDownButton;
 import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
 import fr.crnan.videso3d.ihm.components.Omnibox;
@@ -501,7 +502,7 @@ public class MainWindow extends JFrame {
 		        polygon.setTerrainConforming(true, false);
 		        polygon.setLocations(locations);
 				
-		        wwd.editAirspace(polygon, true);
+		        PolygonEditorsManager.editAirspace(polygon, true);
 			}
 		});
         
@@ -526,7 +527,7 @@ public class MainWindow extends JFrame {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					wwd.editAirspace(p, true);
+					PolygonEditorsManager.editAirspace(p, true);
 				}
 			}
 		});

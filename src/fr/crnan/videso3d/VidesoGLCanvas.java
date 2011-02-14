@@ -22,7 +22,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileFilter;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,8 +46,7 @@ import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VidesoObject;
-import fr.crnan.videso3d.graphics.editor.AirspaceEditorController;
-import fr.crnan.videso3d.graphics.editor.PolygonEditor;
+import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.layers.FPLTracksLayer;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
@@ -124,10 +122,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	private VerticalScaleBar scale;
 	
 	private DraggerListener dragger;
-	
-	private AirspaceLayer editorLayer = new AirspaceLayer();
-	
-	private HashMap<Polygon, PolygonEditor> polygonEditors = new HashMap<Polygon, PolygonEditor>();
+
 	
 	/**
 	 * Initialise les différents objets graphiques
@@ -166,6 +161,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			this.roundGlobe = this.getModel().getGlobe();
 		}
 
+		//this.getSceneController().getGLRuntimeCapabilities().setVertexBufferObjectEnabled(true);
+		
+		PolygonEditorsManager.setWWD(this);
+		
 		//position de départ centrée sur la France
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));		
 	}
@@ -821,26 +820,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}
 	}
 	
-	/**
-	 * Enable editing of an airspace
-	 * @param airspace
-	 * @param orphan True : doesn't belong to an airspace
-	 */
-	public void editAirspace(Polygon airspace, boolean orphan){
-		if(orphan){
-			this.editorLayer.addAirspace(airspace);
-			this.toggleLayer(this.editorLayer, true);
-		}
-		PolygonEditor editor = new PolygonEditor();
-		editor.setPolygon(airspace);
-		editor.setUseRubberBand(true);
-		editor.setKeepControlPointsAboveTerrain(true);
-		editor.setArmed(true);
-		this.polygonEditors.put(airspace, editor);
-		this.toggleLayer(editor, true);
-		AirspaceEditorController controller = new AirspaceEditorController(this);
-		controller.setEditor(editor);
-	}
+
 	
 	public void deleteAirspace(Airspace airspace){
 		if(airspace instanceof VidesoObject){
@@ -853,10 +833,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			}
 			//si l'objet est en édition, supprimer l'éditeur
 			if(airspace instanceof Polygon){
-				if(polygonEditors.containsKey(airspace)){
-					this.removeLayer(polygonEditors.get(airspace));
-					polygonEditors.remove(airspace);
-				}
+				PolygonEditorsManager.stopEditAirspace((Polygon) airspace);
 			}
 		}
 	}

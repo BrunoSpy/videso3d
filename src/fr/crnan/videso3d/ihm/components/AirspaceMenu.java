@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.graphics.VidesoObject;
+import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Airspace;
@@ -118,18 +119,30 @@ public class AirspaceMenu extends JPopupMenu {
 		this.add(new JSeparator());
 		
 		if(airspace instanceof Polygon){
-			JMenuItem edit = new JMenuItem("Editer");
-			edit.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					Polygon polygon = new Polygon(((Polygon)airspace).getLocations());
-					polygon.setAltitudes(((Polygon)airspace).getAltitudes()[0],((Polygon)airspace).getAltitudes()[1] );
-					wwd.deleteAirspace(airspace);
-					wwd.editAirspace(polygon, true);
-				}
-			});		
-			this.add(edit);
+			if(PolygonEditorsManager.isEditing((Polygon) airspace)){
+				JMenuItem edit = new JMenuItem("Termine l'édition");
+				edit.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						PolygonEditorsManager.stopEditAirspace((Polygon) airspace);
+					}
+				});		
+				this.add(edit);
+			} else {
+				JMenuItem edit = new JMenuItem("Editer");
+				edit.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						Polygon polygon = new Polygon(((Polygon)airspace).getLocations());
+						polygon.setAltitudes(((Polygon)airspace).getAltitudes()[0],((Polygon)airspace).getAltitudes()[1] );
+						wwd.deleteAirspace(airspace);
+						PolygonEditorsManager.editAirspace(polygon, true);
+					}
+				});		
+				this.add(edit);
+			}
 			this.add(new JSeparator());
 		}
 		
