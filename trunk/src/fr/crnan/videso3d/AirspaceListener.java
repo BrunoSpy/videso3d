@@ -33,6 +33,7 @@ import fr.crnan.videso3d.graphics.MovablePointPlacemark;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoObject;
+import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.ihm.components.AirspaceMenu;
@@ -286,8 +287,9 @@ public class AirspaceListener implements SelectListener {
 		} else if (event.getEventAction() == SelectEvent.DRAG){
 			if(!(event.getTopObject() instanceof Annotation) &&  //ne pas transférer l'évènement pour les annotations
 				!(this.wwd.getMeasureTool().isArmed()) && //pas de transfert si l'alidad est activé
-			 	!(event.getTopObject() instanceof MovablePointPlacemark)){
-			//	this.wwd.getView().getViewInputHandler().mouseDragged(event.getMouseEvent());
+			 	!(event.getTopObject() instanceof MovablePointPlacemark) &&
+			 	!(event.getTopObject() instanceof Polygon && PolygonEditorsManager.isEditing((Polygon) event.getTopObject()))){
+				this.wwd.getView().getViewInputHandler().mouseDragged(event.getMouseEvent());
 			}
 		} 
 	}
