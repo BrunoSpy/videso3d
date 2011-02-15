@@ -751,15 +751,15 @@ public class FPLReader extends TrackFilesReader {
 	 */
 	private Triplet<String, Type, Double> findElementTypeAndElevation(String e, double elevation){
 		Triplet<String, Type, Double> triplet = new Triplet<String, Type, Double>();
-		if(e.matches("\\p{Alpha}{2,5}/([KMN]\\d+)?[SF]\\d+")){
+		if(e.matches("\\p{Alpha}{2,5}/([KMN]\\d{3,4})?[SF]\\d{3,4}")){
 			String[] baliseNiveau = e.split("/");
 			triplet.setFirst(baliseNiveau[0]);
 			triplet.setSecond(Type.Balise);
 			triplet.setThird(parseElevation(baliseNiveau[1]));
 		}else{
-			if(e.matches("([KMN]\\d+)?[FS]\\d+")){
+			if(e.matches("([KMN]\\d{3,4})?[FS]\\d{3,4}")){
 				triplet.setThird(parseElevation(e));
-			}else if (e.matches("[A-Z]{1,2}\\d+")){
+			}else if (e.matches("[A-Z]{1,2}\\d{1,3}")){
 				triplet.setFirst(e);
 				triplet.setSecond(Type.Route);
 				triplet.setThird(elevation);
@@ -778,6 +778,7 @@ public class FPLReader extends TrackFilesReader {
 		}
 		return triplet;
 	}
+
 
 	/**
 	 * 

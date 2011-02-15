@@ -572,16 +572,50 @@ public class MainWindow extends JFrame {
 		toolbar.add(verticalScaleBar);
 	
 		//fond de la France
-		final JToggleButton fond = new JToggleButton("Fond");
-		fond.addItemListener(new ItemListener() {
+		final DropDownToggleButton fond = new DropDownToggleButton();
+		fond.setText("Fond");
+		final ButtonGroup territoire = new ButtonGroup();
 
-			@Override
+		final JRadioButtonMenuItem france = new JRadioButtonMenuItem("France");
+		france.setSelected(true);
+		france.addItemListener(new ItemListener() {
+			@Override//TODO
 			public void itemStateChanged(ItemEvent e) {
+				System.out.println(e.getStateChange());
+				wwd.setFrontieresEurope(false);
+				fond.setSelected(e.getStateChange() == ItemEvent.SELECTED);
 				wwd.toggleFrontieres(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
-		toolbar.add(fond);
+		territoire.add(france);
 
+		final JRadioButtonMenuItem europe = new JRadioButtonMenuItem("Europe");
+		europe.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				wwd.setFrontieresEurope(true);
+				fond.setSelected(e.getStateChange() == ItemEvent.SELECTED);
+				wwd.toggleFrontieres(e.getStateChange() == ItemEvent.SELECTED);
+
+			}
+		});
+		territoire.add(europe);
+
+		
+		fond.getPopupMenu().add(france);
+		fond.getPopupMenu().add(europe);
+	
+		fond.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				wwd.setFrontieresEurope(europe.isSelected());
+				wwd.toggleFrontieres(e.getStateChange() == ItemEvent.SELECTED);
+			}
+		});
+		fond.addToToolBar(toolbar);
+
+		
+		
 		//Alidade
 		final JToggleButton alidad = new JToggleButton("Alidade");
 		alidad.addItemListener(new ItemListener() {

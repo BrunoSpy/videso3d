@@ -123,6 +123,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	
 	private DraggerListener dragger;
 
+	private boolean europe = false;
 	
 	/**
 	 * Initialise les différents objets graphiques
@@ -418,7 +419,20 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			frontieres = new FrontieresStipLayer();
 			this.insertBeforePlacenames(frontieres);
 		}
-		this.toggleLayer(frontieres, toggle);
+		if(toggle){
+			if(europe){
+				frontieres.setEurope();
+			}else{
+				frontieres.setFrance();
+			}
+		}else{
+			frontieres.removeFond();
+		}
+		this.redrawNow();
+	}
+
+	public void setFrontieresEurope(boolean b){
+		europe = b;
 	}
 
 	/*-------------------------------------------------------------------*/
