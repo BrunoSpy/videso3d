@@ -579,9 +579,8 @@ public class MainWindow extends JFrame {
 		final JRadioButtonMenuItem france = new JRadioButtonMenuItem("France");
 		france.setSelected(true);
 		france.addItemListener(new ItemListener() {
-			@Override//TODO
+			@Override
 			public void itemStateChanged(ItemEvent e) {
-				System.out.println(e.getStateChange());
 				wwd.setFrontieresEurope(false);
 				fond.setSelected(e.getStateChange() == ItemEvent.SELECTED);
 				wwd.toggleFrontieres(e.getStateChange() == ItemEvent.SELECTED);
