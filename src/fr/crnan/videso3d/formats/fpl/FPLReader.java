@@ -48,7 +48,6 @@ import gov.nasa.worldwind.geom.Position;
  * -le plan de vol peut être sur plusieurs lignes à condition de ne pas couper les noms des balises ou des routes
  * -un point défini par ses coordonnées doit avoir un des formats suivants : 45.9568N5.12E  ou  12d42'12"N,104d23'01"E
  * @author Adrien Vidal
- *
  */
 public class FPLReader extends TrackFilesReader {
 
@@ -176,7 +175,7 @@ public class FPLReader extends TrackFilesReader {
 			LinkedList<LPLNTrackPoint> pointsList = new LinkedList<LPLNTrackPoint>();
 			addAirportToTrack(pointsList, depart);
 			parseRoute(new LinkedList<String>(fpl.subList(3,derniereLigneRoute)), pointsList);
-			addAirportToTrack(pointsList, arrivee);
+			addAirportToTrack(pointsList, arrivee);	
 			addKnownPointsListToTrack(pointsList, track);
 		}catch(Exception e){
 			throw new UnrecognizedFPLException(fpl.getFirst());
@@ -193,6 +192,7 @@ public class FPLReader extends TrackFilesReader {
 		track.setIndicatif(indicatif);
 		track.setType("?");
 		try{
+			fpl.set(0, fpl.getFirst().replace("(FPL", ""));
 			String firstLine = fpl.getFirst();
 			String firstElement = firstLine.split("\\s+")[1].trim().toUpperCase();
 			if(firstElement.matches("F\\d{3}"))
@@ -201,11 +201,9 @@ public class FPLReader extends TrackFilesReader {
 			LinkedList<LPLNTrackPoint> pointsList = new LinkedList<LPLNTrackPoint>();
 			boolean arptDepart = false;
 			if(!firstElement.equals("?"))
-					addAirportToTrack(pointsList, firstElement);
-			if(arptDepart){
-				track.setDepart(firstElement);
+					arptDepart = addAirportToTrack(pointsList, firstElement);
+			if(arptDepart)
 				fpl.set(0, firstLine.substring(firstLine.indexOf(firstElement)+firstElement.length()));
-			}
 			fpl.set(fpl.size()-1, fpl.getLast().replace(")", "").trim());
 			parseRoute(fpl, pointsList);
 			String[] lastElements = fpl.getLast().split("\\s+");
@@ -763,8 +761,8 @@ public class FPLReader extends TrackFilesReader {
 				triplet.setFirst(e);
 				triplet.setSecond(Type.Route);
 				triplet.setThird(elevation);
-			}else if(e.matches("\\d{1,3}([\\.,]\\d{2,})?[NS]\\d{1,3}([\\.,]\\d{2,})?[EW]") 
-					|| e.matches("\\d{1,3}[dD](\\s*\\d{2}')?(\\s*\\d{2}\")?\\s*[NnSs],\\d{1,3}[dD](\\s*\\d{2}')?(\\s*\\d{2}\")?\\s*[EeWw]")){
+			}else if(e.matches("\\d{1,3}([\\.,]\\d{1,4})?[NS]\\d{1,3}([\\.,]\\d{1,4})?[EW]") 
+					|| e.matches("\\d{1,3}[dD](\\d{1,2}')?(\\d{1,2}\")?[NnSs],\\d{1,3}[dD](\\d{1,2}')?(\\d{1,2}\")?[EeWw]")){
 				triplet.setFirst(e);
 				triplet.setSecond(Type.Point);
 				triplet.setThird(elevation);
