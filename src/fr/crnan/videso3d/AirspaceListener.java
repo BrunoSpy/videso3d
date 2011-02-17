@@ -54,6 +54,7 @@ import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.Polygon;
 import gov.nasa.worldwind.render.airspaces.TrackAirspace;
+import gov.nasa.worldwind.render.airspaces.editor.AirspaceControlPoint;
 import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
 import gov.nasa.worldwind.render.markers.MarkerAttributes;
 
@@ -288,7 +289,8 @@ public class AirspaceListener implements SelectListener {
 			if(!(event.getTopObject() instanceof Annotation) &&  //ne pas transférer l'évènement pour les annotations
 				!(this.wwd.getMeasureTool().isArmed()) && //pas de transfert si l'alidad est activé
 			 	!(event.getTopObject() instanceof MovablePointPlacemark) &&
-			 	!(event.getTopObject() instanceof Polygon && PolygonEditorsManager.isEditing((Polygon) event.getTopObject()))){
+			 	!(event.getTopObject() instanceof Polygon && PolygonEditorsManager.isEditing((Polygon) event.getTopObject())) &&
+			 	!(event.getTopObject() instanceof AirspaceControlPoint)){
 				this.wwd.getView().getViewInputHandler().mouseDragged(event.getMouseEvent());
 			}
 		} 

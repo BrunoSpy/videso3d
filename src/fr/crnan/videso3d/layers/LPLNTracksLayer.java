@@ -28,6 +28,7 @@ import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrackPoint;
 import fr.crnan.videso3d.graphics.Profil3D;
+import fr.crnan.videso3d.graphics.VPolygon;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.tracks.Track;
@@ -324,5 +325,52 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		List<LPLNTrack> tracksList = new LinkedList<LPLNTrack>();
 		tracksList.addAll(this.tracks.keySet());
 		return tracksList;
+	}
+
+	@Override
+	public boolean isPolygonFilterable() {
+		return false;
+	}
+
+	@Override
+	public void addPolygonFilter(VPolygon polygon) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public List<VPolygon> getPolygonFilters() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void removePolygonFilter(VPolygon polygon) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void disablePolygonFilter(VPolygon polygon) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void enablePolygonFilter(VPolygon polygon) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean isPolygonFilterActive(VPolygon polygon) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int getNumberTrajectories(VPolygon polygon) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

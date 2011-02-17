@@ -20,11 +20,12 @@ import java.util.Collection;
 import java.util.List;
 
 import fr.crnan.videso3d.formats.VidesoTrack;
+import fr.crnan.videso3d.graphics.VPolygon;
 import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer contenant des trajectoires et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.4.1
+ * @version 0.5.0
  */
 public abstract class TrajectoriesLayer extends LayerSet {
 
@@ -211,6 +212,59 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	public abstract double getDefaultWidth();
 	
 	public abstract void setDefaultWidth(double width);
+	
+	/********* Polygon filtering ***********/
+	
+	/**
+	 * Adds a filter
+	 */
+	public abstract void addPolygonFilter(VPolygon polygon);
+	
+	/**
+	 * Disable a filter without removing it
+	 * @param polygon
+	 */
+	public abstract void disablePolygonFilter(VPolygon polygon);
+	
+	/**
+	 * Enable a previously added filter
+	 * @param polygon
+	 */
+	public abstract void enablePolygonFilter(VPolygon polygon);
+	
+	/**
+	 * Returns if a filter is enabled
+	 * @param polygon
+	 * @return
+	 */
+	public abstract boolean isPolygonFilterActive(VPolygon polygon);
+	
+	/**
+	 * Returns the number of trajectories contained by a filter
+	 * @param polygon
+	 * @return
+	 */
+	public abstract int getNumberTrajectories(VPolygon polygon);
+	
+	/**
+	 * True if the layer allows polygon filtering
+	 * @return
+	 */
+	public abstract boolean isPolygonFilterable();
+	
+	/**
+	 * Returns all filters
+	 * @return
+	 */
+	public abstract Collection<VPolygon> getPolygonFilters();
+	
+	/**
+	 * Disables and removes a filter
+	 * @param polygon
+	 */
+	public abstract void removePolygonFilter(VPolygon polygon);
+	
+	/****************************************/
 	
 	public static int string2type(String type){
 		if("Départ".equals(type)){

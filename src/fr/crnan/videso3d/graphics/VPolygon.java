@@ -17,18 +17,17 @@ package fr.crnan.videso3d.graphics;
 
 import java.util.List;
 
-import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.airspaces.Polygon;;
 /**
  * Adds the ability to find if a point is inside the Polygon
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class VPolygon extends Polygon {
 
-	public VPolygon(List<LatLonCautra> locations) {
+	public VPolygon(List<? extends LatLon> locations) {
 		super(locations);
 	}
 

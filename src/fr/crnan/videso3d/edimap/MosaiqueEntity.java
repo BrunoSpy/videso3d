@@ -25,9 +25,9 @@ import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.VidesoObject;
+import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Airspace;
@@ -70,7 +70,7 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 				annotation.setAlwaysOnTop(true);
 				annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
 				annotation.getAttributes().setBorderColor(Color.BLACK);
-				annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
+				annotation.getAttributes().setAdjustWidthToText(AVKey.SIZE_FIT_TEXT);
 			} else {
 				annotation.setText(text);
 			}

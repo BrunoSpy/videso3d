@@ -193,7 +193,7 @@ public class DataExplorer extends JPanel {
 			if(reader.getTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
 				layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
 			}
-			
+			layer.setName(reader.getName());
 			this.addTrajectoriesView(reader);
 		}
 		if(geoFile.size()>0){
@@ -206,6 +206,7 @@ public class DataExplorer extends JPanel {
 			if(reader.getTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
 				layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
 			}
+			layer.setName(reader.getName());
 			this.addTrajectoriesView(reader);
 		}
 		if(lplnFile.size()>0){

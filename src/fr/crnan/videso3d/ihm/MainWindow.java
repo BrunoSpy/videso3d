@@ -17,6 +17,7 @@
 package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -64,6 +65,7 @@ import fr.crnan.videso3d.AirspaceListener;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.SplashScreen;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -72,6 +74,7 @@ import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
 import fr.crnan.videso3d.formats.opas.OPASFileFilter;
 import fr.crnan.videso3d.formats.fpl.FPLFileFilter;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
+import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.components.DropDownButton;
 import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
@@ -87,13 +90,14 @@ import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Globe;
-import gov.nasa.worldwind.render.airspaces.Polygon;
+import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.util.Logging;
 
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3.7
+ * @version 0.3.8
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -478,9 +482,17 @@ public class MainWindow extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				 Polygon polygon = new Polygon();
+				 VPolygon polygon = new VPolygon();
 		         polygon.setAltitudes(0.0, 0.0);
 		         polygon.setTerrainConforming(true, false);
+		         BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
+		         attrs.setDrawOutline(true);
+		         attrs.setMaterial(new Material(Color.CYAN));
+		         attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(Color.CYAN)));
+		         attrs.setOpacity(0.2);
+		         attrs.setOutlineOpacity(0.9);
+		         attrs.setOutlineWidth(1.5);
+		         polygon.setAttributes(attrs);
 				
 				Position position = ShapeUtils.getNewShapePosition(wwd);
 		        Angle heading = ShapeUtils.getNewShapeHeading(wwd, true);
@@ -517,7 +529,15 @@ public class MainWindow extends JFrame {
 				if(fileChooser.showOpenDialog(null) == VFileChooser.APPROVE_OPTION){
 					File file = fileChooser.getSelectedFile();
 					//TODO prendre en charge d'autres formes
-					Polygon p = new Polygon();
+					BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
+					attrs.setDrawOutline(true);
+					attrs.setMaterial(new Material(Color.CYAN));
+					attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(Color.CYAN)));
+					attrs.setOpacity(0.2);
+					attrs.setOutlineOpacity(0.9);
+					attrs.setOutlineWidth(1.5);
+					VPolygon p = new VPolygon();
+					p.setAttributes(attrs);
 					try {
 						BufferedReader input = new BufferedReader(new FileReader(file));
 						String s = input.readLine();

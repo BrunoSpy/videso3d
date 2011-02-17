@@ -124,7 +124,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	private DraggerListener dragger;
 
 	private boolean europe = false;
-	
+		
 	/**
 	 * Initialise les différents objets graphiques
 	 */
@@ -833,8 +833,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			this.removeSelectListener(scale);
 		}
 	}
-	
-
 	
 	public void deleteAirspace(Airspace airspace){
 		if(airspace instanceof VidesoObject){
