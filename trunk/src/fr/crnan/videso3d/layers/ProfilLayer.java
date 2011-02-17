@@ -56,7 +56,7 @@ public class ProfilLayer extends LayerSet {
 		if(profil3d.isPlain()) this.renderableLayer.addRenderable(profil3d.getCurtain());
 	}
 	
-	public void removeAll(){
+	public void removeAllRenderables(){
 		this.shapeLayer.removeAllRenderables();
 		this.renderableLayer.removeAllRenderables();
 		this.baliseLayer.eraseAllBalises();
