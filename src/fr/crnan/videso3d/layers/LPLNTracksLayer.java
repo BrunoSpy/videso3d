@@ -158,7 +158,7 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 
 	@Override
 	public void update() {
-		this.layer.removeAll();
+		this.layer.removeAllRenderables();
 		for(LPLNTrack track : (selectedTracks == null ? tracks.keySet() : selectedTracks)){
 			if(this.isVisible(track)) this.showTrack(track);
 		}
