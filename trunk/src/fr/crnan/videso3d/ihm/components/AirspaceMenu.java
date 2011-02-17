@@ -18,14 +18,21 @@ package fr.crnan.videso3d.ihm.components;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.LinkedList;
+import java.util.List;
 
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.ContextPanel;
+import fr.crnan.videso3d.layers.TrajectoriesLayer;
+import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
@@ -38,6 +45,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
+import javax.swing.ProgressMonitor;
+import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 /**
@@ -120,7 +129,7 @@ public class AirspaceMenu extends JPopupMenu {
 		
 		if(airspace instanceof Polygon){
 			if(PolygonEditorsManager.isEditing((Polygon) airspace)){
-				JMenuItem edit = new JMenuItem("Termine l'édition");
+				JMenuItem edit = new JMenuItem("Terminer l'édition");
 				edit.addActionListener(new ActionListener() {
 
 					@Override
@@ -135,8 +144,9 @@ public class AirspaceMenu extends JPopupMenu {
 
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						Polygon polygon = new Polygon(((Polygon)airspace).getLocations());
+						VPolygon polygon = new VPolygon(((Polygon)airspace).getLocations());
 						polygon.setAltitudes(((Polygon)airspace).getAltitudes()[0],((Polygon)airspace).getAltitudes()[1] );
+						polygon.setAttributes(airspace.getAttributes());
 						wwd.deleteAirspace(airspace);
 						PolygonEditorsManager.editAirspace(polygon, true);
 					}
@@ -146,6 +156,46 @@ public class AirspaceMenu extends JPopupMenu {
 			this.add(new JSeparator());
 		}
 		
+		List<TrajectoriesLayer> trajLayers = new LinkedList<TrajectoriesLayer>();
+		for(Layer l : this.wwd.getModel().getLayers()){
+			if(l instanceof TrajectoriesLayer){
+				if(((TrajectoriesLayer) l).isPolygonFilterable())
+					trajLayers.add((TrajectoriesLayer) l);
+			}
+		}
+		if(airspace instanceof VPolygon && trajLayers.size() > 0 ){
+			JMenu filter = new JMenu("Filtrer...");
+			for(final TrajectoriesLayer l : trajLayers){
+				JMenuItem layer = new JMenuItem(l.getName());
+				layer.addActionListener(new ActionListener() {
+					
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						int polygonNumber = l.getPolygonFilters() == null ? 0 : l.getPolygonFilters().size();
+						final ProgressMonitor progress = new ProgressMonitor(wwd, "Calcul des trajectoires filtrées", "", 0, l.getSelectedTracks().size()*(polygonNumber+1));
+						l.addPropertyChangeListener("progress", new PropertyChangeListener() {
+							
+							@Override
+							public void propertyChange(PropertyChangeEvent evt) {
+								progress.setProgress((Integer) evt.getNewValue());
+							}
+						});
+						new SwingWorker<Integer, Integer>() {
+
+							@Override
+							protected Integer doInBackground() throws Exception {
+								l.addPolygonFilter((VPolygon) airspace);
+								return null;
+							}
+						}.execute();
+						
+					}
+				});
+				filter.add(layer);
+			}
+			this.add(filter);
+			this.add(new JSeparator());
+		}
 		
 		JMenuItem save = new JMenuItem("Sauver ...");
 		save.addActionListener(new ActionListener() {

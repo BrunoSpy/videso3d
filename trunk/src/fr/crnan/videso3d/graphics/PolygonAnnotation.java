@@ -22,14 +22,14 @@ import java.util.List;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.geom.LatLonCautra;
+import gov.nasa.worldwind.avlist.AVKey;
+import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 /**
  * Polygon avec Annotation intégrée
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 public class PolygonAnnotation extends VPolygon implements VidesoObject{
 
@@ -45,7 +45,7 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
 		super();
 	}
 	
-	public PolygonAnnotation(List<LatLonCautra> locations) {
+	public PolygonAnnotation(List<? extends LatLon> locations) {
 		super(locations);
 	}
 	@Override
@@ -55,7 +55,7 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
 			annotation.setAlwaysOnTop(true);
 			annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
 			annotation.getAttributes().setBorderColor(Color.BLACK);
-			annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
+			annotation.getAttributes().setAdjustWidthToText(AVKey.SIZE_FIT_TEXT);
 		} else {
 			annotation.setText(text);
 		}

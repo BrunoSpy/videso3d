@@ -63,6 +63,8 @@ import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.geo.GEOWriter;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
+import fr.crnan.videso3d.graphics.VPolygon;
+import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
 import fr.crnan.videso3d.layers.LPLNTracksLayer;
@@ -91,6 +93,16 @@ public class TrajectoriesView extends JPanel {
 		this.layer = reader.getLayer() == null ? wwd.addTrajectoires(reader) : reader.getLayer();
 		this.wwd = wwd;
 		
+		
+		final JXTaskPane filterPolygonPane = this.createPolygonFilterPane();
+		this.layer.addPropertyChangeListener(AVKey.LAYER, new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent arg0) {
+				filterPolygonPane.setVisible((layer.getPolygonFilters() != null && layer.getPolygonFilters().size() > 0));
+			}
+		});
+		
 		this.setLayout(new BorderLayout());
 		JScrollPane scrollContent = new JScrollPane(content);
 		scrollContent.setBorder(null);
@@ -98,6 +110,7 @@ public class TrajectoriesView extends JPanel {
 		
 		JXTaskPane table = new JXTaskPane("Trajectoires affichées");
 		final JXTable pistes = new JXTable(new TrackTableModel());
+		pistes.setFillsViewportHeight(true);
 		//listener pour le highlight des lignes sélectionnées
 		pistes.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			
@@ -134,6 +147,8 @@ public class TrajectoriesView extends JPanel {
 		content.add(this.createStylePane(), null);
 		content.add(this.createFilterPane(), null);
 		if(layer.isTrackColorFiltrable()) content.add(this.createColorFilterPane(), null);
+		content.add(filterPolygonPane, null);
+		filterPolygonPane.setVisible(layer.getPolygonFilters() != null && layer.getPolygonFilters().size()>0);
 		content.add(table, null);
 		
 		if(reader instanceof GEOReader) {
@@ -179,7 +194,6 @@ public class TrajectoriesView extends JPanel {
 									return null;
 								}
 
-
 							}.execute();
 
 							progress.close();
@@ -193,6 +207,17 @@ public class TrajectoriesView extends JPanel {
 
 	}
 
+	private JXTaskPane createPolygonFilterPane(){
+		JXTaskPane filterPolygonPane = new JXTaskPane("Filtres volumiques");
+		JXTable polygonsTable = new JXTable(new PolygonTableModel());
+		polygonsTable.setColumnControlVisible(true);
+		JPanel container = new JPanel(new BorderLayout());
+		container.add(polygonsTable.getTableHeader(), BorderLayout.NORTH);
+		container.add(polygonsTable, BorderLayout.CENTER);
+		filterPolygonPane.add(container);
+		return filterPolygonPane;
+	}
+	
 	private JXTaskPane createStylePane(){
 		JXTaskPane stylePane = new JXTaskPane("Style des trajectoires");
 		stylePane.setCollapsed(true);
@@ -648,6 +673,117 @@ public class TrajectoriesView extends JPanel {
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			if(columnIndex == 5){
 				layer.setVisible((Boolean)aValue, (Track)tracks[rowIndex]);
+				fireTableDataChanged();
+			}
+		}
+
+		
+		
+	}
+	
+	private class PolygonTableModel extends AbstractTableModel {
+
+		String[] columnNames = {"Nom", "Trajectoires", "Actif"};
+
+		Object[] polygons = null;
+		
+		public PolygonTableModel(){
+			super();
+			if(layer.getPolygonFilters() != null)
+				polygons = layer.getPolygonFilters().toArray();//TODO gérer les mauvais fichiers
+			
+			layer.addPropertyChangeListener(AVKey.LAYER, new PropertyChangeListener() {
+				@Override
+				public void propertyChange(PropertyChangeEvent evt) {
+					if(layer.getPolygonFilters() != null){
+						polygons = layer.getPolygonFilters().toArray();
+						fireTableDataChanged();
+					}
+				}
+			});
+		}
+//		
+//		public VPolygon getPolygonAt(int row){
+//			return (VPolygon) polygons[row];
+//		}
+		
+		@Override
+		public String getColumnName(int col) {
+	        return columnNames[col];
+	    }
+		
+		@Override
+		public int getColumnCount() {
+			return columnNames.length;
+		}
+
+		@Override
+		public int getRowCount() {
+			if(polygons == null){
+				return 0;
+			} else {
+				return polygons.length;
+			}
+		}
+
+		@Override
+		public Object getValueAt(int row, int col) {
+			VPolygon p = (VPolygon) polygons[row];
+			switch (col) {
+			case 0:
+				if(p instanceof VidesoObject){
+					return ((VidesoObject) p).getName();
+				} else {
+					return "Polygone "+row;
+				}
+			case 1:
+				return layer.getNumberTrajectories((VPolygon) polygons[row]);
+			case 2:
+				return layer.isPolygonFilterActive((VPolygon) polygons[row]);
+			default:
+				return "";
+			}
+			
+		}
+
+		
+		/* (non-Javadoc)
+		 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
+		 */
+		@Override
+		public Class<?> getColumnClass(int columnIndex) {
+			if(columnIndex == 2){
+				return Boolean.class;
+			} else if(columnIndex == 1){
+				return Integer.class;
+			} else {
+				return String.class;
+			}
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
+		 */
+		@Override
+		public boolean isCellEditable(int rowIndex, int columnIndex) {
+			if(columnIndex == 2){
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		/* (non-Javadoc)
+		 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
+		 */
+		@Override
+		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+			if(columnIndex == 2){
+				if((Boolean) aValue){
+					layer.enablePolygonFilter((VPolygon) polygons[rowIndex]);
+				} else {
+					layer.disablePolygonFilter((VPolygon) polygons[rowIndex]);
+				}
 				fireTableDataChanged();
 			}
 		}

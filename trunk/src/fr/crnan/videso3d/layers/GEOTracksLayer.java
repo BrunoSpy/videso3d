@@ -19,14 +19,17 @@ import java.awt.Color;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import fr.crnan.videso3d.Configuration;
+import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
+import fr.crnan.videso3d.graphics.VPolygon;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Position;
@@ -41,7 +44,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Layer contenant des tracks Elvira GEO et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.4.2
+ * @version 0.4.3
  */
 public class GEOTracksLayer extends TrajectoriesLayer {
 	
@@ -49,9 +52,6 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	
 	protected HashMap<Integer, String> filters = new HashMap<Integer, String>();
 	
-	/**
-	 * Ensemble des tracks surlignés
-	 */
 	protected HashMap<VidesoTrack, Path> lines = new HashMap<VidesoTrack, Path>();
 	
 	/**
@@ -74,6 +74,11 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	private ShapeAttributes normal = new BasicShapeAttributes();;
 	
 	private ShapeAttributes highlight = new BasicShapeAttributes();;
+	
+	/**
+	 * Filtres par polygone
+	 */
+	HashMap<VPolygon, Couple<Boolean, Integer>> polygonFilters;
 	
 	/**
 	 * Drops point if the previous is less <code>precision</code> far from the previous point
@@ -147,8 +152,12 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	}
 
 	protected void applyFilters(){
-		if(filters.size() == 0)
+		if(filters.size() == 0) {
+			for(Path p : this.lines.values()){
+				p.setVisible(true);
+			}
 			return;
+		}
 		for(Path p : this.lines.values()){
 			p.setVisible(!this.isFilterDisjunctive());
 		}
@@ -232,7 +241,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 			default:
 				break;
 			}
-		}
+		}		
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
@@ -303,9 +312,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	@Override
 	public void removeFilter() {
 		this.filters.clear();
-		for(Path p : lines.values()){
-			p.setVisible(true);
-		}
+		this.update();
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
@@ -315,6 +322,8 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 			this.showTrack(track);
 		}
 		this.applyFilters();
+		//mettre à jour les filtres volumiques
+		this.updatePolygonFilters();
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
@@ -330,7 +339,15 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		return selectedTracks;
 	}
 
-	
+	private Collection<Path> getSelectedPaths(){
+		Set<Path> selected = new HashSet<Path>();
+		for(Path line : lines.values()){
+			if(line != null) {
+				if(line.isVisible()) selected.add(line);
+			}
+		}
+		return selected;
+	}
 	
 	@Override
 	public List<? extends VidesoTrack> getTracks() {
@@ -520,6 +537,137 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		if(this.tracks.size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) styles.add(TrajectoriesLayer.STYLE_CURTAIN);
 		styles.add(TrajectoriesLayer.STYLE_SIMPLE);
 		return styles;
+	}
+
+	private int getNumberPolygonFiltersActives(){
+		int i = 0;
+		for(Couple<Boolean, Integer> c : this.polygonFilters.values()){
+			if(c.getFirst())
+				i++;
+		}
+		return i;
+	}
+	
+	private void updatePolygonFilters(){
+		if(this.polygonFilters == null)
+			return;
+		for(Couple<Boolean, Integer> c : this.polygonFilters.values()){
+			c.setSecond(0);
+		}
+		Collection<Path> paths = this.getSelectedPaths(); //ne pas afficher des trajectoires déjà filtrées
+		if(this.polygonFilters != null && this.polygonFilters.size() != 0 && this.getNumberPolygonFiltersActives() != 0){
+			for(Path p : paths)
+				p.setVisible(false);
+			for(Entry<VPolygon, Couple<Boolean, Integer>> polygon : polygonFilters.entrySet()) {
+				if(polygon.getValue().getFirst()){
+					int i = 0;
+					for(Path p : paths){
+						i++;
+						this.firePropertyChange("progress", i-1, i);
+						Iterator<? extends Position> positions = p.getPositions().iterator();
+						boolean contain = false;
+						while(positions.hasNext() && !contain){
+							if(polygon.getKey().contains(positions.next())){
+								contain = true;
+								p.setVisible(true);
+								polygon.getValue().setSecond(polygon.getValue().getSecond()+1);
+							}
+						}
+					}
+				}
+			}
+		}
+		
+//		for(Path p : lines.values()){
+//			if(this.polygonFilters == null || this.polygonFilters.size() == 0 || this.getNumberPolygonFiltersActives() == 0){
+//				//aucun filtre actif => tout afficher
+//				p.setVisible(true);
+//			} else {
+//								
+//				
+//				Iterator<? extends Position> positions = p.getPositions().iterator();
+//				boolean contain = false;
+//				while(positions.hasNext() && !contain){
+//					Position pos = positions.next();
+//					Iterator<Entry<VPolygon, Couple<Boolean, Integer>>> polygons = polygonFilters.entrySet().iterator();
+//					while(polygons.hasNext() /*&& !contain*/){
+//						Entry<VPolygon, Couple<Boolean, Integer>> polygon = polygons.next();
+//						if(polygon.getValue().getFirst() && polygon.getKey().contains(pos)){
+//							contain = true;
+//							polygon.getValue().setSecond(polygon.getValue().getSecond()+1);
+//						}
+//					}
+//				}
+//				p.setVisible(contain);
+//				contain = false;
+//			}
+//		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
+	}
+	
+	@Override
+	public void addPolygonFilter(VPolygon polygon) {
+		if(this.polygonFilters ==  null) this.polygonFilters = new HashMap<VPolygon, Couple<Boolean, Integer>>();
+		polygonFilters.put(polygon, new Couple<Boolean, Integer>(true, 0));
+		this.update();
+	}
+
+	@Override
+	public void disablePolygonFilter(VPolygon polygon){
+		if(polygonFilters.containsKey(polygon)){
+			if(polygonFilters.get(polygon).getFirst()){
+				polygonFilters.put(polygon, new Couple<Boolean, Integer>(false, 0));
+				this.update();
+			}
+		}
+	}
+	
+	@Override
+	public void enablePolygonFilter(VPolygon polygon){
+		if(polygonFilters.containsKey(polygon)){
+			if(!polygonFilters.get(polygon).getFirst()){
+				polygonFilters.put(polygon, new Couple<Boolean, Integer>(true, 0));
+				this.update();
+			}
+		}
+	}
+	
+	@Override
+	public boolean isPolygonFilterActive(VPolygon polygon){
+		if(this.polygonFilters.containsKey(polygon)){
+			return this.polygonFilters.get(polygon).getFirst();
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean isPolygonFilterable() {
+		return true;
+	}
+
+	@Override
+	public Set<VPolygon> getPolygonFilters() {
+		if(this.polygonFilters == null){
+			return null;
+		} else {
+			return this.polygonFilters.keySet();
+		}
+	}
+
+	@Override
+	public void removePolygonFilter(VPolygon polygon) {
+		if(polygonFilters != null) polygonFilters.remove(polygon);	
+		this.update();
+	}
+
+	@Override
+	public int getNumberTrajectories(VPolygon polygon) {
+		if(this.polygonFilters.containsKey(polygon)){
+			return this.polygonFilters.get(polygon).getSecond();
+		} else {
+			return 0;
+		}
 	}
 	
 }
