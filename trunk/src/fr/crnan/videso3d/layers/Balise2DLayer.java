@@ -28,7 +28,7 @@ import gov.nasa.worldwind.avlist.AVKey;
  * Layer contenant les balises.<br />
  * Permet d'afficher une ou plusieurs balises selon leur nom.
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public class Balise2DLayer extends LayerSet implements BaliseLayer{
 
@@ -70,7 +70,7 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	 */
 	@Override
 	public void addBalise(Balise balise){
-		this.balises.put(balise.getName(), (Balise2D) balise);
+		this.balises.put(balise.getName()+balise.getType(), (Balise2D) balise);
 	}
 	
 	/**
@@ -94,11 +94,7 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 			this.showBalise(b);
 		}
 	}
-	/**
-	 * Affiche une balise.<br />
-	 * Cett balise doit d'abord être ajoutée grâce à <code>addBalise(Balise2D balise)</code>
-	 * @param name Nome de la balise
-	 */
+
 	@Override
 	public void showBalise(String name){
 		Balise2D b = balises.get(name);
@@ -106,7 +102,23 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 			this.showBalise(b);
 		}
 	}
+
 	
+	
+	@Override
+	public void showBalise(String name, int type) {
+		Balise2D b = balises.get(name+type);
+		if(b != null){
+			this.showBalise(b);
+		}
+	}
+	@Override
+	public void hideBalise(String name, int type) {
+		Balise2D b = balises.get(name+type);
+		if(name != null){
+			this.hideBalise(b);
+		}
+	}
 	/**
 	 * Affiche une balise.<br />
 	 * Cett balise doit d'abord être ajoutée grâce à <code>addBalise(Balise2D balise)</code>
@@ -216,9 +228,22 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 		return balises.containsKey(balise);
 	}
 	
+	/**
+	 * Test si une balise a déjà été ajoutée
+	 * @param balise nom de la balise
+	 * @param type
+	 * @return Vrai si la balise a déjà été ajoutée
+	 */
+	public Boolean contains(String balise, int type){
+		return balises.containsKey(balise+type);
+	}
 	
 	public Balise2D getBalise(String balise){
 		return balises.get(balise);
+	}
+	
+	public Balise2D getBalise(String balise, int type){
+		return balises.get(balise+type);
 	}
 
 }

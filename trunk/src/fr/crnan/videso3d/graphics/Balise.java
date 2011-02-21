@@ -18,11 +18,9 @@ package fr.crnan.videso3d.graphics;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public interface Balise extends VidesoObject {
-
-	public String getName();
 
 	public void highlight(boolean b);
 	

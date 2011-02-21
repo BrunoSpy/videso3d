@@ -49,6 +49,7 @@ import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.layers.AirportLayer;
 import fr.crnan.videso3d.layers.Balise2DLayer;
+import fr.crnan.videso3d.layers.Balise3DLayer;
 import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
@@ -66,7 +67,8 @@ import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 /**
  * Contrôle l'affichage et la construction des éléments AIP
  * @author A. Vidal
- * @version 0.3.2
+ * @author Bruno Spyckerelle
+ * @version 0.3.3
  */
 public class AIPController implements VidesoController {
 
@@ -84,6 +86,7 @@ public class AIPController implements VidesoController {
 	private Routes3DLayer routes3D;
 	
 	private Balise2DLayer navFixLayer;
+	private Balise3DLayer navFixLayer3D;
 
 	private AirportLayer arptLayer;
 	
@@ -603,15 +606,16 @@ public class AIPController implements VidesoController {
 			navFixLayer.addBalise(navFix);
 			navFixLayer.showBalise(navFix);
 			balises.add(type+" "+name);
+		} else {
+			navFixLayer.showBalise(name, type);
 		}
 	}
 	
 	private void removeNavFix(int type, String name){
 		if(balises.contains(type+" "+name)){
-			Balise2D navFix = navFixLayer.getBalise(name);
+			Balise2D navFix = navFixLayer.getBalise(name, type);
 			navFixLayer.hideBalise(navFix);
 			this.wwd.getAnnotationLayer().removeAnnotation(navFix.getAnnotation(null));
-			balises.remove(type+" "+name);
 		}
 	}
 	
@@ -849,10 +853,10 @@ public class AIPController implements VidesoController {
 	}
 	
 	private void highlightNavFix(int type, String name){
-		if(!navFixLayer.contains(name)){
+		if(!navFixLayer.contains(name, type)){
 			showNavFix(type, name);
 		}
-		Balise2D navFix = navFixLayer.getBalise(name);
+		Balise2D navFix = navFixLayer.getBalise(name, type);
 		navFix.highlight(true);
 		if(lastHighlighted!=null){
 			lastHighlighted.highlight(false);

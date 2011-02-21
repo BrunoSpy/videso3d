@@ -23,7 +23,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public interface BaliseLayer extends Layer {
 
@@ -43,10 +43,18 @@ public interface BaliseLayer extends Layer {
 	
 	/**
 	 * Affiche une balise.<br />
-	 * Cett balise doit d'abord être ajoutée grâce à <code>addBalise(Balise2D balise)</code>
-	 * @param name Nome de la balise
+	 * Cette balise doit d'abord être ajoutée grâce à <code>addBalise(Balise2D balise)</code>
+	 * @param name Nom de la balise
 	 */
 	public void showBalise(String name);
+	
+	/**
+	 * Affiche une balise.<br />
+	 * Cette balise doit d'abord être ajoutée grâce à <code>addBalise(Balise2D balise)</code>
+	 * @param name
+	 * @param type
+	 */
+	public void showBalise(String name, int type);
 	
 	/**
 	 * Affiche une balise.<br />
@@ -73,6 +81,14 @@ public interface BaliseLayer extends Layer {
 	 * @param name
 	 */
 	public void hideBalise(String name);
+	
+	/**
+	 * Enlève une balise de la vue.<br />
+	 * Cette balise est toujours accessible pour être à nouveau affichée plus tard.
+	 * @param name
+	 * @param type
+	 */
+	public void hideBalise(String name, int type);
 	
 	/**
 	 * Enlève une balise de la vue.<br />
