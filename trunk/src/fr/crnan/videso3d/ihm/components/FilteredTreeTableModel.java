@@ -17,8 +17,11 @@
 package fr.crnan.videso3d.ihm.components;
 
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Enumeration;
 
+import javax.swing.SwingWorker;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
@@ -39,8 +42,13 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 
 	private ViewFilter filter;
 	
+	private int count;
+	
+	private PropertyChangeSupport support;
+	
 	public FilteredTreeTableModel(DefaultMutableTreeNode root) {
 		super(root);
+		this.support = new PropertyChangeSupport(this);
 	}
 
 	public void setViewFilter(ViewFilter filter){
@@ -117,11 +125,55 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 		}
 	}
 
+	public int getLeafsCount(Object parent){
+		if(parent instanceof DefaultMutableTreeNode){
+			if(filter != null) {
+				int count = 0;
+				for(int i = 0; i < ((DefaultMutableTreeNode)parent).getChildCount();i++){
+					DefaultMutableTreeNode child = (DefaultMutableTreeNode) ((DefaultMutableTreeNode)parent).getChildAt(i);
+					if(isLeaf(child) && this.filter.isShown(child)){
+						count++;
+					} else {
+						count += getLeafsCount(child);
+					}
+				}
+				return count;
+			} else {
+				int count = 0;
+				for(int i = 0; i < ((DefaultMutableTreeNode)parent).getChildCount();i++){
+					DefaultMutableTreeNode child = (DefaultMutableTreeNode) ((DefaultMutableTreeNode)parent).getChildAt(i);
+					if(isLeaf(child)){
+						count++;
+					} else {
+						count += getLeafsCount(child);
+					}
+				}
+				return count;
+				
+			}				
+		} else {
+			return 0;
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.jdesktop.swingx.treetable.AbstractTreeTableModel#setValueAt(java.lang.Object, java.lang.Object, int)
 	 */
 	@Override
-	public void setValueAt(Object value, Object node, int column) {
+	public void setValueAt(final Object value, final Object node, final int column) {
+		new SwingWorker<Integer, Integer>() {
+			protected Integer doInBackground() throws Exception {
+				setValueAt(value, node, column, true);
+				return 1;
+			};
+		}.execute();
+	}
+
+	private void setValueAt(Object value, Object node, int column, boolean first){
+		if(first) {
+			count = 0;
+			this.support.firePropertyChange("change", 0, this.getLeafsCount(node));
+		}
 		DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
 		if(column == 1){
 			//ne pas changer la valuer des nodes non affichés
@@ -130,11 +182,13 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 					((Couple<String, Boolean>) treeNode.getUserObject()).setSecond((Boolean)value);
 					for(int i=0;i<treeNode.getChildCount();i++){
 						DefaultMutableTreeNode child = (DefaultMutableTreeNode) treeNode.getChildAt(i);
-						setValueAt(value, child, column);
+						setValueAt(value, child, column, false);
 					}
 				} else {
 					if(this.filter.isShown((DefaultMutableTreeNode) node)){
 						((Couple<String, Boolean>) treeNode.getUserObject()).setSecond((Boolean)value);
+						count++;
+						this.support.firePropertyChange("progress", count-1, count);
 						this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);
 					}
 				}
@@ -144,9 +198,11 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 				if(!treeNode.isLeaf()){
 					for(int i=0;i<treeNode.getChildCount();i++){
 						DefaultMutableTreeNode child = (DefaultMutableTreeNode) treeNode.getChildAt(i);
-						setValueAt(value, child, column);
+						setValueAt(value, child, column, false);
 					}
 				} else {
+					count++;
+					this.support.firePropertyChange("progress", count-1, count);
 					//ne pas envoyer d'évènement si la valeur n'a pas changé
 					if(old != value) {
 						this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);
@@ -155,7 +211,7 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 			}
 		}
 	}
-
+	
 	@Override
 	public int getIndexOfChild(Object parent, Object child) {
 		// TODO Auto-generated method stub
@@ -208,4 +264,20 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 
 	}
 
+	public void addPropertyChangeListener(PropertyChangeListener l){
+		support.addPropertyChangeListener(l);
+	}
+	
+	public void addPropertyChangeListener(String propertyName, PropertyChangeListener l){
+		support.addPropertyChangeListener(propertyName, l);
+	}
+	
+	public void removePropertyChangeListener(PropertyChangeListener l){
+		support.removePropertyChangeListener(l);
+	}
+	
+	public void removePropertyChangeListener(String propertyName, PropertyChangeListener l){
+		support.removePropertyChangeListener(propertyName, l);
+	}
+	
 }

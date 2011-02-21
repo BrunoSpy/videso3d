@@ -32,7 +32,7 @@ import gov.nasa.worldwind.render.PointPlacemarkAttributes;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class Balise3D extends PointPlacemark implements Balise {
 
@@ -52,6 +52,8 @@ public class Balise3D extends PointPlacemark implements Balise {
 		this.setAltitudeMode(WorldWind.ABSOLUTE);
 		this.setApplyVerticalExaggeration(true);
 		this.setLineEnabled(true);
+		this.setLinePickWidth(200);
+		this.setEnableBatchPicking(false);
 		
 		PointPlacemarkAttributes ppa = new PointPlacemarkAttributes();
 		ppa.setLineWidth(2d);

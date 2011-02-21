@@ -215,13 +215,8 @@ public class DatabaseManagerUI extends JDialog {
 					Pays pays = new Pays(file.getAbsolutePath());
 					this.getDatas(pays, "Import des contours des pays", "PAYS");
 				} else if(files.contains(new File(file.getAbsoluteFile()+"/radioCoverageXSL.xsl"))){
-					//System.out.println("(DatabaseManagerUI.java) - ouverture du répertoire :" + file.getAbsolutePath());
-					// Radio radio = new Radio();
 					RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
-					// Radio radio = new Radio(file.getAbsolutePath());
-					this.getDatas(radioDataManager,"Import des données radio","RadioCov");			
-					//RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
-					//radioDataManager.loadData();			
+					this.getDatas(radioDataManager,"Import des données radio","RadioCov");		
 				}
 				else {
 					throw new FileNotFoundException();
@@ -262,8 +257,19 @@ public class DatabaseManagerUI extends JDialog {
 						}
 					}
 					((DBTableModel)table.getModel()).update();	
-					//suppression des fichiers temporaires si besoin
-					FileManager.removeTempFiles();
+					//si base de données STIP, on tente de mettre à jour les données PAYS par la même occasion
+					if(type.equals("STIP")){
+						File file = new File(fileParser.getPath());
+						if(Arrays.asList(file.listFiles()).contains(new File(file.getAbsolutePath()+"/PAYS"))) {
+							Pays pays = new Pays(file.getAbsolutePath());
+							getDatas(pays, "Import des contours des pays", "PAYS");
+						} else {
+							FileManager.removeTempFiles();
+						}
+					} else {			
+						//suppression des fichiers temporaires si besoin
+						FileManager.removeTempFiles();
+					}
 				} else if(evt.getPropertyName().equals("progress")){
 					if(progressMonitor.isCanceled()) {
 						fileParser.cancel(true);

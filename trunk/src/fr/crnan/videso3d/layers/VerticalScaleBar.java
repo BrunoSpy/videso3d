@@ -43,7 +43,7 @@ import gov.nasa.worldwind.render.PointPlacemarkAttributes;
 /**
  * Vertical scalebar in FL, movable
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class VerticalScaleBar extends DraggerListener implements Layer {
 
@@ -69,6 +69,8 @@ public class VerticalScaleBar extends DraggerListener implements Layer {
 		top.setApplyVerticalExaggeration(true);
 		top.setLabelText("FL 600");
 		top.setLineEnabled(true);
+		top.setLinePickWidth(200);
+		top.setEnableBatchPicking(false);
 		PointPlacemarkAttributes topAttr = new PointPlacemarkAttributes();
 		topAttr.setLineWidth(2d);
 		topAttr.setLineMaterial(Material.WHITE);
@@ -86,6 +88,8 @@ public class VerticalScaleBar extends DraggerListener implements Layer {
 			p.setAltitudeMode(WorldWind.ABSOLUTE);
 			p.setApplyVerticalExaggeration(true);
 			p.setLineEnabled(false);
+			p.setLinePickWidth(200);
+			top.setEnableBatchPicking(false);
 			p.setAttributes(hundredsAttributes);
 			hundreds.add(p);
 			this.addRenderable(p);
@@ -101,6 +105,8 @@ public class VerticalScaleBar extends DraggerListener implements Layer {
 				p.setAltitudeMode(WorldWind.ABSOLUTE);
 				p.setApplyVerticalExaggeration(true);
 				p.setLineEnabled(false);
+				p.setLinePickWidth(200);
+				top.setEnableBatchPicking(false);
 				p.setAttributes(tensAttributes);
 				tens.add(p);
 			}

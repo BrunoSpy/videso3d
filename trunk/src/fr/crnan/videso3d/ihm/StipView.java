@@ -21,14 +21,9 @@ import java.awt.event.ItemListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -43,7 +38,7 @@ import fr.crnan.videso3d.stip.StipController;
 /**
  * Sélecteur d'objets Stip
  * @author Bruno Spyckerelle
- * @version 0.5.0
+ * @version 0.6.0
  */
 @SuppressWarnings("serial")
 public class StipView extends FilteredMultiTreeTableView{
@@ -54,12 +49,12 @@ public class StipView extends FilteredMultiTreeTableView{
 	 */
 	private JTabbedPane secteurs = new JTabbedPane();	
 
-	private ItemSecteurListener itemSecteurListener = new ItemSecteurListener();
+//	private ItemSecteurListener itemSecteurListener = new ItemSecteurListener();
 
 	/**
 	 * Liste des checkbox de la vue, afin de pouvoir tous les désélectionner facilement
 	 */
-	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
+//	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
 	
 	public StipView(){
 		
@@ -78,7 +73,9 @@ public class StipView extends FilteredMultiTreeTableView{
 				this.fillBalisesRootNode(balisesRoot);
 				this.addTableTree(new FilteredTreeTableModel(balisesRoot), "Balises", this.createTitleBalises());
 				
-				this.add(this.buildSecteursPanel());
+				DefaultMutableTreeNode secteursRoot = new DefaultMutableTreeNode("root");
+				this.fillSecteursRootNode(secteursRoot);
+				this.addTableTree(new FilteredTreeTableModel(secteursRoot), "Secteurs", null);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -138,6 +135,55 @@ public class StipView extends FilteredMultiTreeTableView{
 		}
 	}
 	
+	private void fillSecteursRootNode(DefaultMutableTreeNode root){
+			
+			DefaultMutableTreeNode aix = new DefaultMutableTreeNode(new Couple<String, Boolean>("Aix", false));
+			this.fillSecteursNode(aix, "AIX", "F");
+			this.fillSecteursNode(aix, "AIX", "U");
+			root.add(aix);
+			
+			DefaultMutableTreeNode bord = new DefaultMutableTreeNode(new Couple<String, Boolean>("Bordeaux", false));
+			this.fillSecteursNode(bord, "BORD", "F");
+			this.fillSecteursNode(bord, "BORD", "U");		
+			root.add(bord);
+			
+			DefaultMutableTreeNode bst = new DefaultMutableTreeNode(new Couple<String, Boolean>("Brest", false));
+			this.fillSecteursNode(bst, "BRST", "F");
+			this.fillSecteursNode(bst, "BRST", "U");
+			root.add(bst);
+			
+			DefaultMutableTreeNode paris = new DefaultMutableTreeNode(new Couple<String, Boolean>("Paris", false));
+			this.fillSecteursNode(paris, "PARI", "F");
+			this.fillSecteursNode(paris, "PARI", "U");
+			root.add(paris);
+			
+			DefaultMutableTreeNode reim = new DefaultMutableTreeNode(new Couple<String, Boolean>("Reims", false));
+			this.fillSecteursNode(reim, "REIM", "F");
+			this.fillSecteursNode(reim, "REIM", "U");
+			root.add(reim);			
+			
+			DefaultMutableTreeNode autre = new DefaultMutableTreeNode(new Couple<String, Boolean>("Autres", false));
+			this.fillSecteursNode(autre, "Autre", "F");
+			this.fillSecteursNode(autre, "Autre", "U");
+			root.add(autre);
+
+	}
+	
+	private void fillSecteursNode(DefaultMutableTreeNode root, String centre, String type){
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(type.equals("F") ? "FIR" : "UIR", false));
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			String centreCondition = centre.equals("Autre") ? "centre != 'REIM' and centre != 'PARI' and centre != 'AIX' and centre != 'BRST' and centre != 'BORD'" : "centre = '"+centre+"'" ;
+			ResultSet rs = st.executeQuery("select * from secteurs where "+centreCondition+" and espace ='"+type+"' order by nom");
+			while(rs.next()){
+				node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString("nom"), false)));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		root.add(node);
+	}
+	
 	/**
 	 * Titre du panel Routes.<br />
 	 * Contient un sélecteur pour choisir la méthode de représentation (2D/3D).
@@ -179,59 +225,59 @@ public class StipView extends FilteredMultiTreeTableView{
 		return titlePanel; 
 	}
 	
-	private JTabbedPane buildSecteursPanel() {
+//	private JTabbedPane buildSecteursPanel() {
+//
+//		secteurs.addTab("Paris", this.buildTabSecteur("PARI"));
+//		secteurs.addTab("Reims", this.buildTabSecteur("REIM"));
+//		secteurs.addTab("Aix", this.buildTabSecteur("AIX"));
+//		secteurs.addTab("Brest", this.buildTabSecteur("BRST"));
+//		secteurs.addTab("Bordeaux", this.buildTabSecteur("BORD"));
+//		secteurs.addTab("Autre", this.buildTabSecteur("Autre"));
+//		return secteurs;
+//	}
+//
+//	private JPanel buildTabSecteur(String centre){
+//		JPanel tab = new JPanel();
+//		tab.setLayout(new BoxLayout(tab, BoxLayout.X_AXIS));
+//
+//		tab.add(this.buildListSecteur(centre, "F"));
+//		tab.add(this.buildListSecteur(centre, "U"));
+//
+//		return tab;
+//	}
 
-		secteurs.addTab("Paris", this.buildTabSecteur("PARI"));
-		secteurs.addTab("Reims", this.buildTabSecteur("REIM"));
-		secteurs.addTab("Aix", this.buildTabSecteur("AIX"));
-		secteurs.addTab("Brest", this.buildTabSecteur("BRST"));
-		secteurs.addTab("Bordeaux", this.buildTabSecteur("BORD"));
-		secteurs.addTab("Autre", this.buildTabSecteur("Autre"));
-		return secteurs;
-	}
-
-	private JPanel buildTabSecteur(String centre){
-		JPanel tab = new JPanel();
-		tab.setLayout(new BoxLayout(tab, BoxLayout.X_AXIS));
-
-		tab.add(this.buildListSecteur(centre, "F"));
-		tab.add(this.buildListSecteur(centre, "U"));
-
-		return tab;
-	}
-
-	private JScrollPane buildListSecteur(String centre, String type){
-
-		JPanel list = new JPanel();
-		list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
-		JScrollPane scrollPane = new JScrollPane(list);
-		scrollPane.setBorder(BorderFactory.createTitledBorder(/*BorderFactory.createEmptyBorder(),*/ type.equals("F") ? "FIR" : "UIR"));
-
-		try {
-			Statement st = DatabaseManager.getCurrentStip();
-			String centreCondition = centre.equals("Autre") ? "centre != 'REIM' and centre != 'PARI' and centre != 'AIX' and centre != 'BRST' and centre != 'BORD'" : "centre = '"+centre+"'" ;
-			ResultSet rs = st.executeQuery("select * from secteurs where "+centreCondition+" and espace ='"+type+"' order by nom");
-			while(rs.next()){
-				JCheckBox chk = new JCheckBox(rs.getString("nom"));
-				chk.addItemListener(itemSecteurListener);
-				list.add(chk);
-				checkBoxList.add(chk);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return scrollPane;
-	}
+//	private JScrollPane buildListSecteur(String centre, String type){
+//
+//		JPanel list = new JPanel();
+//		list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
+//		JScrollPane scrollPane = new JScrollPane(list);
+//		scrollPane.setBorder(BorderFactory.createTitledBorder(/*BorderFactory.createEmptyBorder(),*/ type.equals("F") ? "FIR" : "UIR"));
+//
+//		try {
+//			Statement st = DatabaseManager.getCurrentStip();
+//			String centreCondition = centre.equals("Autre") ? "centre != 'REIM' and centre != 'PARI' and centre != 'AIX' and centre != 'BRST' and centre != 'BORD'" : "centre = '"+centre+"'" ;
+//			ResultSet rs = st.executeQuery("select * from secteurs where "+centreCondition+" and espace ='"+type+"' order by nom");
+//			while(rs.next()){
+//				JCheckBox chk = new JCheckBox(rs.getString("nom"));
+//				chk.addItemListener(itemSecteurListener);
+//				list.add(chk);
+//				checkBoxList.add(chk);
+//			}
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//
+//		return scrollPane;
+//	}
 	
 	@Override
 	public void reset() {
 		super.reset();
-		for(JCheckBox c : checkBoxList){
-			if(c.isSelected()){
-				c.setSelected(false);
-			}
-		}
+//		for(JCheckBox c : checkBoxList){
+//			if(c.isSelected()){
+//				c.setSelected(false);
+//			}
+//		}
 	}
 	
 	/*--------------------------------------------------*/
@@ -241,18 +287,18 @@ public class StipView extends FilteredMultiTreeTableView{
 	 * Listener des checkbox secteurs
 	 * @author Bruno Spyckerelle
 	 */
-	private class ItemSecteurListener implements ItemListener {
-		@Override
-		public void itemStateChanged(ItemEvent e) {
-			String name = ((JCheckBox)e.getSource()).getText();
-			if(e.getStateChange() == ItemEvent.SELECTED){
-				getController().showObject(StipController.SECTEUR, name);
-			}
-			else {
-				getController().hideObject(StipController.SECTEUR, name);
-			}
-		}
-
-	}
+//	private class ItemSecteurListener implements ItemListener {
+//		@Override
+//		public void itemStateChanged(ItemEvent e) {
+//			String name = ((JCheckBox)e.getSource()).getText();
+//			if(e.getStateChange() == ItemEvent.SELECTED){
+//				getController().showObject(StipController.SECTEUR, name);
+//			}
+//			else {
+//				getController().hideObject(StipController.SECTEUR, name);
+//			}
+//		}
+//
+//	}
 
 }
