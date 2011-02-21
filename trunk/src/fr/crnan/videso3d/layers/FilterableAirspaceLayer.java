@@ -31,7 +31,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Airspace layer whose elements are filterable depending on max and min altitudes.
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.2.0
  */
 public class FilterableAirspaceLayer extends AbstractLayer implements AltitudeFilterableLayer{
 
@@ -41,7 +41,7 @@ public class FilterableAirspaceLayer extends AbstractLayer implements AltitudeFi
 	
 	private LinkedList<Airspace> full = new LinkedList<Airspace>();
 	
-	private Set<Airspace> displayed = null;;
+	private Set<Airspace> displayed = null;
 	
     private AirspaceRenderer airspaceRenderer = new AirspaceRenderer();
     
@@ -69,8 +69,6 @@ public class FilterableAirspaceLayer extends AbstractLayer implements AltitudeFi
 			this.addAirspace(a);
 		}
 	}
-
-	
 
 	public Iterable<Airspace> getAirspaces() {
 		if(displayed == null){

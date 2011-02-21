@@ -129,7 +129,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 			
 		});
 		
-		final ProgressMonitor progress = new ProgressMonitor(this, "Affichage des objets...", "", 0, 100);
+		final ProgressMonitor progress = new ProgressMonitor(this, "Affichage des objets...", "", 0, 1);
 		
 		model.addPropertyChangeListener(new PropertyChangeListener() {
 			

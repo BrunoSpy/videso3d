@@ -21,7 +21,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,6 +40,7 @@ import fr.crnan.videso3d.layers.Balise3DLayer;
 import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
+import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.Layer;
@@ -155,6 +155,7 @@ public class StipController implements VidesoController {
 	public void showObject(int type, String name) {
 		switch (type) {
 		case ROUTES://Route
+			this.createRoute(name);
 			this.routes2D.displayRoute(name);
 			this.routes3D.displayRoute(name);
 			break;
@@ -166,9 +167,7 @@ public class StipController implements VidesoController {
 			this.balisesNP2D.showBalise(name, type);
 			break;
 		case SECTEUR://secteur
-			if(!secteurs.containsKey(name+0)){//n'afficher le secteur que s'il n'est pas déjà affiché
-				this.addSecteur3D(name);
-			}
+			this.addSecteur3D(name);
 			break;
 		default:
 			break;
@@ -288,30 +287,39 @@ public class StipController implements VidesoController {
 	 * @param name Nom du secteur à ajouter
 	 */
 	private void addSecteur3D(String name){
-		try {
-			Statement st = DatabaseManager.getCurrentStip();
-			ResultSet rs = st.executeQuery("select secteurs.nom, secteurs.numero, cartesect.flinf, cartesect.flsup from secteurs, cartesect where secteurs.numero = cartesect.sectnum and secteurs.nom ='"+name+"'");
+		if(secteurs.containsKey(name+0)){
 			Integer i = 0;
-			BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
-			attrs.setDrawOutline(true);
-			attrs.setMaterial(new Material(Color.CYAN));
-			attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(Color.CYAN)));
-			attrs.setOpacity(0.2);
-			attrs.setOutlineOpacity(0.9);
-			attrs.setOutlineWidth(1.5);
-			while(rs.next()){
-				Secteur3D secteur3D = new Secteur3D(name, rs.getInt("flinf"), rs.getInt("flsup"),StipController.SECTEUR, DatabaseManager.Type.STIP);
-				Secteur secteur = new Secteur(name, rs.getInt("numero"), DatabaseManager.getCurrentStip());
-				secteur.setConnectionPays(DatabaseManager.getCurrent(DatabaseManager.Type.PAYS));
-				secteur3D.setLocations(secteur.getContour(rs.getInt("flsup")));
-				secteur3D.setAttributes(attrs);
-				this.addToSecteursLayer(secteur3D);
-				secteurs.put(name+i.toString(), secteur3D);
+			while(secteurs.containsKey(name+i.toString())){
+				(secteurs.get(name+i.toString())).setVisible(true);
 				i++;
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} else {
+			try {
+				Statement st = DatabaseManager.getCurrentStip();
+				ResultSet rs = st.executeQuery("select secteurs.nom, secteurs.numero, cartesect.flinf, cartesect.flsup from secteurs, cartesect where secteurs.numero = cartesect.sectnum and secteurs.nom ='"+name+"'");
+				Integer i = 0;
+				BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
+				attrs.setDrawOutline(true);
+				attrs.setMaterial(new Material(Color.CYAN));
+				attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(Color.CYAN)));
+				attrs.setOpacity(0.2);
+				attrs.setOutlineOpacity(0.9);
+				attrs.setOutlineWidth(1.5);
+				while(rs.next()){
+					Secteur3D secteur3D = new Secteur3D(name, rs.getInt("flinf"), rs.getInt("flsup"),StipController.SECTEUR, DatabaseManager.Type.STIP);
+					Secteur secteur = new Secteur(name, rs.getInt("numero"), DatabaseManager.getCurrentStip());
+					secteur.setConnectionPays(DatabaseManager.getCurrent(DatabaseManager.Type.PAYS));
+					secteur3D.setLocations(secteur.getContour(rs.getInt("flsup")));
+					secteur3D.setAttributes(attrs);
+					this.addToSecteursLayer(secteur3D);
+					secteurs.put(name+i.toString(), secteur3D);
+					i++;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
+		this.secteursLayer.firePropertyChange(AVKey.LAYER, null, this.secteursLayer);
 	}
 	/**
 	 * Enlève tous les {@link Secteur3D} formant le secteur <code>name</code>
@@ -320,10 +328,10 @@ public class StipController implements VidesoController {
 	private void removeSecteur3D(String name){
 		Integer i = 0;
 		while(secteurs.containsKey(name+i.toString())){
-			this.removeFromSecteursLayer(secteurs.get(name+i.toString()));
-			secteurs.remove(name+i.toString());
+			secteurs.get(name+i.toString()).setVisible(false);
 			i++;
 		}
+		this.secteursLayer.firePropertyChange(AVKey.LAYER, null, this.secteursLayer);
 	}
 
 	/**
@@ -341,12 +349,7 @@ public class StipController implements VidesoController {
 	
 	private void addToSecteursLayer(Secteur3D secteur){
 		this.secteursLayer.addAirspace(secteur);
-		this.wwd.redraw();
-	}
-	
-	private void removeFromSecteursLayer(Secteur3D secteur){
-		this.secteursLayer.removeAirspace(secteur);
-		this.wwd.redraw();
+		this.secteursLayer.firePropertyChange(AVKey.LAYER, null, this.secteursLayer);
 	}
 	
 	/*--------------------------------------------------------------*/
@@ -361,19 +364,19 @@ public class StipController implements VidesoController {
 			this.wwd.firePropertyChange("step", "", "Création des routes UIR");
 			break;
 		}
-		try {
-			Statement st = DatabaseManager.getCurrentStip();
-			ResultSet routes = st.executeQuery("select name from routes where espace = '"+type+"'");
-			LinkedList<String> routesNames = new LinkedList<String>();
-			while(routes.next()){
-				routesNames.add(routes.getString(1));
-				
-			}
-			Iterator<String> iterator = routesNames.iterator();
-			while(iterator.hasNext()){
-				String name = iterator.next();
-				Route3D route3D = new Route3D(DatabaseManager.Type.STIP, StipController.ROUTES);
-				Route2D route2D = new Route2D(DatabaseManager.Type.STIP, StipController.ROUTES);
+	}
+
+	private void createRoute(String name){
+		if(this.routes2D.getRoute(name) == null) {
+			Route3D route3D = new Route3D(DatabaseManager.Type.STIP, StipController.ROUTES);
+			Route2D route2D = new Route2D(DatabaseManager.Type.STIP, StipController.ROUTES);
+			LinkedList<LatLon> loc = new LinkedList<LatLon>();
+			LinkedList<Integer> sens = new LinkedList<Integer>();
+			LinkedList<String> balises = new LinkedList<String>();
+			try {
+				Statement st = DatabaseManager.getCurrentStip();
+				ResultSet rs = st.executeQuery("select espace from routes where name = '"+name+"'");
+				String type = rs.getString(1);
 				if(type.equals("F")) {
 					route3D.setSpace(Space.FIR);
 					route2D.setSpace(Space.FIR);
@@ -382,10 +385,7 @@ public class StipController implements VidesoController {
 					route3D.setSpace(Space.UIR);
 					route2D.setSpace(Space.UIR);
 				}
-				ResultSet rs = st.executeQuery("select * from routebalise, balises where route = '"+name+"' and routebalise.balise = balises.name and appartient = 1");
-				LinkedList<LatLon> loc = new LinkedList<LatLon>();
-				LinkedList<Integer> sens = new LinkedList<Integer>();
-				LinkedList<String> balises = new LinkedList<String>();
+				rs = st.executeQuery("select * from routebalise, balises where route = '"+name+"' and routebalise.balise = balises.name and appartient = 1");
 				while(rs.next()){
 					loc.add(LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
 					balises.add(rs.getString("balise"));
@@ -395,21 +395,20 @@ public class StipController implements VidesoController {
 						sens.add(Route3D.LEG_AUTHORIZED);
 					}
 				}
-				route3D.setLocations(loc, sens);
-				route3D.setName(name);
-				route3D.setBalises(balises);
-				route2D.setLocations(loc);
-				route2D.setBalises(balises);
-				route2D.setName(name);
-				this.routes3D.addRoute(route3D, name);
-				this.routes2D.addRoute(route2D, name);
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-			st.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			route3D.setLocations(loc, sens);
+			route3D.setName(name);
+			route3D.setBalises(balises);
+			route2D.setLocations(loc);
+			route2D.setBalises(balises);
+			route2D.setName(name);
+			this.routes3D.addRoute(route3D, name);
+			this.routes2D.addRoute(route2D, name);
 		}
 	}
-
+	
 	public Routes3DLayer getRoutes3DLayer(){
 		return routes3D;
 	}
