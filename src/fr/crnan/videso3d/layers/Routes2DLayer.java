@@ -16,7 +16,6 @@
 package fr.crnan.videso3d.layers;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route.Space;
@@ -26,7 +25,7 @@ import gov.nasa.worldwind.layers.RenderableLayer;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 
@@ -34,8 +33,6 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 	 * Liste des routes
 	 */
 	private HashMap<String, Route2D> routes = new HashMap<String, Route2D>();
-
-	private HashSet<Route2D> displayedRoutes = new HashSet<Route2D>();
 
 	public Routes2DLayer(String name){
 		this.setName(name);
@@ -46,6 +43,7 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 	public void addRoute(Route route, String name) {
 		if(route instanceof Route2D) {
 			routes.put(name, (Route2D) route);
+			this.addRenderable((Route2D) route);
 		}
 	}
 
@@ -57,19 +55,14 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 	}
 
 	private void displayRoute(Route2D r){
-		if(!this.displayedRoutes.contains(r)){
-			displayedRoutes.add(r);
-			this.addRenderable(r);
-		}
+		r.setVisible(true);
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	private void displayAllRoutes(Space t){
 		for(Route2D r : routes.values()){
-			if(!displayedRoutes.contains(r)){
-				if(r.getSpace().compareTo(t) == 0) {
-					this.displayRoute(r);
-				}
+			if(r.getSpace().compareTo(t) == 0) {
+				r.setVisible(true);
 			}
 		}
 	}
@@ -96,21 +89,20 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 	
 	@Override
 	public void hideAllRoutes() {
-		this.removeAllRenderables();
-		this.displayedRoutes.clear();
+		for(Route2D r : routes.values()){
+			r.setVisible(false);
+		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	private void hideAllRoutes(Space t) {
-		HashSet<Route2D> temp = new HashSet<Route2D>(this.displayedRoutes);
-		for(Route2D r : temp){
+		for(Route2D r : routes.values()){
 			if(r.getSpace().compareTo(t) == 0){
-				this.displayedRoutes.remove(r);
-				this.removeRenderable(r);
+				r.setVisible(false);
 			}
 		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
-		}
+	}
 
 	@Override
 	public void hideAllRoutesPDR() {
@@ -132,10 +124,7 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 	}
 
 	private void hideRoute(Route2D r){
-		if(this.displayedRoutes.contains(r)){
-			this.displayedRoutes.remove(r);
-			this.removeRenderable(r);
-		}
+		r.setVisible(false);
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 

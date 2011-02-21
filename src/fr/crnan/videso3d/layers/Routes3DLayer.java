@@ -17,7 +17,6 @@
 package fr.crnan.videso3d.layers;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route3D;
@@ -28,7 +27,7 @@ import gov.nasa.worldwind.layers.AirspaceLayer;
  * Layer destiné à afficher les routes<br />
  * Permet d'afficher sélectivement une ou plusieurs routes, selon leur nom ou leur type
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 	
@@ -37,7 +36,6 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 	 */
 	private HashMap<String, Route3D> routes = new HashMap<String, Route3D>();
 	
-	private HashSet<Route3D> displayedRoutes = new HashSet<Route3D>();
 	
 	public Routes3DLayer(String string) {
 		this.setName(string);
@@ -45,8 +43,10 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 
 	@Override
 	public void addRoute(Route route, String name) {
-		if(route instanceof Route3D)
+		if(route instanceof Route3D) {
 			this.routes.put(name, (Route3D) route);
+			this.addAirspace((Route3D)route);
+		}
 	}
 
 	@Override
@@ -58,10 +58,8 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 
 	private void displayAllRoutes(Space t){
 		for(Route3D r : routes.values()){
-			if(!displayedRoutes.contains(r)){
-				if(r.getSpace().compareTo(t) == 0) {
-					this.displayRoute(r);
-				}
+			if(r.getSpace().compareTo(t) == 0) {
+				this.displayRoute(r);
 			}
 		}
 	}
@@ -77,10 +75,7 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 	}
 
 	private void displayRoute(Route3D r){
-		if(!this.displayedRoutes.contains(r)){
-			displayedRoutes.add(r);
-			this.addAirspace(r);
-		}
+		r.setVisible(true);
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
@@ -97,27 +92,23 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 
 	@Override
 	public void hideAllRoutes() {
-		this.displayedRoutes.clear();
-		this.removeAllAirspaces();
+		for(Route3D r : routes.values()){
+			r.setVisible(false);
+		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	private void hideRoute(Route3D r){
-		if(this.displayedRoutes.contains(r)){
-			this.displayedRoutes.remove(r);
-			this.removeAirspace(r);
-		}
+		r.setVisible(false);
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	private void hideAllRoutes(Space t){
 		//copie temporaire pour pouvoir modifier displayedRoutes
 		//sinon on a un accès concurrent impossible
-		HashSet<Route3D> temp = new HashSet<Route3D>(this.displayedRoutes);
-		for(Route3D r : temp){
+		for(Route3D r : routes.values()){
 			if(r.getSpace().compareTo(t) == 0){
-				this.displayedRoutes.remove(r);
-				this.removeAirspace(r);
+				r.setVisible(false);
 			}
 		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
