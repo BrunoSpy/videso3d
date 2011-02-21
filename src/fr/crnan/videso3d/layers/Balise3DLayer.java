@@ -28,7 +28,7 @@ import gov.nasa.worldwind.render.Renderable;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 
@@ -73,6 +73,12 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 	}
 
 	@Override
+	public void showBalise(String name, int type) {
+		if(balises.containsKey(name+type))
+			this.showBalise(balises.get(name+type));
+	}
+	
+	@Override
 	public void showBalise(Balise b) {
 		if(!balisesActives.contains(b)){
 			balisesActives.add((Balise3D) b);
@@ -103,6 +109,14 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 		}
 	}
 
+	@Override
+	public void hideBalise(String name, int type) {
+		Balise3D b = balises.get(name+type);
+		if(name != null){
+			this.hideBalise(b);
+		}
+	}
+	
 	@Override
 	public void hideBalise(Balise b) {
 		if(!this.isLocked() && balisesActives.contains(b)){

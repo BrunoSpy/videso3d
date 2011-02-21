@@ -82,7 +82,7 @@ public class Balise3D extends PointPlacemark implements Balise {
 			annotation.setAlwaysOnTop(true);
 			annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
 			annotation.getAttributes().setBorderColor(Color.BLACK);
-			annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
+			annotation.getAttributes().setAdjustWidthToText(AVKey.SIZE_FIT_TEXT);
 		} else {
 			annotation.setText(text);
 		}
