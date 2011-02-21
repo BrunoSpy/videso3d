@@ -29,7 +29,7 @@ import javax.swing.event.EventListenerList;
  * L'import des données doit être fait dans la méthode doInBackground() afin d'être fait dans un thread secondaire.
  * doInBackground() renvoit le nombre de fichiers traités et publie le nom des fichiers traités
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public abstract class FileParser extends SwingWorker<Integer, String>{
 	
@@ -98,6 +98,8 @@ public abstract class FileParser extends SwingWorker<Integer, String>{
 		}
 	}
 	
-	
+	public String getPath(){
+		return this.path;
+	}
 	
 }

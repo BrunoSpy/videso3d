@@ -23,6 +23,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ProgressMonitor;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -43,7 +46,7 @@ import fr.crnan.videso3d.Couple;
 /**
  * Panel de sélection de données avec plusieurs panels filtrables
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public abstract class FilteredMultiTreeTableView extends JPanel implements DataView {
 
@@ -126,6 +129,20 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 			
 		});
 		
+		final ProgressMonitor progress = new ProgressMonitor(this, "Affichage des objets...", "", 0, 100);
+		
+		model.addPropertyChangeListener(new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent p) {
+				if(p.getPropertyName().equals("change")){
+					progress.setMaximum((Integer)p.getNewValue());
+				} else if(p.getPropertyName().equals("progress")){
+					progress.setProgress((Integer)p.getNewValue());
+				}
+			}
+		});
+		
 		treeTable.setTableHeader(null);
 		treeTable.setRootVisible(false);
 		treeTable.setTreeTableModel(model);
@@ -191,7 +208,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 						treeTable.setValueAt(true, row, 1);
 						getController().highlight(getController().string2type(type),name);
 					}
-				}
+				} 
 			}
 		});
 		
@@ -209,7 +226,5 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 		}
 		getController().reset();
 	}
-
-	
 	
 }

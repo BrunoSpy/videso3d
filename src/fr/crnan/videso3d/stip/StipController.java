@@ -577,6 +577,9 @@ public class StipController implements VidesoController {
 			return BALISES;
 		} else if(type.equals("AWY") || type.equals("PDR") || type.equals("Routes")) {
 			return ROUTES;
+		} else if(type.equals("Secteurs") || type.equals("Secteur") || type.equals("Paris")
+				 || type.equals("Reims") || type.equals("Aix") || type.equals("Bordeaux") || type.equals("Brest") || type.equals("Autres")){
+			return SECTEUR;
 		}
 		return 0;
 	}
