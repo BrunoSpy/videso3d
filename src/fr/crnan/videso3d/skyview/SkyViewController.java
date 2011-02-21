@@ -124,7 +124,7 @@ public class SkyViewController implements VidesoController {
 					e.printStackTrace();
 				}
 			}
-			airports.showBalise(name);
+			airports.showBalise(name, TYPE_AIRPORT);
 			break;
 		case TYPE_WAYPOINT:
 			if(!waypoints.contains(name)){
@@ -142,7 +142,7 @@ public class SkyViewController implements VidesoController {
 					e.printStackTrace();
 				}
 			}
-			waypoints.showBalise(name);
+			waypoints.showBalise(name, TYPE_WAYPOINT);
 			break;
 		default:
 			break;
@@ -158,10 +158,10 @@ public class SkyViewController implements VidesoController {
 			}
 			break;
 		case TYPE_AIRPORT:
-			this.airports.hideBalise(name);
+			this.airports.hideBalise(name, TYPE_AIRPORT);
 			break;
 		case TYPE_WAYPOINT:
-			this.waypoints.hideBalise(name);
+			this.waypoints.hideBalise(name, TYPE_WAYPOINT);
 			break;
 		default:
 			break;
