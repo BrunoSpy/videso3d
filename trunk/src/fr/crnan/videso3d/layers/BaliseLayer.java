@@ -44,13 +44,6 @@ public interface BaliseLayer extends Layer {
 	/**
 	 * Affiche une balise.<br />
 	 * Cette balise doit d'abord être ajoutée grâce à <code>addBalise(Balise2D balise)</code>
-	 * @param name Nom de la balise
-	 */
-	public void showBalise(String name);
-	
-	/**
-	 * Affiche une balise.<br />
-	 * Cette balise doit d'abord être ajoutée grâce à <code>addBalise(Balise2D balise)</code>
 	 * @param name
 	 * @param type
 	 */
@@ -67,20 +60,13 @@ public interface BaliseLayer extends Layer {
 	 * Affiche une liste de balises
 	 * @param balises
 	 */
-	public void showBalises(List<String> balises);
+	public void showBalises(List<String> balises, int type);
 	
 	/**
 	 * Enlève une liste de balises de la vue
 	 * @param balises
 	 */
-	public void hideBalises(List<String> balises);
-	
-	/**
-	 * Enlève une balise de la vue.<br />
-	 * Cette balise est toujours accessible pour être à nouveau affichée plus tard.
-	 * @param name
-	 */
-	public void hideBalise(String name);
+	public void hideBalises(List<String> balises, int type);
 	
 	/**
 	 * Enlève une balise de la vue.<br />

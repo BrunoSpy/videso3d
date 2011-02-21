@@ -39,6 +39,7 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIP.Altitude;
 import fr.crnan.videso3d.aip.RoutesSegments.Segment;
 import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route.Sens;
 import fr.crnan.videso3d.graphics.MarqueurAerodrome;
@@ -152,6 +153,12 @@ public class AIPController implements VidesoController {
 			navFixLayer = new Balise2DLayer("NavFix AIP");	
 			this.toggleLayer(navFixLayer, true);
 		}
+		if(navFixLayer3D != null){
+			navFixLayer3D.removeAllBalises();
+		}else{
+			navFixLayer3D = new Balise3DLayer("NavFix AIP");	
+			this.toggleLayer(navFixLayer3D, false);
+		}
 		if(arptLayer != null){
 			arptLayer.removeAllAirports();
 			this.toggleLayer(arptLayer, true);
@@ -179,6 +186,7 @@ public class AIPController implements VidesoController {
 		this.wwd.removeLayer(routes2D);
 		this.wwd.removeLayer(routes3D);
 		this.wwd.removeLayer(navFixLayer);
+		this.wwd.removeLayer(navFixLayer3D);
 		this.wwd.removeLayer(zonesLayer);
 		this.wwd.removeLayer(arptLayer);
 	}
@@ -603,11 +611,19 @@ public class AIPController implements VidesoController {
 			}
 			annotation += "</html>";
 			navFix.setAnnotation(annotation);
+						
 			navFixLayer.addBalise(navFix);
 			navFixLayer.showBalise(navFix);
+			
+			Balise3D navFix3D = new Balise3D(name, Position.fromDegrees(latitude, longitude, 665*30.47), Type.AIP, type);
+			navFix3D.setAnnotation(annotation);
+			navFixLayer3D.addBalise(navFix3D);
+			navFixLayer3D.showBalise(navFix3D);
+			
 			balises.add(type+" "+name);
 		} else {
 			navFixLayer.showBalise(name, type);
+			navFixLayer3D.showBalise(name, type);
 		}
 	}
 	
@@ -615,6 +631,9 @@ public class AIPController implements VidesoController {
 		if(balises.contains(type+" "+name)){
 			Balise2D navFix = navFixLayer.getBalise(name, type);
 			navFixLayer.hideBalise(navFix);
+			
+			navFixLayer3D.hideBalise(name, type);
+			
 			this.wwd.getAnnotationLayer().removeAnnotation(navFix.getAnnotation(null));
 		}
 	}
@@ -729,6 +748,7 @@ public class AIPController implements VidesoController {
 		this.routes2D.hideAllRoutes();
 		this.routes3D.hideAllRoutes();
 		this.navFixLayer.eraseAllBalises();
+		this.navFixLayer3D.eraseAllBalises();
 		this.arptLayer.removeAllAirports();
 	}
 
@@ -1038,7 +1058,10 @@ public class AIPController implements VidesoController {
 	}
 	
 	
-	
+	public void setBalisesLayer3D(boolean threeD){
+		this.toggleLayer(this.navFixLayer, !threeD);
+		this.toggleLayer(this.navFixLayer3D, threeD);
+	}
 	
 	@Override
 	public String type2string(int type) {

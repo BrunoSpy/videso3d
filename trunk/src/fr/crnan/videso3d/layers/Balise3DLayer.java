@@ -28,7 +28,7 @@ import gov.nasa.worldwind.render.Renderable;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 
@@ -47,7 +47,7 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 
 	@Override
 	public void addBalise(Balise balise) {
-		this.balises.put(balise.getName(), (Balise3D) balise);
+		this.balises.put(balise.getName()+balise.getType(), (Balise3D) balise);
 		
 	}
 
@@ -67,12 +67,6 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 	}
 
 	@Override
-	public void showBalise(String name) {
-		if(balises.containsKey(name))
-			this.showBalise(balises.get(name));
-	}
-
-	@Override
 	public void showBalise(String name, int type) {
 		if(balises.containsKey(name+type))
 			this.showBalise(balises.get(name+type));
@@ -88,24 +82,16 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 	}
 
 	@Override
-	public void showBalises(List<String> balises) {
+	public void showBalises(List<String> balises, int type) {
 		for(String b : balises){
-			this.showBalise(b);
+			this.showBalise(b, type);
 		}
 	}
 
 	@Override
-	public void hideBalises(List<String> balises) {
+	public void hideBalises(List<String> balises, int type) {
 		for(String b : balises){
-			this.hideBalise(b);
-		}
-	}
-
-	@Override
-	public void hideBalise(String name) {
-		Balise3D b = balises.get(name);
-		if(name != null){
-			this.hideBalise(b);
+			this.hideBalise(b, type);
 		}
 	}
 
@@ -153,6 +139,33 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 	 */
 	public void setLocked(Boolean b){
 		this.lock = b;
+	}
+
+	/**
+	 * Test si une balise a déjà été ajoutée
+	 * @param balise nom de la balise
+	 * @return Vrai si la balise a déjà été ajoutée
+	 */
+	public Boolean contains(String balise){
+		return balises.containsKey(balise);
+	}
+	
+	/**
+	 * Test si une balise a déjà été ajoutée
+	 * @param balise nom de la balise
+	 * @param type
+	 * @return Vrai si la balise a déjà été ajoutée
+	 */
+	public Boolean contains(String balise, int type){
+		return balises.containsKey(balise+type);
+	}
+	
+	public Balise3D getBalise(String balise){
+		return balises.get(balise);
+	}
+	
+	public Balise3D getBalise(String balise, int type){
+		return balises.get(balise+type);
 	}
 	
 }

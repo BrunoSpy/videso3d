@@ -95,15 +95,6 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 		}
 	}
 
-	@Override
-	public void showBalise(String name){
-		Balise2D b = balises.get(name);
-		if(b != null){
-			this.showBalise(b);
-		}
-	}
-
-	
 	
 	@Override
 	public void showBalise(String name, int type) {
@@ -139,9 +130,9 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	 * @param balises
 	 */
 	@Override
-	public void showBalises(List<String> balises) {
+	public void showBalises(List<String> balises, int type) {
 		for(String b : balises){
-			this.showBalise(b);
+			this.showBalise(b, type);
 		}
 	}
 	
@@ -150,22 +141,9 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	 * @param balises
 	 */
 	@Override
-	public void hideBalises(List<String> balises) {
+	public void hideBalises(List<String> balises, int type) {
 		for(String b : balises){
-			this.hideBalise(b);
-		}
-	}
-	
-	/**
-	 * Enlève une balise de la vue.<br />
-	 * Cette balise est toujours accessible pour être à nouveau affichée plus tard.
-	 * @param name
-	 */
-	@Override
-	public void hideBalise(String name){
-		Balise2D b = balises.get(name);
-		if(name != null){
-			this.hideBalise(b);
+			this.hideBalise(b, type);
 		}
 	}
 	

@@ -65,7 +65,7 @@ public class AIPView extends FilteredMultiTreeTableView {
 				DefaultMutableTreeNode NavFixRoot = new DefaultMutableTreeNode("root");
 				this.fillNavFixRootNode(NavFixRoot);
 				FilteredTreeTableModel NavFixModel = new FilteredTreeTableModel(NavFixRoot);
-				this.addTableTree(NavFixModel, "Navigation Fix", null);
+				this.addTableTree(NavFixModel, "", createTitleNavFix());
 
 				
 				
@@ -223,5 +223,25 @@ public class AIPView extends FilteredMultiTreeTableView {
 		return titlePanel; 
 	}
 	
+	/**
+	 * Titre du panel Routes.<br />
+	 * Contient un sélecteur pour choisir la méthode de représentation (2D/3D).
+	 * @return JPanel
+	 */
+	//TODO factoriser avec createTitleRoutes de StipView
+	private JPanel createTitleNavFix(){
+		
+		TitleTwoButtons titlePanel = new TitleTwoButtons("Navigation Fix", "2D", "3D", true);
+		titlePanel.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				Boolean state = e.getStateChange() == ItemEvent.SELECTED;
+				getController().setBalisesLayer3D(!state);
+			}
+		});
+		
+		return titlePanel; 
+	}
 	
 }

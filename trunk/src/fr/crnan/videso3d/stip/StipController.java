@@ -160,10 +160,10 @@ public class StipController implements VidesoController {
 			break;
 		case BALISES://Balises
 			this.createBalise(name);
-			this.balisesPub3D.showBalise(name);
-			this.balisesNP3D.showBalise(name);
-			this.balisesPub2D.showBalise(name);
-			this.balisesNP2D.showBalise(name);
+			this.balisesPub3D.showBalise(name, type);
+			this.balisesNP3D.showBalise(name, type);
+			this.balisesPub2D.showBalise(name, type);
+			this.balisesNP2D.showBalise(name, type);
 			break;
 		case SECTEUR://secteur
 			if(!secteurs.containsKey(name+0)){//n'afficher le secteur que s'il n'est pas déjà affiché
@@ -183,10 +183,10 @@ public class StipController implements VidesoController {
 			this.routes3D.hideRoute(name);
 			break;
 		case BALISES://Balises Pub
-			this.balisesPub2D.hideBalise(name);
-			this.balisesNP2D.hideBalise(name);
-			this.balisesPub3D.hideBalise(name);
-			this.balisesNP3D.hideBalise(name);
+			this.balisesPub2D.hideBalise(name, type);
+			this.balisesNP2D.hideBalise(name, type);
+			this.balisesPub3D.hideBalise(name, type);
+			this.balisesNP3D.hideBalise(name, type);
 			break;
 		case SECTEUR://secteur
 			this.removeSecteur3D(name);
@@ -424,18 +424,18 @@ public class StipController implements VidesoController {
 	public void showRoutesBalises(String name){
 		List<String> balises = routes3D.getRoute(name).getBalises();
 		this.createBalise(balises);
-		balisesNP3D.showBalises(balises);
-		balisesPub3D.showBalises(balises);
-		balisesNP2D.showBalises(balises);
-		balisesPub2D.showBalises(balises);
+		balisesNP3D.showBalises(balises, BALISES);
+		balisesPub3D.showBalises(balises, BALISES);
+		balisesNP2D.showBalises(balises, BALISES);
+		balisesPub2D.showBalises(balises, BALISES);
 	}
 	
 	public void hideRoutesBalises(String name){
 		List<String> balises = routes3D.getRoute(name).getBalises();
-		balisesNP2D.hideBalises(balises);
-		balisesPub2D.hideBalises(balises);
-		balisesNP3D.hideBalises(balises);
-		balisesPub3D.hideBalises(balises);
+		balisesNP2D.hideBalises(balises, BALISES);
+		balisesPub2D.hideBalises(balises, BALISES);
+		balisesNP3D.hideBalises(balises, BALISES);
+		balisesPub3D.hideBalises(balises, BALISES);
 	}
 	
 	/**
