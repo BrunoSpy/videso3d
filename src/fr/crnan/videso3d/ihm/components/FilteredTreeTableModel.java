@@ -125,16 +125,16 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 		}
 	}
 
-	public int getLeafsCount(Object parent){
+	public int getLeafsCount(Object parent, boolean value){
 		if(parent instanceof DefaultMutableTreeNode){
 			if(filter != null) {
 				int count = 0;
 				for(int i = 0; i < ((DefaultMutableTreeNode)parent).getChildCount();i++){
 					DefaultMutableTreeNode child = (DefaultMutableTreeNode) ((DefaultMutableTreeNode)parent).getChildAt(i);
-					if(isLeaf(child) && this.filter.isShown(child)){
+					if(isLeaf(child) && this.filter.isShown(child) && ((Couple<String, Boolean>) child.getUserObject()).getSecond() == value){
 						count++;
 					} else {
-						count += getLeafsCount(child);
+						count += getLeafsCount(child, value);
 					}
 				}
 				return count;
@@ -142,10 +142,10 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 				int count = 0;
 				for(int i = 0; i < ((DefaultMutableTreeNode)parent).getChildCount();i++){
 					DefaultMutableTreeNode child = (DefaultMutableTreeNode) ((DefaultMutableTreeNode)parent).getChildAt(i);
-					if(isLeaf(child)){
+					if(isLeaf(child)&& ((Couple<String, Boolean>) child.getUserObject()).getSecond() == value){
 						count++;
 					} else {
-						count += getLeafsCount(child);
+						count += getLeafsCount(child, value);
 					}
 				}
 				return count;
@@ -170,12 +170,19 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 	}
 
 	private void setValueAt(Object value, Object node, int column, boolean first){
-		if(first) {
-			count = 0;
-			this.support.firePropertyChange("change", 0, this.getLeafsCount(node));
-		}
-		DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
+		
 		if(column == 1){
+
+			DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
+			Boolean old = ((Couple<String, Boolean>)((DefaultMutableTreeNode)treeNode).getUserObject()).getSecond();
+			//do nothing if old value equals new value
+			if(old == value)
+				return;
+			
+			if(first) {
+				count = 0;
+				this.support.firePropertyChange("change", -1, this.getLeafsCount(node, !((Boolean) value)));
+			}
 			//ne pas changer la valuer des nodes non affichés
 			if(filter != null){
 				if(!treeNode.isLeaf()){
@@ -193,7 +200,7 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 					}
 				}
 			} else {
-				Boolean old = ((Couple<String, Boolean>)((DefaultMutableTreeNode)treeNode).getUserObject()).getSecond();
+				
 				((Couple<String, Boolean>) treeNode.getUserObject()).setSecond((Boolean)value);
 				if(!treeNode.isLeaf()){
 					for(int i=0;i<treeNode.getChildCount();i++){
@@ -202,11 +209,9 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 					}
 				} else {
 					count++;
-					this.support.firePropertyChange("progress", count-1, count);
-					//ne pas envoyer d'évènement si la valeur n'a pas changé
-					if(old != value) {
-						this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);
-					}
+					this.support.firePropertyChange("progress", count-1, count);		
+					this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);
+					
 				}
 			}
 		}

@@ -21,6 +21,7 @@ import java.awt.event.ItemListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -36,11 +37,19 @@ import fr.crnan.videso3d.stip.StipController;
 /**
  * Sélecteur d'objets Stip
  * @author Bruno Spyckerelle
- * @version 0.6.0
+ * @version 0.6.1
  */
 @SuppressWarnings("serial")
 public class StipView extends FilteredMultiTreeTableView{
 
+	private HashMap<String, DefaultMutableTreeNode> secteurs = new HashMap<String, DefaultMutableTreeNode>();
+	private HashMap<String, DefaultMutableTreeNode> routes = new HashMap<String, DefaultMutableTreeNode>();
+	private HashMap<String, DefaultMutableTreeNode> balises = new HashMap<String, DefaultMutableTreeNode>();
+	
+	private FilteredTreeTableModel routesModel; 
+	private FilteredTreeTableModel balisesModel; 
+	private FilteredTreeTableModel secteursModel; 
+	
 	public StipView(){
 
 		try {
@@ -49,16 +58,19 @@ public class StipView extends FilteredMultiTreeTableView{
 				//Routes
 				DefaultMutableTreeNode routesRoot = new DefaultMutableTreeNode("root");
 				this.fillRoutesRootNode(routesRoot);
-				this.addTableTree(new FilteredTreeTableModel(routesRoot), "Routes", this.createTitleRoutes());
+				this.routesModel = new FilteredTreeTableModel(routesRoot);
+				this.addTableTree(this.routesModel, "Routes", this.createTitleRoutes());
 
 				//Balises
 				DefaultMutableTreeNode balisesRoot = new DefaultMutableTreeNode("root");
 				this.fillBalisesRootNode(balisesRoot);
-				this.addTableTree(new FilteredTreeTableModel(balisesRoot), "Balises", this.createTitleBalises());
+				this.balisesModel = new FilteredTreeTableModel(balisesRoot);
+				this.addTableTree(this.balisesModel, "Balises", this.createTitleBalises());
 				
 				DefaultMutableTreeNode secteursRoot = new DefaultMutableTreeNode("root");
 				this.fillSecteursRootNode(secteursRoot);
-				this.addTableTree(new FilteredTreeTableModel(secteursRoot), "Secteurs", null);
+				this.secteursModel = new FilteredTreeTableModel(secteursRoot);
+				this.addTableTree(this.secteursModel, "Secteurs", null);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -79,13 +91,17 @@ public class StipView extends FilteredMultiTreeTableView{
 			root.add(awy);
 			ResultSet rs = st.executeQuery("select name from routes where espace='F' order by name");
 			while(rs.next()){
-				awy.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false));
+				awy.add(node);
+				routes.put(rs.getString(1), node);
 			}
 			DefaultMutableTreeNode pdr = new DefaultMutableTreeNode(new Couple<String, Boolean>("PDR", false));
 			root.add(pdr);
 			rs = st.executeQuery("select name from routes where espace='U' order by name");
 			while(rs.next()){
-				pdr.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false));
+				pdr.add(node);
+				routes.put(rs.getString(1), node);
 			}
 			rs.close();
 			
@@ -103,13 +119,17 @@ public class StipView extends FilteredMultiTreeTableView{
 			root.add(pub);
 			ResultSet rs = st.executeQuery("select name from balises where publicated='1' order by name");
 			while(rs.next()){
-				pub.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false));
+				balises.put(rs.getString(1), node);
+				pub.add(node);
 			}
 			DefaultMutableTreeNode np = new DefaultMutableTreeNode(new Couple<String, Boolean>("Non publiées", false));
 			root.add(np);
 			rs = st.executeQuery("select name from balises where publicated='0' order by name");
 			while(rs.next()){
-				np.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false));
+				balises.put(rs.getString(1), node);
+				np.add(node);
 			}
 			rs.close();
 			st.close();
@@ -159,8 +179,12 @@ public class StipView extends FilteredMultiTreeTableView{
 			String centreCondition = centre.equals("Autre") ? "centre != 'REIM' and centre != 'PARI' and centre != 'AIX' and centre != 'BRST' and centre != 'BORD'" : "centre = '"+centre+"'" ;
 			ResultSet rs = st.executeQuery("select * from secteurs where "+centreCondition+" and espace ='"+type+"' order by nom");
 			while(rs.next()){
-				node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString("nom"), false)));
+				DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString("nom"), false));
+				this.secteurs.put(rs.getString("nom"), leaf);
+				node.add(leaf);
 			}
+			st.close();
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -208,6 +232,40 @@ public class StipView extends FilteredMultiTreeTableView{
 		return titlePanel; 
 	}
 	
+	@Override
+	public void showObject(int type, String name) {
+		switch (type) {
+		case StipController.ROUTES:
+			this.routesModel.setValueAt(true, this.routes.get(name), 1);			
+			break;
+		case StipController.BALISES:
+			this.balisesModel.setValueAt(true, this.balises.get(name), 1);
+			break;
+		case StipController.SECTEUR:
+			this.secteursModel.setValueAt(true, this.secteurs.get(name), 1);
+			break;
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void hideObject(int type, String name) {
+		switch (type) {
+		case StipController.ROUTES:
+			this.routesModel.setValueAt(false, this.routes.get(name), 1);	
+			break;
+		case StipController.BALISES:
+			this.balisesModel.setValueAt(false, this.balises.get(name), 1);
+			break;
+		case StipController.SECTEUR:
+			this.secteursModel.setValueAt(false, this.secteurs.get(name), 1);
+			break;
+		default:
+			break;
+		}
+	}
+
 	@Override
 	public void reset() {
 		super.reset();
