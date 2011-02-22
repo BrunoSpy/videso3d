@@ -17,6 +17,7 @@ package fr.crnan.videso3d;
 
 import java.util.HashMap;
 
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.aip.AIPContext;
 import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.edimap.EdimapContext;
@@ -46,7 +47,7 @@ import gov.nasa.worldwind.util.Logging;
  * Enregistre les ccontroleurs, les contexts de façon à partager ces éléments avec<br />
  * parties de l'application qui en ont besoin.
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public final class DatasManager {
 
@@ -124,4 +125,24 @@ public final class DatasManager {
 		}
 	}
 	
+	public static int getNumberInitSteps(Type t){
+		switch (t) {
+		case STIP:
+			return StipController.getNumberInitSteps();
+		case EXSA:
+			return STRController.getNumberInitSteps();
+		case Edimap:
+			return EdimapController.getNumberInitSteps();
+		case SkyView:
+			return SkyViewController.getNumberInitSteps();
+		case AIP:
+			return AIPController.getNumberInitSteps();
+		case STPV:
+			return StpvController.getNumberInitSteps();
+		case RadioCov:
+			return RadioCovController.getNumberInitSteps();
+		default:
+			return 0;
+		}
+	}
 }

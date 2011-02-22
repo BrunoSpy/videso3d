@@ -111,7 +111,7 @@ public class AIPController implements VidesoController {
 
 	
 	private void buildAIP() {
-		this.wwd.firePropertyChange("step", "", "Création des volumes");
+		this.wwd.firePropertyChange("step", "", "Création des volumes AIP");
 		if(zonesLayer != null) {
 			zonesLayer.removeAllAirspaces();
 			this.toggleLayer(zonesLayer, true);
@@ -131,7 +131,7 @@ public class AIPController implements VidesoController {
 			e.printStackTrace();
 		}
 		
-		this.wwd.firePropertyChange("step", "", "Création des routes");
+		this.wwd.firePropertyChange("step", "", "Création des routes AIP");
 		//Layers pour les routes
 		if(routes3D != null) {
 			routes3D.removeAllAirspaces();
@@ -146,7 +146,7 @@ public class AIPController implements VidesoController {
 			this.toggleLayer(routes2D, true);
 		}
 		routesAnnotations = new HashMap<String, GlobeAnnotation>();
-		this.wwd.firePropertyChange("step", "", "Création des balises");
+		this.wwd.firePropertyChange("step", "", "Création des balises AIP");
 		if(navFixLayer != null){
 			navFixLayer.removeAllBalises();
 		}else{
@@ -1070,5 +1070,10 @@ public class AIPController implements VidesoController {
 	
 	public String toString(){
 		return "AIP";
+	}
+
+
+	public static int getNumberInitSteps() {
+		return 3;
 	}
 }

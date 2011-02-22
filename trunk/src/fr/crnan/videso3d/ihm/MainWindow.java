@@ -178,11 +178,20 @@ public class MainWindow extends JFrame {
 		
 		wwd.setModel(new BasicModel());
 
+		//compter le nombre d'étapes d'init
+		Integer temp = 0;
+		temp += wwd.getNumberInitSteps();
+		for(Type t : DatabaseManager.getSelectedDatabases()) {
+			temp += DatasManager.getNumberInitSteps(t);
+		}
+		temp++;
+		final int numberInitSteps = temp;
+
 		wwd.addPropertyChangeListener("step", new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				splashScreen.setStatus((String) evt.getNewValue(), (step*100)/(wwd.getNumberInitSteps()+3) );
-				Logging.logger().info(evt.getNewValue()+" "+(step*100)/(wwd.getNumberInitSteps()+3));
+				splashScreen.setStatus((String) evt.getNewValue(), (step*100)/(numberInitSteps) );
+				Logging.logger().info(evt.getNewValue()+" "+(step*100)/(numberInitSteps));
 				step++;
 			}
 		});
@@ -196,6 +205,7 @@ public class MainWindow extends JFrame {
 					for(Type t : DatabaseManager.getSelectedDatabases()) {
 						DatasManager.createDatas(t, wwd);
 					}
+					wwd.firePropertyChange("step", "", "Création de l'interface");
 					dataExplorer = new DataExplorer(wwd);
 				} catch (Exception e) {
 					e.printStackTrace();

@@ -51,7 +51,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage et la construction des éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.1.5
+ * @version 0.1.6
  */
 public class StipController implements VidesoController {
 
@@ -610,5 +610,10 @@ public class StipController implements VidesoController {
 		this.toggleLayer(balisesPub2D, !state);
 		this.toggleLayer(balisesNP3D, state);
 		this.toggleLayer(balisesPub3D, state);
+	}
+
+
+	public static int getNumberInitSteps() {
+		return 5;
 	}
 }

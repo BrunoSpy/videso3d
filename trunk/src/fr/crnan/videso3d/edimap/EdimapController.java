@@ -30,7 +30,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Contrôle l'affichage des éléments Edimap
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class EdimapController implements VidesoController {
 
@@ -45,6 +45,7 @@ public class EdimapController implements VidesoController {
 	
 	public EdimapController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
+		this.wwd.firePropertyChange("step", "", "Création de cartes Edimap");
 		cartes = new Cartes();
 	}
 	
@@ -138,6 +139,10 @@ public class EdimapController implements VidesoController {
 
 	public String toString(){
 		return "Edimap";
+	}
+
+	public static int getNumberInitSteps() {
+		return 1;
 	}
 
 }

@@ -35,7 +35,7 @@ import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class StpvController implements VidesoController {
 
@@ -54,6 +54,7 @@ public class StpvController implements VidesoController {
 	
 	public StpvController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
+		this.wwd.firePropertyChange("step", "", "Création des éléments STPV");
 	}
 	
 	@Override
@@ -162,6 +163,10 @@ public class StpvController implements VidesoController {
 	public String type2string(int type) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public static int getNumberInitSteps() {
+		return 1;
 	}
 
 }

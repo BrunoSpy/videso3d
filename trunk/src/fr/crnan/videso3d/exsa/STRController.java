@@ -44,7 +44,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage des éléments Exsa
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.1.4
  */
 public class STRController implements VidesoController {
 
@@ -75,6 +75,7 @@ public class STRController implements VidesoController {
 	
 	public STRController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
+		this.wwd.firePropertyChange("step", "", "Création des éléments STR");
 	}
 	
 	@Override
@@ -386,6 +387,10 @@ public class STRController implements VidesoController {
 	@Override
 	public String type2string(int type) {
 		return null;
+	}
+
+	public static int getNumberInitSteps() {
+		return 1;
 	}
 	
 	
