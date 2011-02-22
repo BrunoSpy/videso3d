@@ -21,7 +21,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * Controleur d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 public interface VidesoController {
 
@@ -102,4 +102,10 @@ public interface VidesoController {
 	 * Remet à zéro la vue.
 	 */
 	public void reset();
+	
+	/**
+	 * Nombre d'étapes d'initialisation (pour les progressmonitor)
+	 * @return int
+	 */
+	//public int getNumberInitSteps();
 }

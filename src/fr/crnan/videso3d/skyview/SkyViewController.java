@@ -42,7 +42,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * Gestion des données SkyView
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class SkyViewController implements VidesoController {
 
@@ -60,6 +60,7 @@ public class SkyViewController implements VidesoController {
 	
 	public SkyViewController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
+		this.wwd.firePropertyChange("step", "", "Création des éléments SkyView");
 		this.toggleLayer(routes, true);
 		this.toggleLayer(airports, true);
 		this.toggleLayer(waypoints, true);
@@ -310,6 +311,10 @@ public class SkyViewController implements VidesoController {
 			break;
 		}
 		return null;
+	}
+
+	public static int getNumberInitSteps() {
+		return 1;
 	}
 	
 	

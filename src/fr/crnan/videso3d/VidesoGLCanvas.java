@@ -95,7 +95,7 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.9.0
+ * @version 0.9.1
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
@@ -531,7 +531,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * @return int
 	 */
 	public int getNumberInitSteps() {
-		return 7;
+		return 1;
 	}
 
 	/**

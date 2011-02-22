@@ -29,7 +29,7 @@ import gov.nasa.worldwind.render.airspaces.Airspace;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class RadioCovController implements VidesoController {
 
@@ -148,4 +148,7 @@ public class RadioCovController implements VidesoController {
 		return wwd.getModel().getLayers();
 	}
 	
+	public static int getNumberInitSteps(){
+		return 1;
+	}
 }
