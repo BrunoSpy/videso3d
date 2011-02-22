@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -172,6 +173,8 @@ public class StipController implements VidesoController {
 		default:
 			break;
 		}
+		//synchroniser la vue si l'appel n'a pas été fait par la vue
+		DatasManager.getView(Type.STIP).showObject(type, name);
 	}
 
 	@Override
@@ -193,6 +196,8 @@ public class StipController implements VidesoController {
 		default:
 			break;
 		}		
+		//synchroniser la vue si l'appel n'a pas été fait par la vue
+		DatasManager.getView(Type.STIP).hideObject(type, name);
 	}
 	
 	
@@ -504,6 +509,8 @@ public class StipController implements VidesoController {
 	 */
 	@Override
 	public void highlight(int type, String text) {
+		this.showObject(type, text);
+		
 		switch (type) {
 		case ROUTES:
 			Route3D airspace = (Route3D) routes3D.getRoute(text);
@@ -521,9 +528,6 @@ public class StipController implements VidesoController {
 			highlight = airspace;
 			break;
 		case SECTEUR:
-			if(!secteurs.containsKey(text+0)){
-				this.addSecteur3D(text);
-			}
 			this.unHighlightPrevious(text);
 			Secteur3D secteur = secteurs.get(text+0);
 			lastAttrs = secteur == null ? new BasicAirspaceAttributes() : secteur.getAttributes(); //nécessaire à cause des secteurs fictifs qui n'ont pas de dessin
@@ -541,10 +545,6 @@ public class StipController implements VidesoController {
 			this.unHighlightPrevious(balise);
 			this.unHighlightPrevious(balise3d);
 			highlight = balise;
-			balisesNP2D.showBalise(balise);
-			balisesPub2D.showBalise(balise);
-			balisesNP3D.showBalise(balise3d);
-			balisesPub3D.showBalise(balise3d);
 			this.wwd.getView().goTo(balise.getPosition(), 4e5);
 		default:
 			break;

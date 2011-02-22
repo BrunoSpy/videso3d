@@ -21,11 +21,15 @@ import fr.crnan.videso3d.VidesoController;
 /**
  * Panneau de données du DataExplorer
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public interface DataView {
 
 	public VidesoController getController();
 	
 	public void reset();
+
+	public void showObject(int type, String name);
+
+	public void hideObject(int type, String name);
 }

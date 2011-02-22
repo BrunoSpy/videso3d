@@ -189,5 +189,17 @@ public class StrView extends JPanel implements DataView{
 		
 	}
 
+	@Override
+	public void showObject(int type, String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void hideObject(int type, String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

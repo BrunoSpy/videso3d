@@ -150,6 +150,18 @@ public class RadioCovView extends JPanel implements DataView {
 	@Override
 	public RadioCovController getController() {
 		return (RadioCovController) DatasManager.getController(Type.RadioCov);
+	}
+
+	@Override
+	public void showObject(int type, String name) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void hideObject(int type, String name) {
+		// TODO Auto-generated method stub
+		
 	}			
 }	
 
