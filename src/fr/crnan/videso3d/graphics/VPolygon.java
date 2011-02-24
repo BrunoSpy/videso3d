@@ -23,10 +23,12 @@ import gov.nasa.worldwind.render.airspaces.Polygon;;
 /**
  * Adds the ability to find if a point is inside the Polygon
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class VPolygon extends Polygon {
 
+	private java.awt.Polygon surface;
+	
 	public VPolygon(List<? extends LatLon> locations) {
 		super(locations);
 	}
@@ -42,9 +44,11 @@ public class VPolygon extends Polygon {
 	 */
 	public boolean contains(Position pos){
 		if(pos.elevation >= this.getAltitudes()[0] && pos.elevation <= this.getAltitudes()[1]) {
-			java.awt.Polygon surface = new java.awt.Polygon();
-			for(LatLon l : this.getLocations()){
-				surface.addPoint((int)(l.longitude.degrees*100), (int)(l.latitude.degrees*100));
+			if(this.surface == null) {
+				this.surface = new java.awt.Polygon();
+				for(LatLon l : this.getLocations()){
+					surface.addPoint((int)(l.longitude.degrees*100), (int)(l.latitude.degrees*100));
+				}
 			}
 			return surface.contains((int)(pos.longitude.degrees*100), (int)(pos.latitude.degrees*100));
 		} else {
