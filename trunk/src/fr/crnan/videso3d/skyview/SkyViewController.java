@@ -139,6 +139,7 @@ public class SkyViewController implements VidesoController {
 						waypoint.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
 						waypoints.addBalise(waypoint);
 					}
+					st.close();
 				} catch (SQLException e){
 					e.printStackTrace();
 				}
