@@ -33,7 +33,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.ProgressMonitor;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -41,6 +40,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.jdesktop.swingx.JXTreeTable;
 
 import fr.crnan.videso3d.Couple;
+import fr.crnan.videso3d.ihm.ProgressMonitor;
 
 
 /**
@@ -129,8 +129,8 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 			
 		});
 		
-		final ProgressMonitor progress = new ProgressMonitor(this, "Affichage des objets...", "", 0, 1);
-		
+		final ProgressMonitor progress = new ProgressMonitor(this, "Affichage des objets...", "", 0, 1, false, false);
+
 		model.addPropertyChangeListener(new PropertyChangeListener() {
 			
 			@Override
