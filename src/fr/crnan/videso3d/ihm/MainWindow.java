@@ -271,7 +271,7 @@ public class MainWindow extends JFrame {
 		
 		
 		//mises à jour en cas de changement de base
-		progressMonitor = new ProgressMonitor(this, "Mise à jour", "", 0, 7);
+		progressMonitor = new ProgressMonitor(this, "Mise à jour", "", 0, 7, true, false);
 		wwd.addPropertyChangeListener("step", new PropertyChangeListener() {
 			
 			@Override
