@@ -25,7 +25,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.jdom.Element;
@@ -47,6 +46,7 @@ import fr.crnan.videso3d.graphics.PisteAerodrome;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.layers.AirportLayer;
 import fr.crnan.videso3d.layers.Balise2DLayer;
@@ -68,7 +68,7 @@ import gov.nasa.worldwind.view.orbit.BasicOrbitView;
  * Contrôle l'affichage et la construction des éléments AIP
  * @author A. Vidal
  * @author Bruno Spyckerelle
- * @version 0.3.4
+ * @version 0.3.5
  */
 public class AIPController implements VidesoController {
 
@@ -212,10 +212,6 @@ public class AIPController implements VidesoController {
 	public void toggleLayer(Layer layer, Boolean state) {
 		this.wwd.toggleLayer(layer, state);
 	}
-
-	
-	
-	
 	
 	@Override
 	public void showObject(int type, String name) {
@@ -363,13 +359,10 @@ public class AIPController implements VidesoController {
 		}
 	}
 
-
-
-
-
 	private void removeZone(int type, String name) {
 		if(zones.containsKey(type+" "+name)){
 			zones.get(type+" "+name).setVisible(false);
+			this.wwd.getAnnotationLayer().removeAnnotation(zones.get(type+" "+name).getAnnotation(Position.ZERO));
 			this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);
 		}
 	}
@@ -445,7 +438,7 @@ public class AIPController implements VidesoController {
 						routesSegments.addSegment(segmentName, previousNavFix, navFixExtremite, routeName, Integer.parseInt(routeID), display);
 						previousNavFix = navFixExtremite;
 						Couple<Altitude,Altitude> altis = aip.getLevels(segment);
-						LinkedList<LatLon> loc = new LinkedList<LatLon>();
+						ArrayList<LatLon> loc = new ArrayList<LatLon>();
 						Geometrie geometrieSegment = new Geometrie(segment);
 						loc.addAll(geometrieSegment.getLocations());
 						if(loc.get(0)==null){
@@ -542,7 +535,7 @@ public class AIPController implements VidesoController {
 
 	
 	public void displayRouteNavFixs(String pkRoute, boolean display){
-		LinkedList<Couple<String,String>> navFixExtremites = new LinkedList<Couple<String,String>>();
+		List<Couple<String,String>> navFixExtremites = new ArrayList<Couple<String,String>>();
 		try {
 			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nom, type from NavFix, segments where segments.pkRoute = ? AND segments.navFixExtremite = NavFix.pk");
 			st.setString(1, pkRoute);
@@ -688,7 +681,7 @@ public class AIPController implements VidesoController {
 	
 	private void removeAerodrome(int type, String nom){
 		String splittedName = nom.split("--")[0].trim();
-		List<String> nomsPistes = new LinkedList<String>();
+		List<String> nomsPistes = new ArrayList<String>();
 		int pk=-1;
 		ResultSet rs;
 		PreparedStatement ps;
@@ -819,7 +812,9 @@ public class AIPController implements VidesoController {
 	private void highlightCTL(String name){
 		ArrayList<String> names = getCTLSecteurs(name);
 		//on construit le secteur s'il n'existe pas encore
-		this.addZone(AIP.CTL, name);
+		for(String n : names){
+			this.addZone(AIP.CTL, n);
+		}
 		//puis on le centre dans la vue
 		Position center = centerView(zones.get(AIP.CTL+" "+names.get(0)));
 		if(names.size()>1){
@@ -830,22 +825,26 @@ public class AIPController implements VidesoController {
 		}
 	}
 
-
+	
+	private ArrayList<String> names;
 	/**
 	 * Renvoie les noms des morceaux de secteur correspondant au secteur name.
 	 * @param name
 	 * @return
 	 */
 	private ArrayList<String> getCTLSecteurs(String name){
-		ArrayList<String> names = new ArrayList<String>();
-		try{
-			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet rs = st.executeQuery("select nom from volumes where type ='CTL' and (nom LIKE '"+name+" %' OR nom ='"+name+"')");
-			while(rs.next()){
-				names.add(rs.getString(1));
+		if(names == null){
+			names = new ArrayList<String>();
+			try{
+				Statement st = DatabaseManager.getCurrentAIP();
+				ResultSet rs = st.executeQuery("select nom from volumes where type ='CTL' and (nom LIKE '"+name+" %' OR nom ='"+name+"')");
+				while(rs.next()){
+					names.add(rs.getString(1));
+				}
+				st.close();
+			}catch(SQLException e){
+				e.printStackTrace();
 			}
-		}catch(SQLException e){
-			e.printStackTrace();
 		}
 		return names;
 	}
@@ -1059,5 +1058,23 @@ public class AIPController implements VidesoController {
 
 	public static int getNumberInitSteps() {
 		return 3;
+	}
+
+
+	/**
+	 * 
+	 * @param name
+	 * @return Tous les {@link VPolygon} qui forment une zone ou un secteur
+	 */
+	public List<VPolygon> getPolygons(int type, String name) {
+		List<VPolygon> polygons = new ArrayList<VPolygon>();
+		if(type == AIP.CTL){
+			for(String n : this.getCTLSecteurs(name.split(" ")[0])){
+				polygons.add(this.zones.get(type+" "+n));
+			}
+		} else {
+			polygons.add(this.zones.get(type +" "+name));
+		}
+		return polygons;
 	}
 }

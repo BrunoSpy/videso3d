@@ -21,7 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.crnan.videso3d.DatabaseManager;
@@ -36,6 +36,7 @@ import fr.crnan.videso3d.graphics.Route.Space;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.layers.Balise2DLayer;
 import fr.crnan.videso3d.layers.Balise3DLayer;
 import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
@@ -52,7 +53,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage et la construction des éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.1.6
+ * @version 0.1.7
  */
 public class StipController implements VidesoController {
 
@@ -375,9 +376,9 @@ public class StipController implements VidesoController {
 		if(this.routes2D.getRoute(name) == null) {
 			Route3D route3D = new Route3D(DatabaseManager.Type.STIP, StipController.ROUTES);
 			Route2D route2D = new Route2D(DatabaseManager.Type.STIP, StipController.ROUTES);
-			LinkedList<LatLon> loc = new LinkedList<LatLon>();
-			LinkedList<Integer> sens = new LinkedList<Integer>();
-			LinkedList<String> balises = new LinkedList<String>();
+			List<LatLon> loc = new ArrayList<LatLon>();
+			List<Integer> sens = new ArrayList<Integer>();
+			List<String> balises = new ArrayList<String>();
 			try {
 				Statement st = DatabaseManager.getCurrentStip();
 				ResultSet rs = st.executeQuery("select espace from routes where name = '"+name+"'");
@@ -615,5 +616,20 @@ public class StipController implements VidesoController {
 
 	public static int getNumberInitSteps() {
 		return 5;
+	}
+
+	/**
+	 * 
+	 * @param name of the Stip sector
+	 * @return All {@link VPolygon} of the sector
+	 */
+	public List<VPolygon> getPolygons(String name) {
+		List<VPolygon> polygons = new ArrayList<VPolygon>();
+		int i = 0;
+		while(secteurs.containsKey(name+i)){
+			polygons.add(secteurs.get(name+i));
+			i++;
+		}
+		return polygons;
 	}
 }

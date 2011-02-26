@@ -29,6 +29,7 @@ import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,8 +43,10 @@ import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -58,6 +61,7 @@ import org.jdesktop.swingx.JXTaskPaneContainer;
 
 import fr.crnan.videso3d.Triplet;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.geo.GEOReader;
@@ -65,6 +69,7 @@ import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.geo.GEOWriter;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
+import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
@@ -72,6 +77,7 @@ import fr.crnan.videso3d.layers.GEOTracksLayer;
 import fr.crnan.videso3d.layers.LPLNTracksLayer;
 import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
+import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.tracks.Track;
 
@@ -246,8 +252,44 @@ public class TrajectoriesView extends JPanel {
 
 	private JXTaskPane createPolygonFilterPane(){
 		JXTaskPane filterPolygonPane = new JXTaskPane("Filtres volumiques");
-		JXTable polygonsTable = new JXTable(new PolygonTableModel());
+		final JXTable polygonsTable = new JXTable(new PolygonTableModel());
 		polygonsTable.setColumnControlVisible(true);
+		polygonsTable.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getButton() == MouseEvent.BUTTON3){
+					int rowView = polygonsTable.rowAtPoint(e.getPoint());
+					polygonsTable.setRowSelectionInterval(rowView, rowView);
+					final int rowModel = polygonsTable.convertRowIndexToModel(rowView);
+					final JPopupMenu menu = new JPopupMenu();
+					JMenuItem delete = new JMenuItem("Supprimer");
+					delete.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							((PolygonTableModel)polygonsTable.getModel()).deleteRow(rowModel);
+							menu.setVisible(false);
+						}
+					});
+					menu.add(delete);
+					menu.setLocation(e.getPoint());
+					menu.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+		});
 		JPanel container = new JPanel(new BorderLayout());
 		container.add(polygonsTable.getTableHeader(), BorderLayout.NORTH);
 		container.add(polygonsTable, BorderLayout.CENTER);
@@ -722,27 +764,65 @@ public class TrajectoriesView extends JPanel {
 
 		String[] columnNames = {"Nom", "Trajectoires", "Actif"};
 
-		Object[] polygons = null;
+		ArrayList<List<VPolygon>> polygons = null;
 		
 		public PolygonTableModel(){
 			super();
 			if(layer.getPolygonFilters() != null)
-				polygons = layer.getPolygonFilters().toArray();//TODO gérer les mauvais fichiers
+				this.fillArrayPolygons(layer.getPolygonFilters());
 			
 			layer.addPropertyChangeListener(AVKey.LAYER, new PropertyChangeListener() {
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
 					if(layer.getPolygonFilters() != null){
-						polygons = layer.getPolygonFilters().toArray();
+						fillArrayPolygons(layer.getPolygonFilters());
 						fireTableDataChanged();
 					}
 				}
 			});
 		}
-//		
-//		public VPolygon getPolygonAt(int row){
-//			return (VPolygon) polygons[row];
-//		}
+		
+		public void deleteRow(int rowModel) {
+			List<VPolygon> filters = this.polygons.get(rowModel);
+			this.polygons.remove(rowModel);
+			layer.removePolygonFilter(filters);
+			this.fireTableDataChanged();
+		}
+
+		private void fillArrayPolygons(Collection<VPolygon> filters){
+			this.polygons = new ArrayList<List<VPolygon>>();
+			List<VPolygon> list = null;
+			String lastName = "";
+			for(VPolygon p : filters){
+				if(p instanceof Secteur3D && (((Secteur3D) p).getType() == AIP.CTL || ((Secteur3D)p).getType() == StipController.SECTEUR)){
+					//les secteurs peuvent être composés de plusieurs polygones
+					//n'afficher qu'une ligne dans ce cas
+					//on assume que les morceaux d'un secteur se suivent
+					if(lastName.isEmpty() || !lastName.equals(((VidesoObject) p).getName().split(" ")[0])){
+						lastName = ((VidesoObject) p).getName().split(" ")[0];
+						if(list != null){
+							this.polygons.add(list);
+						}
+						list = new ArrayList<VPolygon>();
+						list.add(p);
+					} else {
+						list.add(p);
+					}
+				} else {
+					lastName = "";
+					if(list != null){
+						this.polygons.add(list);
+					}
+					list = new ArrayList<VPolygon>();
+					list.add(p);
+					this.polygons.add(list);
+					list = null;
+				}
+			}
+			if(list != null) { //ne pas oublier la dernière série
+				this.polygons.add(list);
+			}
+		}
 		
 		@Override
 		public String getColumnName(int col) {
@@ -759,24 +839,29 @@ public class TrajectoriesView extends JPanel {
 			if(polygons == null){
 				return 0;
 			} else {
-				return polygons.length;
+				return polygons.size();
 			}
 		}
 
 		@Override
 		public Object getValueAt(int row, int col) {
-			VPolygon p = (VPolygon) polygons[row];
+			List<VPolygon> list= this.polygons.get(row);
+			VPolygon first = list.get(0);
 			switch (col) {
 			case 0:
-				if(p instanceof VidesoObject){
-					return ((VidesoObject) p).getName();
+				if(first instanceof VidesoObject){
+					return ((VidesoObject) first).getName().split(" ")[0];
 				} else {
 					return "Polygone "+row;
 				}
 			case 1:
-				return layer.getNumberTrajectories((VPolygon) polygons[row]);
+				int traj = 0;
+				for(VPolygon p : list){
+					traj += layer.getNumberTrajectories(p);
+				}
+				return traj;
 			case 2:
-				return layer.isPolygonFilterActive((VPolygon) polygons[row]);
+				return layer.isPolygonFilterActive(first);
 			default:
 				return "";
 			}
@@ -816,10 +901,12 @@ public class TrajectoriesView extends JPanel {
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			if(columnIndex == 2){
-				if((Boolean) aValue){
-					layer.enablePolygonFilter((VPolygon) polygons[rowIndex]);
-				} else {
-					layer.disablePolygonFilter((VPolygon) polygons[rowIndex]);
+				for(VPolygon p : this.polygons.get(rowIndex)){
+					if((Boolean) aValue){
+						layer.enablePolygonFilter(p);
+					} else {
+						layer.disablePolygonFilter(p);
+					}
 				}
 				fireTableDataChanged();
 			}

@@ -217,9 +217,16 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	
 	/**
 	 * Adds a filter
+	 * @param polygon Filter to be added
 	 */
 	public abstract void addPolygonFilter(VPolygon polygon);
 	
+	/**
+	 * Adds multiple filters at once
+	 * @param polygon
+	 */
+	public abstract void addPolygonFilter(Collection<VPolygon> polygon);
+		
 	/**
 	 * Disable a filter without removing it
 	 * @param polygon
@@ -263,6 +270,12 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 * @param polygon
 	 */
 	public abstract void removePolygonFilter(VPolygon polygon);
+	
+	/**
+	 * Disables and removes multiple filters
+	 * @param polygons
+	 */
+	public abstract void removePolygonFilter(Collection<VPolygon> polygons);
 	
 	/****************************************/
 	
