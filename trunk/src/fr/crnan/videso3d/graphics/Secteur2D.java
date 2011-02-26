@@ -4,7 +4,7 @@ import java.util.List;
 
 import fr.crnan.videso3d.geom.LatLonCautra;
 
-public class Secteur2D extends SurfacePolygonAnnotation implements Secteur {
+public class Secteur2D extends SurfacePolygonAnnotation implements VidesoObject {
 
 	private int type;
 	

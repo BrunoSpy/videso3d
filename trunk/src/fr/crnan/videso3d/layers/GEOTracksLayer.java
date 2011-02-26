@@ -16,11 +16,11 @@
 package fr.crnan.videso3d.layers;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -48,7 +48,7 @@ import gov.nasa.worldwind.util.Logging;
  */
 public class GEOTracksLayer extends TrajectoriesLayer {
 	
-	private List<GEOTrack> tracks = new LinkedList<GEOTrack>();
+	private List<GEOTrack> tracks = new ArrayList<GEOTrack>();
 	
 	protected HashMap<Integer, String> filters = new HashMap<Integer, String>();
 	
@@ -57,7 +57,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	/**
 	 * Couleurs des tracks
 	 */
-	protected List<ShapeAttributes> colors = new LinkedList<ShapeAttributes>();
+	protected List<ShapeAttributes> colors = new ArrayList<ShapeAttributes>();
 	
 	protected RenderableLayer layer = new RenderableLayer();
 		
@@ -112,7 +112,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		//		line.setDrawVerticals(!(this.getStyle() == TrajectoriesLayer.STYLE_CURTAIN));
 			}
 		} else {
-			LinkedList<Position> positions = new LinkedList<Position>();
+			List<Position> positions = new ArrayList<Position>();
 			Position position = Position.ZERO;
 			for(TrackPoint point : track.getTrackPoints()){
 				if(!(point.getLatitude() == position.latitude.degrees  //only add a position if different from the previous position
@@ -533,7 +533,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 
 	@Override
 	public List<Integer> getStylesAvailable() {
-		List<Integer> styles = new LinkedList<Integer>();
+		List<Integer> styles = new ArrayList<Integer>();
 		if(this.tracks.size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) styles.add(TrajectoriesLayer.STYLE_CURTAIN);
 		styles.add(TrajectoriesLayer.STYLE_SIMPLE);
 		return styles;
@@ -577,31 +577,6 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 				}
 			}
 		}
-		
-//		for(Path p : lines.values()){
-//			if(this.polygonFilters == null || this.polygonFilters.size() == 0 || this.getNumberPolygonFiltersActives() == 0){
-//				//aucun filtre actif => tout afficher
-//				p.setVisible(true);
-//			} else {
-//								
-//				
-//				Iterator<? extends Position> positions = p.getPositions().iterator();
-//				boolean contain = false;
-//				while(positions.hasNext() && !contain){
-//					Position pos = positions.next();
-//					Iterator<Entry<VPolygon, Couple<Boolean, Integer>>> polygons = polygonFilters.entrySet().iterator();
-//					while(polygons.hasNext() /*&& !contain*/){
-//						Entry<VPolygon, Couple<Boolean, Integer>> polygon = polygons.next();
-//						if(polygon.getValue().getFirst() && polygon.getKey().contains(pos)){
-//							contain = true;
-//							polygon.getValue().setSecond(polygon.getValue().getSecond()+1);
-//						}
-//					}
-//				}
-//				p.setVisible(contain);
-//				contain = false;
-//			}
-//		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
@@ -612,6 +587,15 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		this.update();
 	}
 
+	@Override
+	public void addPolygonFilter(Collection<VPolygon> polygons) {
+		if(this.polygonFilters ==  null) this.polygonFilters = new HashMap<VPolygon, Couple<Boolean, Integer>>();
+		for(VPolygon p : polygons){
+			polygonFilters.put(p, new Couple<Boolean, Integer>(true, 0));
+		}
+		this.update();
+	}
+	
 	@Override
 	public void disablePolygonFilter(VPolygon polygon){
 		if(polygonFilters.containsKey(polygon)){
@@ -661,6 +645,16 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		this.update();
 	}
 
+	@Override
+	public void removePolygonFilter(Collection<VPolygon> polygons) {
+		if(polygonFilters != null) {
+			for(VPolygon p : polygons){
+				polygonFilters.remove(p);	
+			}
+		}
+		this.update();
+	}
+	
 	@Override
 	public int getNumberTrajectories(VPolygon polygon) {
 		if(this.polygonFilters.containsKey(polygon)){

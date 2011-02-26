@@ -21,18 +21,14 @@ import fr.crnan.videso3d.DatabaseManager;
 /**
  * Représentation 3D d'un secteur de contrôle
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.4
  */
-public class Secteur3D extends PolygonAnnotation implements Secteur {
+public class Secteur3D extends PolygonAnnotation {
 
 	/*
 	 * Nom du secteur
 	 */
 	private String name;
-
-	private int type;
-	
-	private DatabaseManager.Type base;
 	
 	/**
 	 * Crée un secteur 3D
@@ -43,6 +39,7 @@ public class Secteur3D extends PolygonAnnotation implements Secteur {
 	 * @param base de données origine
 	 */
 	public Secteur3D(String name, Integer plancher, Integer plafond, int t, DatabaseManager.Type base){
+		super();
 		this.setName(name);
 		this.setType(t);
 		this.setDatabaseType(base);
@@ -69,25 +66,6 @@ public class Secteur3D extends PolygonAnnotation implements Secteur {
 	public String getName(){
 		return this.name;
 	}
-	 
-	@Override
-	public void setType(int t) {
-		this.type = t;
-	}
-	
-	@Override
-	public int getType(){
-		return this.type;
-	}
-	
-	@Override
-	public DatabaseManager.Type getDatabaseType() {
-		return this.base;
-	}
 
-	@Override
-	public void setDatabaseType(DatabaseManager.Type type) {
-		this.base = type;
-	}
 }
 

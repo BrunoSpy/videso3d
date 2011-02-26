@@ -55,5 +55,37 @@ public class VPolygon extends Polygon {
 			return false;
 		}
 	}
+
+	@Override
+	public void setLocations(Iterable<? extends LatLon> locations) {
+		super.setLocations(locations);
+		this.surface = null;
+	}
+
+	@Override
+	protected void addLocations(Iterable<? extends LatLon> newLocations) {
+		super.addLocations(newLocations);
+		this.surface = null;
+	}
+
+	@Override
+	protected void doMoveTo(Position oldRef, Position newRef) {
+		super.doMoveTo(oldRef, newRef);
+		this.surface = null;
+	}
+
+	@Override
+	public void move(Position position) {
+		super.move(position);
+		this.surface = null;
+	}
+
+	@Override
+	public void moveTo(Position position) {
+		super.moveTo(position);
+		this.surface = null;
+	}
+	
+	
 	
 }

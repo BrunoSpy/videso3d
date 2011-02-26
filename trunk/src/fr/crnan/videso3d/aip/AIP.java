@@ -26,7 +26,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -117,23 +116,23 @@ public class AIP extends FileParser{
 	}
 
 	public AIP(){
-		this.TSAs = new LinkedList<Couple<Integer,String>>();
-		this.SIVs = new LinkedList<Couple<Integer,String>>();
-		this.CTRs = new LinkedList<Couple<Integer,String>>();
-		this.TMAs = new LinkedList<Couple<Integer,String>>();
-		this.Rs = new LinkedList<Couple<Integer,String>>();
-		this.Ds = new LinkedList<Couple<Integer,String>>();
-		this.FIRs = new LinkedList<Couple<Integer,String>>();
-		this.UIRs = new LinkedList<Couple<Integer,String>>();
-		this.LTAs = new LinkedList<Couple<Integer,String>>();
-		this.UTAs = new LinkedList<Couple<Integer,String>>();
-		this.CTAs = new LinkedList<Couple<Integer,String>>();
-		this.CTLs = new LinkedList<Couple<Integer,String>>();
-		this.Pjes = new LinkedList<Couple<Integer,String>>();
-		this.Aers = new LinkedList<Couple<Integer,String>>();
-		this.Vols = new LinkedList<Couple<Integer,String>>();
-		this.Bals = new LinkedList<Couple<Integer,String>>();
-		this.TrPlas = new LinkedList<Couple<Integer,String>>();
+		this.TSAs = new ArrayList<Couple<Integer,String>>();
+		this.SIVs = new ArrayList<Couple<Integer,String>>();
+		this.CTRs = new ArrayList<Couple<Integer,String>>();
+		this.TMAs = new ArrayList<Couple<Integer,String>>();
+		this.Rs = new ArrayList<Couple<Integer,String>>();
+		this.Ds = new ArrayList<Couple<Integer,String>>();
+		this.FIRs = new ArrayList<Couple<Integer,String>>();
+		this.UIRs = new ArrayList<Couple<Integer,String>>();
+		this.LTAs = new ArrayList<Couple<Integer,String>>();
+		this.UTAs = new ArrayList<Couple<Integer,String>>();
+		this.CTAs = new ArrayList<Couple<Integer,String>>();
+		this.CTLs = new ArrayList<Couple<Integer,String>>();
+		this.Pjes = new ArrayList<Couple<Integer,String>>();
+		this.Aers = new ArrayList<Couple<Integer,String>>();
+		this.Vols = new ArrayList<Couple<Integer,String>>();
+		this.Bals = new ArrayList<Couple<Integer,String>>();
+		this.TrPlas = new ArrayList<Couple<Integer,String>>();
 
 		SAXBuilder sxb = new SAXBuilder();
 		try {
@@ -209,23 +208,23 @@ public class AIP extends FileParser{
 	protected void getFromFiles() throws SQLException {
 		int progress = 0;
 		Element racineVolumes = document.getRootElement().getChild("Situation").getChild("VolumeS");
-		this.TSAs = new LinkedList<Couple<Integer,String>>();
-		this.SIVs = new LinkedList<Couple<Integer,String>>();
-		this.CTRs = new LinkedList<Couple<Integer,String>>();
-		this.TMAs = new LinkedList<Couple<Integer,String>>();
-		this.Rs = new LinkedList<Couple<Integer,String>>();
-		this.Ds = new LinkedList<Couple<Integer,String>>();
-		this.FIRs = new LinkedList<Couple<Integer,String>>();
-		this.UIRs = new LinkedList<Couple<Integer,String>>();
-		this.LTAs = new LinkedList<Couple<Integer,String>>();
-		this.UTAs = new LinkedList<Couple<Integer,String>>();
-		this.CTAs = new LinkedList<Couple<Integer,String>>();
-		this.CTLs = new LinkedList<Couple<Integer,String>>();
-		this.Pjes = new LinkedList<Couple<Integer,String>>();
-		this.Aers = new LinkedList<Couple<Integer,String>>();
-		this.Vols = new LinkedList<Couple<Integer,String>>();
-		this.Bals = new LinkedList<Couple<Integer,String>>();
-		this.TrPlas = new LinkedList<Couple<Integer,String>>();
+		this.TSAs = new ArrayList<Couple<Integer,String>>();
+		this.SIVs = new ArrayList<Couple<Integer,String>>();
+		this.CTRs = new ArrayList<Couple<Integer,String>>();
+		this.TMAs = new ArrayList<Couple<Integer,String>>();
+		this.Rs = new ArrayList<Couple<Integer,String>>();
+		this.Ds = new ArrayList<Couple<Integer,String>>();
+		this.FIRs = new ArrayList<Couple<Integer,String>>();
+		this.UIRs = new ArrayList<Couple<Integer,String>>();
+		this.LTAs = new ArrayList<Couple<Integer,String>>();
+		this.UTAs = new ArrayList<Couple<Integer,String>>();
+		this.CTAs = new ArrayList<Couple<Integer,String>>();
+		this.CTLs = new ArrayList<Couple<Integer,String>>();
+		this.Pjes = new ArrayList<Couple<Integer,String>>();
+		this.Aers = new ArrayList<Couple<Integer,String>>();
+		this.Vols = new ArrayList<Couple<Integer,String>>();
+		this.Bals = new ArrayList<Couple<Integer,String>>();
+		this.TrPlas = new ArrayList<Couple<Integer,String>>();
 		this.setFile("Aerodromes");
 		this.setProgress(progress);
 		this.getAerodromes();

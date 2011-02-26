@@ -22,16 +22,21 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
+import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.aip.AIPController;
+import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
+import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Airspace;
@@ -52,7 +57,7 @@ import javax.swing.event.ChangeListener;
 /**
  * Contextual menu for {@link Airspace}
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class AirspaceMenu extends JPopupMenu {
 
@@ -156,7 +161,7 @@ public class AirspaceMenu extends JPopupMenu {
 			this.add(new JSeparator());
 		}
 		
-		List<TrajectoriesLayer> trajLayers = new LinkedList<TrajectoriesLayer>();
+		List<TrajectoriesLayer> trajLayers = new ArrayList<TrajectoriesLayer>();
 		for(Layer l : this.wwd.getModel().getLayers()){
 			if(l instanceof TrajectoriesLayer){
 				if(((TrajectoriesLayer) l).isPolygonFilterable())
@@ -171,8 +176,20 @@ public class AirspaceMenu extends JPopupMenu {
 					
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
+						final List<VPolygon> polygons = new ArrayList<VPolygon>(); //secteurs stip et aip sont formés de plusieurs polygones
+						if(airspace instanceof Secteur3D){
+							if(((Secteur3D) airspace).getDatabaseType() == Type.STIP){
+								polygons.addAll(((StipController)DatasManager.getController(((Secteur3D) airspace).getDatabaseType())).getPolygons(((Secteur3D) airspace).getName()));
+							} else if(((Secteur3D) airspace).getDatabaseType() == Type.AIP){
+								polygons.addAll(((AIPController)DatasManager.getController(((Secteur3D) airspace).getDatabaseType())).getPolygons(((Secteur3D) airspace).getType(), ((Secteur3D) airspace).getName()));
+							} 
+						} else {
+							polygons.add((VPolygon) airspace);
+						}
+						
+						
 						int polygonNumber = l.getPolygonFilters() == null ? 0 : l.getPolygonFilters().size();
-						final ProgressMonitor progress = new ProgressMonitor(wwd, "Calcul des trajectoires filtrées", "", 0, l.getSelectedTracks().size()*(polygonNumber+1));
+						final ProgressMonitor progress = new ProgressMonitor(wwd, "Calcul des trajectoires filtrées", "", 0, l.getSelectedTracks().size()*(polygonNumber+1)*polygons.size());
 						l.addPropertyChangeListener("progress", new PropertyChangeListener() {
 							
 							@Override
@@ -184,7 +201,7 @@ public class AirspaceMenu extends JPopupMenu {
 
 							@Override
 							protected Integer doInBackground() throws Exception {
-								l.addPolygonFilter((VPolygon) airspace);
+								l.addPolygonFilter(polygons);
 								return null;
 							}
 						}.execute();
