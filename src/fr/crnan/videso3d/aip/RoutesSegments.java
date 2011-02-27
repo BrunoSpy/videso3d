@@ -16,7 +16,7 @@
 
 package fr.crnan.videso3d.aip;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import fr.crnan.videso3d.Couple;
 
@@ -24,11 +24,11 @@ import fr.crnan.videso3d.Couple;
  * Classe permettant de stocker les noms des segments avec les routes auxquelles ils appartiennent, ainsi que les balises aux extremités de 
  * chaque segment.
  * @author A. Vidal
- *
+ * @version 0.1.1
  */
 public class RoutesSegments{
 
-	private LinkedList<Route> routes = new LinkedList<Route>();
+	private ArrayList<Route> routes = new ArrayList<Route>();
 	
 	/**
 	 * Ajoute un segment dans la liste correspondant à sa route
@@ -96,7 +96,7 @@ public class RoutesSegments{
 	
 	
 	
-	public class Route extends LinkedList<Segment>{
+	public class Route extends ArrayList<Segment>{
 		private String name;
 		private int pk;
 		private boolean visible;

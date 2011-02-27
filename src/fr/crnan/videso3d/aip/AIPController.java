@@ -395,6 +395,7 @@ public class AIPController implements VidesoController {
 								routes3D.displayRoute(segmentName);
 							}
 						}
+						st.close();
 					}catch(SQLException e){
 						e.printStackTrace();
 					}	
@@ -520,9 +521,14 @@ public class AIPController implements VidesoController {
 					Statement st = DatabaseManager.getCurrentAIP();
 					ResultSet rs = st.executeQuery("select sequence from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
 					while(rs.next()){
+						try{
 						routes2D.hideRoute(buildSegmentName(routeName, rs.getString(1)));
 						routes3D.hideRoute(buildSegmentName(routeName, rs.getString(1)));
+						} catch(Exception e){
+							e.printStackTrace();
+						}
 					}
+					st.close();
 				}catch(SQLException e){
 					e.printStackTrace();
 				}
