@@ -27,7 +27,7 @@ import gov.nasa.worldwind.layers.AirspaceLayer;
  * Layer destiné à afficher les routes<br />
  * Permet d'afficher sélectivement une ou plusieurs routes, selon leur nom ou leur type
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 	
@@ -81,8 +81,9 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 	
 	@Override
 	public void displayRoute(String route) {
-		Route3D r = routes.get(route);
-		this.displayRoute(r);
+		if(this.routes.containsKey(route)){
+			this.displayRoute(this.routes.get(route));
+		}
 	}
 
 	@Override
@@ -126,20 +127,25 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 
 	@Override
 	public void hideRoute(String route) {
-		this.hideRoute(this.routes.get(route));
+		if(this.routes.containsKey(route)) {
+			this.hideRoute(this.routes.get(route));
+		}
 	}
 
 	@Override
 	public void highlight(String name) {
-		Route3D r = this.routes.get(name);
-		r.highlight(true);
-		this.displayRoute(r);
+		if(this.routes.containsKey(name)){
+			Route3D r = this.routes.get(name);
+			r.highlight(true);
+			this.displayRoute(r);
+		}
 	}
 
 	@Override
 	public void unHighlight(String name) {
-		Route3D r = this.routes.get(name);
-		r.highlight(false);
+		if(this.routes.containsKey(name)){
+			this.routes.get(name).highlight(false);
+		}
 	}
 	
 	
