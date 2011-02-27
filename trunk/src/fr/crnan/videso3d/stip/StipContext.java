@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -51,7 +51,7 @@ public class StipContext extends Context {
 
 	@Override
 	public List<JXTaskPane> getTaskPanes(int type, final String name) {
-		List<JXTaskPane> taskpanes = new LinkedList<JXTaskPane>();
+		List<JXTaskPane> taskpanes = new ArrayList<JXTaskPane>();
 		switch (type) {
 		case StipController.SECTEUR:
 			JXTaskPane taskpane1 = new JXTaskPane();
@@ -84,7 +84,7 @@ public class StipContext extends Context {
 						"sect8 ='"+name+"' or " +
 						"sect9 ='"+name+"'");
 
-				final List<String> balises = new LinkedList<String>();
+				final List<String> balises = new ArrayList<String>();
 				while(rs.next()){
 					balises.add(rs.getString(1));
 				}

@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -120,7 +120,7 @@ public class StpvContext extends Context {
 		default:
 			break;
 		}
-		LinkedList<JXTaskPane> list = new LinkedList<JXTaskPane>();
+		List<JXTaskPane> list = new ArrayList<JXTaskPane>();
 		list.add(taskpane);
 		return list;
 	}

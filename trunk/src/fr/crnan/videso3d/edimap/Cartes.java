@@ -24,7 +24,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.crnan.videso3d.DatabaseManager;
@@ -126,17 +126,17 @@ public class Cartes extends FileParser {
 	 * Récupère les données des cartes en base de données
 	 */
 	public Cartes(){
-		this.cartesDynamiques = new LinkedList<Entity>();
-		this.cartesStatiques = new LinkedList<Entity>();		
-		this.secteurs = new LinkedList<Entity>();
-		this.volumes = new LinkedList<Entity>();
+		this.cartesDynamiques = new ArrayList<Entity>();
+		this.cartesStatiques = new ArrayList<Entity>();		
+		this.secteurs = new ArrayList<Entity>();
+		this.volumes = new ArrayList<Entity>();
 		try {
 			//TODO prendre en compte la possibilité qu'il n'y ait pas de bdd Edimap
 			Statement edimapDB = DatabaseManager.getCurrentEdimap();
 			if(edimapDB != null){
 				ResultSet rs = edimapDB.executeQuery("select * from cartes where type = 'dynamique' order by name");
 				while(rs.next()){
-					List<Entity> values = new LinkedList<Entity>();
+					List<Entity> values = new ArrayList<Entity>();
 					values.add(new Entity("name", rs.getString("name")));
 					values.add(new Entity("fichierActive", rs.getString("fichier")));
 					Entity carte = new Entity("dynamique", values);
@@ -144,7 +144,7 @@ public class Cartes extends FileParser {
 				}
 				rs = edimapDB.executeQuery("select * from cartes where type = 'statique' order by name");
 				while(rs.next()){
-					List<Entity> values = new LinkedList<Entity>();
+					List<Entity> values = new ArrayList<Entity>();
 					values.add(new Entity("name", rs.getString("name")));
 					values.add(new Entity("fichier", rs.getString("fichier")));
 					Entity carte = new Entity("statique", values);
@@ -152,7 +152,7 @@ public class Cartes extends FileParser {
 				}
 				rs = edimapDB.executeQuery("select * from cartes where type = 'secteur' order by name");
 				while(rs.next()){
-					List<Entity> values = new LinkedList<Entity>();
+					List<Entity> values = new ArrayList<Entity>();
 					values.add(new Entity("name", rs.getString("name")));
 					values.add(new Entity("fichierSousControle", rs.getString("fichier")));
 					Entity carte = new Entity("secteur", values);
@@ -160,7 +160,7 @@ public class Cartes extends FileParser {
 				}
 				rs = edimapDB.executeQuery("select * from cartes where type = 'volume' order by name");
 				while(rs.next()){
-					List<Entity> values = new LinkedList<Entity>();
+					List<Entity> values = new ArrayList<Entity>();
 					values.add(new Entity("name", rs.getString("name")));
 					values.add(new Entity("fichier", rs.getString("fichier")));
 					Entity carte = new Entity("volumeInteret", values);
