@@ -24,7 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
@@ -164,7 +164,7 @@ public class FileManager {
 	 * @return list
 	 */
 	public static List<File> untar(File file){
-		List<File> files = new LinkedList<File>();
+		List<File> files = new ArrayList<File>();
 		byte[] data = new byte[2048];
 		try {
 			BufferedOutputStream dest = null;
@@ -232,7 +232,7 @@ public class FileManager {
 	 * @return List of unzipped files
 	 */
 	public static List<File> unzip(File file){
-		List<File> files = new LinkedList<File>();
+		List<File> files = new ArrayList<File>();
 		byte[] data = new byte[2048];
 		try {
 			BufferedOutputStream dest = null;

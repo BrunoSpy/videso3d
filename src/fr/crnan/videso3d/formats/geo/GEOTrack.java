@@ -15,7 +15,7 @@
 */
 package fr.crnan.videso3d.formats.geo;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.crnan.videso3d.formats.VidesoTrack;
@@ -33,7 +33,7 @@ public class GEOTrack implements VidesoTrack {
 	private String type;
 	private Integer numTraj;
 	
-	private List<GEOTrackPoint> trackPoints = new LinkedList<GEOTrackPoint>();
+	private List<GEOTrackPoint> trackPoints = new ArrayList<GEOTrackPoint>();
 	
 	public GEOTrack(String sentence){
 		String[] words = sentence.split("\t");

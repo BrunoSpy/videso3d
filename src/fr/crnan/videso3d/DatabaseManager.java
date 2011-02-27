@@ -35,7 +35,6 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.event.SwingPropertyChangeSupport;
@@ -1303,7 +1302,7 @@ public final class DatabaseManager {
 		case STIP:	
 			st = DatabaseManager.getCurrentStip();
 			if(st != null){
-				items = new LinkedList<Couple<Integer, String>>();
+				items = new ArrayList<Couple<Integer, String>>();
 				rs = st.executeQuery("select name, publicated from balises");
 				while(rs.next()){
 					items.add(new Couple<Integer, String>(StipController.BALISES, rs.getString(1)));
@@ -1321,7 +1320,7 @@ public final class DatabaseManager {
 		case AIP:
 			st = DatabaseManager.getCurrentAIP();
 			if(st != null){
-				items = new LinkedList<Couple<Integer, String>>();
+				items = new ArrayList<Couple<Integer, String>>();
 				rs = st.executeQuery("select nom, type from volumes " +
 								"UNION select nom, type from routes " +
 								"UNION select nom, type from NavFix " +
@@ -1347,7 +1346,7 @@ public final class DatabaseManager {
 		case Edimap:
 			st = DatabaseManager.getCurrentEdimap();
 			if(st != null){
-				items = new LinkedList<Couple<Integer, String>>();
+				items = new ArrayList<Couple<Integer, String>>();
 				rs = st.executeQuery("select name, type from cartes");
 				while(rs.next()) {
 					items.add(new Couple<Integer, String>(Cartes.string2type(rs.getString(2)), rs.getString(1)));
@@ -1382,7 +1381,7 @@ public final class DatabaseManager {
 	 * @return
 	 */
 	public static List<Type> getSelectedDatabases(){
-		List<Type> bases = new LinkedList<DatabaseManager.Type>();
+		List<Type> bases = new ArrayList<DatabaseManager.Type>();
 		try {
 			Statement st = DatabaseManager.getCurrent(Type.Databases);
 			ResultSet rs = st.executeQuery("select type from databases where selected ='1'");
