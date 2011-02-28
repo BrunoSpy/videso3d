@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.swing.SwingWorker;
+
 import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.formats.VidesoTrack;
@@ -550,18 +552,29 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	}
 	
 	private void updatePolygonFilters(){
+		new SwingWorker<Integer, Integer>() {
+			@Override
+			protected Integer doInBackground() throws Exception {
+				doUpdatePolygonFilters();
+				return null;
+			}
+		}.execute();
+	}
+	
+	private void doUpdatePolygonFilters(){
+		this.firePropertyChange("change", -1, this.getNumberPolygonFiltersActives()*this.getSelectedTracks().size());
 		if(this.polygonFilters == null)
 			return;
 		for(Couple<Boolean, Integer> c : this.polygonFilters.values()){
 			c.setSecond(0);
 		}
-		Collection<Path> paths = this.getSelectedPaths(); //ne pas afficher des trajectoires déjà filtrées
+		Collection<Path> paths = getSelectedPaths(); //ne pas afficher des trajectoires déjà filtrées
 		if(this.polygonFilters != null && this.polygonFilters.size() != 0 && this.getNumberPolygonFiltersActives() != 0){
 			for(Path p : paths)
 				p.setVisible(false);
-			for(Entry<VPolygon, Couple<Boolean, Integer>> polygon : polygonFilters.entrySet()) {
+			int i = 0;
+			for(Entry<VPolygon, Couple<Boolean, Integer>> polygon : this.polygonFilters.entrySet()) {
 				if(polygon.getValue().getFirst()){
-					int i = 0;
 					for(Path p : paths){
 						i++;
 						this.firePropertyChange("progress", i-1, i);
