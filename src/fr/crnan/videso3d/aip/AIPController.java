@@ -383,22 +383,6 @@ public class AIPController implements VidesoController {
 				for(Segment s : route){
 					routes2D.displayRoute(s.getName());
 					routes3D.displayRoute(s.getName());
-					String routeID = AIP.getID(type, routeName);
-					try {
-						Statement st = DatabaseManager.getCurrentAIP();
-						ResultSet segments = st.executeQuery("select pk from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
-						while(segments.next()){
-							Element segment = aip.findElement(aip.getDocumentRoot().getChild("SegmentS"), segments.getString(1));
-							if(!segment.getChildText("Circulation").equals("(XxX)")){
-								String segmentName = buildSegmentName(routeName, segment.getChildText("Sequence"));
-								routes2D.displayRoute(segmentName);
-								routes3D.displayRoute(segmentName);
-							}
-						}
-						st.close();
-					}catch(SQLException e){
-						e.printStackTrace();
-					}	
 				}
 			}
 		}
@@ -516,21 +500,6 @@ public class AIPController implements VidesoController {
 				for(Segment s : route){
 					routes2D.hideRoute(s.getName());
 					routes3D.hideRoute(s.getName());
-				}
-				try {
-					Statement st = DatabaseManager.getCurrentAIP();
-					ResultSet rs = st.executeQuery("select sequence from segments where pkRoute = '"+routeID+"' ORDER BY sequence");
-					while(rs.next()){
-						try{
-						routes2D.hideRoute(buildSegmentName(routeName, rs.getString(1)));
-						routes3D.hideRoute(buildSegmentName(routeName, rs.getString(1)));
-						} catch(Exception e){
-							e.printStackTrace();
-						}
-					}
-					st.close();
-				}catch(SQLException e){
-					e.printStackTrace();
 				}
 			}
 			if(route.areNavFixsVisible()){
