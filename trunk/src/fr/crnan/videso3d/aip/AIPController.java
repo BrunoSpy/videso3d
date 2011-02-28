@@ -801,15 +801,13 @@ public class AIPController implements VidesoController {
 	}
 
 	
-	private ArrayList<String> names;
 	/**
 	 * Renvoie les noms des morceaux de secteur correspondant au secteur name.
 	 * @param name
 	 * @return
 	 */
 	private ArrayList<String> getCTLSecteurs(String name){
-		if(names == null){
-			names = new ArrayList<String>();
+		ArrayList<String> names = new ArrayList<String>();
 			try{
 				Statement st = DatabaseManager.getCurrentAIP();
 				ResultSet rs = st.executeQuery("select nom from volumes where type ='CTL' and (nom LIKE '"+name+" %' OR nom ='"+name+"')");
@@ -820,7 +818,6 @@ public class AIPController implements VidesoController {
 			}catch(SQLException e){
 				e.printStackTrace();
 			}
-		}
 		return names;
 	}
 	
