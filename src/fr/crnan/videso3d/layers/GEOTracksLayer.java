@@ -126,6 +126,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 			}
 			if(positions.size()>1){ //only add a line if there's enough points
 				Path line = new Path();
+				line.setOutlinePickWidth(20);
 				line.setAttributes(normal);
 				line.setHighlightAttributes(highlight);
 				line.setNumSubsegments(1); //améliore les performances
@@ -607,6 +608,18 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	}
 	
 	@Override
+	public void disablePolygonFilter(Collection<VPolygon> polygons) {
+		for(VPolygon polygon : polygons){
+			if(polygonFilters.containsKey(polygon)){
+				if(polygonFilters.get(polygon).getFirst()){
+					polygonFilters.put(polygon, new Couple<Boolean, Integer>(false, 0));
+				}
+			}
+		}
+		this.update();
+	}
+		
+	@Override
 	public void enablePolygonFilter(VPolygon polygon){
 		if(polygonFilters.containsKey(polygon)){
 			if(!polygonFilters.get(polygon).getFirst()){
@@ -614,6 +627,18 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 				this.update();
 			}
 		}
+	}
+	
+	@Override
+	public void enablePolygonFilter(Collection<VPolygon> polygons) {
+		for(VPolygon polygon : polygons){
+			if(polygonFilters.containsKey(polygon)){
+				if(!polygonFilters.get(polygon).getFirst()){
+					polygonFilters.put(polygon, new Couple<Boolean, Integer>(true, 0));
+				}
+			}
+		}
+		this.update();
 	}
 	
 	@Override
@@ -663,5 +688,8 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 			return 0;
 		}
 	}
+
+
+
 	
 }

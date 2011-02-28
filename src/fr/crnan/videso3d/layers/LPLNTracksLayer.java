@@ -385,4 +385,16 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void disablePolygonFilter(Collection<VPolygon> polygon) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void enablePolygonFilter(Collection<VPolygon> polygon) {
+		// TODO Auto-generated method stub
+		
+	}
 }

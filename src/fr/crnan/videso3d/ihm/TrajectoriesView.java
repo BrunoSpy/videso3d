@@ -31,6 +31,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -138,28 +139,16 @@ public class TrajectoriesView extends JPanel {
 		pistes.addMouseListener(new MouseListener() {
 			
 			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseReleased(MouseEvent arg0) {}
 			
 			@Override
-			public void mousePressed(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mousePressed(MouseEvent arg0) {}
 			
 			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseExited(MouseEvent arg0) {}
 			
 			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
+			public void mouseEntered(MouseEvent arg0) {}
 			
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -762,12 +751,15 @@ public class TrajectoriesView extends JPanel {
 	
 	private class PolygonTableModel extends AbstractTableModel {
 
-		String[] columnNames = {"Nom", "Trajectoires", "Actif"};
+		private String[] columnNames = {"Nom", "Trajectoires", "Actif"};
 
-		ArrayList<List<VPolygon>> polygons = null;
+		private ArrayList<List<VPolygon>> polygons;
+		
+		private HashMap<String, Integer> names;
 		
 		public PolygonTableModel(){
 			super();
+			this.names = new HashMap<String, Integer>();
 			if(layer.getPolygonFilters() != null)
 				this.fillArrayPolygons(layer.getPolygonFilters());
 			
@@ -791,37 +783,29 @@ public class TrajectoriesView extends JPanel {
 
 		private void fillArrayPolygons(Collection<VPolygon> filters){
 			this.polygons = new ArrayList<List<VPolygon>>();
-			List<VPolygon> list = null;
-			String lastName = "";
+			this.names = new HashMap<String, Integer>();
 			for(VPolygon p : filters){
 				if(p instanceof Secteur3D && (((Secteur3D) p).getType() == AIP.CTL || ((Secteur3D)p).getType() == StipController.SECTEUR)){
 					//les secteurs peuvent être composés de plusieurs polygones
 					//n'afficher qu'une ligne dans ce cas
-					//on assume que les morceaux d'un secteur se suivent
-					if(lastName.isEmpty() || !lastName.equals(((VidesoObject) p).getName().split(" ")[0])){
-						lastName = ((VidesoObject) p).getName().split(" ")[0];
-						if(list != null){
-							this.polygons.add(list);
-						}
-						list = new ArrayList<VPolygon>();
-						list.add(p);
+					String shortName = ((VidesoObject) p).getName().split(" ")[0];
+					if(this.names.containsKey(shortName)){
+						int row = this.names.get(shortName);
+						this.polygons.get(row).add(p);
 					} else {
+						this.names.put(shortName, this.polygons.size());
+						List<VPolygon> list = new ArrayList<VPolygon>();
 						list.add(p);
-					}
-				} else {
-					lastName = "";
-					if(list != null){
 						this.polygons.add(list);
 					}
-					list = new ArrayList<VPolygon>();
+				} else {
+					this.names.put((String)p.getValue(AVKey.NAME), this.polygons.size());
+					List<VPolygon> list = new ArrayList<VPolygon>();
 					list.add(p);
 					this.polygons.add(list);
-					list = null;
 				}
 			}
-			if(list != null) { //ne pas oublier la dernière série
-				this.polygons.add(list);
-			}
+			System.out.println(this.polygons.size());
 		}
 		
 		@Override
@@ -901,12 +885,10 @@ public class TrajectoriesView extends JPanel {
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			if(columnIndex == 2){
-				for(VPolygon p : this.polygons.get(rowIndex)){
-					if((Boolean) aValue){
-						layer.enablePolygonFilter(p);
-					} else {
-						layer.disablePolygonFilter(p);
-					}
+				if((Boolean) aValue){
+					layer.enablePolygonFilter(this.polygons.get(rowIndex));
+				} else {
+					layer.disablePolygonFilter(this.polygons.get(rowIndex));
 				}
 				fireTableDataChanged();
 			}
