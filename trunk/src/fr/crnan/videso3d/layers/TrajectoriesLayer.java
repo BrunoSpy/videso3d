@@ -25,7 +25,7 @@ import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer contenant des trajectoires et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.5.0
+ * @version 0.5.1
  */
 public abstract class TrajectoriesLayer extends LayerSet {
 
@@ -234,10 +234,23 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	public abstract void disablePolygonFilter(VPolygon polygon);
 	
 	/**
+	 * Disable filters without removing them
+	 * @param polygon
+	 */
+	public abstract void disablePolygonFilter(Collection<VPolygon> polygon);
+	
+	
+	/**
 	 * Enable a previously added filter
 	 * @param polygon
 	 */
 	public abstract void enablePolygonFilter(VPolygon polygon);
+	
+	/**
+	 * Enable previously added filters
+	 * @param polygon
+	 */
+	public abstract void enablePolygonFilter(Collection<VPolygon> polygon);
 	
 	/**
 	 * Returns if a filter is enabled

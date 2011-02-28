@@ -221,7 +221,7 @@ public class AIPController implements VidesoController {
 			// si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
 			// donc on va chercher les différents morceaux avec getCTLSecteurs et on les ajoute tous.
 			for(String nomPartieSecteur : getCTLSecteurs(name)){
-					this.addZone(type, nomPartieSecteur);
+				this.addZone(type, nomPartieSecteur);
 			}
 		}else if(type>=AIP.DMEATT && type<AIP.AERODROME){
 			this.showNavFix(type, name);
