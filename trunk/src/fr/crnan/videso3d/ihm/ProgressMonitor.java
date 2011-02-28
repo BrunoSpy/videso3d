@@ -71,6 +71,8 @@ import javax.swing.text.*;
  * <li>automatic progress at each call of setNote</li>
  * <li>optional cancel button</li>
  * </ul>
+ * Also adds the ability to reset the timer.
+ * </p>
  *
  * @see ProgressMonitorInputStream
  * @author James Gosling
@@ -412,6 +414,13 @@ public class ProgressMonitor extends Object implements Accessible
         return note;
     }
 
+    /**
+     * Resets the timer in order to correctly predict millisToPopup
+     */
+    public void resetTimer(){
+    	T0 = System.currentTimeMillis();
+    }
+    
     /////////////////
     // Accessibility support
     ////////////////

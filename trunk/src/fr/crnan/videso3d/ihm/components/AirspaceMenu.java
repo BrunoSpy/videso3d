@@ -18,8 +18,6 @@ package fr.crnan.videso3d.ihm.components;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -50,14 +48,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
-import javax.swing.ProgressMonitor;
-import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 /**
  * Contextual menu for {@link Airspace}
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class AirspaceMenu extends JPopupMenu {
 
@@ -186,26 +182,7 @@ public class AirspaceMenu extends JPopupMenu {
 						} else {
 							polygons.add((VPolygon) airspace);
 						}
-						
-						
-						int polygonNumber = l.getPolygonFilters() == null ? 0 : l.getPolygonFilters().size();
-						final ProgressMonitor progress = new ProgressMonitor(wwd, "Calcul des trajectoires filtrées", "", 0, l.getSelectedTracks().size()*(polygonNumber+1));
-						l.addPropertyChangeListener("progress", new PropertyChangeListener() {
-							
-							@Override
-							public void propertyChange(PropertyChangeEvent evt) {
-								progress.setProgress((Integer) evt.getNewValue());
-							}
-						});
-						new SwingWorker<Integer, Integer>() {
-
-							@Override
-							protected Integer doInBackground() throws Exception {
-								l.addPolygonFilter(polygons);
-								return null;
-							}
-						}.execute();
-						
+						l.addPolygonFilter(polygons);
 					}
 				});
 				filter.add(layer);

@@ -85,9 +85,8 @@ import gov.nasa.worldwind.tracks.Track;
 /**
  * Panel de sélection des trajectoires affichées
  * @author Bruno Spyckerelle
- * @version 0.4
+ * @version 0.4.1
  */
-@SuppressWarnings("serial")
 public class TrajectoriesView extends JPanel {
 
 	private JXTaskPaneContainer content = new JXTaskPaneContainer();
@@ -238,7 +237,7 @@ public class TrajectoriesView extends JPanel {
 		}
 
 	}
-
+	
 	private JXTaskPane createPolygonFilterPane(){
 		JXTaskPane filterPolygonPane = new JXTaskPane("Filtres volumiques");
 		final JXTable polygonsTable = new JXTable(new PolygonTableModel());
@@ -279,6 +278,23 @@ public class TrajectoriesView extends JPanel {
 				}
 			}
 		});
+		
+		final ProgressMonitor progress = new ProgressMonitor(this, "Mise à jour des polygones", "", 0, 1);
+		progress.setMillisToDecideToPopup(200);
+		progress.setMillisToPopup(1000);
+		layer.addPropertyChangeListener(new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent p) {
+				if(p.getPropertyName().equals("change")){
+					progress.setMaximum((Integer) p.getNewValue());
+					progress.resetTimer();
+				} else if(p.getPropertyName().equals("progress")){
+					progress.setProgress((Integer) p.getNewValue());
+				}
+			}
+		});
+		
 		JPanel container = new JPanel(new BorderLayout());
 		container.add(polygonsTable.getTableHeader(), BorderLayout.NORTH);
 		container.add(polygonsTable, BorderLayout.CENTER);
@@ -756,12 +772,13 @@ public class TrajectoriesView extends JPanel {
 		private ArrayList<List<VPolygon>> polygons;
 		
 		private HashMap<String, Integer> names;
-		
+				
 		public PolygonTableModel(){
 			super();
 			this.names = new HashMap<String, Integer>();
-			if(layer.getPolygonFilters() != null)
+			if(layer.getPolygonFilters() != null){
 				this.fillArrayPolygons(layer.getPolygonFilters());
+			}
 			
 			layer.addPropertyChangeListener(AVKey.LAYER, new PropertyChangeListener() {
 				@Override
@@ -805,7 +822,6 @@ public class TrajectoriesView extends JPanel {
 					this.polygons.add(list);
 				}
 			}
-			System.out.println(this.polygons.size());
 		}
 		
 		@Override

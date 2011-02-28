@@ -130,13 +130,14 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 		});
 		
 		final ProgressMonitor progress = new ProgressMonitor(this, "Affichage des objets...", "", 0, 1, false, false);
-
+		progress.setMillisToPopup(1000);
 		model.addPropertyChangeListener(new PropertyChangeListener() {
 			
 			@Override
 			public void propertyChange(PropertyChangeEvent p) {
 				if(p.getPropertyName().equals("change")){
 					progress.setMaximum((Integer)p.getNewValue());
+					progress.resetTimer();
 				} else if(p.getPropertyName().equals("progress")){
 					progress.setProgress((Integer)p.getNewValue());
 				}
