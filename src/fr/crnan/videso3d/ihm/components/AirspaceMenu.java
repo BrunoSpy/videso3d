@@ -189,7 +189,7 @@ public class AirspaceMenu extends JPopupMenu {
 						
 						
 						int polygonNumber = l.getPolygonFilters() == null ? 0 : l.getPolygonFilters().size();
-						final ProgressMonitor progress = new ProgressMonitor(wwd, "Calcul des trajectoires filtrées", "", 0, l.getSelectedTracks().size()*(polygonNumber+1)*polygons.size());
+						final ProgressMonitor progress = new ProgressMonitor(wwd, "Calcul des trajectoires filtrées", "", 0, l.getSelectedTracks().size()*(polygonNumber+1));
 						l.addPropertyChangeListener("progress", new PropertyChangeListener() {
 							
 							@Override
