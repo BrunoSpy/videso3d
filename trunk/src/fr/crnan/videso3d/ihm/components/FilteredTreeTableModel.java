@@ -181,7 +181,8 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 			
 			if(first) {
 				count = 0;
-				this.support.firePropertyChange("change", -1, this.getLeafsCount(node, !((Boolean) value)));
+				if((Boolean) value)
+					this.support.firePropertyChange("change", -1, this.getLeafsCount(node, !((Boolean) value)));
 			}
 			//ne pas changer la valuer des nodes non affichés
 			if(filter != null){
@@ -195,7 +196,8 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 					if(this.filter.isShown((DefaultMutableTreeNode) node)){
 						((Couple<String, Boolean>) treeNode.getUserObject()).setSecond((Boolean)value);
 						count++;
-						this.support.firePropertyChange("progress", count-1, count);
+						if((Boolean) value) 
+							this.support.firePropertyChange("progress", count-1, count);
 						this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);
 					}
 				}
@@ -209,7 +211,8 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 					}
 				} else {
 					count++;
-					this.support.firePropertyChange("progress", count-1, count);		
+					if((Boolean) value) 
+						this.support.firePropertyChange("progress", count-1, count);		
 					this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);
 					
 				}
