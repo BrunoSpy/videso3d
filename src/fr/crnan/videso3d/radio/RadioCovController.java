@@ -18,6 +18,7 @@ package fr.crnan.videso3d.radio;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import fr.crnan.videso3d.DatabaseManager;
@@ -150,5 +151,11 @@ public class RadioCovController implements VidesoController {
 	
 	public static int getNumberInitSteps(){
 		return 1;
+	}
+
+	@Override
+	public Collection<Object> getObjects(int type) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

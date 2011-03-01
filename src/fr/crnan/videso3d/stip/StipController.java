@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -293,13 +294,19 @@ public class StipController implements VidesoController {
 	 * @param name Nom du secteur à ajouter
 	 */
 	private void addSecteur3D(String name){
-		if(secteurs.containsKey(name+0)){
-			Integer i = 0;
-			while(secteurs.containsKey(name+i.toString())){
-				(secteurs.get(name+i.toString())).setVisible(true);
-				i++;
-			}
-		} else {
+		if(!secteurs.containsKey(name+0)){
+			this.createSecteur(name);
+		}
+		Integer i = 0;
+		while(secteurs.containsKey(name+i.toString())){
+			(secteurs.get(name+i.toString())).setVisible(true);
+			i++;
+		}
+		this.secteursLayer.firePropertyChange(AVKey.LAYER, null, this.secteursLayer);
+	}
+	
+	private void createSecteur(String name){
+		if(!secteurs.containsKey(name+0)){
 			try {
 				Statement st = DatabaseManager.getCurrentStip();
 				ResultSet rs = st.executeQuery("select secteurs.nom, secteurs.numero, cartesect.flinf, cartesect.flsup from secteurs, cartesect where secteurs.numero = cartesect.sectnum and secteurs.nom ='"+name+"'");
@@ -317,6 +324,7 @@ public class StipController implements VidesoController {
 					secteur.setConnectionPays(DatabaseManager.getCurrent(DatabaseManager.Type.PAYS));
 					secteur3D.setLocations(secteur.getContour(rs.getInt("flsup")));
 					secteur3D.setAttributes(attrs);
+					secteur3D.setVisible(false);
 					this.addToSecteursLayer(secteur3D);
 					secteurs.put(name+i.toString(), secteur3D);
 					i++;
@@ -325,8 +333,8 @@ public class StipController implements VidesoController {
 				e.printStackTrace();
 			}
 		}
-		this.secteursLayer.firePropertyChange(AVKey.LAYER, null, this.secteursLayer);
 	}
+	
 	/**
 	 * Enlève tous les {@link Secteur3D} formant le secteur <code>name</code>
 	 * @param name Nom du secteur à supprimer
@@ -631,5 +639,28 @@ public class StipController implements VidesoController {
 			i++;
 		}
 		return polygons;
+	}
+
+	@Override
+	public Collection<Object> getObjects(int type) {
+		switch (type) {
+		case SECTEUR:
+			try {
+				Statement st = DatabaseManager.getCurrentStip();
+				ResultSet rs = st.executeQuery("select nom from secteurs");
+				while(rs.next()){
+					this.createSecteur(rs.getString(1));
+				}
+				return new ArrayList<Object>(secteurs.values());
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			break;
+
+		default:
+			break;
+		}
+		return null;
 	}
 }
