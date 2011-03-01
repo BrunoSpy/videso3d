@@ -155,7 +155,6 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	}
 
 	protected void applyFilters(){
-		System.out.println(filters.size());
 		if(filters.size() == 0) {
 			for(Path p : this.lines.values()){
 				p.setVisible(true);
@@ -324,14 +323,9 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		for(GEOTrack track : tracks){
 			this.showTrack(track);
 		}
-		try{
-			this.applyFilters();
-			//mettre à jour les filtres volumiques
-			this.updatePolygonFilters();
-		} catch (Exception e){
-			e.printStackTrace();
-		}
-		
+		this.applyFilters();
+		//mettre à jour les filtres volumiques
+		this.updatePolygonFilters();
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
@@ -370,14 +364,6 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 				line.setHighlighted(b);
 				this.firePropertyChange(AVKey.LAYER, null, this);
 			}
-		}
-	}
-
-
-	@Override
-	public void centerOnTrack(Track track) {
-		if(this.isVisible(track)){
-			//TODO
 		}
 	}
 

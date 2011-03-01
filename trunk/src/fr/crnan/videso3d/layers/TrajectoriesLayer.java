@@ -117,12 +117,6 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	public abstract void highlightTrack(Track track, Boolean b);
 	
 	/**
-	 * Centers the globe on the specified track
-	 * @param track
-	 */
-	public abstract void centerOnTrack(Track track);
-	
-	/**
 	 * Met à jour les trajectoires affichées
 	 */
 	public abstract void update();
