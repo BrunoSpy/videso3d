@@ -574,6 +574,7 @@ public class TrajectoriesView extends JPanel {
 				iafField.setText("");
 				typeField.setText("");
 				layer.removeFilter();
+				layer.update();
 			}
 		});
 		filtres.add(validate);
