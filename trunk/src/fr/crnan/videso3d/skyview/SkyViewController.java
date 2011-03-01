@@ -19,6 +19,7 @@ package fr.crnan.videso3d.skyview;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -316,6 +317,12 @@ public class SkyViewController implements VidesoController {
 
 	public static int getNumberInitSteps() {
 		return 1;
+	}
+
+	@Override
+	public Collection<Object> getObjects(int type) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

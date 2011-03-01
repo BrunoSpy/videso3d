@@ -18,6 +18,7 @@ package fr.crnan.videso3d.edimap;
 
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -143,6 +144,12 @@ public class EdimapController implements VidesoController {
 
 	public static int getNumberInitSteps() {
 		return 1;
+	}
+
+	@Override
+	public Collection<Object> getObjects(int type) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

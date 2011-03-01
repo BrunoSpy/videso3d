@@ -266,12 +266,20 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 
 		Enumeration<Object> e = ((DefaultMutableTreeNode)this.getRoot()).children();
 		while(e.hasMoreElements()){
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.nextElement();
-			this.setValueAt(false, node, 1);
+			this.clearSelection((DefaultMutableTreeNode)e.nextElement());
 		}
-
 	}
 
+	private void clearSelection(DefaultMutableTreeNode node){
+		this.setValueAt(false, node, 1);
+		if(!node.isLeaf()){
+			Enumeration<Object> e = ((DefaultMutableTreeNode)node).children();
+			while(e.hasMoreElements()){
+				this.clearSelection((DefaultMutableTreeNode)e.nextElement());
+			}
+		}
+	}
+	
 	public void addPropertyChangeListener(PropertyChangeListener l){
 		support.addPropertyChangeListener(l);
 	}

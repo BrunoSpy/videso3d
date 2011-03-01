@@ -23,6 +23,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -1048,5 +1049,12 @@ public class AIPController implements VidesoController {
 			polygons.add(this.zones.get(type +" "+name));
 		}
 		return polygons;
+	}
+
+
+	@Override
+	public Collection<Object> getObjects(int type) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

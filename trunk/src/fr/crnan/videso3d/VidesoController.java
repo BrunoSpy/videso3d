@@ -16,6 +16,8 @@
 
 package fr.crnan.videso3d;
 
+import java.util.Collection;
+
 import gov.nasa.worldwind.layers.Layer;
 
 /**
@@ -102,6 +104,13 @@ public interface VidesoController {
 	 * Remet à zéro la vue.
 	 */
 	public void reset();
+
+	/**
+	 * 
+	 * @param type
+	 * @return tous les objets correspondant au type demandé
+	 */
+	public Collection<Object> getObjects(int type);
 	
 	/**
 	 * Nombre d'étapes d'initialisation (pour les progressmonitor)

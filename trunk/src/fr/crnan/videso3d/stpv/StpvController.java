@@ -18,6 +18,7 @@ package fr.crnan.videso3d.stpv;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -167,6 +168,12 @@ public class StpvController implements VidesoController {
 
 	public static int getNumberInitSteps() {
 		return 1;
+	}
+
+	@Override
+	public Collection<Object> getObjects(int type) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
