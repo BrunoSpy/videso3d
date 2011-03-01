@@ -239,12 +239,6 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public void centerOnTrack(Track track) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	protected HashMap<LPLNTrack, Profil3D> getProfils(){
 		return profils;
