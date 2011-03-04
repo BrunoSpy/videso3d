@@ -28,6 +28,7 @@ import java.util.List;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
+import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
@@ -54,9 +55,9 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage et la construction des éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.1.7
+ * @version 0.1.8
  */
-public class StipController implements VidesoController {
+public class StipController extends ProgressSupport implements VidesoController {
 
 	private VidesoGLCanvas wwd;
 	
@@ -148,8 +149,9 @@ public class StipController implements VidesoController {
 		this.balisesPub3D.setLocked(false);
 		this.balisesNP3D.removeAllBalises();
 		this.balisesPub3D.removeAllBalises();
-		this.secteurs.clear();
-		this.secteursLayer.removeAllAirspaces();
+		for(Secteur3D s : this.secteurs.values()){
+			s.setVisible(false);
+		}
 		this.routes2D.hideAllRoutes();
 		this.routes3D.hideAllRoutes();
 	}
@@ -288,7 +290,7 @@ public class StipController implements VidesoController {
 	/*--------------------------------------------------------------*/
 	/*----------------- Gestion des secteurs STIP ------------------*/
 	/*--------------------------------------------------------------*/
-	
+		
 	/**
 	 * Ajoute tous les {@link Secteur3D} formant le secteur <code>name</code>
 	 * @param name Nom du secteur à ajouter
@@ -329,6 +331,7 @@ public class StipController implements VidesoController {
 					secteurs.put(name+i.toString(), secteur3D);
 					i++;
 				}
+				st.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -647,10 +650,15 @@ public class StipController implements VidesoController {
 		case SECTEUR:
 			try {
 				Statement st = DatabaseManager.getCurrentStip();
-				ResultSet rs = st.executeQuery("select nom from secteurs");
+				ResultSet rs = st.executeQuery("select count(*) from secteurs");
+				this.fireTaskStarts(rs.getInt(1));
+				rs = st.executeQuery("select nom from secteurs");
+				int i = 1;
 				while(rs.next()){
 					this.createSecteur(rs.getString(1));
+					this.fireTaskProgress(i++);
 				}
+				st.close();
 				return new ArrayList<Object>(secteurs.values());
 			} catch (SQLException e) {
 				e.printStackTrace();

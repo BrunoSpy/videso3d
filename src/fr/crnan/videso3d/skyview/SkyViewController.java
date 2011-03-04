@@ -176,7 +176,10 @@ public class SkyViewController implements VidesoController {
 
 	@Override
 	public void reset() {
-		this.removeAllLayers();
+		this.routesList.clear();
+		this.routes.removeAllRenderables();
+		this.airports.removeAllBalises();
+		this.waypoints.removeAllBalises();
 	}
 
 	private List<Route2D> createRoute(String ident){

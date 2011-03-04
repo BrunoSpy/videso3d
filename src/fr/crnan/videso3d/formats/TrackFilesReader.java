@@ -23,14 +23,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 /**
  * Lecteur de fichiers trace radar
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 public abstract class TrackFilesReader {
 
@@ -38,7 +38,9 @@ public abstract class TrackFilesReader {
 	
 	private TrajectoriesLayer layer = null;
 	
-	private List<VidesoTrack> tracks = new LinkedList<VidesoTrack>();
+	private List<File> files = new ArrayList<File>();
+	
+	private List<VidesoTrack> tracks = new ArrayList<VidesoTrack>();
 	
 	public TrackFilesReader(){}
 	
@@ -46,6 +48,7 @@ public abstract class TrackFilesReader {
 		this.setLayer(layer);
 		for(File f : files){
 			try {
+				this.files.add(f);
 				this.readFile(f.getAbsolutePath());
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -56,6 +59,7 @@ public abstract class TrackFilesReader {
 	public TrackFilesReader(File selectedFile, TrajectoriesLayer layer) {
 		this.setLayer(layer);
 		try {
+			this.files.add(selectedFile);
 			this.readFile(selectedFile.getAbsolutePath());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -125,5 +129,8 @@ public abstract class TrackFilesReader {
 		}
 		return this.tracks;
 	}
-		
+	
+	public List<File> getFiles(){
+		return files;
+	}
 }
