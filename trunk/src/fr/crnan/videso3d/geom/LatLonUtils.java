@@ -21,6 +21,8 @@ import java.util.regex.Pattern;
 
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.util.Logging;
 
 /**
@@ -191,5 +193,23 @@ public class LatLonUtils {
             return Angle.fromDegrees(d * sign + m / 60 * sign + s / 3600 * sign);
         
         return null;
+    }
+    /**
+     * Si les deux points sont à la même altitude, calcule la distance ellipsoïdale.<br />
+     * Sinon, calcule la distance dans le repère Cautra. Cette méthode donne de bons résultats en France Métropolitaine, mais est inutilisable ailleurs.
+     * @param pos1
+     * @param pos2
+     * @return
+     */
+    public static double computeDistance(Position pos1, Position pos2, Globe globe){
+    	if(pos1.elevation == pos2.elevation){
+    		return Position.ellipsoidalDistance(pos1, pos2, globe.getEquatorialRadius()+pos1.elevation, globe.getPolarRadius()+pos1.elevation);
+    	} else {
+    		LatLonCautra point1 = LatLonCautra.fromDegrees(pos1.latitude.degrees, pos1.longitude.degrees);
+    		LatLonCautra point2 = LatLonCautra.fromDegrees(pos2.latitude.degrees, pos2.longitude.degrees);		
+    		return Math.sqrt(Math.pow(point1.getCautra()[0]*LatLonCautra.NM-point2.getCautra()[0]*LatLonCautra.NM, 2)
+    						+Math.pow(point1.getCautra()[1]*LatLonCautra.NM-point2.getCautra()[1]*LatLonCautra.NM, 2)
+    						+Math.pow(pos1.elevation-pos2.elevation, 2));
+    	}
     }
 }

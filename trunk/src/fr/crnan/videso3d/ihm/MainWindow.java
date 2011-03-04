@@ -240,6 +240,7 @@ public class MainWindow extends JFrame {
 
 		//Panneau contextuel
 		context = new ContextPanel();
+		dataExplorer.setContextPanel(context);
 				
 		JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, dataExplorer, wwd);
 		mainPane.setOneTouchExpandable(true);

@@ -66,6 +66,8 @@ public class DataExplorer extends JPanel {
 
 	private HashMap<Type, DataView> panels = new HashMap<DatabaseManager.Type, DataView>(); 
 	
+	private ContextPanel context = null;
+	
 	/**
 	 * Constructeur
 	 * @param wwd {@link VidesoGLCanvas} Association avec la vue 3D
@@ -229,7 +231,7 @@ public class DataExplorer extends JPanel {
 	}
 	
 	public void addTrajectoriesView(TrackFilesReader reader){
-		final Component content = new TrajectoriesView(wwd, reader);
+		final Component content = new TrajectoriesView(wwd, reader, context);
 		tabs.addTab(reader.getName(), content);	
 		ButtonTabComponent buttonTab = new ButtonTabComponent(tabs);
 		buttonTab.getButton().addActionListener(new ActionListener() {
@@ -241,6 +243,10 @@ public class DataExplorer extends JPanel {
 		});
 		tabs.setTabComponentAt(tabs.indexOfComponent(content), buttonTab);
 		tabs.setSelectedIndex(tabs.getTabCount()-1);
+	}
+	
+	public void setContextPanel(ContextPanel context){
+		this.context = context;
 	}
 	
 	public DataView getView(Type type){

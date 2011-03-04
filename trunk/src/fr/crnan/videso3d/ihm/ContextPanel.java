@@ -18,6 +18,7 @@ package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.Collection;
 import java.util.HashMap;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -37,7 +38,7 @@ import gov.nasa.worldwind.event.SelectListener;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
- * @version 0.4.1
+ * @version 0.4.2
  */
 public class ContextPanel extends JPanel implements SelectListener {
 
@@ -96,7 +97,9 @@ public class ContextPanel extends JPanel implements SelectListener {
 	
 	/**
 	 * Affiche les infos pertinentes pour l'objet en fonction de son type et de son nom
-	 * @param name Nom de l'objet
+	 * @param base
+	 * @param type
+	 * @param name
 	 */
 	public void showInfo(DatabaseManager.Type base, int type, String name){
 		content.removeAll();
@@ -136,15 +139,17 @@ public class ContextPanel extends JPanel implements SelectListener {
 			content.validate();
 		}
 	}
-	/**
-	 * Ajoute les {@link JXTaskPane} demandés.<br />
-	 * Prends en compte l'existence de la base demandée.
-	 * @param base
-	 * @param type
-	 * @param name
-	 */
+
 	public void setTitle(String title) {
 		this.titleAreaPanel.setTitle(title);
+	}
+	
+	public void setTaskPanes(Collection<JXTaskPane> taskpanes){
+		content.removeAll();
+		for(JXTaskPane t : taskpanes){
+			content.add(t, null);
+		}
+		content.validate();
 	}
 	
 	private void addTaskpanes(DatabaseManager.Type base, int type, String name){

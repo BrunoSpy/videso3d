@@ -148,7 +148,7 @@ public class TrajectoriesView extends JPanel {
 				if(e.getClickCount() == 2){
 					int row = pistes.rowAtPoint(e.getPoint());
 					final VidesoTrack t = (VidesoTrack)((TrackTableModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(row));
-					context.setTaskPanes(new TrackContext(layer, reader).getTaskPanes(0, null));
+					context.setTaskPanes(new TrackContext(layer, reader, t, wwd.getModel().getGlobe()).getTaskPanes(0, null));
 					context.open();
 					wwd.centerView(t);
 				}
