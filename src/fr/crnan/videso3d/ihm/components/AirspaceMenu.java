@@ -35,6 +35,7 @@ import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.StipController;
+import fr.crnan.videso3d.trajectography.PolygonsSetFilter;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Airspace;
@@ -172,17 +173,23 @@ public class AirspaceMenu extends JPopupMenu {
 					
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						final List<VPolygon> polygons = new ArrayList<VPolygon>(); //secteurs stip et aip sont formés de plusieurs polygones
+						String name = new String();
+						PolygonsSetFilter filter = null;
 						if(airspace instanceof Secteur3D){
+							name = ((Secteur3D) airspace).getName().split(" ")[0];
 							if(((Secteur3D) airspace).getDatabaseType() == Type.STIP){
-								polygons.addAll(((StipController)DatasManager.getController(((Secteur3D) airspace).getDatabaseType())).getPolygons(((Secteur3D) airspace).getName()));
-							} else if(((Secteur3D) airspace).getDatabaseType() == Type.AIP){
-								polygons.addAll(((AIPController)DatasManager.getController(((Secteur3D) airspace).getDatabaseType())).getPolygons(((Secteur3D) airspace).getType(), ((Secteur3D) airspace).getName()));
-							} 
+								filter = new PolygonsSetFilter(name, ((StipController)DatasManager.getController(((Secteur3D) airspace).getDatabaseType())).getPolygons(((Secteur3D) airspace).getName()));
+							}else if(((Secteur3D) airspace).getDatabaseType() == Type.AIP){
+								filter = new PolygonsSetFilter(name, ((AIPController)DatasManager.getController(((Secteur3D) airspace).getDatabaseType())).getPolygons(((Secteur3D) airspace).getType(), ((Secteur3D) airspace).getName()));
+							} 							
 						} else {
+							name = "Polygone";
+							List<VPolygon> polygons = new ArrayList<VPolygon>();
 							polygons.add((VPolygon) airspace);
+							filter = new PolygonsSetFilter(name, polygons);
 						}
-						l.addPolygonFilter(polygons);
+						
+						l.addPolygonFilter(filter);
 					}
 				});
 				filter.add(layer);
