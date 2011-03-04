@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 import fr.crnan.videso3d.formats.VidesoTrack;
-import fr.crnan.videso3d.graphics.VPolygon;
+import fr.crnan.videso3d.trajectography.PolygonsSetFilter;
 import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer contenant des trajectoires et permettant un affichage sélectif.
@@ -210,55 +210,36 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	/********* Polygon filtering ***********/
 	
 	/**
-	 * Adds a filter
-	 * @param polygon Filter to be added
-	 */
-	public abstract void addPolygonFilter(VPolygon polygon);
-	
-	/**
 	 * Adds multiple filters at once
 	 * @param polygon
 	 */
-	public abstract void addPolygonFilter(Collection<VPolygon> polygon);
-		
-	/**
-	 * Disable a filter without removing it
-	 * @param polygon
-	 */
-	public abstract void disablePolygonFilter(VPolygon polygon);
+	public abstract void addPolygonFilter(PolygonsSetFilter polygon);
 	
 	/**
 	 * Disable filters without removing them
 	 * @param polygon
 	 */
-	public abstract void disablePolygonFilter(Collection<VPolygon> polygon);
-	
-	
-	/**
-	 * Enable a previously added filter
-	 * @param polygon
-	 */
-	public abstract void enablePolygonFilter(VPolygon polygon);
+	public abstract void disablePolygonFilter(PolygonsSetFilter polygon);
 	
 	/**
 	 * Enable previously added filters
 	 * @param polygon
 	 */
-	public abstract void enablePolygonFilter(Collection<VPolygon> polygon);
+	public abstract void enablePolygonFilter(PolygonsSetFilter polygon);
 	
 	/**
 	 * Returns if a filter is enabled
 	 * @param polygon
 	 * @return
 	 */
-	public abstract boolean isPolygonFilterActive(VPolygon polygon);
+	public abstract boolean isPolygonFilterActive(PolygonsSetFilter polygon);
 	
 	/**
 	 * Returns the number of trajectories contained by a filter
 	 * @param polygon
 	 * @return
 	 */
-	public abstract int getNumberTrajectories(VPolygon polygon);
+	public abstract int getNumberTrajectories(PolygonsSetFilter polygon);
 	
 	/**
 	 * True if the layer allows polygon filtering
@@ -270,19 +251,14 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 * Returns all filters
 	 * @return
 	 */
-	public abstract Collection<VPolygon> getPolygonFilters();
+	public abstract List<PolygonsSetFilter> getPolygonFilters();
 	
-	/**
-	 * Disables and removes a filter
-	 * @param polygon
-	 */
-	public abstract void removePolygonFilter(VPolygon polygon);
 	
 	/**
 	 * Disables and removes multiple filters
 	 * @param polygons
 	 */
-	public abstract void removePolygonFilter(Collection<VPolygon> polygons);
+	public abstract void removePolygonFilter(PolygonsSetFilter polygons);
 	
 	/****************************************/
 	
