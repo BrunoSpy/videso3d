@@ -765,7 +765,7 @@ public class MainWindow extends JFrame {
 			public void stateChanged(ChangeEvent e)
 			{
 				double ve = ((JSlider) e.getSource()).getValue();
-				wwd.getSceneController().setVerticalExaggeration(ve);
+				wwd.getSceneController().setVerticalExaggeration(ve == 1.0 ? 1.01 : ve);
 			}
 		});
 		toolbar.add(slider);		
