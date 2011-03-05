@@ -38,7 +38,7 @@ import gov.nasa.worldwind.geom.LatLon;
  * Ces fichiers nécessitent un traitement spécial car ils ne sont pas distribués avec les autres fichiers CA lors d'une livraison par le CESNAC.
  * Il s'agit des fichiers PAYS, CONTPAYS, et POINPAYS
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.2.3
  */
 public class Pays extends FileParser {
 
@@ -200,6 +200,7 @@ public class Pays extends FileParser {
 				DatabaseManager.createPays(this.name);
 				//parsing des fichiers et stockage en base
 				this.getFromFiles();
+				this.createIndexes();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -211,6 +212,13 @@ public class Pays extends FileParser {
 		return this.numberFiles();
 	}
 	
+	private void createIndexes() throws SQLException {
+		Statement st = this.conn.createStatement();
+		st.executeUpdate("CREATE INDEX idx_contpays ON contpays (refcontour ASC, refpoint ASC)");
+		st.executeUpdate("CREATE UNIQUE INDEX idx_refpoint ON poinpays (ref ASC)");	
+		st.close();
+	}
+
 	public void done(){
 		if(this.isCancelled()){
 			try {
