@@ -214,7 +214,7 @@ public class Pays extends FileParser {
 	
 	private void createIndexes() throws SQLException {
 		Statement st = this.conn.createStatement();
-		st.executeUpdate("CREATE INDEX idx_contpays ON contpays (refcontour ASC, refpoint ASC)");
+		st.executeUpdate("CREATE INDEX idx_contpays ON contpays (refpoint ASC)");
 		st.executeUpdate("CREATE UNIQUE INDEX idx_refpoint ON poinpays (ref ASC)");	
 		st.close();
 	}
