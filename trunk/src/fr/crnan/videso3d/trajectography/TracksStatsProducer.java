@@ -26,6 +26,9 @@ import java.util.List;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.VidesoController;
+import fr.crnan.videso3d.aip.AIP;
+import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.Secteur3D;
@@ -53,19 +56,41 @@ public class TracksStatsProducer extends ProgressSupport {
 			return null;
 		}
 		List<Secteur3D> containingSecteurs = new ArrayList<Secteur3D>();
-		StipController controller = (StipController) DatasManager.getController(type);
-		controller.addPropertyChangeListener(new PropertyChangeListener() {
-			
-			@Override
-			public void propertyChange(PropertyChangeEvent p) {
-				if(p.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
-					fireTaskStarts((Integer) p.getNewValue());
-				} else if(p.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
-					fireTaskProgress((Integer) p.getNewValue());
+		Collection<Object> secteurs;
+		VidesoController controller;
+		if(type.equals(Type.STIP)){
+			controller = (StipController) DatasManager.getController(type);
+			((ProgressSupport) controller).addPropertyChangeListener(new PropertyChangeListener() {
+
+				@Override
+				public void propertyChange(PropertyChangeEvent p) {
+					if(p.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
+						fireTaskStarts((Integer) p.getNewValue());
+					} else if(p.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
+						fireTaskProgress((Integer) p.getNewValue());
+					}
 				}
-			}
-		});
-		Collection<Object> secteurs = controller.getObjects(StipController.SECTEUR);
+			});
+			secteurs = controller.getObjects(StipController.SECTEUR);
+		} else if(type.equals(Type.AIP)){
+			controller = (AIPController) DatasManager.getController(type);
+			((ProgressSupport) controller).addPropertyChangeListener(new PropertyChangeListener() {
+
+				@Override
+				public void propertyChange(PropertyChangeEvent p) {
+					if(p.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
+						fireTaskStarts((Integer) p.getNewValue());
+					} else if(p.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
+						fireTaskProgress((Integer) p.getNewValue());
+					}
+				}
+			});
+			secteurs = controller.getObjects(AIP.CTL);
+		}
+		else {
+			return null;
+		}
+
 		Secteur3D last = null;
 		for(TrackPoint point : track.getTrackPoints()){
 			
