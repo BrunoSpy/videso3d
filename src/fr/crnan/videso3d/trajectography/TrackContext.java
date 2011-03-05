@@ -16,25 +16,32 @@
 
 package fr.crnan.videso3d.trajectography;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingWorker;
 
 import org.jdesktop.swingx.JXTaskPane;
+import org.jdesktop.swingx.plaf.TaskPaneUI;
 
 import fr.crnan.videso3d.Context;
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.ProgressSupport;
+import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.geom.LatLonCautra;
@@ -46,28 +53,28 @@ import gov.nasa.worldwind.globes.Globe;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.0.2
+ * @version 0.0.3
  */
 public class TrackContext extends Context {
-	
+
 	private TrajectoriesLayer layer;
 	private TrackFilesReader reader;
 	private Globe globe;	
 	private VidesoTrack track;
-	
+
 	public TrackContext(TrajectoriesLayer layer, TrackFilesReader reader, VidesoTrack track, Globe globe){
 		this.layer = layer;
 		this.reader = reader;
 		this.globe = globe;
 		this.track = track;
 	}
-	
+
 	@Override
 	public List<JXTaskPane> getTaskPanes(int type, String name) {
 		List<JXTaskPane> taskpanes = new ArrayList<JXTaskPane>();
-		
+
 		JXTaskPane taskPane1 = new JXTaskPane("Informations générales");
-		
+
 		String listFiles = new String();
 		for(File f : reader.getFiles()){
 			listFiles += "<li>";
@@ -77,16 +84,16 @@ public class TrackContext extends Context {
 		taskPane1.add(new JLabel("<html><b>Liste des fichiers :</b><br/>" +
 				"<ul>" +
 				listFiles +
-				"</ul></html>"));
-		
+		"</ul></html>"));
+
 		taskPane1.add(new JLabel("<html><b>Nombre de trajectoires : </b>"+reader.getTracks().size()));
 
 		taskpanes.add(taskPane1);	
-		
+
 		final TracksStatsProducer stats = new TracksStatsProducer();
 		final ProgressMonitor progress = new ProgressMonitor(null, "", "", 0, 1);
 		stats.addPropertyChangeListener(new PropertyChangeListener() {
-			
+
 			@Override
 			public void propertyChange(PropertyChangeEvent p) {
 				if(p.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
@@ -98,59 +105,124 @@ public class TrackContext extends Context {
 			}
 		});
 		final JXTaskPane taskPane2 = new JXTaskPane("Informations sur "+track.getName());
-		
+
 		taskPane2.add(new JLabel(String.format("<html><b>Longueur :</b> %.2f NM<html>",
-									stats.computeLengthBetweenLevels(track, 0, 660, globe)/LatLonCautra.NM)));
-		
-		taskPane2.add(new AbstractAction() {
-			
-			{
-				putValue(Action.NAME, "<html><b>Secteurs traversés :</b> Calculer...</html>");
-			}
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				
-				new SwingWorker<Integer, Integer>() {
+				stats.computeLengthBetweenLevels(track, 0, 660, globe)/LatLonCautra.NM)));
 
-					Collection<Secteur3D> secteurs;
-					
-					@Override
-					protected Integer doInBackground() throws Exception {
-						progress.setNote("Calcul des secteurs traversés");
-						secteurs = stats.computeContainingSectors(track, Type.STIP);
-						return null;
+		try {
+			if(DatabaseManager.getCurrentStip() != null){
+				final JPanel stipList = new JPanel();
+				stipList.setLayout(new BoxLayout(stipList, BoxLayout.X_AXIS));
+				taskPane2.add(new AbstractAction() {
+
+					{
+						putValue(Action.NAME, "<html><b>Secteurs STIP traversés :</b> Calculer...</html>");
 					}
 
-					/* (non-Javadoc)
-					 * @see javax.swing.SwingWorker#done()
-					 */
 					@Override
-					protected void done() {
-						putValue(Action.NAME, "<html><b>Secteurs traversés :</b></html>");
-						Secteur3D last = null;
-						for(Secteur3D s : secteurs){
-							if(last == null || !s.getName().split(" ")[0].equals(last.getName().split(" ")[0])){
-								final Secteur3D tSecteur = s;
-								taskPane2.add(new AbstractAction() {
-									{
-										putValue(Action.NAME, "\t"+tSecteur.getName());
-									}
-									@Override
-									public void actionPerformed(ActionEvent arg0) {
-										DatasManager.getController(Type.STIP).highlight(StipController.SECTEUR, tSecteur.getName());
-									}
-								});
-								last = s;
+					public void actionPerformed(ActionEvent arg0) {
+
+						new SwingWorker<Integer, Integer>() {
+
+							Collection<Secteur3D> secteurs;
+
+							@Override
+							protected Integer doInBackground() throws Exception {
+								progress.setNote("Calcul des secteurs STIP traversés");
+								secteurs = stats.computeContainingSectors(track, Type.STIP);
+								return null;
 							}
-						}
+
+							/* (non-Javadoc)
+							 * @see javax.swing.SwingWorker#done()
+							 */
+							@Override
+							protected void done() {
+								putValue(Action.NAME, "<html><b>Secteurs STIP traversés :</b></html>");
+								Secteur3D last = null;
+								for(Secteur3D s : secteurs){
+									if(last == null || !s.getName().split(" ")[0].equals(last.getName().split(" ")[0])){
+										final Secteur3D tSecteur = s;
+										Component action = ((TaskPaneUI)taskPane2.getUI()).createAction(
+												new AbstractAction() {
+													{
+														putValue(Action.NAME, "\t"+tSecteur.getName());
+													}
+													@Override
+													public void actionPerformed(ActionEvent arg0) {
+														DatasManager.getController(Type.STIP).highlight(StipController.SECTEUR, tSecteur.getName());
+													}
+										});
+										stipList.add(action);
+										stipList.add(new JLabel(" "));
+										last = s;
+									}
+								}
+							}
+						}.execute();
 					}
-				}.execute();
+				});
+				taskPane2.add(stipList);
 			}
-		});
-		
+			if(DatabaseManager.getCurrentAIP() != null){
+				final JPanel aipList = new JPanel();
+				aipList.setLayout(new BoxLayout(aipList, BoxLayout.X_AXIS));
+				taskPane2.add(new AbstractAction() {
+
+					{
+						putValue(Action.NAME, "<html><b>Secteurs AIP traversés :</b> Calculer...</html>");
+					}
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+
+						new SwingWorker<Integer, Integer>() {
+
+							Collection<Secteur3D> secteurs;
+
+							@Override
+							protected Integer doInBackground() throws Exception {
+								progress.setNote("Calcul des secteurs AIP traversés");
+								secteurs = stats.computeContainingSectors(track, Type.AIP);
+								return null;
+							}
+
+							/* (non-Javadoc)
+							 * @see javax.swing.SwingWorker#done()
+							 */
+							@Override
+							protected void done() {
+								putValue(Action.NAME, "<html><b>Secteurs AIP traversés :</b></html>");
+								Secteur3D last = null;
+								for(Secteur3D s : secteurs){
+									if(last == null || !s.getName().split(" ")[0].equals(last.getName().split(" ")[0])){
+										final Secteur3D tSecteur = s;
+										Component action = ((TaskPaneUI)taskPane2.getUI()).createAction(
+												new AbstractAction() {
+													{
+														putValue(Action.NAME, "\t"+tSecteur.getName().split("\\s+")[0]);
+													}
+													@Override
+													public void actionPerformed(ActionEvent arg0) {
+														DatasManager.getController(Type.AIP).highlight(AIP.CTL, tSecteur.getName().split("\\s+")[0]);
+													}
+										});
+										aipList.add(action);
+										aipList.add(new JLabel(" "));
+										last = s;
+									}
+								}
+							}
+						}.execute();
+					}
+				});
+				taskPane2.add(aipList);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		taskpanes.add(taskPane2);
-		
+
 		return taskpanes;
 	}
 

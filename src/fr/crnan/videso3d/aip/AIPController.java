@@ -34,6 +34,7 @@ import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.Pallet;
+import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIP.Altitude;
@@ -69,9 +70,9 @@ import gov.nasa.worldwind.view.orbit.BasicOrbitView;
  * Contrôle l'affichage et la construction des éléments AIP
  * @author A. Vidal
  * @author Bruno Spyckerelle
- * @version 0.3.5
+ * @version 0.4.0
  */
-public class AIPController implements VidesoController {
+public class AIPController extends ProgressSupport implements VidesoController {
 
 	private VidesoGLCanvas wwd;
 	private AIP aip = new AIP();
@@ -261,6 +262,15 @@ public class AIPController implements VidesoController {
 
 	private void addZone(int type, String name) {
 		if(!zones.containsKey(type+" "+name)){
+			this.createZone(type, name);
+		} else {
+			this.zones.get(type+" "+name).setVisible(true);
+			this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);
+		}
+	}
+
+	private void createZone(int type, String name){
+		if(!zones.containsKey(type+" "+name)){
 			Color couleurZone=null;
 			switch(type){
 			case AIP.TSA:
@@ -351,27 +361,18 @@ public class AIPController implements VidesoController {
 				upperAltitudeRef = AVKey.ABOVE_MEAN_SEA_LEVEL;
 			}
 			zone.setAltitudeDatum(lowerAltitudeRef, upperAltitudeRef);
-
+			zone.setVisible(false);
+			this.zonesLayer.addAirspace(zone);
 			zones.put(type+" "+name, zone);
-			this.addToZonesLayer(zone);
-		} else {
-			zones.get(type+" "+name).setVisible(true);
-			this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);
 		}
 	}
-
+	
 	private void removeZone(int type, String name) {
 		if(zones.containsKey(type+" "+name)){
 			zones.get(type+" "+name).setVisible(false);
 			this.wwd.getAnnotationLayer().removeAnnotation(zones.get(type+" "+name).getAnnotation(Position.ZERO));
 			this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);
 		}
-	}
-
-
-	private void addToZonesLayer(Secteur3D zone){
-		this.zonesLayer.addAirspace(zone);
-		this.wwd.redraw();
 	}
 	
 	public void showRoute(String routeName, int type){
@@ -1054,7 +1055,28 @@ public class AIPController implements VidesoController {
 
 	@Override
 	public Collection<Object> getObjects(int type) {
-		// TODO Auto-generated method stub
+		if(type == AIP.CTL){
+			try{
+				Statement st = DatabaseManager.getCurrentAIP();
+				ResultSet rs = st.executeQuery("select count(*) from volumes where type = 'CTL'");
+				this.fireTaskStarts(rs.getInt(1));
+				rs = st.executeQuery("select nom from volumes where type = 'CTL' order by nom");
+				int i = 1;
+				while(rs.next()){
+					this.createZone(AIP.CTL, rs.getString(1));
+					this.fireTaskProgress(i++);
+				}
+				st.close();
+			} catch(SQLException e){
+				e.printStackTrace();
+			}
+			Collection<Object> secteurs = new HashSet<Object>();
+			for(Secteur3D s : this.zones.values()){
+				if(s.getType() == AIP.CTL)
+					secteurs.add(s);
+			}
+			return secteurs;
+		}
 		return null;
 	}
 }
