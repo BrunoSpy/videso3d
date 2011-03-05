@@ -336,4 +336,10 @@ public class RadioCovPolygon extends AbstractAirspace implements VidesoObject{
 		public int getType() {
 			return this.type;
 		}
+		@Override
+		protected List<Vec4> computeMinimalGeometry(Globe globe,
+				double verticalExaggeration) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 }
