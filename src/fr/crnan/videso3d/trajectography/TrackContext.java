@@ -129,7 +129,7 @@ public class TrackContext extends Context {
 							@Override
 							protected Integer doInBackground() throws Exception {
 								progress.setNote("Calcul des secteurs STIP traversés");
-								secteurs = stats.computeContainingSectors(track, Type.STIP);
+								secteurs = stats.computeContainingSectors(track, Type.STIP, StipController.SECTEUR);
 								return null;
 							}
 
@@ -150,7 +150,7 @@ public class TrackContext extends Context {
 													}
 													@Override
 													public void actionPerformed(ActionEvent arg0) {
-														DatasManager.getController(Type.STIP).highlight(StipController.SECTEUR, tSecteur.getName());
+														DatasManager.getController(Type.STIP).showObject(StipController.SECTEUR, tSecteur.getName());
 													}
 										});
 										stipList.add(action);
@@ -183,7 +183,7 @@ public class TrackContext extends Context {
 							@Override
 							protected Integer doInBackground() throws Exception {
 								progress.setNote("Calcul des secteurs AIP traversés");
-								secteurs = stats.computeContainingSectors(track, Type.AIP);
+								secteurs = stats.computeContainingSectors(track, Type.AIP, AIP.CTL);
 								return null;
 							}
 
@@ -204,7 +204,7 @@ public class TrackContext extends Context {
 													}
 													@Override
 													public void actionPerformed(ActionEvent arg0) {
-														DatasManager.getController(Type.AIP).highlight(AIP.CTL, tSecteur.getName().split("\\s+")[0]);
+														DatasManager.getController(Type.AIP).showObject(AIP.CTL, tSecteur.getName().split("\\s+")[0]);
 													}
 										});
 										aipList.add(action);
@@ -217,6 +217,110 @@ public class TrackContext extends Context {
 					}
 				});
 				taskPane2.add(aipList);
+				
+				final JPanel aipList2 = new JPanel();
+				aipList2.setLayout(new BoxLayout(aipList2, BoxLayout.Y_AXIS));
+				taskPane2.add(new AbstractAction() {
+
+					{
+						putValue(Action.NAME, "<html><b>TMA AIP traversées :</b> Calculer...</html>");
+					}
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+
+						new SwingWorker<Integer, Integer>() {
+
+							Collection<Secteur3D> secteurs;
+
+							@Override
+							protected Integer doInBackground() throws Exception {
+								progress.setNote("Calcul des TMA AIP traversées");
+								secteurs = stats.computeContainingSectors(track, Type.AIP, AIP.TMA);
+								return null;
+							}
+
+							/* (non-Javadoc)
+							 * @see javax.swing.SwingWorker#done()
+							 */
+							@Override
+							protected void done() {
+								putValue(Action.NAME, "<html><b>TMA AIP traversés :</b></html>");
+								Secteur3D last = null;
+								for(Secteur3D s : secteurs){
+									if(last == null || !s.getName().equals(last.getName())){
+										final Secteur3D tSecteur = s;
+										Component action = ((TaskPaneUI)taskPane2.getUI()).createAction(
+												new AbstractAction() {
+													{
+														putValue(Action.NAME, "\t"+tSecteur.getName());
+													}
+													@Override
+													public void actionPerformed(ActionEvent arg0) {
+														DatasManager.getController(Type.AIP).showObject(AIP.TMA, tSecteur.getName());
+													}
+										});
+										aipList2.add(action);
+										last = s;
+									}
+								}
+							}
+						}.execute();
+					}
+				});
+				taskPane2.add(aipList2);
+				
+				final JPanel aipList3 = new JPanel();
+				aipList3.setLayout(new BoxLayout(aipList3, BoxLayout.Y_AXIS));
+				taskPane2.add(new AbstractAction() {
+
+					{
+						putValue(Action.NAME, "<html><b>CTR AIP traversées :</b> Calculer...</html>");
+					}
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+
+						new SwingWorker<Integer, Integer>() {
+
+							Collection<Secteur3D> secteurs;
+
+							@Override
+							protected Integer doInBackground() throws Exception {
+								progress.setNote("Calcul des CTR AIP traversées");
+								secteurs = stats.computeContainingSectors(track, Type.AIP, AIP.CTR);
+								return null;
+							}
+
+							/* (non-Javadoc)
+							 * @see javax.swing.SwingWorker#done()
+							 */
+							@Override
+							protected void done() {
+								putValue(Action.NAME, "<html><b>CTR AIP traversées :</b></html>");
+								Secteur3D last = null;
+								for(Secteur3D s : secteurs){
+									if(last == null || !s.getName().equals(last.getName())){
+										final Secteur3D tSecteur = s;
+										Component action = ((TaskPaneUI)taskPane2.getUI()).createAction(
+												new AbstractAction() {
+													{
+														putValue(Action.NAME, "\t"+tSecteur.getName());
+													}
+													@Override
+													public void actionPerformed(ActionEvent arg0) {
+														DatasManager.getController(Type.AIP).showObject(AIP.CTR, tSecteur.getName());
+													}
+										});
+										aipList3.add(action);
+										last = s;
+									}
+								}
+							}
+						}.execute();
+					}
+				});
+				taskPane2.add(aipList3);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
