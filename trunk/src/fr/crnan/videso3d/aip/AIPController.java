@@ -263,6 +263,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	private void addZone(int type, String name) {
 		if(!zones.containsKey(type+" "+name)){
 			this.createZone(type, name);
+			this.zones.get(type+" "+name).setVisible(true);
 		} else {
 			this.zones.get(type+" "+name).setVisible(true);
 			this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);
@@ -1073,6 +1074,48 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			Collection<Object> secteurs = new HashSet<Object>();
 			for(Secteur3D s : this.zones.values()){
 				if(s.getType() == AIP.CTL)
+					secteurs.add(s);
+			}
+			return secteurs;
+		} else if(type == AIP.TMA){
+			try{
+				Statement st = DatabaseManager.getCurrentAIP();
+				ResultSet rs = st.executeQuery("select count(*) from volumes where type = 'TMA'");
+				this.fireTaskStarts(rs.getInt(1));
+				rs = st.executeQuery("select nom from volumes where type = 'TMA' order by nom");
+				int i = 1;
+				while(rs.next()){
+					this.createZone(AIP.TMA, rs.getString(1));
+					this.fireTaskProgress(i++);
+				}
+				st.close();
+			} catch(SQLException e){
+				e.printStackTrace();
+			}
+			Collection<Object> secteurs = new HashSet<Object>();
+			for(Secteur3D s : this.zones.values()){
+				if(s.getType() == AIP.TMA)
+					secteurs.add(s);
+			}
+			return secteurs;
+		} else if(type == AIP.CTR){
+			try{
+				Statement st = DatabaseManager.getCurrentAIP();
+				ResultSet rs = st.executeQuery("select count(*) from volumes where type = 'CTR'");
+				this.fireTaskStarts(rs.getInt(1));
+				rs = st.executeQuery("select nom from volumes where type = 'CTR' order by nom");
+				int i = 1;
+				while(rs.next()){
+					this.createZone(AIP.CTR, rs.getString(1));
+					this.fireTaskProgress(i++);
+				}
+				st.close();
+			} catch(SQLException e){
+				e.printStackTrace();
+			}
+			Collection<Object> secteurs = new HashSet<Object>();
+			for(Secteur3D s : this.zones.values()){
+				if(s.getType() == AIP.CTR)
 					secteurs.add(s);
 			}
 			return secteurs;

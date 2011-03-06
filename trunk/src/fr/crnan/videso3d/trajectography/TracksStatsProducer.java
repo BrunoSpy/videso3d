@@ -27,7 +27,6 @@ import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.VidesoController;
-import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.geom.LatLonUtils;
@@ -40,7 +39,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.0.2
+ * @version 0.0.3
  */
 public class TracksStatsProducer extends ProgressSupport {
 		
@@ -50,7 +49,7 @@ public class TracksStatsProducer extends ProgressSupport {
 	 * @param type
 	 * @return Tous les secteurs traversés par <code>track</code>
 	 */
-	public Collection<Secteur3D> computeContainingSectors(final VidesoTrack track, Type type){
+	public Collection<Secteur3D> computeContainingSectors(final VidesoTrack track, Type type, int objectType){
 		if(DatasManager.getController(type) == null){
 			Logging.logger().severe("Controller inexistant");
 			return null;
@@ -85,7 +84,7 @@ public class TracksStatsProducer extends ProgressSupport {
 					}
 				}
 			});
-			secteurs = controller.getObjects(AIP.CTL);
+			secteurs = controller.getObjects(objectType);
 		}
 		else {
 			return null;
