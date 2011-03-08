@@ -38,7 +38,7 @@ import gov.nasa.worldwind.event.SelectListener;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
- * @version 0.4.2
+ * @version 0.4.3
  */
 public class ContextPanel extends JPanel implements SelectListener {
 
@@ -54,8 +54,9 @@ public class ContextPanel extends JPanel implements SelectListener {
 		this.setLayout(new BorderLayout());
 
 		this.add(titleAreaPanel, BorderLayout.NORTH);
-
-		this.add(new JScrollPane(content), BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane(content);
+		scrollPane.setBorder(null);
+		this.add(scrollPane, BorderLayout.CENTER);
 	}
 	
 	/**

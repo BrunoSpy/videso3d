@@ -111,14 +111,14 @@ public class TracksStatsProducer extends ProgressSupport {
 	}
 	
 	/**
-	 * Calcule la distance parcourue dans chaque tranche de 5 FL entre le niveau 0 et le niveau 660.<br />
+	 * Calcule la distance parcourue dans chaque tranche de <code>step</code> FL entre le niveau 0 et le niveau 660.<br />
 	 * La valeur à l'indice i correspond à la distance parcourue entre le niveau i*5 et (i+1)*5.<br />
 	 * @param track
 	 * @param globe
 	 * @return
 	 */
-	public double[] computeLengthRepartition(VidesoTrack track, Globe globe){
-		double[] lengths = new double[132];
+	public double[] computeLengthRepartition(VidesoTrack track, Globe globe, int step){
+		double[] lengths = new double[660/step];
 		Iterator<? extends TrackPoint> points = track.getTrackPoints().iterator();
 		TrackPoint first = null;
 		while(points.hasNext()){
@@ -127,19 +127,24 @@ public class TracksStatsProducer extends ProgressSupport {
 			} else {
 				TrackPoint second = points.next();
 				double length = LatLonUtils.computeDistance(first.getPosition(), second.getPosition(), globe);
-				int flMax = (int)(Math.max(first.getPosition().elevation, second.getPosition().elevation)/30.48);
-				int flMin = (int)(Math.min(first.getPosition().elevation, second.getPosition().elevation)/30.48);
-				
-				for(int i = (flMax/5);i<=(flMin/5);i++){
-					if((i+1)*5 > flMax){
-						lengths[i] += length * (((double)(flMax%5))/((double)((flMax-flMin))));
-					} else if(i*5<flMin) {
-						lengths[i] += length * (((double)(5-flMin%5))/((double)((flMax-flMin))));
+				if(!Double.isNaN(length)){
+					int flMax = (int)(Math.max(first.getPosition().elevation, second.getPosition().elevation)/30.48);
+					int flMin = (int)(Math.min(first.getPosition().elevation, second.getPosition().elevation)/30.48);
+					if(flMax == flMin){
+						lengths[Math.abs(flMax)/step] += length;
 					} else {
-						lengths[i] += length * (5.0/((double)((flMax-flMin))));
+						for(int i = (flMax/step);i<=(flMin/step);i++){
+							if((i+1)*step > flMax){
+								lengths[i] += length * (((double)(flMax%step))/((double)((flMax-flMin))));
+							} else if(i*step<flMin) {
+								lengths[i] += length * (((double)(step-flMin%step))/((double)((flMax-flMin))));
+							} else {
+								lengths[i] += length * ((double)step/((double)((flMax-flMin))));
+							}
+						}
 					}
+					first = second;
 				}
-				first = second;
 			}
 		}
 		return lengths;

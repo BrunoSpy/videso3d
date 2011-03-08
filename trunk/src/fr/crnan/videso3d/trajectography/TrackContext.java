@@ -62,11 +62,20 @@ public class TrackContext extends Context {
 	private Globe globe;	
 	private VidesoTrack track;
 
+	private ProgressMonitor progress = new ProgressMonitor(null, "", "", 0, 1);
+	private JXTaskPane trackPane;
+	private JXTaskPane layerPane;
+	private TracksStatsProducer stats;
+	
 	public TrackContext(TrajectoriesLayer layer, TrackFilesReader reader, VidesoTrack track, Globe globe){
 		this.layer = layer;
 		this.reader = reader;
 		this.globe = globe;
 		this.track = track;
+		
+		this.trackPane = new JXTaskPane();
+		this.layerPane = new JXTaskPane();
+		this.stats = new TracksStatsProducer();
 	}
 
 	@Override
@@ -89,9 +98,7 @@ public class TrackContext extends Context {
 		taskPane1.add(new JLabel("<html><b>Nombre de trajectoires : </b>"+reader.getTracks().size()));
 
 		taskpanes.add(taskPane1);	
-
-		final TracksStatsProducer stats = new TracksStatsProducer();
-		final ProgressMonitor progress = new ProgressMonitor(null, "", "", 0, 1);
+		
 		stats.addPropertyChangeListener(new PropertyChangeListener() {
 
 			@Override
@@ -104,16 +111,82 @@ public class TrackContext extends Context {
 				}
 			}
 		});
-		final JXTaskPane taskPane2 = new JXTaskPane("Informations sur "+track.getName());
+		
+		if(this.track != null)
+			this.updateTrackPane(track);
+		taskpanes.add(trackPane);
+		
+		this.updateLayerPane();
+		taskpanes.add(layerPane);
+		
+		return taskpanes;
+	}
 
-		taskPane2.add(new JLabel(String.format("<html><b>Longueur :</b> %.2f NM<html>",
+	public void updateLayerPane(){
+		this.layerPane.removeAll();
+		this.layerPane.setTitle("Informations sur les trajectoires affichées");
+		
+		this.layerPane.add(new AbstractAction() {
+			{
+				putValue(Action.NAME, "<html><b>Répartition en niveaux : </b>Calculer ...</html>");
+			}
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				progress.setMaximum(layer.getSelectedTracks().size());
+				progress.setNote("Calcul de la répartition en tranches de niveau des trajectoires");
+				progress.resetTimer();
+				
+				new SwingWorker<Integer, Integer>(){
+
+					@Override
+					protected Integer doInBackground() throws Exception {
+						double[] lengths = new double[66];
+						int p = 1;
+						for(VidesoTrack track : layer.getSelectedTracks()){
+							progress.setProgress(p++);
+							double[] temp = stats.computeLengthRepartition(track, globe,10);
+
+							for(int i = 0; i<66;i++){
+								lengths[i] += temp[i];
+							}
+						}
+						setEnabled(false);
+						double total = 0;
+						int lastNonNul = 0;
+						for(int i=0;i<66;i++){
+							total += lengths[i];
+							if(lengths[i] != 0.0) 
+								lastNonNul = i;
+						}
+						String text = "<html><b>Répartition en niveaux : </b>";
+						for(int i=0;i<=lastNonNul;i++){
+							text += "<br /> de "+i*10+" à "+(i+1)*10+" : "+String.format("%.2f",(lengths[i]/total)*100.0);
+						}
+						putValue(Action.NAME,text);
+						
+						
+						return null;
+					}
+					
+				}.execute();
+				
+			}
+		});
+	}
+	
+	public void updateTrackPane(final VidesoTrack track){
+		trackPane.setTitle("Informations sur "+track.getName());
+		trackPane.removeAll();
+
+		trackPane.add(new JLabel(String.format("<html><b>Longueur :</b> %.2f NM<html>",
 				stats.computeLengthBetweenLevels(track, 0, 660, globe)/LatLonCautra.NM)));
 
 		try {
 			if(DatabaseManager.getCurrentStip() != null){
 				final JPanel stipList = new JPanel();
 				stipList.setLayout(new BoxLayout(stipList, BoxLayout.X_AXIS));
-				taskPane2.add(new AbstractAction() {
+				trackPane.add(new AbstractAction() {
 
 					{
 						putValue(Action.NAME, "<html><b>Secteurs STIP traversés :</b> Calculer...</html>");
@@ -143,7 +216,7 @@ public class TrackContext extends Context {
 								for(Secteur3D s : secteurs){
 									if(last == null || !s.getName().split(" ")[0].equals(last.getName().split(" ")[0])){
 										final Secteur3D tSecteur = s;
-										Component action = ((TaskPaneUI)taskPane2.getUI()).createAction(
+										Component action = ((TaskPaneUI)trackPane.getUI()).createAction(
 												new AbstractAction() {
 													{
 														putValue(Action.NAME, "\t"+tSecteur.getName());
@@ -162,12 +235,12 @@ public class TrackContext extends Context {
 						}.execute();
 					}
 				});
-				taskPane2.add(stipList);
+				trackPane.add(stipList);
 			}
 			if(DatabaseManager.getCurrentAIP() != null){
 				final JPanel aipList = new JPanel();
 				aipList.setLayout(new BoxLayout(aipList, BoxLayout.X_AXIS));
-				taskPane2.add(new AbstractAction() {
+				trackPane.add(new AbstractAction() {
 
 					{
 						putValue(Action.NAME, "<html><b>Secteurs AIP traversés :</b> Calculer...</html>");
@@ -197,7 +270,7 @@ public class TrackContext extends Context {
 								for(Secteur3D s : secteurs){
 									if(last == null || !s.getName().split(" ")[0].equals(last.getName().split(" ")[0])){
 										final Secteur3D tSecteur = s;
-										Component action = ((TaskPaneUI)taskPane2.getUI()).createAction(
+										Component action = ((TaskPaneUI)trackPane.getUI()).createAction(
 												new AbstractAction() {
 													{
 														putValue(Action.NAME, "\t"+tSecteur.getName().split("\\s+")[0]);
@@ -216,11 +289,11 @@ public class TrackContext extends Context {
 						}.execute();
 					}
 				});
-				taskPane2.add(aipList);
+				trackPane.add(aipList);
 				
 				final JPanel aipList2 = new JPanel();
 				aipList2.setLayout(new BoxLayout(aipList2, BoxLayout.Y_AXIS));
-				taskPane2.add(new AbstractAction() {
+				trackPane.add(new AbstractAction() {
 
 					{
 						putValue(Action.NAME, "<html><b>TMA AIP traversées :</b> Calculer...</html>");
@@ -250,7 +323,7 @@ public class TrackContext extends Context {
 								for(Secteur3D s : secteurs){
 									if(last == null || !s.getName().equals(last.getName())){
 										final Secteur3D tSecteur = s;
-										Component action = ((TaskPaneUI)taskPane2.getUI()).createAction(
+										Component action = ((TaskPaneUI)trackPane.getUI()).createAction(
 												new AbstractAction() {
 													{
 														putValue(Action.NAME, "\t"+tSecteur.getName());
@@ -268,11 +341,11 @@ public class TrackContext extends Context {
 						}.execute();
 					}
 				});
-				taskPane2.add(aipList2);
+				trackPane.add(aipList2);
 				
 				final JPanel aipList3 = new JPanel();
 				aipList3.setLayout(new BoxLayout(aipList3, BoxLayout.Y_AXIS));
-				taskPane2.add(new AbstractAction() {
+				trackPane.add(new AbstractAction() {
 
 					{
 						putValue(Action.NAME, "<html><b>CTR AIP traversées :</b> Calculer...</html>");
@@ -302,7 +375,7 @@ public class TrackContext extends Context {
 								for(Secteur3D s : secteurs){
 									if(last == null || !s.getName().equals(last.getName())){
 										final Secteur3D tSecteur = s;
-										Component action = ((TaskPaneUI)taskPane2.getUI()).createAction(
+										Component action = ((TaskPaneUI)trackPane.getUI()).createAction(
 												new AbstractAction() {
 													{
 														putValue(Action.NAME, "\t"+tSecteur.getName());
@@ -320,14 +393,11 @@ public class TrackContext extends Context {
 						}.execute();
 					}
 				});
-				taskPane2.add(aipList3);
+				trackPane.add(aipList3);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		taskpanes.add(taskPane2);
-
-		return taskpanes;
 	}
-
+	
 }
