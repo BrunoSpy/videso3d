@@ -112,9 +112,4 @@ public interface VidesoController {
 	 */
 	public Collection<Object> getObjects(int type);
 	
-	/**
-	 * Nombre d'étapes d'initialisation (pour les progressmonitor)
-	 * @return int
-	 */
-	//public int getNumberInitSteps();
 }

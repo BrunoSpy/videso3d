@@ -29,9 +29,7 @@ import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -70,6 +68,7 @@ import fr.crnan.videso3d.formats.geo.GEOWriter;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
+import fr.crnan.videso3d.ihm.components.VXTable;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
 import fr.crnan.videso3d.layers.LPLNTracksLayer;
 import fr.crnan.videso3d.layers.OPASTracksLayer;
@@ -96,11 +95,13 @@ public class TrajectoriesView extends JPanel {
 	
 	private ContextPanel context;
 	
+	private TrackContext trackContext;
+	
 	public TrajectoriesView(final VidesoGLCanvas wwd, final TrackFilesReader reader, final ContextPanel contxt){
 		this.context = contxt;
 		this.layer = reader.getLayer() == null ? wwd.addTrajectoires(reader) : reader.getLayer();
 		this.wwd = wwd;
-		
+		this.trackContext = new TrackContext(this.layer, reader, null, this.wwd.getModel().getGlobe());
 		
 		final JXTaskPane filterPolygonPane = this.createPolygonFilterPane();
 		
@@ -111,7 +112,7 @@ public class TrajectoriesView extends JPanel {
 		this.add(scrollContent, BorderLayout.CENTER);		
 		
 		final JXTaskPane table = new JXTaskPane("Trajectoires affichées ("+layer.getSelectedTracks().size()+")");
-		final JXTable pistes = new JXTable(new TrackTableModel());
+		final VXTable pistes = new VXTable(new TrackTableModel());
 		pistes.setFillsViewportHeight(true);
 		//listener pour le highlight des lignes sélectionnées
 		pistes.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -148,14 +149,13 @@ public class TrajectoriesView extends JPanel {
 				if(e.getClickCount() == 2){
 					int row = pistes.rowAtPoint(e.getPoint());
 					final VidesoTrack t = (VidesoTrack)((TrackTableModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(row));
-					context.setTaskPanes(new TrackContext(layer, reader, t, wwd.getModel().getGlobe()).getTaskPanes(0, null));
+					trackContext.updateTrackPane(t);
+					context.setTaskPanes(trackContext.getTaskPanes(0, null));
 					context.open();
 					wwd.centerView(t);
 				}
 			}
-		});
-		pistes.setColumnControlVisible(true);			
-		
+		});		
 
 		if(layer instanceof LPLNTracksLayer){
 			pistes.getColumnExt("IAF").setVisible(false);
@@ -165,11 +165,13 @@ public class TrajectoriesView extends JPanel {
 			pistes.getColumnExt("Type").setVisible(false);
 		}
 		pistes.getColumnExt("Affiché").setVisible(layer.isTrackHideable());
+		pistes.setColumnControlVisible(true);
 		pistes.packAll();
 		
-		JScrollPane scrollPane = new JScrollPane(pistes);
-		scrollPane.setBorder(null);
-		table.add(scrollPane);
+		JScrollPane scrollPistes = new JScrollPane(pistes);
+		scrollPistes.setBorder(null);
+		scrollPistes.setPreferredSize(new Dimension(600,600));
+		table.add(scrollPistes);
 				
 		content.add(this.createStylePane(), null);
 		content.add(this.createFilterPane(), null);
@@ -566,6 +568,7 @@ public class TrajectoriesView extends JPanel {
 					layer.addFilter(TrajectoriesLayer.FIELD_TYPE_AVION, typeField.getText());
 				}
 				layer.update();
+				trackContext.updateLayerPane();
 			}
 		});
 		JButton cancel = new JButton("Effacer");
@@ -580,6 +583,7 @@ public class TrajectoriesView extends JPanel {
 				typeField.setText("");
 				layer.removeFilter();
 				layer.update();
+				trackContext.updateLayerPane();
 			}
 		});
 		filtres.add(validate);
@@ -622,7 +626,7 @@ public class TrajectoriesView extends JPanel {
 	}
 	
 	/**
-	 * Supprime le layer associé au sélecteur.
+	 * Supprime le layer associé au sélecteur.<br />
 	 */
 	public void delete(){
 		this.wwd.getModel().getLayers().remove(layer);
@@ -776,12 +780,9 @@ public class TrajectoriesView extends JPanel {
 		private String[] columnNames = {"Nom", "Trajectoires", "Actif"};
 
 		private List<PolygonsSetFilter> polygons;
-		
-		private HashMap<String, Integer> names;
-				
+						
 		public PolygonTableModel(){
 			super();
-			this.names = new HashMap<String, Integer>();
 			if(layer.getPolygonFilters() != null){
 				this.polygons = layer.getPolygonFilters();
 			}

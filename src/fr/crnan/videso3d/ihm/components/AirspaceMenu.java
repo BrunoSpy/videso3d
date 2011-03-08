@@ -54,7 +54,7 @@ import javax.swing.event.ChangeListener;
 /**
  * Contextual menu for {@link Airspace}
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class AirspaceMenu extends JPopupMenu {
 
@@ -146,11 +146,15 @@ public class AirspaceMenu extends JPopupMenu {
 
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						VPolygon polygon = new VPolygon(((Polygon)airspace).getLocations());
-						polygon.setAltitudes(((Polygon)airspace).getAltitudes()[0],((Polygon)airspace).getAltitudes()[1] );
-						polygon.setAttributes(airspace.getAttributes());
-						wwd.deleteAirspace(airspace);
-						PolygonEditorsManager.editAirspace(polygon, true);
+						if(airspace instanceof Secteur3D){
+							VPolygon polygon = new VPolygon(((Polygon)airspace).getLocations());
+							polygon.setAltitudes(((Polygon)airspace).getAltitudes()[0],((Polygon)airspace).getAltitudes()[1] );
+							polygon.setAttributes(airspace.getAttributes());
+							wwd.deleteAirspace(airspace);
+							PolygonEditorsManager.editAirspace(polygon, true);
+						} else {
+							PolygonEditorsManager.editAirspace((Polygon) airspace, true);
+						}
 					}
 				});		
 				this.add(edit);
