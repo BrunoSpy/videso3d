@@ -273,6 +273,7 @@ public class MosaiqueLayer extends LayerSet {
 				SurfacePolygonAnnotation polygon = new SurfacePolygonAnnotation(locations);
 				polygon.setDatabaseType(base);
 				polygon.setType(type);
+				polygon.setName(annotation.split("[<>]")[4]);
 				if(attr != null) polygon.setAttributes(attr);
 				if(annotation != null) polygon.setAnnotation(annotation);
 				this.shapeLayer.addRenderable(polygon);
@@ -280,6 +281,7 @@ public class MosaiqueLayer extends LayerSet {
 				PolygonAnnotation polyg = new PolygonAnnotation(locations);
 				polyg.setDatabaseType(base);
 				polyg.setType(type);
+				polyg.setName(annotation.split("[<>]")[4]);
 				polyg.setAltitudes(plancher, plafond);
 				if(annotation != null) polyg.setAnnotation(annotation);
 				if(airspaceAttr != null) polyg.setAttributes(airspaceAttr);
@@ -304,6 +306,7 @@ public class MosaiqueLayer extends LayerSet {
 				SurfacePolygonAnnotation polygon = new SurfacePolygonAnnotation(locations);
 				polygon.setDatabaseType(base);
 				polygon.setType(type);
+				polygon.setName(annotation.split("[<>]")[4]);
 				if(attr != null) polygon.setAttributes(attr);
 				if(annotation != null) polygon.setAnnotation(annotation);
 				this.shapeLayer.addRenderable(polygon);
@@ -311,6 +314,7 @@ public class MosaiqueLayer extends LayerSet {
 				PolygonAnnotation polyg = new PolygonAnnotation(locations);
 				polyg.setDatabaseType(base);
 				polyg.setType(type);
+				polyg.setName(annotation.split("[<>]")[4]);
 				polyg.setAltitudes(plancher, plafond);
 				if(airspaceAttr != null) polyg.setAttributes(airspaceAttr);
 				if(annotation != null) polyg.setAnnotation(annotation);

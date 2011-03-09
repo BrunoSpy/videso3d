@@ -18,15 +18,17 @@ package fr.crnan.videso3d.graphics;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import gov.nasa.worldwind.geom.Position;
 /**
- * Représentation graphique d'un aérodrome sans la piste dessinée.
+ * Représentation d'un aérodrome dont on ne connaît pas les pistes.
  * @author Adrien Vidal
  * @version 0.1.1
  */
 public class MarqueurAerodrome extends Balise2D implements Aerodrome {
 
+	String nomPiste = "";
 	
-	public MarqueurAerodrome(int type, CharSequence name, Position position,String annotation, Type base) {
-		super(((String)name).split("--")[0].trim(), position, annotation, base, type);
+	public MarqueurAerodrome(int type, String name, Position position,String nomPiste, Type base) {
+		super(name.split("--")[0].trim(), position, "<b>"+name+"</b><br/>Piste "+ nomPiste, base, type);
+		this.nomPiste = nomPiste;
 		this.setDatabaseType(base);
 		this.setType(type);
 	}
@@ -40,5 +42,20 @@ public class MarqueurAerodrome extends Balise2D implements Aerodrome {
 	public String getAnnotationText() {
 		return this.getAnnotation(null).getText();
 	}
+	
+	@Override
+	public String getNomPiste(){
+		return nomPiste;
+	}
+
+	@Override
+	public void setVisible(boolean visible) {
+		this.getUserFacingText().setVisible(visible);
+	}
+	
+
+
+	
+	
 
 }

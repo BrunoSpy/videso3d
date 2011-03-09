@@ -172,13 +172,11 @@ public class FilterableAirspaceLayer extends AbstractLayer implements AltitudeFi
      *
      * @throws IllegalStateException If a custom Iterable has been specified by a call to <code>setAirspaces</code>.
      */
-    public void removeAllAirspaces()
-    {
+    public void removeAllAirspaces(){
         clearAirspaces();
     }
 
-    private void clearAirspaces()
-    {
+    private void clearAirspaces(){
         if (this.full != null && this.full.size() > 0) {
         	this.full.clear();
         	if(displayed != null) displayed = null;

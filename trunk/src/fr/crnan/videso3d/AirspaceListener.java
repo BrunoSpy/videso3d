@@ -213,7 +213,6 @@ public class AirspaceListener implements SelectListener {
 								public void actionPerformed(ActionEvent e) {
 									Route2D route = (Route2D) event.getTopObject();
 									context.showInfo(route.getDatabaseType(), route.getType(), route.getName());
-									context.open();
 								}
 							});
 							JMenuItem supprItem = new JMenuItem("Supprimer");				
@@ -236,7 +235,6 @@ public class AirspaceListener implements SelectListener {
 							@Override
 							public void actionPerformed(ActionEvent e) {
 								context.showInfo(fr.crnan.videso3d.DatabaseManager.Type.STIP, StipController.BALISES, ((Balise2D)event.getTopObject()).getName());
-								context.open();
 							}
 						});
 						JMenu analyseItem = new JMenu("Analyse");

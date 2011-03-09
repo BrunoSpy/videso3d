@@ -118,10 +118,10 @@ public class FrontieresStipLayer extends RenderableLayer {
 		setFondPays("France", France.FRANCE);
 	}
 	
-	public void setEurope(){
-		setFondPays("France", France.FRANCE);
+	public void setEurope(){		
 		setFondPays("Corse", France.CORSE);
 		setFondPays("Allemange", Allemagne.ALLEMAGNE);
+		setFondPays("France", France.FRANCE);
 		setFondPays("Belgique", BeNeLux.BELGIQUE);
 		setFondPays("Luxembourg", BeNeLux.LUXEMBOURG);
 		setFondPays("PaysBas", BeNeLux.PAYSBAS);

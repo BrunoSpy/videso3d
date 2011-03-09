@@ -16,24 +16,74 @@
 
 package fr.crnan.videso3d.exsa;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import org.jdesktop.swingx.JXTaskPane;
 
 import fr.crnan.videso3d.Context;
+import fr.crnan.videso3d.DatabaseManager;
 /**
  * 
  * @author Bruno Spyckerelle
+ * @author Adrien Vidal
  * @version 0.1
  */
 public class STRContext extends Context {
 
 	@Override
 	public List<JXTaskPane> getTaskPanes(int type, String name) {
-		// TODO Auto-generated method stub
+		if(type == STRController.MOSAIQUE_VVF){
+			return showVVFInfos(name);
+		}
 		return null;
 	}
 
-
+	private List<JXTaskPane> showVVFInfos(String name){
+		String vvfName = name.split("\\s+")[1];
+		JXTaskPane infos = new JXTaskPane();
+		infos.setTitle("Suites de codes associées au VVF");
+		ArrayList<String> debut = new ArrayList<String>();
+		ArrayList<String> fin = new ArrayList<String>();
+		ArrayList<String> espaces = new ArrayList<String>();
+		try {
+			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.EXSA, "select * from centscodf where vvf = ?");
+			st.setString(1, vvfName);
+			ResultSet rs = st.executeQuery();
+			while(rs.next()){
+				debut.add(rs.getString(3));
+				fin.add(rs.getString(4));
+				espaces.add(rs.getString(5));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	
+		JTable table = new JTable();
+		DefaultTableModel model = new DefaultTableModel(){
+			@Override
+			public boolean isCellEditable(int row, int column){
+				return false;
+			}
+		};
+		model.addColumn("Début", debut.toArray());
+		model.addColumn("Fin", fin.toArray());
+		model.addColumn("Espaces de visualisation", espaces.toArray());
+		table.setModel(model);
+		table.setFillsViewportHeight(true);
+		JScrollPane jsp = new JScrollPane(table);
+		infos.add(jsp);
+		ArrayList<JXTaskPane> list = new ArrayList<JXTaskPane>();
+		list.add(infos);
+		return list;		
+	}
+	
 
 }
