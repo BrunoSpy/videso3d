@@ -39,6 +39,7 @@ import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIP.Altitude;
 import fr.crnan.videso3d.aip.RoutesSegments.Segment;
+import fr.crnan.videso3d.graphics.Aerodrome;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.Route;
@@ -104,6 +105,8 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	
 	private Balise2D lastHighlighted;
 	private Annotation lastNavFixAnnotation;
+	
+	private String routeEnCreation = "";
 	
 	public AIPController(VidesoGLCanvas wwd) {
 		this.wwd = wwd;
@@ -263,12 +266,15 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	private void addZone(int type, String name) {
 		if(!zones.containsKey(type+" "+name)){
 			this.createZone(type, name);
-			this.zones.get(type+" "+name).setVisible(true);
-		} else {
-			this.zones.get(type+" "+name).setVisible(true);
-			this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);
+			this.wwd.redraw();
+		}else {
+			this.zones.get(type+" "+name).setVisible(true);	
+			this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);	
 		}
+		
 	}
+
+
 
 	private void createZone(int type, String name){
 		if(!zones.containsKey(type+" "+name)){
@@ -346,6 +352,8 @@ public class AIPController extends ProgressSupport implements VidesoController {
 					+"<p>Plafond : "+niveaux.getSecond().getFullText()
 					+"<br />Plancher : "+niveaux.getFirst().getFullText()+"</p>");
 			Geometrie contour = new Geometrie(aip.findElement(aip.getDocumentRoot().getChild("PartieS"),maZone.getChild("Partie").getAttributeValue("pk")));
+			if(contour.getLocations().isEmpty())
+				return;
 			zone.setLocations(contour.getLocations());
 			String upperAltitudeRef, lowerAltitudeRef = null;
 
@@ -362,7 +370,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 				upperAltitudeRef = AVKey.ABOVE_MEAN_SEA_LEVEL;
 			}
 			zone.setAltitudeDatum(lowerAltitudeRef, upperAltitudeRef);
-			zone.setVisible(false);
+			zone.setVisible(true);
 			this.zonesLayer.addAirspace(zone);
 			zones.put(type+" "+name, zone);
 		}
@@ -377,17 +385,21 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	}
 	
 	public void showRoute(String routeName, int type){
-		RoutesSegments.Route route = routesSegments.getSegmentOfRoute(routeName);
-		if(route==null){
-			addRouteToLayer(routeName, type, true);
-		}else{
-			if(!route.isVisible()){
-				route.setVisible(true);
-				for(Segment s : route){
-					routes2D.displayRoute(s.getName());
-					routes3D.displayRoute(s.getName());
+		if(!routeEnCreation.equals(routeName)){
+			routeEnCreation = routeName;
+			RoutesSegments.Route route = routesSegments.getSegmentOfRoute(routeName);
+			if(route==null){
+				addRouteToLayer(routeName, type, true);
+			}else{
+				if(!route.isVisible()){
+					route.setVisible(true);
+					for(Segment s : route){
+						routes2D.displayRoute(s.getName());
+						routes3D.displayRoute(s.getName());
+					}
 				}
 			}
+			routeEnCreation = "";
 		}
 	}
 
@@ -602,96 +614,67 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	
 
 	private void showAerodrome(int type, String nom){
-		int pk = -1;
-		double latRef =0, lonRef=0;
-		
-		ResultSet rs;
-		PreparedStatement ps;
-		try{
-			if(type == AIP.AERODROME){
-				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk, latRef, lonRef from aerodromes where upper(code) = ?");
-				ps.setString(1, nom.split("--")[0].trim());
-				rs = ps.executeQuery();
-
-			}else{
-				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk, latRef, lonRef from aerodromes where nom = ?");
-				ps.setString(1, nom);
-				rs = ps.executeQuery();
+		if( arptLayer.containsAirport(nom)){	
+			ArrayList<Aerodrome> aerodromes = arptLayer.getAirport(nom);	
+			for(Aerodrome ad : aerodromes){
+				arptLayer.addAirport(ad);
 			}
-			if(rs.next()){
-				pk = rs.getInt(1);
-				latRef = rs.getDouble(2);
-				lonRef = rs.getDouble(3);
-			}
+		}else{
+			int pk = -1;
+			double latRef =0, lonRef=0;
 
-			ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select * from runways where pk_ad=?");
-			ps.setInt(1, pk);
-			ResultSet rs2 = ps.executeQuery();
-			boolean runwayExists = false;
-			while(rs2.next()){
-				runwayExists = true;
-				String nomPiste = rs2.getString("nom");
-				if(rs2.getInt("largeur")>0 && rs2.getDouble("lat1")!=0){
-					double lat1 = rs2.getDouble("lat1");
-					double lon1 = rs2.getDouble("lon1");
-					double lat2 = rs2.getDouble("lat2");
-					double lon2 = rs2.getDouble("lon2");
-					double largeur = rs2.getDouble("largeur");
-					String annotation = "<b>"+nom+"</b><br/>Piste "+ nomPiste;
-					PisteAerodrome piste = new PisteAerodrome(type, nom, annotation, lat1, lon1, lat2, lon2, largeur, Position.fromDegrees(latRef, lonRef), Type.AIP);
-					arptLayer.addAirport(piste, nomPiste);
+			ResultSet rs;
+			PreparedStatement ps;
+			try{
+				if(type == AIP.AERODROME){
+					ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk, latRef, lonRef from aerodromes where upper(code) = ?");
+					ps.setString(1, nom.split("--")[0].trim());
+					rs = ps.executeQuery();
+
 				}else{
-					String annotation = "<b>"+nom+"</b><br/>Piste "+ nomPiste;
-					MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), annotation, DatabaseManager.Type.AIP);
-					arptLayer.addAirport(airportBalise, nomPiste);
+					ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk, latRef, lonRef from aerodromes where nom = ?");
+					ps.setString(1, nom);
+					rs = ps.executeQuery();
 				}
+				if(rs.next()){
+					pk = rs.getInt(1);
+					latRef = rs.getDouble(2);
+					lonRef = rs.getDouble(3);
+				}
+
+				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select * from runways where pk_ad=?");
+				ps.setInt(1, pk);
+				ResultSet rs2 = ps.executeQuery();
+				boolean runwayExists = false;
+				while(rs2.next()){
+					runwayExists = true;
+					String nomPiste = rs2.getString("nom");
+					if(rs2.getInt("largeur")>0 && rs2.getDouble("lat1")!=0){
+						double lat1 = rs2.getDouble("lat1");
+						double lon1 = rs2.getDouble("lon1");
+						double lat2 = rs2.getDouble("lat2");
+						double lon2 = rs2.getDouble("lon2");
+						double largeur = rs2.getDouble("largeur");
+						PisteAerodrome piste = new PisteAerodrome(type, nom, nomPiste, lat1, lon1, lat2, lon2, largeur, Position.fromDegrees(latRef, lonRef), Type.AIP);
+						arptLayer.addAirport(piste);
+					}else{
+						MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), nomPiste, DatabaseManager.Type.AIP);
+						arptLayer.addAirport(airportBalise);
+					}
+				}
+				if(!runwayExists){
+					MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), "Pistes inconnues", DatabaseManager.Type.AIP);
+					arptLayer.addAirport(airportBalise);
+				}
+			}catch(SQLException e){
+				e.printStackTrace();
 			}
-			if(!runwayExists){
-				String annotation = "<b>"+nom+"</b><br/>Pistes inconnues";
-				MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), annotation, DatabaseManager.Type.AIP);
-				arptLayer.addAirport(airportBalise, "XX");
-			}
-		}catch(SQLException e){
-			e.printStackTrace();
 		}
 	}
 	
 	
 	private void removeAerodrome(int type, String nom){
-		String splittedName = nom.split("--")[0].trim();
-		List<String> nomsPistes = new ArrayList<String>();
-		int pk=-1;
-		ResultSet rs;
-		PreparedStatement ps;
-		try{
-			if(type == AIP.AERODROME){
-				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from aerodromes where upper(code) = ?");
-				ps.setString(1, splittedName);
-				rs = ps.executeQuery();
-			}else{
-				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from aerodromes where nom = ?");
-				ps.setString(1, nom);
-				rs = ps.executeQuery();
-			}
-			if(rs.next()){
-				pk = rs.getInt(1);
-			}
-			ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nom from runways where pk_ad = ?");
-			ps.setInt(1, pk);
-			rs = ps.executeQuery();
-			while(rs.next()){
-				nomsPistes.add(rs.getString(1));
-			}
-		}catch(SQLException e){
-			e.printStackTrace();
-		}
-		if(nomsPistes.size()>0){
-			for(String nomPiste : nomsPistes){
-				arptLayer.hideAirport(splittedName,nomPiste);
-			}
-		}else{
-			arptLayer.hideAirport(splittedName,"XX");
-		}
+		arptLayer.hideAirport(nom);
 	}
 	
 	
@@ -704,12 +687,13 @@ public class AIPController extends ProgressSupport implements VidesoController {
 
 	@Override
 	public void reset() {
-		this.zones.clear();
-		this.zonesLayer.removeAllAirspaces();
+		for(Secteur3D s : zones.values()){
+			s.setVisible(false);
+		}
 		this.routes2D.hideAllRoutes();
 		this.routes3D.hideAllRoutes();
-		this.navFixLayer.eraseAllBalises();
-		this.navFixLayer3D.eraseAllBalises();
+		this.navFixLayer.removeAllBalises();
+		this.navFixLayer3D.removeAllBalises();
 		this.arptLayer.removeAllAirports();
 	}
 
@@ -826,9 +810,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	
 	
 	private void highlightAirport(int type, String name){
-		if(!arptLayer.containsAirport(name)){
-			showAerodrome(type, name);
-		}
+		showAerodrome(type, name);
 		centerView(arptLayer.getAirport(name));
 	}
 	

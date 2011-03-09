@@ -96,6 +96,8 @@ public class StipController extends ProgressSupport implements VidesoController 
 	private Object highlight;
 	private Object lastAttrs;
 	
+	private String routeEnCreation = "";
+	
 	/**
 	 * Constantes
 	 */
@@ -384,45 +386,49 @@ public class StipController extends ProgressSupport implements VidesoController 
 	}
 
 	private void createRoute(String name){
-		if(this.routes2D.getRoute(name) == null) {
-			Route3D route3D = new Route3D(DatabaseManager.Type.STIP, StipController.ROUTES);
-			Route2D route2D = new Route2D(DatabaseManager.Type.STIP, StipController.ROUTES);
-			List<LatLon> loc = new ArrayList<LatLon>();
-			List<Integer> sens = new ArrayList<Integer>();
-			List<String> balises = new ArrayList<String>();
-			try {
-				Statement st = DatabaseManager.getCurrentStip();
-				ResultSet rs = st.executeQuery("select espace from routes where name = '"+name+"'");
-				String type = rs.getString(1);
-				if(type.equals("F")) {
-					route3D.setSpace(Space.FIR);
-					route2D.setSpace(Space.FIR);
-				}
-				if(type.equals("U")) {
-					route3D.setSpace(Space.UIR);
-					route2D.setSpace(Space.UIR);
-				}
-				rs = st.executeQuery("select * from routebalise, balises where route = '"+name+"' and routebalise.balise = balises.name and appartient = 1");
-				while(rs.next()){
-					loc.add(LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
-					balises.add(rs.getString("balise"));
-					if(rs.getString("sens").equals("+")){
-						sens.add(Route3D.LEG_FORBIDDEN);
-					} else {
-						sens.add(Route3D.LEG_AUTHORIZED);
+		if(!routeEnCreation.equals(name)){
+			routeEnCreation = name;
+			if(this.routes2D.getRoute(name) == null) {
+				Route3D route3D = new Route3D(DatabaseManager.Type.STIP, StipController.ROUTES);
+				Route2D route2D = new Route2D(DatabaseManager.Type.STIP, StipController.ROUTES);
+				List<LatLon> loc = new ArrayList<LatLon>();
+				List<Integer> sens = new ArrayList<Integer>();
+				List<String> balises = new ArrayList<String>();
+				try {
+					Statement st = DatabaseManager.getCurrentStip();
+					ResultSet rs = st.executeQuery("select espace from routes where name = '"+name+"'");
+					String type = rs.getString(1);
+					if(type.equals("F")) {
+						route3D.setSpace(Space.FIR);
+						route2D.setSpace(Space.FIR);
 					}
+					if(type.equals("U")) {
+						route3D.setSpace(Space.UIR);
+						route2D.setSpace(Space.UIR);
+					}
+					rs = st.executeQuery("select * from routebalise, balises where route = '"+name+"' and routebalise.balise = balises.name and appartient = 1");
+					while(rs.next()){
+						loc.add(LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
+						balises.add(rs.getString("balise"));
+						if(rs.getString("sens").equals("+")){
+							sens.add(Route3D.LEG_FORBIDDEN);
+						} else {
+							sens.add(Route3D.LEG_AUTHORIZED);
+						}
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
-			} catch (SQLException e) {
-				e.printStackTrace();
+				route3D.setLocations(loc, sens);
+				route3D.setName(name);
+				route3D.setBalises(balises);
+				route2D.setLocations(loc);
+				route2D.setBalises(balises);
+				route2D.setName(name);
+				this.routes3D.addRoute(route3D, name);
+				this.routes2D.addRoute(route2D, name);
 			}
-			route3D.setLocations(loc, sens);
-			route3D.setName(name);
-			route3D.setBalises(balises);
-			route2D.setLocations(loc);
-			route2D.setBalises(balises);
-			route2D.setName(name);
-			this.routes3D.addRoute(route3D, name);
-			this.routes2D.addRoute(route2D, name);
+			routeEnCreation = "";
 		}
 	}
 	

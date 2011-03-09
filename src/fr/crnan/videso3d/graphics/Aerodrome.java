@@ -24,4 +24,6 @@ public interface Aerodrome extends VidesoObject{
 	public UserFacingText getUserFacingText();
 	public String getName();
 	public String getAnnotationText();
+	public String getNomPiste();
+	public void setVisible(boolean b);
 }

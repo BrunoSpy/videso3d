@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.layers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,7 +26,6 @@ import fr.crnan.videso3d.graphics.MarqueurAerodrome;
 import fr.crnan.videso3d.graphics.PisteAerodrome;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.RenderableLayer;
-import gov.nasa.worldwind.render.UserFacingText;
 
 /**
  * Layer contenant les aérodromes.<br />
@@ -40,7 +40,7 @@ public class AirportLayer extends LayerSet {
 	
 	private HashSet<String> texts = new HashSet<String>();
 	
-	private HashMap<String,Aerodrome> activeAirports = new HashMap<String, Aerodrome>();
+	private HashMap<String,Aerodrome> pistes = new HashMap<String, Aerodrome>();
 	/**
 	 * Crée un nouveau calque d'aéroports
 	 * @param name Nom du calque
@@ -53,78 +53,68 @@ public class AirportLayer extends LayerSet {
 		this.textLayer.setAMSL(false);
 	}
 	
-	public void addAirport(Object arpt, String nomPiste){
-		UserFacingText uft=null;
-		if(arpt instanceof MarqueurAerodrome){
-			MarqueurAerodrome airportBalise = (MarqueurAerodrome) arpt;
-			uft = airportBalise.getUserFacingText();		
-			if(!activeAirports.containsKey(airportBalise.getName()+nomPiste)){
-				activeAirports.put(airportBalise.getName()+nomPiste, airportBalise);		
-				markerLayer.addMarker(airportBalise);
+	public void addAirport(Aerodrome arpt){
+		if(arpt instanceof MarqueurAerodrome)
+			markerLayer.addMarker((MarqueurAerodrome)arpt);
+		String nomComplet = arpt.getName()+";"+arpt.getNomPiste();
+		if(!pistes.containsKey(nomComplet)){
+			pistes.put(nomComplet, arpt);
+			if(arpt instanceof PisteAerodrome){
+				airportsLayer.addRenderable(((PisteAerodrome) arpt).getInnerRectangle());
+				airportsLayer.addRenderable(((PisteAerodrome) arpt).getOuterRectangle());
 			}
-		}else if(arpt instanceof PisteAerodrome){
-			PisteAerodrome piste = (PisteAerodrome) arpt;
-			uft = piste.getUserFacingText();
-			if(!activeAirports.containsKey(piste.getName()+nomPiste)){
-				activeAirports.put(piste.getName()+nomPiste, piste);
-				airportsLayer.addRenderable(piste.getOuterRectangle());
-				airportsLayer.addRenderable(piste.getInnerRectangle());
+			if(!texts.contains((String)arpt.getUserFacingText().getText())){
+				textLayer.addGeographicText(arpt.getUserFacingText());
+				texts.add((String)arpt.getUserFacingText().getText());
 			}	
 		}
-		if(!texts.contains((String)uft.getText())){
-			textLayer.addGeographicText(uft);
-			texts.add((String) uft.getText());
-		}
+		arpt.setVisible(true);
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
-	public void hideAirport(String name, String nomPiste){
-		if(activeAirports.containsKey(name+nomPiste)){
-			UserFacingText uft = null;
-			Object arpt = activeAirports.get(name+nomPiste);
-			if(arpt instanceof MarqueurAerodrome){
-				uft = ((MarqueurAerodrome)arpt).getUserFacingText();
-				markerLayer.removeMarker((MarqueurAerodrome)arpt);
-			}else{
-				uft = ((PisteAerodrome)arpt).getUserFacingText();
-				airportsLayer.removeRenderable(((PisteAerodrome)arpt).getOuterRectangle());
-				airportsLayer.removeRenderable(((PisteAerodrome)arpt).getInnerRectangle());
+	public void hideAirport(String name){
+		Iterator<String> it = pistes.keySet().iterator();
+		String arptCode = name.split("--")[0].trim();
+		while(it.hasNext()){
+			String next = it.next();
+			if(next.startsWith(arptCode)){
+				Aerodrome arpt = pistes.get(next);
+				arpt.setVisible(false);
+				if(arpt instanceof MarqueurAerodrome)
+					markerLayer.removeMarker((MarqueurAerodrome)arpt);
 			}
-			if(texts.contains((String)uft.getText())){
-				textLayer.removeGeographicText(uft);
-				texts.remove((String)uft.getText());
-			}
-			activeAirports.remove(name+nomPiste);
 		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	public void removeAllAirports(){
-		textLayer.removeAllGeographicTexts();
 		markerLayer.setMarkers(null);
-		airportsLayer.removeAllRenderables();
-		activeAirports.clear();
+		for(Aerodrome a : pistes.values()){
+			a.setVisible(false);
+		}
 	}
 	
 	public boolean containsAirport(String name){
-		boolean contains = false;
-		Iterator<String> it = activeAirports.keySet().iterator();
+		String arptCode = name.split("--")[0].trim();
+		Iterator<String> it = pistes.keySet().iterator();
 		while(it.hasNext()){
-			if(it.next().startsWith(name.split("--")[0].trim()))
-				contains = true;
+			if(it.next().startsWith(arptCode))
+				return true;
 		}
-		return contains;
+		return false;
 	}
 	
 	
-	public Aerodrome getAirport(String name){
-		Iterator<String> it = activeAirports.keySet().iterator();
+	public ArrayList<Aerodrome> getAirport(String name){
+		String arptCode = name.split("--")[0].trim();
+		ArrayList<Aerodrome> aerodromes = new ArrayList<Aerodrome>();
+		Iterator<String> it = pistes.keySet().iterator();
 		while(it.hasNext()){
 			String next = it.next();
-			if(next.startsWith(name.split("--")[0].trim()))
-				return activeAirports.get(next);
+			if(next.startsWith(arptCode))
+				aerodromes.add(pistes.get(next));
 		}
-		return null;
+		return aerodromes.isEmpty()? null : aerodromes;
 	}
 	
 }

@@ -54,8 +54,6 @@ public class AIPContext extends Context {
 
 	@Override
 	public List<JXTaskPane> getTaskPanes(int type, String name) {
-		JXTaskPane taskPane = new JXTaskPane();
-		taskPane.setTitle("Eléments AIP");
 		if(type<20){
 			return showZoneInfos(type, name);
 		}else if(type>=20 && type <30){
@@ -78,7 +76,6 @@ public class AIPContext extends Context {
 		String hor = getController().getAIP().getZoneAttributeValue(zoneID, "HorTxt");
 		String act = getController().getAIP().getZoneAttributeValue(zoneID, "Activite");
 		String rmq = getController().getAIP().getZoneAttributeValue(zoneID, "Remarque");
-		
 		if(classe != null){
 			infos.add(new JLabel("<html><b>Classe</b> : " + classe+"</html>"));
 		}
@@ -314,7 +311,6 @@ public class AIPContext extends Context {
 					AbstractAction adLink = new AbstractAction("<html><b>Aérodrome</b> :<font color=\"blue\">"+adCode+" -- "+adName+"</font></html>"){
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
-							//TODO vérifier si le type AIP.AERODROME suffit pour highlight
 							getController().highlight(AIP.AERODROME, adCode);
 							((ContextPanel)infosNavFix.getParent().getParent().getParent().getParent()).showInfo(Type.AIP, AIP.AERODROME, adCode);
 						}

@@ -248,7 +248,6 @@ public class MainWindow extends JFrame {
 		mainPane.setPreferredSize(new Dimension(600, 0));
 		
 		
-		wwd.addSelectListener(context);
 		airspaceListener = new AirspaceListener(wwd, context);
 		wwd.addSelectListener(airspaceListener);
 		context.setMinimumSize(new Dimension(0,0)); //taille mini à 0 pour permettre la fermeture du panneau avec setDividerLocation

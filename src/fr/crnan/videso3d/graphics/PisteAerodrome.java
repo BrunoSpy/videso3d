@@ -48,13 +48,14 @@ public class PisteAerodrome implements Aerodrome{
 	private Position refPosition;
 	private DatabaseManager.Type base;
 	private int type;
+	private String nomPiste = "";
 	
-	public PisteAerodrome(int type, String name, String annotationText, double lat1, double lon1, double lat2, double lon2, double largeur, Position ref, DatabaseManager.Type base){
+	public PisteAerodrome(int type, String name, String nomPiste, double lat1, double lon1, double lat2, double lon2, double largeur, Position ref, DatabaseManager.Type base){
 		this.setDatabaseType(base);
 		this.setType(type);
-		
+		this.nomPiste = nomPiste;
 		this.name = name.split("--")[0].trim();
-		this.setAnnotation(annotationText);
+		this.setAnnotation("<b>"+name+"</b><br/>Piste "+ nomPiste);
 		this.refPosition = ref;
 		
 		computeRectangles(lat1, lon1, lat2, lon2, largeur);
@@ -62,7 +63,7 @@ public class PisteAerodrome implements Aerodrome{
 		innerAttrs.setInteriorMaterial(new Material(Color.WHITE));
 		innerAttrs.setInteriorOpacity(0.8);
 		this.inner.setAttributes(innerAttrs);
-		this.inner.setAnnotation(annotationText);
+		this.inner.setAnnotation("<b>"+name+"</b><br/>Piste "+ nomPiste);
 		this.inner.setDatabaseType(base);
 		this.inner.setType(type);
 		this.inner.setName(name);
@@ -73,7 +74,7 @@ public class PisteAerodrome implements Aerodrome{
 		outerAttrs.setOutlineOpacity(1);
 		outerAttrs.setDrawOutline(true);
 		this.outer.setAttributes(outerAttrs);
-		this.outer.setAnnotation(annotationText);
+		this.outer.setAnnotation("<b>"+name+"</b><br/>Piste "+ nomPiste);
 		this.outer.setDatabaseType(base);
 		this.outer.setType(type);
 		this.outer.setName(name);
@@ -207,6 +208,20 @@ public class PisteAerodrome implements Aerodrome{
 		}
 		return null;
 	}
+
+	@Override
+	public String getNomPiste() {
+		return nomPiste;
+	}
+	
+	@Override
+	public void setVisible(boolean visible){
+		outer.setVisible(visible);
+		inner.setVisible(visible);
+		text.setVisible(visible);
+	}
+	
+	
 
 	
 }

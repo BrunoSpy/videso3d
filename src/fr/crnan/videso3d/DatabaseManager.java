@@ -440,6 +440,11 @@ public final class DatabaseManager {
 				"vvfs varchar(16), " +
 				"plafonds varchar(32), " +
 		"planchers varchar(32))");
+		st.executeUpdate("create table centscodf (id integer primary key autoincrement, " +
+				"vvf varchar(1), " +
+				"debut varchar(4), " +
+				"fin varchar(4), " +
+				"espaces varchar(20))");
 		st.executeUpdate("create table radrgener (id integer primary key autoincrement, " +
 				"name varchar(16), " +
 				"numero int, " +
@@ -463,6 +468,13 @@ public final class DatabaseManager {
 				"hauteur float, " +
 				"portee int, " +
 				"deport boolean)");
+		st.executeUpdate("create table association (id integer primary key autoincrement, " +
+				"name varchar(6)," +
+				"associations varchar(70))");
+		st.executeUpdate("create table signalisation (id integer primary key autoincrement, " +
+				"name varchar(6)," +
+				"signalisations varchar(70))");
+		
 		st.close();
 		//on ajoute le nom de la base
 		DatabaseManager.addDatabase(name, Type.EXSA, new SimpleDateFormat().format(new Date()));
