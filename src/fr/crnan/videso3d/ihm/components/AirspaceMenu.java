@@ -86,7 +86,6 @@ public class AirspaceMenu extends JPopupMenu {
 				public void actionPerformed(ActionEvent event) {
 					VidesoObject o = (VidesoObject) airspace;
 					context.showInfo(o.getDatabaseType(), o.getType(), o.getName());
-					context.open();
 				}
 			});
 			this.add(info);

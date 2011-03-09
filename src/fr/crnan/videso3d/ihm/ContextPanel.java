@@ -20,6 +20,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -30,17 +32,14 @@ import org.jdesktop.swingx.JXTaskPaneContainer;
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.stip.StipController;
-import gov.nasa.worldwind.event.SelectEvent;
-import gov.nasa.worldwind.event.SelectListener;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
  * @version 0.4.3
  */
-public class ContextPanel extends JPanel implements SelectListener {
+public class ContextPanel extends JPanel{
 
 	private JXTaskPaneContainer content = new JXTaskPaneContainer();	
 	
@@ -54,9 +53,8 @@ public class ContextPanel extends JPanel implements SelectListener {
 		this.setLayout(new BorderLayout());
 
 		this.add(titleAreaPanel, BorderLayout.NORTH);
-		JScrollPane scrollPane = new JScrollPane(content);
-		scrollPane.setBorder(null);
-		this.add(scrollPane, BorderLayout.CENTER);
+
+		this.add(new JScrollPane(content), BorderLayout.CENTER);
 	}
 	
 	/**
@@ -69,17 +67,6 @@ public class ContextPanel extends JPanel implements SelectListener {
 			} else {
 				((JSplitPane)this.getParent()).setDividerLocation(this.getParent().getWidth()-250);
 			}
-		}
-	}
-
-	@Override
-	public void selected(SelectEvent event) {
-		if(event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){
-			this.open();
-			if(event.getTopObject() instanceof VidesoObject){
-				VidesoObject o = (VidesoObject) event.getTopObject();
-				this.showInfo(o.getDatabaseType(), o.getType(), o.getName());
-			} 
 		}
 	}
 	
@@ -98,9 +85,7 @@ public class ContextPanel extends JPanel implements SelectListener {
 	
 	/**
 	 * Affiche les infos pertinentes pour l'objet en fonction de son type et de son nom
-	 * @param base
-	 * @param type
-	 * @param name
+	 * @param name Nom de l'objet
 	 */
 	public void showInfo(DatabaseManager.Type base, int type, String name){
 		content.removeAll();
@@ -131,16 +116,15 @@ public class ContextPanel extends JPanel implements SelectListener {
 					break;
 				}
 				break;
-			case AIP:
-				this.addTaskpanes(Type.AIP, type, name);
-				break;
 			default:
-				break;
+				this.addTaskpanes(base, type, name);
 			}
 			content.validate();
+			open();
 		}
 	}
-
+	
+	
 	public void setTitle(String title) {
 		this.titleAreaPanel.setTitle(title);
 	}
@@ -152,11 +136,21 @@ public class ContextPanel extends JPanel implements SelectListener {
 		}
 		content.validate();
 	}
-	
+
+	/**
+	 * Ajoute les {@link JXTaskPane} demandés.<br />
+	 * Prends en compte l'existence de la base demandée.
+	 * @param base
+	 * @param type
+	 * @param name
+	 */
 	private void addTaskpanes(DatabaseManager.Type base, int type, String name){
 		if(taskpanes.get(base) != null) {
-			for(JXTaskPane pane : taskpanes.get(base).getTaskPanes(type, name)){
-				content.add(pane, null);
+			List<JXTaskPane> panesList = taskpanes.get(base).getTaskPanes(type, name);
+			if(panesList != null){
+				for(JXTaskPane pane : panesList){
+					content.add(pane, null);
+				}
 			}
 		}
 	}
