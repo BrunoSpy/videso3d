@@ -201,7 +201,7 @@ public class AIP extends FileParser{
 	 * Crée le nom de la base : AIP_date de publication
 	 */
 	private void getName() {		
-		this.name = "AIP_"+document.getRootElement().getChild("Situation").getAttributeValue("pubDate");
+		this.name = "AIP_"+document.getRootElement().getChild("Situation").getAttributeValue("effDate");
 	}
 
 	@Override

@@ -33,6 +33,7 @@ import org.jdom.Element;
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.MultiValueMap;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.VidesoController;
@@ -94,6 +95,8 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	private AirportLayer arptLayer;
 	
 	private HashMap<String, Secteur3D> zones;
+	
+	private MultiValueMap<String, String> volumesSecteursCTL = new MultiValueMap<String, String>();
 	
 	private HashSet<String> balises;
 	
@@ -225,8 +228,17 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		}else if(type == AIP.CTL){
 			// si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
 			// donc on va chercher les différents morceaux avec getCTLSecteurs et on les ajoute tous.
-			for(String nomPartieSecteur : getCTLSecteurs(name)){
-				this.addZone(type, nomPartieSecteur);
+			List<String> volumesSecteur = volumesSecteursCTL.get(name);
+			if(volumesSecteur==null){
+				ArrayList<String> volumesSect = getCTLSecteurs(name);
+				volumesSecteursCTL.put(name, volumesSect);
+				for(String nomVolumeSecteur : volumesSect){
+					this.addZone(type, nomVolumeSecteur);
+				}
+			}else{
+				for(String nomVolumeSecteur : volumesSecteur){
+					this.addZone(type, nomVolumeSecteur);
+				}
 			}
 		}else if(type>=AIP.DMEATT && type<AIP.AERODROME){
 			this.showNavFix(type, name);
@@ -249,11 +261,14 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		}else if(type == AIP.CTL){
 			// si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
 			// donc on va chercher les différents morceaux avec getCTLSecteurs et on les enlève tous.
-			for(String nomPartieSecteur : getCTLSecteurs(name)){
-				this.removeZone(type,nomPartieSecteur);
+			List<String> volumesSecteur = volumesSecteursCTL.get(name);
+			if(volumesSecteur!=null){
+				for(String nomVolumeSecteur : volumesSecteur){
+					this.hideZone(type, nomVolumeSecteur);
+				}
 			}
 		}else{
-			this.removeZone(type,name);
+			this.hideZone(type,name);
 		}
 	}
 
@@ -264,122 +279,121 @@ public class AIPController extends ProgressSupport implements VidesoController {
 
 
 	private void addZone(int type, String name) {
-		if(!zones.containsKey(type+" "+name)){
+		Secteur3D zone = this.zones.get(type+" "+name);
+		if(zone==null){
 			this.createZone(type, name);
 			this.wwd.redraw();
 		}else {
-			this.zones.get(type+" "+name).setVisible(true);	
-			this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);	
+			zone.setVisible(true);	
 		}
-		
+		this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);	
 	}
 
 
 
 	private void createZone(int type, String name){
-		if(!zones.containsKey(type+" "+name)){
-			Color couleurZone=null;
-			switch(type){
-			case AIP.TSA:
-				couleurZone=Color.orange;
-				break;
-			case AIP.SIV:
-				couleurZone=Pallet.SIVColor;
-				break;
-			case AIP.CTR:
-				couleurZone=Pallet.CTRColor;
-				break;
-			case AIP.TMA:
-				couleurZone=Pallet.TMAColor;
-				break;
-			case AIP.R:
-				couleurZone=Color.red;
-				break;
-			case AIP.D:
-				couleurZone=Color.red;
-				break;
-			case AIP.FIR:
-				couleurZone=Pallet.FIRColor;
-				break;
-			case AIP.UIR:
-				couleurZone=Pallet.UIRColor;
-				break;
-			case AIP.LTA:
-				couleurZone=Pallet.LTAColor;
-				break;
-			case AIP.UTA:
-				couleurZone=Pallet.UTAColor;
-				break;
-			case AIP.CTA:
-				couleurZone=Pallet.CTAColor;
-				break;
-			case AIP.CTL:
-				couleurZone=Pallet.CTLColor;
-				break;
-			case AIP.Pje:
-				couleurZone=Pallet.defaultColor;
-				break;
-			case AIP.Aer:
-				couleurZone=Pallet.defaultColor;
-				break;
-			case AIP.Vol:
-				couleurZone=Pallet.defaultColor;
-				break;
-			case AIP.Bal:
-				couleurZone=Pallet.defaultColor;
-				break;
-			case AIP.TrPla:
-				couleurZone=Pallet.defaultColor;
-				break;
-			default: 
-				break;
-			}
-
-			Element maZone = aip.findElementByName(type, name);
-			Couple<Altitude,Altitude> niveaux = aip.getLevels(maZone);
-			Secteur3D zone = new Secteur3D(name, niveaux.getFirst().getFL(), niveaux.getSecond().getFL(),type, DatabaseManager.Type.AIP);
-
-			BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
-			attrs.setDrawOutline(true);
-			attrs.setMaterial(new Material(couleurZone));
-			attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(couleurZone)));
-			attrs.setOpacity(0.2);
-			attrs.setOutlineOpacity(0.9);
-			attrs.setOutlineWidth(1.5);
-			zone.setAttributes(attrs);
-
-			zone.setAnnotation("<p><b>"+name+"</b></p>"
-					+"<p>Plafond : "+niveaux.getSecond().getFullText()
-					+"<br />Plancher : "+niveaux.getFirst().getFullText()+"</p>");
-			Geometrie contour = new Geometrie(aip.findElement(aip.getDocumentRoot().getChild("PartieS"),maZone.getChild("Partie").getAttributeValue("pk")));
-			if(contour.getLocations().isEmpty())
-				return;
-			zone.setLocations(contour.getLocations());
-			String upperAltitudeRef, lowerAltitudeRef = null;
-
-			if(niveaux.getFirst().getRef()==Altitude.asfc){
-				lowerAltitudeRef = AVKey.ABOVE_GROUND_LEVEL;
-			}else{
-				//Si le plancher est SFC, on met comme référence AMSL pour éviter que 
-				//les zones au-dessus de la mer ne descendent sous la surface de l'eau.
-				lowerAltitudeRef = AVKey.ABOVE_MEAN_SEA_LEVEL;
-			}
-			if(niveaux.getSecond().getRef()==Altitude.asfc||niveaux.getSecond().getRef()==Altitude.refSFC){
-				upperAltitudeRef = AVKey.ABOVE_GROUND_LEVEL;
-			}else{
-				upperAltitudeRef = AVKey.ABOVE_MEAN_SEA_LEVEL;
-			}
-			zone.setAltitudeDatum(lowerAltitudeRef, upperAltitudeRef);
-			zone.setVisible(true);
-			this.zonesLayer.addAirspace(zone);
-			zones.put(type+" "+name, zone);
+		Color couleurZone=null;
+		switch(type){
+		case AIP.TSA:
+			couleurZone=Color.orange;
+			break;
+		case AIP.SIV:
+			couleurZone=Pallet.SIVColor;
+			break;
+		case AIP.CTR:
+			couleurZone=Pallet.CTRColor;
+			break;
+		case AIP.TMA:
+			couleurZone=Pallet.TMAColor;
+			break;
+		case AIP.R:
+			couleurZone=Color.red;
+			break;
+		case AIP.D:
+			couleurZone=Color.red;
+			break;
+		case AIP.FIR:
+			couleurZone=Pallet.FIRColor;
+			break;
+		case AIP.UIR:
+			couleurZone=Pallet.UIRColor;
+			break;
+		case AIP.LTA:
+			couleurZone=Pallet.LTAColor;
+			break;
+		case AIP.UTA:
+			couleurZone=Pallet.UTAColor;
+			break;
+		case AIP.CTA:
+			couleurZone=Pallet.CTAColor;
+			break;
+		case AIP.CTL:
+			couleurZone=Pallet.CTLColor;
+			break;
+		case AIP.Pje:
+			couleurZone=Pallet.defaultColor;
+			break;
+		case AIP.Aer:
+			couleurZone=Pallet.defaultColor;
+			break;
+		case AIP.Vol:
+			couleurZone=Pallet.defaultColor;
+			break;
+		case AIP.Bal:
+			couleurZone=Pallet.defaultColor;
+			break;
+		case AIP.TrPla:
+			couleurZone=Pallet.defaultColor;
+			break;
+		default: 
+			break;
 		}
+
+		Element maZone = aip.findElementByName(type, name);
+		Couple<Altitude,Altitude> niveaux = aip.getLevels(maZone);
+		Secteur3D zone = new Secteur3D(name, niveaux.getFirst().getFL(), niveaux.getSecond().getFL(),type, DatabaseManager.Type.AIP);
+
+		BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
+		attrs.setDrawOutline(true);
+		attrs.setMaterial(new Material(couleurZone));
+		attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(couleurZone)));
+		attrs.setOpacity(0.2);
+		attrs.setOutlineOpacity(0.9);
+		attrs.setOutlineWidth(1.5);
+		zone.setAttributes(attrs);
+
+		zone.setAnnotation("<p><b>"+name+"</b></p>"
+				+"<p>Plafond : "+niveaux.getSecond().getFullText()
+				+"<br />Plancher : "+niveaux.getFirst().getFullText()+"</p>");
+		Geometrie contour = new Geometrie(aip.findElement(aip.getDocumentRoot().getChild("PartieS"),maZone.getChild("Partie").getAttributeValue("pk")));
+		if(contour.getLocations().isEmpty())
+			return;
+		zone.setLocations(contour.getLocations());
+		String upperAltitudeRef, lowerAltitudeRef = null;
+
+		if(niveaux.getFirst().getRef()==Altitude.asfc){
+			lowerAltitudeRef = AVKey.ABOVE_GROUND_LEVEL;
+		}else{
+			//Si le plancher est SFC, on met comme référence AMSL pour éviter que 
+			//les zones au-dessus de la mer ne descendent sous la surface de l'eau.
+			lowerAltitudeRef = AVKey.ABOVE_MEAN_SEA_LEVEL;
+		}
+		if(niveaux.getSecond().getRef()==Altitude.asfc||niveaux.getSecond().getRef()==Altitude.refSFC){
+			upperAltitudeRef = AVKey.ABOVE_GROUND_LEVEL;
+		}else{
+			upperAltitudeRef = AVKey.ABOVE_MEAN_SEA_LEVEL;
+		}
+		zone.setAltitudeDatum(lowerAltitudeRef, upperAltitudeRef);
+		zone.setVisible(true);
+		this.zonesLayer.addAirspace(zone);
+		zones.put(type+" "+name, zone);
 	}
 	
-	private void removeZone(int type, String name) {
-		if(zones.containsKey(type+" "+name)){
-			zones.get(type+" "+name).setVisible(false);
-			this.wwd.getAnnotationLayer().removeAnnotation(zones.get(type+" "+name).getAnnotation(Position.ZERO));
+	private void hideZone(int type, String name) {
+		Secteur3D zone = zones.get(type+" "+name);
+		if(zone!=null){
+			zone.setVisible(false);
+			zone.getAnnotation(Position.ZERO).getAttributes().setVisible(false);
 			this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);
 		}
 	}
@@ -505,9 +519,9 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		//on ne connaît pas le territoire, donc quand on affiche les deux J 22 en même temps, on ne garde qu'une seule des deux annotations
 		//dans le hashmap. Du coup on ne peut plus enlever l'autre.
 		String routeID = AIP.getID(type, routeName);
-		if(routesAnnotations.containsKey(routeName.split("-")[0].trim())){
-			routesAnnotations.get(routeName.split("-")[0].trim()).getAttributes().setVisible(false);
-		}
+		GlobeAnnotation routeAnnotation = routesAnnotations.get(routeName.split("-")[0].trim());
+		if(routeAnnotation != null)
+			routeAnnotation.getAttributes().setVisible(false);
 		RoutesSegments.Route route = routesSegments.getSegmentOfRoute(routeName);
 		if(route!=null){
 			if(route.isVisible()){
