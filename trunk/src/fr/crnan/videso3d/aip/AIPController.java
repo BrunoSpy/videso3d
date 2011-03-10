@@ -825,7 +825,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	
 	private void highlightAirport(int type, String name){
 		showAerodrome(type, name);
-		centerView(arptLayer.getAirport(name));
+		centerView(arptLayer.getAirport(name).get(0));
 	}
 	
 	private void highlightNavFix(int type, String name){
