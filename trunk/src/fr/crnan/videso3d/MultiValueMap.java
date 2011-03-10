@@ -53,6 +53,8 @@ public class MultiValueMap<T, U> {
 	
 	public List<U> get(T key){
 		Couple<Integer, Integer> debutFin = map.get(key);
+		if(debutFin==null)
+			return null;
 		return valuesArray.subList(debutFin.getFirst(), debutFin.getSecond());
 	}
 	
