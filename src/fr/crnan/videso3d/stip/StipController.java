@@ -410,8 +410,13 @@ public class StipController extends ProgressSupport implements VidesoController 
 					while(rs.next()){
 						loc.add(LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
 						balises.add(rs.getString("balise"));
-						if(rs.getString("sens").equals("+")){
+						String s = rs.getString("sens");
+						if(s.equals("+")){
 							sens.add(Route3D.LEG_FORBIDDEN);
+						} else if(s.equals(">")){
+							sens.add(Route3D.LEG_DIRECT);
+						} else if(s.equals("<")){
+							sens.add(Route3D.LEG_INVERSE);
 						} else {
 							sens.add(Route3D.LEG_AUTHORIZED);
 						}
@@ -422,7 +427,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 				route3D.setLocations(loc, sens);
 				route3D.setName(name);
 				route3D.setBalises(balises);
-				route2D.setLocations(loc);
+				route2D.setLocations(loc, sens);
 				route2D.setBalises(balises);
 				route2D.setName(name);
 				this.routes3D.addRoute(route3D, name);

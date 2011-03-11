@@ -23,13 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import org.jdesktop.swingx.JXTaskPane;
 
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.ihm.components.VXTable;
 /**
  * 
  * @author Bruno Spyckerelle
@@ -65,8 +65,6 @@ public class STRContext extends Context {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	
-		JTable table = new JTable();
 		DefaultTableModel model = new DefaultTableModel(){
 			@Override
 			public boolean isCellEditable(int row, int column){
@@ -76,9 +74,11 @@ public class STRContext extends Context {
 		model.addColumn("Début", debut.toArray());
 		model.addColumn("Fin", fin.toArray());
 		model.addColumn("Espaces de visualisation", espaces.toArray());
-		table.setModel(model);
+		VXTable table = new VXTable(model);
+
 		table.setFillsViewportHeight(true);
 		JScrollPane jsp = new JScrollPane(table);
+		jsp.setBorder(null);
 		infos.add(jsp);
 		ArrayList<JXTaskPane> list = new ArrayList<JXTaskPane>();
 		list.add(infos);

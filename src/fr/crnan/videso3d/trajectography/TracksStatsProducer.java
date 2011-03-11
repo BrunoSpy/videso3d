@@ -31,6 +31,7 @@ import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.tracks.TrackPoint;
@@ -46,7 +47,8 @@ public class TracksStatsProducer extends ProgressSupport {
 	/**
 	 * 
 	 * @param track
-	 * @param type
+	 * @param type {@link VidesoObject#getDatabaseType()}
+	 * @param objectType {@link VidesoObject#getType()}
 	 * @return Tous les secteurs traversés par <code>track</code>
 	 */
 	public Collection<Secteur3D> computeContainingSectors(final VidesoTrack track, Type type, int objectType){

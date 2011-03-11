@@ -54,7 +54,9 @@ public class ContextPanel extends JPanel{
 
 		this.add(titleAreaPanel, BorderLayout.NORTH);
 
-		this.add(new JScrollPane(content), BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane(content);
+		scrollPane.setBorder(null);
+		this.add(scrollPane, BorderLayout.CENTER);
 	}
 	
 	/**

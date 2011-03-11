@@ -31,7 +31,9 @@ import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.SwingWorker;
+import javax.swing.table.DefaultTableModel;
 
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.plaf.TaskPaneUI;
@@ -47,6 +49,7 @@ import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.ihm.ProgressMonitor;
+import fr.crnan.videso3d.ihm.components.VXTable;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.globes.Globe;
@@ -126,7 +129,10 @@ public class TrackContext extends Context {
 		this.layerPane.removeAll();
 		this.layerPane.setTitle("Informations sur les trajectoires affichées");
 		
-		this.layerPane.add(new AbstractAction() {
+		final JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
+		Action action = new AbstractAction() {
 			{
 				putValue(Action.NAME, "<html><b>Répartition en niveaux : </b>Calculer ...</html>");
 			}
@@ -136,6 +142,8 @@ public class TrackContext extends Context {
 				progress.setMaximum(layer.getSelectedTracks().size());
 				progress.setNote("Calcul de la répartition en tranches de niveau des trajectoires");
 				progress.resetTimer();
+				this.setEnabled(false);
+				this.putValue(Action.NAME,"<html><b>Répartition en niveaux : </b></html>");
 				
 				new SwingWorker<Integer, Integer>(){
 
@@ -154,25 +162,40 @@ public class TrackContext extends Context {
 						setEnabled(false);
 						double total = 0;
 						int lastNonNul = 0;
+						ArrayList<Integer> start = new ArrayList<Integer>();
+						ArrayList<Integer> end = new ArrayList<Integer>(); 
+						ArrayList<Double> percent = new ArrayList<Double>(); 
 						for(int i=0;i<66;i++){
 							total += lengths[i];
 							if(lengths[i] != 0.0) 
 								lastNonNul = i;
 						}
-						String text = "<html><b>Répartition en niveaux : </b>";
+						
 						for(int i=0;i<=lastNonNul;i++){
-							text += "<br /> de "+i*10+" à "+(i+1)*10+" : "+String.format("%.2f",(lengths[i]/total)*100.0);
+							start.add(i*10);
+							end.add((i+1)*10);
+							percent.add(lengths[i]/total*100.0);
 						}
-						putValue(Action.NAME,text);
 						
-						
+						DefaultTableModel model = new DefaultTableModel();
+						model.addColumn("Du FL", start.toArray());
+						model.addColumn("Au FL", end.toArray());
+						model.addColumn("%", percent.toArray());
+						VXTable table = new VXTable(model);
+						table.setEditable(false);
+						JScrollPane jsp = new JScrollPane(table);
+						jsp.setBorder(null);
+						panel.add(jsp);
 						return null;
 					}
 					
 				}.execute();
 				
 			}
-		});
+		};
+		
+		this.layerPane.add(action);
+		this.layerPane.add(panel);
 	}
 	
 	public void updateTrackPane(final VidesoTrack track){

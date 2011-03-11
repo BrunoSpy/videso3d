@@ -583,6 +583,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		}else if(object instanceof List){
 			if(((List<?>)object).get(0) instanceof Route){
 				return computeBestEyePosition((List<? extends Route>)object);
+			} else if (((List<?>)object).get(0) instanceof Aerodrome){
+				Position ref = ((Aerodrome) ((List<?>)object).get(0)).getRefPosition();
+				return new double[]{ref.latitude.degrees, ref.longitude.degrees, 50000};
 			}
 		}
 		return null;

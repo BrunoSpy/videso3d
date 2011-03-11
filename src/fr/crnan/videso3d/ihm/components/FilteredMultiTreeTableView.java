@@ -206,8 +206,8 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 						@SuppressWarnings("unchecked")
 						String type = ((Couple<String, Boolean>)((DefaultMutableTreeNode)path[1]).getUserObject()).getFirst();
 						String name = (String) treeTable.getValueAt(row, 0);
-						treeTable.setValueAt(true, row, 1);
 						getController().highlight(getController().string2type(type),name);
+						treeTable.setValueAt(true, row, 1);
 					}
 				} 
 			}
