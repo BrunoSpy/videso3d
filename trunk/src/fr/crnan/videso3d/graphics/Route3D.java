@@ -35,12 +35,9 @@ import gov.nasa.worldwind.util.RestorableSupport;
 /**
  * Représentation 3D d'une route sous la forme d'un ruban
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 public class Route3D extends TrackAirspace implements VidesoObject, Route {
-
-	public static final int LEG_FORBIDDEN = 0;
-	public static final int LEG_AUTHORIZED = 1;
 
 	private List<LatLon> locations = new ArrayList<LatLon>();
 	private double width = 1.0;
@@ -242,7 +239,7 @@ public class Route3D extends TrackAirspace implements VidesoObject, Route {
 			}
 		}
 		Box leg = new Box();
-		if(sens == LEG_AUTHORIZED){
+		if(sens != LEG_FORBIDDEN){
 
 			double[] altitudes = this.getAltitudes();
 			boolean[] terrainConformant = this.isTerrainConforming();

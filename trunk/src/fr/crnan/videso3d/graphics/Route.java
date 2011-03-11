@@ -22,10 +22,15 @@ import java.util.List;
 /**
  * Représentation graphique d'une route
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.2.3
  */
 public interface Route extends VidesoObject{
 
+	public static final int LEG_FORBIDDEN = 0;
+	public static final int LEG_AUTHORIZED = 1;
+	public static final int LEG_DIRECT = 2;
+	public static final int LEG_INVERSE = 3;
+	
 	public static enum Space {FIR, UIR};
 	
 	public static enum Sens {RED, GREEN, BLUE};

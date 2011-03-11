@@ -72,7 +72,7 @@ import gov.nasa.worldwind.view.orbit.BasicOrbitView;
  * Contrôle l'affichage et la construction des éléments AIP
  * @author A. Vidal
  * @author Bruno Spyckerelle
- * @version 0.4.0
+ * @version 0.4.1
  */
 public class AIPController extends ProgressSupport implements VidesoController {
 
@@ -235,7 +235,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 				for(String nomVolumeSecteur : volumesSect){
 					this.addZone(type, nomVolumeSecteur);
 				}
-			}else{
+			} else {
 				for(String nomVolumeSecteur : volumesSecteur){
 					this.addZone(type, nomVolumeSecteur);
 				}
@@ -245,7 +245,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		}else if(type>=AIP.AERODROME){
 			this.showAerodrome(type, name);
 		}else{
-				this.addZone(type,name);
+			this.addZone(type,name);
 		}
 	}
 
@@ -282,113 +282,114 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		Secteur3D zone = this.zones.get(type+" "+name);
 		if(zone==null){
 			this.createZone(type, name);
-			this.wwd.redraw();
-		}else {
-			zone.setVisible(true);	
+			zone = this.zones.get(type+" "+name);
 		}
+		zone.setVisible(true);	
 		this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);	
 	}
 
 
 
 	private void createZone(int type, String name){
-		Color couleurZone=null;
-		switch(type){
-		case AIP.TSA:
-			couleurZone=Color.orange;
-			break;
-		case AIP.SIV:
-			couleurZone=Pallet.SIVColor;
-			break;
-		case AIP.CTR:
-			couleurZone=Pallet.CTRColor;
-			break;
-		case AIP.TMA:
-			couleurZone=Pallet.TMAColor;
-			break;
-		case AIP.R:
-			couleurZone=Color.red;
-			break;
-		case AIP.D:
-			couleurZone=Color.red;
-			break;
-		case AIP.FIR:
-			couleurZone=Pallet.FIRColor;
-			break;
-		case AIP.UIR:
-			couleurZone=Pallet.UIRColor;
-			break;
-		case AIP.LTA:
-			couleurZone=Pallet.LTAColor;
-			break;
-		case AIP.UTA:
-			couleurZone=Pallet.UTAColor;
-			break;
-		case AIP.CTA:
-			couleurZone=Pallet.CTAColor;
-			break;
-		case AIP.CTL:
-			couleurZone=Pallet.CTLColor;
-			break;
-		case AIP.Pje:
-			couleurZone=Pallet.defaultColor;
-			break;
-		case AIP.Aer:
-			couleurZone=Pallet.defaultColor;
-			break;
-		case AIP.Vol:
-			couleurZone=Pallet.defaultColor;
-			break;
-		case AIP.Bal:
-			couleurZone=Pallet.defaultColor;
-			break;
-		case AIP.TrPla:
-			couleurZone=Pallet.defaultColor;
-			break;
-		default: 
-			break;
+		if(!this.zones.containsKey(type+" "+name)){
+			Color couleurZone=null;
+			switch(type){
+			case AIP.TSA:
+				couleurZone=Color.orange;
+				break;
+			case AIP.SIV:
+				couleurZone=Pallet.SIVColor;
+				break;
+			case AIP.CTR:
+				couleurZone=Pallet.CTRColor;
+				break;
+			case AIP.TMA:
+				couleurZone=Pallet.TMAColor;
+				break;
+			case AIP.R:
+				couleurZone=Color.red;
+				break;
+			case AIP.D:
+				couleurZone=Color.red;
+				break;
+			case AIP.FIR:
+				couleurZone=Pallet.FIRColor;
+				break;
+			case AIP.UIR:
+				couleurZone=Pallet.UIRColor;
+				break;
+			case AIP.LTA:
+				couleurZone=Pallet.LTAColor;
+				break;
+			case AIP.UTA:
+				couleurZone=Pallet.UTAColor;
+				break;
+			case AIP.CTA:
+				couleurZone=Pallet.CTAColor;
+				break;
+			case AIP.CTL:
+				couleurZone=Pallet.CTLColor;
+				break;
+			case AIP.Pje:
+				couleurZone=Pallet.defaultColor;
+				break;
+			case AIP.Aer:
+				couleurZone=Pallet.defaultColor;
+				break;
+			case AIP.Vol:
+				couleurZone=Pallet.defaultColor;
+				break;
+			case AIP.Bal:
+				couleurZone=Pallet.defaultColor;
+				break;
+			case AIP.TrPla:
+				couleurZone=Pallet.defaultColor;
+				break;
+			default: 
+				break;
+			}
+
+			Element maZone = aip.findElementByName(type, name);
+			Couple<Altitude,Altitude> niveaux = aip.getLevels(maZone);
+			Secteur3D zone = new Secteur3D(name, niveaux.getFirst().getFL(), niveaux.getSecond().getFL(),type, DatabaseManager.Type.AIP);
+
+			BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
+			attrs.setDrawOutline(true);
+			attrs.setMaterial(new Material(couleurZone));
+			attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(couleurZone)));
+			attrs.setOpacity(0.2);
+			attrs.setOutlineOpacity(0.9);
+			attrs.setOutlineWidth(1.5);
+			zone.setAttributes(attrs);
+
+			zone.setAnnotation("<p><b>"+name+"</b></p>"
+					+"<p>Plafond : "+niveaux.getSecond().getFullText()
+					+"<br />Plancher : "+niveaux.getFirst().getFullText()+"</p>");
+			Geometrie contour = new Geometrie(aip.findElement(aip.getDocumentRoot().getChild("PartieS"),maZone.getChild("Partie").getAttributeValue("pk")));
+			if(contour.getLocations().isEmpty())
+				return;
+			zone.setLocations(contour.getLocations());
+			String upperAltitudeRef, lowerAltitudeRef = null;
+
+			if(niveaux.getFirst().getRef()==Altitude.asfc){
+				lowerAltitudeRef = AVKey.ABOVE_GROUND_LEVEL;
+			}else{
+				//Si le plancher est SFC, on met comme référence AMSL pour éviter que 
+				//les zones au-dessus de la mer ne descendent sous la surface de l'eau.
+				lowerAltitudeRef = AVKey.ABOVE_MEAN_SEA_LEVEL;
+			}
+			if(niveaux.getSecond().getRef()==Altitude.asfc||niveaux.getSecond().getRef()==Altitude.refSFC){
+				upperAltitudeRef = AVKey.ABOVE_GROUND_LEVEL;
+			}else{
+				upperAltitudeRef = AVKey.ABOVE_MEAN_SEA_LEVEL;
+			}
+			zone.setAltitudeDatum(lowerAltitudeRef, upperAltitudeRef);
+			zone.setVisible(false);
+			this.zonesLayer.addAirspace(zone);
+			zones.put(type+" "+name, zone);
 		}
-
-		Element maZone = aip.findElementByName(type, name);
-		Couple<Altitude,Altitude> niveaux = aip.getLevels(maZone);
-		Secteur3D zone = new Secteur3D(name, niveaux.getFirst().getFL(), niveaux.getSecond().getFL(),type, DatabaseManager.Type.AIP);
-
-		BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
-		attrs.setDrawOutline(true);
-		attrs.setMaterial(new Material(couleurZone));
-		attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(couleurZone)));
-		attrs.setOpacity(0.2);
-		attrs.setOutlineOpacity(0.9);
-		attrs.setOutlineWidth(1.5);
-		zone.setAttributes(attrs);
-
-		zone.setAnnotation("<p><b>"+name+"</b></p>"
-				+"<p>Plafond : "+niveaux.getSecond().getFullText()
-				+"<br />Plancher : "+niveaux.getFirst().getFullText()+"</p>");
-		Geometrie contour = new Geometrie(aip.findElement(aip.getDocumentRoot().getChild("PartieS"),maZone.getChild("Partie").getAttributeValue("pk")));
-		if(contour.getLocations().isEmpty())
-			return;
-		zone.setLocations(contour.getLocations());
-		String upperAltitudeRef, lowerAltitudeRef = null;
-
-		if(niveaux.getFirst().getRef()==Altitude.asfc){
-			lowerAltitudeRef = AVKey.ABOVE_GROUND_LEVEL;
-		}else{
-			//Si le plancher est SFC, on met comme référence AMSL pour éviter que 
-			//les zones au-dessus de la mer ne descendent sous la surface de l'eau.
-			lowerAltitudeRef = AVKey.ABOVE_MEAN_SEA_LEVEL;
-		}
-		if(niveaux.getSecond().getRef()==Altitude.asfc||niveaux.getSecond().getRef()==Altitude.refSFC){
-			upperAltitudeRef = AVKey.ABOVE_GROUND_LEVEL;
-		}else{
-			upperAltitudeRef = AVKey.ABOVE_MEAN_SEA_LEVEL;
-		}
-		zone.setAltitudeDatum(lowerAltitudeRef, upperAltitudeRef);
-		zone.setVisible(true);
-		this.zonesLayer.addAirspace(zone);
-		zones.put(type+" "+name, zone);
 	}
-	
+
 	private void hideZone(int type, String name) {
 		Secteur3D zone = zones.get(type+" "+name);
 		if(zone!=null){
@@ -786,11 +787,12 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	 * @param names les noms des différents morceaux correspondant à un secteur.
 	 */
 	private void highlightCTL(String name){
-		ArrayList<String> names = getCTLSecteurs(name);
+		this.showObject(AIP.CTL, name);
+		List<String> names = volumesSecteursCTL.get(name);
 		//on construit le secteur s'il n'existe pas encore
-		for(String n : names){
-			this.addZone(AIP.CTL, n);
-		}
+//		for(String n : names){
+//			this.addZone(AIP.CTL, n);
+//		}
 		//puis on le centre dans la vue
 		Position center = centerView(zones.get(AIP.CTL+" "+names.get(0)));
 		if(names.size()>1){
@@ -989,13 +991,6 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		}
 		return nearSeq;
 	}
-	
-	
-/*	private List<LatLon> computeRwyLocations(double latRef, double lonRef, int orientation, int longueur, int largeur){
-		return null;
-	}
-	
-	*/
 	
 	public void displayAnnotationAndGoTo(Route segment){
 		Position annotationPosition = new Position(segment.getLocations().iterator().next(), 0);
