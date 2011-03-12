@@ -18,6 +18,7 @@ package fr.crnan.videso3d;
 
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Point;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -39,12 +40,14 @@ import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
+import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.graphics.Aerodrome;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Secteur3D;
+import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.layers.FPLTracksLayer;
@@ -70,7 +73,9 @@ import gov.nasa.worldwind.data.TiledImageProducer;
 import gov.nasa.worldwind.examples.util.LayerManagerLayer;
 import gov.nasa.worldwind.exception.WWRuntimeException;
 import gov.nasa.worldwind.geom.Angle;
+import gov.nasa.worldwind.geom.Intersection;
 import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Line;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.globes.Globe;
@@ -95,7 +100,7 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.9.1
+ * @version 0.9.2
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
@@ -168,6 +173,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		
 		//position de départ centrée sur la France
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));		
+		
 	}
 
 	public AnnotationLayer getAnnotationLayer(){
@@ -547,8 +553,38 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		this.getView().setHeading(Angle.ZERO);
 		this.redraw();
 	}
-
-
+	
+	/**
+	 * Computes a position included in the upper polygon
+	 * @param point ScreenPoint
+	 * @param refObject Vpolygon
+	 * @return
+	 */
+	public Position computePositionFromScreenPoint(Point point, VPolygon refObject){
+		Position pos = this.computePositionFromScreenPoint(point, (Airspace)refObject);
+		if(!refObject.contains(pos)){ //if the point is not inside the polygon, find the nearest border point
+			Position groundPosition = new Position(pos.getLatitude(), pos.getLongitude(), 0);
+			double distance = LatLonUtils.computeDistance(groundPosition, 
+					new Position(refObject.getLocations().get(0), 0), 
+					this.getModel().getGlobe());
+			for(LatLon loc : refObject.getLocations()){
+				double newDistance = LatLonUtils.computeDistance(groundPosition, new Position(loc, 0), this.getModel().getGlobe());
+				if(newDistance < distance){
+					distance = newDistance;
+					groundPosition = new Position(loc, 0);
+				}
+			}
+			pos = new Position(groundPosition, refObject.getAltitudes()[1]); 
+		}
+		return pos;
+	}
+	
+	public Position computePositionFromScreenPoint(Point point, Airspace refObject){
+		Line ray = this.getView().computeRayFromScreenPoint(point.x, point.y);
+		Intersection inters[] = this.getModel().getGlobe().intersect(ray,  refObject.getAltitudes()[1]);
+		Position pos = this.getModel().getGlobe().computePositionFromPoint(inters[0].getIntersectionPoint());
+		return pos;
+	}
 	
 	public Position centerView(Object object){
 		getView().setValue(AVKey.ELEVATION, 1e11);

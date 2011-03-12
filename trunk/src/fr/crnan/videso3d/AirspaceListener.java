@@ -53,7 +53,6 @@ import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.Polygon;
-import gov.nasa.worldwind.render.airspaces.TrackAirspace;
 import gov.nasa.worldwind.render.airspaces.editor.AirspaceControlPoint;
 import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
 import gov.nasa.worldwind.render.markers.MarkerAttributes;
@@ -61,7 +60,7 @@ import gov.nasa.worldwind.render.markers.MarkerAttributes;
 /**
  * Listener d'évènements sur les airspaces et shapes
  * @author Bruno Spyckerelle
- * @version 0.4.1
+ * @version 0.4.2
  */
 public class AirspaceListener implements SelectListener {
 
@@ -298,9 +297,9 @@ public class AirspaceListener implements SelectListener {
 		if(o instanceof VidesoObject){ //affichage du tooltip
 			Position pos = null;
 			if(o instanceof VPolygon) {
-				pos = new Position(((Polygon) o).getReferencePosition(), ((Airspace) o).getAltitudes()[1]);
-			} else if( o instanceof TrackAirspace) {
-				pos = new Position(((TrackAirspace) o).getReferencePosition(), ((TrackAirspace) o).getAltitudes()[1]);
+				pos = this.wwd.computePositionFromScreenPoint(new Point(point.x, point.y-5), (VPolygon) o);
+			} else if( o instanceof Airspace) {
+				pos = this.wwd.computePositionFromScreenPoint(new Point(point.x, point.y-5), (Airspace)o);
 			} else {
 				pos = this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5);//décalage de 5 pixels pour éviter le clignotement
 			}
@@ -358,10 +357,10 @@ public class AirspaceListener implements SelectListener {
 			lastToolTip = o;
 			if(o instanceof VidesoObject){
 				Position pos = null;
-				if(o instanceof Polygon) {
-					pos = new Position(((Polygon) o).getReferencePosition(), ((Airspace) o).getAltitudes()[1]);
-				} else if( o instanceof TrackAirspace) {
-					pos = new Position(((TrackAirspace) o).getReferencePosition(), ((TrackAirspace) o).getAltitudes()[1]);
+				if(o instanceof VPolygon) {
+					pos = this.wwd.computePositionFromScreenPoint(new Point(point.x, point.y-5), (VPolygon) o);
+				} else if( o instanceof Airspace) {
+					pos = this.wwd.computePositionFromScreenPoint(new Point(point.x, point.y-5), (Airspace)o);
 				} else {
 					pos = this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5);//décalage de 5 pixels pour éviter le clignotement
 				}
