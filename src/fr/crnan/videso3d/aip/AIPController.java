@@ -51,6 +51,7 @@ import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
+import fr.crnan.videso3d.graphics.VidesoAnnotation;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.layers.AirportLayer;
 import fr.crnan.videso3d.layers.Balise2DLayer;
@@ -72,7 +73,7 @@ import gov.nasa.worldwind.view.orbit.BasicOrbitView;
  * Contrôle l'affichage et la construction des éléments AIP
  * @author A. Vidal
  * @author Bruno Spyckerelle
- * @version 0.4.1
+ * @version 0.4.2
  */
 public class AIPController extends ProgressSupport implements VidesoController {
 
@@ -772,7 +773,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		}else if(obj instanceof List){
 			if(((List<?>)obj).get(0) instanceof Route){
 				String routeName = ((List<? extends Route>)obj).get(0).getName().split("-")[0].trim();
-				GlobeAnnotation routeAnnotation = new GlobeAnnotation(routeName, pos);
+				GlobeAnnotation routeAnnotation = new VidesoAnnotation(routeName, pos);
 				routeAnnotation.getAttributes().setLeaderGapWidth(10);
 				routeAnnotation.getAttributes().setDrawOffset(new Point(20,20));
 				routesAnnotations.put(routeName, routeAnnotation);

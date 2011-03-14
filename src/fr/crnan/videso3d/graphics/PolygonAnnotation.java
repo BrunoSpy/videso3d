@@ -16,16 +16,12 @@
 
 package fr.crnan.videso3d.graphics;
 
-import java.awt.Color;
 import java.util.List;
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.DatabaseManager.Type;
-import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.GlobeAnnotation;
 /**
  * Polygon avec Annotation intégrée
  * @author Bruno Spyckerelle
@@ -33,7 +29,7 @@ import gov.nasa.worldwind.render.GlobeAnnotation;
  */
 public class PolygonAnnotation extends VPolygon implements VidesoObject{
 
-	private GlobeAnnotation annotation;
+	private VidesoAnnotation annotation;
 
 	private DatabaseManager.Type base;
 	
@@ -51,17 +47,13 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
 	@Override
 	public void setAnnotation(String text){
 		if(annotation == null) {
-			annotation = new GlobeAnnotation(text, Position.ZERO);
-			annotation.setAlwaysOnTop(true);
-			annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
-			annotation.getAttributes().setBorderColor(Color.BLACK);
-			annotation.getAttributes().setAdjustWidthToText(AVKey.SIZE_FIT_TEXT);
+			annotation = new VidesoAnnotation(text);
 		} else {
 			annotation.setText(text);
 		}
 	}
 	@Override
-	public GlobeAnnotation getAnnotation(Position pos){
+	public VidesoAnnotation getAnnotation(Position pos){
 		annotation.setPosition(pos);
 		return annotation;
 	}

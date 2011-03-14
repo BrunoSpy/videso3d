@@ -26,9 +26,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
-import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfacePolygon;
@@ -43,7 +41,7 @@ public class PisteAerodrome implements Aerodrome{
 
 	private SurfacePolygonAnnotation inner, outer;
 	private String name;
-	private GlobeAnnotation annotation;
+	private VidesoAnnotation annotation;
 	private UserFacingText text;
 	private Position refPosition;
 	private DatabaseManager.Type base;
@@ -147,11 +145,7 @@ public class PisteAerodrome implements Aerodrome{
 	@Override
 	public void setAnnotation(String text) {
 		if(annotation == null) {
-			annotation = new GlobeAnnotation(text, Position.ZERO);
-			annotation.setAlwaysOnTop(true);
-			annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
-			annotation.getAttributes().setBorderColor(Color.BLACK);
-			annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
+			annotation = new VidesoAnnotation(text);
 		} else {
 			annotation.setText(text);
 		}
@@ -159,7 +153,7 @@ public class PisteAerodrome implements Aerodrome{
 
 	
 	@Override
-	public GlobeAnnotation getAnnotation(Position pos) {
+	public VidesoAnnotation getAnnotation(Position pos) {
 		annotation.setPosition(pos);
 		return annotation;
 	}

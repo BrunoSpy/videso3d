@@ -25,8 +25,6 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.Annotation;
-import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Box;
 import gov.nasa.worldwind.render.airspaces.TrackAirspace;
@@ -35,14 +33,14 @@ import gov.nasa.worldwind.util.RestorableSupport;
 /**
  * Représentation 3D d'une route sous la forme d'un ruban
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.2.3
  */
 public class Route3D extends TrackAirspace implements VidesoObject, Route {
 
 	private List<LatLon> locations = new ArrayList<LatLon>();
 	private double width = 1.0;
 
-	private GlobeAnnotation annotation;
+	private VidesoAnnotation annotation;
 	
 	private Space space;
 	
@@ -115,20 +113,12 @@ public class Route3D extends TrackAirspace implements VidesoObject, Route {
 
 	@Override
 	public void setAnnotation(String text) {
-		this.createAnnotation();
+		if(annotation == null) this.annotation = new VidesoAnnotation("Route "+this.getName());
 		this.annotation.setText(text);
 	}
 	
-	private void createAnnotation(){
-		this.annotation = new GlobeAnnotation("Route "+this.getName(), Position.ZERO);
-		this.annotation.setAlwaysOnTop(true);
-		this.annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
-		this.annotation.getAttributes().setBorderColor(Color.BLACK);
-		this.annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
-	}
-	
-	public GlobeAnnotation getAnnotation(Position pos){
-		if(annotation == null) createAnnotation();
+	public VidesoAnnotation getAnnotation(Position pos){
+		if(annotation == null) this.annotation = new VidesoAnnotation("Route "+this.getName());
 		annotation.setPosition(pos);
 		return this.annotation;
 	}

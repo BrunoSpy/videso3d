@@ -21,14 +21,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
+import fr.crnan.videso3d.graphics.VidesoAnnotation;
 import fr.crnan.videso3d.graphics.VidesoObject;
-import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
@@ -37,7 +35,7 @@ import gov.nasa.worldwind.render.airspaces.Polygon;
 /**
  * Représentation 3D des mosaiques ODS (volume d'interet, de sécurité, ..)
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 public class MosaiqueEntity extends LinkedList<Airspace>{
 	
@@ -46,7 +44,7 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 	
 	private class Volume extends Polygon implements VidesoObject {
 		
-		private GlobeAnnotation annotation;
+		private VidesoAnnotation annotation;
 		
 		private DatabaseManager.Type base;
 		
@@ -66,18 +64,14 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 		@Override
 		public void setAnnotation(String text){
 			if(annotation == null) {
-				annotation = new GlobeAnnotation(text, Position.ZERO);
-				annotation.setAlwaysOnTop(true);
-				annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
-				annotation.getAttributes().setBorderColor(Color.BLACK);
-				annotation.getAttributes().setAdjustWidthToText(AVKey.SIZE_FIT_TEXT);
+				annotation = new VidesoAnnotation(text);
 			} else {
 				annotation.setText(text);
 			}
 		}
 		
 		@Override
-		public GlobeAnnotation getAnnotation(Position pos){
+		public VidesoAnnotation getAnnotation(Position pos){
 			annotation.setPosition(pos);
 			return annotation;
 		}
