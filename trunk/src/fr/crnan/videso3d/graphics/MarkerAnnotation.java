@@ -16,26 +16,21 @@
 
 package fr.crnan.videso3d.graphics;
 
-import java.awt.Color;
-
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.Annotation;
-import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.markers.BasicMarker;
 import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
 import gov.nasa.worldwind.render.markers.MarkerAttributes;
 
 /**
- * {@link BasicMarker} avec {@link GlobeAnnotation} intégré
+ * {@link BasicMarker} avec {@link VidesoAnnotation} intégré
  * @author  Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 public class MarkerAnnotation extends BasicMarker implements VidesoObject {
 
-	private GlobeAnnotation annotation;
+	private VidesoAnnotation annotation;
 	
 	private DatabaseManager.Type base;
 	
@@ -56,18 +51,14 @@ public class MarkerAnnotation extends BasicMarker implements VidesoObject {
 	@Override
 	public void setAnnotation(String text){
 		if(annotation == null) {
-			annotation = new GlobeAnnotation(text, Position.ZERO);
-			annotation.setAlwaysOnTop(true);
-			annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
-			annotation.getAttributes().setBorderColor(Color.BLACK);
-			annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
+			annotation = new VidesoAnnotation(text);
 		} else {
 			annotation.setText(text);
 		}
 	}
 	
 	@Override
-	public GlobeAnnotation getAnnotation(Position pos){
+	public VidesoAnnotation getAnnotation(Position pos){
 		annotation.setPosition(pos);
 		return annotation;
 	}

@@ -16,7 +16,6 @@
 
 package fr.crnan.videso3d.graphics;
 
-import java.awt.Color;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ import com.sun.opengl.util.BufferUtil;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.View;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.examples.util.DirectedPath;
@@ -42,18 +40,17 @@ import gov.nasa.worldwind.geom.Vec4;
 import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.DrawContext;
-import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.terrain.Terrain;
 /**
  * Route en 2D.<br />
  * Couleurs respectant le codage SIA
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 public class Route2D extends DirectedPath implements Route{
 
-	private GlobeAnnotation annotation;
+	private VidesoAnnotation annotation;
 	
 	private Space space;
 	
@@ -162,11 +159,7 @@ public class Route2D extends DirectedPath implements Route{
 	@Override
 	public void setAnnotation(String text) {
 		if(annotation == null) {
-			annotation = new GlobeAnnotation(text, Position.ZERO);
-			annotation.setAlwaysOnTop(true);
-			annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
-			annotation.getAttributes().setBorderColor(Color.BLACK);
-			annotation.getAttributes().setAdjustWidthToText(Annotation.SIZE_FIT_TEXT);
+			annotation = new VidesoAnnotation(text);
 		} else {
 			annotation.setText(text);
 		}

@@ -16,30 +16,26 @@
 
 package fr.crnan.videso3d.graphics;
 
-import java.awt.Color;
-
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Annotation;
-import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.PointPlacemark;
 import gov.nasa.worldwind.render.PointPlacemarkAttributes;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class Balise3D extends PointPlacemark implements Balise {
 
 	private int type;
 	private Type base;
 	
-	private GlobeAnnotation annotation;
+	private VidesoAnnotation annotation;
 	
 	public Balise3D(CharSequence name, Position position, String annotation, DatabaseManager.Type base, int type){
 		super(position);
@@ -80,11 +76,7 @@ public class Balise3D extends PointPlacemark implements Balise {
 	@Override
 	public void setAnnotation(String text) {
 		if(annotation == null) {
-			annotation = new GlobeAnnotation(text, Position.ZERO);
-			annotation.setAlwaysOnTop(true);
-			annotation.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
-			annotation.getAttributes().setBorderColor(Color.BLACK);
-			annotation.getAttributes().setAdjustWidthToText(AVKey.SIZE_FIT_TEXT);
+			annotation = new VidesoAnnotation(text);
 		} else {
 			annotation.setText(text);
 		}
