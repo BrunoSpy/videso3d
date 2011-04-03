@@ -26,7 +26,6 @@ import java.util.Set;
 
 import fr.crnan.videso3d.DraggerListener;
 import fr.crnan.videso3d.VidesoGLCanvas;
-import fr.crnan.videso3d.graphics.MovablePointPlacemark;
 import gov.nasa.worldwind.Movable;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.WorldWindow;
@@ -64,7 +63,7 @@ public class VerticalScaleBar extends DraggerListener implements Layer {
 		this.wwd = wd;
 
 
-		top = new MovablePointPlacemark(new Position(LatLon.ZERO, 600*30.48));
+		top = new PointPlacemark(new Position(LatLon.ZERO, 600*30.48));
 		top.setAltitudeMode(WorldWind.ABSOLUTE);
 		top.setApplyVerticalExaggeration(true);
 		top.setLabelText("FL 600");
@@ -83,7 +82,7 @@ public class VerticalScaleBar extends DraggerListener implements Layer {
 		hundredsAttributes.setUsePointAsDefaultImage(true);
 		hundredsAttributes.setLabelScale(0.8);
 		for(int i = 1;i<6;i++){
-			PointPlacemark p = new MovablePointPlacemark(new Position(LatLon.ZERO, 100*i*30.48));
+			PointPlacemark p = new PointPlacemark(new Position(LatLon.ZERO, 100*i*30.48));
 			p.setLabelText("FL "+i*100);
 			p.setAltitudeMode(WorldWind.ABSOLUTE);
 			p.setApplyVerticalExaggeration(true);
@@ -100,7 +99,7 @@ public class VerticalScaleBar extends DraggerListener implements Layer {
 		tensAttributes.setLabelScale(0.7);
 		for(int i = 1; i < 60;i++){
 			if( i % 10 != 0){
-				PointPlacemark p = new MovablePointPlacemark(new Position(LatLon.ZERO, 10*i*30.48));
+				PointPlacemark p = new PointPlacemark(new Position(LatLon.ZERO, 10*i*30.48));
 				p.setLabelText(""+i*10);
 				p.setAltitudeMode(WorldWind.ABSOLUTE);
 				p.setApplyVerticalExaggeration(true);
