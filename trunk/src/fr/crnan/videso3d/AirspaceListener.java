@@ -29,7 +29,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import fr.crnan.videso3d.graphics.Balise2D;
-import fr.crnan.videso3d.graphics.MovablePointPlacemark;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoObject;
@@ -47,6 +46,7 @@ import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.PointPlacemark;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.airspaces.AbstractAirspace;
 import gov.nasa.worldwind.render.airspaces.Airspace;
@@ -281,11 +281,11 @@ public class AirspaceListener implements SelectListener {
 		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){ //ouverture du contexte
 			this.doDoubleClick(event.getTopObject());
 		} else if (event.getEventAction() == SelectEvent.LEFT_CLICK){
-				this.doLeftClick(event.getTopObject(), event.getPickPoint());
+			this.doLeftClick(event.getTopObject(), event.getPickPoint());
 		} else if (event.getEventAction() == SelectEvent.DRAG){
 			if(!(event.getTopObject() instanceof Annotation) &&  //ne pas transférer l'évènement pour les annotations
 				!(this.wwd.getMeasureTool().isArmed()) && //pas de transfert si l'alidad est activé
-			 	!(event.getTopObject() instanceof MovablePointPlacemark) &&
+			 	!(event.getTopObject() instanceof PointPlacemark) &&
 			 	!(event.getTopObject() instanceof Polygon && PolygonEditorsManager.isEditing((Polygon) event.getTopObject())) &&
 			 	!(event.getTopObject() instanceof AirspaceControlPoint)){
 				this.wwd.getView().getViewInputHandler().mouseDragged(event.getMouseEvent());
@@ -322,7 +322,6 @@ public class AirspaceListener implements SelectListener {
 				BasicAirspaceAttributes highliteAttrs = new BasicAirspaceAttributes((AirspaceAttributes) lastAttrs);
 				highliteAttrs.setMaterial(new Material(Pallet.makeBrighter(((AirspaceAttributes)lastAttrs).getMaterial().getDiffuse())));
 				((AbstractAirspace) lastHighlit).setAttributes(highliteAttrs);
-
 			} else if (o instanceof AbstractShape) {
 				lastHighlit = (AbstractShape)o;
 				lastAttrs = ((AbstractShape)lastHighlit).getAttributes();
