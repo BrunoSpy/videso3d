@@ -224,6 +224,10 @@ public class Stpv extends FileParser{
 				this.insertLieu6(line);
 			} else if (line.startsWith("LIEU 8")) {
 				this.insertLieu8(line);
+			} else if(line.startsWith("LIEU 90") && !line.startsWith("LIEU 901")){
+				this.insertLieu90(line);
+			} else if(line.startsWith("LIEU 901")){
+				this.insertLieu901(line);
 			} else if(line.startsWith("LIEU 91") && !line.startsWith("LIEU 91S")) {
 				this.insertLieu91(line);
 			} else if(line.startsWith("LIEU 91S")){
@@ -231,6 +235,42 @@ public class Stpv extends FileParser{
 			}
 		}
 	}
+
+	private void insertLieu901(String line) throws SQLException {
+		Statement st = this.conn.createStatement();
+		ResultSet rs = st.executeQuery("select max(id) from lieu90"); //le lieu 901 auquel se rapporte ce lieu 91s est forcément le dernier lieu90 enregistré
+		int id = rs.getInt(1);
+		String conf = line.substring(20, 25).trim();
+		String name = line.substring(26).trim();
+		st.executeUpdate("insert into lieu901 (lieu90, conf, name) " +
+		"values ('"+id+"', '"+conf+"', '"+name+"')");
+		st.close();
+	}
+
+
+
+	private void insertLieu90(String line) throws SQLException {
+		PreparedStatement insert = this.conn.prepareStatement("insert into lieu90 (oaci, balini, bal1, bal2, bal3, bal4, bal5, bal6, bal7, bal8, hel, jet, fir, uir) " +
+				"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		insert.setString(1, line.substring(8, 12).trim());
+		insert.setString(2, line.substring(14, 19).trim());
+		insert.setString(3, line.substring(20, 25).trim());
+		insert.setString(4, line.substring(26, 31).trim());
+		insert.setString(5, line.substring(32, 37).trim());
+		insert.setString(6, line.substring(38, 43).trim());
+		insert.setString(7, line.substring(44, 49).trim());
+		insert.setString(8, line.substring(50, 55).trim());
+		insert.setString(9, line.substring(56, 61).trim());
+		insert.setString(10, line.substring(62, 67).trim());
+		insert.setBoolean(11, line.substring(68, 69).equals("O"));
+		insert.setBoolean(12, line.substring(69, 70).equals("O"));
+		insert.setBoolean(13, line.substring(70, 71).equals("O"));
+		insert.setBoolean(14, line.substring(71, 72).equals("O"));
+		insert.executeUpdate();
+
+	}
+
+
 
 	private void addLieu91S(String line) throws SQLException {
 		Statement st = this.conn.createStatement();

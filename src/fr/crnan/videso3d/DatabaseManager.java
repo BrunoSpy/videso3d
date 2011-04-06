@@ -528,6 +528,25 @@ public final class DatabaseManager {
 		st.executeUpdate("create table sect (id integer primary key autoincrement, " +
 				"nom varchar(2), " +
 				"freq varchar(7))");
+		st.executeUpdate("create table lieu90 (id integer primary key autoincrement, " +
+				"oaci varchar(4), " +
+				"balini varchar(5), " +
+				"bal1 varchar(5), " +
+				"bal2 varchar(5), " +
+				"bal3 varchar(5), " +
+				"bal4 varchar(5), " +
+				"bal5 varchar(5), " +
+				"bal6 varchar(5), " +
+				"bal7 varchar(5), " +
+				"bal8 varchar(5), " +
+				"hel boolean, " +
+				"jet boolean, " +
+				"fir boolean, " +
+				"uir boolean)");
+		st.executeUpdate("create table lieu901 (id integer primary key autoincrement, " +
+				"lieu90 int, " +
+				"conf varchar(5), " +
+				"name varchar(7))");
 		st.close();
 		DatabaseManager.addDatabase(name, Type.STPV, new SimpleDateFormat().format(new Date()));
 	}
