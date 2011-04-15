@@ -1114,4 +1114,9 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		}
 		return null;
 	}
+	
+	@Override
+	public void setColor(Color color, int type, String name) {
+		throw new UnsupportedOperationException("Not implemented");
+	}
 }

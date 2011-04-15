@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d;
 
+import java.awt.Color;
 import java.util.Collection;
 
 import gov.nasa.worldwind.layers.Layer;
@@ -111,5 +112,13 @@ public interface VidesoController {
 	 * @return tous les objets correspondant au type demandé
 	 */
 	public Collection<Object> getObjects(int type);
+
+	/**
+	 * Change the color of an object
+	 * @param color
+	 * @param type
+	 * @param name
+	 */
+	public void setColor(Color color, int type, String name);
 	
 }

@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.edimap;
 
+import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -152,4 +153,8 @@ public class EdimapController implements VidesoController {
 		return null;
 	}
 
+	@Override
+	public void setColor(Color color, int type, String name) {
+		throw new UnsupportedOperationException("Not implemented");
+	}
 }
