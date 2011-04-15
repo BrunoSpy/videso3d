@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.skyview;
 
+import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -328,5 +329,9 @@ public class SkyViewController implements VidesoController {
 		return null;
 	}
 	
+	@Override
+	public void setColor(Color color, int type, String name) {
+		throw new UnsupportedOperationException("Not implemented");
+	}
 	
 }

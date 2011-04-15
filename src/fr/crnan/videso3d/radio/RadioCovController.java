@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.radio;
 
+import java.awt.Color;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -157,5 +158,10 @@ public class RadioCovController implements VidesoController {
 	public Collection<Object> getObjects(int type) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public void setColor(Color color, int type, String name) {
+		throw new UnsupportedOperationException("Not implemented");
 	}
 }

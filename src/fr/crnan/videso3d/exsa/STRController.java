@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.exsa;
 
+import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -400,6 +401,9 @@ public class STRController implements VidesoController {
 		return null;
 	}
 	
-	
+	@Override
+	public void setColor(Color color, int type, String name) {
+		throw new UnsupportedOperationException("Not implemented");
+	}	
 
 }
