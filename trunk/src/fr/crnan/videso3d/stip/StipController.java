@@ -55,7 +55,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage et la construction des éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.1.8
+ * @version 0.1.9
  */
 public class StipController extends ProgressSupport implements VidesoController {
 
@@ -206,6 +206,28 @@ public class StipController extends ProgressSupport implements VidesoController 
 		DatasManager.getView(Type.STIP).hideObject(type, name);
 	}
 	
+
+	@Override
+	public void setColor(Color color, int type, String name) {
+		switch (type) {
+		case ROUTES://Routes
+			
+			break;
+		case BALISES://Balises Pub
+			
+			break;
+		case SECTEUR://secteur
+			int i = 0;
+			while(this.secteurs.containsKey(name+i)){
+				this.secteurs.get(name+i).getAttributes().setMaterial(new Material(color));
+				i++;
+			}
+			this.firePropertyChange(AVKey.LAYER, null, this.secteursLayer);
+			break;
+		default:
+			break;
+		}		
+	}
 	
 	/*--------------------------------------------------------------*/
 	/*----------------- Gestion des balises STIP -------------------*/
@@ -682,4 +704,5 @@ public class StipController extends ProgressSupport implements VidesoController 
 		}
 		return null;
 	}
+
 }
