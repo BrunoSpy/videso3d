@@ -21,7 +21,7 @@ import com.mxgraph.view.mxGraph;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class VGraph extends mxGraph {
 
@@ -41,7 +41,9 @@ public class VGraph extends mxGraph {
 			if(v instanceof CellContent ){
 				String t = ((CellContent) v).getType();
 				//les routes et les itis ne doivent pas pouvoir être réduits
-				if(t.equals(CellContent.TYPE_ROUTE) || t.equals(CellContent.TYPE_ITI) || t.equals(CellContent.TYPE_TRAJET) || t.equals(CellContent.TYPE_CONNEXION)){
+				if(t.equals(CellContent.TYPE_ROUTE) || t.equals(CellContent.TYPE_ITI)
+						|| t.equals(CellContent.TYPE_TRAJET) || t.equals(CellContent.TYPE_CONNEXION)
+						|| t.equals(CellContent.TYPE_STAR)){
 					return false;
 				}
 			}

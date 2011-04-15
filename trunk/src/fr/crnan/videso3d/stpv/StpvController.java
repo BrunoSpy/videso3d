@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.stpv;
 
+import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -45,6 +46,8 @@ public class StpvController implements VidesoController {
 	public static final int BALISE = 1;
 
 	public static final int SECTEUR = 2;
+	
+	public static final int STAR = 3;
 	
 	/**
 	 * Liste des layers Mosaiques
@@ -174,6 +177,11 @@ public class StpvController implements VidesoController {
 	public Collection<Object> getObjects(int type) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setColor(Color color, int type, String name) {
+		throw new UnsupportedOperationException("Not implemented");
 	}
 
 }
