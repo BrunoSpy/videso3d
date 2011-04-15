@@ -18,7 +18,7 @@ package fr.crnan.videso3d.graphs;
 /**
  * Contenu d'une cellule
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class CellContent {
 
@@ -33,6 +33,8 @@ public class CellContent {
 	public static String TYPE_TRAJET_GROUPE = "trajet_groupe";
 	
 	public static String TYPE_CONNEXION = "connexion";
+	
+	public static String TYPE_STAR = "star";
 	
 	private String type = null;
 	

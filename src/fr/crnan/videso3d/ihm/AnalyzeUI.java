@@ -46,6 +46,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphs.ConnexPanel;
 import fr.crnan.videso3d.graphs.ItiPanel;
 import fr.crnan.videso3d.graphs.RoutePanel;
+import fr.crnan.videso3d.graphs.StarPanel;
 import fr.crnan.videso3d.graphs.TrajetPanel;
 import fr.crnan.videso3d.ihm.components.ButtonTabComponent;
 import fr.crnan.videso3d.stip.StipController;
@@ -53,7 +54,7 @@ import fr.crnan.videso3d.stip.StipController;
  * Fenêtre d'analyse des données Stip et Stpv.<br />
  * Cette classe est un singleton afin de n'être ouverte qu'une fois maximum.
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 public final class AnalyzeUI extends JFrame {
 
@@ -158,6 +159,8 @@ public final class AnalyzeUI extends JFrame {
 			return new BaliseResultPanel(search);
 		} else if(type.equals("connexion")){
 			return new ConnexPanel(search, search2);
+		} else if(type.equals("stars")){
+			return new StarPanel(search, search2);
 		}
 		return null;
 	}
@@ -168,7 +171,7 @@ public final class AnalyzeUI extends JFrame {
 
 		toolbar.add(new JLabel(" Rechercher : "));
 
-		String[] types = {"balise", /*"balint",*/ "iti", "trajet", "route", "connexion"};
+		String[] types = {"balise", /*"balint",*/ "iti", "trajet", "route", "connexion", "stars"};
 
 		final JComboBox type = new JComboBox(types);
 

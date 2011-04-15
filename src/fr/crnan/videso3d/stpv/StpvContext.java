@@ -111,12 +111,42 @@ public class StpvContext extends Context {
 							AnalyzeUI.showResults("balise", name, "");
 						}
 					});
+					taskpane.add(new AbstractAction() {
+						{
+							putValue(Action.NAME, "Appartient à "+(st2.executeQuery("select COUNT(*) from lieu90, lieu901 where lieu90.id = lieu901.lieu90 and (oaci ='"+name+"' or bal1='"+name+"'"
+									+" or bal2='"+name+"' or bal3='"+name+"' or bal4='"+name+"'"
+									+" or bal5='"+name+"' or bal6='"+name+"' or bal7='"+name+"' or bal8='"+name+"')")).getInt(1)+" star(s).");
+						}
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							AnalyzeUI.showResults("stars", name, "");
+						}
+					});
 				}
 			} catch (SQLException e){
 				e.printStackTrace();
 			}
 			break;
-
+		case StpvController.STAR:
+			Integer id = new Integer(name);
+			try {
+				if(DatabaseManager.getCurrentStpv() == null){
+					taskpane.add(new JLabel("<html><i>Aucune base STPV configurée.</i></html>"));
+				} else {
+					Statement st3 = DatabaseManager.getCurrentStpv();
+					ResultSet rs3 = st3.executeQuery("select * from lieu90 where id = '"+id+"'");
+					if(rs3.next()){
+						taskpane.add(new JLabel("<html><b>Hélices : </b>"+(rs3.getBoolean(12) ? "Oui" : "Non")+"</html>"));
+						taskpane.add(new JLabel("<html><b>Jets : </b>"+(rs3.getBoolean(13) ? "Oui" : "Non")+"</html>"));
+						taskpane.add(new JLabel("<html><b>FIR : </b>"+(rs3.getBoolean(14) ? "Oui" : "Non")+"</html>"));
+						taskpane.add(new JLabel("<html><b>UIR : </b>"+(rs3.getBoolean(15) ? "Oui" : "Non")+"</html>"));
+					}
+					st3.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
 		default:
 			break;
 		}

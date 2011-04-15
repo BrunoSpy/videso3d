@@ -28,11 +28,12 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.stip.StipController;
+import fr.crnan.videso3d.stpv.StpvController;
 /**
  * Listener de cellule JGraph.<br />
  * Permet de mettre à jour la fenêtre contextuelle en fonction de la cellule sélectionnée
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class CellSelectionListener implements mxIEventListener {
 
@@ -78,6 +79,9 @@ public class CellSelectionListener implements mxIEventListener {
 				}
 			} else if(content.getType().equals(CellContent.TYPE_CONNEXION)){
 				context.showInfo(Type.STIP, StipController.CONNEXION, new Integer(((CellContent)cell.getValue()).getId()).toString());
+				context.setTitle("Informations sur "+((CellContent)cell.getValue()).getName());
+			} else if(content.getType().equals(CellContent.TYPE_STAR)){
+				context.showInfo(Type.STPV, StpvController.STAR, new Integer(((CellContent)cell.getValue()).getId()).toString());
 				context.setTitle("Informations sur "+((CellContent)cell.getValue()).getName());
 			}
 		}
