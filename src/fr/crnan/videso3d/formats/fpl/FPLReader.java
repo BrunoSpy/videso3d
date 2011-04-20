@@ -200,7 +200,7 @@ public class FPLReader extends TrackFilesReader {
 			track.setDepart(firstElement);
 			LinkedList<LPLNTrackPoint> pointsList = new LinkedList<LPLNTrackPoint>();
 			boolean arptDepart = false;
-			if(!firstElement.equals("?"))
+			if(!firstElement.equals("?")&& firstElement.matches("\\p{Alpha}*"));
 					arptDepart = addAirportToTrack(pointsList, firstElement);
 			if(arptDepart)
 				fpl.set(0, firstLine.substring(firstLine.indexOf(firstElement)+firstElement.length()));
@@ -761,8 +761,8 @@ public class FPLReader extends TrackFilesReader {
 				triplet.setFirst(e);
 				triplet.setSecond(Type.Route);
 				triplet.setThird(elevation);
-			}else if(e.matches("\\d{1,3}([\\.,]\\d{1,4})?[NS]\\d{1,3}([\\.,]\\d{1,4})?[EW]") 
-					|| e.matches("\\d{1,3}[dD](\\d{1,2}')?(\\d{1,2}\")?[NnSs],\\d{1,3}[dD](\\d{1,2}')?(\\d{1,2}\")?[EeWw]")){
+			}else if(e.matches("\\d{1,3}([\\.,]\\d{1,4})?[NS]\\d{1,3}([\\.,]\\d{1,4})?[EW]")
+					|| e.matches("\\d{1,3}D(\\d{1,2}')?(\\d{1,2}\")?[NS],?\\d{1,3}D(\\d{1,2}')?(\\d{1,2}\")?[EW]")){
 				triplet.setFirst(e);
 				triplet.setSecond(Type.Point);
 				triplet.setThird(elevation);
