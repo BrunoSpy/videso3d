@@ -71,7 +71,7 @@ public class NectarReader extends SwingWorker<Integer, String>{
  			in = new BufferedReader(new InputStreamReader(new ProgressMonitorInputStream(null, "Extraction du fichier " + this.path+" ...", new FileInputStream(this.path))));
  			this.setProgress(0);
  			datas = new Entity("root", this.getEntity(in));
- 		} catch (FileNotFoundException e) {
+ 		} catch (Exception e) {
  			e.printStackTrace();
  		}
  		this.setProgress(100);
