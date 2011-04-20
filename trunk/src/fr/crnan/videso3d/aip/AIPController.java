@@ -285,8 +285,10 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			this.createZone(type, name);
 			zone = this.zones.get(type+" "+name);
 		}
-		zone.setVisible(true);	
-		this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);	
+		if(zone!=null){
+			zone.setVisible(true);
+			this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);	
+		}
 	}
 
 
@@ -345,6 +347,9 @@ public class AIPController extends ProgressSupport implements VidesoController {
 				break;
 			case AIP.TrPla:
 				couleurZone=Pallet.defaultColor;
+				break;
+			case AIP.OCA:
+				couleurZone=Pallet.OCAColor;
 				break;
 			default: 
 				break;
@@ -755,9 +760,9 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	 */
 	public Position centerView(Object object){
 		Position centerPosition = this.wwd.centerView(object);		
-		showAnnotation(object, centerPosition);
+		if(centerPosition!=null)
+			showAnnotation(object, centerPosition);
 		return centerPosition;
-		
 	}
 	
 	/**

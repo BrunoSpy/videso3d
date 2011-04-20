@@ -589,12 +589,15 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public Position centerView(Object object){
 		getView().setValue(AVKey.ELEVATION, 1e11);
 		double[] eyePosition = this.computeBestEyePosition(object);
-		Position centerPosition = Position.fromDegrees(eyePosition[0], eyePosition[1]);
-		getView().setHeading(Angle.ZERO);
-		getView().setPitch(Angle.ZERO);
-		BasicOrbitView bov = (BasicOrbitView) getView();
-		bov.addPanToAnimator(centerPosition, bov.getHeading(), bov.getPitch(), eyePosition[2], 2000, true);
-		bov.firePropertyChange(AVKey.VIEW, null, bov);
+		Position centerPosition = null;
+		if(eyePosition.length>1){
+			centerPosition = Position.fromDegrees(eyePosition[0], eyePosition[1]);
+			getView().setHeading(Angle.ZERO);
+			getView().setPitch(Angle.ZERO);
+			BasicOrbitView bov = (BasicOrbitView) getView();
+			bov.addPanToAnimator(centerPosition, bov.getHeading(), bov.getPitch(), eyePosition[2], 2000, true);
+			bov.firePropertyChange(AVKey.VIEW, null, bov);
+		}
 		return centerPosition;
 	}
 	

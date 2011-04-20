@@ -40,6 +40,7 @@ public class Pallet {
 	public static Color LTAColor = new Color(150,0,150);
 	public static Color UTAColor = new Color(255,180,255);
 	public static Color CTAColor = Color.pink;
+	public static Color OCAColor = new Color(150,150,0);
 	public static Color CTLColor = new Color(0,150,250);
 	public static Color defaultColor = new Color(50,50,50);
 	

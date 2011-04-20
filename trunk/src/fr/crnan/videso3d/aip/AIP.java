@@ -49,7 +49,7 @@ import fr.crnan.videso3d.graphics.Route;
  */
 public class AIP extends FileParser{
 
-	private final Integer numberFiles = 20;
+	private final Integer numberFiles = 21;
 
 	/**
 	 * Le nom de la base de données.
@@ -83,6 +83,7 @@ public class AIP extends FileParser{
 	private List<Couple<Integer,String>> LTAs;
 	private List<Couple<Integer,String>> UTAs;
 	private List<Couple<Integer,String>> CTAs;
+	private List<Couple<Integer,String>> OCAs;
 	private List<Couple<Integer,String>> CTLs;
 	private List<Couple<Integer,String>> Pjes;
 	private List<Couple<Integer,String>> Aers;
@@ -93,7 +94,7 @@ public class AIP extends FileParser{
 
 	public final static int Partie=0, TSA = 1, SIV = 2, CTR = 3, TMA = 4, R = 5, 
 	D = 6, FIR = 7, UIR = 8, LTA = 9, UTA = 10, CTA = 11, 
-	CTL = 12, Pje = 13, Aer = 14, Vol=15, Bal = 16, TrPla = 17,
+	CTL = 12, Pje = 13, Aer = 14, Vol=15, Bal = 16, TrPla = 17, OCA = 18,
 	AWY = 20, PDR = 21, TAC = 23,
 	DMEATT = 30, L = 31, NDB = 32, PNP = 33, TACAN = 34, VFR = 35, VOR = 36, VORDME = 37, VORTAC = 38, WPT = 39,
 	AERODROME = 40, ALTI = 41, PRIVE = 42;
@@ -127,6 +128,7 @@ public class AIP extends FileParser{
 		this.LTAs = new ArrayList<Couple<Integer,String>>();
 		this.UTAs = new ArrayList<Couple<Integer,String>>();
 		this.CTAs = new ArrayList<Couple<Integer,String>>();
+		this.OCAs = new ArrayList<Couple<Integer,String>>();
 		this.CTLs = new ArrayList<Couple<Integer,String>>();
 		this.Pjes = new ArrayList<Couple<Integer,String>>();
 		this.Aers = new ArrayList<Couple<Integer,String>>();
@@ -198,7 +200,7 @@ public class AIP extends FileParser{
 
 
 	/**
-	 * Crée le nom de la base : AIP_date de publication
+	 * Crée le nom de la base : AIP_date d'entrée en vigueur
 	 */
 	private void getName() {		
 		this.name = "AIP_"+document.getRootElement().getChild("Situation").getAttributeValue("effDate");
@@ -219,6 +221,7 @@ public class AIP extends FileParser{
 		this.LTAs = new ArrayList<Couple<Integer,String>>();
 		this.UTAs = new ArrayList<Couple<Integer,String>>();
 		this.CTAs = new ArrayList<Couple<Integer,String>>();
+		this.OCAs = new ArrayList<Couple<Integer,String>>();
 		this.CTLs = new ArrayList<Couple<Integer,String>>();
 		this.Pjes = new ArrayList<Couple<Integer,String>>();
 		this.Aers = new ArrayList<Couple<Integer,String>>();
@@ -261,6 +264,9 @@ public class AIP extends FileParser{
 		this.setFile("CTA");
 		this.setProgress(progress++);
 		this.getZones(racineVolumes,"CTA");
+		this.setFile("OCA");
+		this.setProgress(progress++);
+		this.getZones(racineVolumes,"OCA");
 		this.setFile("CTL");
 		this.setProgress(progress++);
 		this.getZones(racineVolumes,"CTL");
@@ -515,10 +521,12 @@ public class AIP extends FileParser{
 		Iterator<Element> itCBA = cbaList.iterator();
 		Iterator<Element> itTSA = tsaList.iterator();
 		while(itCBA.hasNext()){
-			this.insertZone(itCBA.next(),false,"TSA");
+			Element cba = itCBA.next();
+			this.insertZone(cba,getVolumeName(cba.getAttributeValue("lk")),false,"TSA");
 		}
 		while(itTSA.hasNext()){
-			this.insertZone(itTSA.next(),false,"TSA");
+			Element tsa = itTSA.next();
+			this.insertZone(tsa,getVolumeName(tsa.getAttributeValue("lk")),false,"TSA");
 		}
 	}
 
@@ -547,10 +555,11 @@ public class AIP extends FileParser{
 		}
 		while(it2.hasNext()){
 			Element zoneElement = it2.next();
-			if(sameNames.contains(getVolumeName(zoneElement.getAttributeValue("lk")))){
-				this.insertZone(zoneElement,true,type);
+			String zoneName = getVolumeName(zoneElement.getAttributeValue("lk"));
+			if(sameNames.contains(zoneName)){
+				this.insertZone(zoneElement, zoneName, true, type);
 			}else{
-				this.insertZone(zoneElement,false,type);
+				this.insertZone(zoneElement, zoneName, false, type);
 			}
 		}
 	}
@@ -562,26 +571,25 @@ public class AIP extends FileParser{
 	 * @param type
 	 * @throws SQLException
 	 */
-	private void insertZone(Element zone, boolean displaySequence, String type) throws SQLException {
+	private void insertZone(Element zone, String name, boolean displaySequence, String type) throws SQLException {
 		int zoneID = Integer.parseInt(zone.getAttributeValue("pk"));
-		String zoneName = getVolumeName(zone.getAttributeValue("lk"));
 		//on teste s'il s'agit d'une zone Pje, Aer, Vol, Bal ou TrPla en regardant si le deuxième caractère est en minuscule
 		if(type.length()>1){
 			if (Character.isLowerCase(type.charAt(1))){
 				String usualName = getUsualName(zone);
 				if(usualName != null){
-					zoneName += " -- "+usualName;
+					name += " -- "+usualName;
 				}
 			}
 		}
 		if(displaySequence){
-			zoneName+=" "+zone.getChildText("Sequence");
+			name+=" "+zone.getChildText("Sequence");
 		}
-		getZones(string2type(type)).add(new Couple<Integer,String>(zoneID,zoneName));
+		getZones(string2type(type)).add(new Couple<Integer,String>(zoneID,name));
 		PreparedStatement ps = this.conn.prepareStatement("insert into volumes (pk,type,nom) VALUES (?, ?, ?)");
 		ps.setInt(1, zoneID);
 		ps.setString(2, type);
-		ps.setString(3, removeType(zoneName));
+		ps.setString(3, removeType(name));
 		ps.executeUpdate();
 	}
 
@@ -628,6 +636,7 @@ public class AIP extends FileParser{
 				||name.startsWith("LTA")
 				||name.startsWith("UTA")
 				||name.startsWith("CTA")
+				||name.startsWith("OCA")
 				||name.startsWith("CTL")
 				||name.startsWith("Pje")
 				||name.startsWith("Aer")
@@ -671,6 +680,8 @@ public class AIP extends FileParser{
 			return UTAs;
 		case CTA:
 			return CTAs;
+		case OCA:
+			return OCAs;
 		case CTL:
 			return CTLs;
 		case Pje:
@@ -712,6 +723,8 @@ public class AIP extends FileParser{
 			return "UTA";
 		case CTA:
 			return "CTA";
+		case OCA:
+			return "OCA";
 		case CTL:
 			return "CTL";
 		case Pje:
@@ -803,6 +816,9 @@ public class AIP extends FileParser{
 		}
 		if (type.equals("CTA")){
 			return CTA;
+		}
+		if(type.equals("OCA")){
+			return OCA;
 		}
 		if (type.equals("CTL")){
 			return CTL;
