@@ -29,6 +29,7 @@ import java.util.List;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileParser;
+import fr.crnan.videso3d.Pallet;
 
 /**
  * Jeu de cartes Edimap
@@ -240,7 +241,9 @@ public class Cartes extends FileParser {
 		Iterator<Entity> iterator = this.getCartesDynamiques().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			if(new File(this.path+"/"+carte.getValue("fichierActive")+ ".NCT").exists()){
+			if(new File(this.path+"/"+carte.getValue("fichierActive")+ ".NCT").exists() ||
+					new File(this.path+"/"+carte.getValue("fichierActive")+ ".nct").exists() ||
+					new File(this.path+"/"+carte.getValue("fichierActive")).exists()){
 				insert.setString(2, "dynamique");
 				insert.setString(1, carte.getValue("name"));
 				insert.setString(3, carte.getValue("fichierActive"));
@@ -250,7 +253,9 @@ public class Cartes extends FileParser {
 		iterator = this.getCartesStatiques().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			if(new File(this.path+"/"+carte.getValue("fichier")+ ".NCT").exists()){
+			if(new File(this.path+"/"+carte.getValue("fichier")+ ".NCT").exists() ||
+					new File(this.path+"/"+carte.getValue("fichier")+ ".nct").exists() ||
+					new File(this.path+"/"+carte.getValue("fichier")).exists()){
 				insert.setString(2, "statique");
 				insert.setString(1, carte.getValue("name"));
 				insert.setString(3, carte.getValue("fichier"));
@@ -260,7 +265,9 @@ public class Cartes extends FileParser {
 		iterator = this.getSecteurs().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			if(new File(this.path+"/"+carte.getValue("fichierSousControle")+ ".NCT").exists()){
+			if(new File(this.path+"/"+carte.getValue("fichierSousControle")+ ".NCT").exists() ||
+					new File(this.path+"/"+carte.getValue("fichierSousControle")+ ".nct").exists() ||
+					new File(this.path+"/"+carte.getValue("fichierSousControle")).exists()){
 				insert.setString(2, "secteur");
 				insert.setString(1, carte.getValue("name"));
 				insert.setString(3, carte.getValue("fichierSousControle"));
@@ -270,7 +277,9 @@ public class Cartes extends FileParser {
 		iterator = this.getVolumes().iterator();
 		while(iterator.hasNext()){
 			Entity carte = iterator.next();
-			if(new File(this.path+"/"+carte.getValue("fichier")+ ".NCT").exists()){//le fichier carac_jeu peut contenir des cartes qui ne sont pas présentes dans le dossier
+			if(new File(this.path+"/"+carte.getValue("fichier")+ ".NCT").exists() ||
+					new File(this.path+"/"+carte.getValue("fichier")).exists() ||
+					new File(this.path+"/"+carte.getValue("fichier")+ ".nct").exists()){//le fichier carac_jeu peut contenir des cartes qui ne sont pas présentes dans le dossier
 				insert.setString(2, "volume");
 				insert.setString(1, carte.getValue("name"));
 				insert.setString(3, carte.getValue("fichier"));
@@ -298,7 +307,14 @@ public class Cartes extends FileParser {
 			st = DatabaseManager.getCurrentEdimap();
 			rs = st.executeQuery("select * from cartes where name='"+name+"' and type='"+type+"'");
 			rs.next();
-			String cartePath = this.path + "/"+ rs.getString(4) + ".NCT"; //TODO gérer l'extension
+			String cartePath = "";
+			if(new File(this.path + "/"+ rs.getString(4) + ".NCT").exists()){
+				cartePath = this.path + "/"+ rs.getString(4) + ".NCT";
+			} else if (new File(this.path + "/"+ rs.getString(4) + ".nct").exists()){
+				cartePath = this.path + "/"+ rs.getString(4) + ".nct";
+			} else if (new File(this.path + "/"+ rs.getString(4)).exists()){
+				cartePath = this.path + "/"+ rs.getString(4);
+			} 
 			NectarReader carte = new NectarReader();
 			try {
 				carte = new NectarReader(cartePath);
@@ -316,14 +332,17 @@ public class Cartes extends FileParser {
 
 
 	private void setPalette(){
-		NectarReader paletteFichier = new NectarReader();
 		try {
+			NectarReader paletteFichier = new NectarReader();
+
 			paletteFichier = new NectarReader(this.path+"/palette");
+
 			paletteFichier.doInBackground();
 			this.palette = new PaletteEdimap(paletteFichier.getEntity());
+
 		} catch (FileNotFoundException e) {
+			System.out.println("test");
 			this.palette = new PaletteEdimap();
-			e.printStackTrace();
 		}
 
 	}

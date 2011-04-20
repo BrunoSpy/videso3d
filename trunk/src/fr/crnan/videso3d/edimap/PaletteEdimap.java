@@ -47,16 +47,16 @@ public class PaletteEdimap extends Pallet{
 	 * Construction d'une palette par défaut en cas d'absence de fichier palette
 	 */
 	public PaletteEdimap() {
-		this.palette.put("Noir", Color.decode("000000"));
-		this.palette.put("Lilas", Color.decode("766a6a"));
-		this.palette.put("Vert salle de bain", Color.decode("535e4e"));
-		this.palette.put("Lie de vin", Color.decode("514948"));
-		this.palette.put("Jaune", Color.decode("cbcb65"));
-		this.palette.put("Gris clair", Color.decode("5a5a5a"));
-		this.palette.put("Gris", Color.decode("424242"));
-		this.palette.put("Gris fonce", Color.decode("3d3d3d"));
-		this.palette.put("Orange", Color.decode("9c5d00"));
-		this.palette.put("Gris kaki", Color.decode("1f3022"));
+		this.palette.put("Noir", Color.decode("#000000"));
+		this.palette.put("Lilas", Color.decode("#766a6a"));
+		this.palette.put("Vert salle de bain", Color.decode("#535e4e"));
+		this.palette.put("Lie de vin", Color.decode("#514948"));
+		this.palette.put("Jaune", Color.decode("#cbcb65"));
+		this.palette.put("Gris clair", Color.decode("#5a5a5a"));
+		this.palette.put("Gris", Color.decode("#424242"));
+		this.palette.put("Gris fonce", Color.decode("#3d3d3d"));
+		this.palette.put("Orange", Color.decode("#9c5d00"));
+		this.palette.put("Gris kaki", Color.decode("#1f3022"));
 	}
 
 	public Color getColor(String color){
