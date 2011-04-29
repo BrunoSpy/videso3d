@@ -35,7 +35,7 @@ import gov.nasa.worldwind.util.Logging;
  * Lecteur de fichiers EXSA<br />
  * Détecte automatiquement le type de fichier (formaté ou non).
  * @author Bruno Spyckerelle
- * @version 0.4.1
+ * @version 0.4.2
  */
 public class Exsa extends FileParser {
 	/**
@@ -187,9 +187,13 @@ public class Exsa extends FileParser {
 					insert = this.conn.prepareStatement("insert into centflvvf (name) " +
 					"values (?)");
 					this.setCentFlvvf(line, formated);
-				} /*else if (line.startsWith("CENT_STACK")) {
-
-				} else if (line.startsWith("CENT_TMA-F")) {
+				} else if (line.startsWith(formated ? "CENT_STACK" : "CENT.STACK")) {
+					this.setFile("CENT_STACK");
+					this.setProgress(4);
+					insert = this.conn.prepareStatement("insert into centflvvf (name, latitude, longitude, xcautra, ycautra, rayonint, rayonext, flinf, flsup, type) " +
+					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					this.setCentStack(line, formated);
+				} /*else if (line.startsWith("CENT_TMA-F")) {
 
 				}*/ else if (line.startsWith(formated ? "CENT_Z_OCC" : "CENT.Z_OCC")) {
 					this.setFile("CENT_Z_OCC.");
@@ -461,6 +465,21 @@ public class Exsa extends FileParser {
 	}
 
 
+	private void setCentStack(String line, Boolean formated) throws SQLException, ParseException {
+		CentStack centStack = new CentStack(line, formated);
+		insert.setString(1, centStack.getName());
+		insert.setDouble(2, centStack.getLatitude().toDecimal());
+		insert.setDouble(3, centStack.getLongitude().toDecimal());
+		insert.setDouble(4, centStack.getX());
+		insert.setDouble(5, centStack.getY());
+		insert.setInt(6, centStack.getRayonInt());
+		insert.setInt(7, centStack.getRayonExt());
+		insert.setInt(8, centStack.getFlInf());
+		insert.setInt(9, centStack.getFlSup());
+		insert.setString(10, centStack.getType());
+		insert.executeUpdate();
+	}
+	
 	private void setRadrTechn(String line, Boolean formated) throws SQLException, ParseException {
 		RadrTechn radrTechn = new RadrTechn(line, formated);
 		insert.setString(1, radrTechn.getNom());

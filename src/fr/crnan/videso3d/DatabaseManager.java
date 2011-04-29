@@ -43,7 +43,7 @@ import javax.swing.event.SwingPropertyChangeSupport;
 /**
  * Gère la base de données
  * @author Bruno Spyckerelle
- * @version 0.8.1
+ * @version 0.8.2
  */
 public final class DatabaseManager {
 	
@@ -474,7 +474,17 @@ public final class DatabaseManager {
 		st.executeUpdate("create table signalisation (id integer primary key autoincrement, " +
 				"name varchar(6)," +
 				"signalisations varchar(70))");
-		
+		st.executeUpdate("create table centstack (id integer primary key autoincrement, " +
+				"name varchar(6)," +
+				"latitude float," +
+				"longitude float," +
+				"xcautra float," +
+				"ycautra float," +
+				"rayonint int," +
+				"rayonext int," +
+				"flinf int," +
+				"flsup int," +
+				"type varchar(8))");
 		st.close();
 		//on ajoute le nom de la base
 		DatabaseManager.addDatabase(name, Type.EXSA, new SimpleDateFormat().format(new Date()));
