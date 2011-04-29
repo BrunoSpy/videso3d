@@ -55,14 +55,14 @@ public class STRController implements VidesoController {
 	 */
 	private HashMap<String, MosaiqueLayer> mosaiquesLayer = new HashMap<String, MosaiqueLayer>();
 	/**
-	 * Layer pour les radars
+	 * Layer pour les radars et les stacks
 	 */
-	private RenderableLayer radarsLayer = new RenderableLayer();
-	{radarsLayer.setName("Radars");}
+	private RenderableLayer renderableLayer = new RenderableLayer();
+	{renderableLayer.setName("EXSA");}
 	/**
-	 * Liste des radars affichés
+	 * Liste des radars et stacks affichés
 	 */
-	private HashMap<String, SurfaceShape> radars = new HashMap<String, SurfaceShape>();
+	private HashMap<String, SurfaceShape> renderables = new HashMap<String, SurfaceShape>();
 	
 	private VidesoGLCanvas wwd;
 	
@@ -74,6 +74,7 @@ public class STRController implements VidesoController {
 	public static final int MOSAIQUE_DYN = 2;
 	public static final int MOSAIQUE_CAPA = 3;
 	public static final int RADAR = 5;
+	public static final int STACK = 6;
 	
 	public STRController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
@@ -98,7 +99,7 @@ public class STRController implements VidesoController {
 			this.wwd.removeLayer(l);
 		}
 		mosaiquesLayer.clear();
-		this.wwd.removeLayer(radarsLayer);
+		this.wwd.removeLayer(renderableLayer);
 	}
 
 	@Override
@@ -125,7 +126,7 @@ public class STRController implements VidesoController {
 			this.toggleLayer(this.createMosaiqueLayer(type, name), true);
 			break;
 		case RADAR:
-			if(!radars.containsKey(name)){
+			if(!renderables.containsKey(name)){
 				try {
 					Statement st = DatabaseManager.getCurrentExsa();
 					ResultSet rs = st.executeQuery("select * from radrgener, radrtechn where radrgener.name = radrtechn.name and radrgener.name ='"+name+"'");
@@ -139,10 +140,35 @@ public class STRController implements VidesoController {
 								"Code radar : "+rs.getInt("coderadar")+"<br />" +
 								"Tour d'antenne : "+rs.getInt("vitesse")+"s<br />" +
 										"</html>");
-						radarsLayer.addRenderable(radar);
-						radars.put(name, radar);
-						this.toggleLayer(radarsLayer, true);
+						renderableLayer.addRenderable(radar);
+						renderables.put(name, radar);
+						this.toggleLayer(renderableLayer, true);
 					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			this.wwd.redraw();
+			break;
+		case STACK:
+			if(!renderables.containsKey(name)){
+				try {
+					Statement st = DatabaseManager.getCurrentExsa();
+					ResultSet rs = st.executeQuery("select * from centstack where name='"+name+"'");
+//					if(rs.next()){
+//						Radar radar = new Radar(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")), rs.getInt("portee"), 
+//								DatabaseManager.Type.EXSA, STRController.RADAR);
+//						radar.setAnnotation("<html><b>Radar : "+name+"</b><br /><br />" +
+//								"Portée : "+rs.getInt("portee")+"NM<br />" +
+//								"Numéro : "+rs.getInt("numero")+"<br />" +
+//								"Code pays : "+rs.getInt("codepays")+"<br />" +
+//								"Code radar : "+rs.getInt("coderadar")+"<br />" +
+//								"Tour d'antenne : "+rs.getInt("vitesse")+"s<br />" +
+//										"</html>");
+//						renderableLayer.addRenderable(radar);
+//						renderables.put(name, radar);
+//						this.toggleLayer(renderableLayer, true);
+//					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -355,9 +381,9 @@ public class STRController implements VidesoController {
 	@Override
 	public void hideObject(int type, String name) {
 		if(type == RADAR){
-			if(radars.containsKey(name)){
-				radarsLayer.removeRenderable(radars.get(name));
-				radars.remove(name);
+			if(renderables.containsKey(name)){
+				renderableLayer.removeRenderable(renderables.get(name));
+				renderables.remove(name);
 				this.wwd.redraw();
 			}
 		} else {
