@@ -27,13 +27,16 @@ import java.util.List;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.Radar;
+import fr.crnan.videso3d.graphics.SimpleStack3D;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
 
+import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.RenderableLayer;
@@ -46,7 +49,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage des éléments Exsa
  * @author Bruno Spyckerelle
- * @version 0.1.4
+ * @version 0.2.0
  */
 public class STRController implements VidesoController {
 
@@ -62,7 +65,7 @@ public class STRController implements VidesoController {
 	/**
 	 * Liste des radars et stacks affichés
 	 */
-	private HashMap<String, SurfaceShape> renderables = new HashMap<String, SurfaceShape>();
+	private HashMap<String, Object> renderables = new HashMap<String, Object>();
 	
 	private VidesoGLCanvas wwd;
 	
@@ -147,31 +150,43 @@ public class STRController implements VidesoController {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+			} else {
+				((SurfaceShape) this.renderables.get(name)).setVisible(true);
 			}
-			this.wwd.redraw();
+			this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
 			break;
 		case STACK:
 			if(!renderables.containsKey(name)){
 				try {
 					Statement st = DatabaseManager.getCurrentExsa();
 					ResultSet rs = st.executeQuery("select * from centstack where name='"+name+"'");
-//					if(rs.next()){
-//						Radar radar = new Radar(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")), rs.getInt("portee"), 
-//								DatabaseManager.Type.EXSA, STRController.RADAR);
-//						radar.setAnnotation("<html><b>Radar : "+name+"</b><br /><br />" +
-//								"Portée : "+rs.getInt("portee")+"NM<br />" +
-//								"Numéro : "+rs.getInt("numero")+"<br />" +
-//								"Code pays : "+rs.getInt("codepays")+"<br />" +
-//								"Code radar : "+rs.getInt("coderadar")+"<br />" +
-//								"Tour d'antenne : "+rs.getInt("vitesse")+"s<br />" +
-//										"</html>");
-//						renderableLayer.addRenderable(radar);
-//						renderables.put(name, radar);
-//						this.toggleLayer(renderableLayer, true);
-//					}
+					if(rs.next()){
+						SimpleStack3D stack = new SimpleStack3D(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")),
+								rs.getDouble("rayonint"), rs.getDouble("rayonext"), rs.getInt("flinf"), rs.getInt("flsup"));
+						stack.setAnnotation("<html><b>Stack : "+name+"</b><br /><br />" +
+								"Type : "+rs.getString("type")+"<br />" +
+								"Rayon : "+rs.getInt("rayonint")+" NM<br />" +
+								"Rayon protection : "+rs.getInt("rayonext")+" NM<br />" +
+								"Plafond : FL"+rs.getInt("flsup")+"<br />" +
+								"Plancher : FL"+rs.getInt("flinf")+"<br />" +
+										"</html>");
+						BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
+						attrs.setDrawOutline(true);
+						attrs.setMaterial(new Material(Color.CYAN));
+						attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(Color.CYAN)));
+						attrs.setOpacity(0.2);
+						attrs.setOutlineOpacity(0.9);
+						attrs.setOutlineWidth(1.0);
+						stack.setAttributes(attrs);
+						renderableLayer.addRenderable(stack);
+						renderables.put(name, stack);
+						this.toggleLayer(renderableLayer, true);
+					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+			} else {
+				((SimpleStack3D) this.renderables.get(name)).setVisible(true);
 			}
 			this.wwd.redraw();
 			break;
@@ -382,9 +397,13 @@ public class STRController implements VidesoController {
 	public void hideObject(int type, String name) {
 		if(type == RADAR){
 			if(renderables.containsKey(name)){
-				renderableLayer.removeRenderable(renderables.get(name));
-				renderables.remove(name);
-				this.wwd.redraw();
+				((SurfaceShape) renderables.get(name)).setVisible(false);
+				this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
+			}
+		} else if(type == STACK){
+			if(renderables.containsKey(name)){
+				((SimpleStack3D) renderables.get(name)).setVisible(false);
+				this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
 			}
 		} else {
 			this.toggleLayer(this.mosaiquesLayer.get(type+name), false);
