@@ -190,7 +190,7 @@ public class Exsa extends FileParser {
 				} else if (line.startsWith(formated ? "CENT_STACK" : "CENT.STACK")) {
 					this.setFile("CENT_STACK");
 					this.setProgress(4);
-					insert = this.conn.prepareStatement("insert into centflvvf (name, latitude, longitude, xcautra, ycautra, rayonint, rayonext, flinf, flsup, type) " +
+					insert = this.conn.prepareStatement("insert into centstack (name, latitude, longitude, xcautra, ycautra, rayonint, rayonext, flinf, flsup, type) " +
 					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					this.setCentStack(line, formated);
 				} /*else if (line.startsWith("CENT_TMA-F")) {

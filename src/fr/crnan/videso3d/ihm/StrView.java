@@ -68,6 +68,11 @@ public class StrView extends JPanel implements DataView{
 	 * Radars
 	 */
 	private JPanel radars = new JPanel();
+	/**
+	 * Stacks
+	 */
+	private JPanel stacks = new JPanel();
+	
 	
 	private ItemCheckListener itemCheckListener = new ItemCheckListener();
 	
@@ -86,6 +91,7 @@ public class StrView extends JPanel implements DataView{
 		zocc.setBorder(BorderFactory.createTitledBorder("Zones d'occultation"));
 		vvf.setBorder(BorderFactory.createTitledBorder("VVF"));
 		radars.setBorder(BorderFactory.createTitledBorder("Portées radars"));
+		stacks.setBorder(BorderFactory.createTitledBorder("Stacks"));
 		
 		//affichage 2D/3D
 		TitleTwoButtons style = new TitleTwoButtons("Style d'affichage : ", "2D", "3D", true);
@@ -106,6 +112,7 @@ public class StrView extends JPanel implements DataView{
 				this.add(this.buildPanel(dyn, "select DISTINCT abonne from ficaafnic"));
 				this.add(this.buildPanel(zocc, "select name from centzocc"));
 				this.add(this.buildPanel(vvf, "select name from centflvvf"));
+				this.add(this.buildPanel(stacks, "select name from centstack"));
 				this.add(this.buildPanel(radars, "select name from radrtechn"));
 				this.add(Box.createVerticalGlue());
 			}
@@ -169,6 +176,8 @@ public class StrView extends JPanel implements DataView{
 					getController().showObject(STRController.MOSAIQUE_VVF, ((JCheckBox)e.getSource()).getText());
 				} else if(radars.equals(parent)){
 					getController().showObject(STRController.RADAR,((JCheckBox)e.getSource()).getText());
+				} else if(stacks.equals(parent)){
+					getController().showObject(STRController.STACK,((JCheckBox)e.getSource()).getText());
 				}
 			} else {
 				if(mosaiques.equals(parent)){
@@ -183,6 +192,8 @@ public class StrView extends JPanel implements DataView{
 					getController().hideObject(STRController.MOSAIQUE_VVF, ((JCheckBox)e.getSource()).getText());
 				} else if(radars.equals(parent)){
 					getController().hideObject(STRController.RADAR, ((JCheckBox)e.getSource()).getText());
+				} else if(stacks.equals(parent)){
+					getController().hideObject(STRController.STACK,((JCheckBox)e.getSource()).getText());
 				}
 			}
 		}
