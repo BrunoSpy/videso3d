@@ -32,6 +32,7 @@ import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
+import fr.crnan.videso3d.graphics.Cylinder;
 import fr.crnan.videso3d.graphics.Radar;
 import fr.crnan.videso3d.graphics.SimpleStack3D;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
@@ -46,6 +47,7 @@ import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
+
 /**
  * Contrôle l'affichage des éléments Exsa
  * @author Bruno Spyckerelle
@@ -78,6 +80,7 @@ public class STRController implements VidesoController {
 	public static final int MOSAIQUE_CAPA = 3;
 	public static final int RADAR = 5;
 	public static final int STACK = 6;
+	public static final int TMA_F = 7;
 	
 	public STRController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
@@ -188,7 +191,40 @@ public class STRController implements VidesoController {
 			} else {
 				((SimpleStack3D) this.renderables.get(name)).setVisible(true);
 			}
-			this.wwd.redraw();
+			this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
+			break;
+		case TMA_F:
+			if(!renderables.containsKey(name)){
+				try {
+					Statement st = DatabaseManager.getCurrentExsa();
+					ResultSet rs = st.executeQuery("select * from centtmaf where name='"+name+"'");
+					if(rs.next()){
+						Cylinder tmaFilet = new Cylinder(name, Type.EXSA, TMA_F, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")),
+								0, rs.getInt("fl"), rs.getDouble("rayon"));
+						tmaFilet.setAnnotation("<html><b>TMA Filet : "+name+"</b><br /><br />" +
+								"Rayon : "+rs.getInt("rayon")+" NM<br />" +
+								"Plafond : FL"+rs.getInt("fl")+"<br />" +
+								"Nom du secteur : "+rs.getString("nomsecteur")+"<br />" +
+										"</html>");
+						BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
+						attrs.setDrawOutline(true);
+						attrs.setMaterial(new Material(Color.CYAN));
+						attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(Color.CYAN)));
+						attrs.setOpacity(0.2);
+						attrs.setOutlineOpacity(0.9);
+						attrs.setOutlineWidth(1.0);
+						tmaFilet.setAttributes(attrs);
+						renderableLayer.addRenderable(tmaFilet);
+						renderables.put(name, tmaFilet);
+						this.toggleLayer(renderableLayer, true);
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			} else {
+				((Cylinder) this.renderables.get(name)).setVisible(true);
+			}
+			this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
 			break;
 		default:
 			break;
@@ -405,7 +441,12 @@ public class STRController implements VidesoController {
 				((SimpleStack3D) renderables.get(name)).setVisible(false);
 				this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
 			}
-		} else {
+		} else if(type == TMA_F) { 
+			if(renderables.containsKey(name)){
+				((Cylinder) renderables.get(name)).setVisible(false);
+				this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
+			}
+		}else {
 			this.toggleLayer(this.mosaiquesLayer.get(type+name), false);
 		}
 	}

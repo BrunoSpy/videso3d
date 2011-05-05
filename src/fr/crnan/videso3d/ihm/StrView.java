@@ -39,7 +39,7 @@ import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
 /**
  * Sélecteur de données STR
  * @author Bruno Spyckerelle
- * @version 0.2.5
+ * @version 0.2.6
  */
 @SuppressWarnings("serial")
 public class StrView extends JPanel implements DataView{
@@ -72,7 +72,10 @@ public class StrView extends JPanel implements DataView{
 	 * Stacks
 	 */
 	private JPanel stacks = new JPanel();
-	
+	/**
+	 * TMA Filets
+	 */
+	private JPanel tmaF = new JPanel();
 	
 	private ItemCheckListener itemCheckListener = new ItemCheckListener();
 	
@@ -92,6 +95,7 @@ public class StrView extends JPanel implements DataView{
 		vvf.setBorder(BorderFactory.createTitledBorder("VVF"));
 		radars.setBorder(BorderFactory.createTitledBorder("Portées radars"));
 		stacks.setBorder(BorderFactory.createTitledBorder("Stacks"));
+		tmaF.setBorder(BorderFactory.createTitledBorder("TMA Filet"));
 		
 		//affichage 2D/3D
 		TitleTwoButtons style = new TitleTwoButtons("Style d'affichage : ", "2D", "3D", true);
@@ -113,6 +117,7 @@ public class StrView extends JPanel implements DataView{
 				this.add(this.buildPanel(zocc, "select name from centzocc"));
 				this.add(this.buildPanel(vvf, "select name from centflvvf"));
 				this.add(this.buildPanel(stacks, "select name from centstack"));
+				this.add(this.buildPanel(tmaF, "select name from centtmaf"));
 				this.add(this.buildPanel(radars, "select name from radrtechn"));
 				this.add(Box.createVerticalGlue());
 			}
@@ -178,6 +183,8 @@ public class StrView extends JPanel implements DataView{
 					getController().showObject(STRController.RADAR,((JCheckBox)e.getSource()).getText());
 				} else if(stacks.equals(parent)){
 					getController().showObject(STRController.STACK,((JCheckBox)e.getSource()).getText());
+				} else if(tmaF.equals(parent)){
+					getController().showObject(STRController.TMA_F,((JCheckBox)e.getSource()).getText());
 				}
 			} else {
 				if(mosaiques.equals(parent)){
@@ -194,6 +201,8 @@ public class StrView extends JPanel implements DataView{
 					getController().hideObject(STRController.RADAR, ((JCheckBox)e.getSource()).getText());
 				} else if(stacks.equals(parent)){
 					getController().hideObject(STRController.STACK,((JCheckBox)e.getSource()).getText());
+				} else if(tmaF.equals(parent)){
+					getController().hideObject(STRController.TMA_F,((JCheckBox)e.getSource()).getText());
 				}
 			}
 		}

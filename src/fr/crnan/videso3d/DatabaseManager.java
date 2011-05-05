@@ -485,6 +485,15 @@ public final class DatabaseManager {
 				"flinf int," +
 				"flsup int," +
 				"type varchar(8))");
+		st.executeUpdate("create table centtmaf (id integer primary key autoincrement, " +
+				"name varchar(6)," +
+				"latitude float," +
+				"longitude float," +
+				"xcautra float," +
+				"ycautra float," +
+				"rayon int," +
+				"fl int," +
+				"nomsecteur varchar(8))");
 		st.close();
 		//on ajoute le nom de la base
 		DatabaseManager.addDatabase(name, Type.EXSA, new SimpleDateFormat().format(new Date()));
