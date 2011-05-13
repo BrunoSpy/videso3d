@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.ihm;
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -25,10 +26,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
@@ -39,7 +40,7 @@ import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
 /**
  * Sélecteur de données STR
  * @author Bruno Spyckerelle
- * @version 0.2.6
+ * @version 0.2.7
  */
 @SuppressWarnings("serial")
 public class StrView extends JPanel implements DataView{
@@ -85,8 +86,12 @@ public class StrView extends JPanel implements DataView{
 	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
 		
 	public StrView() {
+			
+		this.setLayout(new BorderLayout());
 		
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		JPanel container = new JPanel();
+		
+		container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 		
 		mosaiques.setBorder(BorderFactory.createTitledBorder("Mosaïques"));
 		capa.setBorder(BorderFactory.createTitledBorder("Filtrage capacitif"));
@@ -107,23 +112,29 @@ public class StrView extends JPanel implements DataView{
 			}
 		});
 		style.setBorder(BorderFactory.createTitledBorder(" "));
-		this.add(style);
+		container.add(style);
 		
 		try {
 			if(DatabaseManager.getCurrentExsa() != null) {
-				this.add(this.buildPanel(mosaiques, "select type from centmosai"));
-				this.add(this.buildPanel(capa, "select DISTINCT abonne from ficaafniv"));
-				this.add(this.buildPanel(dyn, "select DISTINCT abonne from ficaafnic"));
-				this.add(this.buildPanel(zocc, "select name from centzocc"));
-				this.add(this.buildPanel(vvf, "select name from centflvvf"));
-				this.add(this.buildPanel(stacks, "select name from centstack"));
-				this.add(this.buildPanel(tmaF, "select name from centtmaf"));
-				this.add(this.buildPanel(radars, "select name from radrtechn"));
-				this.add(Box.createVerticalGlue());
+				container.add(this.buildPanel(mosaiques, "select type from centmosai"));
+				container.add(this.buildPanel(capa, "select DISTINCT abonne from ficaafniv"));
+				container.add(this.buildPanel(dyn, "select DISTINCT abonne from ficaafnic"));
+				container.add(this.buildPanel(zocc, "select name from centzocc"));
+				container.add(this.buildPanel(vvf, "select name from centflvvf"));
+				container.add(this.buildPanel(stacks, "select name from centstack"));
+				container.add(this.buildPanel(tmaF, "select name from centtmaf"));
+				container.add(this.buildPanel(radars, "select name from radrtechn"));
+				//container.add(Box.createVerticalGlue());
 			}
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
+		
+		JScrollPane scrollPane = new JScrollPane(container);
+		scrollPane.setBorder(null);
+		
+		this.add(scrollPane, BorderLayout.CENTER);
+		
 	}
 	
 	@Override
