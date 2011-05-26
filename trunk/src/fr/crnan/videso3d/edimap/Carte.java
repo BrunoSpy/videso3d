@@ -18,6 +18,7 @@ package fr.crnan.videso3d.edimap;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.LayerSet;
+import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.layers.RenderableLayer;
 
 import java.util.HashMap;
@@ -48,10 +49,12 @@ public class Carte extends LayerSet {
 	 */
 	private RenderableLayer surfaceLayer = new RenderableLayer();
 	private FilterableAirspaceLayer airspaceLayer = new FilterableAirspaceLayer();
+	private TextLayer textLayer = new TextLayer("Textes Edimap");
 	
 	public Carte(Entity carte, PaletteEdimap palette){
 		this.add(surfaceLayer);
 		this.add(airspaceLayer);
+		this.add(textLayer);
 		
 		Entity map = carte.getEntity("map");
 		this.name = map.getValue("name");
@@ -87,7 +90,7 @@ public class Carte extends LayerSet {
 			} else if(type.equalsIgnoreCase("RectangleEntity")){
 				this.surfaceLayer.addRenderable(new RectangleEdimap(entity, pointsRef, palette, idAtc));
 			} else if(type.equalsIgnoreCase("TextEntity")){
-	//			this.addRenderable(new TextEdimap(entity, pointsRef, palette, idAtc);
+				this.textLayer.addGeographicText(new TextEdimap(entity, pointsRef, palette, idAtc));
 			} else if(type.equalsIgnoreCase("EllipseEntity")){
 				this.surfaceLayer.addRenderable(new EllipseEdimap(entity, pointsRef, palette, idAtc));
 			} else if(type.equalsIgnoreCase("MosaiqueEntity")) {

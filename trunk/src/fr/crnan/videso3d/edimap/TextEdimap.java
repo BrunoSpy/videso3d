@@ -50,7 +50,7 @@ public class TextEdimap extends UserFacingText {
 			latlon = pointsRef.get(((String)point.getValue()).replaceAll("\"", ""));
 		} else {
 			String[] points = ((String)point.getValue()).split("\\s+");
-			latlon = LatLonCautra.fromCautra(new Double(points[1])/64*LatLonCautra.NM, new Double(points[3])/64*LatLonCautra.NM);
+			latlon = LatLonCautra.fromCautra(new Double(points[1])/64, new Double(points[3])/64);
 		}
 		this.setPosition(new Position(latlon, 100.0));
 		//this.scale(10.0, 10.0);
