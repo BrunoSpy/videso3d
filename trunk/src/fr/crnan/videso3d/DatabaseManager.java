@@ -494,6 +494,13 @@ public final class DatabaseManager {
 				"rayon int," +
 				"fl int," +
 				"nomsecteur varchar(8))");
+		st.executeUpdate("create table centsctma (id integer primary key autoincrement, " +
+				"carre int, " +
+				"souscarre int, " +
+				"v1 int, " +
+				"v2 int, " +
+				"v3 int, " +
+				"name varchar(2))");
 		st.close();
 		//on ajoute le nom de la base
 		DatabaseManager.addDatabase(name, Type.EXSA, new SimpleDateFormat().format(new Date()));
