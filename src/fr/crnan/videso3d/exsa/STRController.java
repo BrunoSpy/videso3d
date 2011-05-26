@@ -81,6 +81,7 @@ public class STRController implements VidesoController {
 	public static final int RADAR = 5;
 	public static final int STACK = 6;
 	public static final int TMA_F = 7;
+	public static final int TMA_F_M = 8;
 	
 	public STRController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
@@ -225,6 +226,9 @@ public class STRController implements VidesoController {
 				((Cylinder) this.renderables.get(name)).setVisible(true);
 			}
 			this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
+			break;
+		case TMA_F_M:
+			this.toggleLayer(this.createMosaiqueLayer(type, name), true);
 			break;
 		default:
 			break;
@@ -373,6 +377,37 @@ public class STRController implements VidesoController {
 					while(rs.next()){
 						squares.add(new Couple<Integer, Integer>(rs.getInt("carre"), rs.getInt("souscarre")));
 						altitudes.add(new Couple<Double, Double>(0.0, rs.getInt("plafond")*30.48));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}  else if (type == TMA_F_M){
+				annotationTitle = "TMA Filet "+name;
+				grille = false;
+				squares = new LinkedList<Couple<Integer,Integer>>();
+				altitudes = new LinkedList<Couple<Double,Double>>();
+				try {
+					Statement st = DatabaseManager.getCurrentExsa();
+					ResultSet rs = st.executeQuery("select * from centmosai where type ='CCR'");
+					origine = LatLonCautra.fromCautra(rs.getDouble("xcautra"), rs.getDouble("ycautra"));
+					width = rs.getInt("colonnes");
+					height = rs.getInt("lignes");
+					size = 32;
+					hSens = MosaiqueLayer.BOTTOM_UP;
+					vSens = MosaiqueLayer.LEFT_RIGHT;
+					numSens = MosaiqueLayer.VERTICAL_FIRST;
+					numbers = false;
+					attr = new BasicShapeAttributes();
+					attr.setInteriorMaterial(Material.YELLOW);
+					attr.setInteriorOpacity(0.4);
+					airspaceAttr = new BasicAirspaceAttributes();
+					airspaceAttr.setMaterial(Material.YELLOW);
+					airspaceAttr.setOpacity(0.4);
+					grille = false;
+					rs = st.executeQuery("select * from centsctma where name = '"+name.split(" ")[0]+"'");
+					while(rs.next()){
+						squares.add(new Couple<Integer, Integer>(rs.getInt("carre"), rs.getInt("souscarre")));
+						altitudes.add(new Couple<Double, Double>(0.0, rs.getInt(name.split(" ")[1])*30.48));
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();

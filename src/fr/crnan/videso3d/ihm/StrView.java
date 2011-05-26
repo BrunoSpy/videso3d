@@ -40,7 +40,7 @@ import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
 /**
  * Sélecteur de données STR
  * @author Bruno Spyckerelle
- * @version 0.2.7
+ * @version 0.2.8
  */
 @SuppressWarnings("serial")
 public class StrView extends JPanel implements DataView{
@@ -77,6 +77,10 @@ public class StrView extends JPanel implements DataView{
 	 * TMA Filets
 	 */
 	private JPanel tmaF = new JPanel();
+	/**
+	 * TMA Filet dans la mosaïque
+	 */
+	private JPanel tmaFMosaique = new JPanel();
 	
 	private ItemCheckListener itemCheckListener = new ItemCheckListener();
 	
@@ -101,6 +105,7 @@ public class StrView extends JPanel implements DataView{
 		radars.setBorder(BorderFactory.createTitledBorder("Portées radars"));
 		stacks.setBorder(BorderFactory.createTitledBorder("Stacks"));
 		tmaF.setBorder(BorderFactory.createTitledBorder("TMA Filet"));
+		tmaFMosaique.setBorder(BorderFactory.createTitledBorder("Mosaiques des TMA Filet"));
 		
 		//affichage 2D/3D
 		TitleTwoButtons style = new TitleTwoButtons("Style d'affichage : ", "2D", "3D", true);
@@ -123,6 +128,7 @@ public class StrView extends JPanel implements DataView{
 				container.add(this.buildPanel(vvf, "select name from centflvvf"));
 				container.add(this.buildPanel(stacks, "select name from centstack"));
 				container.add(this.buildPanel(tmaF, "select name from centtmaf"));
+				container.add(this.buildPanel(tmaFMosaique, "select DISTINCT name from centsctma"));
 				container.add(this.buildPanel(radars, "select name from radrtechn"));
 				//container.add(Box.createVerticalGlue());
 			}
@@ -149,11 +155,21 @@ public class StrView extends JPanel implements DataView{
 			Statement st = DatabaseManager.getCurrentExsa();
 			ResultSet rs = st.executeQuery(query);
 			while(rs.next()){
-				JCheckBox chk = new JCheckBox(rs.getString(1));
-				chk.addItemListener(itemCheckListener);
-				checkBoxList.add(chk);
-				panel.add(chk);	
-				i++;
+				if(panel.equals(tmaFMosaique)){//TODO faire ça un peu mieux ...
+					for(int v = 1; v<=3;v++){
+						JCheckBox chk = new JCheckBox(rs.getString(1)+" V"+v);
+						chk.addItemListener(itemCheckListener);
+						checkBoxList.add(chk);
+						panel.add(chk);	
+						i++;
+					}
+				} else {
+					JCheckBox chk = new JCheckBox(rs.getString(1));
+					chk.addItemListener(itemCheckListener);
+					checkBoxList.add(chk);
+					panel.add(chk);	
+					i++;
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -196,6 +212,8 @@ public class StrView extends JPanel implements DataView{
 					getController().showObject(STRController.STACK,((JCheckBox)e.getSource()).getText());
 				} else if(tmaF.equals(parent)){
 					getController().showObject(STRController.TMA_F,((JCheckBox)e.getSource()).getText());
+				} else if(tmaFMosaique.equals(parent)){
+					getController().showObject(STRController.TMA_F_M,((JCheckBox)e.getSource()).getText());
 				}
 			} else {
 				if(mosaiques.equals(parent)){
@@ -214,6 +232,8 @@ public class StrView extends JPanel implements DataView{
 					getController().hideObject(STRController.STACK,((JCheckBox)e.getSource()).getText());
 				} else if(tmaF.equals(parent)){
 					getController().hideObject(STRController.TMA_F,((JCheckBox)e.getSource()).getText());
+				}else if(tmaFMosaique.equals(parent)){
+					getController().hideObject(STRController.TMA_F_M,((JCheckBox)e.getSource()).getText());
 				}
 			}
 		}

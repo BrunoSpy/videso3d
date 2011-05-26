@@ -219,11 +219,15 @@ public class Exsa extends FileParser {
 					insert = this.conn.prepareStatement("insert into centscodf (vvf, debut, fin, espaces) " +
 					"values (?, ?, ?, ?)");
 					this.setCentSCodf(line, formated);
-				}/* else if (line.startsWith("CENT_SCTMA")) {
-
-				}*/ else if (line.startsWith(formated ? "CENT_SCZOC" : "CENT.SCZOC")) {
-					this.setFile("CENT_SCZOC.");
+				} else if (line.startsWith(formated ? "CENT_SCTMA" : "CENT.SCTMA")) {
+					this.setFile("CENT_SCTMA");
 					this.setProgress(9);
+					insert = this.conn.prepareStatement("insert into centsctma (carre, souscarre, v1, v2, v3, name) " +
+					"values (?, ?, ?, ?, ?, ?)");
+					this.setCentScTma(line, formated);
+				} else if (line.startsWith(formated ? "CENT_SCZOC" : "CENT.SCZOC")) {
+					this.setFile("CENT_SCZOC.");
+					this.setProgress(10);
 					insert = this.conn.prepareStatement("insert into centsczoc (carre, souscarre, zone, plafond) " +
 					"values (?, ?, ?, ?)");
 					this.setCentSczoc(line, formated);
@@ -276,14 +280,14 @@ public class Exsa extends FileParser {
 
 				}*/ else if (line.startsWith(formated ? "RADR_GENER" : "RADR.GENER")) {
 					this.setFile("RADR_GENER.");
-					this.setProgress(10);
+					this.setProgress(11);
 					insert = this.conn.prepareStatement("insert into radrgener (name, numero, type, nommosaique, latitude, longitude, xcautra, ycautra, " +
 							"ecart, radarrelation, typerelation, typeplots, typeradar, codepays, coderadar, militaire) " +
 					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
 					this.setRadrGener(line, formated);
 				} else if (line.startsWith(formated ? "RADR_TECHN" : "RADR.TECHN")) {
 					this.setFile("RADR_TECHN");
-					this.setProgress(11);
+					this.setProgress(12);
 					insert = this.conn.prepareStatement("insert into radrtechn (name, vitesse, hauteur, portee, deport) " +
 					"values (?, ?, ?, ?, ?)");
 					this.setRadrTechn(line, formated);
@@ -437,13 +441,13 @@ public class Exsa extends FileParser {
 
 				}*/ else if (line.startsWith(formated ? "FICA_AFNIV" : "FICA.AFNIV")) {
 					this.setFile("FICA_AFNIV.");
-					this.setProgress(13);
+					this.setProgress(14);
 					insert = this.conn.prepareStatement("insert into ficaafniv (abonne, carre, plancher, plafond, elimine, firstcode, lastcode) " +
 					"values (?, ?, ?, ?, ?, ?, ?)");
 					this.setFicaAfniv(line, formated);
 				} else if (line.startsWith(formated ? "FICA_AFNIC" : "FICA.AFNIC")) {
 					this.setFile("FICA_AFNIC.");
-					this.setProgress(14);
+					this.setProgress(15);
 					insert = this.conn.prepareStatement("insert into ficaafnic (abonne, carre, plancher, plafond, firstcode, lastcode) " +
 					"values (?, ?, ?, ?, ?, ?)");
 					this.setFicaAfnic(line, formated);
@@ -468,6 +472,20 @@ public class Exsa extends FileParser {
 		this.setProgress(this.numberFiles());
 	}
 
+	private void setCentScTma(String line, Boolean formated) throws SQLException, ParseException {
+		CentScTma centSctma = new CentScTma(line, formated);
+		//on n'insère sque les lignes utiles
+		if(!centSctma.getName().equals("##")){
+			insert.setInt(1, centSctma.getCarre());
+			insert.setInt(2, centSctma.getSouscarre());
+			insert.setInt(3, centSctma.getV1());
+			insert.setInt(4, centSctma.getV2());
+			insert.setInt(5, centSctma.getV3());
+			insert.setString(6, centSctma.getName());
+			insert.executeUpdate();
+		}
+	}
+	
 	private void setCentTmaF(String line, Boolean formated) throws SQLException, ParseException {
 		CentTmaF centTmaF = new CentTmaF(line, formated);
 		insert.setString(1, centTmaF.getName());
@@ -665,7 +683,7 @@ public class Exsa extends FileParser {
 
 	@Override
 	public int numberFiles() {
-		return 14;
+		return 15;
 	}
 
 }
