@@ -120,6 +120,17 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		this.showTrack(track);
 	}
 	
+
+	@Override
+	public void removeTracks(List<Track> selectedTracks) {
+		for(Track track : selectedTracks){
+			this.tracks.remove(track);
+			this.profils.remove(track);
+			this.selectedTracks.remove(track);
+		}
+		this.update();
+	}
+	
 	protected void showTrack(LPLNTrack track){
 		if(profils.containsKey(track)){
 			this.layer.addProfil3D(profils.get(track));

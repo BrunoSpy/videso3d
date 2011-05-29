@@ -73,9 +73,9 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	
 	private String name = "Trajectoires GEO";
 	
-	private ShapeAttributes normal = new BasicShapeAttributes();;
+	private ShapeAttributes normal = new BasicShapeAttributes();
 	
-	private ShapeAttributes highlight = new BasicShapeAttributes();;
+	private ShapeAttributes highlight = new BasicShapeAttributes();
 	
 	/**
 	 * Filtres par polygone
@@ -95,10 +95,9 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	}
 
 	public GEOTracksLayer(Boolean tracksHideable, Boolean tracksHighlightable){
-		super();
-		this.add(layer);
+		this();
 		this.setTracksHighlightable(tracksHighlightable);
-		this.setDefaultMaterial();
+		this.setTracksHideable(tracksHideable);
 	}
 	
 	private void addTrack(GEOTrack track){
@@ -134,7 +133,6 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 				line.setNumSubsegments(1); //améliore les performances
 				line.setExtrude(this.style == TrajectoriesLayer.STYLE_CURTAIN);
 		//		line.setDrawVerticals(!(this.getStyle() == TrajectoriesLayer.STYLE_CURTAIN));
-				line.setAttributes(normal);
 				line.setAltitudeMode(WorldWind.ABSOLUTE);
 				line.setPositions(positions);
 				lines.put(track, line);
@@ -386,7 +384,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		return this.tracksHideable;
 	}
 
-	@Override
+	@Override 
 	public Boolean isTrackHighlightable() {
 		return this.tracksHighlightable;
 	}
@@ -403,6 +401,18 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 	 */
 	public void setTracksHighlightable(Boolean b) {}
 
+	@Override
+	public void removeTracks(List<Track> selectedTracks) {
+		this.tracks.removeAll(selectedTracks);
+		for(Track track : selectedTracks){
+			Path line = this.lines.get(track);
+			line.setVisible(false);
+			this.remove(line);
+			this.lines.remove(track);
+		}
+		this.update();
+	}
+	
 	@Override
 	/**
 	 * If number of track > Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION,<br />
@@ -669,8 +679,5 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 			return 0;
 		}
 	}
-
-
-
 	
 }

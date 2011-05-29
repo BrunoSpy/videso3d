@@ -260,6 +260,12 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 */
 	public abstract void removePolygonFilter(PolygonsSetFilter polygons);
 	
+	/**
+	 * Removes and deletes tracks from this layer
+	 * @param selectedTracks
+	 */
+	public abstract void removeTracks(List<Track> selectedTracks) ;
+	
 	/****************************************/
 	
 	public static int string2type(String type){

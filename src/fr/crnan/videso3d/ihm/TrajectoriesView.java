@@ -29,6 +29,7 @@ import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -153,6 +154,25 @@ public class TrajectoriesView extends JPanel {
 					context.setTaskPanes(trackContext.getTaskPanes(0, null));
 					context.open();
 					wwd.centerView(t);
+				} else if(e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3 && pistes.getSelectedRows().length > 0){
+					final List<Track> selectedTracks = new ArrayList<Track>();
+					for(int row : pistes.getSelectedRows()){
+						selectedTracks.add((Track)((TrackTableModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(row)));
+					}
+					final JPopupMenu menu = new JPopupMenu();
+					JMenuItem delete = new JMenuItem("Supprimer les trajectoires sélectionnées...");
+					delete.addActionListener(new ActionListener() {
+						
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							if(JOptionPane.showConfirmDialog(menu, "La suppression des trajectoires est définitive.\n\n Confirmer la suppression des "+(selectedTracks.size())+" trajectoires ?", "Suppression des trajectoires", JOptionPane.OK_CANCEL_OPTION,
+										JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION){
+								layer.removeTracks(selectedTracks);
+							}
+						}
+					});
+					menu.add(delete);
+					menu.show(pistes, e.getX(), e.getY());
 				}
 			}
 		});		
@@ -242,6 +262,7 @@ public class TrajectoriesView extends JPanel {
 			});
 			this.add(save, BorderLayout.SOUTH);
 		}
+
 
 	}
 	
