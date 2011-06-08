@@ -18,7 +18,6 @@ package fr.crnan.videso3d.graphics;
 import gov.nasa.worldwind.geom.*;
 import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.render.Polyline;
-import gov.nasa.worldwind.util.*;
 
 import javax.media.opengl.*;
 import java.util.*;
@@ -56,35 +55,10 @@ public class VPolyline extends Polyline
     	this.plain = plain;
     }
 
-    public void render(DrawContext dc)
+      
+    @Override
+    protected void drawOrderedRenderable(DrawContext dc)
     {
-        if (dc == null)
-        {
-            String message = Logging.getMessage("nullValue.DrawContextIsNull");
-            Logging.logger().severe(message);
-            throw new IllegalStateException(message);
-        }
-
-        if (((ArrayList<Position>)this.getPositions()).size() < 2)
-            return;
-
-     // vertices potentially computed every frame to follow terrain changes
-        if (this.currentSpans == null || (this.isFollowTerrain() && this.geomGenTimeStamp != dc.getFrameTimeStamp())
-            || this.geomGenVE != dc.getVerticalExaggeration())
-        {
-            // Reference center must be computed prior to computing vertices.
-            this.computeReferenceCenter(dc);
-            this.makeVertices(dc);
-            this.geomGenTimeStamp = dc.getFrameTimeStamp();
-            this.geomGenVE = dc.getVerticalExaggeration();
-        }
-
-        if (this.currentSpans == null || this.currentSpans.size() < 1)
-            return;
-
-        if (dc.isPickingMode() && !dc.getPickFrustums().intersectsAny(this.getExtent(dc)))
-            return;
-
         GL gl = dc.getGL();
 
         int attrBits = GL.GL_HINT_BIT | GL.GL_CURRENT_BIT | GL.GL_LINE_BIT;
@@ -148,8 +122,8 @@ public class VPolyline extends Polyline
 
             for (int i=0;i< this.currentSpans.size();i++)
             {
-            	ArrayList<Vec4> span = this.currentSpans.get(i);
-            	ArrayList<Vec4> ground = this.currentCurtains.get(i);
+            	List<Vec4> span = this.currentSpans.get(i);
+            	List<Vec4> ground = this.currentCurtains.get(i);
             	
                 if (span == null)
                     continue;
@@ -194,7 +168,7 @@ public class VPolyline extends Polyline
                         (byte) this.getHighlightColor().getBlue(), (byte) this.getHighlightColor().getAlpha());
 
                     gl.glLineWidth((float) this.getLineWidth() + 2);
-                    for (ArrayList<Vec4> span : this.currentSpans)
+                    for (List<Vec4> span : this.currentSpans)
                     {
                         if (span == null)
                             continue;
@@ -225,7 +199,7 @@ public class VPolyline extends Polyline
     protected void makeVertices(DrawContext dc)
     {
         if (this.currentSpans == null)
-            this.currentSpans = new ArrayList<ArrayList<Vec4>>();
+            this.currentSpans = new ArrayList<List<Vec4>>();
         else
             this.currentSpans.clear();
 
