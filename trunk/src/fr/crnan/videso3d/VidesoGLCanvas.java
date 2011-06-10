@@ -19,6 +19,8 @@ package fr.crnan.videso3d;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -28,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.ProgressMonitor;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.xml.xpath.XPath;
 
@@ -38,6 +41,7 @@ import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
+import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.geom.LatLonUtils;
@@ -69,14 +73,20 @@ import gov.nasa.worldwind.avlist.AVListImpl;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.cache.FileStore;
 import gov.nasa.worldwind.data.DataImportUtil;
+import gov.nasa.worldwind.data.ImageIOReader;
 import gov.nasa.worldwind.data.TiledImageProducer;
 import gov.nasa.worldwind.examples.util.LayerManagerLayer;
+import gov.nasa.worldwind.examples.util.ShapeUtils;
 import gov.nasa.worldwind.exception.WWRuntimeException;
+import gov.nasa.worldwind.formats.gcps.GCPSReader;
+import gov.nasa.worldwind.formats.tab.TABRasterReader;
+import gov.nasa.worldwind.formats.worldfile.WorldFile;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Intersection;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Line;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.geom.Sector;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.layers.AirspaceLayer;
@@ -87,20 +97,24 @@ import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
+import gov.nasa.worldwind.render.SurfaceImage;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.Polygon;
 import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.util.DataConfigurationFilter;
 import gov.nasa.worldwind.util.DataConfigurationUtils;
+import gov.nasa.worldwind.util.ImageUtil;
 import gov.nasa.worldwind.util.Logging;
+import gov.nasa.worldwind.util.RasterControlPointList;
 import gov.nasa.worldwind.util.WWIO;
+import gov.nasa.worldwind.util.WWMath;
 import gov.nasa.worldwind.util.WWXML;
 import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.9.2
+ * @version 0.9.3
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
@@ -130,6 +144,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 
 	private boolean europe = false;
 		
+	private VidesoGLCanvas getWWD(){
+		return this;
+	}
+	
 	/**
 	 * Initialise les différents objets graphiques
 	 */
@@ -142,16 +160,16 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		Layer latlon = new LatLonGraticuleLayer();
 		latlon.setEnabled(false);
 		this.getModel().getLayers().add(latlon);
-
-		//dragger
-		this.dragger = new DraggerListener(this);
-		this.addSelectListener(dragger);
 		
 		//on screen layer manager
 		LayerManagerLayer layerManager = new LayerManagerLayer(this);
 		layerManager.setEnabled(false); //réduit par défaut
 		this.getModel().getLayers().add(0, layerManager);
-
+		
+		//dragger
+		this.dragger = new DraggerListener(this);
+		this.addSelectListener(dragger);
+		
 		//mise à jour des calques de WorldWindInstalled
 		firePropertyChange("step", "", "Ajout des layers installés");
 		this.updateWWI();
@@ -554,6 +572,14 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		this.redraw();
 	}
 	
+//	public Line computeRayFromScreenPointToCenter(double x, double y){
+//		Rectangle viewport = this.getView().getViewport();
+//		double yInGLCoords = viewport.height - y - 1; // screen coords to GL coords
+//		Vec4 a = this.getView().unProject(new Vec4(x, yInGLCoords, 0, 0));
+//		Vec4 b = this.getView().unProject(new Vec4(x, yInGLCoords, 1, 0));
+//		return new Line(new Vec4(0.0, 0.0, 0.0, 1.0), a.subtract3(b).normalize3());
+//	}
+	
 	/**
 	 * Computes a position included in the upper polygon
 	 * @param point ScreenPoint
@@ -856,6 +882,208 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		task.execute();
 	}
 
+	/**
+	 * Add images to the view<br />
+	 * @param images
+	 */
+	public void addImages(final File[] images){
+		final ProgressMonitor progress = new ProgressMonitor(null, "Import des images", "Tile", 0, images.length);
+		progress.setMillisToDecideToPopup(0);
+		
+		new SwingWorker<Integer, Integer>() {
+
+			@Override
+			protected Integer doInBackground() throws Exception {
+				ImageIOReader imageReader = new ImageIOReader();
+				for (final File file : images) {
+					final BufferedImage image = imageReader.read(file);
+					if (image == null)
+						return null;
+
+					final SurfaceImage si = createGeoreferencedSurfaceImage(file, image);
+					if (si == null)	{
+						addNonGeoreferencedSurfaceImage(file, image);
+						return null;
+					}
+
+					SwingUtilities.invokeLater(new Runnable(){
+						public void run()
+						{
+				            //new EditableSurfaceImage(getWWD(), si, file.getName());
+						}
+					});
+                }
+				return null;
+			}
+		}.execute();
+		
+	}
+	
+	 private SurfaceImage createGeoreferencedSurfaceImage(File file, BufferedImage image)
+     {
+         try
+         {
+             SurfaceImage si = null;
+
+             File tabFile = this.getAssociatedTABFile(file);
+             if (tabFile != null)
+                 si = this.createSurfaceImageFromTABFile(image, tabFile);
+
+             if (si == null)
+             {
+                 File gcpsFile = this.getAssociatedGCPSFile(file);
+                 if (gcpsFile != null)
+                     si = this.createSurfaceImageFromGCPSFile(image, gcpsFile);
+             }
+
+             if (si == null)
+             {
+                 File[] worldFiles = this.getAssociatedWorldFiles(file);
+                 if (worldFiles != null)
+                     si = this.createSurfaceImageFromWorldFiles(image, worldFiles);
+             }
+
+             return si;
+         }
+         catch (Exception e)
+         {
+             e.printStackTrace();
+             return null;
+         }
+     }
+	 
+	 public File getAssociatedTABFile(File file)
+     {
+         File tabFile = TABRasterReader.getTABFileFor(file);
+         if (tabFile != null && tabFile.exists())
+         {
+             TABRasterReader reader = new TABRasterReader();
+             if (reader.canRead(tabFile))
+                 return tabFile;
+         }
+
+         return null;
+     }
+
+     public File getAssociatedGCPSFile(File file)
+     {
+         File gcpsFile = GCPSReader.getGCPSFileFor(file);
+         if (gcpsFile != null && gcpsFile.exists())
+         {
+             GCPSReader reader = new GCPSReader();
+             if (reader.canRead(gcpsFile))
+                 return gcpsFile;
+         }
+
+         return null;
+     }
+
+     public File[] getAssociatedWorldFiles(File file)
+     {
+         try
+         {
+             File[] worldFiles = WorldFile.getWorldFiles(file);
+             if (worldFiles != null && worldFiles.length > 0)
+                 return worldFiles;
+         }
+         catch (Exception ignored)
+         {
+         }
+
+         return null;
+     }
+
+     protected SurfaceImage createSurfaceImageFromWorldFiles(BufferedImage image, File[] worldFiles)
+         throws java.io.IOException
+     {
+         AVList worldFileParams = new AVListImpl();
+         WorldFile.decodeWorldFiles(worldFiles, worldFileParams);
+
+         BufferedImage alignedImage = createPowerOfTwoImage(image.getWidth(), image.getHeight());
+         Sector sector = ImageUtil.warpImageWithWorldFile(image, worldFileParams, alignedImage);
+
+         return new SurfaceImage(alignedImage, sector);
+     }
+
+     protected SurfaceImage createSurfaceImageFromTABFile(BufferedImage image, File tabFile)
+         throws java.io.IOException
+     {
+         TABRasterReader reader = new TABRasterReader();
+         RasterControlPointList controlPoints = reader.read(tabFile);
+
+         return this.createSurfaceImageFromControlPoints(image, controlPoints);
+     }
+
+     protected SurfaceImage createSurfaceImageFromGCPSFile(BufferedImage image, File gcpsFile)
+         throws java.io.IOException
+     {
+         GCPSReader reader = new GCPSReader();
+         RasterControlPointList controlPoints = reader.read(gcpsFile);
+
+         return this.createSurfaceImageFromControlPoints(image, controlPoints);
+     }
+     
+     protected SurfaceImage createSurfaceImageFromControlPoints(BufferedImage image,
+             RasterControlPointList controlPoints) throws java.io.IOException
+         {
+             int numControlPoints = controlPoints.size();
+             Point2D[] imagePoints = new Point2D[numControlPoints];
+             LatLon[] geoPoints = new LatLon[numControlPoints];
+
+             for (int i = 0; i < numControlPoints; i++)
+             {
+                 RasterControlPointList.ControlPoint p = controlPoints.get(i);
+                 imagePoints[i] = p.getRasterPoint();
+                 geoPoints[i] = p.getWorldPointAsLatLon();
+             }
+
+             BufferedImage destImage = createPowerOfTwoImage(image.getWidth(), image.getHeight());
+             Sector sector = ImageUtil.warpImageWithControlPoints(image, imagePoints, geoPoints, destImage);
+
+             return new SurfaceImage(destImage, sector);
+         }
+
+     protected void addNonGeoreferencedSurfaceImage(final File file, final BufferedImage image) {
+    	 if (!SwingUtilities.isEventDispatchThread()) {
+    		 SwingUtilities.invokeLater(new Runnable() {
+    			 public void run(){
+    				 addNonGeoreferencedSurfaceImage(file, image);
+    			 }
+    		 });
+    	 }
+    	 else {
+
+    		 Position position = ShapeUtils.getNewShapePosition(this);
+    		 double lat = position.getLatitude().radians;
+    		 double lon = position.getLongitude().radians;
+    		 double sizeInMeters = ShapeUtils.getViewportScaleFactor(this);
+    		 double arcLength = sizeInMeters / this.getModel().getGlobe().getRadiusAt(position);
+    		 Sector sector = Sector.fromRadians(lat - arcLength, lat + arcLength, lon - arcLength, lon + arcLength);
+
+    		 BufferedImage powerOfTwoImage = createPowerOfTwoScaledCopy(image);
+
+    		 new EditableSurfaceImage(powerOfTwoImage, sector, this,  file.getName());
+    	 }
+     }
+
+
+     protected static BufferedImage createPowerOfTwoImage(int minWidth, int minHeight)
+     {
+         return new BufferedImage(WWMath.powerOfTwoCeiling(minWidth), WWMath.powerOfTwoCeiling(minHeight),
+             BufferedImage.TYPE_INT_ARGB);
+     }
+
+     protected static BufferedImage createPowerOfTwoScaledCopy(BufferedImage image)
+     {
+         if (WWMath.isPowerOfTwo(image.getWidth()) && WWMath.isPowerOfTwo(image.getHeight()))
+             return image;
+
+         BufferedImage powerOfTwoImage = createPowerOfTwoImage(image.getWidth(), image.getHeight());
+         ImageUtil.getScaledCopy(image, powerOfTwoImage);
+         return powerOfTwoImage;
+     }
+
+	 
 	public DraggerListener getDraggerListener(){
 		return this.dragger;
 	}

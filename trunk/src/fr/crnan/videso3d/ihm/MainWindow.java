@@ -93,11 +93,13 @@ import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.util.Logging;
+import gov.nasa.worldwind.data.ImageIOReader;
+import gov.nasa.worldwind.examples.util.ImageIOFileFilter;
 
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3.8
+ * @version 0.3.9
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -408,9 +410,12 @@ public class MainWindow extends JFrame {
 		
 		toolbar.addSeparator();
 		
-		//ajout de dalles
-		JButton dalle = new JButton(new ImageIcon(getClass().getResource("/resources/add_geotiff_22.png")));
-		dalle.setToolTipText("Importer des images géoréférencées.");
+		//ajout d'images
+		final DropDownButton images = new DropDownButton(new ImageIcon(getClass().getResource("/resources/add_geotiff_22.png")));
+		images.setToolTipText("Ajouter une image");
+		
+		final JMenuItem dalle = new JMenuItem("Ajout permanent");
+		dalle.setToolTipText("Importer des images géoréférencées (GeoTiff, ...) de manière permanente");
 		dalle.addActionListener(new ActionListener() {
 			
 			@Override
@@ -422,7 +427,35 @@ public class MainWindow extends JFrame {
 				}
 			}
 		});
-		toolbar.add(dalle);
+		
+		images.getPopupMenu().add(dalle);
+		
+		final JMenuItem image = new JMenuItem("Ajout temporaire");
+		image.setToolTipText("Importer une image de manière temporaire");
+		
+		image.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				VFileChooser file = new VFileChooser();
+				file.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				file.setMultiSelectionEnabled(true);
+				file.addChoosableFileFilter(new ImageIOFileFilter(new ImageIOReader()));
+				if(file.showOpenDialog(null) == VFileChooser.APPROVE_OPTION){
+					wwd.addImages(file.getSelectedFiles());
+				}
+			}
+		});
+		
+		images.getPopupMenu().add(image);
+		images.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				image.doClick();
+			}
+		});
+		images.addToToolBar(toolbar);
 		
 		//Ajouter trajectoires
 		final DropDownButton trajectoires = new DropDownButton(new ImageIcon(getClass().getResource("/resources/plus_traj_22.png")));
