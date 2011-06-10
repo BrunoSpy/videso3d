@@ -28,6 +28,7 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.VPolygon;
@@ -36,6 +37,7 @@ import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.ihm.components.AirspaceMenu;
+import fr.crnan.videso3d.ihm.components.ImageMenu;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.event.SelectEvent;
@@ -48,12 +50,14 @@ import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.PointPlacemark;
 import gov.nasa.worldwind.render.ShapeAttributes;
+import gov.nasa.worldwind.render.SurfaceImage;
 import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.Polygon;
 import gov.nasa.worldwind.render.airspaces.editor.AirspaceControlPoint;
+import gov.nasa.worldwind.render.markers.BasicMarker;
 import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
 import gov.nasa.worldwind.render.markers.MarkerAttributes;
 
@@ -287,7 +291,19 @@ public class AirspaceListener implements SelectListener {
 					}
 					menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 				}
-			}			
+			} else if(event.getTopObject() instanceof SurfaceImage){
+				ImageMenu imageMenu = new ImageMenu((SurfaceImage) event.getTopObject(), wwd){
+					/* (non-Javadoc)
+					 * @see javax.swing.JPopupMenu#setVisible(boolean)
+					 */
+					@Override
+					public void setVisible(boolean arg0) {
+						super.setVisible(arg0);
+						lock = arg0;
+					}
+				};
+				imageMenu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
+			}
 		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){ //ouverture du contexte
 			this.doDoubleClick(event.getTopObject());
 		} else if (event.getEventAction() == SelectEvent.LEFT_CLICK){
@@ -296,8 +312,10 @@ public class AirspaceListener implements SelectListener {
 			if(!(event.getTopObject() instanceof Annotation) &&  //ne pas transférer l'évènement pour les annotations
 				!(this.wwd.getMeasureTool().isArmed()) && //pas de transfert si l'alidad est activé
 			 	!(event.getTopObject() instanceof PointPlacemark) &&
+			 	!(event.getTopObject() instanceof BasicMarker) &&
 			 	!(event.getTopObject() instanceof Polygon && PolygonEditorsManager.isEditing((Polygon) event.getTopObject())) &&
-			 	!(event.getTopObject() instanceof AirspaceControlPoint)){
+			 	!(event.getTopObject() instanceof AirspaceControlPoint) &&
+			 	!(event.getTopObject() instanceof EditableSurfaceImage )){
 				this.wwd.getView().getViewInputHandler().mouseDragged(event.getMouseEvent());
 			}
 		} 
