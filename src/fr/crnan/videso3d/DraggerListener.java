@@ -30,8 +30,6 @@ import gov.nasa.worldwind.geom.Line;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.geom.Vec4;
 import gov.nasa.worldwind.globes.Globe;
-import gov.nasa.worldwind.render.Annotation;
-import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.util.Logging;
 import gov.nasa.worldwind.util.RayCastingSupport;
 
@@ -77,12 +75,9 @@ public class DraggerListener implements SelectListener {
 		}
 
 		
-		if (event.getEventAction().equals(SelectEvent.DRAG_END))
-		{
+		if (event.getEventAction().equals(SelectEvent.DRAG_END)) {
 			this.dragging = false;
-		}
-		else if (event.getEventAction().equals(SelectEvent.DRAG))
-		{
+		} else if (event.getEventAction().equals(SelectEvent.DRAG)) {
 			DragSelectEvent dragEvent = (DragSelectEvent) event;
 			Object topObject = dragEvent.getTopObject();
 			if (topObject == null){
@@ -162,6 +157,7 @@ public class DraggerListener implements SelectListener {
 				this.doMove(p, dragObject);
 			}
 			this.dragging = true;
+			event.consume();
 		}
 	}
 

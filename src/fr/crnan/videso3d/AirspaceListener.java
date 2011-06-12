@@ -305,7 +305,7 @@ public class AirspaceListener implements SelectListener {
 			 	!(event.getTopObject() instanceof BasicMarker) &&
 			 	!(event.getTopObject() instanceof Polygon && PolygonEditorsManager.isEditing((Polygon) event.getTopObject())) &&
 			 	!(event.getTopObject() instanceof AirspaceControlPoint) &&
-			 	!(event.getTopObject() instanceof EditableSurfaceImage )){
+			 	!(event.getTopObject() instanceof EditableSurfaceImage)){
 				this.wwd.getView().getViewInputHandler().mouseDragged(event.getMouseEvent());
 			}
 		} 
