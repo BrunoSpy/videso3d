@@ -19,19 +19,12 @@ package fr.crnan.videso3d;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Point;
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileFilter;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.swing.ProgressMonitor;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
+
 import javax.xml.xpath.XPath;
 
 import org.w3c.dom.Document;
@@ -41,7 +34,7 @@ import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
-import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
+import fr.crnan.videso3d.formats.images.ImagesController;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.geom.LatLonUtils;
@@ -64,29 +57,19 @@ import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.layers.VerticalScaleBar;
 import fr.crnan.videso3d.util.VMeasureTool;
 
-import gov.nasa.worldwind.BasicFactory;
 import gov.nasa.worldwind.Factory;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.avlist.AVList;
 import gov.nasa.worldwind.avlist.AVListImpl;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
-import gov.nasa.worldwind.cache.FileStore;
-import gov.nasa.worldwind.data.DataImportUtil;
-import gov.nasa.worldwind.data.ImageIOReader;
-import gov.nasa.worldwind.data.TiledImageProducer;
 import gov.nasa.worldwind.examples.util.LayerManagerLayer;
-import gov.nasa.worldwind.examples.util.ShapeUtils;
 import gov.nasa.worldwind.exception.WWRuntimeException;
-import gov.nasa.worldwind.formats.gcps.GCPSReader;
-import gov.nasa.worldwind.formats.tab.TABRasterReader;
-import gov.nasa.worldwind.formats.worldfile.WorldFile;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Intersection;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Line;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.geom.Sector;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.layers.AirspaceLayer;
@@ -97,17 +80,13 @@ import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
-import gov.nasa.worldwind.render.SurfaceImage;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.Polygon;
 import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.util.DataConfigurationFilter;
 import gov.nasa.worldwind.util.DataConfigurationUtils;
-import gov.nasa.worldwind.util.ImageUtil;
 import gov.nasa.worldwind.util.Logging;
-import gov.nasa.worldwind.util.RasterControlPointList;
 import gov.nasa.worldwind.util.WWIO;
-import gov.nasa.worldwind.util.WWMath;
 import gov.nasa.worldwind.util.WWXML;
 import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 import gov.nasa.worldwind.view.orbit.FlatOrbitView;
@@ -133,6 +112,12 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	private FlatGlobeCautra flatGlobe;
 	private Globe roundGlobe;
 	private String projection;
+	
+	/**
+	 * Gestion des images
+	 */
+	private ImagesController imagesController;
+	
 	/**
 	 * Outil de mesure (alidade)
 	 */
@@ -143,10 +128,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	private DraggerListener dragger;
 
 	private boolean europe = false;
-		
-	private VidesoGLCanvas getWWD(){
-		return this;
-	}
 	
 	/**
 	 * Initialise les différents objets graphiques
@@ -248,6 +229,13 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		layers.add(position, layer);
 	}
 
+	public ImagesController getImagesController(){
+		if(this.imagesController == null){
+			this.imagesController = new ImagesController(this);
+		}
+		return this.imagesController;
+	}
+	
 	/**
 	 * Mets à jour les layers installés dans WorldWindInstalled
 	 */
@@ -753,336 +741,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	}
 
 	
-	/**
-	 * Import GEOTiff image or a directory containing GEOTiff images.<br />
-	 * Images have to be projected in latlon/WGS84.
-	 * @param selectedFile
-	 */
-	public void importImage(final File selectedFile) {
 
-		FileStore fileStore = WorldWind.getDataFileStore();
-
-		final File fileStoreLocation = DataImportUtil.getDefaultImportLocation(fileStore);
-		String cacheName = WWIO.replaceIllegalFileNameCharacters(selectedFile.getName());
-
-		AVList params = new AVListImpl();
-		params.setValue(AVKey.FILE_STORE_LOCATION, fileStoreLocation.getAbsolutePath());
-		params.setValue(AVKey.DATA_CACHE_NAME, cacheName);
-		params.setValue(AVKey.DATASET_NAME, selectedFile.getName());
-
-
-		// Create a TiledImageProducer to transforms the source image to a pyramid of images tiles in the World Wind
-		// Java cache format.
-		final TiledImageProducer producer = new TiledImageProducer();
-
-		// Configure the TiledImageProducer with the parameter list and the image source.
-		producer.setStoreParameters(params);
-
-		final ProgressMonitor progress = new ProgressMonitor(null, "Import des images", "Tile", 0, 100);
-		progress.setMillisToDecideToPopup(0);
-
-		//Traitement lourd --> SwingWorker
-		final SwingWorker<Integer,Integer> task = new SwingWorker<Integer, Integer>() {
-			@Override
-			protected Integer doInBackground() throws Exception {
-				try {
-					if(selectedFile.isDirectory()){
-						File[] files = selectedFile.listFiles(new FileFilter() {
-
-							@Override
-							public boolean accept(File pathname) {
-								if (pathname.isDirectory()) {
-									return false;
-								}
-
-								String ext = null;
-								String s = pathname.getName();
-								int i = s.lastIndexOf('.');
-								if (i > 0 &&  i < s.length() - 1) {
-									ext = s.substring(i+1).toLowerCase();
-								}
-
-								if (ext != null) {
-									if (ext.equals("tif")||ext.equals("tiff")) {
-										return true;
-									} else {
-										return false;
-									}
-								}
-								return false;
-							}
-						});
-						for(int i = 0;i<files.length;i++){
-							if(progress.isCanceled()){
-								this.cancel(true);
-								return null;
-							} else {
-								Double p = (double)i/(double)files.length * 50;
-								progress.setProgress(p.intValue());
-								progress.setNote("Ajout de l'image "+files[i].getName());
-								producer.offerDataSource(files[i], null);
-							}
-						}
-					} else {
-						producer.offerDataSource(selectedFile, null);
-					}
-					// Import the source image into the FileStore by converting it to the World Wind Java cache format.
-					producer.startProduction();
-				}
-				catch (Exception e) {
-					producer.removeProductionState();
-					e.printStackTrace();
-				}
-				return null;
-			}
-
-			@Override
-			protected void done() {	
-				if(this.isCancelled()) {
-					producer.stopProduction();
-					producer.removeProductionState();
-					//suppression des fichiers déjà créés
-					FileManager.deleteFile(new File(fileStoreLocation.getAbsoluteFile()+"/"+selectedFile.getName()));					
-				} else {
-					Logging.logger().info("Import des images terminé.");
-					progress.setProgress(100);
-
-					// Extract the data configuration document from the production results. If production sucessfully completed, the
-					// TiledImageProducer should always contain a document in the production results, but we test the results
-					// anyway.
-					Iterable<?> results = producer.getProductionResults();
-					if (results == null || results.iterator() == null || !results.iterator().hasNext())
-						return;
-
-					Object o = results.iterator().next();
-					if (o == null || !(o instanceof Document))
-						return;
-
-					// Construct a Layer by passing the data configuration document to a LayerFactory.
-					Layer layer = (Layer) BasicFactory.create(AVKey.LAYER_FACTORY, ((Document) o).getDocumentElement());
-					layer.setEnabled(true); 
-					insertBeforePlacenames(layer);
-				}
-			}
-		};
-		
-		producer.addPropertyChangeListener(AVKey.PROGRESS, new PropertyChangeListener() {
-
-			@Override
-			public void propertyChange(PropertyChangeEvent evt) {
-				if(progress.isCanceled()){
-					task.cancel(true);
-				} else {
-					progress.setNote("Conversion des images...");
-					progress.setProgress(new Double((Double)evt.getNewValue()*50).intValue() + 50);
-				}
-			}
-		});
-		
-		task.execute();
-	}
-
-	/**
-	 * Add images to the view<br />
-	 * @param images
-	 */
-	public void addImages(final File[] images){
-		final ProgressMonitor progress = new ProgressMonitor(null, "Import des images", "Tile", 0, images.length);
-		progress.setMillisToDecideToPopup(0);
-		
-		new SwingWorker<Integer, Integer>() {
-
-			@Override
-			protected Integer doInBackground() throws Exception {
-				ImageIOReader imageReader = new ImageIOReader();
-				for (final File file : images) {
-					final BufferedImage image = imageReader.read(file);
-					if (image == null)
-						return null;
-
-					final SurfaceImage si = createGeoreferencedSurfaceImage(file, image);
-					if (si == null)	{
-						addNonGeoreferencedSurfaceImage(file, image);
-						return null;
-					}
-
-					SwingUtilities.invokeLater(new Runnable(){
-						public void run()
-						{
-				            //new EditableSurfaceImage(getWWD(), si, file.getName());
-						}
-					});
-                }
-				return null;
-			}
-		}.execute();
-		
-	}
 	
-	 private SurfaceImage createGeoreferencedSurfaceImage(File file, BufferedImage image)
-     {
-         try
-         {
-             SurfaceImage si = null;
-
-             File tabFile = this.getAssociatedTABFile(file);
-             if (tabFile != null)
-                 si = this.createSurfaceImageFromTABFile(image, tabFile);
-
-             if (si == null)
-             {
-                 File gcpsFile = this.getAssociatedGCPSFile(file);
-                 if (gcpsFile != null)
-                     si = this.createSurfaceImageFromGCPSFile(image, gcpsFile);
-             }
-
-             if (si == null)
-             {
-                 File[] worldFiles = this.getAssociatedWorldFiles(file);
-                 if (worldFiles != null)
-                     si = this.createSurfaceImageFromWorldFiles(image, worldFiles);
-             }
-
-             return si;
-         }
-         catch (Exception e)
-         {
-             e.printStackTrace();
-             return null;
-         }
-     }
-	 
-	 public File getAssociatedTABFile(File file)
-     {
-         File tabFile = TABRasterReader.getTABFileFor(file);
-         if (tabFile != null && tabFile.exists())
-         {
-             TABRasterReader reader = new TABRasterReader();
-             if (reader.canRead(tabFile))
-                 return tabFile;
-         }
-
-         return null;
-     }
-
-     public File getAssociatedGCPSFile(File file)
-     {
-         File gcpsFile = GCPSReader.getGCPSFileFor(file);
-         if (gcpsFile != null && gcpsFile.exists())
-         {
-             GCPSReader reader = new GCPSReader();
-             if (reader.canRead(gcpsFile))
-                 return gcpsFile;
-         }
-
-         return null;
-     }
-
-     public File[] getAssociatedWorldFiles(File file)
-     {
-         try
-         {
-             File[] worldFiles = WorldFile.getWorldFiles(file);
-             if (worldFiles != null && worldFiles.length > 0)
-                 return worldFiles;
-         }
-         catch (Exception ignored)
-         {
-         }
-
-         return null;
-     }
-
-     protected SurfaceImage createSurfaceImageFromWorldFiles(BufferedImage image, File[] worldFiles)
-         throws java.io.IOException
-     {
-         AVList worldFileParams = new AVListImpl();
-         WorldFile.decodeWorldFiles(worldFiles, worldFileParams);
-
-         BufferedImage alignedImage = createPowerOfTwoImage(image.getWidth(), image.getHeight());
-         Sector sector = ImageUtil.warpImageWithWorldFile(image, worldFileParams, alignedImage);
-
-         return new SurfaceImage(alignedImage, sector);
-     }
-
-     protected SurfaceImage createSurfaceImageFromTABFile(BufferedImage image, File tabFile)
-         throws java.io.IOException
-     {
-         TABRasterReader reader = new TABRasterReader();
-         RasterControlPointList controlPoints = reader.read(tabFile);
-
-         return this.createSurfaceImageFromControlPoints(image, controlPoints);
-     }
-
-     protected SurfaceImage createSurfaceImageFromGCPSFile(BufferedImage image, File gcpsFile)
-         throws java.io.IOException
-     {
-         GCPSReader reader = new GCPSReader();
-         RasterControlPointList controlPoints = reader.read(gcpsFile);
-
-         return this.createSurfaceImageFromControlPoints(image, controlPoints);
-     }
-     
-     protected SurfaceImage createSurfaceImageFromControlPoints(BufferedImage image,
-             RasterControlPointList controlPoints) throws java.io.IOException
-         {
-             int numControlPoints = controlPoints.size();
-             Point2D[] imagePoints = new Point2D[numControlPoints];
-             LatLon[] geoPoints = new LatLon[numControlPoints];
-
-             for (int i = 0; i < numControlPoints; i++)
-             {
-                 RasterControlPointList.ControlPoint p = controlPoints.get(i);
-                 imagePoints[i] = p.getRasterPoint();
-                 geoPoints[i] = p.getWorldPointAsLatLon();
-             }
-
-             BufferedImage destImage = createPowerOfTwoImage(image.getWidth(), image.getHeight());
-             Sector sector = ImageUtil.warpImageWithControlPoints(image, imagePoints, geoPoints, destImage);
-
-             return new SurfaceImage(destImage, sector);
-         }
-
-     protected void addNonGeoreferencedSurfaceImage(final File file, final BufferedImage image) {
-    	 if (!SwingUtilities.isEventDispatchThread()) {
-    		 SwingUtilities.invokeLater(new Runnable() {
-    			 public void run(){
-    				 addNonGeoreferencedSurfaceImage(file, image);
-    			 }
-    		 });
-    	 }
-    	 else {
-
-    		 Position position = ShapeUtils.getNewShapePosition(this);
-    		 double lat = position.getLatitude().radians;
-    		 double lon = position.getLongitude().radians;
-    		 double sizeInMeters = ShapeUtils.getViewportScaleFactor(this);
-    		 double arcLength = sizeInMeters / this.getModel().getGlobe().getRadiusAt(position);
-    		 Sector sector = Sector.fromRadians(lat - arcLength, lat + arcLength, lon - arcLength, lon + arcLength);
-
-    		 BufferedImage powerOfTwoImage = createPowerOfTwoScaledCopy(image);
-
-    		 new EditableSurfaceImage(powerOfTwoImage, sector, this,  file.getName());
-    	 }
-     }
-
-
-     protected static BufferedImage createPowerOfTwoImage(int minWidth, int minHeight)
-     {
-         return new BufferedImage(WWMath.powerOfTwoCeiling(minWidth), WWMath.powerOfTwoCeiling(minHeight),
-             BufferedImage.TYPE_INT_ARGB);
-     }
-
-     protected static BufferedImage createPowerOfTwoScaledCopy(BufferedImage image)
-     {
-         if (WWMath.isPowerOfTwo(image.getWidth()) && WWMath.isPowerOfTwo(image.getHeight()))
-             return image;
-
-         BufferedImage powerOfTwoImage = createPowerOfTwoImage(image.getWidth(), image.getHeight());
-         ImageUtil.getScaledCopy(image, powerOfTwoImage);
-         return powerOfTwoImage;
-     }
-
+	
 	 
 	public DraggerListener getDraggerListener(){
 		return this.dragger;

@@ -423,7 +423,7 @@ public class MainWindow extends JFrame {
 				VFileChooser file = new VFileChooser();
 				file.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 				if(file.showOpenDialog(null) == VFileChooser.APPROVE_OPTION){
-					wwd.importImage(file.getSelectedFile());
+					wwd.getImagesController().importImage(file.getSelectedFile());
 				}
 			}
 		});
@@ -442,7 +442,7 @@ public class MainWindow extends JFrame {
 				file.setMultiSelectionEnabled(true);
 				file.addChoosableFileFilter(new ImageIOFileFilter(new ImageIOReader()));
 				if(file.showOpenDialog(null) == VFileChooser.APPROVE_OPTION){
-					wwd.addImages(file.getSelectedFiles());
+					wwd.getImagesController().addEditableImages(file.getSelectedFiles());
 				}
 			}
 		});
@@ -768,7 +768,7 @@ public class MainWindow extends JFrame {
 
 		toolbar.addSeparator();
 		
-		JLabel label = new JLabel("Exagération verticale : ");
+		JLabel label = new JLabel("Échelle verticale : ");
 		toolbar.add(label);
 
 		int MIN_VE = 1;
@@ -780,10 +780,10 @@ public class MainWindow extends JFrame {
 		slider.setPaintTicks(false);
 		slider.setSnapToTicks(true);
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
-		labelTable.put(1, new JLabel("1x"));
-		labelTable.put(2, new JLabel("2x"));
-		labelTable.put(4, new JLabel("4x"));
-		labelTable.put(8, new JLabel("8x"));
+		labelTable.put(1, new JLabel("x1"));
+		labelTable.put(2, new JLabel("x2"));
+		labelTable.put(4, new JLabel("x4"));
+		labelTable.put(8, new JLabel("x8"));
 		slider.setLabelTable(labelTable);
 		slider.setPaintLabels(true);
 		toolbar.addPropertyChangeListener("orientation", new PropertyChangeListener() {
