@@ -19,40 +19,31 @@ package fr.crnan.videso3d.formats.images;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import gov.nasa.worldwind.examples.util.SurfaceImageEditor;
 import gov.nasa.worldwind.geom.Sector;
-import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.SurfaceImage;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class EditableSurfaceImage extends SurfaceImage{
 	
      private SurfaceImageEditor editor;
-     private RenderableLayer layer;
 
-     public EditableSurfaceImage(Object imageSource, Sector sector, VidesoGLCanvas wwd, String name){
+     public EditableSurfaceImage(Object imageSource, Sector sector, VidesoGLCanvas wwd){
     	 
     	 super(imageSource, sector);
     	 
          this.editor = new SurfaceImageEditor(wwd, this);
          this.editor.setArmed(false);
-         
-         this.layer = new RenderableLayer();
-         this.layer.setName(name);
-         this.layer.setPickEnabled(true);
-         this.layer.addRenderable(this);
 
-         wwd.toggleLayer(layer, true);
      }
 
-     public SurfaceImageEditor getEditor()
-     {
+     public EditableSurfaceImage(SurfaceImage si, VidesoGLCanvas wwd){
+    	 this(si.getImageSource(), si.getSector(), wwd);    	 
+     }
+     
+     public SurfaceImageEditor getEditor()  {
          return this.editor;
      }
 
-     public RenderableLayer getLayer()
-     {
-         return this.layer;
-     }
 }
