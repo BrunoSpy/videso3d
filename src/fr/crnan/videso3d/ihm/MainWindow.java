@@ -391,7 +391,7 @@ public class MainWindow extends JFrame {
 		toolbar.add(config);
 		
 		//Analyse
-		final JButton analyze = new JButton(new ImageIcon(getClass().getResource("/resources/analyze_22.png")));
+		final JButton analyze = new JButton(new ImageIcon(getClass().getResource("/resources/datas_analyze_22.png")));
 		analyze.setToolTipText("Analyser les données Stip/Stpv");
 		analyze.addActionListener(new ActionListener() {
 			
