@@ -38,6 +38,7 @@ import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.ihm.components.AirspaceMenu;
 import fr.crnan.videso3d.ihm.components.ImageMenu;
+import fr.crnan.videso3d.ihm.components.OpacityMenuItem;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.event.SelectEvent;
@@ -64,7 +65,7 @@ import gov.nasa.worldwind.render.markers.MarkerAttributes;
 /**
  * Listener d'évènements sur les airspaces et shapes
  * @author Bruno Spyckerelle
- * @version 0.4.4
+ * @version 0.4.5
  */
 public class AirspaceListener implements SelectListener {
 
@@ -170,20 +171,9 @@ public class AirspaceListener implements SelectListener {
 					};
 					JMenuItem colorItem = new JMenuItem("Couleur...");
 
-
-					JMenu opacityItem = new JMenu("Opacité ...");
-					JSlider slider = new JSlider();
-					slider.setMaximum(100);
-					slider.setMinimum(0);
-					slider.setOrientation(JSlider.VERTICAL);
-					slider.setMinorTickSpacing(10);
-					slider.setMajorTickSpacing(20);
-					slider.setPaintLabels(true);
-					slider.setPaintTicks(true);
-					opacityItem.add(slider);
-
 					//Ajout des listeners en fonction du type d'objet
 					if(lastAttrs instanceof ShapeAttributes){
+						OpacityMenuItem opacityItem = new OpacityMenuItem();
 						menu.add(colorItem);
 						menu.add(opacityItem);
 						colorItem.addActionListener(new ActionListener() {
@@ -201,8 +191,8 @@ public class AirspaceListener implements SelectListener {
 								}
 							}
 						});
-						slider.setValue((int)(((ShapeAttributes)lastAttrs).getInteriorOpacity()*100.0));
-						slider.addChangeListener(new ChangeListener() {
+						opacityItem.setValue((int)(((ShapeAttributes)lastAttrs).getInteriorOpacity()*100.0));
+						opacityItem.addChangeListener(new ChangeListener() {
 							@Override
 							public void stateChanged(ChangeEvent e) {
 								JSlider source = (JSlider)e.getSource();

@@ -106,18 +106,9 @@ public class AirspaceMenu extends JPopupMenu {
 		});
 		this.add(colorItem);
 		
-		JMenu opacityItem = new JMenu("Opacité ...");
-		JSlider slider = new JSlider();
-		slider.setMaximum(100);
-		slider.setMinimum(0);
-		slider.setOrientation(JSlider.VERTICAL);
-		slider.setMinorTickSpacing(10);
-		slider.setMajorTickSpacing(20);
-		slider.setPaintLabels(true);
-		slider.setPaintTicks(true);
-		opacityItem.add(slider);
-		slider.setValue((int)(attrs.getOpacity()*100.0));
-		slider.addChangeListener(new ChangeListener() {
+		OpacityMenuItem opacityItem = new OpacityMenuItem();
+		opacityItem.setValue((int)(attrs.getOpacity()*100.0));
+		opacityItem.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				JSlider source = (JSlider)e.getSource();
