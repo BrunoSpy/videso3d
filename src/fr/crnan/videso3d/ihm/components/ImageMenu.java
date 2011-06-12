@@ -24,9 +24,9 @@ import java.io.IOException;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.formats.images.ImageUtils;
+
 import gov.nasa.worldwind.render.SurfaceImage;
 
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -52,26 +52,14 @@ public class ImageMenu extends JPopupMenu {
 
 	private void createMenu(){
 		
-		JMenu opacityItem = new JMenu("Opacité ...");
-		JSlider slider = new JSlider();
-		slider.setMaximum(100);
-		slider.setMinimum(0);
-		slider.setOrientation(JSlider.VERTICAL);
-		slider.setMinorTickSpacing(10);
-		slider.setMajorTickSpacing(20);
-		slider.setPaintLabels(true);
-		slider.setPaintTicks(true);
-		opacityItem.add(slider);
-
-		slider.setValue((int)(image.getOpacity()*100.0));
-		slider.addChangeListener(new ChangeListener() {
+		OpacityMenuItem opacityItem = new OpacityMenuItem(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
 				JSlider source = (JSlider)e.getSource();
 				image.setOpacity(source.getValue()/100.0);
 				wwd.redraw();
 			}
-		});
+		}, (int)(image.getOpacity()*100.0));
 
 		this.add(opacityItem);
 		this.add(new JSeparator());
