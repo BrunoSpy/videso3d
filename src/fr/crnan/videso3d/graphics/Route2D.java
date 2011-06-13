@@ -82,6 +82,7 @@ public class Route2D extends DirectedPath implements Route{
 		this.setAltitudeMode(WorldWind.CLAMP_TO_GROUND);
 		this.setMaxScreenSize(9.0);
 		this.setArrowLength(40000);
+		this.setFollowTerrain(true);
 	}
 
 	@Override
