@@ -35,6 +35,7 @@ import fr.crnan.videso3d.Triplet;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.lpln.LPLNTrackPoint;
 import fr.crnan.videso3d.geom.LatLonUtils;
+import fr.crnan.videso3d.ihm.components.ProgressMonitorInputStream;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 
@@ -118,7 +119,7 @@ public class FPLReader extends TrackFilesReader {
 		String line;
 		BufferedReader in = new BufferedReader(
 				new InputStreamReader(
-						new MyProgressMonitorInputStream(null, "Extraction du fichier plan de vol ...", stream)), 32);
+						new ProgressMonitorInputStream(null, "Extraction du fichier plan de vol ...", stream)), 32);
 		try{
 			while(in.ready()){
 				line = in.readLine();

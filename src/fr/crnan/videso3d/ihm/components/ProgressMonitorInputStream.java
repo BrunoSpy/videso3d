@@ -13,20 +13,23 @@
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.crnan.videso3d.formats.fpl;
+package fr.crnan.videso3d.ihm.components;
 
 import java.awt.Component;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
 
-import javax.swing.ProgressMonitorInputStream;
-
-public class MyProgressMonitorInputStream extends ProgressMonitorInputStream {
+/**
+ * {@link javax.swing.ProgressMonitorInputStream} qui se déclenche même pour les fichiers dont la taille est infèrieure à 8ko.
+ * @author Adrien Vidal
+ * @version 0.1.0
+ */
+public class ProgressMonitorInputStream extends javax.swing.ProgressMonitorInputStream {
 
 	private int nread = 0;
 	
-	public MyProgressMonitorInputStream(Component parent, Object message,
+	public ProgressMonitorInputStream(Component parent, Object message,
 			InputStream in) {
 		super(parent, message, in);
 	}
