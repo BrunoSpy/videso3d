@@ -19,7 +19,9 @@ package fr.crnan.videso3d.ihm.components;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 
 import javax.swing.SwingWorker;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -154,6 +156,21 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 		} else {
 			return 0;
 		}
+	}
+	
+	public List<DefaultMutableTreeNode> getChildList(Object parent){
+		List<DefaultMutableTreeNode> list = new ArrayList<DefaultMutableTreeNode>();
+		if(parent instanceof DefaultMutableTreeNode) {
+			if(((DefaultMutableTreeNode) parent).isLeaf())
+				list.add((DefaultMutableTreeNode) parent);
+			else {
+				for(int i = 0; i < ((DefaultMutableTreeNode)parent).getChildCount();i++){
+					list.addAll(getChildList(((DefaultMutableTreeNode)parent).getChildAt(i)));
+				}
+			}
+			return list;
+		}
+		return null;
 	}
 	
 	/* (non-Javadoc)

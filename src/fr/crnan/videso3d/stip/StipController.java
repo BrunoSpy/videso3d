@@ -206,6 +206,19 @@ public class StipController extends ProgressSupport implements VidesoController 
 		DatasManager.getView(Type.STIP).hideObject(type, name);
 	}
 	
+	@Override
+	public boolean isColorEditable(int type){
+		switch (type) {
+		case ROUTES://Routes
+			return false;
+		case BALISES://Balises Pub
+			return false;
+		case SECTEUR://secteur
+			return true;
+		default:
+			return false;
+		}		
+	}
 
 	@Override
 	public void setColor(Color color, int type, String name) {

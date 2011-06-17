@@ -333,5 +333,10 @@ public class SkyViewController implements VidesoController {
 	public void setColor(Color color, int type, String name) {
 		throw new UnsupportedOperationException("Not implemented");
 	}
+
+	@Override
+	public boolean isColorEditable(int type) {
+		return false;
+	}
 	
 }
