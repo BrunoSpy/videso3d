@@ -156,12 +156,16 @@ public class RadioCovController implements VidesoController {
 
 	@Override
 	public Collection<Object> getObjects(int type) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("Not implemented");
 	}
 	
 	@Override
 	public void setColor(Color color, int type, String name) {
 		throw new UnsupportedOperationException("Not implemented");
+	}
+
+	@Override
+	public boolean isColorEditable(int type) {
+		return false;
 	}
 }

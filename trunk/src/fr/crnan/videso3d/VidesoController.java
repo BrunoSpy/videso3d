@@ -24,7 +24,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * Controleur d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public interface VidesoController {
 
@@ -120,5 +120,12 @@ public interface VidesoController {
 	 * @param name
 	 */
 	public void setColor(Color color, int type, String name);
+
+	/**
+	 * Tell if the controller can change the color of an object of a certain type
+	 * @param type
+	 * @return
+	 */
+	public boolean isColorEditable(int type);
 	
 }

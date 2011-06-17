@@ -30,7 +30,10 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JColorChooser;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.TreeModelEvent;
@@ -199,7 +202,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 		treeTable.addMouseListener(new MouseAdapter(){
 			@Override
 			public void mouseClicked(MouseEvent e){
-				if(e.getClickCount()==2){
+				if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2){
 					int row = treeTable.rowAtPoint(e.getPoint());  
 					Object[] path = treeTable.getPathForRow(row).getPath();
 					if(path.length>2){
@@ -209,7 +212,35 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 						getController().highlight(getController().string2type(type),name);
 						treeTable.setValueAt(true, row, 1);
 					}
-				} 
+				} else if(e.getButton() == MouseEvent.BUTTON3) {
+					final int row = treeTable.rowAtPoint(e.getPoint());
+					final Object[] path = treeTable.getPathForRow(row).getPath();
+					
+					if(getController().isColorEditable(getController().string2type(((Couple<String, Boolean>)((DefaultMutableTreeNode)path[1]).getUserObject()).getFirst()))){
+					
+						final JPopupMenu menu = new JPopupMenu();
+						JMenuItem color = new JMenuItem("Changer la couleur ...");
+						color.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								Color color = JColorChooser.showDialog(menu, "Couleur du secteur", null);
+								DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeTable.getPathForRow(row).getLastPathComponent();
+								String type = ((Couple<String, Boolean>)((DefaultMutableTreeNode)path[1]).getUserObject()).getFirst();
+								if(color != null){
+									for(DefaultMutableTreeNode child :  ((FilteredTreeTableModel) treeTable.getTreeTableModel()).getChildList(node)){
+										getController().setColor(color, getController().string2type(type), ((Couple<String,Boolean>) child.getUserObject()).getFirst());
+									}
+
+								}
+								menu.setVisible(false);
+							}
+						});
+						menu.add(color);
+						menu.setLocation(e.getPoint());
+						menu.show(e.getComponent(), e.getX(), e.getY());
+					}
+				}
 			}
 		});
 		
