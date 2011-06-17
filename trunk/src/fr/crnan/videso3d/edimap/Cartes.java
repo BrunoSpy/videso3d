@@ -29,7 +29,6 @@ import java.util.List;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileParser;
-import fr.crnan.videso3d.Pallet;
 
 /**
  * Jeu de cartes Edimap
@@ -341,7 +340,6 @@ public class Cartes extends FileParser {
 			this.palette = new PaletteEdimap(paletteFichier.getEntity());
 
 		} catch (FileNotFoundException e) {
-			System.out.println("test");
 			this.palette = new PaletteEdimap();
 		}
 

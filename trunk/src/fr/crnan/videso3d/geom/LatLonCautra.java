@@ -36,6 +36,7 @@ public class LatLonCautra extends LatLon {
 	
     private static final double L0 = 0.8169557248772987; //latitude conforme au point d'origine, en radians
     private static final double R0 = 6366757.037688594; //rayon de la sphère conforme au point d'origine, en mètres
+    													//this.a*Math.cos(this.phi0)/(Math.sqrt(1-Math.pow(this.e*Math.sin(this.phi0), 2))*Math.cos(this.latitudeConforme(this.phi0)));
     private static final double y0 = -5040511.788585899; //ordonnée de P0 dans le plan tangent, en mètres
     
 	/**
