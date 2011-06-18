@@ -15,10 +15,13 @@
  */
 
 package fr.crnan.videso3d.graphs;
+
+import fr.crnan.videso3d.stip.Stip;
+
 /**
  * Contenu d'une cellule
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class CellContent {
 
@@ -70,6 +73,18 @@ public class CellContent {
 	@Override
 	public String toString(){
 		return name;
+	}
+	
+	/**
+	 * Returns a String to be used in a clipboard for example
+	 * @return 
+	 */
+	public String toFormattedString(){
+		String selection = new String();
+		if(this.getType() == TYPE_ITI){
+			selection = Stip.itiToString(getId());
+		}
+		return selection;
 	}
 }
 

@@ -39,9 +39,7 @@ public class CellFoldedListener implements mxIEventListener {
 	/**
 	 * Constructeur pour écouter le repli d'une cellule
 	 * @param cell
-	 * @param graph
 	 * @param stack
-	 * @param context
 	 */
 	public CellFoldedListener(mxCell cell, mxStackLayout stack){
 		super();
