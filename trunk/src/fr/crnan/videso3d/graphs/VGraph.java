@@ -18,10 +18,14 @@ package fr.crnan.videso3d.graphs;
 
 import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
+
+import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.stip.StipController;
+import fr.crnan.videso3d.stpv.StpvController;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class VGraph extends mxGraph {
 
@@ -39,11 +43,14 @@ public class VGraph extends mxGraph {
 		if(cell instanceof mxCell){
 			Object v = ((mxCell) cell).getValue();
 			if(v instanceof CellContent ){
-				String t = ((CellContent) v).getType();
+				int t = ((CellContent) v).getType();
+				Type base = ((CellContent) v).getBase();
 				//les routes et les itis ne doivent pas pouvoir être réduits
-				if(t.equals(CellContent.TYPE_ROUTE) || t.equals(CellContent.TYPE_ITI)
-						|| t.equals(CellContent.TYPE_TRAJET) || t.equals(CellContent.TYPE_CONNEXION)
-						|| t.equals(CellContent.TYPE_STAR)){
+				if((base.equals(Type.STIP) && t == StipController.ROUTES) ||
+						(base.equals(Type.STIP) && t == StipController.ITI) ||
+						(base.equals(Type.STIP) && t == StipController.TRAJET) ||
+						(base.equals(Type.STIP) && t == StipController.CONNEXION) ||
+						(base.equals(Type.STPV) && t == StpvController.STAR)){
 					return false;
 				}
 			}

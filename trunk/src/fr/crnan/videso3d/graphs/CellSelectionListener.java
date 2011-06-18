@@ -15,16 +15,11 @@
  */
 package fr.crnan.videso3d.graphs;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraph;
 
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.stip.StipController;
@@ -57,31 +52,46 @@ public class CellSelectionListener implements mxIEventListener {
 		mxCell cell = (mxCell) graph.getSelectionCell();
 		if(cell != null && cell.getValue() instanceof CellContent){
 			CellContent content = (CellContent) cell.getValue();
-			if(content.getType().equals(CellContent.TYPE_BALISE)){
-				context.showInfo(Type.STIP, StipController.BALISES, ((CellContent)cell.getValue()).getName());
-			} else if(content.getType().equals(CellContent.TYPE_ITI)){
-				context.showInfo(Type.STIP, StipController.ITI, new Integer(((CellContent)cell.getValue()).getId()).toString());
-				context.setTitle("Informations sur "+((CellContent)cell.getValue()).getName());
-			} else if(content.getType().equals(CellContent.TYPE_TRAJET) || content.getType().equals(CellContent.TYPE_TRAJET_GROUPE)){
-				context.showInfo(Type.STIP, StipController.TRAJET, new Integer(((CellContent)cell.getValue()).getId()).toString());
-				context.setTitle("Informations sur "+((CellContent)cell.getValue()).getName());
-			} else if(content.getType().equals(CellContent.TYPE_ROUTE)){
-				int id = ((CellContent)cell.getValue()).getId();
-				try {
-					Statement st = DatabaseManager.getCurrentStip();
-					ResultSet rs  = st.executeQuery("select * from routes where id='"+id+"'");
-					String name = rs.getString(2);
-					context.showInfo(Type.STIP, StipController.ROUTES, name);
-				} catch (SQLException e) {
-					e.printStackTrace();
+			switch (content.getBase()) {
+			case STIP:
+				switch (content.getType()) {
+				case StipController.ROUTES:
+					context.showInfo(Type.STIP, StipController.ROUTES, content.getName());
+					break;
+				case StipController.BALISES:
+					context.showInfo(Type.STIP, StipController.BALISES, content.getName());
+					break;
+				case StipController.ITI:
+					context.showInfo(Type.STIP, StipController.ITI, new Integer(content.getId()).toString());
+					context.setTitle("Informations sur "+content.getName());
+					break;
+				case StipController.TRAJET:
+					context.showInfo(Type.STIP, StipController.TRAJET, new Integer(content.getId()).toString());
+					context.setTitle("Informations sur "+content.getName());
+					break;
+				case StipController.CONNEXION:
+					context.showInfo(Type.STIP, StipController.CONNEXION, new Integer(content.getId()).toString());
+					context.setTitle("Informations sur "+content.getName());
+					break;
+				default:
+					break;
 				}
-			} else if(content.getType().equals(CellContent.TYPE_CONNEXION)){
-				context.showInfo(Type.STIP, StipController.CONNEXION, new Integer(((CellContent)cell.getValue()).getId()).toString());
-				context.setTitle("Informations sur "+((CellContent)cell.getValue()).getName());
-			} else if(content.getType().equals(CellContent.TYPE_STAR)){
-				context.showInfo(Type.STPV, StpvController.STAR, new Integer(((CellContent)cell.getValue()).getId()).toString());
-				context.setTitle("Informations sur "+((CellContent)cell.getValue()).getName());
+				break;
+			case STPV:
+				switch (content.getType()) {
+				case StpvController.STAR:
+					context.showInfo(Type.STPV, StpvController.STAR, new Integer(content.getId()).toString());
+					context.setTitle("Informations sur "+content.getName());
+					break;
+
+				default:
+					break;
+				}
+				break;
+			default:
+				break;
 			}
+
 		}
 	}
 
