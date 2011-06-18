@@ -30,6 +30,7 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.stip.StipController;
 
 /**
  * Lecteur de BDS Stpv
@@ -382,5 +383,75 @@ public class Stpv extends FileParser{
 		return 3;
 	}
 
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private static String starToString(int id){
+		String star = new String();
+		try {
+			Statement st = DatabaseManager.getCurrentStpv();
+			ResultSet rs = st.executeQuery("select * from lieu90 where id ='"+id+"'");
+			if(rs.next()){
+				star += "LIEU 90 ";
+				String oaci = rs.getString("oaci");
+				star += oaci+"  ";
+				String balini = rs.getString("balini");
+				star += balini;
+				for(int i = 0;i<6-balini.length();i++){
+					star += " ";
+				}
+				for(int i=1;i<=8;i++){
+					if(rs.getString("bal"+i) != null){
+						star += rs.getString("bal"+i);
+						for(int j = 0;j<6-rs.getString("bal"+i).length();j++){
+							star += " ";
+						}
+					}
+				}
+				for(int i=0;i<68-star.length();i++){
+					star += " ";
+				}
+				star += rs.getBoolean("hel") ? "O" : "N";
+				star += rs.getBoolean("jet") ? "O" : "N";
+				star += rs.getBoolean("fir") ? "O" : "N";
+				star += rs.getBoolean("uir") ? "O" : "N";
+				star += "\n";
+				rs = st.executeQuery("select * from lieu901 where lieu90 = '"+id+"'");
+				while(rs.next()){
+					star += "LIEU 901"+oaci+"  "+balini;
+					for(int i = 0;i<6-balini.length();i++){
+						star += " ";
+					}
+					star += rs.getString("conf");
+					for(int i = 0;i<6-rs.getString("conf").length();i++){
+						star += " ";
+					}
+					star += rs.getString("name")+"\n";
+				}
+			}
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return star;
+	}
+	
+	/**
+	 * 
+	 * @param type from {@link StipController}
+	 * @param id
+	 * @return
+	 */
+	public static String getString(int type, int id){
+		switch (type) {
+		case StpvController.STAR:
+			return starToString(id);
+		default:
+			return null;
+		}
+	}
 
 }

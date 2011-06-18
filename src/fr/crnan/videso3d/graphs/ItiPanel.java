@@ -32,6 +32,8 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxEvent;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.stip.StipController;
 
 
 /**
@@ -130,17 +132,17 @@ public class ItiPanel extends ResultGraphPanel {
 								itisRoot.add(itiRoot);
 								entree = rs.getString(5);
 							}
-							iti = (mxCell) graph.insertVertex(itiRoot, null, new CellContent(CellContent.TYPE_ITI, id, rs.getString(6)), 0, 0, 80, 50, GraphStyle.groupStyle);
+							iti = (mxCell) graph.insertVertex(itiRoot, null, new CellContent(Type.STIP, StipController.ITI, id, rs.getString(6)), 0, 0, 80, 50, GraphStyle.groupStyle);
 							iti.setConnectable(false);
 							itis.add(iti);
-							first = (mxCell) graph.insertVertex(iti, null, new CellContent(CellContent.TYPE_BALISE, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
+							first = (mxCell) graph.insertVertex(iti, null, new CellContent(Type.STIP, StipController.BALISES, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
 							first.setConnectable(false);
 							balises.put(rs.getInt(4), first);
 						} else {
 							String style = rs.getBoolean(2) ? 
 									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
 										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
-							mxCell bal = (mxCell) graph.insertVertex(iti, null, new CellContent(CellContent.TYPE_BALISE, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
+							mxCell bal = (mxCell) graph.insertVertex(iti, null, new CellContent(Type.STIP, StipController.BALISES, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							bal.setConnectable(false);
 							graph.insertEdge(iti, null, "", first, bal, GraphStyle.edgeStyle);
 							balises.put(rs.getInt(4), bal);
@@ -185,11 +187,11 @@ public class ItiPanel extends ResultGraphPanel {
 								graph.insertEdge(parent, null, "", first, balisesByItis.get(rs.getInt(1)).get(rs.getInt(6)), GraphStyle.edgeTrajet);
 							} else {
 								if(second == null) {
-									second = (mxCell) graph.insertVertex(parent, null, new CellContent(CellContent.TYPE_BALISE, 0, rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
+									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, 0, rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
 									second.setConnectable(false);
 									graph.insertEdge(parent, null, rs.getString(4), first, second, GraphStyle.edgeTrajet);
 								} else {
-									second = (mxCell) graph.insertVertex(parent, null, new CellContent(CellContent.TYPE_BALISE, 0, rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
+									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, 0, rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
 									second.setConnectable(false);
 									graph.insertEdge(parent, null, "", first, second, GraphStyle.edgeTrajet);
 								}

@@ -42,23 +42,10 @@ import fr.crnan.videso3d.DatabaseManager.Type;
  * Lecteur de fichiers STIP
  * Toutes les infos concernant les fichiers SATIN sont dans le DDI Satin
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public class Stip extends FileParser{
-
-	/**
-	 * Type Route
-	 */
-	public final static String STIP_ROUTE = "stip.route";
-	/**
-	 * Type Balise
-	 */
-	public final static String STIP_BALISE = "stip.balise";
-	/**
-	 * Type Secteur
-	 */
-	public final static String STIP_SECTEUR = "stip.secteur";
-
+	
 	/**
 	 * Nombre de fichiers gérés
 	 */
@@ -851,39 +838,14 @@ public class Stip extends FileParser{
 		return this.numberFiles;
 	}
 
-	/**
-	 * Détermine le type de l'objet en fonction de son nom
-	 * @param name Nom de l'objet
-	 * @return Type de l'objet
-	 */
-	public static String getTypeFromName(String name){
-		try {
-			Statement st = DatabaseManager.getCurrentStip();
-			ResultSet rs = st.executeQuery("select name from routes where name = '"+name+"'");
-			if(rs.next()){
-				return STIP_ROUTE;
-			}
-			rs = st.executeQuery("select * from secteurs where nom = '"+name+"'");
-			if(rs.next()){
-				return STIP_SECTEUR;
-			}
-			rs = st.executeQuery("select * from balises where name = '"+name+"'");
-			if(rs.next()){
-				return STIP_BALISE;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 
-		return null;
-	}
 
 	/**
 	 * Returns a String representing an iti as in Satin datas
 	 * @param id
 	 * @return
 	 */
-	public static String itiToString(int id){
+	private static String itiToString(int id){
 		String iti = new String();
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
@@ -936,5 +898,196 @@ public class Stip extends FileParser{
 		}
 
 		return iti;
+	}
+	
+	private static String trajetToString(int id){
+		String trajet = new String();
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select * from trajets where id='"+id+"'");
+			if(rs.next()){
+				trajet += rs.getString("eclatement");
+				for(int i = 0;i<8-rs.getString("eclatement").length();i++){
+					trajet += " ";
+				}
+				trajet += rs.getString("raccordement");
+				for(int i = 0;i<8-rs.getString("raccordement").length();i++){
+					trajet += " ";
+				}
+				trajet += rs.getString("type");
+				for(int i = 0;i<6;i++){
+					trajet += " ";
+				}
+				trajet += rs.getString("fl");
+				for(int i = 0;i<5;i++){
+					trajet += " ";
+				}
+				trajet += rs.getString("cond1");
+				for(int i = 0;i<7-rs.getString("cond1").length();i++){
+					trajet += " ";
+				}
+				trajet += rs.getString("etat1");
+				for(int i = 0;i<2;i++){
+					trajet += " ";
+				}
+				if(rs.getString("cond2")!=null){
+					trajet += rs.getString("cond2");
+					for(int i = 0;i<7-rs.getString("cond2").length();i++){
+						trajet += " ";
+					}
+					trajet += rs.getString("etat2");
+					for(int i = 0;i<2;i++){
+						trajet += " ";
+					}
+					if(rs.getString("cond3")!=null){
+						trajet += rs.getString("cond3");
+						for(int i = 0;i<7-rs.getString("cond3").length();i++){
+							trajet += " ";
+						}
+						trajet += rs.getString("etat3");
+						for(int i = 0;i<2;i++){
+							trajet += " ";
+						}
+						if(rs.getString("cond4")!=null){
+							trajet += rs.getString("cond4");
+							for(int i = 0;i<7-rs.getString("cond4").length();i++){
+								trajet += " ";
+							}
+							trajet += rs.getString("etat4");
+							for(int i = 0;i<2;i++){
+								trajet += " ";
+							}
+						}
+					}
+				}
+				trajet += "\n                ";
+				rs = st.executeQuery("select * from baltrajets where idtrajet ='"+id+"'");
+				int count = 0;
+				while(rs.next()){
+					String balise = rs.getString("balise");
+					if(count + balise.length()>40){
+						trajet += "\n                ";
+						count = 0;
+					}
+					trajet += balise;
+					count += balise.length()+1;
+					if(!rs.getBoolean("appartient")){
+						trajet += "/ ";
+						count++;
+					} else {
+						trajet += " ";
+					}
+				}
+			}
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return trajet;
+	}
+	
+	private static String connexToString(int id){
+		String connex = new String();
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select * from connexions where id = '"+id+"'");
+			if(rs.next()){
+				String debut = rs.getString("terrain");
+				debut += "   ";
+				String type = rs.getString("type");
+				debut += type;
+				debut += "   ";
+				for(int i = 0;i<3-rs.getString("flinf").length();i++){
+					debut += "0";
+				}
+				debut += rs.getString("flinf")+" ";
+				debut += rs.getString("flsup")+" ";
+				if(rs.getString("vitessesigne") != null){
+					debut += rs.getString("vitessesigne");
+					for(int i = 0;i<1-rs.getString("vitessesigne").length();i++){
+						debut += " ";
+					}
+					for(int i = 0;i<3-rs.getString("vitesse").length();i++){
+						debut += "0";
+					}
+					debut += rs.getString("vitesse");
+				} else {
+					debut += "    ";
+				}
+				debut += "      ";
+				String balise = rs.getString("connexion");
+				int count = 0;
+				rs = st.executeQuery("select * from balconnexions where idconn = '"+id+"'");
+				String line = debut;
+				while(rs.next()){
+					if(count == 3){
+						connex += line+"\n";
+						line = debut;
+						count = 0;
+					}
+					if(type.equals("D")){
+						line += balise;
+						for(int i = 0;i<7-balise.length();i++){
+							line += " ";
+						}
+						line += rs.getString("balise");
+						if(rs.getBoolean("appartient")){
+							for(int i = 0;i<7-rs.getString("balise").length();i++){
+								line += " ";
+							}
+						} else {
+							line += "/";
+							for(int i = 0;i<6-rs.getString("balise").length();i++){
+								line += " ";
+							}
+						}
+					} else {
+						line += rs.getString("balise");
+						if(rs.getBoolean("appartient")){
+							for(int i = 0;i<7-rs.getString("balise").length();i++){
+								line += " ";
+							}
+						} else {
+							line += "/";
+							for(int i = 0;i<6-rs.getString("balise").length();i++){
+								line += " ";
+							}
+						}
+						line += balise;
+						for(int i = 0;i<7-balise.length();i++){
+							line += " ";
+						}
+					}
+					count++;
+				}
+				if(count < 3){
+					connex += line+"\n";
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return connex;
+	}
+	
+	/**
+	 * 
+	 * @param type from {@link StipController}
+	 * @param id
+	 * @return
+	 */
+	public static String getString(int type, int id){
+		switch (type) {
+		case StipController.ITI:
+			return itiToString(id);
+		case StipController.TRAJET:
+			return trajetToString(id);
+		case StipController.CONNEXION:
+			return connexToString(id);
+		default:
+			return null;
+		}
 	}
 }

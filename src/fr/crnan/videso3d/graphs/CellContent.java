@@ -16,30 +16,20 @@
 
 package fr.crnan.videso3d.graphs;
 
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.stip.Stip;
+import fr.crnan.videso3d.stpv.Stpv;
 
 /**
  * Contenu d'une cellule
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.2.0
  */
 public class CellContent {
-
-	public static String TYPE_BALISE = "balise";
 	
-	public static String TYPE_ITI = "iti";
+	private int type;
 	
-	public static String TYPE_ROUTE = "route";
-	
-	public static String TYPE_TRAJET = "trajet";
-	
-	public static String TYPE_TRAJET_GROUPE = "trajet_groupe";
-	
-	public static String TYPE_CONNEXION = "connexion";
-	
-	public static String TYPE_STAR = "star";
-	
-	private String type = null;
+	private DatabaseManager.Type base;
 	
 	private int id = 0;
 	
@@ -50,14 +40,15 @@ public class CellContent {
 	 * @param type
 	 * @param id
 	 */
-	public CellContent(String type, int id, String name){
+	public CellContent(DatabaseManager.Type base, int type, int id, String name){
 		this.type = type;
+		this.base = base;
 		this.id = id;
 		this.name = name;
 	}
 
 
-	public String getType() {
+	public int getType() {
 		return type;
 	}
 
@@ -70,6 +61,10 @@ public class CellContent {
 		return name;
 	}
 	
+	public DatabaseManager.Type getBase() {
+		return base;
+	}
+
 	@Override
 	public String toString(){
 		return name;
@@ -80,11 +75,17 @@ public class CellContent {
 	 * @return 
 	 */
 	public String toFormattedString(){
-		String selection = new String();
-		if(this.getType() == TYPE_ITI){
-			selection = Stip.itiToString(getId());
+		switch (base) {
+		case STIP:
+			return Stip.getString(type, id);
+		case STPV:
+			return Stpv.getString(type, id);
+		default:
+			return null;
 		}
-		return selection;
 	}
+
+
+
 }
 
