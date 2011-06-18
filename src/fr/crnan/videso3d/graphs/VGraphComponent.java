@@ -23,7 +23,7 @@ import com.mxgraph.view.mxGraph;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class VGraphComponent extends mxGraphComponent {
 
@@ -47,6 +47,8 @@ public class VGraphComponent extends mxGraphComponent {
 				} 
 			}
 		});
+		
+		this.addKeyListener(new KeyGraphComponentListener(graph));
 
 	}
 

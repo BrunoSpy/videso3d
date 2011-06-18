@@ -42,7 +42,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
  * Lecteur de fichiers STIP
  * Toutes les infos concernant les fichiers SATIN sont dans le DDI Satin
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.3.1
  */
 public class Stip extends FileParser{
 
@@ -878,4 +878,63 @@ public class Stip extends FileParser{
 		return null;
 	}
 
+	/**
+	 * Returns a String representing an iti as in Satin datas
+	 * @param id
+	 * @return
+	 */
+	public static String itiToString(int id){
+		String iti = new String();
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select * from itis where id = '"+id+"'");
+			if(rs.next()){
+				iti = rs.getString("entree");
+				for(int i = 0;i<8-rs.getString("entree").length();i++){
+					iti += " ";
+				}
+				iti += rs.getString("sortie");
+				for(int i = 0;i<8-rs.getString("sortie").length();i++){
+					iti += " ";
+				}
+				String flinf = rs.getInt("flinf")+"";
+				for(int i = 0;i<3-flinf.length();i++){
+					iti += "0";
+				}
+				iti += flinf;
+				for(int i = 0;i<5;i++){
+					iti += " ";
+				}
+				String flsup = rs.getInt("flsup")+"";
+				for(int i = 0;i<3-flsup.length();i++){
+					iti += "0";
+				}
+				iti += flsup;
+				iti += "\n                ";
+				rs = st.executeQuery("select * from balitis where iditi ='"+id+"'");
+				int length = 0;
+				while(rs.next()){
+					String balise = rs.getString("balise");
+					if(length + balise.length() > 44){
+						iti += "\n                ";
+						length = 0;
+					}
+					iti += balise;
+					length += balise.length()+1;
+					if(!rs.getBoolean("appartient")){
+						iti+="/ ";
+						length++;
+					} else {
+						iti+=" ";
+					}
+				}
+			}
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return iti;
+	}
 }

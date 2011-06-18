@@ -43,7 +43,6 @@ public class CellSelectionListener implements mxIEventListener {
 	/**
 	 * Constructeur pour écouter la sélection d'une cellule
 	 * @param graph
-	 * @param stack
 	 * @param context
 	 */
 	public CellSelectionListener(mxGraph graph, ContextPanel context){
@@ -54,8 +53,7 @@ public class CellSelectionListener implements mxIEventListener {
 
 
 	@Override
-	public void invoke(Object sender, mxEventObject evt) {
-
+	public void invoke(Object sender, mxEventObject evt) {		
 		mxCell cell = (mxCell) graph.getSelectionCell();
 		if(cell != null && cell.getValue() instanceof CellContent){
 			CellContent content = (CellContent) cell.getValue();

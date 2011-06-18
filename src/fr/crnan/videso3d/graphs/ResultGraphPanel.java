@@ -62,7 +62,6 @@ public abstract class ResultGraphPanel extends ResultPanel  {
 	/**
 	 * Crée le graphe proprement dit
 	 * @param balise
-	 * @return
 	 */
 	protected abstract void createGraphComponent(final String balise, final String balise2);
 	
