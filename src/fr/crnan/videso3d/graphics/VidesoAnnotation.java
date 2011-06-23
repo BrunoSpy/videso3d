@@ -38,6 +38,7 @@ public class VidesoAnnotation extends GlobeAnnotation {
 		this.getAttributes().setBackgroundColor(Pallet.ANNOTATION_BACKGROUND);
 		this.getAttributes().setBorderColor(Color.BLACK);
 		this.getAttributes().setAdjustWidthToText(AVKey.SIZE_FIT_TEXT);
+		this.setPickEnabled(true);
 	}
 
 }

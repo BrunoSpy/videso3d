@@ -165,8 +165,7 @@ public class DraggerListener implements SelectListener {
 		o.moveTo(p);
 	}
 	
-    public boolean isDragging()
-    {
+    public boolean isDragging() {
         return this.dragging;
     }
 

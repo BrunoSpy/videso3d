@@ -17,7 +17,6 @@ package fr.crnan.videso3d.graphics;
 
 import fr.crnan.videso3d.DatabaseManager;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.Annotation;
 /**
  * Un objet graphique pour Videso comprend 5 éléments :
  * <ul><li>l'objet en lui-même (renderable, airspace, ...)</li>
@@ -26,7 +25,7 @@ import gov.nasa.worldwind.render.Annotation;
  * <li>le type de données qu'il représente (géré par le controleur)</li>
  * <li>un nom</li></ul>
  * @author Bruno Spyckerelle
- * @version 2.0
+ * @version 2.0.1
  */
 public interface VidesoObject{
 	
@@ -41,7 +40,7 @@ public interface VidesoObject{
 	 * @param pos Position de l'annotation par rapport au Globe
 	 * @return
 	 */
-	public Annotation getAnnotation(Position pos);
+	public VidesoAnnotation getAnnotation(Position pos);
 	
 	/**
 	 * Base de données que l'objet représente

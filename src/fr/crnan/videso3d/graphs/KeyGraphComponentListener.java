@@ -54,7 +54,7 @@ public class KeyGraphComponentListener implements KeyListener, ClipboardOwner {
 				if(cell instanceof mxCell){
 					if(((mxCell) cell).getValue() instanceof CellContent){
 						CellContent content = (CellContent) ((mxCell)cell).getValue();
-						if(!cells.contains(content)){
+						if(!cells.contains(content)&& content.toFormattedString() != null){
 							cells.add(content);
 							selection += content.toFormattedString()+"\n";
 						}
@@ -62,7 +62,7 @@ public class KeyGraphComponentListener implements KeyListener, ClipboardOwner {
 						for(int i = 0;i<((mxCell)cell).getChildCount();i++){
 							if(((mxCell)cell).getChildAt(i).getValue() instanceof CellContent){
 								CellContent content = (CellContent)((mxCell)cell).getChildAt(i).getValue();
-								if(!cells.contains(content)){
+								if(!cells.contains(content) && content.toFormattedString() != null){
 									cells.add(content);
 									selection += content.toFormattedString()+"\n";
 								}
