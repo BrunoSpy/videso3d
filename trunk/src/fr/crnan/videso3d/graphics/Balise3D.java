@@ -21,7 +21,6 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.PointPlacemark;
 import gov.nasa.worldwind.render.PointPlacemarkAttributes;
@@ -83,7 +82,7 @@ public class Balise3D extends PointPlacemark implements Balise {
 	}
 
 	@Override
-	public Annotation getAnnotation(Position pos) {
+	public VidesoAnnotation getAnnotation(Position pos) {
 		annotation.setPosition(pos);
 		return annotation;
 	}

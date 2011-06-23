@@ -73,7 +73,6 @@ import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.layers.AirspaceLayer;
-import gov.nasa.worldwind.layers.AnnotationLayer;
 import gov.nasa.worldwind.layers.LatLonGraticuleLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
@@ -101,7 +100,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	/**
 	 * Layer contenant les annotations
 	 */
-	private AnnotationLayer annotationLayer;
+	private VAnnotationLayer annotationLayer;
 	/**
 	 * Layer pour les frontières
 	 */
@@ -175,9 +174,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		
 	}
 
-	public AnnotationLayer getAnnotationLayer(){
+	public VAnnotationLayer getAnnotationLayer(){
 		if(annotationLayer == null){
-			annotationLayer = new VAnnotationLayer();
+			annotationLayer = new VAnnotationLayer(this);
 			this.getModel().getLayers().add(annotationLayer);
 		}
 		return annotationLayer;

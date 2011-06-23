@@ -37,7 +37,6 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Line;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.geom.Vec4;
-import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.render.Material;
@@ -151,7 +150,7 @@ public class Route2D extends DirectedPath implements Route{
 
 
 	@Override
-	public Annotation getAnnotation(Position pos) {
+	public VidesoAnnotation getAnnotation(Position pos) {
 		if(annotation == null) this.setAnnotation("Route "+this.name);
 		annotation.setPosition(pos);
 		return annotation;

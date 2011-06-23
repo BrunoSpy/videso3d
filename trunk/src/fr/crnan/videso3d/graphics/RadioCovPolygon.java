@@ -24,11 +24,9 @@ package fr.crnan.videso3d.graphics;
  */
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import gov.nasa.worldwind.geom.*;
 import gov.nasa.worldwind.globes.Globe;
 //import gov.nasa.worldwind.globes.Globe;
-import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.util.Logging;
 //import gov.nasa.worldwind.util.RestorableSupport;
@@ -312,7 +310,7 @@ public class RadioCovPolygon extends AbstractAirspace implements VidesoObject{
 			
 		}
 		@Override
-		public Annotation getAnnotation(Position pos) {
+		public VidesoAnnotation getAnnotation(Position pos) {
 			// TODO Auto-generated method stub
 			return null;
 		}

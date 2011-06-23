@@ -16,17 +16,27 @@
 
 package fr.crnan.videso3d.layers;
 
+import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.graphics.VidesoAnnotation;
 import gov.nasa.worldwind.layers.AnnotationLayer;
 import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.util.Logging;
 /**
- * Extension de AnnotationLayer qui s'assure qu'une annotation ne peut pas être ajoutée deux fois.
+ * Extension de AnnotationLayer qui s'assure qu'une annotation ne peut pas être ajoutée deux fois.<br />
+ * Rend possible le Drag sur les annotations.
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class VAnnotationLayer extends AnnotationLayer {
 
-	public void addAnnotation(Annotation annotation){
+	private VidesoGLCanvas wwd;
+	
+	public VAnnotationLayer(VidesoGLCanvas wwd){
+		super();
+		this.wwd = wwd;
+	}
+	
+	public void addAnnotation(VidesoAnnotation annotation){
 		if (annotation == null)
 		{
 			String msg = Logging.getMessage("nullValue.AnnotationIsNull");
@@ -41,6 +51,7 @@ public class VAnnotationLayer extends AnnotationLayer {
 		}
 		if(!this.annotations.contains(annotation)){
 			this.annotations.add(annotation);
+			this.wwd.getDraggerListener().addDraggableObject(annotation);
 		} 
 	}
 
