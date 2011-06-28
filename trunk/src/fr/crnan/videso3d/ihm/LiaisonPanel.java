@@ -10,9 +10,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -21,7 +18,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
-import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.stpv.StpvController;
 
 public class LiaisonPanel extends ResultPanel implements ActionListener{
 
@@ -36,16 +35,7 @@ public class LiaisonPanel extends ResultPanel implements ActionListener{
 	private int searchNum;
 	
 	public LiaisonPanel(String searchNum, JTabbedPane tabPane){
-		try {
-			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.Databases, "select name from databases where type = ? and selected = ?");
-			st.setString(1, "STPV");
-			st.setInt(2, 1);
-			ResultSet rs = st.executeQuery();
-			String STPVName = rs.next() ? rs.getString(1) : null;
-			f = new File("./datas/CODE_"+STPVName);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		f = new File("./datas/CODE_"+((StpvController)DatasManager.getController(Type.STPV)).getCurrentName());
 		this.tabPane = tabPane;
 		this.searchNum = Integer.parseInt(searchNum);
 		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
