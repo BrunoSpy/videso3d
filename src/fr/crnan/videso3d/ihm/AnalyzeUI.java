@@ -36,6 +36,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
@@ -67,7 +68,23 @@ public final class AnalyzeUI extends JFrame {
 	private JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, context, tabPane);
 
 	private JLabel nombreResultats = new JLabel();
+	
+	private JToolBar toolbar;
+	
+	private JComboBox search;
+	private JComboBox search2;
+	private JTextField searchNum;
+	
+	private JLabel labelContenant = new JLabel(" contenant : ");
+	
+	private JLabel labelEt = new JLabel(" et : ");
+	
+	private JLabel numeroLabel = new JLabel(" numéro : ");
+	
 
+	//toolbarState = 1 par défaut, = 2 pour afficher la toolbar de recherche de liaison privilégiée.
+	private int toolbarState = 1;
+	
 	public final static AnalyzeUI getInstance(){
 		if(instance == null){
 			instance = new AnalyzeUI();
@@ -84,9 +101,10 @@ public final class AnalyzeUI extends JFrame {
 	 * @param type Type de recherche
 	 * @param balise1 Première balise cherchée
 	 * @param balise2 Deuxième balise cherchée (optionnel)
+	 * @param numero Numéro de la liaison privilégiée recherchée (optionnel)
 	 */
-	public final static void showResults(String type, String balise1, String balise2){
-		ResultPanel content = getInstance().createResultPanel(type, balise1, balise2);
+	public final static void showResults(String type, String balise1, String balise2, String searchNum){
+		ResultPanel content = getInstance().createResultPanel(type, balise1, balise2, searchNum, getInstance().tabPane);
 		content.setContext(getInstance().context);
 		content.addPropertyChangeListener(ResultPanel.PROPERTY_RESULT, new PropertyChangeListener() {
 
@@ -96,7 +114,12 @@ public final class AnalyzeUI extends JFrame {
 			}
 		});
 
-		getInstance().tabPane.addTab(type+" "+balise1+(balise2.isEmpty() ? "" : "+"+balise2), content);
+		String tabTitle = "";
+		if(type.equals("liaison privilégiée"))
+			tabTitle = "Liaison "+searchNum;
+		else
+			tabTitle = type+" "+balise1+(balise2.isEmpty() ? "" : "+"+balise2);
+		getInstance().tabPane.addTab(tabTitle, content);
 
 		ButtonTabComponent buttonTab = new ButtonTabComponent(getInstance().tabPane);
 		getInstance().tabPane.setTabComponentAt(getInstance().tabPane.indexOfComponent(content), buttonTab);
@@ -122,7 +145,7 @@ public final class AnalyzeUI extends JFrame {
 	 * @param balise Balise cherchée
 	 */
 	public final static void showResults(String type, String balise){
-		showResults(type, balise, "");
+		showResults(type, balise, "", "");
 	}
 
 	private AnalyzeUI(){
@@ -133,7 +156,8 @@ public final class AnalyzeUI extends JFrame {
 
 		this.setTitle("Videso - Analyse ("+Videso3D.VERSION+")");
 
-		this.add(this.createToolbar(), BorderLayout.PAGE_START);
+		toolbar = this.createToolbar();
+		this.add(toolbar, BorderLayout.PAGE_START);
 
 		this.add(this.createStatusBar(), BorderLayout.PAGE_END);
 
@@ -147,7 +171,7 @@ public final class AnalyzeUI extends JFrame {
 
 	}	
 
-	private ResultPanel createResultPanel(final String type, final String search, final String search2){
+	private ResultPanel createResultPanel(final String type, final String search, final String search2, final String searchNum, JTabbedPane tabPane){
 
 		if(type.equals("iti")){
 			return new ItiPanel(search, search2);
@@ -161,6 +185,8 @@ public final class AnalyzeUI extends JFrame {
 			return new ConnexPanel(search, search2);
 		} else if(type.equals("stars")){
 			return new StarPanel(search, search2);
+		}else if(type.equals("liaison privilégiée")){
+			return new LiaisonPanel(searchNum, tabPane);
 		}
 		return null;
 	}
@@ -171,13 +197,22 @@ public final class AnalyzeUI extends JFrame {
 
 		toolbar.add(new JLabel(" Rechercher : "));
 
-		String[] types = {"balise", /*"balint",*/ "iti", "trajet", "route", "connexion", "stars"};
+		String[] types = {"balise", /*"balint",*/ "iti", "trajet", "route", "connexion", "stars", "liaison privilégiée"};
 
 		final JComboBox type = new JComboBox(types);
+		
+		type.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				 JComboBox cb = (JComboBox)e.getSource();
+			     String itemRecherche = (String)cb.getSelectedItem();
+			     changeToolbar(itemRecherche);
+			}
+		});
 
 		toolbar.add(type);
 
-		toolbar.add(new JLabel(" contenant : "));
+		toolbar.add(labelContenant);
 
 
 		LinkedList<String> results = new LinkedList<String>();
@@ -192,7 +227,7 @@ public final class AnalyzeUI extends JFrame {
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-		final JComboBox search = new JComboBox(results.toArray());
+		search = new JComboBox(results.toArray());
 		search.setEditable(true);
 		search.setToolTipText("<html>Nom de la balise ou du terrain recherché.<br />Exemple : LF* renverra toutes les informations sur les terrains français.</html>");
 	
@@ -200,25 +235,30 @@ public final class AnalyzeUI extends JFrame {
 
 		toolbar.add(search);
 
-		toolbar.add(new JLabel(" et : "));
+		toolbar.add(labelEt);
 
 		//nouvelle liste de résultat avec un résultat vide en première position
 		LinkedList<String> results2 = (LinkedList<String>) results.clone();
 		results2.addFirst("");
-		final JComboBox search2 = new JComboBox((results2).toArray());
+		search2 = new JComboBox((results2).toArray());
 		search2.setEditable(true);
 		search2.setToolTipText("Sans objet.");
 		AutoCompleteDecorator.decorate(search2);
 
 		toolbar.add(search2);
 
+		searchNum = new JTextField(2);
+		searchNum.setEditable(true);
+		searchNum.setToolTipText("Numéro de la liaison recherchée, de 1 à ..");
+
+		
 		final JButton newSearch = new JButton("Nouvelle recherche");
 		newSearch.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!search.getSelectedItem().toString().isEmpty() || !search2.getSelectedItem().toString().isEmpty()){
-					showResults(type.getSelectedItem().toString(), search.getSelectedItem().toString(), search2.getSelectedItem().toString());
+				if(!search.getSelectedItem().toString().isEmpty() || !search2.getSelectedItem().toString().isEmpty() || !searchNum.getText().isEmpty()){
+					showResults(type.getSelectedItem().toString(), search.getSelectedItem().toString(), search2.getSelectedItem().toString(), searchNum.getText());
 				}
 			}
 		});
@@ -270,7 +310,13 @@ public final class AnalyzeUI extends JFrame {
 				}
 			}
 		});
-		
+		searchNum.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+					newSearch.doClick();
+			}
+		});
 		return toolbar;
 
 	}
@@ -302,6 +348,33 @@ public final class AnalyzeUI extends JFrame {
 		return statusBar;
 	}
 
+	private void changeToolbar(String itemRecherche){
+		if(toolbarState==1){//si la toolbar est dans son état par défaut
+			if(itemRecherche.equals("liaison privilégiée")){
+				toolbar.remove(labelContenant);
+				toolbar.remove(search);
+				toolbar.remove(labelEt);
+				toolbar.remove(search2);
+				toolbar.add(numeroLabel, 2);
+				toolbar.add(searchNum, 3);
+				toolbar.validate();
+				toolbarState = 2;
+			}
+		}else if(toolbarState==2){//si la toolbar est dans l'état pour la recherche de liaison privilégiée
+			if(!itemRecherche.equals("liaison privilégiée")){
+				toolbar.remove(numeroLabel);
+				toolbar.remove(searchNum);
+				toolbar.add(labelContenant,2);
+				toolbar.add(search, 3);
+				toolbar.add(labelEt, 4);
+				toolbar.add(search2, 5);
+				toolbar.validate();
+				toolbarState = 1;
+			}
+		}
+	}
+	
+	
 	public static ContextPanel getContextPanel(){
 		return getInstance().context;
 	}

@@ -75,7 +75,7 @@ public class Stpv extends FileParser{
 			//si la base de données n'existe pas
 			if(!DatabaseManager.databaseExists(this.name)){
 				//puis la structure de la base de donnée
-				DatabaseManager.createSTPV(this.name);
+				DatabaseManager.createSTPV(this.name, this.path);
 				//et on remplit la bdd avec les données du fichier
 				this.getFromFiles();
 				this.conn.commit();

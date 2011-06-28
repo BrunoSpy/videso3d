@@ -511,7 +511,7 @@ public final class DatabaseManager {
 	 * @param name Nom de la base recevant les tables
 	 * @throws SQLException 
 	 */
-	public static void createSTPV(String name) throws SQLException {
+	public static void createSTPV(String name, String path) throws SQLException {
 		Statement st = DatabaseManager.selectDB(Type.STPV, name).createStatement();
 		st.executeUpdate("create table mosaique (id integer primary key autoincrement, " +
 				"type varchar(2), " +
@@ -575,6 +575,12 @@ public final class DatabaseManager {
 				"name varchar(7))");
 		st.close();
 		DatabaseManager.addDatabase(name, Type.STPV, new SimpleDateFormat().format(new Date()));
+		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
+		insertClef.setString(1, "path");
+		insertClef.setString(2, "STPV");
+		insertClef.setString(3, path);
+		insertClef.executeUpdate();
+		insertClef.close();
 	}
 
 	/**
@@ -1213,14 +1219,31 @@ public final class DatabaseManager {
 	}
 
 	/**
-	 * Renvoit une connection vers la base de données STPV sélectionnée
+	 * Renvoie une connection vers la base de données STPV sélectionnée
 	 * @return {@link Statement}
 	 * @throws SQLException
 	 */
 	public static Statement getCurrentStpv() throws SQLException {
 		return DatabaseManager.getCurrent(Type.STPV);
 	}
-
+	
+	/**
+	 * Renvoie le path des donnees STPV selectionnées
+	 * @return 
+	 * @throws SQLException
+	 * 
+	 */
+	public static String getCurrentStpvPath() throws SQLException {
+		String path = null;
+		PreparedStatement getPath = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("select value from clefs where type = ?");
+		getPath.setString(1, "STPV");
+		ResultSet rs = getPath.executeQuery();
+		while (rs.next()) {
+		    path = rs.getString(1);
+		}
+		return path;
+	}
+	
 	/**
 	 * Renvoit une connection vers la base de données EXSA sélectionnée
 	 * @return {@link Statement}
