@@ -16,6 +16,7 @@
 package fr.crnan.videso3d.stpv;
 
 import java.awt.Color;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -144,6 +145,22 @@ public class StpvController implements VidesoController {
 		}
 	}
 
+	public String getCurrentName(){
+		String STPVName = null;
+		PreparedStatement st;
+		try {
+			st = DatabaseManager.prepareStatement(DatabaseManager.Type.Databases, "select name from databases where type = ? and selected = ?");
+		
+		st.setString(1, "STPV");
+		st.setInt(2, 1);
+		ResultSet rs = st.executeQuery();
+		STPVName = rs.next() ? rs.getString(1) : null;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return STPVName;
+	}
+	
 	@Override
 	public void hideObject(int type, String name) {
 		if(mosaiquesLayer.containsKey(type+name)){
