@@ -36,7 +36,7 @@ import com.ice.tar.TarInputStream;
 /**
  * Manages several kind of files
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3
  */
 public class FileManager {
 
@@ -62,11 +62,13 @@ public class FileManager {
 	public static boolean deleteFile(File file){
 		if(file.isFile()){
 			return file.delete();
-		} else {
+		} else if (file.exists()){
 			for(File f : file.listFiles()){
 				FileManager.deleteFile(f);
 			}
 			return file.delete();
+		} else {
+			return false;
 		}
 	}
 	
@@ -293,5 +295,7 @@ public class FileManager {
 		}
 		return files;
 	}
+	
+	
 	
 }
