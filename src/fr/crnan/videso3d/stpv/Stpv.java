@@ -17,6 +17,7 @@
 package fr.crnan.videso3d.stpv;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -95,6 +96,7 @@ public class Stpv extends FileParser{
 		if(this.isCancelled()){
 			try {
 				DatabaseManager.deleteDatabase(name, Type.STPV);
+				FileManager.deleteFile(new File(path+"/datas/CODE_"+name));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -122,6 +124,7 @@ public class Stpv extends FileParser{
 		this.setProgress(2);
 		this.setSect(FileManager.getFile(path + "/SECT"));
 		this.setProgress(3);
+		FileManager.copyFileAs(path + "/CODE", "./datas/CODE_"+name);
 	}
 
 	/**

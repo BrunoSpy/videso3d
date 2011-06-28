@@ -10,6 +10,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
@@ -35,7 +37,12 @@ public class LiaisonPanel extends ResultPanel implements ActionListener{
 	
 	public LiaisonPanel(String searchNum, JTabbedPane tabPane){
 		try {
-			f = new File(DatabaseManager.getCurrentStpvPath()+"\\CODE");
+			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.Databases, "select name from databases where type = ? and selected = ?");
+			st.setString(1, "STPV");
+			st.setInt(2, 1);
+			ResultSet rs = st.executeQuery();
+			String STPVName = rs.next() ? rs.getString(1) : null;
+			f = new File("./datas/CODE_"+STPVName);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

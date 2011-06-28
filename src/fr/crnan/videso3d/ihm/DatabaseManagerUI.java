@@ -290,6 +290,7 @@ public class DatabaseManagerUI extends JDialog {
 		
 		private String[] titles = {"id", "Nom", "Type", "Date d'import", "Commentaire", "Sélectionné"};
 		
+		@SuppressWarnings("rawtypes")
 		private Class[] types = new Class[] {Integer.class, String.class, String.class, String.class, String.class, Boolean.class};
 				
 		private Vector<Vector<Object>> data = new Vector<Vector<Object>>();
@@ -329,9 +330,8 @@ public class DatabaseManagerUI extends JDialog {
 			return data.get(rowIndex).get(columnIndex);
 		}
 		
-		@SuppressWarnings("unchecked")
 		@Override
-		public Class getColumnClass(int columnIndex){
+		public Class<?> getColumnClass(int columnIndex){
 			return types[columnIndex];
 		}
 		
@@ -445,8 +445,8 @@ public class DatabaseManagerUI extends JDialog {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Object source = e.getSource();
+			int index = table.convertRowIndexToModel(table.getSelectionModel().getAnchorSelectionIndex());
 			if(source == select){
-				int index = table.convertRowIndexToModel(table.getSelectionModel().getAnchorSelectionIndex());
 				try {
 					String type = (String)table.getModel().getValueAt(index, 2);
 					DatabaseManager.selectDatabase((Integer)((DBTableModel)table.getModel()).getId(index), type);
@@ -457,10 +457,13 @@ public class DatabaseManagerUI extends JDialog {
 				}
 			} else if (source == delete) {				
 				try {
-					int index = table.convertRowIndexToModel(table.getSelectionModel().getAnchorSelectionIndex());
+					String type = (String)table.getModel().getValueAt(index, 2);
+					if(type.equals("STPV"))
+						FileManager.deleteFile(new File("./datas/CODE_"+table.getModel().getValueAt(index, 1)));
 					Integer id = (Integer)((DBTableModel)table.getModel()).getId(index);
 					DatabaseManager.deleteDatabase(id);
 					((DBTableModel)table.getModel()).delete(index);
+					
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
