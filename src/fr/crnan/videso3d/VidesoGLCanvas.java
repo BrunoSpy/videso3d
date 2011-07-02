@@ -20,6 +20,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -632,6 +633,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			return new double[]{ref.latitude.degrees, ref.longitude.degrees, 50000};
 		}else if(object instanceof VidesoTrack){
 			return computeBestEyePosition((VidesoTrack)object);
+		} else if(object instanceof Route){
+			ArrayList<Route> list = new ArrayList<Route>();
+			list.add((Route) object);
+			return computeBestEyePosition(list);
 		}else if(object instanceof List){
 			if(((List<?>)object).get(0) instanceof Route){
 				return computeBestEyePosition((List<? extends Route>)object);
