@@ -318,6 +318,16 @@ public class StipContext extends Context {
 			
 				taskpane1.setTitle("Informations générales");
 
+				taskpane1.add(new AbstractAction() {
+					{
+						putValue(Action.NAME, "<html>Afficher l'iti sur la vue 3D.</html>");
+					}
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						DatasManager.getController(Type.STIP).highlight(StipController.ITI, name);
+					}
+				});
+				
 				taskpane1.add(new JLabel("<html><b>Entrée</b> : "+rs.getString(2)+"</html>"));
 				taskpane1.add(new JLabel("<html><b>Sortie</b> : "+rs.getString(3)+"</html>"));
 				taskpane1.add(new JLabel("<html><b>Plancher</b> : "+rs.getString(4)+"</html>"));

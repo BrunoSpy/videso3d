@@ -48,6 +48,7 @@ import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
@@ -55,7 +56,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage et la construction des éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.1.9
+ * @version 0.2.0
  */
 public class StipController extends ProgressSupport implements VidesoController {
 
@@ -68,16 +69,22 @@ public class StipController extends ProgressSupport implements VidesoController 
 	private Routes2DLayer routes2D;
 
 	/**
+	 * Layer pour les itis
+	 */
+	private RenderableLayer itisLayer;
+	private HashMap<String, Route2D> itis = new HashMap<String, Route2D>();
+	
+	/**
 	 * 
 	 * Layers pour les balises publiées
 	 */
-	private Balise3DLayer balisesPub3D = new Balise3DLayer("Balises publiées");
+	private Balise3DLayer balisesPub3D = new Balise3DLayer("Balises 3D publiées");
 	private Balise2DLayer balisesPub2D = new Balise2DLayer("Balises publiées");
 	/**
 	 * Layers pour les balises non publiées
 	 */
 	private Balise2DLayer balisesNP2D = new Balise2DLayer("Balises non publiées");
-	private Balise3DLayer balisesNP3D = new Balise3DLayer("Balises non publiées");
+	private Balise3DLayer balisesNP3D = new Balise3DLayer("Balises 3D non publiées");
 	/**
 	 * Layer contenant les secteurs
 	 */
@@ -176,6 +183,16 @@ public class StipController extends ProgressSupport implements VidesoController 
 		case SECTEUR://secteur
 			this.addSecteur3D(name);
 			break;
+		case ITI:
+			if(this.itis.containsKey(name)){
+				this.itis.get(name).setVisible(true);
+			} else {
+				this.createIti(name);
+			}
+			for(String balise : this.itis.get(name).getBalises()){
+				this.showObject(BALISES, balise);
+			}
+			break;
 		default:
 			break;
 		}
@@ -199,6 +216,9 @@ public class StipController extends ProgressSupport implements VidesoController 
 		case SECTEUR://secteur
 			this.removeSecteur3D(name);
 			break;
+		case ITI:
+			if(this.itis.containsKey(name))
+				((Route2D) this.itis.get(name)).setVisible(false);
 		default:
 			break;
 		}		
@@ -500,6 +520,47 @@ public class StipController extends ProgressSupport implements VidesoController 
 		balisesPub3D.hideBalises(balises, BALISES);
 	}
 	
+	/*--------------------------------------------------------------*/
+	/*-------------------- Gestion des itis STIP -------------------*/
+	/*--------------------------------------------------------------*/
+	
+
+	/**
+	 * Crée et affiche l'iti correspondant
+	 * @param name Id de l'iti
+	 */
+	public void createIti(String name) {
+		Integer id = new Integer(name);
+		Route2D iti = new Route2D(name, Type.STIP, ITI);
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select * from itis, balitis where itis.id ='"+id+"' and itis.id = balitis.iditi");
+			ArrayList<String> balises = new ArrayList<String>();
+			ArrayList<Integer> sens = new ArrayList<Integer>();
+			ArrayList<LatLon> pos = new ArrayList<LatLon>();
+			while(rs.next()){
+				balises.add(rs.getString("balise"));
+				sens.add(Route3D.LEG_AUTHORIZED);
+			}
+			for(String balise : balises){
+				rs = st.executeQuery("select * from balises where name ='"+balise+"'");
+				pos.add(LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
+			}
+			iti.setLocations(pos, sens);
+			iti.setBalises(balises);
+			rs = st.executeQuery("select * from itis where itis.id ='"+id+"'");
+			iti.setAnnotation("<html><b>Iti</b><br /><br />De "+rs.getString("entree")+" vers "+rs.getString("sortie")+".<br />" +
+					"Du niveau "+rs.getString("flsup")+" au niveau "+rs.getString("flinf"));
+			st.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.itis.put(name, iti);
+		this.itisLayer.addRenderable(iti);
+		this.itisLayer.firePropertyChange(AVKey.LAYER, null, this.itisLayer);
+	}
+	
 	/**
 	 * Construit ou met à jour les objets Stip
 	 * Appelé lors de l'initialisation de la vue ou lors du changement de base de données Stip
@@ -545,6 +606,15 @@ public class StipController extends ProgressSupport implements VidesoController 
 			secteursLayer.setEnableAntialiasing(true);
 			this.toggleLayer(secteursLayer, true);
 		}
+		if(itisLayer != null){
+			itisLayer.removeAllRenderables();
+			this.toggleLayer(itisLayer, true);
+			itis.clear();
+		} else {
+			itisLayer = new RenderableLayer();
+			itisLayer.setName("Stip Itis");
+			this.toggleLayer(itisLayer, true);
+		}
 		try {
 			if(DatabaseManager.getCurrentStip() != null) {
 				//création des nouveaux objets
@@ -553,7 +623,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 				buildRoutes("F");
 				buildRoutes("U");
 				this.toggleLayer(secteursLayer, true);
-				secteurs = new HashMap<String, Secteur3D>();				
+				secteurs.clear();				
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -604,6 +674,14 @@ public class StipController extends ProgressSupport implements VidesoController 
 			this.unHighlightPrevious(balise3d);
 			highlight = balise;
 			this.wwd.getView().goTo(balise.getPosition(), 4e5);
+			break;
+		case ITI:
+			Route2D iti = this.itis.get(text);
+			if(iti != null){
+				this.showObject(ITI, text);
+		//		this.wwd.centerView(iti);
+			}
+			break;
 		default:
 			break;
 		}
@@ -637,6 +715,8 @@ public class StipController extends ProgressSupport implements VidesoController 
 		} else if(type.equals("Secteurs") || type.equals("Secteur") || type.equals("Paris")
 				 || type.equals("Reims") || type.equals("Aix") || type.equals("Bordeaux") || type.equals("Brest") || type.equals("Autres")){
 			return SECTEUR;
+		} else if(type.equals("Itis") || type.equals("Iti")) {
+			return ITI;
 		}
 		return 0;
 	}
@@ -653,6 +733,8 @@ public class StipController extends ProgressSupport implements VidesoController 
 			return "Secteur";
 		case BALISES:
 			return "Balise";
+		case ITI:
+			return "Iti";
 		default:
 			break;
 		}

@@ -45,7 +45,7 @@ import gov.nasa.worldwind.terrain.Terrain;
  * Route en 2D.<br />
  * Couleurs respectant le codage SIA
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public class Route2D extends DirectedPath implements Route{
 
@@ -73,7 +73,6 @@ public class Route2D extends DirectedPath implements Route{
 		this.setSpace(s);
 		this.setName(name);
 	}
-	
 	public Route2D(DatabaseManager.Type base, int type) {
 		super();
 		this.setDatabaseType(base);
@@ -82,6 +81,11 @@ public class Route2D extends DirectedPath implements Route{
 		this.setMaxScreenSize(9.0);
 		this.setArrowLength(40000);
 		this.setFollowTerrain(true);
+	}
+	
+	public Route2D(String name, DatabaseManager.Type base, int type) {
+		this(base, type);
+		this.setName(name);
 	}
 
 	@Override
