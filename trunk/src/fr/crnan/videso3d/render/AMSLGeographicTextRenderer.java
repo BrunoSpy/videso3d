@@ -109,7 +109,7 @@ public class AMSLGeographicTextRenderer extends GeographicTextRenderer {
 			return;
 
 		Frustum frustumInModelCoords = dc.getView().getFrustumInModelCoordinates();
-		double horizon = dc.getView().computeHorizonDistance();
+		double horizon = dc.getView().getHorizonDistance();
 
 		while (iterator.hasNext())
 		{
@@ -186,7 +186,7 @@ public class AMSLGeographicTextRenderer extends GeographicTextRenderer {
 				return;
 		}
 
-		double horizon = dc.getView().computeHorizonDistance();
+		double horizon = dc.getView().getHorizonDistance();
 		double eyeDistance = dc.getView().getEyePoint().distanceTo3(textPoint);
 		if (eyeDistance > horizon)
 			return;

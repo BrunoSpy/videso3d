@@ -21,6 +21,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileFilter;
 
+import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
@@ -35,9 +36,8 @@ import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.avlist.AVList;
 import gov.nasa.worldwind.avlist.AVListImpl;
 import gov.nasa.worldwind.cache.FileStore;
-import gov.nasa.worldwind.data.DataImportUtil;
-import gov.nasa.worldwind.data.ImageIOReader;
 import gov.nasa.worldwind.data.TiledImageProducer;
+import gov.nasa.worldwind.examples.dataimport.DataInstallUtil;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.SurfaceImage;
@@ -72,9 +72,8 @@ public class ImagesController {
 
 			@Override
 			protected Integer doInBackground() throws Exception {
-				ImageIOReader imageReader = new ImageIOReader();
 				for (final File file : images) {
-					final BufferedImage image = imageReader.read(file);
+					final BufferedImage image = ImageIO.read(file);
 					if (image == null)
 						return null;
 
@@ -116,7 +115,7 @@ public class ImagesController {
 
 		FileStore fileStore = WorldWind.getDataFileStore();
 
-		final File fileStoreLocation = DataImportUtil.getDefaultImportLocation(fileStore);
+		final File fileStoreLocation = DataInstallUtil.getDefaultInstallLocation(fileStore);
 		String cacheName = WWIO.replaceIllegalFileNameCharacters(selectedFile.getName());
 
 		AVList params = new AVListImpl();

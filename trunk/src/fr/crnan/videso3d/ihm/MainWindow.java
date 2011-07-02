@@ -38,6 +38,7 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.Hashtable;
 
+import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -60,6 +61,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import fr.crnan.videso3d.AirspaceListener;
 import fr.crnan.videso3d.DatabaseManager;
@@ -93,8 +95,6 @@ import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.util.Logging;
-import gov.nasa.worldwind.data.ImageIOReader;
-import gov.nasa.worldwind.examples.util.ImageIOFileFilter;
 
 /**
  * Fenêtre principale
@@ -440,7 +440,8 @@ public class MainWindow extends JFrame {
 				VFileChooser file = new VFileChooser();
 				file.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				file.setMultiSelectionEnabled(true);
-				file.addChoosableFileFilter(new ImageIOFileFilter(new ImageIOReader()));
+				file.addChoosableFileFilter(
+						new FileNameExtensionFilter("Images", ImageIO.getReaderFormatNames()));
 				if(file.showOpenDialog(null) == VFileChooser.APPROVE_OPTION){
 					wwd.getImagesController().addEditableImages(file.getSelectedFiles());
 				}
