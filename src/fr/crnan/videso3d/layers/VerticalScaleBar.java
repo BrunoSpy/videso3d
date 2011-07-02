@@ -31,6 +31,7 @@ import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.avlist.AVList;
+import gov.nasa.worldwind.event.Message;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.Layer;
@@ -396,6 +397,11 @@ public class VerticalScaleBar extends DraggerListener implements Layer {
 	public Double getMinEffectiveAltitude(Double radius) {
 		return this.layer.getMinEffectiveAltitude(radius);
 	}
+	
+	@Override
+	public void onMessage(Message msg) {
+		this.layer.onMessage(msg);
+	}
 
 	private void addRenderables(List<PointPlacemark> tens) {
 		this.layer.addRenderables(tens);
@@ -408,5 +414,8 @@ public class VerticalScaleBar extends DraggerListener implements Layer {
 	private void removeRenderable(PointPlacemark renderable) {
 		this.layer.removeRenderable(renderable);
 	}
+
+
+
 
 }
