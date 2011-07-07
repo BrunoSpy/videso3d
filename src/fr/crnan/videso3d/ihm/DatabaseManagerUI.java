@@ -56,6 +56,7 @@ import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.edimap.Cartes;
 import fr.crnan.videso3d.exsa.Exsa;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
+import fr.crnan.videso3d.kml.KML;
 import fr.crnan.videso3d.pays.Pays;
 import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.stpv.Stpv;
@@ -188,7 +189,11 @@ public class DatabaseManagerUI extends JDialog {
 					File aipFile = FileManager.copyFile(file);
 					AIP aip = new AIP("./"+aipFile.getName());
 					this.getDatas(aip, "Import des données AIP", "AIP");
-				} else {
+				} else if (file.getName().endsWith(".kml")) {
+					KML kml = new KML(file.getAbsolutePath());			
+					this.getDatas(kml,"import des données KML","KML");
+				}				
+				else {
 					file = file.getParentFile();
 				}
 			}
