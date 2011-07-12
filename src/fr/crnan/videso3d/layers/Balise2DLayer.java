@@ -16,8 +16,8 @@
 
 package fr.crnan.videso3d.layers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import fr.crnan.videso3d.graphics.Balise;
@@ -28,7 +28,7 @@ import gov.nasa.worldwind.avlist.AVKey;
  * Layer contenant les balises.<br />
  * Permet d'afficher une ou plusieurs balises selon leur nom.
  * @author Bruno Spyckerelle
- * @version 0.3.2
+ * @version 0.3.3
  */
 public class Balise2DLayer extends LayerSet implements BaliseLayer{
 
@@ -37,7 +37,7 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	 */
 	private HashMap<String, Balise2D> balises = new HashMap<String, Balise2D>();
 	
-	private LinkedList<Balise2D> balisesActives = new LinkedList<Balise2D>();
+	private List<Balise2D> balisesActives = new ArrayList<Balise2D>();
 	
 	private TextLayer textLayer = new TextLayer("Balises");
 	private BaliseMarkerLayer markerLayer = new BaliseMarkerLayer();
@@ -224,4 +224,12 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 		return balises.get(balise+type);
 	}
 
+	@Override
+	public List<String> getVisibleBalises() {
+		List<String> balisesList = new ArrayList<String>();
+		for(Balise b : balisesActives){
+			balisesList.add(b.getName());
+		}
+		return balisesList;
+	}
 }

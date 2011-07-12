@@ -816,7 +816,15 @@ public class StipController extends ProgressSupport implements VidesoController 
 			}
 		}
 		if(!secteurs.isEmpty()) objects.put(SECTEUR, secteurs);
-		
+		//BALISES
+		List<String> balis = new ArrayList<String>();
+		balis.addAll(balisesNP2D.getVisibleBalises());
+		balis.addAll(balisesPub2D.getVisibleBalises());
+		if(!balis.isEmpty()) objects.put(BALISES, balis);
+		//ROUTES
+		List<String> routes = new ArrayList<String>();
+		routes.addAll(routes2D.getVisibleRoutes());
+		if(!routes.isEmpty()) objects.put(ROUTES, routes);
 		return objects;
 	}
 
