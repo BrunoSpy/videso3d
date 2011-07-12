@@ -36,6 +36,7 @@ import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.lpln.LPLNTrackPoint;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.ihm.components.ProgressMonitorInputStream;
+import fr.crnan.videso3d.stip.PointNotFoundException;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 
@@ -62,11 +63,11 @@ public class FPLReader extends TrackFilesReader {
 	}
 
 
-	public FPLReader(File selectedFile) {
+	public FPLReader(File selectedFile) throws PointNotFoundException {
 		super(selectedFile);
 	}
 
-	public FPLReader(Vector<File> files){
+	public FPLReader(Vector<File> files) throws PointNotFoundException{
 		super(files);
 	}
 

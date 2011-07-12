@@ -17,6 +17,7 @@ package fr.crnan.videso3d.formats.geo;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
+import fr.crnan.videso3d.stip.PointNotFoundException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,19 +39,19 @@ public class GEOReader extends TrackFilesReader{
 	
 	
 	
-	public GEOReader(Vector<File> files) {
+	public GEOReader(Vector<File> files) throws PointNotFoundException {
 		super(files);
 	}
 	
-	public GEOReader(File selectedFile) {
+	public GEOReader(File selectedFile) throws PointNotFoundException {
 		super(selectedFile);
 	}
 
-	public GEOReader(File selectedFile, GEOTracksLayer layer) {
+	public GEOReader(File selectedFile, GEOTracksLayer layer) throws PointNotFoundException {
 		super(selectedFile, layer);
 	}
 	
-	public GEOReader(Vector<File> geoFile, GEOTracksLayer layer) {
+	public GEOReader(Vector<File> geoFile, GEOTracksLayer layer) throws PointNotFoundException {
 		super(geoFile, layer);
 	}
 
