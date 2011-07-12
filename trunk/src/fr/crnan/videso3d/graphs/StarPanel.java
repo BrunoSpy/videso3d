@@ -115,6 +115,9 @@ public class StarPanel extends ResultGraphPanel {
 
 				try {
 					Statement st = DatabaseManager.getCurrentStpv();
+					
+					if(st == null) return 0;
+					
 					ResultSet rs = st.executeQuery("select oaci, balini, bal1, bal2, bal3, bal4, " +
 							"bal5, bal6, bal7, bal8, hel, jet, fir, uir, lieu90, conf, name from lieu90, lieu901 where" +
 							" lieu90.id = lieu901.lieu90 and lieu90 in ("+findStars(balise1, balise2)+")");

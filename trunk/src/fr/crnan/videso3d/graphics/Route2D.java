@@ -81,6 +81,7 @@ public class Route2D extends DirectedPath implements Route{
 		this.setMaxScreenSize(9.0);
 		this.setArrowLength(40000);
 		this.setFollowTerrain(true);
+		this.setAttributes(new BasicShapeAttributes());
 	}
 	
 	public Route2D(String name, DatabaseManager.Type base, int type) {

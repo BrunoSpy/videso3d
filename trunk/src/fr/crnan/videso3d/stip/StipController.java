@@ -50,6 +50,7 @@ import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 
@@ -143,6 +144,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 		this.wwd.removeLayer(balisesNP3D);
 		this.wwd.removeLayer(balisesPub3D);
 		this.wwd.removeLayer(secteursLayer);
+		this.wwd.removeLayer(itisLayer);
 	}
 	
 	@Override
@@ -163,6 +165,9 @@ public class StipController extends ProgressSupport implements VidesoController 
 		}
 		this.routes2D.hideAllRoutes();
 		this.routes3D.hideAllRoutes();
+		for(Renderable r : this.itisLayer.getRenderables()){
+			((Route2D) r).setVisible(false);
+		}
 	}
 
 	@Override
