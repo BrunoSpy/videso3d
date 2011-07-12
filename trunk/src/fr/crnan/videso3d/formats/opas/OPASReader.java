@@ -29,6 +29,7 @@ import javax.swing.ProgressMonitorInputStream;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.layers.OPASTracksLayer;
+import fr.crnan.videso3d.stip.PointNotFoundException;
 
 /**
  * Lecteur de fichier OPAS
@@ -37,19 +38,19 @@ import fr.crnan.videso3d.layers.OPASTracksLayer;
  */
 public class OPASReader extends TrackFilesReader{
 		
-	public OPASReader(Vector<File> files, OPASTracksLayer layer){
+	public OPASReader(Vector<File> files, OPASTracksLayer layer) throws PointNotFoundException{
 		super(files, layer);
 	}
 	
-	public OPASReader(File selectedFile, OPASTracksLayer layer) {
+	public OPASReader(File selectedFile, OPASTracksLayer layer) throws PointNotFoundException {
 		super(selectedFile, layer);
 	}
 	
-	public OPASReader(Vector<File> files){
+	public OPASReader(Vector<File> files) throws PointNotFoundException{
 		super(files);
 	}
 	
-	public OPASReader(File selectedFile) {
+	public OPASReader(File selectedFile) throws PointNotFoundException {
 		super(selectedFile);
 	}
 

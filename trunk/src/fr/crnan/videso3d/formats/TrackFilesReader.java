@@ -17,6 +17,7 @@
 package fr.crnan.videso3d.formats;
 
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
+import fr.crnan.videso3d.stip.PointNotFoundException;
 import gov.nasa.worldwind.util.Logging;
 
 import java.io.File;
@@ -44,7 +45,7 @@ public abstract class TrackFilesReader {
 	
 	public TrackFilesReader(){}
 	
-	public TrackFilesReader(Vector<File> files, TrajectoriesLayer layer) {
+	public TrackFilesReader(Vector<File> files, TrajectoriesLayer layer) throws PointNotFoundException {
 		this.setLayer(layer);
 		for(File f : files){
 			try {
@@ -56,7 +57,7 @@ public abstract class TrackFilesReader {
 		}
 	}
 	
-	public TrackFilesReader(File selectedFile, TrajectoriesLayer layer) {
+	public TrackFilesReader(File selectedFile, TrajectoriesLayer layer) throws PointNotFoundException {
 		this.setLayer(layer);
 		try {
 			this.files.add(selectedFile);
@@ -66,11 +67,11 @@ public abstract class TrackFilesReader {
 		}
 	}
 	
-	public TrackFilesReader(Vector<File> files) {
+	public TrackFilesReader(Vector<File> files) throws PointNotFoundException {
 		this(files, null);
 	}
 	
-	public TrackFilesReader(File selectedFile) {
+	public TrackFilesReader(File selectedFile) throws PointNotFoundException {
 		this(selectedFile, null);
 	}
 	
@@ -78,8 +79,9 @@ public abstract class TrackFilesReader {
 	 * @param path
 	 * @throws IllegalArgumentException if <code>path</code> is null
 	 * @throws java.io.IOException
+	 * @throws PointNotFoundException 
 	 */
-	public void readFile(String path) throws IOException
+	public void readFile(String path) throws IOException, PointNotFoundException
 	{
 		if (path == null)
 		{
@@ -119,7 +121,7 @@ public abstract class TrackFilesReader {
 		return this.layer;
 	}
 	
-	protected abstract void doReadStream(FileInputStream fis);
+	protected abstract void doReadStream(FileInputStream fis) throws PointNotFoundException;
 	
 	public List<VidesoTrack> getTracks(){
 		if(this.tracks.isEmpty()){

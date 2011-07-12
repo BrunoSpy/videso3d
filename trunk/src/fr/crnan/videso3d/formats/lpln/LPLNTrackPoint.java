@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.stip.PointNotFoundException;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.tracks.TrackPoint;
@@ -35,16 +36,20 @@ public class LPLNTrackPoint implements TrackPoint{
 	private String name;
 	private Position position;
 	
-	public LPLNTrackPoint(String sentence) {
+	public LPLNTrackPoint(String sentence) throws PointNotFoundException {
 		this.setName(sentence.substring(17,27).trim());
 		this.setTime(sentence.substring(47, 52));	
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
 			ResultSet rs = st.executeQuery("select * from balises where name ='"+this.getName()+"'");
-			rs.next();
-			this.setPosition(new Position(Angle.fromDegrees(rs.getDouble("latitude")),
+			//TODO ajouter une erreur si pas de base STIP
+			if(rs.next()){
+				this.setPosition(new Position(Angle.fromDegrees(rs.getDouble("latitude")),
 										  Angle.fromDegrees(rs.getDouble("longitude")),
 										  (new Double(sentence.substring(55, 58)))*30.48));
+			} else {
+				throw new PointNotFoundException(this.getName(), "Point "+this.getName()+" non trouvé");
+			}
 			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

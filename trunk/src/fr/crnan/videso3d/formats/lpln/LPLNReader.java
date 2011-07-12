@@ -16,6 +16,7 @@
 package fr.crnan.videso3d.formats.lpln;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.stip.PointNotFoundException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,11 +37,11 @@ import javax.swing.ProgressMonitorInputStream;
  */
 public class LPLNReader extends TrackFilesReader{
 		
-	public LPLNReader(File selectedFile) {
+	public LPLNReader(File selectedFile) throws PointNotFoundException {
 		super(selectedFile);
 	}
 
-	public LPLNReader(Vector<File> files){
+	public LPLNReader(Vector<File> files) throws PointNotFoundException {
 		super(files);
 	}
 	
@@ -68,8 +69,8 @@ public class LPLNReader extends TrackFilesReader{
 	}
 
 	@Override
-	protected void doReadStream(FileInputStream stream)
-	{
+	protected void doReadStream(FileInputStream stream) throws PointNotFoundException {
+		
 		String sentence;
 
 		BufferedReader in = new BufferedReader(
@@ -78,8 +79,7 @@ public class LPLNReader extends TrackFilesReader{
 								"Extraction du fichier LPLN ...",
 								stream)));
 
-		try
-		{
+	    try {
 			LPLNTrack track = null;
 			boolean balisesFound = false;
 			int count = 0;
@@ -114,7 +114,12 @@ public class LPLNReader extends TrackFilesReader{
 								count++;
 							} else {
 								if(count < 2){ //à partir de count == 2, l'ensemble des balises est passé
-									track.addPoint(new LPLNTrackPoint(sentence));
+									try {
+										track.addPoint(new LPLNTrackPoint(sentence));
+									} catch (PointNotFoundException e) {
+										e.printStackTrace();
+										throw e;
+									}
 								}
 							}
 						}
@@ -122,8 +127,7 @@ public class LPLNReader extends TrackFilesReader{
 				} 
 			}
 		}
-		catch (NoSuchElementException e)
-		{
+		catch (NoSuchElementException e) {
 			//noinspection UnnecessaryReturnStatement
 			return;
 		} catch (IOException e) {
