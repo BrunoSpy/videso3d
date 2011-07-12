@@ -15,6 +15,8 @@
  */
 package fr.crnan.videso3d;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
@@ -50,7 +52,7 @@ import gov.nasa.worldwind.util.Logging;
  * Enregistre les ccontroleurs, les contexts de façon à partager ces éléments avec<br />
  * parties de l'application qui en ont besoin.
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public final class DatasManager {
 
@@ -61,9 +63,12 @@ public final class DatasManager {
 	private HashMap<DatabaseManager.Type, Context> contexts = new HashMap<DatabaseManager.Type, Context>();
 	
 	private HashMap<DatabaseManager.Type, DataView> views = new HashMap<DatabaseManager.Type, DataView>();
+		
+	private PropertyChangeSupport support;
 	
 	private DatasManager(){
 		super();
+		support = new PropertyChangeSupport(this);
 	}
 	
 	public static void addDatas(DatabaseManager.Type type, VidesoController controller, Context context, DataView view){
@@ -128,6 +133,7 @@ public final class DatasManager {
 			Logging.logger().severe("Type "+type+" inconnu");
 			throw new Exception("Type "+type+" inconnu");
 		}
+		instance.support.firePropertyChange("done", null, true);
 	}
 	
 	public static int getNumberInitSteps(Type t){
@@ -151,5 +157,25 @@ public final class DatasManager {
 		default:
 			return 0;
 		}
+	}
+	
+	/* ****************************************************** */
+	/* *************** Gestion des listeners **************** */
+	/* ****************************************************** */
+	
+	public static void addPropertyChangeListener(PropertyChangeListener l){
+		instance.support.addPropertyChangeListener(l);
+	}
+	
+	public static void addPropertyChangeListener(String propertyName, PropertyChangeListener l){
+		instance.support.addPropertyChangeListener(propertyName, l);
+	}
+	
+	public static void removePropertyChangeListener(PropertyChangeListener l){
+		instance.support.removePropertyChangeListener(l);
+	}
+	
+	public static void removePropertyChangeListener(String propertyName, PropertyChangeListener l){
+		instance.support.removePropertyChangeListener(propertyName, l);
 	}
 }

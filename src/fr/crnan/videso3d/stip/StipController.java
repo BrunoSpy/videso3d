@@ -805,4 +805,20 @@ public class StipController extends ProgressSupport implements VidesoController 
 		return null;
 	}
 
+	@Override
+	public HashMap<Integer, List<String>> getSelectedObjects() {
+		HashMap<Integer, List<String>> objects = new HashMap<Integer, List<String>>();
+		//SECTEUR
+		List<String> secteurs = new ArrayList<String>();
+		for(String s : this.secteurs.keySet()){
+			if(this.secteurs.get(s).isVisible()){
+				secteurs.add(s.substring(0, s.length()-1));
+			}
+		}
+		if(!secteurs.isEmpty()) objects.put(SECTEUR, secteurs);
+		
+		return objects;
+	}
+
+	
 }

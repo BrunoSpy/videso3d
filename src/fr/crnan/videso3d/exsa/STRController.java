@@ -530,6 +530,12 @@ public class STRController implements VidesoController {
 	@Override
 	public boolean isColorEditable(int type) {
 		return false;
+	}
+
+	@Override
+	public HashMap<Integer, List<String>> getSelectedObjects() {
+		// TODO Auto-generated method stub
+		return null;
 	}	
 
 }

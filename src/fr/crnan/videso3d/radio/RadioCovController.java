@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import fr.crnan.videso3d.DatabaseManager;
@@ -167,5 +168,11 @@ public class RadioCovController implements VidesoController {
 	@Override
 	public boolean isColorEditable(int type) {
 		return false;
+	}
+
+	@Override
+	public HashMap<Integer, List<String>> getSelectedObjects() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

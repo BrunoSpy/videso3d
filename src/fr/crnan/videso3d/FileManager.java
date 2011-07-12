@@ -29,17 +29,21 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import com.ice.tar.TarEntry;
 import com.ice.tar.TarInputStream;
 
 /**
- * Manages several kind of files
+ * Manages several kind of files.<br />
+ * Manages compressed files.
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.5
  */
 public class FileManager {
 
+		
+	
 	/**
 	 * Remove temp files created by untar, unzip or gunzip
 	 */
@@ -57,7 +61,7 @@ public class FileManager {
 	/**
 	 * Deletes a file even if it is a non-empty directory
 	 * @param file
-	 * @return
+	 * @return True si suppression réussie
 	 */
 	public static boolean deleteFile(File file){
 		if(file.isFile()){
@@ -105,7 +109,7 @@ public class FileManager {
 	
 	/**
 	 * Copy a file to the datas repertory
-	 * @param file to copy
+	 * @param path to copy
 	 * @return File : the new file
 	 */
 	public static File copyFile(String path){
@@ -279,7 +283,9 @@ public class FileManager {
 			File newRep = new File(repName);
 			newRep.mkdirs();
 			while((entree = zip.getNextEntry()) != null){
-				files.add(new File(repName+"/"+entree.getName()));
+				File newFile = new File(repName+"/"+entree.getName());
+				newFile.getParentFile().mkdirs();
+				files.add(newFile);
 				dest = new BufferedOutputStream(new FileOutputStream(repName+"/"+entree.getName()), 2048);
 				while((count = zip.read(data, 0, 2048)) != -1){
 					dest.write(data, 0, count);
@@ -296,6 +302,63 @@ public class FileManager {
 		return files;
 	}
 	
+	/**
+	 * 
+	 * @param zipFile Zip file
+	 * @param files Files to zip
+	 * @throws IOException 
+	 */
+	public static void createZipFile(File zipFile, File[] files) throws IOException{
+
+		// Create the ZIP file
+
+		ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile));
+
+		// Compress the files
+		addToZip(files, out);
+		
+		// Complete the ZIP file
+		out.close();
+
+	}
 	
+	private static void addToZip(File[] files, ZipOutputStream out) throws IOException{
+		// Create a buffer for reading the files
+		byte[] buf = new byte[1024];
+
+		for(int i=0; i<files.length; i++){
+			if(files[i].isDirectory()){
+				addToZip(files[i].listFiles(), out);
+			} else {
+				FileInputStream in = new FileInputStream(files[i]);
+
+				// Add ZIP entry to output stream.
+				out.putNextEntry(new ZipEntry(files[i].getPath()));
+
+				// Transfer bytes from the file to the ZIP file
+				int len;
+				while ((len = in.read(buf)) > 0) {
+					out.write(buf, 0, len);
+				}
+
+				// Complete the entry
+				out.closeEntry();
+				in.close();
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @param zipFile
+	 * @param file File to be zipped, can be a directory
+	 * @throws IOException 
+	 */
+	public static void createZipFile(File zipFile, File file) throws IOException{
+		File[] files = {file};
+		createZipFile(zipFile, files);
+	}
+	
+
 	
 }

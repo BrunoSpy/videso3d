@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -337,6 +338,12 @@ public class SkyViewController implements VidesoController {
 	@Override
 	public boolean isColorEditable(int type) {
 		return false;
+	}
+
+	@Override
+	public HashMap<Integer, List<String>> getSelectedObjects() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

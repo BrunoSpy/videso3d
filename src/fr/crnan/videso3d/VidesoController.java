@@ -18,13 +18,15 @@ package fr.crnan.videso3d;
 
 import java.awt.Color;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 import gov.nasa.worldwind.layers.Layer;
 
 /**
  * Controleur d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.3.2
+ * @version 0.3.3
  */
 public interface VidesoController {
 
@@ -128,4 +130,9 @@ public interface VidesoController {
 	 */
 	public boolean isColorEditable(int type);
 	
+	/**
+	 * Get all selected objects
+	 * @return
+	 */
+	public HashMap<Integer, List<String>> getSelectedObjects();
 }

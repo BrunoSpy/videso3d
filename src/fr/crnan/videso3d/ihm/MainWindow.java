@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.zip.ZipException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -48,6 +49,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
@@ -68,6 +70,7 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
+import fr.crnan.videso3d.ProjectManager;
 import fr.crnan.videso3d.SplashScreen;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -410,6 +413,61 @@ public class MainWindow extends JFrame {
 		
 		toolbar.addSeparator();
 		
+		final JButton loadProject = new JButton(new ImageIcon(getClass().getResource("/resources/load_project_22.png")));
+		loadProject.setToolTipText("Charger un projet");
+		loadProject.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				VFileChooser fileChooser = new VFileChooser();
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				if(fileChooser.showOpenDialog(loadProject) == JFileChooser.APPROVE_OPTION){
+					try {
+						ProjectManager.loadProject(fileChooser.getSelectedFile());
+					} catch (FileNotFoundException e1) {
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					} catch (ClassNotFoundException e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		toolbar.add(loadProject);
+		
+		final JButton saveProject = new JButton(new ImageIcon(getClass().getResource("/resources/save_project_22.png")));
+		saveProject.setToolTipText("Enregistrer le projet");
+		saveProject.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				VFileChooser fileChooser = new VFileChooser();
+				if(fileChooser.showSaveDialog(saveProject) == JFileChooser.APPROVE_OPTION){
+					final File file = fileChooser.getSelectedFile();
+					if(!(file.exists()) || 
+							(file.exists() &&
+									JOptionPane.showConfirmDialog(null, "Le fichier existe déjà.\n\nSouhaitez-vous réellement l'écraser ?",
+											"Confirmer la suppression du fichier précédent",
+											JOptionPane.OK_CANCEL_OPTION,
+											JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION)) {
+						try {
+							ProjectManager.saveProject(file);
+						} catch(ZipException e) {
+							JOptionPane.showMessageDialog(null, "Aucun fichier projet sauvé, vérifiez qu'il y a bien des objets à sauver.",
+									"Impossible de créer un fichier projet", JOptionPane.ERROR_MESSAGE);
+							Logging.logger().warning("Impossible de créer un fichier projet");
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		});
+		
+		toolbar.add(saveProject);
+		toolbar.addSeparator();
 		//ajout d'images
 		final DropDownButton images = new DropDownButton(new ImageIcon(getClass().getResource("/resources/add_geotiff_22.png")));
 		images.setToolTipText("Ajouter une image");

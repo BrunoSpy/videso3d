@@ -397,7 +397,7 @@ public class ProgressMonitor extends Object implements Accessible
         if (noteLabel != null) {
             noteLabel.setText(note);
         }
-        if(this.automaticProgress){
+        if(this.automaticProgress && myBar != null){
         	this.setProgress(myBar.getValue()+1);
         }
     }

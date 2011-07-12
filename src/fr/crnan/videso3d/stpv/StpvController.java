@@ -205,4 +205,10 @@ public class StpvController implements VidesoController {
 		return false;
 	}
 
+	@Override
+	public HashMap<Integer, List<String>> getSelectedObjects() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

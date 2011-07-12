@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -161,5 +162,11 @@ public class EdimapController implements VidesoController {
 	@Override
 	public boolean isColorEditable(int type) {
 		return false;
+	}
+
+	@Override
+	public HashMap<Integer, List<String>> getSelectedObjects() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
