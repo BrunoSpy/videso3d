@@ -15,7 +15,10 @@
  */
 package fr.crnan.videso3d.layers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route.Space;
@@ -140,6 +143,18 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 	public void unHighlight(String name) {
 		Route2D r = (Route2D) this.getRoute(name);
 		r.highlight(false);
+	}
+
+
+	@Override
+	public List<String> getVisibleRoutes() {
+		List<String> routesList = new ArrayList<String>();
+		for(Entry<String, Route2D> entry : routes.entrySet()){
+			if(entry.getValue().isVisible()){
+				routesList.add(entry.getKey());
+			}
+		}
+		return routesList;
 	}
 
 

@@ -16,12 +16,14 @@
 
 package fr.crnan.videso3d.layers;
 
+import java.util.List;
+
 import fr.crnan.videso3d.graphics.Route;
 /**
  * Layer destiné à afficher les routes<br />
  * Permet d'afficher sélectivement une ou plusieurs routes, selon leur nom ou leur type
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public interface RoutesLayer {
 
@@ -48,6 +50,8 @@ public interface RoutesLayer {
 	public void highlight(String name);
 	
 	public void unHighlight(String name);
+	
+	public List<String> getVisibleRoutes();
 
 }
 

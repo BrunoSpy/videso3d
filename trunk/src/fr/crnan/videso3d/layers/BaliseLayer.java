@@ -23,7 +23,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public interface BaliseLayer extends Layer {
 
@@ -93,5 +93,5 @@ public interface BaliseLayer extends Layer {
 	 */
 	public void eraseAllBalises();
 
-	
+	public List<String> getVisibleBalises();
 }

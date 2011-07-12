@@ -16,8 +16,8 @@
 
 package fr.crnan.videso3d.layers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import fr.crnan.videso3d.graphics.Balise;
@@ -28,7 +28,7 @@ import gov.nasa.worldwind.render.Renderable;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 
@@ -37,7 +37,7 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 	 */
 	private HashMap<String, Balise3D> balises = new HashMap<String, Balise3D>();
 	
-	private LinkedList<Balise3D> balisesActives = new LinkedList<Balise3D>();
+	private List<Balise3D> balisesActives = new ArrayList<Balise3D>();
 	
 	private Boolean lock = false;
 	
@@ -166,6 +166,15 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 	
 	public Balise3D getBalise(String balise, int type){
 		return balises.get(balise+type);
+	}
+
+	@Override
+	public List<String> getVisibleBalises() {
+		List<String> balisesList = new ArrayList<String>();
+		for(Balise b : balisesActives){
+			balisesList.add(b.getName());
+		}
+		return balisesList;
 	}
 	
 }

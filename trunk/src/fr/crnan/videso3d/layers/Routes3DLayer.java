@@ -16,7 +16,10 @@
 
 package fr.crnan.videso3d.layers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
 
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route3D;
@@ -27,7 +30,7 @@ import gov.nasa.worldwind.layers.AirspaceLayer;
  * Layer destiné à afficher les routes<br />
  * Permet d'afficher sélectivement une ou plusieurs routes, selon leur nom ou leur type
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 	
@@ -148,7 +151,16 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 		}
 	}
 	
-	
+	@Override
+	public List<String> getVisibleRoutes() {
+		List<String> routesList = new ArrayList<String>();
+		for(Entry<String, Route3D> entry : routes.entrySet()){
+			if(entry.getValue().isVisible()){
+				routesList.add(entry.getKey());
+			}
+		}
+		return routesList;
+	}
 
 	
 
