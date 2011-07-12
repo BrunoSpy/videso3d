@@ -197,16 +197,15 @@ public class Stpv extends FileParser{
 	private void getName() throws IOException{
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path+"/RESULTAT")));
 			Boolean nameFound = false;
-			while (in.ready() || !nameFound){
+			while (in.ready() && !nameFound){
 				String line = in.readLine();
-				if (line.startsWith("1     STPV - CAUTRA")){
-					//on prend le premier mot de la ligne
-					this.name = line.substring(29, 38).trim();
+				if (line.startsWith("1     STPV - CAUTRA IV - CA:")){
+					this.name = line.substring(29, 38).trim()+"."+line.substring(79, 88).trim();
 					nameFound = true;
 				}
 			}
 	}
-	
+
 	/**
 	 * Parse le fichier LIEU<br />
 	 * Prend en compte les LIEU 20, 26, 27, 6, 8 et 91
