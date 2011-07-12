@@ -6,6 +6,8 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.URL;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.VidesoController;
@@ -201,6 +203,12 @@ public class KMLController extends ProgressSupport implements VidesoController{
 	public boolean isColorEditable(int type) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public HashMap<Integer, List<String>> getSelectedObjects() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

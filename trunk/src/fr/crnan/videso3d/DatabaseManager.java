@@ -364,6 +364,13 @@ public final class DatabaseManager {
 		//à l'ajout d'une base de données, l'envoi de propertychange est demandé par le Filemanager à la fin de l'import
 	}
 
+	public static void addDatabase(String name, Type type) throws SQLException{
+		if(!databaseExists(name)){
+			addDatabase(name, type, new SimpleDateFormat().format(new Date()));
+		}
+		selectDatabase(getId(name), type);
+	}
+	
 	/**
 	 * Ajoute une référence à une base SkyView
 	 * @param name
@@ -1178,7 +1185,7 @@ public final class DatabaseManager {
 	 * Crée un PreparedStatement sur la base de données courante du type <code>type</code>, avec la requête sql passée en paramètre.
 	 * @param type
 	 * @param sqlRequest
-	 * @return
+	 * @return {@link PreparedStatement}
 	 * @throws SQLException
 	 */
 	public static PreparedStatement prepareStatement(Type type, String sqlRequest) throws SQLException{
@@ -1216,6 +1223,24 @@ public final class DatabaseManager {
 		return name;
 	}
 
+	/**
+	 * 
+	 * @param name Name of the database
+	 * @return
+	 * @throws SQLException 
+	 */
+	private static int getId(String name) throws SQLException{
+		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+		ResultSet rs = st.executeQuery("select id from databases where name = '"+name+"'");
+		Integer id = null;
+		while(rs.next()){
+			id = rs.getInt(1);
+		}
+		rs.close();
+		st.close();
+		return id;
+	}
+	
 	/**
 	 * Retourne le chemin correspondant à une base SkyView.
 	 * Renvoit null si aucune base n'est trouvée
@@ -1280,9 +1305,8 @@ public final class DatabaseManager {
 	
 	/**
 	 * Renvoit la liste des path des donnees de couvertures radio selectionnes
-	 * @ return 
+	 * @return liste des chemin vers les couvertures radios
 	 * @throws SQLException
-	 * 
 	 */
 	public static ArrayList<String> getCurrentRadioCovPath() throws SQLException {
 		ArrayList <String> pathTab = new ArrayList<String>();
@@ -1390,7 +1414,7 @@ public final class DatabaseManager {
 	/**
 	 * Get a list of all displayables objects
 	 * @param type
-	 * @return
+	 * @return liste des éléments visibles
 	 * @throws SQLException
 	 */
 	public static List<Couple<Integer, String>> getAllVisibleObjects(Type type) throws SQLException{
@@ -1477,7 +1501,7 @@ public final class DatabaseManager {
 	
 	/**
 	 * Returns all selected databases but PAYS
-	 * @return
+	 * @return liste des bases de données sélectionnées
 	 */
 	public static List<Type> getSelectedDatabases(){
 		List<Type> bases = new ArrayList<DatabaseManager.Type>();
