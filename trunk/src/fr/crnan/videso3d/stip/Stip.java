@@ -1062,7 +1062,7 @@ public class Stip extends FileParser{
 					}
 					count++;
 				}
-				if(count < 3){
+				if(count < 3 && count != 0){
 					connex += line+"\n";
 				}
 			}
