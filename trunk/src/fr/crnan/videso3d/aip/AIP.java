@@ -76,6 +76,7 @@ public class AIP extends FileParser{
 	private List<Couple<Integer,String>> SIVs;
 	private List<Couple<Integer,String>> CTRs;
 	private List<Couple<Integer,String>> TMAs;
+	private List<Couple<Integer,String>> Ps;
 	private List<Couple<Integer,String>> Rs;
 	private List<Couple<Integer,String>> Ds;
 	private List<Couple<Integer,String>> FIRs;
@@ -84,6 +85,7 @@ public class AIP extends FileParser{
 	private List<Couple<Integer,String>> UTAs;
 	private List<Couple<Integer,String>> CTAs;
 	private List<Couple<Integer,String>> OCAs;
+	private List<Couple<Integer,String>> PRNs;
 	private List<Couple<Integer,String>> CTLs;
 	private List<Couple<Integer,String>> Pjes;
 	private List<Couple<Integer,String>> Aers;
@@ -93,9 +95,9 @@ public class AIP extends FileParser{
 
 
 	public final static int Partie=0, TSA = 1, SIV = 2, CTR = 3, TMA = 4, R = 5, 
-	D = 6, FIR = 7, UIR = 8, LTA = 9, UTA = 10, CTA = 11, 
-	CTL = 12, Pje = 13, Aer = 14, Vol=15, Bal = 16, TrPla = 17, OCA = 18,
-	AWY = 20, PDR = 21, TAC = 23,
+	D = 6, FIR = 7, UIR = 8, LTA = 9, UTA = 10, CTA = 11, CTL = 12, Pje = 13,
+	Aer = 14, Vol=15, Bal = 16, TrPla = 17, OCA = 18, P = 19, PRN = 20, 
+	AWY = 21, PDR = 22, TAC = 23, 
 	DMEATT = 30, L = 31, NDB = 32, PNP = 33, TACAN = 34, VFR = 35, VOR = 36, VORDME = 37, VORTAC = 38, WPT = 39,
 	AERODROME = 40, ALTI = 41, PRIVE = 42;
 	
@@ -121,6 +123,7 @@ public class AIP extends FileParser{
 		this.SIVs = new ArrayList<Couple<Integer,String>>();
 		this.CTRs = new ArrayList<Couple<Integer,String>>();
 		this.TMAs = new ArrayList<Couple<Integer,String>>();
+		this.Ps = new ArrayList<Couple<Integer,String>>();		
 		this.Rs = new ArrayList<Couple<Integer,String>>();
 		this.Ds = new ArrayList<Couple<Integer,String>>();
 		this.FIRs = new ArrayList<Couple<Integer,String>>();
@@ -129,6 +132,7 @@ public class AIP extends FileParser{
 		this.UTAs = new ArrayList<Couple<Integer,String>>();
 		this.CTAs = new ArrayList<Couple<Integer,String>>();
 		this.OCAs = new ArrayList<Couple<Integer,String>>();
+		this.PRNs = new ArrayList<Couple<Integer,String>>();	
 		this.CTLs = new ArrayList<Couple<Integer,String>>();
 		this.Pjes = new ArrayList<Couple<Integer,String>>();
 		this.Aers = new ArrayList<Couple<Integer,String>>();
@@ -214,6 +218,7 @@ public class AIP extends FileParser{
 		this.SIVs = new ArrayList<Couple<Integer,String>>();
 		this.CTRs = new ArrayList<Couple<Integer,String>>();
 		this.TMAs = new ArrayList<Couple<Integer,String>>();
+		this.Ps = new ArrayList<Couple<Integer,String>>();
 		this.Rs = new ArrayList<Couple<Integer,String>>();
 		this.Ds = new ArrayList<Couple<Integer,String>>();
 		this.FIRs = new ArrayList<Couple<Integer,String>>();
@@ -222,6 +227,7 @@ public class AIP extends FileParser{
 		this.UTAs = new ArrayList<Couple<Integer,String>>();
 		this.CTAs = new ArrayList<Couple<Integer,String>>();
 		this.OCAs = new ArrayList<Couple<Integer,String>>();
+		this.PRNs = new ArrayList<Couple<Integer,String>>();
 		this.CTLs = new ArrayList<Couple<Integer,String>>();
 		this.Pjes = new ArrayList<Couple<Integer,String>>();
 		this.Aers = new ArrayList<Couple<Integer,String>>();
@@ -243,6 +249,9 @@ public class AIP extends FileParser{
 		this.setFile("TMA");
 		this.setProgress(progress++);
 		this.getZones(racineVolumes,"TMA");
+		this.setFile("P");
+		this.setProgress(progress++);
+		this.getZones(racineVolumes,"P");
 		this.setFile("R");
 		this.setProgress(progress++);
 		this.getZones(racineVolumes,"R");
@@ -267,6 +276,9 @@ public class AIP extends FileParser{
 		this.setFile("OCA");
 		this.setProgress(progress++);
 		this.getZones(racineVolumes,"OCA");
+		this.setFile("PRN");
+		this.setProgress(progress++);
+		this.getZones(racineVolumes,"PRN");
 		this.setFile("CTL");
 		this.setProgress(progress++);
 		this.getZones(racineVolumes,"CTL");
@@ -539,7 +551,12 @@ public class AIP extends FileParser{
 	 * @throws SQLException 
 	 */
 	private void getZones(Element racine, String type) throws SQLException{
-		List<Element> zoneList = findVolumes(racine, "lk",type);
+		List<Element> zoneList;
+		if(type.equals("P")){
+			zoneList = findVolumes(racine, "lk", "P ");
+		}else{
+			zoneList = findVolumes(racine, "lk",type);
+		}		
 		Iterator<Element> it1 = zoneList.iterator();
 		Iterator<Element> it2 = zoneList.iterator();
 		HashSet<String> sameNames = new HashSet<String>();
@@ -572,14 +589,22 @@ public class AIP extends FileParser{
 	 * @throws SQLException
 	 */
 	private void insertZone(Element zone, String name, boolean displaySequence, String type) throws SQLException {
+		System.out.println(type);
 		int zoneID = Integer.parseInt(zone.getAttributeValue("pk"));
-		//on teste s'il s'agit d'une zone Pje, Aer, Vol, Bal ou TrPla en regardant si le deuxième caractère est en minuscule
+		//on teste s'il s'agit d'une zone Pje, Aer, Vol, Bal ou TrPla en regardant si le deuxième caractère est en minuscule : si c'est le cas,
+		// on recherche le nom usuel. On cherche aussi le nom usuel pour les zones P et PRN.
 		if(type.length()>1){
-			if (Character.isLowerCase(type.charAt(1))){
+			if (Character.isLowerCase(type.charAt(1)) || type.equals("PRN")){
 				String usualName = getUsualName(zone);
 				if(usualName != null){
 					name += " -- "+usualName;
 				}
+			}
+			
+		}else if(type.equals("P")){
+			String usualName = getUsualName(zone);
+			if(usualName != null){
+				name += " -- "+usualName;
 			}
 		}
 		if(displaySequence){
@@ -624,7 +649,7 @@ public class AIP extends FileParser{
 	/**
 	 * Vérifie si le nom de la zone commence par le type (CTR, TMA,...)
 	 * @param name Le nom à vérifier
-	 * @return Le nom amputé du type de zone, sauf si c'est une zone R ou D.
+	 * @return Le nom amputé du type de zone, sauf si c'est une zone P, R ou D.
 	 */
 	private String removeType(String name){
 		int lettersToRemove = 0;
@@ -666,6 +691,8 @@ public class AIP extends FileParser{
 			return CTRs;
 		case TMA:
 			return TMAs;
+		case P:
+			return Ps;
 		case R:
 			return Rs;
 		case D:
@@ -682,6 +709,8 @@ public class AIP extends FileParser{
 			return CTAs;
 		case OCA:
 			return OCAs;
+		case PRN:
+			return PRNs;
 		case CTL:
 			return CTLs;
 		case Pje:
@@ -709,6 +738,8 @@ public class AIP extends FileParser{
 			return "CTR";
 		case TMA:
 			return "TMA";
+		case P:
+			return "P";		
 		case R:
 			return "R";
 		case D:
@@ -725,6 +756,8 @@ public class AIP extends FileParser{
 			return "CTA";
 		case OCA:
 			return "OCA";
+		case PRN:
+			return "PRN";	
 		case CTL:
 			return "CTL";
 		case Pje:
@@ -796,6 +829,9 @@ public class AIP extends FileParser{
 		if (type.equals("SIV")){
 			return SIV;
 		}
+		if (type.equals("P")){
+			return P;
+		}
 		if (type.equals("R")){
 			return R;
 		}
@@ -819,6 +855,9 @@ public class AIP extends FileParser{
 		}
 		if(type.equals("OCA")){
 			return OCA;
+		}
+		if (type.equals("PRN")){
+			return PRN;
 		}
 		if (type.equals("CTL")){
 			return CTL;

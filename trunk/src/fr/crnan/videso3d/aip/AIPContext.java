@@ -54,13 +54,13 @@ public class AIPContext extends Context {
 
 	@Override
 	public List<JXTaskPane> getTaskPanes(int type, String name) {
-		if(type<20){
+		if(type<AIP.AWY){
 			return showZoneInfos(type, name);
-		}else if(type>=20 && type <30){
+		}else if(type>=AIP.AWY && type <AIP.DMEATT){
 			return showRouteInfos(getController().getRoutes2DLayer().getRoute(name));
-		}else if(type>=30 && type<40){
+		}else if(type>=AIP.DMEATT && type<AIP.AERODROME){
 			return showNavFixInfos(type, name);
-		}else if(type>=40){
+		}else if(type>=AIP.AERODROME){
 			return showAirportInfos(type, name);
 		}
 		return null;
