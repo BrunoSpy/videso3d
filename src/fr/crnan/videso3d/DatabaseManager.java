@@ -54,7 +54,8 @@ public final class DatabaseManager {
 	/**
 	 * Property fired when a base is changed
 	 */
-	public static String BASE_CHANGED = "fr.crnan.videso3d.basechanged";
+	public static String BASE_UNSELECTED = "fr.crnan.videso3d.baseunselected";
+	public static String BASE_SELECTED = "fr.crnan.videso3d.baseselected";
 	
 	/**
 	 * Types de base de données possibles
@@ -1086,7 +1087,7 @@ public final class DatabaseManager {
 		st.executeUpdate("delete from clefs where type='"+name+"'");
 		st.close();
 		//si la base de données sélectionnée a changé
-		if(changed) instance.support.firePropertyChange(BASE_CHANGED, null, type);
+		if(changed) instance.support.firePropertyChange(BASE_UNSELECTED, null, type);
 	}
 
 	/**
@@ -1112,6 +1113,7 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static void selectDatabase(Integer id, Type type) throws SQLException {
+		System.out.println("select");
 		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		st.executeUpdate("update databases set selected = 0 where type = '"+type.toString()+"'");
 		st.executeUpdate("update databases set selected = 1 where id ='"+id+"'");
@@ -1121,7 +1123,7 @@ public final class DatabaseManager {
 		result.close();
 		st.close();
 		DatabaseManager.selectDB(type, name);
-		instance.support.firePropertyChange(BASE_CHANGED, null, type);
+		instance.support.firePropertyChange(BASE_SELECTED, null, type);
 	}
 	
 	public static void selectDatabase(Integer id, String type) throws SQLException {
@@ -1133,6 +1135,7 @@ public final class DatabaseManager {
 	 * @param type de la base de données
 	 */
 	public static void unselectDatabase(Type type) throws SQLException{
+		System.out.println("unselect");
 		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		ResultSet result = st.executeQuery("select * from databases where selected = 1 and type = '"+type.toString()+"'");
 		Integer id = null;
@@ -1143,7 +1146,7 @@ public final class DatabaseManager {
 		st.close();
 		if(id != null) {
 			DatabaseManager.unselectDatabase(id);
-			instance.support.firePropertyChange(BASE_CHANGED, null, type);
+			instance.support.firePropertyChange(BASE_UNSELECTED, null, type);
 		}
 	}
 	
@@ -1370,7 +1373,7 @@ public final class DatabaseManager {
 	 */
 	public static void importFinished(Type type){
 		Logging.logger().info("La base de type "+type.toString()+" a changée.");
-		instance.support.firePropertyChange(BASE_CHANGED, null, type);
+		instance.support.firePropertyChange(BASE_SELECTED, null, type);
 	}
 	
 	/**

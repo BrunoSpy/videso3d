@@ -18,6 +18,7 @@ package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -37,6 +38,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.Hashtable;
+import java.util.Vector;
 import java.util.zip.ZipException;
 
 import javax.imageio.ImageIO;
@@ -54,7 +56,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSlider;
-import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
@@ -65,27 +66,52 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.jdesktop.swingx.plaf.nimbus.NimbusMultiSliderUI;
+
+import bibliothek.gui.dock.common.CControl;
+import bibliothek.gui.dock.common.CGrid;
+import bibliothek.gui.dock.common.CLocation;
+import bibliothek.gui.dock.common.DefaultSingleCDockable;
+import bibliothek.gui.dock.common.event.CDockableStateListener;
+import bibliothek.gui.dock.common.group.CGroupBehavior;
+import bibliothek.gui.dock.common.intern.CDockable;
+import bibliothek.gui.dock.common.mode.ExtendedMode;
+import bibliothek.gui.dock.common.theme.ThemeMap;
+
 import fr.crnan.videso3d.AirspaceListener;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.ProjectManager;
 import fr.crnan.videso3d.SplashScreen;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.geo.GEOFileFilter;
+import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
+import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASFileFilter;
+import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.formats.fpl.FPLFileFilter;
+import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
+import fr.crnan.videso3d.ihm.components.AltitudeRangeSlider;
+import fr.crnan.videso3d.ihm.components.ClosableSingleDockable;
+import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.ihm.components.DropDownButton;
 import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
 import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
+import fr.crnan.videso3d.layers.GEOTracksLayer;
+import fr.crnan.videso3d.layers.OPASTracksLayer;
+import fr.crnan.videso3d.layers.TrajectoriesLayer;
+import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
@@ -111,10 +137,6 @@ public class MainWindow extends JFrame {
 	 * NASA WorldWind
 	 */
 	private VidesoGLCanvas wwd;
-	/**
-	 * Explorateur de données
-	 */
-	private DataExplorer dataExplorer;
 
 	/**
 	 * Panel contextuel
@@ -124,11 +146,12 @@ public class MainWindow extends JFrame {
 	 * OmniBox
 	 */
 	private Omnibox omniBox;
+
 	/**
-	 * SplitPane qui contient la vue et le contextPanel.
+	 * Dock Control
 	 */
-	private JSplitPane splitPane;
-	
+	private CControl control;
+	private CLocation locationDatas;
 	/**
 	 * Gestionnaire de bases de données
 	 */
@@ -211,7 +234,6 @@ public class MainWindow extends JFrame {
 						DatasManager.createDatas(t, wwd);
 					}
 					wwd.firePropertyChange("step", "", "Création de l'interface");
-					dataExplorer = new DataExplorer(wwd);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -245,22 +267,51 @@ public class MainWindow extends JFrame {
 
 		//Panneau contextuel
 		context = new ContextPanel();
-		dataExplorer.setContextPanel(context);
 				
-		JSplitPane mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, dataExplorer, wwd);
-		mainPane.setOneTouchExpandable(true);
-		mainPane.setBorder(null);
-		mainPane.setPreferredSize(new Dimension(600, 0));
+		control = new CControl(this);
+		control.setTheme(ThemeMap.KEY_ECLIPSE_THEME);
+		control.setGroupBehavior(CGroupBehavior.TOPMOST);
+		this.add(control.getContentArea(), BorderLayout.CENTER);
+		
+		DefaultSingleCDockable dockableDatas = new DefaultSingleCDockable("dataExplorer");
+		DefaultSingleCDockable dockableWWD = new DefaultSingleCDockable("wwd");
+		DefaultSingleCDockable dockableContext = new DefaultSingleCDockable("context");
+		
+		CGrid grid = new CGrid(control);
+		grid.add(0, 0, 1, 1, dockableDatas);
+		grid.add(1, 0, 3, 1, dockableWWD);
+		grid.add(3, 0, 1.2, 1, dockableContext);
+		control.getContentArea().deploy(grid);
+		
+		AltitudeRangeSlider rangeSlider = new AltitudeRangeSlider(wwd);
+		rangeSlider.setUI(new NimbusMultiSliderUI(rangeSlider));
+		JPanel wwdContainer = new JPanel(new BorderLayout());
+		wwdContainer.add(rangeSlider, BorderLayout.WEST);
+		wwdContainer.add(wwd, BorderLayout.CENTER);
+		dockableWWD.setTitleShown(false);
+		dockableWWD.add(wwdContainer);
+		
+		dockableDatas.add(new JPanel());
+		
+		dockableContext.add(context);
+		dockableContext.setTitleText("Informations");
+		dockableContext.setDefaultLocation(ExtendedMode.MINIMIZED, CLocation.base().minimalEast());
+		dockableContext.setExtendedMode(ExtendedMode.MINIMIZED);
+		dockableContext.setCloseable(false);
+		context.setDockable(dockableContext);
+		
+		locationDatas = /*CLocation.base().normalWest(0.2);*/dockableDatas.getBaseLocation().aside();
+		
+		for(Type type : DatabaseManager.getSelectedDatabases()){
+			this.updateDockables(type, false);
+		}
+		
+		control.removeDockable(dockableDatas);
 		
 		
 		airspaceListener = new AirspaceListener(wwd, context);
 		wwd.addSelectListener(airspaceListener);
-		context.setMinimumSize(new Dimension(0,0)); //taille mini à 0 pour permettre la fermeture du panneau avec setDividerLocation
-		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, mainPane, context);
-	//	splitPane.setOneTouchExpandable(true); //en attendant de trouver mieux ...
-		splitPane.setResizeWeight(1.0);
-		
-		this.getContentPane().add(splitPane, BorderLayout.CENTER);
+
 
 		//initialisation omnibox et contextpanel
 		omniBox = new Omnibox(wwd, context);
@@ -285,14 +336,33 @@ public class MainWindow extends JFrame {
 			}
 		});
 
-		DatabaseManager.addPropertyChangeListener(DatabaseManager.BASE_CHANGED, new PropertyChangeListener() {
+		
+		//Mise à jour quand une base est déselectionnée ou supprimée
+		DatabaseManager.addPropertyChangeListener(DatabaseManager.BASE_UNSELECTED, new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				Type type = (Type) evt.getNewValue();
+				control.removeSingleDockable(type.toString());
+				DatasManager.deleteDatas(type);
+				omniBox.removeDatabase(type);
+				context.removeTaskPane(type);
+				AnalyzeUI.getContextPanel().removeTaskPane(type);
+			}
+			
+		});
+		
+		//Mise à jour quand une base est selectionnée ou créée
+		DatabaseManager.addPropertyChangeListener(DatabaseManager.BASE_SELECTED, new PropertyChangeListener() {
 
 			@Override
 			public void propertyChange(final PropertyChangeEvent evt) {
-				
+												
 				//précréation des éléments 3D dans un SwingWorker avec ProgressMonitor
 				new SwingWorker<Integer, Integer>(){
 
+					private boolean empty = false;
+					
 					@Override
 					protected Integer doInBackground() throws Exception {
 						progressMonitor.setProgress(0);
@@ -302,8 +372,8 @@ public class MainWindow extends JFrame {
 							e.printStackTrace();
 						}
 						DatabaseManager.Type type = (Type) evt.getNewValue();
+						empty = DatasManager.numberViews() == 0;
 						DatasManager.createDatas(type, wwd);
-						dataExplorer.updateView(type);
 						return null;
 					}
 
@@ -311,14 +381,11 @@ public class MainWindow extends JFrame {
 					protected void done() {
 						Type type = (Type) evt.getNewValue();
 						try {
-							if(dataExplorer.getView(type) == null){
-								omniBox.removeDatabase(type);
-								context.removeTaskPane(type);
-								AnalyzeUI.getContextPanel().removeTaskPane(type);
-							} else {
+							if(DatasManager.getView(type) != null){
+								updateDockables(type, empty);
 								context.addTaskPane(DatasManager.getContext(type), type);
 								AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(type), type);
-								omniBox.addDatabase(type, dataExplorer.getView(type).getController(), DatabaseManager.getAllVisibleObjects(type));
+								omniBox.addDatabase(type, DatasManager.getView(type).getController(), DatabaseManager.getAllVisibleObjects(type));
 							}
 						} catch (SQLException e) {
 							e.printStackTrace();
@@ -342,12 +409,33 @@ public class MainWindow extends JFrame {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setVisible(true);
 		
-		//ferme le panneau d'informations, doit être fait après l'affichage de la fenêtre
-		splitPane.setDividerLocation(1.0);
-		
 		firePropertyChange("done", null, true);
 	}
 
+	/**
+	 * 
+	 * @param type Type de la base de données
+	 * @param empty Vrai si il n'y a plus de tabs
+	 */
+	private void updateDockables(Type type, boolean empty){
+		this.control.removeSingleDockable(type.toString());
+		ClosableSingleDockable dockable = new ClosableSingleDockable(type.toString());
+		dockable.addCloseAction(control);
+				
+		dockable.setType(type);
+		dockable.setTitleText(type.toString());
+		if(empty){
+			locationDatas = CLocation.base().normalWest(0.2);
+		} 
+		dockable.setDefaultLocation(ExtendedMode.MINIMIZED, CLocation.base().minimalWest());
+		dockable.setLocation(locationDatas);
+		dockable.add((Component) DatasManager.getView(type));
+		control.addDockable(dockable);
+		dockable.setVisible(true);
+		
+
+	}
+	
 	/**
 	 * Barre de status de l'application
 	 * @return Barre de status
@@ -373,9 +461,10 @@ public class MainWindow extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dataExplorer.resetView();
+				for(DataView view : DatasManager.getViews()){
+					view.reset();
+				}
 				wwd.resetView();
-				splitPane.setDividerLocation(splitPane.getMaximumDividerLocation());
 			}
 		});
 		
@@ -538,7 +627,7 @@ public class MainWindow extends JFrame {
 						@Override
 						protected String doInBackground() throws Exception {
 							try {
-								dataExplorer.addTrajectoriesViews(fileChooser.getSelectedFiles());
+								addTrajectoriesViews(fileChooser.getSelectedFiles());
 							} catch(Exception e1){
 								e1.printStackTrace();
 							}
@@ -558,7 +647,7 @@ public class MainWindow extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new FPLImportUI(dataExplorer).setVisible(true);
+				new FPLImportUI(getThis()).setVisible(true);
 			}
 		});
 		trajectoires.getPopupMenu().add(file);
@@ -573,7 +662,6 @@ public class MainWindow extends JFrame {
 			}
 		});
 		trajectoires.addToToolBar(toolbar);
-		//toolbar.add(trajectoires);
 
 		final DropDownButton addAirspace = new DropDownButton(new ImageIcon(getClass().getResource("/resources/draw-polygon_22_1.png")));
 		
@@ -921,8 +1009,117 @@ public class MainWindow extends JFrame {
 		toolbar.add(aide);
 		return toolbar;
 	}
+	/**
+	 * Ajoute un tab de sélection des trajectoires.<br />
+	 * Un tab est créé pour chaque type de fichier si plusieurs fichiers sont sélectionnés.
+	 * @param file
+	 * @throws Exception 
+	 */
+	public void addTrajectoriesViews(File[] files){
+		Vector<File> opasFile = new Vector<File>();
+		Vector<File> geoFile = new Vector<File>();
+		Vector<File> lplnFile = new Vector<File>();
+		Vector<File> fplFile = new Vector<File>();
+		for(File f : files){
+			if(OPASReader.isOpasFile(f)) {
+				opasFile.add(f);
+			} else if(LPLNReader.isLPLNFile(f)) {
+				lplnFile.add(f);
+			} else if(GEOReader.isGeoFile(f)) {
+				geoFile.add(f);
+			} else if (FPLReader.isFPLFile(f)){
+				fplFile.add(f);
+			}
+		}
+		
+		if(opasFile.size()>0){
+			try{
+				OPASTracksLayer layer = new OPASTracksLayer();
+				layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
+				this.wwd.toggleLayer(layer, true);
+				//lecture et création des tracks à la volée
+				OPASReader reader = new OPASReader(opasFile, layer);
+				//changement du style en fonction de la conf
+				if(reader.getTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
+					layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
+				}
+				layer.setName(reader.getName());
+				this.addTrajectoriesView(reader);
+			} catch (PointNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		if(geoFile.size()>0){
+			try{
+				GEOTracksLayer layer = new GEOTracksLayer();
+				layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
+				this.wwd.toggleLayer(layer, true);
+				//lecture et création des tracks à la volée
+				GEOReader reader = new GEOReader(geoFile, layer);
+				//changement du style en fonction de la conf
+				if(reader.getTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
+					layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
+				}
+				layer.setName(reader.getName());
+				this.addTrajectoriesView(reader);
+			} catch (PointNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		if(lplnFile.size()>0){
+			try {
+				this.addTrajectoriesView(new LPLNReader(lplnFile));
+			} catch (PointNotFoundException e) {
+				Logging.logger().warning("Point non trouvé : "+e.getName());
+				JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Impossible de trouver certains points du fichier.<br /><br />" +
+						"<b>Solution :</b><br />Vérifiez qu'une base de données STIP existe et qu'elle est cohérente avec le fichier de trajectoires.</html>",
+						"Erreur", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		if(fplFile.size()>0){
+			try {
+				FPLReader fplR = new FPLReader(fplFile);
+				String msgErreur = fplR.getErrorMessage();
+				if(!msgErreur.isEmpty())
+					JOptionPane.showMessageDialog(null, msgErreur, "Erreur lors de la lecture du plan de vol", JOptionPane.ERROR_MESSAGE);
+				if(fplR.getTracks().size()>0)
+					this.addTrajectoriesView(fplR);
+			} catch (PointNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		if(opasFile.size() == 0 && geoFile.size() == 0 && lplnFile.size() == 0 && fplFile.size()==0){
+			Logging.logger().warning("Aucun fichier trajectoire trouvé.");
+			JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucun fichier trajectoire trouvé.<br /><br />" +
+					"<b>Solution :</b><br />Vérifiez que les fichiers sélectionnés sont bien dans un format pris en compte.</html>", "Erreur", JOptionPane.ERROR_MESSAGE);
+		}
+	
+	}
+	
+	public void addTrajectoriesView(final TrackFilesReader reader){
+		final Component content = new TrajectoriesView(wwd, reader, context);
+		DefaultSingleCDockable dockable = new DefaultSingleCDockable(reader.getName());
+		dockable.setTitleText(reader.getName());
 
-	public DataExplorer getDataExplorer(){
-		return this.dataExplorer;
+		dockable.setLocation(locationDatas);
+		dockable.setCloseable(true);
+		dockable.add(content);
+		control.addDockable(dockable);
+		dockable.setVisible(true);
+		
+		dockable.addCDockableStateListener(new CDockableStateListener() {
+			
+			@Override
+			public void visibilityChanged(CDockable dockable) {
+				wwd.removeLayer(reader.getLayer());
+			}
+			
+			@Override
+			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
+		});
+	}
+	
+	private MainWindow getThis(){
+		return this;
 	}
 }

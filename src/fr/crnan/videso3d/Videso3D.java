@@ -76,7 +76,7 @@ public class Videso3D {
 								@Override
 								public void propertyChange(PropertyChangeEvent e) {
 									File[] files = {new File(arg0)};
-									main.getDataExplorer().addTrajectoriesViews(files);
+									main.addTrajectoriesViews(files);
 								}
 							});
 							
