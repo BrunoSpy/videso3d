@@ -29,6 +29,9 @@ import javax.swing.JSplitPane;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
 
+import bibliothek.gui.dock.common.DefaultSingleCDockable;
+import bibliothek.gui.dock.common.mode.ExtendedMode;
+
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
@@ -37,7 +40,7 @@ import fr.crnan.videso3d.stip.StipController;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
- * @version 0.4.3
+ * @version 0.4.4
  */
 public class ContextPanel extends JPanel{
 
@@ -47,9 +50,11 @@ public class ContextPanel extends JPanel{
 
 	private HashMap<DatabaseManager.Type, Context> taskpanes = new HashMap<DatabaseManager.Type, Context>();
 		
+	private DefaultSingleCDockable dockable;
+	
 	public ContextPanel(){
 		super();
-		this.setPreferredSize(new Dimension(300, 0));
+		this.setPreferredSize(new Dimension(250, 0));
 		this.setLayout(new BorderLayout());
 
 		this.add(titleAreaPanel, BorderLayout.NORTH);
@@ -59,16 +64,21 @@ public class ContextPanel extends JPanel{
 		this.add(scrollPane, BorderLayout.CENTER);
 	}
 	
+	public void setDockable(DefaultSingleCDockable dockable){
+		this.dockable = dockable;
+		this.remove(titleAreaPanel);
+	}
+	
 	/**
-	 * Ouvre le panneau si le parent est un {@link JSplitPane}
+	 * Ouvre le panneau
 	 */
 	public void open(){
 		if(this.getParent() instanceof JSplitPane) {
 			if(((JSplitPane)this.getParent()).getLeftComponent().equals(this)){
 				((JSplitPane)this.getParent()).setDividerLocation(250);
-			} else {
-				((JSplitPane)this.getParent()).setDividerLocation(this.getParent().getWidth()-250);
-			}
+			} 
+		} else if(this.dockable != null && this.dockable.getExtendedMode() == ExtendedMode.MINIMIZED){
+			this.dockable.setExtendedMode(ExtendedMode.NORMALIZED);
 		}
 	}
 	
@@ -92,7 +102,11 @@ public class ContextPanel extends JPanel{
 	public void showInfo(DatabaseManager.Type base, int type, String name){
 		content.removeAll();
 		if(base != null) {
-			titleAreaPanel.setTitle("Informations sur "+name);
+			if(dockable != null){
+				dockable.setTitleText("Informations sur "+name);
+			} else {
+				titleAreaPanel.setTitle("Informations sur "+name);
+			}
 			switch (base) {
 			case STIP:
 				switch (type) {
@@ -128,7 +142,11 @@ public class ContextPanel extends JPanel{
 	
 	
 	public void setTitle(String title) {
-		this.titleAreaPanel.setTitle(title);
+		if(dockable != null){
+			dockable.setTitleText(title);
+		} else {
+			this.titleAreaPanel.setTitle(title);
+		}
 	}
 	
 	public void setTaskPanes(Collection<JXTaskPane> taskpanes){

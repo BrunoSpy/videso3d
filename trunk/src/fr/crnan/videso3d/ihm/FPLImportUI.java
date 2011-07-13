@@ -52,10 +52,10 @@ public class FPLImportUI extends JFrame implements ActionListener{
 	private JButton importButton, cancelButton;
 	private JTextArea fplArea;
 	private JTextField indiTextField;
-	private DataExplorer dataExplorer;
+	private MainWindow mainWindow;
 	
-	public FPLImportUI(DataExplorer dataExplorer){
-		this.dataExplorer = dataExplorer;
+	public FPLImportUI(MainWindow mainWindow){
+		this.mainWindow = mainWindow;
 		this.setTitle("Importer un plan de vol...");
 		
 		JLabel indicatif = new JLabel("Indicatif (facultatif)");
@@ -163,7 +163,7 @@ public class FPLImportUI extends JFrame implements ActionListener{
 						JOptionPane.showMessageDialog(null, msgErreur, "Erreur lors de la lecture du plan de vol", JOptionPane.ERROR_MESSAGE);
 					}
 					if(fplR.getTracks().size()>0)
-						dataExplorer.addTrajectoriesView(fplR);
+						mainWindow.addTrajectoriesView(fplR);
 				}
 				
 				private String parseFPL(LinkedList<String> pln){

@@ -95,45 +95,52 @@ public final class DatasManager {
 	 * @throws Exception 
 	 */
 	public static void createDatas(DatabaseManager.Type type, VidesoGLCanvas wwd) throws Exception{
+		deleteDatas(type);
+		if(DatabaseManager.getCurrent(type) != null){
+			switch (type) {
+			case STIP:
+				DatasManager.addDatas(type, new StipController(wwd), new StipContext(), new StipView());
+				break;
+			case STPV:
+				DatasManager.addDatas(type, new StpvController(wwd), new StpvContext(), new StpvView());
+				break;
+			case EXSA:
+				DatasManager.addDatas(type, new STRController(wwd), new STRContext(), new StrView());
+				break;
+			case Edimap:
+				DatasManager.addDatas(type, new EdimapController(wwd), new EdimapContext(), new EdimapView());
+				break;
+			case AIP:
+				DatasManager.addDatas(type, new AIPController(wwd), new AIPContext(), new AIPView());
+				break;
+			case RadioCov:
+				//la vue radio a besoin du controlleur ...
+				//d'où obligation d'enregistrer le controleur
+				instance.controllers.put(type, new RadioCovController(wwd));
+				instance.contexts.put(type, new RadioCovContext());
+				instance.views.put(type, new RadioCovView());
+				break;
+			case SkyView:
+				DatasManager.addDatas(type, new SkyViewController(wwd), new SkyViewContext(), new SkyView());
+				break;
+			case KML:
+				DatasManager.addDatas(type, new KMLController(wwd), new KMLContext(), new KMLView());
+				break;
+			default:
+				Logging.logger().severe("Type "+type+" inconnu");
+				throw new Exception("Type "+type+" inconnu");
+			}
+		}
+		instance.support.firePropertyChange("done", null, true);
+	}
+	
+	public static void deleteDatas(DatabaseManager.Type type){
 		if(instance.controllers.containsKey(type)) {
 			instance.controllers.get(type).removeAllLayers();
 			instance.controllers.remove(type);
 		}
 		if(instance.views.containsKey(type)) instance.views.remove(type);
 		if(instance.contexts.containsKey(type)) instance.contexts.remove(type);
-		switch (type) {
-		case STIP:
-			DatasManager.addDatas(type, new StipController(wwd), new StipContext(), new StipView());
-			break;
-		case STPV:
-			DatasManager.addDatas(type, new StpvController(wwd), new StpvContext(), new StpvView());
-			break;
-		case EXSA:
-			DatasManager.addDatas(type, new STRController(wwd), new STRContext(), new StrView());
-			break;
-		case Edimap:
-			DatasManager.addDatas(type, new EdimapController(wwd), new EdimapContext(), new EdimapView());
-			break;
-		case AIP:
-			DatasManager.addDatas(type, new AIPController(wwd), new AIPContext(), new AIPView());
-			break;
-		case RadioCov:
-			//la vue radio a besoin du controlleur ...
-			//d'où obligation d'enregistrer le controleur
-			instance.controllers.put(type, new RadioCovController(wwd));
-			instance.contexts.put(type, new RadioCovContext());
-			instance.views.put(type, new RadioCovView());
-			break;			
-		case KML:
-			DatasManager.addDatas(type, new KMLController(wwd), new KMLContext(), new KMLView());
-		case SkyView:
-			DatasManager.addDatas(type, new SkyViewController(wwd), new SkyViewContext(), new SkyView());
-			break;
-		default:
-			Logging.logger().severe("Type "+type+" inconnu");
-			throw new Exception("Type "+type+" inconnu");
-		}
-		instance.support.firePropertyChange("done", null, true);
 	}
 	
 	public static int getNumberInitSteps(Type t){
@@ -157,6 +164,14 @@ public final class DatasManager {
 		default:
 			return 0;
 		}
+	}
+
+	public static int numberViews(){
+		return instance.views.size();
+	}
+	
+	public static Iterable<DataView> getViews() {
+		return instance.views.values();
 	}
 	
 	/* ****************************************************** */
