@@ -309,6 +309,9 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			case AIP.TMA:
 				couleurZone=Pallet.TMAColor;
 				break;
+			case AIP.P:
+				couleurZone=Color.red;
+				break;
 			case AIP.R:
 				couleurZone=Color.red;
 				break;
@@ -350,6 +353,9 @@ public class AIPController extends ProgressSupport implements VidesoController {
 				break;
 			case AIP.OCA:
 				couleurZone=Pallet.OCAColor;
+				break;
+			case AIP.PRN:
+				couleurZone=Pallet.PRNColor;
 				break;
 			default: 
 				break;
