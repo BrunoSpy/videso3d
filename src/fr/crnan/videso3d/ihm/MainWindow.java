@@ -286,6 +286,7 @@ public class MainWindow extends JFrame {
 		AltitudeRangeSlider rangeSlider = new AltitudeRangeSlider(wwd);
 		rangeSlider.setUI(new NimbusMultiSliderUI(rangeSlider));
 		JPanel wwdContainer = new JPanel(new BorderLayout());
+		wwdContainer.setMinimumSize(new Dimension(600, 600));
 		wwdContainer.add(rangeSlider, BorderLayout.WEST);
 		wwdContainer.add(wwd, BorderLayout.CENTER);
 		dockableWWD.setTitleShown(false);
