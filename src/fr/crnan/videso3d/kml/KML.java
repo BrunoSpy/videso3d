@@ -45,7 +45,6 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphics.Route;
 import gov.nasa.worldwind.avlist.AVKey;
 
-import gov.nasa.worldwind.examples.util.layertree.*;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.ogc.kml.KMLRoot;
 import gov.nasa.worldwind.ogc.kml.impl.KMLController;

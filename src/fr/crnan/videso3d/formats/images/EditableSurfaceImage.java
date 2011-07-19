@@ -17,7 +17,7 @@
 package fr.crnan.videso3d.formats.images;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
-import gov.nasa.worldwind.examples.util.SurfaceImageEditor;
+import gov.nasa.worldwindx.examples.util.SurfaceImageEditor;
 import gov.nasa.worldwind.geom.Sector;
 import gov.nasa.worldwind.render.SurfaceImage;
 /**

@@ -26,7 +26,7 @@ import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.avlist.AVList;
 import gov.nasa.worldwind.avlist.AVListImpl;
 import gov.nasa.worldwind.data.BufferedImageRaster;
-import gov.nasa.worldwind.examples.util.ShapeUtils;
+import gov.nasa.worldwindx.examples.util.ShapeUtils;
 import gov.nasa.worldwind.formats.gcps.GCPSReader;
 import gov.nasa.worldwind.formats.tab.TABRasterReader;
 import gov.nasa.worldwind.formats.tiff.GeotiffReader;
