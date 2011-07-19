@@ -64,7 +64,7 @@ import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.avlist.AVList;
 import gov.nasa.worldwind.avlist.AVListImpl;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
-import gov.nasa.worldwind.examples.util.LayerManagerLayer;
+import gov.nasa.worldwindx.examples.util.LayerManagerLayer;
 import gov.nasa.worldwind.exception.WWRuntimeException;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Intersection;

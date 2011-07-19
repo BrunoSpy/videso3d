@@ -37,7 +37,7 @@ import gov.nasa.worldwind.avlist.AVList;
 import gov.nasa.worldwind.avlist.AVListImpl;
 import gov.nasa.worldwind.cache.FileStore;
 import gov.nasa.worldwind.data.TiledImageProducer;
-import gov.nasa.worldwind.examples.dataimport.DataInstallUtil;
+import gov.nasa.worldwindx.examples.dataimport.DataInstallUtil;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.SurfaceImage;
@@ -47,7 +47,7 @@ import gov.nasa.worldwind.util.WWIO;
 /**
  * 
  * @author Bruno Spyckerelle
- *
+ * @version 0.1.0
  */
 public class ImagesController {
 

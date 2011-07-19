@@ -115,8 +115,8 @@ import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
-import gov.nasa.worldwind.examples.util.ScreenShotAction;
-import gov.nasa.worldwind.examples.util.ShapeUtils;
+import gov.nasa.worldwindx.examples.util.ScreenShotAction;
+import gov.nasa.worldwindx.examples.util.ShapeUtils;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;

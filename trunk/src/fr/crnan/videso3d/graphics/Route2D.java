@@ -30,7 +30,7 @@ import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import gov.nasa.worldwind.View;
 import gov.nasa.worldwind.WorldWind;
-import gov.nasa.worldwind.examples.util.DirectedPath;
+import gov.nasa.worldwindx.examples.util.DirectedPath;
 import gov.nasa.worldwind.geom.Cylinder;
 import gov.nasa.worldwind.geom.Frustum;
 import gov.nasa.worldwind.geom.LatLon;

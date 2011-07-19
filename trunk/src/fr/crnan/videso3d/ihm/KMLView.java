@@ -36,7 +36,7 @@ import fr.crnan.videso3d.kml.KMLController;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
 import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
-import gov.nasa.worldwind.examples.util.layertree.*;
+import gov.nasa.worldwind.util.layertree.LayerTree;
 
 
 /**
