@@ -28,6 +28,7 @@ import java.nio.channels.FileChannel;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
 
@@ -56,20 +57,56 @@ import fr.crnan.videso3d.DatabaseManager.Type;
  * <li>
  * </ul>
  * @author Bruno Spyckerelle
- * @version 0.0.1
+ * @version 0.0.2
  */
 public class ProjectManager extends ProgressSupport {
 
+	private HashMap<Type, HashMap<Integer, List<String>>> objects;
+	
 	public ProjectManager(){
-		
+		super();
+		objects = new HashMap<DatabaseManager.Type, HashMap<Integer,List<String>>>();
 	}
 	
 	/**
 	 * 
+	 * @return Set of exportables types
+	 */
+	public Set<Type> getTypes(){
+		return objects.keySet();
+	}
+	
+	/**
+	 * Creates list of objects in order to allow the selection of objects to be saved
+	 */
+	public void prepareSaving(){
+		//Objets des bases de données
+		for(Type type : Type.values()){
+			try {
+				if(DatabaseManager.getCurrent(type) != null && DatasManager.getController(type) != null){
+					HashMap<Integer, List<String>> o = DatasManager.getController(type).getSelectedObjects();
+
+					if(o != null && !o.isEmpty()) {
+						objects.put(type, o);
+					}
+				}
+			}catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
+		
+		//images
+		
+		//trajectoires
+	}
+	
+	/**
+	 * Before invoking this method, <code>prepareSaving</code> has to be called once.
 	 * @param file .vpj file
 	 * @throws IOException 
 	 */
-	public static void saveProject(File file) throws IOException{
+	public void saveProject(File file) throws IOException{
 		
 		int index = file.getName().lastIndexOf(".");
 		
@@ -80,39 +117,36 @@ public class ProjectManager extends ProgressSupport {
 		main.mkdir();
 		
 		//create databases directory
-		File databases = new File(main.getAbsolutePath()+"/databases");
-		databases.mkdir();
-		for(Type type : Type.values()){
-			try {
-				if(DatabaseManager.getCurrent(type) != null && DatasManager.getController(type) != null){
-					HashMap<Integer, List<String>> objects = DatasManager.getController(type).getSelectedObjects();
+		if(!objects.isEmpty()){
+			File databases = new File(main.getAbsolutePath()+"/databases");
+			databases.mkdir();
 
-					if(objects != null && !objects.isEmpty()) {
-						//for each database with selected objects, we copy the sqlite file
-						File baseCopy = new File(databases, DatabaseManager.getCurrentName(type)+"."+type);
-						baseCopy.createNewFile();
+			try{
+				for(Type type : objects.keySet()){
 
-						FileChannel source = new FileInputStream(new File(DatabaseManager.getCurrentName(type))).getChannel();
-						FileChannel destination = new FileOutputStream(baseCopy).getChannel();
+					//for each database with selected objects, we copy the sqlite file
+					File baseCopy = new File(databases, DatabaseManager.getCurrentName(type)+"."+type);
+					baseCopy.createNewFile();
 
-						destination.transferFrom(source, 0, source.size());
+					FileChannel source = new FileInputStream(new File(DatabaseManager.getCurrentName(type))).getChannel();
+					FileChannel destination = new FileOutputStream(baseCopy).getChannel();
 
-						source.close();
-						destination.close();
-						
-						//then we save the selected objects
-						File selectedObjects = new File(databases, type.toString());
-						selectedObjects.createNewFile();
-						ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(selectedObjects));
-						oos.writeObject(objects);
-						oos.close();
-					}
+					destination.transferFrom(source, 0, source.size());
+
+					source.close();
+					destination.close();
+
+					//then we save the selected objects
+					File selectedObjects = new File(databases, type.toString());
+					selectedObjects.createNewFile();
+					ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(selectedObjects));
+					oos.writeObject(objects.get(type));
+					oos.close();
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		
 		//create the zip file
 		FileManager.createZipFile(file, main);
 		
@@ -121,7 +155,7 @@ public class ProjectManager extends ProgressSupport {
 		
 	}
 	
-	public static void loadProject(File file) throws FileNotFoundException, IOException, ClassNotFoundException{
+	public void loadProject(File file) throws FileNotFoundException, IOException, ClassNotFoundException{
 		
 		List<File> files = FileManager.unzip(file);
 		
