@@ -193,14 +193,16 @@ public class Pays extends FileParser {
 		try {
 			//récupération du nom de la base à créer
 			this.getName();
-			this.conn = DatabaseManager.selectDB(Type.PAYS, this.name);
-			this.conn.setAutoCommit(false);
 			if(!DatabaseManager.databaseExists(this.name)){
+				this.conn = DatabaseManager.selectDB(Type.PAYS, this.name);
+				this.conn.setAutoCommit(false);
 				//création de la structure de la base de données
 				DatabaseManager.createPays(this.name);
 				//parsing des fichiers et stockage en base
 				this.getFromFiles();
 				this.createIndexes();
+			} else {
+				DatabaseManager.selectDatabase(this.name, Type.PAYS);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

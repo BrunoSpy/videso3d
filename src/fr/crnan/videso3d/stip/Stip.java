@@ -42,7 +42,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
  * Lecteur de fichiers STIP
  * Toutes les infos concernant les fichiers SATIN sont dans le DDI Satin
  * @author Bruno Spyckerelle
- * @version 0.3.2
+ * @version 0.3.3
  */
 public class Stip extends FileParser{
 	
@@ -80,10 +80,10 @@ public class Stip extends FileParser{
 		try {
 			//récupération du nom de la base à créer
 			this.getName();
-			//création de la connection à la base de données
-			this.conn = DatabaseManager.selectDB(Type.STIP, this.name);
-			this.conn.setAutoCommit(false); //fixes performance issue
 			if(!DatabaseManager.databaseExists(this.name)){
+				//création de la connection à la base de données
+				this.conn = DatabaseManager.selectDB(Type.STIP, this.name);
+				this.conn.setAutoCommit(false); //fixes performance issue
 				//création de la structure de la base de données
 				DatabaseManager.createSTIP(this.name);
 				//parsing des fichiers et stockage en base
@@ -97,6 +97,8 @@ public class Stip extends FileParser{
 				
 				this.conn.commit();
 				this.setProgress(this.numberFiles());
+			} else {
+				DatabaseManager.selectDatabase(this.name, Type.STIP);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

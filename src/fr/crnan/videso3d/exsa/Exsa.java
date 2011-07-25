@@ -73,15 +73,17 @@ public class Exsa extends FileParser {
 		try {
 			//on récupère le nom de la base de données
 			this.getName();
-			//on crée la connection avec bdd avec ce nom
-			this.conn = DatabaseManager.selectDB(Type.EXSA, this.name);
-			this.conn.setAutoCommit(false);
 			if(!DatabaseManager.databaseExists(this.name)){
+				//on crée la connection avec bdd avec ce nom
+				this.conn = DatabaseManager.selectDB(Type.EXSA, this.name);
+				this.conn.setAutoCommit(false);
 				//puis la structure de la base de donnée
 				DatabaseManager.createEXSA(this.name);
 				//et on remplit la bdd avec les données du fichier
 				this.getFromFiles();
 				this.conn.commit();
+			} else {
+				DatabaseManager.selectDatabase(this.name, Type.EXSA);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
