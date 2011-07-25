@@ -70,16 +70,18 @@ public class Stpv extends FileParser{
 	public Integer doInBackground() {
 		try {
 			this.getName();
-			//on crée la connection à la db
-			this.conn = DatabaseManager.selectDB(Type.STPV, this.name);
-			this.conn.setAutoCommit(false);
 			//si la base de données n'existe pas
 			if(!DatabaseManager.databaseExists(this.name)){
+				//on crée la connection à la db
+				this.conn = DatabaseManager.selectDB(Type.STPV, this.name);
+				this.conn.setAutoCommit(false);
 				//puis la structure de la base de donnée
 				DatabaseManager.createSTPV(this.name, this.path);
 				//et on remplit la bdd avec les données du fichier
 				this.getFromFiles();
 				this.conn.commit();
+			} else {
+				DatabaseManager.selectDatabase(this.name, Type.STPV);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

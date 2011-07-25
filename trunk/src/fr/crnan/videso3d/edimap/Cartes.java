@@ -29,6 +29,7 @@ import java.util.List;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileParser;
+import fr.crnan.videso3d.DatabaseManager.Type;
 
 /**
  * Jeu de cartes Edimap
@@ -187,6 +188,8 @@ public class Cartes extends FileParser {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+			} else {
+				DatabaseManager.selectDatabase(this.version, Type.Edimap);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

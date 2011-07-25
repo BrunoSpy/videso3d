@@ -45,7 +45,7 @@ import fr.crnan.videso3d.graphics.Route;
 /**
  * Lecteur des exports en xml du SIA
  * @author Adrien Vidal
- * @version 0.3.2
+ * @version 0.3.3
  */
 public class AIP extends FileParser{
 
@@ -175,10 +175,10 @@ public class AIP extends FileParser{
 		try {
 			//récupération du nom de la base à créer
 			this.getName();
-			//création de la connection à la base de données
-			this.conn = DatabaseManager.selectDB(Type.AIP, this.name);
-			this.conn.setAutoCommit(false); //fixes performance issue
 			if(!DatabaseManager.databaseExists(this.name)){
+				//création de la connection à la base de données
+				this.conn = DatabaseManager.selectDB(Type.AIP, this.name);
+				this.conn.setAutoCommit(false); //fixes performance issue
 				//création de la structure de la base de données
 				DatabaseManager.createAIP(this.name,path);
 				//parsing des fichiers et stockage en base
@@ -186,6 +186,8 @@ public class AIP extends FileParser{
 				this.setProgress(1);
 				this.conn.commit();
 				this.setProgress(this.numberFiles());
+			} else {
+				DatabaseManager.selectDatabase(this.name, Type.AIP);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -589,7 +591,6 @@ public class AIP extends FileParser{
 	 * @throws SQLException
 	 */
 	private void insertZone(Element zone, String name, boolean displaySequence, String type) throws SQLException {
-		System.out.println(type);
 		int zoneID = Integer.parseInt(zone.getAttributeValue("pk"));
 		//on teste s'il s'agit d'une zone Pje, Aer, Vol, Bal ou TrPla en regardant si le deuxième caractère est en minuscule : si c'est le cas,
 		// on recherche le nom usuel. On cherche aussi le nom usuel pour les zones P et PRN.

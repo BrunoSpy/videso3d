@@ -18,7 +18,6 @@ package fr.crnan.videso3d;
 
 import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.edimap.Cartes;
-//import fr.crnan.videso3d.skyview.SkyViewController;
 import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.util.Logging;
 
@@ -1113,7 +1112,6 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static void selectDatabase(Integer id, Type type) throws SQLException {
-		System.out.println("select");
 		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		st.executeUpdate("update databases set selected = 0 where type = '"+type.toString()+"'");
 		st.executeUpdate("update databases set selected = 1 where id ='"+id+"'");
@@ -1130,12 +1128,19 @@ public final class DatabaseManager {
 			DatabaseManager.selectDatabase(id, stringToType(type));	
 	}
 
+	public static void selectDatabase(String name, Type type) throws SQLException {
+		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+		ResultSet rs = st.executeQuery("select id from databases where name ='"+name+"'");
+		if(rs.next()){
+			selectDatabase(rs.getInt(1), type);
+		}
+	}
+	
 	/**
 	 * Désélectionne la base de données sélectionnée de type <code>type</code>
 	 * @param type de la base de données
 	 */
 	public static void unselectDatabase(Type type) throws SQLException{
-		System.out.println("unselect");
 		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		ResultSet result = st.executeQuery("select * from databases where selected = 1 and type = '"+type.toString()+"'");
 		Integer id = null;
@@ -1416,6 +1421,7 @@ public final class DatabaseManager {
 	
 	/**
 	 * Get a list of all displayables objects
+	 * TODO move this in each controller
 	 * @param type
 	 * @return liste des éléments visibles
 	 * @throws SQLException
