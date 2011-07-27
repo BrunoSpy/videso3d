@@ -38,12 +38,14 @@ import fr.crnan.videso3d.stip.StipController;
 /**
  * Connexions recherchées, sous forme de graphe
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class ConnexPanel extends ResultGraphPanel {
 
-	public ConnexPanel(String balise1, String balise2){
-		super(balise1, balise2);
+	private String titleTab = "Connex";
+
+	public ConnexPanel(boolean advanced, String... criteria){
+		super(advanced, criteria);
 	}
 
 	private String findConnex(String balise1, String balise2){
@@ -65,7 +67,13 @@ public class ConnexPanel extends ResultGraphPanel {
 	}
 	
 	@Override
-	protected void createGraphComponent(final String balise1, final String balise2) {
+	protected void createGraphComponent(boolean advanced, final String... criteria) {
+		
+		final String balise1 = criteria[0];
+		final String balise2 = criteria[1];
+		
+		titleTab += " "+balise1+ (balise2.isEmpty()? "" : " + "+balise2);
+
 		progressBar.setMinimum(0);
 		progressBar.setMaximum(8);
 		progressBar.setVisible(true);
@@ -274,7 +282,10 @@ public class ConnexPanel extends ResultGraphPanel {
 			}
 		}.execute();
 	}
-	
 
+	@Override
+	public String getTitleTab() {
+		return this.titleTab;
+	}
 
 }

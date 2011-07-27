@@ -41,8 +41,10 @@ import fr.crnan.videso3d.stip.StipController;
  */
 public class TrajetPanel extends ResultGraphPanel {
 
-	public TrajetPanel(String balise, String balise2) {
-		super(balise, balise2);
+	private String titleTab = "Trajet";
+
+	public TrajetPanel(boolean advanced, String... criteria) {
+		super(advanced, criteria);
 	}
 
 	private String findTrajets(String balise1, String balise2){
@@ -62,8 +64,13 @@ public class TrajetPanel extends ResultGraphPanel {
 	 * @see fr.crnan.videso3d.graphs.ResultGraphPanel#createGraphComponent(java.lang.String)
 	 */
 	@Override
-	protected void createGraphComponent(final String balise1, final String balise2) {
+	protected void createGraphComponent(boolean advanced, final String... criteria) {
 
+		final String balise1 = criteria[0];
+		final String balise2 = criteria[1];
+		
+		titleTab  += " "+balise1+ (balise2.isEmpty()? "" : " + "+balise2);
+		
 		progressBar.setMinimum(0);
 		progressBar.setMaximum(6);
 		progressBar.setVisible(true);
@@ -190,6 +197,11 @@ public class TrajetPanel extends ResultGraphPanel {
 			}
 
 		}.execute();
+	}
+
+	@Override
+	public String getTitleTab() {
+		return this.titleTab;
 	}
 
 }

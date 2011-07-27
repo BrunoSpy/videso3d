@@ -207,7 +207,7 @@ public class StipContext extends Context {
 					}
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						AnalyzeUI.showResults("route", name, "", "");
+						AnalyzeUI.showResults(false, "route", name, "", "");
 					}
 				});
 
@@ -217,7 +217,7 @@ public class StipContext extends Context {
 					}
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						AnalyzeUI.showResults("iti", name, "", "");
+						AnalyzeUI.showResults(false, "iti", name, "", "");
 					}
 				});
 
@@ -227,7 +227,7 @@ public class StipContext extends Context {
 					}
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						AnalyzeUI.showResults("trajet", name, "", "");
+						AnalyzeUI.showResults(false, "trajet", name, "", "");
 					}
 				});
 
@@ -238,7 +238,7 @@ public class StipContext extends Context {
 					}
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						AnalyzeUI.showResults("connexion", name, "", "");
+						AnalyzeUI.showResults(false, "connexion", name, "", "");
 					}
 				});
 
@@ -248,7 +248,7 @@ public class StipContext extends Context {
 					}
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						AnalyzeUI.showResults("balise", name, "", "");
+						AnalyzeUI.showResults(false, "balise", name, "", "");
 					}
 				});
 
@@ -258,7 +258,7 @@ public class StipContext extends Context {
 					}
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						AnalyzeUI.showResults("balise", name, "", "");
+						AnalyzeUI.showResults(false, "balise", name, "", "");
 					}
 				});
 			} catch(SQLException e) {

@@ -20,6 +20,7 @@ import java.awt.BorderLayout;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,40 +40,128 @@ import fr.crnan.videso3d.stip.StipController;
 /**
  * Itis recherchés sour forme de graphe
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2.0
  */
 public class ItiPanel extends ResultGraphPanel {
 
-	public ItiPanel(String balise, String balise2) {
-		super(balise, balise2);
-	}
-
-	private String findItis(String balise1, String balise2){
-		if(balise2.isEmpty() && !balise1.isEmpty()){
-			return "select iditi from balitis where balise "+forgeSql(balise1)+ 
-			" UNION select id as iditi from itis where entree "+forgeSql(balise1);
-		} else if(balise1.isEmpty() && !balise2.isEmpty()){
-			return "select iditi from balitis where balise "+forgeSql(balise2)+ 
-			" UNION select id as iditi from itis where sortie "+forgeSql(balise2);
-		} else if(balise1.isEmpty() && balise2.isEmpty()){
-			//cas impossible normalement
-			return "";
+	private String titleTab = "Iti";
+	
+	/**
+	 * If <code>advanced</code> is <code>true</code>, <code>criteria</code> contains :<br />
+	 * <ul><li>entree</li>
+	 * <li>sortie</li>
+	 * <li>flinf</li>
+	 * <li>flsup</li>
+	 * <li>first balise</li>
+	 * <li>last balise</li>
+	 * <li>list of balise</li>
+	 * </ul>
+	 * If <code>advanced</code> is <code>false</code>, <code>criteria</code> contains two balises
+	 * @param advanced
+	 * @param criteria 
+	 */
+	public ItiPanel(boolean advanced, String... criteria) {
+		super(advanced, criteria);
+		if(advanced){
+			for(int i = 0;i<criteria.length;i++){
+				if(!criteria[i].isEmpty() && i != 4 && i != 5){
+					titleTab += " + "+criteria[i];
+				}
+			}
 		} else {
-			return "select iditi from (select iditi from balitis where balise "+forgeSql(balise1)+ 
-			" UNION select id as iditi from itis where entree "+forgeSql(balise1)+") as ab"+ 
-			" INTERSECT "+ 
-			"select iditi from (select iditi from balitis where balise "+forgeSql(balise2)+ 
-			" UNION select id as iditi from itis where sortie "+forgeSql(balise2)+") as cd";
+			titleTab += " "+criteria[0]+ (criteria[1].isEmpty()? "" : " + "+criteria[1]);
+		}
+	}
+	
+	private String findItis(boolean advanced, String... criteria){
+		if (advanced){
+			String entree = criteria[0].trim();
+			String sortie = criteria[1].trim();
+			String first = criteria[6].trim();
+			String last = criteria[7].trim();
+			Integer flInf = criteria[2].trim().isEmpty() ? 0 : new Integer(criteria[2]);
+			Integer flSup = criteria[3].trim().isEmpty() ? 800 : new Integer(criteria[3]);
+			
+			ArrayList<String> sql = new ArrayList<String>();
+			if(!entree.isEmpty())
+				sql.add("select id as iditi from itis where entree "+forgeSql(entree));
+			
+			if(!sortie.isEmpty())
+				sql.add("select id as iditi from itis where sortie "+forgeSql(sortie));
+			
+			if(!first.isEmpty())
+				sql.add("select iditi  from balitis t1 where iditi in (SELECT iditi FROM balitis where balise "+forgeSql(first)+") " +
+														"and id=(select min(t2.id) from balitis t2 where t2.iditi = t1.iditi ) " +
+														"and balise "+forgeSql(first));
+			if(!last.isEmpty())
+				sql.add("select iditi  from balitis t1 where iditi in (SELECT iditi FROM balitis where balise "+forgeSql(last)+") " +
+														"and id=(select max(t2.id) from balitis t2 where t2.iditi = t1.iditi ) " +
+														"and balise "+forgeSql(last));
+			
+			if(flInf>0)
+				sql.add("select id as iditi from itis where flinf "+criteria[4]+"'"+flInf+"'");
+			
+			if(flSup<800)
+				sql.add("select id as iditi from itis where flsup "+criteria[5]+"'"+flSup+"'");
+			
+			for(int i=8;i<criteria.length;i++){
+				if(!criteria[i].trim().isEmpty())
+					sql.add("select iditi from balitis where balise "+forgeSql(criteria[i].trim()));
+			}
+			
+			String sqlQuery = "";
+			for(int i=0;i<sql.size();i++){
+				if(i==0){
+					sqlQuery = sql.get(i);
+				} else {
+					sqlQuery += " INTERSECT "+sql.get(i);
+				}
+			}
+			
+			return sqlQuery;
+		} else {
+			String balise1 = criteria[0];
+			String balise2 = criteria[1];
+			if(balise2.isEmpty() && !balise1.isEmpty()){
+				return "select iditi from balitis where balise "+forgeSql(balise1)+ 
+						" UNION select id as iditi from itis where entree "+forgeSql(balise1);
+			} else if(balise1.isEmpty() && !balise2.isEmpty()){
+				return "select iditi from balitis where balise "+forgeSql(balise2)+ 
+						" UNION select id as iditi from itis where sortie "+forgeSql(balise2);
+			} else if(balise1.isEmpty() && balise2.isEmpty()){
+				//cas impossible normalement
+				return "";
+			} else {
+				return "select iditi from (select iditi from balitis where balise "+forgeSql(balise1)+ 
+						" UNION select id as iditi from itis where entree "+forgeSql(balise1)+") as ab"+ 
+						" INTERSECT "+ 
+						"select iditi from (select iditi from balitis where balise "+forgeSql(balise2)+ 
+						" UNION select id as iditi from itis where sortie "+forgeSql(balise2)+") as cd";
+			}
 		}
 	}
 
+	private boolean isSearchedBalise(boolean advanced, String name, String... criteria){
+		if(advanced){
+			boolean match = false;
+			for(int i=4;i<criteria.length;i++){
+				match = match || nameMatch(criteria[i], name);
+			}
+			return match || nameMatch(criteria[0], name) || nameMatch(criteria[1],name) || nameMatch(criteria[5],name) || nameMatch(criteria[6],name);
+		} else {
+			return nameMatch(criteria[0], name) || nameMatch(criteria[1],name);
+		}
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see fr.crnan.videso3d.graphs.ResultGraphPanel#createGraphComponent(java.lang.String)
 	 */
 	@Override
-	protected void createGraphComponent(final String balise1, final String balise2){
+	protected void createGraphComponent(final boolean advanced, final String... criteria){
 
+		
+		
 		progressBar.setMinimum(0);
 		progressBar.setMaximum(8);
 		progressBar.setVisible(true);
@@ -90,7 +179,7 @@ public class ItiPanel extends ResultGraphPanel {
 
 				try {
 					Statement st = DatabaseManager.getCurrentStip();
-					ResultSet rs = st.executeQuery("select balise, appartient, iditi, balid, entree, sortie from balitis, itis where itis.id = balitis.iditi and iditi in ("+findItis(balise1, balise2)+")");
+					ResultSet rs = st.executeQuery("select balise, appartient, iditi, balid, entree, sortie from balitis, itis where itis.id = balitis.iditi and iditi in ("+findItis(advanced, criteria)+")");
 
 					progressBar.setValue(1);
 
@@ -140,8 +229,8 @@ public class ItiPanel extends ResultGraphPanel {
 							balises.put(rs.getInt(4), first);
 						} else {
 							String style = rs.getBoolean(2) ? 
-									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
-										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
+									(isSearchedBalise(advanced, name, criteria) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
+										(isSearchedBalise(advanced, name, criteria) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
 							mxCell bal = (mxCell) graph.insertVertex(iti, null, new CellContent(Type.STIP, StipController.BALISES, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							bal.setConnectable(false);
 							graph.insertEdge(iti, null, "", first, bal, GraphStyle.edgeStyle);
@@ -164,7 +253,7 @@ public class ItiPanel extends ResultGraphPanel {
 
 					progressBar.setValue(3);
 
-					rs = st.executeQuery("select iditi, trajetid, raccordement_id, cond1, balise, balid from couple_trajets, baltrajets where couple_trajets.trajetid = baltrajets.idtrajet and iditi in ("+findItis(balise1, balise2)+") ");
+					rs = st.executeQuery("select iditi, trajetid, raccordement_id, cond1, balise, balid from couple_trajets, baltrajets where couple_trajets.trajetid = baltrajets.idtrajet and iditi in ("+findItis(advanced, criteria)+") ");
 
 					progressBar.setValue(4);
 
@@ -255,6 +344,11 @@ public class ItiPanel extends ResultGraphPanel {
 				add(component, BorderLayout.CENTER);
 			}
 		}.execute();
+	}
+
+	@Override
+	public String getTitleTab() {
+		return this.titleTab;
 	}
 
 

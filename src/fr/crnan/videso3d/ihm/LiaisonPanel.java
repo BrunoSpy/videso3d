@@ -1,3 +1,18 @@
+/*
+ * This file is part of ViDESO.
+ * ViDESO is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ViDESO is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
@@ -21,7 +36,11 @@ import javax.swing.JTextArea;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.stpv.StpvController;
-
+/**
+ * Panel de résultats des liaisons privilégiées
+ * @author Adrien Vidal
+ * @version 0.1.0
+ */
 public class LiaisonPanel extends ResultPanel implements ActionListener{
 
 	private JTextArea t = new JTextArea(15,40);
@@ -29,12 +48,16 @@ public class LiaisonPanel extends ResultPanel implements ActionListener{
 	private JButton suiv = new JButton(" Suivante >");
 	private JPanel bottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 	private JTabbedPane tabPane;
-		
+	private String titleTab = "LP";
 	private File f;
 	
 	private int searchNum;
 	
 	public LiaisonPanel(String searchNum, JTabbedPane tabPane){
+		titleTab += " "+searchNum;
+		if(DatasManager.getController(Type.STPV) == null)
+			return;
+		//TODO changer cet appel pour ne plus avoir besoin du controleur
 		f = new File("./datas/CODE_"+((StpvController)DatasManager.getController(Type.STPV)).getCurrentName());
 		this.tabPane = tabPane;
 		this.searchNum = Integer.parseInt(searchNum);
@@ -76,18 +99,15 @@ public class LiaisonPanel extends ResultPanel implements ActionListener{
 				if(numLiaisonEncours==searchNum){
 					line = line.replaceFirst("0", "0 ");
 					String lp = line+"\n";
-					int nbLines = 1;
 					boolean finLiaison = false;
 					while(in.ready() && !finLiaison){
 						line = in.readLine();
 						if(line.startsWith("CODE 30S")  || line.startsWith("CODE 31S")){
 							lp+=line+"\n";
-							nbLines++;
 						}
 						else if(line.startsWith("CODE 31")){
 							line = line.replaceFirst("1", "1 ");
 							lp+=line+"\n";
-							nbLines++;
 						}else
 							finLiaison = true;
 					}
@@ -123,5 +143,10 @@ public class LiaisonPanel extends ResultPanel implements ActionListener{
 			displayLP();
 		}
 		tabPane.setTitleAt(tabPane.getSelectedIndex(), "Liaison "+searchNum);
+	}
+
+	@Override
+	public String getTitleTab() {
+		return this.titleTab;
 	}
 }
