@@ -77,6 +77,7 @@ import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.trajectography.PolygonsSetFilter;
 import fr.crnan.videso3d.trajectography.TrackContext;
 import gov.nasa.worldwind.avlist.AVKey;
+import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.tracks.Track;
 
 /**
@@ -103,7 +104,7 @@ public class TrajectoriesView extends JPanel {
 		this.layer = reader.getLayer() == null ? wwd.addTrajectoires(reader) : reader.getLayer();
 		this.wwd = wwd;
 		this.trackContext = new TrackContext(this.layer, reader, null, this.wwd.getModel().getGlobe());
-		
+
 		final JXTaskPane filterPolygonPane = this.createPolygonFilterPane();
 		
 		
@@ -447,7 +448,6 @@ public class TrajectoriesView extends JPanel {
 		JButton validate = new JButton("Valider");
 		
 		validate.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -461,13 +461,11 @@ public class TrajectoriesView extends JPanel {
 				} else if(itemSelected.equals("Profil")){
 					layer.setStyle(TrajectoriesLayer.STYLE_PROFIL);
 				}
-				
 				layer.setDefaultOutsideColor(changeColor2.getBackground());
 				layer.setDefaultInsideColor(changeColor1.getBackground());
 				layer.setDefaultWidth(Double.parseDouble(width.getText()));
 				layer.setDefaultOpacity(Double.parseDouble(opacity.getText())/100.0);
-				
-			//	layer.update();
+				layer.update();
 			}
 		});
 		
@@ -651,6 +649,10 @@ public class TrajectoriesView extends JPanel {
 	 */
 	public void delete(){
 		this.wwd.getModel().getLayers().remove(layer);
+	}
+	
+	public Layer getLayer(){
+		return this.layer;
 	}
 	
 	private class TrackTableModel extends AbstractTableModel {

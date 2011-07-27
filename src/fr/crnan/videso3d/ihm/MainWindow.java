@@ -478,7 +478,7 @@ public class MainWindow extends JFrame {
 	}
 	
 	public void addTrajectoriesView(final TrackFilesReader reader){
-		final Component content = new TrajectoriesView(wwd, reader, context);
+		final TrajectoriesView content = new TrajectoriesView(wwd, reader, context);
 		DefaultSingleCDockable dockable = new DefaultSingleCDockable(reader.getName());
 		dockable.setTitleText(reader.getName());
 
@@ -492,9 +492,9 @@ public class MainWindow extends JFrame {
 			
 			@Override
 			public void visibilityChanged(CDockable dockable) {
-				wwd.removeLayer(reader.getLayer());
+					wwd.removeLayer(content.getLayer());
 			}
-			
+				
 			@Override
 			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
 		});
