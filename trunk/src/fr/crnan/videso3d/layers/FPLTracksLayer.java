@@ -35,7 +35,7 @@ import gov.nasa.worldwind.tracks.Track;
  *
  */
 public class FPLTracksLayer extends LPLNTracksLayer {
-	
+		
 	/**
 	 * Permet de stocker plusieurs profils pour une seule trajectoire, afin de pouvoir changer la couleur d'une partie de la trajectoire.
 	 */
@@ -119,7 +119,7 @@ public class FPLTracksLayer extends LPLNTracksLayer {
 	 * @param annotations
 	 * @param positions
 	 * @param incertain
-	 * @return Un profil de couleur rouge si la route est incertaine, de couleur bleue si la route est connue avec exactitude.
+	 * @return Un profil de couleur orange si la route est incertaine, de couleur bleue si la route est connue avec exactitude.
 	 */
 	private Profil3D buildProfil(List<String> balises, List<String> annotations, List<Position> positions, boolean incertain){
 		Profil3D p = new Profil3D( balises, annotations, positions);
@@ -131,6 +131,73 @@ public class FPLTracksLayer extends LPLNTracksLayer {
 		return p;
 	}
 	
+	@Override
+	public Color getDefaultOutsideColor() {
+		return this.defaultOutsideColor;
+	}
+
+	@Override
+	public void setDefaultOutsideColor(Color color) {
+		Color c = new Color(color.getRed(), color.getGreen(), color.getBlue(), this.getDefaultOutsideColor().getAlpha());
+		if(profils!=null){
+			for(Profil3D p : profils.values()){
+				p.getProfil().setColor(c);
+			}
+			this.firePropertyChange(AVKey.LAYER, null, this);
+
+		}
+		this.defaultOutsideColor = color;
+	}
+
+	@Override
+	public Color getDefaultInsideColor() {
+		return this.defaultInsideColor;
+	}
+
+	@Override
+	public void setDefaultInsideColor(Color color) {
+		if(profils!=null){
+			for(Profil3D p : profils.values()){
+				p.getCurtain().setColor(color);
+			}
+			this.firePropertyChange(AVKey.LAYER, null, this);
+
+		}
+		this.defaultInsideColor = color;
+	}
+
+	@Override
+	public double getDefaultOpacity() {
+		return this.defaultOpacity;
+	}
+
+	@Override
+	public void setDefaultOpacity(double opacity) {
+		this.defaultOpacity  = opacity;
+		Color c = new Color(defaultInsideColor.getRed(), defaultInsideColor.getGreen(), defaultInsideColor.getBlue(), (int)(opacity*255));
+		if(profils!=null){
+			for(Profil3D p : profils.values()){
+				p.getCurtain().setColor(c);
+			}
+			this.firePropertyChange(AVKey.LAYER, null, this);
+		}
+	}
+
+	@Override
+	public double getDefaultWidth() {
+		return this.defaultWidth;
+	}
+
+	@Override
+	public void setDefaultWidth(double width) {
+		if(profils!=null){
+			for(Profil3D p : profils.values()){
+				p.getProfil().setLineWidth(width);
+			}		
+			this.firePropertyChange(AVKey.LAYER, null, this);
+		}
+		this.defaultWidth = width;
+	}
 	
 }
 	

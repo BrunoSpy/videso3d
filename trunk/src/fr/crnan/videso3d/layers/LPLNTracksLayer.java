@@ -51,9 +51,13 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	
 	private int style = TrajectoriesLayer.STYLE_PROFIL;
 	
-	private Color defaultInsideColor = Pallet.makeBrighter(Color.BLUE);
+	protected Color defaultInsideColor = Pallet.makeBrighter(Color.BLUE);
 	
-	private Color defaultOutsideColor = Color.BLUE;
+	protected Color defaultOutsideColor = Color.BLUE;
+	
+	protected double defaultWidth = 1.0;
+
+	protected double defaultOpacity = 0.3;
 	
 	public LPLNTracksLayer(){
 		super();
@@ -279,9 +283,8 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 
 	@Override
 	public void setDefaultInsideColor(Color color) {
-		Color c = new Color(color.getRed(), color.getGreen(), color.getBlue(), this.getDefaultInsideColor().getAlpha());
 		for(Profil3D p : profils.values()){
-			p.setInsideColor(c);
+			p.setInsideColor(color);
 		}
 		this.defaultInsideColor = color;
 		this.firePropertyChange(AVKey.LAYER, null, this);
@@ -289,23 +292,32 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 
 	@Override
 	public double getDefaultOpacity() {
-		// TODO Auto-generated method stub
-		return 0.0;
+		return this.defaultOpacity;
 	}
 
 	@Override
 	public void setDefaultOpacity(double opacity) {
-
+		this.defaultOpacity  = opacity;
+		Color c = new Color(defaultInsideColor.getRed(), defaultInsideColor.getGreen(), defaultInsideColor.getBlue(), (int)(opacity*255));
+		for(Profil3D p : profils.values()){
+			p.getCurtain().setColor(c);
+		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
 	@Override
 	public double getDefaultWidth() {
-		// TODO Auto-generated method stub
-		return 0.0;
+		return this.defaultWidth;
 	}
 
 	@Override
 	public void setDefaultWidth(double width) {
+		for(Profil3D p : profils.values()){
+			p.getProfil().setLineWidth(width);
+		}
+		this.defaultWidth = width;
+		this.firePropertyChange(AVKey.LAYER, null, this);
+
 	}
 	
 	@Override

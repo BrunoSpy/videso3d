@@ -62,5 +62,8 @@ public class MultiValueMap<T, U> {
 		return map.containsKey(key);
 	}
 	
+	public List<U> values(){
+		return valuesArray;
+	}
 	
 }
