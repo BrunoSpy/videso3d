@@ -23,16 +23,18 @@ import javax.swing.JTextField;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dimension;
 
+import fr.crnan.videso3d.ihm.components.JUpperCaseTextField;
 import fr.crnan.videso3d.ihm.components.TypeComboBox;
 
 /**
  * Advanced search panel for ITI
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class ItiSearchPanel extends AdvancedSearchPanel {
 	private JTextField entreeField;
@@ -45,6 +47,7 @@ public class ItiSearchPanel extends AdvancedSearchPanel {
 	private JTextField balise2Field;
 	private JComboBox infComboBox;
 	private JComboBox supComboBox;
+
 	
 	/**
 	 * Create the panel.
@@ -76,11 +79,11 @@ public class ItiSearchPanel extends AdvancedSearchPanel {
 			}
 		};
 		
-		entreeField = new JTextField();
+		entreeField = new JUpperCaseTextField();
 		entreeField.setColumns(10);
 		entreeField.addActionListener(rechercheActionListener);
 
-		sortieField = new JTextField();
+		sortieField = new JUpperCaseTextField();
 		sortieField.setColumns(10);
 		sortieField.addActionListener(rechercheActionListener);
 
@@ -99,17 +102,17 @@ public class ItiSearchPanel extends AdvancedSearchPanel {
 		supField.setColumns(10);
 		supField.addActionListener(rechercheActionListener);
 		
-		balisesField = new JTextField();
+		balisesField = new JUpperCaseTextField();
 		balisesField.setColumns(10);
 		balisesField.addActionListener(rechercheActionListener);
 		balisesField.setToolTipText("Iti comprenant toutes ces balises, séparées par une virgule.");
 		
-		balise1Field = new JTextField();
+		balise1Field = new JUpperCaseTextField();
 		balise1Field.setColumns(10);
 		balise1Field.addActionListener(rechercheActionListener);
 		balise1Field.setToolTipText("Uniquement les itis dont la première balise est celle-ci.");
 		
-		balise2Field = new JTextField();
+		balise2Field = new JUpperCaseTextField();
 		balise2Field.setColumns(10);
 		balise2Field.addActionListener(rechercheActionListener);		
 		balise2Field.setToolTipText("Uniquement les itis dont la dernière balise est celle-ci.");
