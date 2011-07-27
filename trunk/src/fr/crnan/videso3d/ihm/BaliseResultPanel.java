@@ -41,7 +41,12 @@ import fr.crnan.videso3d.ihm.components.TitledPanel;
  */
 public class BaliseResultPanel extends ResultPanel {
 
+	private String titleTab = "Balise";
+	
 	public BaliseResultPanel(String balise){
+		
+		titleTab += " "+balise;
+		
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		Boolean stip = false;
 		Boolean stpv = false;
@@ -402,6 +407,13 @@ public class BaliseResultPanel extends ResultPanel {
 	@Override
 	public void setContext(ContextPanel context) {
 		//la vue contextuelle est sans objet pour l'instant
+	}
+
+
+
+	@Override
+	public String getTitleTab() {
+		return this.titleTab;
 	}
 
 }

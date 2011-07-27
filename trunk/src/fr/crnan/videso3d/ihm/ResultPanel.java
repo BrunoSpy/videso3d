@@ -22,14 +22,14 @@ import javax.swing.JPanel;
  * Panel de résultats.
  * Doit permettre la liaison avec le panel contextuel
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 public abstract class ResultPanel extends JPanel {
 	
 	public static String PROPERTY_RESULT = "number_results_changed";
 	
 	public abstract void setContext(ContextPanel context);
-	
+		
 	public void fireNumberResults(int count){
 		firePropertyChange(PROPERTY_RESULT, -1, count);
 	}
@@ -51,5 +51,7 @@ public abstract class ResultPanel extends JPanel {
 			return name.equals(balise); 
 		}
 	}
+
+	public abstract String getTitleTab();
 	
 }

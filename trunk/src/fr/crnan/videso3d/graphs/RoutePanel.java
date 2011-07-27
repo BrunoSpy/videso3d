@@ -40,8 +40,10 @@ import fr.crnan.videso3d.stip.StipController;
  */
 public class RoutePanel extends ResultGraphPanel {
 
-	public RoutePanel(String balise, String balise2){
-		super(balise, balise2);
+	private String titleTab = "Route";
+	
+	public RoutePanel(boolean advanced, String... criteria){
+		super(advanced, criteria);
 	}
 
 	private String findRoute(String balise1, String balise2){
@@ -54,8 +56,13 @@ public class RoutePanel extends ResultGraphPanel {
 		}
 	}
 	
-	protected void createGraphComponent(final String balise1, final String balise2) {
+	protected void createGraphComponent(boolean advanced, final String... criteria) {
 
+		final String balise1 = criteria[0];
+		final String balise2 = criteria[1];
+		
+		titleTab += " "+balise1+ (balise2.isEmpty()? "" : " + "+balise2);
+		
 		progressBar.setMinimum(0);
 		progressBar.setMaximum(6);
 		progressBar.setVisible(true);
@@ -175,6 +182,11 @@ public class RoutePanel extends ResultGraphPanel {
 			}
 
 		}.execute();
+	}
+
+	@Override
+	public String getTitleTab() {
+		return titleTab;
 	}
 
 }

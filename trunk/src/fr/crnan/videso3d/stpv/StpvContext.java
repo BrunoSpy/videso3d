@@ -72,7 +72,7 @@ public class StpvContext extends Context {
 						}
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("balise", name, "", "");
+							AnalyzeUI.showResults(false, "balise", name, "", "");
 						}
 					});
 					taskpane.add(new AbstractAction() {
@@ -81,7 +81,7 @@ public class StpvContext extends Context {
 						}
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("balise", name, "", "");
+							AnalyzeUI.showResults(false, "balise", name, "", "");
 						}
 					});
 					taskpane.add(new AbstractAction() {
@@ -90,7 +90,7 @@ public class StpvContext extends Context {
 						}
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("balise", name, "", "");
+							AnalyzeUI.showResults(false, "balise", name, "", "");
 						}
 					});
 					taskpane.add(new AbstractAction() {
@@ -99,7 +99,7 @@ public class StpvContext extends Context {
 						}
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("balise", name, "", "");
+							AnalyzeUI.showResults(false, "balise", name, "", "");
 						}
 					});
 					taskpane.add(new AbstractAction() {
@@ -108,7 +108,7 @@ public class StpvContext extends Context {
 						}
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("balise", name, "", "");
+							AnalyzeUI.showResults(false, "balise", name, "", "");
 						}
 					});
 					taskpane.add(new AbstractAction() {
@@ -119,7 +119,7 @@ public class StpvContext extends Context {
 						}
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("stars", name, "", "");
+							AnalyzeUI.showResults(false, "stars", name, "", "");
 						}
 					});
 				}

@@ -42,11 +42,11 @@ public abstract class ResultGraphPanel extends ResultPanel  {
 	protected JProgressBar progressBar = new JProgressBar();
 
 	/**
-	 * Construit le panneau
-	 * @param balise Balise recherchée
-	 * @param balise2 
+	 * 
+	 * @param advanced True if using advanced search
+	 * @param criteria List of search criteria
 	 */
-	public ResultGraphPanel(final String balise, String balise2){
+	public ResultGraphPanel(boolean advanced, final String... criteria){
 		layout.setParallelEdgeSpacing(5.0);
 		layout.setInterRankCellSpacing(20.0);//edge size
 		layout.setInterHierarchySpacing(10.0);
@@ -56,14 +56,14 @@ public abstract class ResultGraphPanel extends ResultPanel  {
 		this.setBorder(null);
 		this.setLayout(new BorderLayout());
 
-		this.createGraphComponent(balise, balise2);
+		this.createGraphComponent(advanced, criteria);
 	}
 
 	/**
 	 * Crée le graphe proprement dit
 	 * @param balise
 	 */
-	protected abstract void createGraphComponent(final String balise, final String balise2);
+	protected abstract void createGraphComponent(boolean advanced, final String... criteria);
 	
 	protected VGraph getGraph(){
 		return this.graph;

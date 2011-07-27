@@ -41,8 +41,10 @@ import fr.crnan.videso3d.stpv.StpvController;
  */
 public class StarPanel extends ResultGraphPanel {
 
-	public StarPanel(String balise, String balise2) {
-		super(balise, balise2);
+	private String titleTab = "Star";
+
+	public StarPanel(boolean advanced, String... criteria) {
+		super(advanced, criteria);
 	}
 
 	private String findStars(String balise1, String balise2){
@@ -97,7 +99,13 @@ public class StarPanel extends ResultGraphPanel {
 	}
 	
 	@Override
-	protected void createGraphComponent(final String balise1, final String balise2) {
+	protected void createGraphComponent(boolean advanced, final String... criteria) {
+		
+		final String balise1 = criteria[0];
+		final String balise2 = criteria[1];
+		
+		titleTab += " "+balise1+ (balise2.isEmpty()? "" : " + "+balise2);
+		
 		progressBar.setMinimum(0);
 		progressBar.setMaximum(8);
 		progressBar.setVisible(true);
@@ -232,6 +240,11 @@ public class StarPanel extends ResultGraphPanel {
 			}
 		}.execute();
 
+	}
+
+	@Override
+	public String getTitleTab() {
+		return this.titleTab;
 	}
 
 }
