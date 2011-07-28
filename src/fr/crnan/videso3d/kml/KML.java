@@ -195,8 +195,8 @@ public class KML extends FileParser{
 	}
 
 
-	private void getName() {		
-		this.name = "";
+	public String getName() {		
+		return this.name;
 	}
 
 	@Override

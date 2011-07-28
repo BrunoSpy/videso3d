@@ -962,7 +962,7 @@ public final class DatabaseManager {
 		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
 		insertClef.setString(1, "path");
 		insertClef.setString(2, name);
-		insertClef.setString(3, path);
+		insertClef.setString(3, new File(path).getName());
 		insertClef.executeUpdate();
 		insertClef.close();
 		

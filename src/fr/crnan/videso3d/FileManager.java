@@ -17,15 +17,18 @@ package fr.crnan.videso3d;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -38,11 +41,41 @@ import com.ice.tar.TarInputStream;
  * Manages several kind of files.<br />
  * Manages compressed files.
  * @author Bruno Spyckerelle
- * @version 0.5
+ * @version 0.5.1
  */
 public class FileManager {
 
-		
+	/** 
+	 * Read a text file into an array of String.
+	 */
+	public static String[] textFiletoArray(String file) throws IOException {
+		BufferedReader rdr = new BufferedReader(new FileReader(file));
+		Vector<String> s = new Vector<String>();
+		for (;;) {
+			String line = rdr.readLine();
+			if (line == null) break;
+			s.addElement(line);
+		}
+		String[] a = new String[s.size()];
+		s.copyInto(a);
+		return a;
+	}
+	
+	/** 
+	 * Read a text file into an array of String.
+	 */
+	public static String[] textFiletoArray(File file) throws IOException {
+		BufferedReader rdr = new BufferedReader(new FileReader(file));
+		Vector<String> s = new Vector<String>();
+		for (;;) {
+			String line = rdr.readLine();
+			if (line == null) break;
+			s.addElement(line);
+		}
+		String[] a = new String[s.size()];
+		s.copyInto(a);
+		return a;
+	}
 	
 	/**
 	 * Remove temp files created by untar, unzip or gunzip
@@ -74,6 +107,42 @@ public class FileManager {
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+	 * Copy a file to a directory inside the datas repertory
+	 * @param file to copy
+	 * @return File : the new file
+	 */
+	public static File copyFile(File file, String dirName){
+		
+		File destDir = new File(dirName);
+		if(!destDir.exists() || !destDir.isDirectory()){
+			destDir.mkdirs();	
+		}
+
+		File src = file;
+		File dest = new File(dirName,src.getName());
+		try {
+			if(!dest.exists()){
+				dest.createNewFile();
+			}
+
+			FileChannel source = new FileInputStream(src).getChannel();
+			FileChannel destination = new FileOutputStream(dest).getChannel();
+
+			destination.transferFrom(source, 0, source.size());
+			
+			source.close();
+			destination.close();
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return dest;
 	}
 	
 	/**

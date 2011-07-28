@@ -59,7 +59,7 @@ public class AIP extends FileParser{
 	/**
 	 * Le chemin du fichier xml utilisé
 	 */
-	private String filePath;
+	private String fileName;
 
 	/**
 	 * Connection à la base de données
@@ -106,7 +106,7 @@ public class AIP extends FileParser{
 
 	public AIP(String path) {
 		super(path);
-		this.filePath=path;
+		this.fileName=path;
 		//construction du document à partir du fichier xml
 		SAXBuilder sxb = new SAXBuilder();
 		try {
@@ -142,13 +142,14 @@ public class AIP extends FileParser{
 
 		SAXBuilder sxb = new SAXBuilder();
 		try {
+			this.name = DatabaseManager.getCurrentName(DatabaseManager.Type.AIP);
 			//on récupère le chemin d'accès au fichier xml à parser
 			Statement st = DatabaseManager.getCurrent(DatabaseManager.Type.Databases);
 			ResultSet rs;
 			rs = st.executeQuery("select * from clefs where name='path' and type='"+DatabaseManager.getCurrentName(DatabaseManager.Type.AIP)+"'");
 			if(rs.next()){
-				this.filePath = rs.getString(4);
-				document = sxb.build(new File(filePath));
+				this.fileName = rs.getString(4);
+				document = sxb.build(new File(name+"_files",fileName));
 			}
 			//TODO prendre en compte la possibilité qu'il n'y ait pas de bdd AIP
 			Statement aipDB = DatabaseManager.getCurrentAIP();
@@ -174,7 +175,7 @@ public class AIP extends FileParser{
 	public Integer doInBackground() {
 		try {
 			//récupération du nom de la base à créer
-			this.getName();
+			this.createName();
 			if(!DatabaseManager.databaseExists(this.name)){
 				//création de la connection à la base de données
 				this.conn = DatabaseManager.selectDB(Type.AIP, this.name);
@@ -204,12 +205,16 @@ public class AIP extends FileParser{
 		return document.getRootElement().getChild("Situation");
 	}
 
+	private void createName(){
+		this.name = "AIP_"+document.getRootElement().getChild("Situation").getAttributeValue("effDate");
+	}
 
 	/**
 	 * Crée le nom de la base : AIP_date d'entrée en vigueur
 	 */
-	private void getName() {		
-		this.name = "AIP_"+document.getRootElement().getChild("Situation").getAttributeValue("effDate");
+	@Override
+	public String getName() {
+		return this.name;
 	}
 
 	@Override
