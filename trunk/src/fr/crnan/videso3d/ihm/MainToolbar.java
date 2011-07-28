@@ -26,7 +26,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.zip.ZipException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -36,8 +35,8 @@ import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSeparator;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
@@ -64,7 +63,6 @@ import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
-import gov.nasa.worldwind.util.Logging;
 import gov.nasa.worldwindx.examples.util.ScreenShotAction;
 import gov.nasa.worldwindx.examples.util.ShapeUtils;
 /**
@@ -77,65 +75,62 @@ public class MainToolbar extends JToolBar {
 	private VidesoGLCanvas wwd;
 	private MainWindow mainWindow;
 	private Omnibox omniBox;
-	
+
 	public MainToolbar(MainWindow parent, VidesoGLCanvas ww, Omnibox box) {
 		this.wwd = ww;
 		this.mainWindow = parent;
 		this.omniBox = box;
-		
-		//Reset de l'affichage
-		final JButton reset = new JButton(new ImageIcon(getClass().getResource("/resources/reset_22.png")));
-		reset.setToolTipText("Remettre à zéro la carte.");
 
-		reset.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				for(DataView view : DatasManager.getViews()){
-					view.reset();
-				}
-				wwd.resetView();
-			}
-		});
-		
-		this.add(reset);
-		
 		//Configuration
 		final JButton config = new JButton(new ImageIcon(getClass().getResource("/resources/configure.png")));
 		config.setToolTipText("Configurer les paramètres généraux de l'application");
 		config.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new ConfigurationUI().setVisible(true);
 			}
 		});
 		this.add(config);
+
+		this.addSeparator();
 		
 		//Analyse
 		final JButton analyze = new JButton(new ImageIcon(getClass().getResource("/resources/datas_analyze_22.png")));
 		analyze.setToolTipText("Analyser les données Stip/Stpv");
 		analyze.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				AnalyzeUI.showAnalyzeUI();
 			}
 		});
 		this.add(analyze);
-		
-		//Screenshot
-		JButton snapshot = new JButton(new ImageIcon(getClass().getResource("/resources/snapshot.png")));
-		snapshot.setToolTipText("Enregistrer la vue 3D.");
-		snapshot.addActionListener(new ScreenShotAction(wwd));
-		this.add(snapshot);
-		
+
+		//Comparaison de fichiers
+		final JButton compare = new JButton(new ImageIcon(getClass().getResource("/resources/compare_22.png")));
+		compare.setToolTipText("Comparer le contenu des fichiers de deux bases de données");
+
+		this.add(compare);
+
+		//Ajouter données
+		JButton datas = new JButton(new ImageIcon(getClass().getResource("/resources/database_22.png")));
+		datas.setToolTipText("Ajouter/supprimer des données");
+		datas.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new DatabaseManagerUI().setVisible(true);
+			}
+		});
+		this.add(datas);
+
 		this.addSeparator();
-		
+
 		final JButton loadProject = new JButton(new ImageIcon(getClass().getResource("/resources/load_project_22.png")));
 		loadProject.setToolTipText("Charger un projet");
 		loadProject.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				VFileChooser fileChooser = new VFileChooser();
@@ -154,27 +149,34 @@ public class MainToolbar extends JToolBar {
 			}
 		});
 		this.add(loadProject);
-		
+
 		final JButton saveProject = new JButton(new ImageIcon(getClass().getResource("/resources/save_project_22.png")));
 		saveProject.setToolTipText("Enregistrer le projet");
 		saveProject.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				new ProjectManagerUI(mainWindow);
 			}
 		});
-		
+
 		this.add(saveProject);
+		
+		//Screenshot
+		JButton snapshot = new JButton(new ImageIcon(getClass().getResource("/resources/snapshot.png")));
+		snapshot.setToolTipText("Capture d'écran de la vue 3D");
+		snapshot.addActionListener(new ScreenShotAction(wwd));
+		this.add(snapshot);
+		
 		this.addSeparator();
 		//ajout d'images
 		final DropDownButton images = new DropDownButton(new ImageIcon(getClass().getResource("/resources/add_geotiff_22.png")));
 		images.setToolTipText("Ajouter une image");
-		
+
 		final JMenuItem dalle = new JMenuItem("Ajout permanent");
 		dalle.setToolTipText("Importer des images géoréférencées (GeoTiff, ...) de manière permanente");
 		dalle.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				VFileChooser file = new VFileChooser();
@@ -184,14 +186,14 @@ public class MainToolbar extends JToolBar {
 				}
 			}
 		});
-		
+
 		images.getPopupMenu().add(dalle);
-		
+
 		final JMenuItem image = new JMenuItem("Ajout temporaire");
 		image.setToolTipText("Importer une image de manière temporaire");
-		
+
 		image.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				VFileChooser file = new VFileChooser();
@@ -204,24 +206,24 @@ public class MainToolbar extends JToolBar {
 				}
 			}
 		});
-		
+
 		images.getPopupMenu().add(image);
 		images.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				image.doClick();
 			}
 		});
 		images.addToToolBar(this);
-		
+
 		//Ajouter trajectoires
 		final DropDownButton trajectoires = new DropDownButton(new ImageIcon(getClass().getResource("/resources/plus_traj_22.png")));
-		
+
 		final JMenuItem file = new JMenuItem("Fichier");
 		file.setToolTipText("Importer des trajectoires dans un fichier");
 		file.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				final VFileChooser fileChooser = new VFileChooser();
@@ -249,12 +251,12 @@ public class MainToolbar extends JToolBar {
 
 			}
 		});
-		
-		
+
+
 		JMenuItem text = new JMenuItem("Texte");
 		text.setToolTipText("Importer des trajectoires par copier/coller");
 		text.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				new FPLImportUI(mainWindow).setVisible(true);
@@ -262,7 +264,7 @@ public class MainToolbar extends JToolBar {
 		});
 		trajectoires.getPopupMenu().add(file);
 		trajectoires.getPopupMenu().add(text);
-		
+
 		trajectoires.setToolTipText("Importer des trajectoires");
 		trajectoires.addActionListener(new ActionListener() {
 
@@ -274,54 +276,54 @@ public class MainToolbar extends JToolBar {
 		trajectoires.addToToolBar(this);
 
 		final DropDownButton addAirspace = new DropDownButton(new ImageIcon(getClass().getResource("/resources/draw-polygon_22_1.png")));
-		
-		
+
+
 		final JMenuItem addPolygon = new JMenuItem("Nouveau");
 		addPolygon.setToolTipText("Nouveau polygone");
 		addPolygon.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				 VPolygon polygon = new VPolygon();
-		         polygon.setAltitudes(0.0, 0.0);
-		         polygon.setTerrainConforming(true, false);
-		         BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
-		         attrs.setDrawOutline(true);
-		         attrs.setMaterial(new Material(Color.CYAN));
-		         attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(Color.CYAN)));
-		         attrs.setOpacity(0.2);
-		         attrs.setOutlineOpacity(0.9);
-		         attrs.setOutlineWidth(1.5);
-		         polygon.setAttributes(attrs);
-				
+				VPolygon polygon = new VPolygon();
+				polygon.setAltitudes(0.0, 0.0);
+				polygon.setTerrainConforming(true, false);
+				BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
+				attrs.setDrawOutline(true);
+				attrs.setMaterial(new Material(Color.CYAN));
+				attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(Color.CYAN)));
+				attrs.setOpacity(0.2);
+				attrs.setOutlineOpacity(0.9);
+				attrs.setOutlineWidth(1.5);
+				polygon.setAttributes(attrs);
+
 				Position position = ShapeUtils.getNewShapePosition(wwd);
-		        Angle heading = ShapeUtils.getNewShapeHeading(wwd, true);
-		        double sizeInMeters = ShapeUtils.getViewportScaleFactor(wwd);
+				Angle heading = ShapeUtils.getNewShapeHeading(wwd, true);
+				double sizeInMeters = ShapeUtils.getViewportScaleFactor(wwd);
 
-		        java.util.List<LatLon> locations = ShapeUtils.createSquareInViewport(wwd, position, heading, sizeInMeters);
+				java.util.List<LatLon> locations = ShapeUtils.createSquareInViewport(wwd, position, heading, sizeInMeters);
 
-		        double maxElevation = -Double.MAX_VALUE;
-		        Globe globe = wwd.getModel().getGlobe();
+				double maxElevation = -Double.MAX_VALUE;
+				Globe globe = wwd.getModel().getGlobe();
 
-		        for (LatLon ll : locations)
-		        {
-		            double e = globe.getElevation(ll.getLatitude(), ll.getLongitude());
-		            if (e > maxElevation)
-		                maxElevation = e;
-		        }
+				for (LatLon ll : locations)
+				{
+					double e = globe.getElevation(ll.getLatitude(), ll.getLongitude());
+					if (e > maxElevation)
+						maxElevation = e;
+				}
 
-		        polygon.setAltitudes(0.0, maxElevation + sizeInMeters);
-		        polygon.setTerrainConforming(true, false);
-		        polygon.setLocations(locations);
-				
-		        PolygonEditorsManager.editAirspace(polygon, true);
+				polygon.setAltitudes(0.0, maxElevation + sizeInMeters);
+				polygon.setTerrainConforming(true, false);
+				polygon.setLocations(locations);
+
+				PolygonEditorsManager.editAirspace(polygon, true);
 			}
 		});
-        
+
 		JMenuItem addFromFile = new JMenuItem("Charger un fichier");
 		addFromFile.setToolTipText("Nouveau polygone depuis un fichier");
 		addFromFile.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				VFileChooser fileChooser = new VFileChooser();
@@ -351,11 +353,11 @@ public class MainToolbar extends JToolBar {
 				}
 			}
 		});
-		
+
 		addAirspace.getPopupMenu().add(addPolygon);
 		addAirspace.getPopupMenu().add(addFromFile);
 		addAirspace.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				addPolygon.doClick();
@@ -363,32 +365,38 @@ public class MainToolbar extends JToolBar {
 		});
 		//toolbar.add(addPolygon);
 		addAirspace.addToToolBar(this);
-		
-		//Ajouter données
-		JButton datas = new JButton(new ImageIcon(getClass().getResource("/resources/database_22.png")));
-		datas.setToolTipText("Ajouter/supprimer des données");
-		datas.addActionListener(new ActionListener() {
+
+		//Reset de l'affichage
+		final JButton reset = new JButton(new ImageIcon(getClass().getResource("/resources/reset_22.png")));
+		reset.setToolTipText("Remettre à zéro la carte.");
+
+		reset.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new DatabaseManagerUI().setVisible(true);
+				for(DataView view : DatasManager.getViews()){
+					view.reset();
+				}
+				wwd.resetView();
 			}
 		});
-		this.add(datas);
-		this.addSeparator();
 
+		this.add(reset);
+
+		this.addSeparator();
+		
 		//afficher une échelle verticale	
 		final JToggleButton verticalScaleBar = new JToggleButton(new ImageIcon(getClass().getResource("/resources/scale_22_2.png")));
 		verticalScaleBar.setToolTipText("Afficher une échelle verticale");
 		verticalScaleBar.addItemListener(new ItemListener() {
-			
+
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				wwd.activateVerticalScaleBar(e.getStateChange() == ItemEvent.SELECTED);
 			}
 		});
 		this.add(verticalScaleBar);
-	
+
 		//fond de la France
 		final DropDownToggleButton fond = new DropDownToggleButton();
 		fond.setText("Fond");
@@ -418,10 +426,10 @@ public class MainToolbar extends JToolBar {
 		});
 		territoire.add(europe);
 
-		
+
 		fond.getPopupMenu().add(france);
 		fond.getPopupMenu().add(europe);
-	
+
 		fond.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -431,8 +439,8 @@ public class MainToolbar extends JToolBar {
 		});
 		fond.addToToolBar(this);
 
-		
-		
+
+
 		//Alidade
 		final JToggleButton alidad = new JToggleButton("Alidade");
 		alidad.addItemListener(new ItemListener() {
@@ -447,34 +455,34 @@ public class MainToolbar extends JToolBar {
 		//Projections 
 		new ProjectionDropDownButton(wwd).addToToolBar(this);
 		this.addSeparator();
-		
+
 		//Vertical exaggeration
 		JLabel label = new JLabel("Échelle verticale : ");
 		this.add(label);
 		this.add(new VerticalExaggerationSlider(wwd));		
 		this.addSeparator();
-		
-		
+
+
 		//recherche avec autocomplétion
 		omniBox.addToToolbar(this);
 		this.addSeparator();
-	
+
 		//Help button
 		JButton aide = new JButton(new ImageIcon(getClass().getResource("/resources/bullet_about_22.png")));
 		aide.setToolTipText("A propos...");
 		aide.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				JDialog help = new HelpDialog();
 				help.setVisible(true);
 			}
 		});
-		
+
 		this.add(aide);
-		
+
 	}
-	
-	
-	
+
+
+
 }
