@@ -132,6 +132,7 @@ public class Cartes extends FileParser {
 		this.secteurs = new ArrayList<Entity>();
 		this.volumes = new ArrayList<Entity>();
 		try {
+			this.version = DatabaseManager.getCurrentName(Type.Edimap);
 			//TODO prendre en compte la possibilité qu'il n'y ait pas de bdd Edimap
 			Statement edimapDB = DatabaseManager.getCurrentEdimap();
 			if(edimapDB != null){
@@ -426,5 +427,10 @@ public class Cartes extends FileParser {
 			break;
 		}
 		return null;
+	}
+
+	@Override
+	public String getName() {
+		return this.version;
 	}
 }

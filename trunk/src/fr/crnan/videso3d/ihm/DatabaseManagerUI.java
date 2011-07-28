@@ -176,7 +176,7 @@ public class DatabaseManagerUI extends JDialog {
 				if(suffix.equalsIgnoreCase(".lst") || suffix.equalsIgnoreCase(".txt")){
 					//import données EXSA
 					Exsa exsa = new Exsa(file.getAbsolutePath());
-					this.getDatas(exsa, "Import des données EXSA", "EXSA");
+					this.getDatas(exsa, "Import des données EXSA", "EXSA", file);
 					return;
 				} else if (suffix.equalsIgnoreCase(".mdb")) { //base SkyView
 					DatabaseManager.createSkyView(file.getName(), file.getAbsolutePath());
@@ -185,10 +185,8 @@ public class DatabaseManagerUI extends JDialog {
 					return;			
 				} else if (file.getName().endsWith("n.xml")){ //TODO trouver une autre méthode
 					//export des données SIA, base AIP
-					//on copie le fichier pour éviter de le perdre
-					File aipFile = FileManager.copyFile(file);
-					AIP aip = new AIP("./"+aipFile.getName());
-					this.getDatas(aip, "Import des données AIP", "AIP");
+					AIP aip = new AIP("./"+file.getName());
+					this.getDatas(aip, "Import des données AIP", "AIP", file);
 				} else if (file.getName().endsWith(".kml")) {
 					KML kml = new KML(file.getAbsolutePath());			
 					this.getDatas(kml,"import des données KML","KML");
@@ -201,11 +199,11 @@ public class DatabaseManagerUI extends JDialog {
 				List<File> files = Arrays.asList(file.listFiles());
 				if(files.contains(new File(file.getAbsolutePath()+"/LIEUX"))){//une méthode comme une autre pour vérifier que le dossier est une dossier de données STIP
 					Stip stip = new Stip(file.getAbsolutePath());
-					this.getDatas(stip, "Import des données STIP", "STIP");
+					this.getDatas(stip, "Import des données STIP", "STIP", (File[]) files.toArray());
 				} else if(files.contains(new File(file.getAbsolutePath()+"/LIEU"))//une méthode comme une autre pour vérifier que le dossier est une dossier de données STPV
 						|| files.contains(new File(file.getAbsolutePath()+"/LIEU.txt"))) { //Bordeaux a des fichiers Stpv qui finissent par un .txt
 					Stpv stpv = new Stpv(file.getAbsolutePath());
-					this.getDatas(stpv, "Import des données STPV", "STPV");
+					this.getDatas(stpv, "Import des données STPV", "STPV", (File[]) files.toArray());
 				} else if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))
 						|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))
 						|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) {
@@ -215,12 +213,16 @@ public class DatabaseManagerUI extends JDialog {
 					if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))) caracJeuPath = "carac_jeu.nct";
 					if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) caracJeuPath = "carac_jeu.NCT";
 					Cartes cartes = new Cartes(file.getAbsolutePath(),caracJeuPath);
-					this.getDatas(cartes, "Import des données EDIMAP", "Edimap");
+					this.getDatas(cartes, "Import des données EDIMAP", "Edimap", (File[]) files.toArray());
 				} else if(files.contains(new File(file.getAbsolutePath()+"/PAYS"))) {
 					Pays pays = new Pays(file.getAbsolutePath());
-					this.getDatas(pays, "Import des contours des pays", "PAYS");
+					this.getDatas(pays, "Import des contours des pays", "PAYS", (File[]) files.toArray());
 				} else if(files.contains(new File(file.getAbsoluteFile()+"/radioCoverageXSL.xsl"))){
-					RadioDataManager radioDataManager = new RadioDataManager(file.getAbsolutePath());
+	//				System.out.println(System.getProperty("user.dir"));
+	//				System.out.println(file.getAbsolutePath());
+	//				System.out.println(new File(System.getProperty("user.dir")).toURI().relativize(new File(file.getAbsolutePath()).toURI()).getPath());
+
+					RadioDataManager radioDataManager = new RadioDataManager(new File(System.getProperty("user.dir")).toURI().relativize(new File(file.getAbsolutePath()).toURI()).getPath());
 					this.getDatas(radioDataManager,"Import des données radio","RadioCov");		
 				}
 				else {
@@ -239,8 +241,9 @@ public class DatabaseManagerUI extends JDialog {
      * @param fileParser File parser to be launched
      * @param title Title of the progress window
      * @param type Type of the database
+     * @param files Files imported
      */
-    private void getDatas(final FileParser fileParser, String title, final String type) {
+    private void getDatas(final FileParser fileParser, String title, final String type, final File... files) {
     	
     	progressMonitor = new ProgressMonitor(this, title, "", 1, fileParser.numberFiles());
     	progressMonitor.setMillisToDecideToPopup(0);
@@ -261,6 +264,11 @@ public class DatabaseManagerUI extends JDialog {
 							Logging.logger().warning("Pas de fichier de base de données trouvé");
 						}
 					}
+					//copie des fichiers
+					for(File f : files){
+						FileManager.copyFile(f, fileParser.getName()+"_files");
+					}
+					
 					((DBTableModel)table.getModel()).update();	
 					//si base de données STIP, on tente de mettre à jour les données PAYS par la même occasion
 					if(type.equals("STIP")){
@@ -275,6 +283,7 @@ public class DatabaseManagerUI extends JDialog {
 						//suppression des fichiers temporaires si besoin
 						FileManager.removeTempFiles();
 					}
+					
 				} else if(evt.getPropertyName().equals("progress")){
 					if(progressMonitor.isCanceled()) {
 						fileParser.cancel(true);
@@ -462,9 +471,7 @@ public class DatabaseManagerUI extends JDialog {
 				}
 			} else if (source == delete) {				
 				try {
-					String type = (String)table.getModel().getValueAt(index, 2);
-					if(type.equals("STPV"))
-						FileManager.deleteFile(new File("./datas/CODE_"+table.getModel().getValueAt(index, 1)));
+					FileManager.deleteFile(new File(table.getModel().getValueAt(index, 1)+"_files"));
 					Integer id = (Integer)((DBTableModel)table.getModel()).getId(index);
 					DatabaseManager.deleteDatabase(id);
 					((DBTableModel)table.getModel()).delete(index);

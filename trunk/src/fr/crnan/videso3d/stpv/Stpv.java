@@ -36,7 +36,7 @@ import fr.crnan.videso3d.stip.StipController;
 /**
  * Lecteur de BDS Stpv
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class Stpv extends FileParser{
 
@@ -69,7 +69,7 @@ public class Stpv extends FileParser{
 	@Override
 	public Integer doInBackground() {
 		try {
-			this.getName();
+			this.createName();
 			//si la base de données n'existe pas
 			if(!DatabaseManager.databaseExists(this.name)){
 				//on crée la connection à la db
@@ -98,7 +98,7 @@ public class Stpv extends FileParser{
 		if(this.isCancelled()){
 			try {
 				DatabaseManager.deleteDatabase(name, Type.STPV);
-				FileManager.deleteFile(new File(path+"/datas/CODE_"+name));
+				FileManager.deleteFile(new File(name+"_files"));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -126,7 +126,6 @@ public class Stpv extends FileParser{
 		this.setProgress(2);
 		this.setSect(FileManager.getFile(path + "/SECT"));
 		this.setProgress(3);
-		FileManager.copyFileAs(path + "/CODE", "./datas/CODE_"+name);
 	}
 
 	/**
@@ -196,7 +195,7 @@ public class Stpv extends FileParser{
 	 * Récupère le nom de la BDS
 	 * @throws IOException 
 	 */
-	private void getName() throws IOException{
+	private void createName() throws IOException{
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path+"/RESULTAT")));
 			Boolean nameFound = false;
 			while (in.ready() && !nameFound){
@@ -456,6 +455,13 @@ public class Stpv extends FileParser{
 		default:
 			return null;
 		}
+	}
+
+
+
+	@Override
+	public String getName() {
+		return this.name;
 	}
 
 }

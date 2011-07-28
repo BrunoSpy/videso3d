@@ -38,7 +38,7 @@ import gov.nasa.worldwind.geom.LatLon;
  * Ces fichiers nécessitent un traitement spécial car ils ne sont pas distribués avec les autres fichiers CA lors d'une livraison par le CESNAC.
  * Il s'agit des fichiers PAYS, CONTPAYS, et POINPAYS
  * @author Bruno Spyckerelle
- * @version 0.2.3
+ * @version 0.2.4
  */
 public class Pays extends FileParser {
 
@@ -192,7 +192,7 @@ public class Pays extends FileParser {
 	public Integer doInBackground() {
 		try {
 			//récupération du nom de la base à créer
-			this.getName();
+			this.createName();
 			if(!DatabaseManager.databaseExists(this.name)){
 				this.conn = DatabaseManager.selectDB(Type.PAYS, this.name);
 				this.conn.setAutoCommit(false);
@@ -201,6 +201,7 @@ public class Pays extends FileParser {
 				//parsing des fichiers et stockage en base
 				this.getFromFiles();
 				this.createIndexes();
+				this.conn.commit();
 			} else {
 				DatabaseManager.selectDatabase(this.name, Type.PAYS);
 			}
@@ -230,11 +231,6 @@ public class Pays extends FileParser {
 			}
 			firePropertyChange("done", true, false);
 		} else {
-			try {
-				this.conn.commit();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 			firePropertyChange("done", false, true);
 		}
 	}
@@ -244,7 +240,7 @@ public class Pays extends FileParser {
 	 * = PAYS.date_CA
 	 * @throws IOException 
 	 */
-	private void getName() throws IOException {
+	private void createName() throws IOException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path + "/PAYS")));
 		String line = in.readLine();
 		this.name = "PAYS." + line.substring(33,41);
@@ -339,5 +335,10 @@ public class Pays extends FileParser {
 			e.printStackTrace();
 		}
 		return polygon;
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
 	}
 }

@@ -35,7 +35,7 @@ import gov.nasa.worldwind.util.Logging;
  * Lecteur de fichiers EXSA<br />
  * Détecte automatiquement le type de fichier (formaté ou non).
  * @author Bruno Spyckerelle
- * @version 0.4.2
+ * @version 0.4.3
  */
 public class Exsa extends FileParser {
 	/**
@@ -72,7 +72,7 @@ public class Exsa extends FileParser {
 	public Integer doInBackground(){
 		try {
 			//on récupère le nom de la base de données
-			this.getName();
+			this.createName();
 			if(!DatabaseManager.databaseExists(this.name)){
 				//on crée la connection avec bdd avec ce nom
 				this.conn = DatabaseManager.selectDB(Type.EXSA, this.name);
@@ -116,7 +116,7 @@ public class Exsa extends FileParser {
 	 * Récupère le nom de la base de données EXSA
 	 * @throws IOException 
 	 */
-	protected void getName() throws IOException {
+	protected void createName() throws IOException {
 		Boolean nameFound = false;
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path)));
@@ -686,6 +686,11 @@ public class Exsa extends FileParser {
 	@Override
 	public int numberFiles() {
 		return 15;
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
 	}
 
 }

@@ -79,7 +79,7 @@ public class Stip extends FileParser{
 	public Integer doInBackground() {
 		try {
 			//récupération du nom de la base à créer
-			this.getName();
+			this.createName();
 			if(!DatabaseManager.databaseExists(this.name)){
 				//création de la connection à la base de données
 				this.conn = DatabaseManager.selectDB(Type.STIP, this.name);
@@ -129,7 +129,7 @@ public class Stip extends FileParser{
 	 * = date_CA.date_livraison
 	 * @throws IOException 
 	 */
-	private void getName() throws IOException{
+	private void createName() throws IOException{
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path + "/REF")));
 		String line = in.readLine();
 		this.name = line.substring(33,41) + "." + line.substring(55,63);
@@ -1091,5 +1091,10 @@ public class Stip extends FileParser{
 		default:
 			return null;
 		}
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
 	}
 }

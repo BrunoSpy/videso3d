@@ -102,4 +102,9 @@ public abstract class FileParser extends SwingWorker<Integer, String>{
 		return this.path;
 	}
 	
+	/**
+	 * Name of the created database
+	 * @return
+	 */
+	public abstract String getName();
 }

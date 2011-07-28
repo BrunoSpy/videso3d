@@ -58,7 +58,7 @@ public class LiaisonPanel extends ResultPanel implements ActionListener{
 		if(DatasManager.getController(Type.STPV) == null)
 			return;
 		//TODO changer cet appel pour ne plus avoir besoin du controleur
-		f = new File("./datas/CODE_"+((StpvController)DatasManager.getController(Type.STPV)).getCurrentName());
+		f = new File(((StpvController)DatasManager.getController(Type.STPV)).getCurrentName()+"_files","CODE");
 		this.tabPane = tabPane;
 		this.searchNum = Integer.parseInt(searchNum);
 		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));

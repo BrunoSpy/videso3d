@@ -137,6 +137,11 @@ public class Radio extends FileParser {
 	@Override
 	public void getFromFiles() {		
 	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
 	
 	
 }
