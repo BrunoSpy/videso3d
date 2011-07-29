@@ -33,6 +33,7 @@ import org.jdom.Element;
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.MultiValueMap;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.ProgressSupport;
@@ -229,6 +230,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		}else if(type == AIP.CTL){
 			// si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
 			// donc on va chercher les différents morceaux avec getCTLSecteurs et on les ajoute tous.
+			name = name.split(" ")[0].trim();
 			List<String> volumesSecteur = volumesSecteursCTL.get(name);
 			if(volumesSecteur==null){
 				ArrayList<String> volumesSect = getCTLSecteurs(name);
@@ -248,6 +250,8 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		}else{
 			this.addZone(type,name);
 		}
+		//synchroniser la vue si l'appel n'a pas été fait par la vue
+		DatasManager.getView(Type.AIP).showObject(type, name);
 	}
 
 	@Override
@@ -262,6 +266,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		}else if(type == AIP.CTL){
 			// si c'est de type CTL, il se peut qu'il y ait plusieurs volumes correspondant à un seul secteur
 			// donc on va chercher les différents morceaux avec getCTLSecteurs et on les enlève tous.
+			name = name.split(" ")[0].trim();
 			List<String> volumesSecteur = volumesSecteursCTL.get(name);
 			if(volumesSecteur!=null){
 				for(String nomVolumeSecteur : volumesSecteur){
@@ -271,6 +276,8 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		}else{
 			this.hideZone(type,name);
 		}
+		//synchroniser la vue si l'appel n'a pas été fait par la vue
+		DatasManager.getView(Type.AIP).hideObject(type, name);
 	}
 
 	
@@ -593,7 +600,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			try {
 				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select lat, lon, type, frequence from NavFix where nom = ? and type = ?");
 				ps.setString(1, name);
-				ps.setString(2, AIP.getTypeString(type));
+				ps.setString(2, AIP.type2String(type));
 				ResultSet rs = ps.executeQuery();
 				while(rs.next()){
 					latitude = rs.getDouble(1);
@@ -737,6 +744,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	 */
 	@Override
 	public void highlight(int type, String name) {
+		this.showObject(type, name);
 	 	if(type == AIP.CTL){
 			highlightCTL(name);
 			//Si le type est supérieur à 20 et inférieur à 30, c'est une route
@@ -799,8 +807,8 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	 * @param names les noms des différents morceaux correspondant à un secteur.
 	 */
 	private void highlightCTL(String name){
-		this.showObject(AIP.CTL, name);
-		List<String> names = volumesSecteursCTL.get(name);
+		String nomSecteur = name.split(" ")[0].trim();
+		List<String> names = volumesSecteursCTL.get(nomSecteur);
 		//on construit le secteur s'il n'existe pas encore
 //		for(String n : names){
 //			this.addZone(AIP.CTL, n);
@@ -838,12 +846,10 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	
 	
 	private void highlightAirport(int type, String name){
-		showAerodrome(type, name);
 		centerView(arptLayer.getAirport(name).get(0));
 	}
 	
 	private void highlightNavFix(int type, String name){
-		this.showNavFix(type, name);
 		Balise2D navFix = navFixLayer.getBalise(name, type);
 		navFix.highlight(true);
 		if(lastHighlighted!=null){
@@ -865,7 +871,6 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	 * @param segmentsNames Les noms des segments de la route
 	 */
 	private void highlightRoute(int type, String name){
-			showRoute(name, type);
 		RoutesSegments.Route route = routesSegments.getSegmentOfRoute(name);
 		if(route != null){
 			ArrayList<Route2D> segments2D = new ArrayList<Route2D>();
@@ -877,8 +882,8 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			centerView(segments2D);
 		}
 	}
-	
-	
+
+
 
 	private String buildSegmentName(String routeName, String sequence){
 		return routeName.concat(" - ").concat(sequence);
@@ -1026,7 +1031,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	
 	@Override
 	public String type2string(int type) {
-		return AIP.getTypeString(type);
+		return AIP.type2String(type);
 	}
 	
 	public String toString(){

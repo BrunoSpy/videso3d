@@ -34,6 +34,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.swing.event.SwingPropertyChangeSupport;
@@ -1457,6 +1458,7 @@ public final class DatabaseManager {
 								"UNION select nom, type from routes " +
 								"UNION select nom, type from NavFix " +
 								"UNION select nom, type from aerodromes");
+				HashSet<String> CTLset = new HashSet<String>();
 				while(rs.next()){
 					try{
 					int typeInt = AIP.string2type(rs.getString(2));
@@ -1466,6 +1468,12 @@ public final class DatabaseManager {
 						ps.setString(1, nom);
 						ResultSet rs2 = ps.executeQuery();
 						items.add(new Couple<Integer, String>(typeInt, rs2.getString(1)+" -- "+nom));
+					}else if(typeInt == AIP.CTL){
+						nom = nom.split(" ")[0].trim();
+						if(!CTLset.contains(nom)){
+							items.add(new Couple<Integer, String>(typeInt, nom));	
+							CTLset.add(nom);
+						}
 					}else{
 						items.add(new Couple<Integer, String>(typeInt, nom));
 					}

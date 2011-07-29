@@ -243,7 +243,7 @@ public class AIPContext extends Context {
 		try {
 			PreparedStatement ps = DatabaseManager.prepareStatement(Type.AIP, "select lat, lon from NavFix where nom=? and type = ?");
 			ps.setString(1, name);
-			ps.setString(2, AIP.getTypeString(type));
+			ps.setString(2, AIP.type2String(type));
 			ResultSet rs = ps.executeQuery();
 			latitude = rs.getFloat(1);
 			longitude = rs.getFloat(2);

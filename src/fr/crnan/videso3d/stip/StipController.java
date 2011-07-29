@@ -209,6 +209,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 	public void hideObject(int type, String name) {
 		switch (type) {
 		case ROUTES://Routes
+			
 			this.routes2D.hideRoute(name);
 			this.routes3D.hideRoute(name);
 			break;

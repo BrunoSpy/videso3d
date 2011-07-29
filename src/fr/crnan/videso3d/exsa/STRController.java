@@ -27,6 +27,7 @@ import java.util.List;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -89,7 +90,9 @@ public class STRController implements VidesoController {
 	}
 	
 	@Override
-	public void highlight(int type, String name) {}
+	public void highlight(int type, String name) {
+		this.showObject(type, name);
+	}
 
 	@Override
 	public void unHighlight(int type, String name) {	}
@@ -233,6 +236,8 @@ public class STRController implements VidesoController {
 		default:
 			break;
 		}
+		//synchroniser la vue si l'appel n'a pas été fait par la vue
+		DatasManager.getView(Type.EXSA).showObject(type, name);
 		
 	}
 
@@ -456,7 +461,7 @@ public class STRController implements VidesoController {
 			MosaiqueLayer mLayer = new MosaiqueLayer(annotationTitle, grille, origine, width, 
 													height, size, hSens, vSens, numSens, squares,
 													altitudes, numbers, attr, airspaceAttr,
-													Type.EXSA, type);
+													Type.EXSA, type, name);
 			mosaiquesLayer.put(type+name, mLayer);
 			mLayer.setName("Mosaïque "+type+" "+name);
 			mLayer.set3D(!flat);
@@ -484,6 +489,8 @@ public class STRController implements VidesoController {
 		}else {
 			this.toggleLayer(this.mosaiquesLayer.get(type+name), false);
 		}
+		//synchroniser la vue si l'appel n'a pas été fait par la vue
+		DatasManager.getView(Type.EXSA).hideObject(type, name);
 	}
 
 	@Override

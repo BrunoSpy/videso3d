@@ -18,11 +18,6 @@ package fr.crnan.videso3d.radio;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
 // import java.io.FilenameFilter;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -34,6 +29,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 // import fr.crnan.videso3d.formats.xstream.PolygonSerializer;
 import fr.crnan.videso3d.formats.xml.PolygonDeserializer;
 import fr.crnan.videso3d.formats.xml.SaxonFactory;
+import fr.crnan.videso3d.graphics.VidesoObject;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 
 /**
@@ -114,7 +110,9 @@ public class RadioDataManager extends FileParser {
 			System.out.println("Debut de désérialisation");
 			PolygonDeserializer polygonDeserializer = new PolygonDeserializer();			
 			this.airspaces= polygonDeserializer.Deserialize(outputXmlFilePath);
-
+			for (Airspace airspace : airspaces){
+				((VidesoObject)airspace).setDatabaseType(Type.RadioCov);
+			}
 //			this.airspaces= polygonDeserializer.Deserialize("e:/radioCoverageData/radioOutput.xml");
 //			test = true;
 			System.out.println("Fin de désérialisation");
@@ -153,11 +151,11 @@ public class RadioDataManager extends FileParser {
 			this.setProgress(0);
 			
 			String XSL = directoryPath+File.separator+"radioCoverageXSL.xsl";
-			String XSL2 = directoryPath+File.separator+"radioCoverageXSLEnd.xsl";
-			String XSL3 = directoryPath+File.separator+"Fileconcat.xsl";
-			String XML_outTemp = directory.getAbsolutePath()+File.separator+"tempradioOutput.xml";
+//			String XSL2 = directoryPath+File.separator+"radioCoverageXSLEnd.xsl";
+//			String XSL3 = directoryPath+File.separator+"Fileconcat.xsl";
+//			String XML_outTemp = directory.getAbsolutePath()+File.separator+"tempradioOutput.xml";
 			String XML_out = directory.getAbsolutePath()+File.separator+"radioOutput.xml";
-			String XML_Temp_In = directory.getAbsolutePath()+File.separator+"radioIntput.xml";
+//			String XML_Temp_In = directory.getAbsolutePath()+File.separator+"radioIntput.xml";
 			
 			XmlFile.writeIntoFile(XML_out, "<list>"+"\n");
 			

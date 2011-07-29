@@ -20,6 +20,7 @@ import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,7 +49,7 @@ import fr.crnan.videso3d.ihm.components.VerticalMultipleSplitPanes;
  */
 @SuppressWarnings("serial")
 public class EdimapView extends JPanel implements DataView{
-
+	
 	/**
 	 * Cartes statiques
 	 */
@@ -69,11 +70,15 @@ public class EdimapView extends JPanel implements DataView{
 	private ItemCheckListener itemCheckListener = new ItemCheckListener();
 	
 	/**
-	 * Liste des checkbox de la vue, afin de pouvoir tous les désélectionner facilement
+	 * Listes des checkbox de la vue, afin de pouvoir tous les désélectionner facilement
 	 */
-	private List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
-		
+	private HashMap<String,JCheckBox> checkBoxMapDyn = new HashMap<String,JCheckBox>();
+	private HashMap<String,JCheckBox> checkBoxMapStat = new HashMap<String,JCheckBox>();
+	private HashMap<String,JCheckBox> checkBoxMapVol = new HashMap<String,JCheckBox>();
+	private HashMap<String,JCheckBox> checkBoxMapSect = new HashMap<String,JCheckBox>();
+	
 	private JXMultiSplitPane container = new VerticalMultipleSplitPanes();
+	
 	
 	public EdimapView(){
 		
@@ -89,10 +94,10 @@ public class EdimapView extends JPanel implements DataView{
 			if(DatabaseManager.getCurrentEdimap() != null) {
 				Cartes cartes = new Cartes();
 				
-				container.add(this.buildPanel(statiques, cartes.getCartesStatiques()));
-				if(!cartes.getVolumes().isEmpty()) container.add(this.buildPanel(volumes, cartes.getVolumes()));
-				container.add(this.buildPanel(secteurs, cartes.getSecteurs()));
-				container.add(this.buildPanel(dynamiques, cartes.getCartesDynamiques()));
+				container.add(this.buildPanel(statiques, cartes.getCartesStatiques(),Cartes.EDIMAP_STATIC));
+				if(!cartes.getVolumes().isEmpty()) container.add(this.buildPanel(volumes, cartes.getVolumes(), Cartes.EDIMAP_VOLUME));
+				container.add(this.buildPanel(secteurs, cartes.getSecteurs(), Cartes.EDIMAP_SECTOR));
+				container.add(this.buildPanel(dynamiques, cartes.getCartesDynamiques(), Cartes.EDIMAP_DYNAMIC));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -100,7 +105,7 @@ public class EdimapView extends JPanel implements DataView{
 		
 	}
 
-	private Component buildPanel(JPanel panel, List<Entity> liste) {
+	private Component buildPanel(JPanel panel, List<Entity> liste, int type) {
 		JPanel list = new JPanel();
 		JScrollPane scrollPane = new JScrollPane(list);
 		scrollPane.setBorder(null);
@@ -108,9 +113,17 @@ public class EdimapView extends JPanel implements DataView{
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		Iterator<Entity> iterator = liste.iterator();
 		while(iterator.hasNext()){
-			JCheckBox checkBox = new JCheckBox(iterator.next().getValue("name"));
+			String name = iterator.next().getValue("name");
+			JCheckBox checkBox = new JCheckBox(name);
 			checkBox.addItemListener(itemCheckListener);
-			checkBoxList.add(checkBox);
+			if(type == Cartes.EDIMAP_DYNAMIC)
+				checkBoxMapDyn.put(name, checkBox);
+			else if(type == Cartes.EDIMAP_STATIC)
+				checkBoxMapStat.put(name, checkBox);
+			else if(type == Cartes.EDIMAP_VOLUME)
+				checkBoxMapVol.put(name, checkBox);
+			else if(type == Cartes.EDIMAP_SECTOR)
+				checkBoxMapSect.put(name, checkBox);
 			list.add(checkBox);
 		}
 		panel.add(scrollPane);
@@ -119,6 +132,11 @@ public class EdimapView extends JPanel implements DataView{
 	
 	@Override
 	public void reset() {
+		List<JCheckBox> checkBoxList = new LinkedList<JCheckBox>();
+		checkBoxList.addAll(checkBoxMapDyn.values());
+		checkBoxList.addAll(checkBoxMapStat.values());
+		checkBoxList.addAll(checkBoxMapSect.values());
+		checkBoxList.addAll(checkBoxMapVol.values());
 		for(JCheckBox c : checkBoxList){
 			if(c.isSelected()){
 				c.setSelected(false);
@@ -161,16 +179,39 @@ public class EdimapView extends JPanel implements DataView{
 		}
 	}
 
+	/**
+	 * Recherche une checkBox dans un des JPanel
+	 * @param type pour préciser le JPanel dans lequel il faut chercher
+	 * @param name le nom de la checkbox à chercher
+	 */
+	private JCheckBox getCheckBox(int type, String name){
+		if(type == Cartes.EDIMAP_DYNAMIC){
+			return checkBoxMapDyn.get(name);
+		}
+		if(type == Cartes.EDIMAP_STATIC){
+			return checkBoxMapStat.get(name);
+		}
+		if(type == Cartes.EDIMAP_VOLUME){
+			return checkBoxMapVol.get(name);
+		}
+		if(type == Cartes.EDIMAP_SECTOR){
+			return checkBoxMapSect.get(name);
+		}
+		return null;
+	}
+	
 	@Override
 	public void showObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
+		JCheckBox c = getCheckBox(type, name);
+		if(c!=null)
+			c.setSelected(true);
 	}
 
 	@Override
 	public void hideObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
+		JCheckBox c = getCheckBox(type, name);
+		if(c!=null)
+			c.setSelected(false);
 	}
 
 

@@ -26,13 +26,13 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.PolygonAnnotation;
 import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
+import fr.crnan.videso3d.graphics.VSurfacePolyline;
 
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.ShapeAttributes;
-import gov.nasa.worldwind.render.SurfacePolyline;
 import gov.nasa.worldwind.render.UserFacingText;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 /**
@@ -89,6 +89,7 @@ public class MosaiqueLayer extends LayerSet {
 	 * Layer pour la grille
 	 */
 	private RenderableLayer grilleLayer = new RenderableLayer();
+	
 	/**
 	 * Création d'une mosaïque</br>
 	 * @param annotationTitle {@link String} Titre des annotations des carrés
@@ -122,8 +123,8 @@ public class MosaiqueLayer extends LayerSet {
 			ShapeAttributes attr,
 			AirspaceAttributes airspaceAttr, 
 			DatabaseManager.Type base, 
-			int type){
-
+			int type,
+			String name){
 		this.add(textLayer);
 		this.add(shapeLayer);
 		this.add(grilleLayer);
@@ -144,7 +145,10 @@ public class MosaiqueLayer extends LayerSet {
 				LinkedList<LatLon> line = new LinkedList<LatLon>();
 				line.add(start);
 				line.add(stop);
-				SurfacePolyline ligne = new SurfacePolyline(line);
+				VSurfacePolyline ligne = new VSurfacePolyline(line);
+				ligne.setDatabaseType(base);
+				ligne.setType(type);
+				ligne.setName(name);
 				ligne.setAttributes(new BasicShapeAttributes());
 				ligne.setClosed(false);
 				this.grilleLayer.addRenderable(ligne);
@@ -159,7 +163,10 @@ public class MosaiqueLayer extends LayerSet {
 				LinkedList<LatLon> line = new LinkedList<LatLon>();
 				line.add(start);
 				line.add(stop);
-				SurfacePolyline col = new SurfacePolyline(line);
+				VSurfacePolyline col = new VSurfacePolyline(line);
+				col.setDatabaseType(base);
+				col.setType(type);
+				col.setName(name);
 				col.setAttributes(new BasicShapeAttributes());
 				col.setClosed(false);
 				this.grilleLayer.addRenderable(col);
@@ -209,7 +216,8 @@ public class MosaiqueLayer extends LayerSet {
 					annotation += "<br />Plafond : "+String.format("%3.0f", altitude.getSecond()/30.48)+
 								  "<br />Plancher : "+String.format("%3.0f", altitude.getFirst()/30.48)+"</p>";
 				}
-				this.colorieCarre(annotation, origine, square.getFirst(), square.getSecond(), width, height, size, altitude.getFirst(), altitude.getSecond(), hsens, vsens, numSens, attr, airspaceAttr, base, type);
+				this.colorieCarre(annotation, origine, square.getFirst(), square.getSecond(), width, height, size, altitude.getFirst(), 
+						altitude.getSecond(), hsens, vsens, numSens, attr, airspaceAttr, base, type, name);
 			}
 		}
 	}
@@ -242,7 +250,9 @@ public class MosaiqueLayer extends LayerSet {
 			int vsens, 
 			int numSens, ShapeAttributes attr, AirspaceAttributes airspaceAttr,
 			DatabaseManager.Type base,
-			int type){
+			int type,
+			String name){
+
 		int colonne, ligne; //colonne et ligne du carré. Débute à 0.
 		if(numSens == VERTICAL_FIRST) {
 			colonne = carre / height;
@@ -272,8 +282,9 @@ public class MosaiqueLayer extends LayerSet {
 			
 				SurfacePolygonAnnotation polygon = new SurfacePolygonAnnotation(locations);
 				polygon.setDatabaseType(base);
+				polygon.setName(name);
 				polygon.setType(type);
-				polygon.setName(annotation.split("[<>]")[4]);
+				//polygon.setName(annotation.split("[<>]")[4]);
 				if(attr != null) polygon.setAttributes(attr);
 				if(annotation != null) polygon.setAnnotation(annotation);
 				this.shapeLayer.addRenderable(polygon);
@@ -281,7 +292,8 @@ public class MosaiqueLayer extends LayerSet {
 				PolygonAnnotation polyg = new PolygonAnnotation(locations);
 				polyg.setDatabaseType(base);
 				polyg.setType(type);
-				polyg.setName(annotation.split("[<>]")[4]);
+				polyg.setName(name);
+				//polyg.setName(annotation.split("[<>]")[4]);
 				polyg.setAltitudes(plancher, plafond);
 				if(annotation != null) polyg.setAnnotation(annotation);
 				if(airspaceAttr != null) polyg.setAttributes(airspaceAttr);
@@ -305,8 +317,9 @@ public class MosaiqueLayer extends LayerSet {
 	
 				SurfacePolygonAnnotation polygon = new SurfacePolygonAnnotation(locations);
 				polygon.setDatabaseType(base);
+				polygon.setName(name);
 				polygon.setType(type);
-				polygon.setName(annotation.split("[<>]")[4]);
+				//polygon.setName(annotation.split("[<>]")[4]);
 				if(attr != null) polygon.setAttributes(attr);
 				if(annotation != null) polygon.setAnnotation(annotation);
 				this.shapeLayer.addRenderable(polygon);
@@ -314,7 +327,8 @@ public class MosaiqueLayer extends LayerSet {
 				PolygonAnnotation polyg = new PolygonAnnotation(locations);
 				polyg.setDatabaseType(base);
 				polyg.setType(type);
-				polyg.setName(annotation.split("[<>]")[4]);
+				polyg.setName(name);
+				//polyg.setName(annotation.split("[<>]")[4]);
 				polyg.setAltitudes(plancher, plafond);
 				if(airspaceAttr != null) polyg.setAttributes(airspaceAttr);
 				if(annotation != null) polyg.setAnnotation(annotation);

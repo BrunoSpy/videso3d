@@ -57,7 +57,7 @@ public class LiaisonPanel extends ResultPanel implements ActionListener{
 		titleTab += " "+searchNum;
 		if(DatasManager.getController(Type.STPV) == null)
 			return;
-		//TODO changer cet appel pour ne plus avoir besoin du controleur
+		//TODO changer cet appel pour ne plus avoir besoin du contrôleur
 		f = new File(((StpvController)DatasManager.getController(Type.STPV)).getCurrentName()+"_files","CODE");
 		this.tabPane = tabPane;
 		this.searchNum = Integer.parseInt(searchNum);

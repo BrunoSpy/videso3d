@@ -26,6 +26,7 @@ import java.util.List;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -64,8 +65,7 @@ public class StpvController implements VidesoController {
 	
 	@Override
 	public void highlight(int type, String name) {
-		// TODO Auto-generated method stub
-
+		this.showObject(type, name);
 	}
 
 	@Override
@@ -137,12 +137,14 @@ public class StpvController implements VidesoController {
 			MosaiqueLayer mLayer = new MosaiqueLayer(annotationTitle, grille, origine, 
 												width, height, size, hSens, vSens, numSens, 
 												squares, altitudes, numbers, attr, airspaceAttr, 
-												Type.STPV, MOSAIQUE);
+												Type.STPV, MOSAIQUE, name);
 			mosaiquesLayer.put(type+name, mLayer);
 			mLayer.setName("Mosaïque "+type+" "+name);
 			mLayer.set3D(false);
 			this.toggleLayer(mLayer, true);
 		}
+		//synchroniser la vue si l'appel n'a pas été fait par la vue
+		DatasManager.getView(Type.STPV).showObject(type, name);
 	}
 
 	public String getCurrentName(){
@@ -166,6 +168,8 @@ public class StpvController implements VidesoController {
 		if(mosaiquesLayer.containsKey(type+name)){
 			this.toggleLayer(mosaiquesLayer.get(type+name), false);
 		}
+		//synchroniser la vue si l'appel n'a pas été fait par la vue
+		DatasManager.getView(Type.STPV).hideObject(type, name);
 	}
 
 	@Override

@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.ihm;
 
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -76,7 +77,7 @@ public class StpvView extends JPanel implements DataView{
 	
 	private JPanel buildPanel(JPanel panel, String query){
 		panel.setLayout(new GridLayout(0, 3));
-		int i = 0;
+		//int i = 0;
 		try {
 			Statement st = DatabaseManager.getCurrentStpv();
 			ResultSet rs = st.executeQuery(query);
@@ -85,7 +86,7 @@ public class StpvView extends JPanel implements DataView{
 				chk.addItemListener(itemCheckListener);
 				chkList.add(chk);
 				panel.add(chk);	
-				i++;
+				//i++;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -125,16 +126,48 @@ public class StpvView extends JPanel implements DataView{
 		
 	}
 
+	
+	/**
+	 * Recherche une checkBox dans un des JPanel
+	 * @param type pour préciser le JPanel dans lequel il faut chercher
+	 * @param name le nom de la checkbox à chercher
+	 */
+	private JCheckBox getCheckBox(int type, String name){
+		JPanel panel = null;
+		switch(type){
+		case StpvController.MOSAIQUE :
+			panel = mosaique;
+			break;
+		case StpvController.BALISE :
+			break;
+		case StpvController.SECTEUR :
+			break;
+		case StpvController.STAR :
+			break;
+		}
+		if(panel!=null){
+			for(Component c : panel.getComponents()){
+				if(c instanceof JCheckBox){
+					if(((JCheckBox)c).getText().equals(name))
+						return (JCheckBox)c;
+				}
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	public void showObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
+		JCheckBox c = getCheckBox(type, name);
+		if(c!=null)
+			c.setSelected(true);	
 	}
 
 	@Override
 	public void hideObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
+		JCheckBox c = getCheckBox(type, name);
+		if(c!=null)
+			c.setSelected(false);
 	}
 
 
