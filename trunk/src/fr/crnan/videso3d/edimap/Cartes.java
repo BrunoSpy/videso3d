@@ -327,7 +327,7 @@ public class Cartes extends FileParser {
 			}
 			//		this.setProgress(carte.getProgress());
 			carte.doInBackground();
-			Carte c = new Carte(carte.getEntity(), this.getPalette());
+			Carte c = new Carte(carte.getEntity(), this.getPalette(), Cartes.string2type(type));
 			cartes.put(name+type, c);
 			return c;
 		}

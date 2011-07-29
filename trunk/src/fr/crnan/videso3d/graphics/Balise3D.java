@@ -33,6 +33,7 @@ public class Balise3D extends PointPlacemark implements Balise {
 
 	private int type;
 	private Type base;
+	private String name;
 	
 	private VidesoAnnotation annotation;
 	
@@ -40,7 +41,7 @@ public class Balise3D extends PointPlacemark implements Balise {
 		super(position);
 		this.setType(type);
 		this.setDatabaseType(base);
-		
+		this.setName((String)name);
 		this.setLabelText((String) name);
 		
 		this.setValue(AVKey.DISPLAY_NAME, annotation);
@@ -69,7 +70,7 @@ public class Balise3D extends PointPlacemark implements Balise {
 
 	@Override
 	public String getName() {
-		return this.getLabelText();
+		return this.name;
 	}
 
 	@Override
@@ -109,7 +110,7 @@ public class Balise3D extends PointPlacemark implements Balise {
 
 	@Override
 	public void setName(String name) {
-		this.setLabelText(name);
+		this.name = name;
 	}
 
 	@Override

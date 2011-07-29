@@ -27,6 +27,7 @@ import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.MultiValueMap;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
 import fr.crnan.videso3d.skyview.SkyViewController;
@@ -37,7 +38,11 @@ import fr.crnan.videso3d.skyview.SkyViewController;
  * @version 0.3.2
  */
 public class SkyView extends FilteredMultiTreeTableView {
+	
+	private MultiValueMap<String, DefaultMutableTreeNode> nodes = new MultiValueMap<String, DefaultMutableTreeNode>();
 
+	private FilteredTreeTableModel model;
+	
 	public SkyView(){
 
 	//	this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -51,9 +56,9 @@ public class SkyView extends FilteredMultiTreeTableView {
 				
 				DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
 				this.fillRootNode(root);
-				FilteredTreeTableModel model = new FilteredTreeTableModel(root);
+				this.model = new FilteredTreeTableModel(root);
 
-				this.addTableTree(model, null, null);
+				this.addTableTree(this.model, null, null);
 				
 			}
 		} catch (SQLException e){
@@ -86,7 +91,11 @@ public class SkyView extends FilteredMultiTreeTableView {
 				DefaultMutableTreeNode state = new DefaultMutableTreeNode(new Couple<String, Boolean>(oaci, false));
 				routes.add(state);
 				while(rs.next()){
-					state.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+					String name = rs.getString(1);
+					DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(name, false));
+					state.add(node);
+					nodes.put(name, node);
+					
 				}
 			}
 			//ajout des waypoints
@@ -102,7 +111,10 @@ public class SkyView extends FilteredMultiTreeTableView {
 				DefaultMutableTreeNode point = new DefaultMutableTreeNode(new Couple<String, Boolean>(oaci, false));
 				waypoints.add(point);
 				while(rs.next()){
-					point.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+					String name = rs.getString(1);
+					DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(name, false));
+					point.add(node);
+					nodes.put(name, node);
 				}
 			}
 			//ajout des aéroports
@@ -118,7 +130,10 @@ public class SkyView extends FilteredMultiTreeTableView {
 				DefaultMutableTreeNode airport = new DefaultMutableTreeNode(new Couple<String, Boolean>(oaci, false));
 				airports.add(airport);
 				while(rs.next()){
-					airport.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+					String name = rs.getString(1);
+					DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(name, false));
+					airport.add(node);
+					nodes.put(name, node);
 				}
 			}
 			rs.close();
@@ -128,16 +143,20 @@ public class SkyView extends FilteredMultiTreeTableView {
 		}
 	}
 
+	
+	
 	@Override
 	public void showObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
+		for(DefaultMutableTreeNode node : this.nodes.get(name)){
+			this.model.setValueAt(true, node, 1);
+		}
 	}
 
 	@Override
 	public void hideObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
+		for(DefaultMutableTreeNode node : this.nodes.get(name)){
+			this.model.setValueAt(false, node, 1);
+		}
 	}
 
 }

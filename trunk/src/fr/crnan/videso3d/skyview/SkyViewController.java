@@ -29,6 +29,7 @@ import java.util.List;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -152,6 +153,8 @@ public class SkyViewController implements VidesoController {
 		default:
 			break;
 		}
+		//synchroniser la vue si l'appel n'a pas été fait par la vue
+		DatasManager.getView(Type.SkyView).showObject(type, name);
 	}
 
 	@Override
@@ -171,6 +174,8 @@ public class SkyViewController implements VidesoController {
 		default:
 			break;
 		}
+		//synchroniser la vue si l'appel n'a pas été fait par la vue
+		DatasManager.getView(Type.SkyView).hideObject(type, name);
 	}
 
 	@Override

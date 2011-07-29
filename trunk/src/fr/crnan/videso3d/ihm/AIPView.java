@@ -21,6 +21,7 @@ import java.awt.event.ItemListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -31,6 +32,7 @@ import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.aip.AIPController;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
@@ -42,30 +44,41 @@ import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
  */
 public class AIPView extends FilteredMultiTreeTableView {
 
+	private HashMap<String, DefaultMutableTreeNode> zones = new HashMap<String, DefaultMutableTreeNode>();
+	private HashMap<String, DefaultMutableTreeNode> routes = new HashMap<String, DefaultMutableTreeNode>();
+	private HashMap<String, DefaultMutableTreeNode> aerodromes = new HashMap<String, DefaultMutableTreeNode>();
+	private HashMap<String, DefaultMutableTreeNode> balises = new HashMap<String, DefaultMutableTreeNode>();
+	
+	private FilteredTreeTableModel zonesModel;
+	private FilteredTreeTableModel routesModel;
+	private FilteredTreeTableModel aerodromesModel;
+	private FilteredTreeTableModel balisesModel;
+	
+	
 	public AIPView() {
 
 		try {
 			if(DatabaseManager.getCurrentAIP() != null) { //si pas de bdd, ne pas créer la vue
 
-				DefaultMutableTreeNode ZonesRoot = new DefaultMutableTreeNode("root");
-				this.fillZonesRootNode(ZonesRoot);
-				FilteredTreeTableModel ZonesModel = new FilteredTreeTableModel(ZonesRoot);
-				this.addTableTree(ZonesModel, "Espaces", null);
+				DefaultMutableTreeNode zonesRoot = new DefaultMutableTreeNode("root");
+				this.fillZonesRootNode(zonesRoot);
+				this.zonesModel = new FilteredTreeTableModel(zonesRoot);
+				this.addTableTree(this.zonesModel, "Espaces", null);
 				
-				DefaultMutableTreeNode RoutesRoot = new DefaultMutableTreeNode("root");
-				this.fillRoutesRootNode(RoutesRoot);
-				FilteredTreeTableModel RoutesModel = new FilteredTreeTableModel(RoutesRoot);
-				this.addTableTree(RoutesModel, "", createTitleRoutes());
+				DefaultMutableTreeNode routesRoot = new DefaultMutableTreeNode("root");
+				this.fillRoutesRootNode(routesRoot);
+				this.routesModel = new FilteredTreeTableModel(routesRoot);
+				this.addTableTree(this.routesModel, "", createTitleRoutes());
 				
-				DefaultMutableTreeNode AerodromesRoot = new DefaultMutableTreeNode("root");
-				this.fillAerodromesRootNode(AerodromesRoot);
-				FilteredTreeTableModel AerodromesModel = new FilteredTreeTableModel(AerodromesRoot);
-				this.addTableTree(AerodromesModel, "Terrains", null);
+				DefaultMutableTreeNode aerodromesRoot = new DefaultMutableTreeNode("root");
+				this.fillAerodromesRootNode(aerodromesRoot);
+				this.aerodromesModel = new FilteredTreeTableModel(aerodromesRoot);
+				this.addTableTree(this.aerodromesModel, "Terrains", null);
 
-				DefaultMutableTreeNode NavFixRoot = new DefaultMutableTreeNode("root");
-				this.fillNavFixRootNode(NavFixRoot);
-				FilteredTreeTableModel NavFixModel = new FilteredTreeTableModel(NavFixRoot);
-				this.addTableTree(NavFixModel, "", createTitleNavFix());
+				DefaultMutableTreeNode navFixRoot = new DefaultMutableTreeNode("root");
+				this.fillBalisesRootNode(navFixRoot);
+				this.balisesModel = new FilteredTreeTableModel(navFixRoot);
+				this.addTableTree(this.balisesModel, "", createTitleBalises());
 
 				
 				
@@ -103,15 +116,21 @@ public class AIPView extends FilteredMultiTreeTableView {
 						if(name.contains(" ")){
 							String shortName = name.split("\\s+")[0];
 							if(secteurs.add(shortName)){
-								node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(shortName, false)));
+								DefaultMutableTreeNode node2 = new DefaultMutableTreeNode(new Couple<String, Boolean>(shortName, false));
+								node.add(node2);
+								zones.put(t+shortName, node2);
 							}
 						}else{
-							node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+							DefaultMutableTreeNode node2 = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false));
+							node.add(node2);
+							zones.put(t+rs.getString(1), node2);
 						}
 					}
 				}else{
 					while(rs.next()){
-						node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+						DefaultMutableTreeNode node2 = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false));
+						node.add(node2);
+						zones.put(t+rs.getString(1), node2);
 					}
 				}
 			}
@@ -133,10 +152,12 @@ public class AIPView extends FilteredMultiTreeTableView {
 			}
 			for(String t : types){
 				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(t, false));
-				root.add(node);
+				root.add(node);				
 				rs = st.executeQuery("select nom from routes where type = '"+t+"' order by nom");
 				while(rs.next()){
-					node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+					DefaultMutableTreeNode node2 = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false));
+					node.add(node2);
+					routes.put(rs.getString(1), node2);
 				}
 			}
 			rs.close();
@@ -147,7 +168,7 @@ public class AIPView extends FilteredMultiTreeTableView {
 	}
 	
 	
-	private void fillNavFixRootNode(DefaultMutableTreeNode root){
+	private void fillBalisesRootNode(DefaultMutableTreeNode root){
 		try{
 			Statement st = DatabaseManager.getCurrentAIP();
 			ResultSet rs = st.executeQuery("select distinct type from NavFix order by type");
@@ -160,7 +181,9 @@ public class AIPView extends FilteredMultiTreeTableView {
 				root.add(node);
 				rs = st.executeQuery("select distinct nom from NavFix where type = '"+t+"' order by nom");
 				while(rs.next()){
-					node.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false)));
+					DefaultMutableTreeNode node2 = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false));
+					node.add(node2);
+					balises.put(t+rs.getString(1), node2);
 				}
 			}
 			rs.close();
@@ -179,15 +202,22 @@ public class AIPView extends FilteredMultiTreeTableView {
 
 			ResultSet rs0 = st.executeQuery("select code, nom from Aerodromes where type=0 order by code");
 			while(rs0.next()){
-				aerodromes.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs0.getString(1)+" -- "+rs0.getString(2), false)));
+				String name = rs0.getString(1)+" -- "+rs0.getString(2);
+				DefaultMutableTreeNode node2 = new DefaultMutableTreeNode(new Couple<String, Boolean>(name, false));
+				aerodromes.add(node2);
+				this.aerodromes.put(name, node2);
 			}
 			ResultSet rs1 = st.executeQuery("select nom from Aerodromes where type=1 order by nom");
 			while(rs1.next()){
-				alti.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs1.getString(1), false)));
+				DefaultMutableTreeNode node2 = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs1.getString(1), false));
+				alti.add(node2);
+				this.aerodromes.put(rs1.getString(1), node2);
 			}
 			ResultSet rs2 = st.executeQuery("select nom from Aerodromes where type=2 order by nom");
 			while(rs2.next()){
-				prive.add(new DefaultMutableTreeNode(new Couple<String, Boolean>(rs2.getString(1), false)));
+				DefaultMutableTreeNode node2 = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs2.getString(1), false));
+				prive.add(node2);
+				this.aerodromes.put(rs2.getString(1), node2);
 			}
 			
 			rs0.close();rs1.close();rs2.close();
@@ -229,7 +259,7 @@ public class AIPView extends FilteredMultiTreeTableView {
 	 * @return JPanel
 	 */
 	//TODO factoriser avec createTitleRoutes de StipView
-	private JPanel createTitleNavFix(){
+	private JPanel createTitleBalises(){
 		
 		TitleTwoButtons titlePanel = new TitleTwoButtons("Navigation Fix", "2D", "3D", true);
 		titlePanel.addItemListener(new ItemListener() {
@@ -245,17 +275,34 @@ public class AIPView extends FilteredMultiTreeTableView {
 	}
 
 
+	private void setValueAt(int type, String name, boolean selected){
+		if(type <= 20){
+			this.zonesModel.setValueAt(selected, this.zones.get(AIP.type2String(type)+name), 1);
+		}else if(type > 20 && type < 30){
+			this.routesModel.setValueAt(selected, this.routes.get(name), 1);
+		}else if(type >=30 && type < 40){
+			this.balisesModel.setValueAt(selected, this.balises.get(AIP.type2String(type)+name), 1);
+		}else if(type>=40){
+			this.aerodromesModel.setValueAt(selected, this.aerodromes.get(name), 1);
+		}
+	}
+	
 	@Override
 	public void showObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
+		setValueAt(type, name, true);
 	}
-
 
 	@Override
 	public void hideObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
+		//Si jamais c'est le nom d'un segment qui est passé en paramètre, il faut enlever le numéro pour retrouver le nom de la route
+		if(type == AIP.AWY || type == AIP.PDR){
+			String[] splittedName = name.split("-");
+			if(splittedName.length==3)
+				name = (splittedName[0]+"-"+splittedName[1]).trim();
+			else if(splittedName.length==2)
+				name = splittedName[0].trim();
+		}
+		setValueAt(type, name, false);
 	}
 	
 }

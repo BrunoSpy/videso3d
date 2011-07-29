@@ -109,13 +109,14 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 	}
 	
 	
-	public MosaiqueEntity(Entity entity, HashMap<String, LatLonCautra> pointsRef) {
+	@SuppressWarnings("unchecked")
+	public MosaiqueEntity(Entity entity, String name, HashMap<String, LatLonCautra> pointsRef) {
 		plancher = new Double(entity.getValue("value_min"))*30.48;
 		plafond = new Double(entity.getValue("value_max"))*30.48;
-		this.createAirspaces((LinkedList<Entity>) entity.getEntity("geometry").getValue());
+		this.createAirspaces((LinkedList<Entity>) entity.getEntity("geometry").getValue(), name);
 	}
 
-	private void createAirspaces(LinkedList<Entity> value) {
+	private void createAirspaces(LinkedList<Entity> value, String name) {
 		LatLonCautra p = null;
 		
 		int i = 0;
@@ -161,6 +162,9 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 							volume.setAttributes(attrs);
 						}
 						volume.setLocations(locations);
+						volume.setName(name);
+						volume.setType(Cartes.EDIMAP_VOLUME);
+						volume.setDatabaseType(Type.Edimap);
 						this.add(volume);
 						
 					}

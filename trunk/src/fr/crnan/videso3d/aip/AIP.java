@@ -734,7 +734,7 @@ public class AIP extends FileParser{
 	}
 
 
-	public static String getTypeString(int type){
+	public static String type2String(int type){
 		switch(type){
 		case TSA:
 			return "TSA";
@@ -1094,7 +1094,7 @@ public class AIP extends FileParser{
 				e.printStackTrace();
 			}
 		}else{
-			String typeString=getTypeString(type);
+			String typeString=type2String(type);
 			try {
 				PreparedStatement st = DatabaseManager.prepareStatement(Type.AIP, "select pk from volumes where type = ? AND nom = ?");
 				st.setString(1, typeString);

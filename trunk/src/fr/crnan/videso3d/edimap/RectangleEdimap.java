@@ -16,7 +16,11 @@
 
 package fr.crnan.videso3d.edimap;
 
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
+import fr.crnan.videso3d.graphics.VidesoAnnotation;
+import fr.crnan.videso3d.graphics.VidesoObject;
+import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
@@ -29,9 +33,12 @@ import java.util.List;
  * @author Bruno Spyckerelle
  * @version 0.2.1
  */
-public class RectangleEdimap extends SurfaceQuad {
+public class RectangleEdimap extends SurfaceQuad implements VidesoObject{
 
 	private String name;
+	
+	private String nomCarte;
+	private int typeCarte=-1;
 	
 	HashMap<String, LatLonCautra> pointsRef;
 	
@@ -102,5 +109,45 @@ public class RectangleEdimap extends SurfaceQuad {
 		this.setAttributes(attrs);
 	}
 
+	@Override
+	public String getName(){
+		return this.nomCarte;
+	}
+
 	
+	
+	@Override
+	public void setAnnotation(String text) {
+		//Pas d'annotation		
+	}
+
+	@Override
+	public VidesoAnnotation getAnnotation(Position pos) {
+		return null;
+	}
+
+	@Override
+	public Type getDatabaseType() {
+		return Type.Edimap;
+	}
+
+	@Override
+	public void setDatabaseType(Type type) {
+		//Ne rien faire, le type sera toujours Edimap
+	}
+
+	@Override
+	public void setType(int type) {
+		this.typeCarte = type;
+	}
+
+	@Override
+	public int getType() {
+		return this.typeCarte;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.nomCarte = name;
+	}	
 }

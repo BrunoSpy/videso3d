@@ -16,6 +16,7 @@
 package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -239,17 +240,66 @@ public class StrView extends JPanel implements DataView{
 		}
 		
 	}
-
+	
+	/**
+	 * Recherche une checkBox dans un des JPanel
+	 * @param type pour préciser le JPanel dans lequel il faut chercher
+	 * @param name le nom de la checkbox à chercher
+	 */
+	private JCheckBox getCheckBox(int type, String name){
+		JPanel panel = null;
+		switch(type){
+		case STRController.MOSAIQUE :
+			panel = mosaiques;
+			break;
+		case STRController.MOSAIQUE_CAPA :
+			panel = capa;
+			break;
+		case STRController.MOSAIQUE_DYN :
+			panel = dyn;
+			break;
+		case STRController.MOSAIQUE_VVF :
+			panel = vvf;
+			break;
+		case STRController.MOSAIQUE_ZOCC :
+			panel = zocc;
+			break;
+		case STRController.RADAR :
+			panel = radars;
+			break;
+		case STRController.STACK :
+			panel = stacks;
+			break;
+		case STRController.TMA_F :
+			panel = tmaF;
+			break;
+		case STRController.TMA_F_M :
+			panel = tmaFMosaique;
+			break;
+		}
+		if(panel!=null){
+			for(Component c : panel.getComponents()){
+				if(c instanceof JCheckBox){
+					if(((JCheckBox)c).getText().equals(name))
+						return (JCheckBox)c;
+				}
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	public void showObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
+		JCheckBox c = getCheckBox(type, name);
+		if(c!=null)
+			c.setSelected(true);	
 	}
 
 	@Override
 	public void hideObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
+		JCheckBox c = getCheckBox(type, name);
+		if(c!=null)
+			c.setSelected(false);
 	}
 
 

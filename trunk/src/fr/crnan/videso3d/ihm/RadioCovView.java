@@ -76,7 +76,7 @@ public class RadioCovView extends JPanel implements DataView {
 	}	
 													
 	public void initGUI() {
-		int height = 0;
+		//int height = 0;
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));					
 		box.add(Box.createVerticalStrut(10));
 		box.setPreferredSize(new Dimension(150,150));		
@@ -152,16 +152,25 @@ public class RadioCovView extends JPanel implements DataView {
 		return (RadioCovController) DatasManager.getController(Type.RadioCov);
 	}
 
+	
 	@Override
 	public void showObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
+		for(JCheckBox c : checkboxes){
+			if(c.getText()==name){
+				c.setSelected(true);
+				break;
+			}
+		}
 	}
 
 	@Override
 	public void hideObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
+		for(JCheckBox c : checkboxes){
+			if(c.getText() == name){
+				c.setSelected(false);
+				break;
+			}
+		}
 	}			
 }	
 

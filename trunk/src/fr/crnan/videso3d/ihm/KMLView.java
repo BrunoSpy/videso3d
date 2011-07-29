@@ -56,11 +56,8 @@ public class KMLView extends FilteredMultiTreeTableView {
 		            this.layerTree.getModel().addLayer(layerNode);
 		            this.layerTree.makeVisible(layerNode.getPath());
 		            layerNode.expandOpenContainers(this.layerTree);*/		
-				DefaultMutableTreeNode kmlTree = new DefaultMutableTreeNode("root");
-				System.out.println("");
-				
-				this.fillKmlTree(kmlTree);
-			
+				DefaultMutableTreeNode kmlTree = new DefaultMutableTreeNode("root");				
+				this.fillKmlTree(kmlTree);			
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

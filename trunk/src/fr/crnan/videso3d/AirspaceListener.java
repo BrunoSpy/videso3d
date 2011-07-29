@@ -29,6 +29,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoAnnotation;
@@ -48,6 +49,7 @@ import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.GlobeAnnotation;
 import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.PointPlacemarkAttributes;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfaceImage;
 import gov.nasa.worldwind.render.SurfaceShape;
@@ -213,19 +215,18 @@ public class AirspaceListener implements SelectListener {
 									context.showInfo(route.getDatabaseType(), route.getType(), route.getName());
 								}
 							});
-							JMenuItem supprItem = new JMenuItem("Supprimer");				
-							menu.add(supprItem);
-							supprItem.addActionListener(new ActionListener() {
-
-								@Override
-								public void actionPerformed(ActionEvent e) {
-									Route2D r = (Route2D) event.getTopObject();
-									DatasManager.getController(r.getDatabaseType()).hideObject(r.getType(), r.getName());
-								}
-							});
 						}
+						JMenuItem supprItem = new JMenuItem("Supprimer");				
+						menu.add(supprItem);
+						supprItem.addActionListener(new ActionListener() {
 
-					} else if(lastAttrs instanceof MarkerAttributes){
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								VidesoObject o = (VidesoObject) event.getTopObject();
+								DatasManager.getController(o.getDatabaseType()).hideObject(o.getType(), o.getName());
+							}
+						});
+					} else if(lastAttrs instanceof MarkerAttributes || lastAttrs instanceof PointPlacemarkAttributes){
 						JMenuItem contextItem = new JMenuItem("Informations...");				
 						menu.add(contextItem);
 						contextItem.addActionListener(new ActionListener() {
@@ -273,6 +274,16 @@ public class AirspaceListener implements SelectListener {
 						});
 						analyseItem.add(analyseRoute);
 						menu.add(analyseItem);
+						JMenuItem supprItem = new JMenuItem("Supprimer");				
+						menu.add(supprItem);
+						supprItem.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								VidesoObject o = (VidesoObject) event.getTopObject();
+								DatasManager.getController(o.getDatabaseType()).hideObject(o.getType(), o.getName());
+							}
+						});
 					}
 					menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 				}
@@ -347,6 +358,11 @@ public class AirspaceListener implements SelectListener {
 				BasicMarkerAttributes  highliteAttrs = new BasicMarkerAttributes((BasicMarkerAttributes) lastAttrs);
 				highliteAttrs.setMaterial(new Material(Pallet.makeBrighter(((MarkerAttributes)lastAttrs).getMaterial().getDiffuse())));
 				((Balise2D)lastHighlit).setAttributes(highliteAttrs);
+			} else if (o instanceof Balise3D){
+				lastHighlit = (Balise3D)o;
+				lastAttrs = ((Balise3D)lastHighlit).getAttributes();
+				PointPlacemarkAttributes  highliteAttrs = new PointPlacemarkAttributes((PointPlacemarkAttributes) lastAttrs);
+				((Balise3D)lastHighlit).setAttributes(highliteAttrs);
 			} else {
 				lastHighlit = null;
 				lastAttrs = null;
@@ -375,12 +391,14 @@ public class AirspaceListener implements SelectListener {
 					pos = this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5);//décalage de 5 pixels pour éviter le clignotement
 				}
 
-				VidesoAnnotation a = ((VidesoObject)o).getAnnotation(pos); 
-				a.getAttributes().setVisible(true);
-				if(!((VAnnotationLayer)this.wwd.getAnnotationLayer()).contains(a)){
-					//on ne modifie lastAnnotation que si l'annotation n'a pas déjà été ajoutée
-					//(notamment lors d'un clic gauche)
-					lastAnnotation = a;
+				VidesoAnnotation a = ((VidesoObject)o).getAnnotation(pos);
+				if(a!=null){
+					a.getAttributes().setVisible(true);
+					if(!((VAnnotationLayer)this.wwd.getAnnotationLayer()).contains(a)){
+						//on ne modifie lastAnnotation que si l'annotation n'a pas déjà été ajoutée
+						//(notamment lors d'un clic gauche)
+						lastAnnotation = a;
+					}
 				}
 			} 
 			if(lastAnnotation != null) this.wwd.getAnnotationLayer().addAnnotation(lastAnnotation);

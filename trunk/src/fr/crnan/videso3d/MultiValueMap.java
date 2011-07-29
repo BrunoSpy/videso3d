@@ -15,12 +15,10 @@
 */
 package fr.crnan.videso3d;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-
-import fr.crnan.videso3d.Couple;
 
 /**
  * Une structure permettant de stocker plusieurs valeurs associées à une clef, basée sur une HashMap et stockant les valeurs dans une ArrayList.
@@ -29,33 +27,29 @@ import fr.crnan.videso3d.Couple;
  */
 public class MultiValueMap<T, U> {
 
-	private HashMap<T, Couple<Integer, Integer>> map = new HashMap<T, Couple<Integer,Integer>>();
-	private ArrayList<U> valuesArray = new ArrayList<U>();
+	private HashMap<T, List<U>> map = new HashMap<T, List<U>>();
 	
 	public void put(T key, Collection<U> values){
-		int debut = valuesArray.size();
-		map.put(key, new Couple<Integer, Integer>(debut, debut+values.size()));
-		valuesArray.addAll(values);
-	}
-	
-	//TODO à vérifier
-	public void put(T key, U value){
-		Couple<Integer, Integer> debutFin = map.get(key);
-		if(debutFin == null){
-			int debut = valuesArray.size();
-			map.put(key, new Couple<Integer, Integer>(debut, debut+1));
-			valuesArray.add(value);
-		}else{
-			map.put(key, new Couple<Integer, Integer>(debutFin.getFirst(), debutFin.getSecond()+1));
-			valuesArray.add(debutFin.getSecond(), value);
+		List<U> liste = map.get(key);
+		if(liste == null){
+			liste = new LinkedList<U>();
+			map.put(key, liste);
 		}
+		liste.addAll(values);
+	}
+
+
+	public void put(T key, U value){
+		List<U> liste = map.get(key);
+		if(liste == null){
+			liste = new LinkedList<U>();
+			map.put(key, liste);
+		}
+		liste.add(value);
 	}
 	
 	public List<U> get(T key){
-		Couple<Integer, Integer> debutFin = map.get(key);
-		if(debutFin==null)
-			return null;
-		return valuesArray.subList(debutFin.getFirst(), debutFin.getSecond());
+		return map.get(key);
 	}
 	
 	public boolean containsKey(T key){
@@ -63,7 +57,11 @@ public class MultiValueMap<T, U> {
 	}
 	
 	public List<U> values(){
-		return valuesArray;
+		LinkedList<U> values = new LinkedList<U>();
+		for(T key : map.keySet()){
+			values.addAll(map.get(key));
+		}
+		return values;
 	}
 	
 }

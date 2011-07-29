@@ -51,7 +51,7 @@ public class Carte extends LayerSet {
 	private FilterableAirspaceLayer airspaceLayer = new FilterableAirspaceLayer();
 	private TextLayer textLayer = new TextLayer("Textes Edimap");
 	
-	public Carte(Entity carte, PaletteEdimap palette){
+	public Carte(Entity carte, PaletteEdimap palette, int typeCarte){
 		this.add(surfaceLayer);
 		this.add(airspaceLayer);
 		this.add(textLayer);
@@ -80,21 +80,36 @@ public class Carte extends LayerSet {
 			if(type.equalsIgnoreCase("PolylineEntity")){
 				String fill = (idAtc.get(entity.getValue("id_atc"))).getValue("fill_visibility");
 				if(fill != null && fill.equals("1")){ //polygone
-					this.surfaceLayer.addRenderable(new PolygonEdimap(entity, pointsRef, palette, idAtc));
+					PolygonEdimap polygon = new PolygonEdimap(entity, pointsRef, palette, idAtc);
+					polygon.setName(name);
+					polygon.setType(typeCarte);
+					this.surfaceLayer.addRenderable(polygon);
 				} else { //polyligne
-					this.surfaceLayer.addRenderable(new PolylineEdimap(entity, pointsRef, palette, idAtc));
+					PolylineEdimap polyline = new PolylineEdimap(entity, pointsRef, palette, idAtc);
+					polyline.setName(name);
+					polyline.setType(typeCarte);
+					this.surfaceLayer.addRenderable(polyline);
 				}
 				
 			} else if(type.equalsIgnoreCase("LineEntity")) {
-				this.surfaceLayer.addRenderable(new PolylineEdimap(entity, pointsRef, palette, idAtc));
+				PolylineEdimap polyline = new PolylineEdimap(entity, pointsRef, palette, idAtc);
+				polyline.setName(name);
+				polyline.setType(typeCarte);
+				this.surfaceLayer.addRenderable(polyline);
 			} else if(type.equalsIgnoreCase("RectangleEntity")){
-				this.surfaceLayer.addRenderable(new RectangleEdimap(entity, pointsRef, palette, idAtc));
+				RectangleEdimap rectangle = new RectangleEdimap(entity, pointsRef, palette, idAtc);
+				rectangle.setName(name);
+				rectangle.setType(typeCarte);
+				this.surfaceLayer.addRenderable(rectangle);
 			} else if(type.equalsIgnoreCase("TextEntity")){
 				this.textLayer.addGeographicText(new TextEdimap(entity, pointsRef, palette, idAtc));
 			} else if(type.equalsIgnoreCase("EllipseEntity")){
-				this.surfaceLayer.addRenderable(new EllipseEdimap(entity, pointsRef, palette, idAtc));
+				EllipseEdimap ellipse = new EllipseEdimap(entity, pointsRef, palette, idAtc);
+				ellipse.setName(name);
+				ellipse.setType(typeCarte);
+				this.surfaceLayer.addRenderable(ellipse);
 			} else if(type.equalsIgnoreCase("MosaiqueEntity")) {
-				this.airspaceLayer.addAirspaces(new MosaiqueEntity(entity, pointsRef));
+				this.airspaceLayer.addAirspaces(new MosaiqueEntity(entity, name, pointsRef));
 			}
 		}
 //		Iterator<Entry<String, PointEdimap>> ite = pointsRef.entrySet().iterator();
