@@ -56,6 +56,9 @@ public class SkyViewController implements VidesoController {
 	private Balise2DLayer airports = new Balise2DLayer("Aéroports SkyView");
 	private Balise2DLayer waypoints = new Balise2DLayer("Balises SkyView");
 	
+	private HashMap<String, Balise2D> airportsMap = new HashMap<String, Balise2D>();
+	private HashMap<String, Balise2D> waypointsMap = new HashMap<String, Balise2D>();
+	
 	private HashSet<String> routesList = new HashSet<String>();
 	
 	public final static int TYPE_ROUTE = 0;
@@ -112,7 +115,7 @@ public class SkyViewController implements VidesoController {
 			}
 			break;
 		case TYPE_AIRPORT:
-			if(!airports.contains(name)){
+			if(!airportsMap.containsKey(name)){
 				try {
 					Statement st = DatabaseManager.getCurrentSkyView();
 					ResultSet rs = st.executeQuery("select * from airport where ident='"+name+"'");
@@ -122,6 +125,7 @@ public class SkyViewController implements VidesoController {
 												DatabaseManager.Type.SkyView,
 												SkyViewController.TYPE_AIRPORT);
 						airport.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
+						airportsMap.put(name, airport);
 						airports.addBalise(airport);
 					}
 					st.close();
@@ -132,7 +136,7 @@ public class SkyViewController implements VidesoController {
 			airports.showBalise(name, TYPE_AIRPORT);
 			break;
 		case TYPE_WAYPOINT:
-			if(!waypoints.contains(name)){
+			if(!waypointsMap.containsKey(name)){
 				try{
 					Statement st = DatabaseManager.getCurrentSkyView();
 					ResultSet rs = st.executeQuery("select * from waypoint where ident='"+name+"'");
@@ -141,6 +145,7 @@ public class SkyViewController implements VidesoController {
 								DatabaseManager.Type.SkyView,
 								SkyViewController.TYPE_WAYPOINT);
 						waypoint.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
+						waypointsMap.put(name, waypoint);
 						waypoints.addBalise(waypoint);
 					}
 					st.close();
