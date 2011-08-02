@@ -26,6 +26,7 @@ import javax.swing.text.SimpleAttributeSet;
 
 import fr.crnan.videso3d.util.diff.Diff.change;
 
+
 /**
  * Prints a diff into three panels.<br />
  * @author Bruno Spyckerelle
@@ -113,8 +114,6 @@ public class ThreePanelsDiffPrinter extends AbstractDiffPrinter {
 
 			if (next == null || i < next.line0) {
 				if (i < file0.length) {
-					//outfile.print(' ');
-					//print_1_line ("", file0[i++]);
 					addUnchangedLine(file0[i++].toString(), i);
 				}
 				j++;
@@ -125,8 +124,6 @@ public class ThreePanelsDiffPrinter extends AbstractDiffPrinter {
 				int k2 = next.inserted;
 				
 				while (k-- > 0 && k2-- > 0) {
-					//		outfile.print('-');
-					//		print_1_line ("", file0[i++]);
 					addChangedLine(file0[i++].toString(), file1[j++].toString(), i);
 				}
 

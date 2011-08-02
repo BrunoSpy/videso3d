@@ -185,7 +185,7 @@ public class DatabaseManagerUI extends JDialog {
 					return;			
 				} else if (file.getName().endsWith("n.xml")){ //TODO trouver une autre méthode
 					//export des données SIA, base AIP
-					AIP aip = new AIP("./"+file.getName());
+					AIP aip = new AIP(file.getAbsolutePath());
 					this.getDatas(aip, "Import des données AIP", "AIP", file);
 				} else if (file.getName().endsWith(".kml")) {
 					KML kml = new KML(file.getAbsolutePath());			
