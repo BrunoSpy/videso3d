@@ -547,7 +547,6 @@ public class Diff {
       this.inserted = inserted;
       this.deleted = deleted;
       this.link = old;
-      //System.err.println(line0+","+line1+","+inserted+","+deleted);
     }
   }
 

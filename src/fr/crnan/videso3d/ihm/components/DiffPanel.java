@@ -30,6 +30,7 @@
  */
 package fr.crnan.videso3d.ihm.components;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
@@ -57,7 +58,7 @@ import javax.swing.ScrollPaneConstants;
 /**
  * Panel to display diff between two files
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class DiffPanel extends JPanel {
 	
@@ -66,17 +67,24 @@ public class DiffPanel extends JPanel {
 	private JTextPane paneNumLines;
 	private JTextPane paneDst;
 	
-	public DiffPanel(File fileSrc, File fileDst) throws BadLocationException {
+	
+	/**
+	 * 
+	 * @param titled True to display the name of the file above panels
+	 */
+	public DiffPanel(boolean titled){
+		
+		titled = false;
 		
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWeights = new double[]{1.0, 0.0, 1.0};
 		gridBagLayout.columnWidths = new int[]{205, 40, 205};
 		gridBagLayout.rowHeights = new int[]{0, 0};
-		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{titled ? 0.0 : 1.0, Double.MIN_VALUE};
 		setLayout(gridBagLayout);
 		
 		NoWrapEditorKit noWrapEditorKit = new NoWrapEditorKit();
-		
+				
 		paneSrc = new JTextPane();
 		paneSrc.setEditable(false);
 		paneSrc.setEditorKit(noWrapEditorKit);
@@ -86,21 +94,29 @@ public class DiffPanel extends JPanel {
 		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
 		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane_1.gridx = 0;
-		gbc_scrollPane_1.gridy = 0;
+		gbc_scrollPane_1.gridy = titled ? 1 : 0;
 		add(scrollPane_1, gbc_scrollPane_1);
 		
-		
+		gbc_scrollPane_1.fill = GridBagConstraints.NONE;
+		gbc_scrollPane_1.gridy = 0;
+		JLabel titleSrc = new JLabel();
+		if(titled) add(titleSrc, gbc_scrollPane_1);
 		
 		paneNumLines = new JTextPane();
 		paneNumLines.setEditable(false);
 		paneNumLines.setFont(new java.awt.Font("Monospaced", 0, 12));
-		paneNumLines.setPreferredSize(new Dimension(40, 0));
+		paneNumLines.setPreferredSize(new Dimension(50, 0));
 		paneNumLines.setBackground(Color.LIGHT_GRAY);
 		GridBagConstraints gbc_editorPane = new GridBagConstraints();
 		gbc_editorPane.fill = GridBagConstraints.BOTH;
 		gbc_editorPane.gridx = 1;
-		gbc_editorPane.gridy = 0;
+		gbc_editorPane.gridy = titled ? 1 : 0;
 		add(paneNumLines, gbc_editorPane);
+		
+		gbc_editorPane.fill = GridBagConstraints.NONE;
+		gbc_editorPane.gridy = 0;
+		JLabel titleLine = new JLabel("");
+		if(titled) add(titleLine, gbc_editorPane);
 		
 		paneDst = new JTextPane();
 		paneDst.setEditorKit(noWrapEditorKit);
@@ -111,21 +127,39 @@ public class DiffPanel extends JPanel {
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 2;
-		gbc_scrollPane.gridy = 0;
+		gbc_scrollPane.gridy = titled ? 1 : 0;
 		add(scrollPane, gbc_scrollPane);		
 
+		gbc_scrollPane.fill = GridBagConstraints.NONE;
+		gbc_scrollPane.gridy = 0;
+		JLabel titleDst = new JLabel("");
+		if(titled) add(titleDst, gbc_scrollPane);
+		
 		paneSrc.setHighlighter(new LineHighLighter());
 		paneDst.setHighlighter(new LineHighLighter());
 		
-		try {
-			this.fillPanels(fileSrc, fileDst);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-
 	}
 
+	/**
+	 * Compare and displays the comparison
+	 * @param src
+	 * @param dst
+	 * @throws IOException
+	 */
+	public void compareFiles(File src, File dst) throws IOException{
+		try {
+			this.fillPanels(src, dst);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		} 
+	}
+	
+	public void clear(){
+		paneSrc.setText("");
+		paneDst.setText("");
+		paneNumLines.setText("");
+	}
+	
 	private void fillPanels(File src, File dst) throws BadLocationException, IOException {
 		
 		String[] stringSrc = FileManager.textFiletoArray(src);

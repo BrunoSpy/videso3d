@@ -144,12 +144,16 @@ public class ItiPanel extends ResultGraphPanel {
 	private boolean isSearchedBalise(boolean advanced, String name, String... criteria){
 		if(advanced){
 			boolean match = false;
-			for(int i=4;i<criteria.length;i++){
-				match = match || nameMatch(criteria[i], name);
+			for(int i=8;i<criteria.length;i++){
+				match = match || nameMatch(criteria[i].trim(), name);
 			}
-			return match || nameMatch(criteria[0], name) || nameMatch(criteria[1],name) || nameMatch(criteria[5],name) || nameMatch(criteria[6],name);
+			return match || 
+				   nameMatch(criteria[0].trim(), name) || 
+				   nameMatch(criteria[1].trim(),name) || 
+				   nameMatch(criteria[6].trim(),name) || 
+				   nameMatch(criteria[7].trim(),name);
 		} else {
-			return nameMatch(criteria[0], name) || nameMatch(criteria[1],name);
+			return nameMatch(criteria[0].trim(), name) || nameMatch(criteria[1].trim(),name);
 		}
 	}
 	
