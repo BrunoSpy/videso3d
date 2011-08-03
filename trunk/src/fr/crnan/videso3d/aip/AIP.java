@@ -45,7 +45,7 @@ import fr.crnan.videso3d.graphics.Route;
 /**
  * Lecteur des exports en xml du SIA
  * @author Adrien Vidal
- * @version 0.3.3
+ * @version 0.3.4
  */
 public class AIP extends FileParser{
 
@@ -171,6 +171,16 @@ public class AIP extends FileParser{
 		}
 	}
 
+	/**
+	 * Determine if the file is a AIP file (XML containing AIP datas)
+	 * TODO Do it better
+	 * @param file
+	 * @return <code>true</code> if it is an AIP xml database
+	 */
+	public static boolean isAIPFile(File file) {
+		return file.getName().endsWith("n.xml");
+	}
+	
 	@Override
 	public Integer doInBackground() {
 		try {
@@ -1270,6 +1280,16 @@ public class AIP extends FileParser{
 				return (int) (((double) originalValue)/3.2808);
 			return (int) (((double) originalValue*100)/3.2808);
 		}
+	}
+
+
+
+
+
+
+	@Override
+	public Type getType() {
+		return Type.AIP;
 	}
 
 }

@@ -23,13 +23,15 @@ import java.text.ParseException;
 import javax.swing.SwingWorker;
 import javax.swing.event.EventListenerList;
 
+import fr.crnan.videso3d.DatabaseManager.Type;
+
 
 /**
  * Importe les données de fichiers et les stocke en base de données
  * L'import des données doit être fait dans la méthode doInBackground() afin d'être fait dans un thread secondaire.
  * doInBackground() renvoit le nombre de fichiers traités et publie le nom des fichiers traités
  * @author Bruno Spyckerelle
- * @version 0.3.2
+ * @version 0.3.3
  */
 public abstract class FileParser extends SwingWorker<Integer, String>{
 	
@@ -107,4 +109,6 @@ public abstract class FileParser extends SwingWorker<Integer, String>{
 	 * @return
 	 */
 	public abstract String getName();
+	
+	public abstract Type getType();
 }

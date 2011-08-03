@@ -34,19 +34,15 @@ package fr.crnan.videso3d.ihm;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
-import javax.swing.AbstractButton;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.BoxLayout;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -78,19 +74,11 @@ public class FileCompareSelector extends JFrame {
 
 	private final JPanel contentPanel = new JPanel();
 	private JList listTypes;
-	private JList listBases;
 	private JList listFiles;
 	private JPanel basesPanel;
 	private DiffPanel comparePanel;
 	private File path2;
 	private File path1;
-
-	
-	public static void main(final String[] args){
-		FileCompareSelector test = new FileCompareSelector();
-		test.pack();
-		test.setVisible(true);
-	}
 	
 	/**
 	 * Create the dialog.

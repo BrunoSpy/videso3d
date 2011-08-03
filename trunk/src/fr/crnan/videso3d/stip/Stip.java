@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -42,7 +43,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
  * Lecteur de fichiers STIP
  * Toutes les infos concernant les fichiers SATIN sont dans le DDI Satin
  * @author Bruno Spyckerelle
- * @version 0.3.3
+ * @version 0.3.4
  */
 public class Stip extends FileParser{
 	
@@ -75,6 +76,16 @@ public class Stip extends FileParser{
 		super(path);
 	}
 
+	public static boolean containsStipFiles(Collection<File> files) {
+		Iterator<File> iterator = files.iterator();
+		boolean found = false;
+		while(iterator.hasNext() && !found){
+			String name = iterator.next().getName();
+			found = name.equalsIgnoreCase("LIEUX");
+		}
+		return found;
+	}
+	
 	@Override
 	public Integer doInBackground() {
 		try {
@@ -1097,4 +1108,10 @@ public class Stip extends FileParser{
 	public String getName() {
 		return this.name;
 	}
+
+	@Override
+	public Type getType() {
+		return Type.STIP;
+	}
+
 }

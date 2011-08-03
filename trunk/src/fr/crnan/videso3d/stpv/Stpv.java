@@ -26,6 +26,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileManager;
@@ -65,6 +67,17 @@ public class Stpv extends FileParser{
 		super(path);
 	}
 	
+
+	public static boolean containsSTPVFiles(TreeSet<File> files) {
+		Iterator<File> iterator = files.iterator();
+		while (iterator.hasNext()) {
+			File file = (File) iterator.next();
+			if(file.getName().equalsIgnoreCase("lieu") || file.getName().equalsIgnoreCase("lieu.txt")){
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	@Override
 	public Integer doInBackground() {
@@ -197,14 +210,14 @@ public class Stpv extends FileParser{
 	 */
 	private void createName() throws IOException{
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path+"/RESULTAT")));
-			Boolean nameFound = false;
-			while (in.ready() && !nameFound){
-				String line = in.readLine();
-				if (line.startsWith("1     STPV - CAUTRA IV - CA:")){
-					this.name = line.substring(29, 38).trim()+"."+line.substring(79, 88).trim();
-					nameFound = true;
-				}
+		Boolean nameFound = false;
+		while (in.ready() && !nameFound){
+			String line = in.readLine();
+			if (line.startsWith("1     STPV - CAUTRA IV - CA:")){
+				this.name = line.substring(29, 38).trim()+"."+line.substring(79, 88).trim();
+				nameFound = true;
 			}
+		}
 	}
 
 	/**
@@ -463,5 +476,13 @@ public class Stpv extends FileParser{
 	public String getName() {
 		return this.name;
 	}
+
+
+
+	@Override
+	public Type getType() {
+		return Type.STPV;
+	}
+
 
 }

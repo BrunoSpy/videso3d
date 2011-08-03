@@ -16,6 +16,7 @@
 package fr.crnan.videso3d.pays;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,6 +26,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -64,6 +67,16 @@ public class Pays extends FileParser {
 	
 	public Pays(String path){
 		super(path);
+	}
+	
+	public static boolean containsPaysFiles(Collection<File> files) {
+		Iterator<File> iterator = files.iterator();
+		boolean found = false;
+		while(iterator.hasNext() && !found){
+			String name = iterator.next().getName();
+			found = name.equalsIgnoreCase("PAYS");
+		}
+		return found;
 	}
 	
 	@Override
@@ -341,4 +354,10 @@ public class Pays extends FileParser {
 	public String getName() {
 		return this.name;
 	}
+
+	@Override
+	public Type getType() {
+		return Type.PAYS;
+	}
+
 }
