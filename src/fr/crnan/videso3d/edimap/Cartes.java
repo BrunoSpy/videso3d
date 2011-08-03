@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 /**
  * Jeu de cartes Edimap
  * @author Bruno Spyckerelle
- * @version 0.5
+ * @version 0.5.1
  */
 public class Cartes extends FileParser {
 
@@ -175,6 +176,22 @@ public class Cartes extends FileParser {
 		}
 	}
 
+	/**
+	 * Check is ths list of files contains a set of Edimap maps
+	 * TODO Check integrity
+	 * @param files
+	 * @return
+	 */
+	public static boolean containsCartes(Collection<File> files) {
+		Iterator<File> iterator = files.iterator();
+		boolean found = false;
+		while(iterator.hasNext() && !found){
+			String name = iterator.next().getName();
+			found = name.equalsIgnoreCase("carac_jeu") || name.equalsIgnoreCase("carac_jeu.nct") 
+					|| name.toLowerCase().endsWith("nct"); 
+		}
+		return found;
+	}
 
 	@Override
 	protected void getFromFiles() {
@@ -433,4 +450,10 @@ public class Cartes extends FileParser {
 	public String getName() {
 		return this.version;
 	}
+
+	@Override
+	public Type getType() {
+		return Type.Edimap;
+	}
+
 }
