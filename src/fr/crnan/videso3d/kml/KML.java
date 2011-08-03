@@ -166,6 +166,10 @@ public class KML extends FileParser{
 		}
 	}
 
+	public static boolean isKMLFile(File file) {
+		return file.getName().toLowerCase().endsWith(".kml");
+	}
+	
 	@Override
 	public Integer doInBackground() {
 		try {
@@ -215,5 +219,12 @@ public class KML extends FileParser{
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+
+	@Override
+	public Type getType() {
+		return Type.KML;
+	}
+
 		
 }

@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.ihm;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -157,6 +158,10 @@ public class SkyView extends FilteredMultiTreeTableView {
 		for(DefaultMutableTreeNode node : this.nodes.get(name)){
 			this.model.setValueAt(false, node, 1);
 		}
+	}
+
+	public static boolean isSkyViewFile(File file) {
+		return file.getName().toLowerCase().endsWith("mdb");
 	}
 
 }

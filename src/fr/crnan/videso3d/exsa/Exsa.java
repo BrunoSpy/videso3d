@@ -17,6 +17,7 @@
 package fr.crnan.videso3d.exsa;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -35,7 +36,7 @@ import gov.nasa.worldwind.util.Logging;
  * Lecteur de fichiers EXSA<br />
  * Détecte automatiquement le type de fichier (formaté ou non).
  * @author Bruno Spyckerelle
- * @version 0.4.3
+ * @version 0.4.4
  */
 public class Exsa extends FileParser {
 	/**
@@ -67,6 +68,32 @@ public class Exsa extends FileParser {
 		super(path);
 	}
 	
+
+	/**
+	 * 
+	 * @param file
+	 * @return
+	 */
+	public static boolean isExsaFile(File file) {
+		int index = file.getName().lastIndexOf(".");
+		String suffix = index == -1 ? "" : file.getName().substring(index);
+		if(suffix.equalsIgnoreCase(".lst")){
+			return true;
+		} else if(suffix.equalsIgnoreCase(".txt")){
+			//search in th 20 first lines if a line begin with "CARA_GENER" or "CARA.GENER"
+			int count = 0;
+			try{
+				BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+				while (in.ready() && count < 20){
+					String line = in.readLine();
+					return line.startsWith("CARA_GENER") || line.startsWith("CARA.GENER");
+				}
+			} catch(IOException e){
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
 
 	@Override
 	public Integer doInBackground(){
@@ -692,5 +719,11 @@ public class Exsa extends FileParser {
 	public String getName() {
 		return this.name;
 	}
+
+	@Override
+	public Type getType() {
+		return Type.EXSA;
+	}
+
 
 }

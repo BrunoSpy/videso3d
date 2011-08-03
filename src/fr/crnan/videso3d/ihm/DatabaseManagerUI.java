@@ -23,12 +23,16 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.swing.Box;
@@ -40,7 +44,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
-import javax.swing.ProgressMonitor;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -66,7 +69,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Interface de gestion des base de données.<br />
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.4.0
  */
 @SuppressWarnings("serial")
 public class DatabaseManagerUI extends JDialog {
@@ -75,9 +78,11 @@ public class DatabaseManagerUI extends JDialog {
 	private JButton select;
 	private JButton add;
 	private JButton delete;
-		
-	private static ProgressMonitor progressMonitor;
-		
+				
+	private DoubleProgressMonitor progressMonitor2;
+	
+	private HashMap<FileParser, File[]> databases;
+	
 	public DatabaseManagerUI() {
 
 		this.setTitle("Gestion des bases de données");
@@ -98,7 +103,6 @@ public class DatabaseManagerUI extends JDialog {
 		
 		table = new JXTable(new DBTableModel());
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	//	table.setEditable(false);
 		table.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.setColumnControlVisible(true);
 		table.getColumnExt("id").setVisible(false);
@@ -131,31 +135,19 @@ public class DatabaseManagerUI extends JDialog {
 		add.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				try {
-					VFileChooser fileChooser = new VFileChooser();
-					fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-					if(fileChooser.showOpenDialog(add) == JFileChooser.APPROVE_OPTION){
-						MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
-						File file = fileChooser.getSelectedFile();
-						if(MimeUtil.getMimeTypes(file).contains("application/zip")){
-							//add datas
-							addDatabase(FileManager.unzip(file).get(0).getAbsoluteFile());
-							//la suppression des fichiers est faite lorsque le parser a terminé
-						} else if(MimeUtil.getMimeTypes(file).contains("application/x-gzip")){
-							File tarFile = FileManager.gunzip(file);
-							if(MimeUtil.getMimeTypes(tarFile).contains("application/x-tar")){
-								addDatabase(FileManager.untar(tarFile).get(0).getAbsoluteFile());
-							} else {
-								//if ungzipped file is not a tar file, try to add datas
-								addDatabase(tarFile);
-							}
-						} else {
-							addDatabase(file);
-						}
+
+				VFileChooser fileChooser = new VFileChooser();
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				fileChooser.setMultiSelectionEnabled(true);
+				if(fileChooser.showOpenDialog(add) == JFileChooser.APPROVE_OPTION)
+					databases = new HashMap<FileParser, File[]>();
+					if(!processFiles(fileChooser.getSelectedFiles())){
+						JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
+								"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+						Logging.logger().warning("Pas de fichier de base de données trouvé");
+					} else {
+						importDatabases();
 					}
-				} catch(Exception e1){
-					e1.printStackTrace();
-				}
 			}
 		});
 		buttons.add(add);
@@ -166,138 +158,238 @@ public class DatabaseManagerUI extends JDialog {
 		this.getContentPane().add(buttons, BorderLayout.SOUTH);
 	}
 	
-	
-	
-	private void addDatabase(File file){
-		try {
-			if(file.isFile()){
-				int index = file.getName().lastIndexOf(".");
-				String suffix = index == -1 ? "" : file.getName().substring(index);
-				if(suffix.equalsIgnoreCase(".lst") || suffix.equalsIgnoreCase(".txt")){
-					//import données EXSA
-					Exsa exsa = new Exsa(file.getAbsolutePath());
-					this.getDatas(exsa, "Import des données EXSA", "EXSA", file);
-					return;
-				} else if (suffix.equalsIgnoreCase(".mdb")) { //base SkyView
-					DatabaseManager.createSkyView(file.getName(), file.getAbsolutePath());
-					DatabaseManager.importFinished(Type.SkyView);
-					((DBTableModel)table.getModel()).update();
-					return;			
-				} else if (file.getName().endsWith("n.xml")){ //TODO trouver une autre méthode
-					//export des données SIA, base AIP
-					AIP aip = new AIP(file.getAbsolutePath());
-					this.getDatas(aip, "Import des données AIP", "AIP", file);
-				} else if (file.getName().endsWith(".kml")) {
-					KML kml = new KML(file.getAbsolutePath());			
-					this.getDatas(kml,"import des données KML","KML");
-				}				
-				else {
-					file = file.getParentFile();
+	/**
+	 * Determine how many databases to add and call the addDatabase() method for each one
+	 * @param files Files selected
+	 * @return True if at least a database has been imported
+	 */
+	private boolean processFiles(File[] filesSelected){
+			
+		boolean baseImported = false;
+		TreeSet<File> files = new TreeSet<File>();
+		for(File f : filesSelected){
+			files.add(f);
+		}
+		MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
+		
+		while(files.size() > 0){
+			File file = files.first();
+			if(file.isDirectory()){
+				baseImported = baseImported || processFiles(file.listFiles());
+			} else {
+				if(MimeUtil.getMimeTypes(file).contains("application/zip")){
+					boolean temp = processFiles(FileManager.unzip(file).toArray(new File[]{}));
+					baseImported = baseImported || temp;
+				} else if(MimeUtil.getMimeTypes(file).contains("application/x-gzip")){
+					boolean temp = processFiles(new File[]{FileManager.gunzip(file)});
+					baseImported = baseImported || temp;
+				} else if(MimeUtil.getMimeTypes(file).contains("application/x-tar")){
+					boolean temp = processFiles(FileManager.unzip(file).toArray(new File[]{}));
+					baseImported = baseImported || temp;
+				} else { //file not zipped
+					if(AIP.isAIPFile(file)){
+						baseImported = true;
+						addDatabase(Type.AIP, file);
+					} else if(Exsa.isExsaFile(file)){
+						baseImported = true;
+						addDatabase(Type.EXSA, file);
+					} else if(KML.isKMLFile(file)){
+						baseImported = true;
+						addDatabase(Type.KML, file);
+					} else if(SkyView.isSkyViewFile(file)){
+						baseImported = true;
+						addDatabase(Type.SkyView, file);
+					} else if(Stpv.containsSTPVFiles(files)){
+						baseImported = true;
+						//remove RESULTAT file in order to avoid a new detection of STPV files
+						Iterator<File> iterator = files.iterator();
+						while(iterator.hasNext()){
+							File currentFile = iterator.next();
+							if(currentFile.getName().equalsIgnoreCase("lieu") || currentFile.getName().equalsIgnoreCase("lieu.txt")){
+								iterator.remove();
+							}
+						}
+						addDatabase(Type.STPV, file.getParentFile());
+					} else if(Cartes.containsCartes(files)){
+						baseImported = true;
+						//assuming there's only one set of maps in a directory
+						//remove carac_jeu, .nct files and palette
+						Iterator<File> iterator = files.iterator();
+						while(iterator.hasNext()){
+							File currentFile = iterator.next();
+							if(currentFile.getName().equalsIgnoreCase("carac_jeu") 
+									|| currentFile.getName().toLowerCase().endsWith("nct") 
+									|| currentFile.getName().equalsIgnoreCase("palette")){
+								iterator.remove();
+							}
+						}
+						addDatabase(Type.Edimap, file.getParentFile());
+					} else if(RadioDataManager.containsRadioDatas(files)){
+						baseImported = true;
+						//remove radioCoverageXSL.xsl file in order to avoid a new detection of radio files
+						Iterator<File> iterator = files.iterator();
+						while(iterator.hasNext()){
+							File currentFile = iterator.next();
+							if(currentFile.getName().equalsIgnoreCase("radioCoverageXSL.xsl")){
+								iterator.remove();
+							}
+						}
+						addDatabase(Type.RadioCov, file.getParentFile());
+					} else if(Stip.containsStipFiles(files)){
+						baseImported = true;
+						//remove LIEUX file in order to avoid a new detection of stip files
+						Iterator<File> iterator = files.iterator();
+						while(iterator.hasNext()){
+							File currentFile = iterator.next();
+							if(currentFile.getName().equalsIgnoreCase("LIEUX")){
+								iterator.remove();
+							}
+						}
+						addDatabase(Type.STIP, file.getParentFile());
+					} else if(Pays.containsPaysFiles(files)){
+						baseImported = true;
+						//remove PAYS file in order to avoid a new detection of pays files
+						Iterator<File> iterator = files.iterator();
+						while(iterator.hasNext()){
+							File currentFile = iterator.next();
+							if(currentFile.getName().equalsIgnoreCase("PAYS")){
+								iterator.remove();
+							}
+						}
+						addDatabase(Type.PAYS, file.getParentFile());
+					}
 				}
 			}
-			if(file.isDirectory()){
-				List<File> files = Arrays.asList(file.listFiles());
-				if(files.contains(new File(file.getAbsolutePath()+"/LIEUX"))){//une méthode comme une autre pour vérifier que le dossier est une dossier de données STIP
-					Stip stip = new Stip(file.getAbsolutePath());
-					this.getDatas(stip, "Import des données STIP", "STIP", (File[]) files.toArray());
-				} else if(files.contains(new File(file.getAbsolutePath()+"/LIEU"))//une méthode comme une autre pour vérifier que le dossier est une dossier de données STPV
-						|| files.contains(new File(file.getAbsolutePath()+"/LIEU.txt"))) { //Bordeaux a des fichiers Stpv qui finissent par un .txt
-					Stpv stpv = new Stpv(file.getAbsolutePath());
-					this.getDatas(stpv, "Import des données STPV", "STPV", (File[]) files.toArray());
-				} else if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))
-						|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))
-						|| files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) {
-					//TODO trouver une meilleure gestion des extensions
-					String caracJeuPath = "";
-					if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))) caracJeuPath = "carac_jeu";
-					if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))) caracJeuPath = "carac_jeu.nct";
-					if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) caracJeuPath = "carac_jeu.NCT";
-					Cartes cartes = new Cartes(file.getAbsolutePath(),caracJeuPath);
-					this.getDatas(cartes, "Import des données EDIMAP", "Edimap", (File[]) files.toArray());
-				} else if(files.contains(new File(file.getAbsolutePath()+"/PAYS"))) {
-					Pays pays = new Pays(file.getAbsolutePath());
-					this.getDatas(pays, "Import des contours des pays", "PAYS", (File[]) files.toArray());
-				} else if(files.contains(new File(file.getAbsoluteFile()+"/radioCoverageXSL.xsl"))){
-	//				System.out.println(System.getProperty("user.dir"));
-	//				System.out.println(file.getAbsolutePath());
-	//				System.out.println(new File(System.getProperty("user.dir")).toURI().relativize(new File(file.getAbsolutePath()).toURI()).getPath());
-
-					RadioDataManager radioDataManager = new RadioDataManager(new File(System.getProperty("user.dir")).toURI().relativize(new File(file.getAbsolutePath()).toURI()).getPath());
-					this.getDatas(radioDataManager,"Import des données radio","RadioCov");		
-				}
-				else {
-					throw new FileNotFoundException();
-				}
-			} 
-		} catch(FileNotFoundException e){
-			JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
-					"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-			Logging.logger().warning("Pas de fichier de base de données trouvé");
+			files.remove(file);
+		}
+		return baseImported;
+	}
+	
+	private void addDatabase(Type type, File file){
+		switch (type) {
+		case AIP:
+			AIP aip = new AIP(file.getAbsolutePath());
+			databases.put(aip, new File[]{file});
+			break;
+		case EXSA:
+			Exsa exsa = new Exsa(file.getAbsolutePath());
+			databases.put(exsa, new File[]{file});
+			break;
+		case Edimap:
+			String caracJeuPath = "";
+			List<File> files = Arrays.asList(file.listFiles());
+			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu"))) caracJeuPath = "carac_jeu";
+			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.nct"))) caracJeuPath = "carac_jeu.nct";
+			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) caracJeuPath = "carac_jeu.NCT";
+			Cartes cartes = new Cartes(file.getAbsolutePath(),caracJeuPath);
+			databases.put(cartes, file.listFiles());
+			break;
+		case KML:
+			KML kml = new KML(file.getAbsolutePath());		
+			databases.put(kml, new File[]{file});
+			break;
+		case SkyView:
+			DatabaseManager.createSkyView(file.getName(), file.getAbsolutePath());
+			DatabaseManager.importFinished(Type.SkyView);
+			((DBTableModel)table.getModel()).update();
+			break;
+		case STPV:
+			Stpv stpv = new Stpv(file.getAbsolutePath());
+			databases.put(stpv, file.listFiles());
+			break;
+		case RadioCov:
+			RadioDataManager radioDataManager = new RadioDataManager(new File(System.getProperty("user.dir")).toURI().relativize(new File(file.getAbsolutePath()).toURI()).getPath());
+			databases.put(radioDataManager, new File[]{});
+		    break;
+		case STIP:
+			Stip stip = new Stip(file.getAbsolutePath());
+			databases.put(stip, file.listFiles());
+			break;
+		case PAYS:
+			Pays pays = new Pays(file.getAbsolutePath());
+			databases.put(pays, file.listFiles());
+		default:
+			break;
 		}
 	}
 
-	/**
-	 * Parses files and displays a progress window
-     * @param fileParser File parser to be launched
-     * @param title Title of the progress window
-     * @param type Type of the database
-     * @param files Files imported
-     */
-    private void getDatas(final FileParser fileParser, String title, final String type, final File... files) {
-    	
-    	progressMonitor = new ProgressMonitor(this, title, "", 1, fileParser.numberFiles());
-    	progressMonitor.setMillisToDecideToPopup(0);
-    	progressMonitor.setMillisToPopup(0);
-    	
-    	fileParser.addPropertyChangeListener(new PropertyChangeListener() {
+	private Entry<FileParser, File[]> current = null;
+	private Iterator<Entry<FileParser, File[]>> iterator = null;
+	private HashSet<Type> types = null;
+	private int done = 0;
+	
+	private void importDatabases(){
+		int max = 0;
+		for(FileParser fileParser : databases.keySet()){
+			max += fileParser.numberFiles();
+		}
+		
+		done = 0;
+		
+		progressMonitor2 = new DoubleProgressMonitor(this, "Import des fichiers sélectionnés", "", 0, max);
+		progressMonitor2.setVisible(true);
+				
+		iterator = databases.entrySet().iterator();
+		
+		types = new HashSet<DatabaseManager.Type>();
+		
+		PropertyChangeListener fileParserListener = new PropertyChangeListener() {
+			
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				if(evt.getPropertyName().equals("done")){
 					if((Boolean) evt.getNewValue()) {
-						DatabaseManager.importFinished(type);
-					} else {
-						//done = false, on affiche une boite de dialogue d'erreur
-						//sauf si l'annulation provient du progressmonitor
-						if(!progressMonitor.isCanceled()) {
-							JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
-									"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-							Logging.logger().warning("Pas de fichier de base de données trouvé");
-						}
+						types.add(current.getKey().getType());
 					}
 					//copie des fichiers
-					for(File f : files){
-						FileManager.copyFile(f, fileParser.getName()+"_files");
+					for(File f : current.getValue()){
+						FileManager.copyFile(f, current.getKey().getName()+"_files");
 					}
-					
-					((DBTableModel)table.getModel()).update();	
-					//si base de données STIP, on tente de mettre à jour les données PAYS par la même occasion
-					if(type.equals("STIP")){
-						File file = new File(fileParser.getPath());
-						if(Arrays.asList(file.listFiles()).contains(new File(file.getAbsolutePath()+"/PAYS"))) {
-							Pays pays = new Pays(file.getAbsolutePath());
-							getDatas(pays, "Import des contours des pays", "PAYS");
-						} else {
-							FileManager.removeTempFiles();
+					//suppression du listener
+					current.getKey().removePropertyChangeListener(this);
+					//import de la base suivante
+					if(iterator.hasNext()){
+						done += current.getKey().numberFiles();
+						importDatabase(iterator.next(), this);
+					} else {
+						//plus de base de données à importer : on fait le ménage
+						FileManager.removeTempFiles();
+						//et on cache le progressmonitor
+						progressMonitor2.setVisible(false);
+						//on met à jour la fenetre
+						((DBTableModel)table.getModel()).update();
+						//on met à jour les tabs
+						for(Type t : types){
+							DatabaseManager.importFinished(t);
 						}
-					} else {			
-						//suppression des fichiers temporaires si besoin
-						FileManager.removeTempFiles();
 					}
-					
 				} else if(evt.getPropertyName().equals("progress")){
-					if(progressMonitor.isCanceled()) {
-						fileParser.cancel(true);
-						//suppression des fichiers temporaires si besoin
-						FileManager.removeTempFiles();
+					if(progressMonitor2.isCanceled()) {
+						current.getKey().cancel(true);	
 					}
-					progressMonitor.setProgress((Integer)evt.getNewValue());	
+					progressMonitor2.getSecondaryProgressBar().setValue((Integer)evt.getNewValue());
+					progressMonitor2.getMainProgressBar().setValue(done+(Integer)evt.getNewValue());
 				} else if(evt.getPropertyName().equals("file")){
-					progressMonitor.setNote("Import du fichier "+(String)evt.getNewValue());
+					progressMonitor2.setSecondNote("import du fichier "+(String)evt.getNewValue());
 				}
 			}
-		});
-    	fileParser.execute();
-    }
+		};
+		
+		
+		if(iterator.hasNext()){			
+			importDatabase(iterator.next(), fileParserListener);
+		}
+	}
+	
+	private void importDatabase(Entry<FileParser, File[]> entry, PropertyChangeListener listener){
+		current = entry;
+		current.getKey().addPropertyChangeListener(listener);
+		progressMonitor2.setMainNote("Base "+current.getKey().getClass().getSimpleName());
+		progressMonitor2.getSecondaryProgressBar().setMaximum(current.getKey().numberFiles());
+		progressMonitor2.getSecondaryProgressBar().setValue(0);
+		current.getKey().execute();
+	}
+	
 	
 	/*-------------- TableModel ----------------*/
 	private  class DBTableModel extends AbstractTableModel {

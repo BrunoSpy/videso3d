@@ -142,6 +142,11 @@ public class Radio extends FileParser {
 	public String getName() {
 		return this.name;
 	}
+
+	@Override
+	public Type getType() {
+		return Type.RadioCov;
+	}
 	
 	
 }

@@ -18,15 +18,15 @@ package fr.crnan.videso3d.radio;
 
 import java.io.File;
 import java.io.FileFilter;
-// import java.io.FilenameFilter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
-// import fr.crnan.videso3d.formats.xstream.PolygonSerializer;
 import fr.crnan.videso3d.formats.xml.PolygonDeserializer;
 import fr.crnan.videso3d.formats.xml.SaxonFactory;
 import fr.crnan.videso3d.graphics.VidesoObject;
@@ -83,6 +83,16 @@ public class RadioDataManager extends FileParser {
 	 			} 							  				
 		});				
 	}		
+	
+	public static boolean containsRadioDatas(Collection<File> files) {
+		Iterator<File> iterator = files.iterator();
+		boolean found = false;
+		while(iterator.hasNext() && !found){
+			String name = iterator.next().getName();
+			found = name.equalsIgnoreCase("radioCoverageXSL.xsl");
+		}
+		return found;
+	}
 	
 	public ArrayList<Airspace> getAirspaces() {
 		return this.airspaces;
@@ -269,4 +279,11 @@ public class RadioDataManager extends FileParser {
 	public String getName() {
 		return this.name;
 	}
+
+	@Override
+	public Type getType() {
+		return Type.RadioCov;
+	}
+
+
 }
