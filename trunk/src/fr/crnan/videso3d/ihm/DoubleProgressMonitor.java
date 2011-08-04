@@ -16,11 +16,12 @@
 package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.AbstractButton;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -33,7 +34,7 @@ import javax.swing.BoxLayout;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.3
  */
 public class DoubleProgressMonitor extends JDialog {
 
@@ -49,18 +50,22 @@ public class DoubleProgressMonitor extends JDialog {
 	private boolean cancel = false;
 	private JPanel contentPanel;
 	private JPanel iconPanel;
+
+	private AbstractButton cancelButton;
 	
 	/**
 	 * Create the dialog.
 	 */
-	public DoubleProgressMonitor(Component parentComponent,
+	public DoubleProgressMonitor(Dialog parentComponent,
             String title,
             String note,
             int min,
             int max) {
 		
+		super(parentComponent);
+		
 		this.setTitle(title);
-		this.setAlwaysOnTop(true);
+	
 		
 		setBounds(100, 100, 390, 165);
 		getContentPane().setLayout(new BorderLayout());
@@ -95,13 +100,14 @@ public class DoubleProgressMonitor extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton cancelButton = new JButton("Annuler");
+				cancelButton = new JButton("Annuler");
 				cancelButton.setActionCommand("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						setVisible(false);
+						//setVisible(false);
+						cancelButton.setEnabled(false);
 						cancel = true;
 					}
 				});
@@ -116,6 +122,12 @@ public class DoubleProgressMonitor extends JDialog {
 	
 	public JProgressBar getSecondaryProgressBar(){
 		return this.secondaryProgressBar;
+	}
+	
+	public void setCancel(boolean cancel){
+		if(cancel)
+			cancelButton.setEnabled(true);
+		this.cancel = cancel;
 	}
 	
 	public boolean isCanceled(){

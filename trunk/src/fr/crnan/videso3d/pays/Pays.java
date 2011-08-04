@@ -206,7 +206,7 @@ public class Pays extends FileParser {
 		try {
 			//récupération du nom de la base à créer
 			this.createName();
-			if(!DatabaseManager.databaseExists(this.name)){
+			if(!DatabaseManager.databaseExists(Type.PAYS, this.name)){
 				this.conn = DatabaseManager.selectDB(Type.PAYS, this.name);
 				this.conn.setAutoCommit(false);
 				//création de la structure de la base de données

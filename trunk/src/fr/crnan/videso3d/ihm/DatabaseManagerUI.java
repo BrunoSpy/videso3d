@@ -17,6 +17,7 @@
 package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -96,13 +97,14 @@ public class DatabaseManagerUI extends JDialog {
 				
 		this.pack();
 		
-		this.setModal(true);
+		this.setModalityType(Dialog.DEFAULT_MODALITY_TYPE);
 		
 	}
 	
 	private void build(){
 		
 		progressMonitor2 = new DoubleProgressMonitor(this, "Import des fichiers sélectionnés", "", 0, 100);
+		progressMonitor2.setAlwaysOnTop(true);
 		
 		table = new JXTable(new DBTableModel());
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -152,6 +154,7 @@ public class DatabaseManagerUI extends JDialog {
 						@Override
 						protected Integer doInBackground() throws Exception {
 
+							progressMonitor2.setCancel(false);
 							progressMonitor2.getMainProgressBar().setIndeterminate(true);
 							progressMonitor2.getSecondaryProgressBar().setIndeterminate(true);
 							progressMonitor2.setVisible(true);
@@ -164,13 +167,15 @@ public class DatabaseManagerUI extends JDialog {
 
 						@Override
 						protected void done() {
-							if(!databaseFound){
-								progressMonitor2.setVisible(false);
-								JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
-										"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-								Logging.logger().warning("Pas de fichier de base de données trouvé");
-							} else {
-								importDatabases();
+							if(!progressMonitor2.isCanceled()){
+								if(!databaseFound){
+									progressMonitor2.setVisible(false);
+									JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
+											"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+									Logging.logger().warning("Pas de fichier de base de données trouvé");
+								} else {
+									importDatabases();
+								}
 							}
 						}
 
@@ -368,40 +373,60 @@ public class DatabaseManagerUI extends JDialog {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
 				if(evt.getPropertyName().equals("done")){
-					if((Boolean) evt.getNewValue()) {
-						types.add(current.getKey().getType());
-					}
-					//copie des fichiers
-					for(File f : current.getValue()){
-						FileManager.copyFile(f, current.getKey().getName()+"_files");
-					}
-					//suppression du listener
-					current.getKey().removePropertyChangeListener(this);
-					//import de la base suivante
-					if(iterator.hasNext()){
-						done += current.getKey().numberFiles();
-						importDatabase(iterator.next(), this);
-					} else {
+					if(progressMonitor2.isCanceled()){
+						for(Entry<FileParser, File[]> entry : databases.entrySet()){
+							try {
+								DatabaseManager.deleteDatabase(entry.getKey().getName(), entry.getKey().getType());
+								for(File f : entry.getValue()){
+									FileManager.deleteFile(f);
+								}
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+						}
 						//plus de base de données à importer : on fait le ménage
 						FileManager.removeTempFiles();
 						//et on cache le progressmonitor
 						progressMonitor2.setVisible(false);
 						//on met à jour la fenetre
 						((DBTableModel)table.getModel()).update();
-						//on met à jour les tabs
-						for(Type t : types){
-							DatabaseManager.importFinished(t);
+					} else {
+						if((Boolean) evt.getNewValue()) { //l'import s'est bien terminé
+							types.add(current.getKey().getType());
+						}
+						//copie des fichiers
+						for(File f : current.getValue()){
+							FileManager.copyFile(f, current.getKey().getName()+"_files");
+						}
+						//suppression du listener
+						current.getKey().removePropertyChangeListener(this);
+						//import de la base suivante
+						if(iterator.hasNext()){
+							done += current.getKey().numberFiles();
+							importDatabase(iterator.next(), this);
+						} else {
+							//plus de base de données à importer : on fait le ménage
+							FileManager.removeTempFiles();
+							//et on cache le progressmonitor
+							progressMonitor2.setVisible(false);
+							//on met à jour la fenetre
+							((DBTableModel)table.getModel()).update();
+							//on met à jour les tabs
+							for(Type t : types){
+								DatabaseManager.importFinished(t);
+							}
 						}
 					}
 				} else if(evt.getPropertyName().equals("progress")){
 					if(progressMonitor2.isCanceled()) {
-						current.getKey().cancel(true);	
-						//plus de base de données à importer : on fait le ménage
-						FileManager.removeTempFiles();
-						//et on cache le progressmonitor
-						progressMonitor2.setVisible(false);
-						//on met à jour la fenetre
-						((DBTableModel)table.getModel()).update();
+						//user information
+						progressMonitor2.setMainNote("Annulation en cours ...");
+						progressMonitor2.getMainProgressBar().setIndeterminate(true);
+						progressMonitor2.getSecondaryProgressBar().setIndeterminate(true);
+						//annulation du parsing
+						//on n'utilise pas SwingWorker.cancel(true) à cause des effets de bord avec sqlite
+						//la fin de l'annulation est faite lorsque "done" est reçu
+						
 					}
 					progressMonitor2.getSecondaryProgressBar().setValue((Integer)evt.getNewValue());
 					progressMonitor2.getMainProgressBar().setValue(done+(Integer)evt.getNewValue());
@@ -565,6 +590,7 @@ public class DatabaseManagerUI extends JDialog {
 				try {
 					if(!(Boolean)data.get(rowIndex).get(5)){
 						DatabaseManager.selectDatabase((Integer)data.get(rowIndex).get(0), (String)data.get(rowIndex).get(2));
+						DatabaseManager.fireBaseSelected(DatabaseManager.stringToType((String)data.get(rowIndex).get(2)));
 					} else {
 						DatabaseManager.unselectDatabase(DatabaseManager.stringToType((String)data.get(rowIndex).get(2)));
 					}
@@ -592,6 +618,7 @@ public class DatabaseManagerUI extends JDialog {
 				try {
 					String type = (String)table.getModel().getValueAt(index, 2);
 					DatabaseManager.selectDatabase((Integer)((DBTableModel)table.getModel()).getId(index), type);
+					DatabaseManager.fireBaseSelected(DatabaseManager.stringToType(type));
 					//Mise à jour de la vue
 					((DBTableModel)table.getModel()).select(index);
 				} catch (SQLException e1) {

@@ -84,7 +84,7 @@ public class Stpv extends FileParser{
 		try {
 			this.createName();
 			//si la base de données n'existe pas
-			if(!DatabaseManager.databaseExists(this.name)){
+			if(!DatabaseManager.databaseExists(Type.STPV, this.name)){
 				//on crée la connection à la db
 				this.conn = DatabaseManager.selectDB(Type.STPV, this.name);
 				this.conn.setAutoCommit(false);
@@ -111,7 +111,6 @@ public class Stpv extends FileParser{
 		if(this.isCancelled()){
 			try {
 				DatabaseManager.deleteDatabase(name, Type.STPV);
-				FileManager.deleteFile(new File(name+"_files"));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -214,7 +213,7 @@ public class Stpv extends FileParser{
 		while (in.ready() && !nameFound){
 			String line = in.readLine();
 			if (line.startsWith("1     STPV - CAUTRA IV - CA:")){
-				this.name = line.substring(29, 38).trim()+"."+line.substring(79, 88).trim();
+				this.name = "STPV_"+line.substring(29, 38).trim()+"."+line.substring(79, 88).trim();
 				nameFound = true;
 			}
 		}

@@ -198,7 +198,7 @@ public class Cartes extends FileParser {
 		try {
 			this.conn = DatabaseManager.selectDB(DatabaseManager.Type.Edimap, this.version);
 			this.conn.setAutoCommit(false); //fixes performance issue
-			if(!DatabaseManager.databaseExists(this.version)){
+			if(!DatabaseManager.databaseExists(Type.Edimap, this.version)){
 				DatabaseManager.createEdimap(this.version, this.path);
 				this.insertCartes();
 				try {

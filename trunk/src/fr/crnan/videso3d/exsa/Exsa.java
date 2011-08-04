@@ -100,7 +100,7 @@ public class Exsa extends FileParser {
 		try {
 			//on récupère le nom de la base de données
 			this.createName();
-			if(!DatabaseManager.databaseExists(this.name)){
+			if(!DatabaseManager.databaseExists(Type.EXSA, this.name)){
 				//on crée la connection avec bdd avec ce nom
 				this.conn = DatabaseManager.selectDB(Type.EXSA, this.name);
 				this.conn.setAutoCommit(false);

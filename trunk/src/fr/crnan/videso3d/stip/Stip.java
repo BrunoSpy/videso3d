@@ -91,7 +91,7 @@ public class Stip extends FileParser{
 		try {
 			//récupération du nom de la base à créer
 			this.createName();
-			if(!DatabaseManager.databaseExists(this.name)){
+			if(!DatabaseManager.databaseExists(Type.STIP, this.name)){
 				//création de la connection à la base de données
 				this.conn = DatabaseManager.selectDB(Type.STIP, this.name);
 				this.conn.setAutoCommit(false); //fixes performance issue
@@ -122,10 +122,10 @@ public class Stip extends FileParser{
 	}
 
 	@Override
-	public void done(){
+	public void done() {
 		if(this.isCancelled()){//si le parsing a été annulé, on fait le ménage
 			try {
-				DatabaseManager.deleteDatabase(name, Type.STIP);
+				DatabaseManager.deleteDatabase(this.name, Type.STIP);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -143,7 +143,7 @@ public class Stip extends FileParser{
 	private void createName() throws IOException{
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path + "/REF")));
 		String line = in.readLine();
-		this.name = line.substring(33,41) + "." + line.substring(55,63);
+		this.name = "STIP_"+line.substring(33,41) + "." + line.substring(55,63);
 		in.close();
 	}
 	
