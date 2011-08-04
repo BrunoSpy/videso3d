@@ -396,6 +396,12 @@ public class DatabaseManagerUI extends JDialog {
 				} else if(evt.getPropertyName().equals("progress")){
 					if(progressMonitor2.isCanceled()) {
 						current.getKey().cancel(true);	
+						//plus de base de données à importer : on fait le ménage
+						FileManager.removeTempFiles();
+						//et on cache le progressmonitor
+						progressMonitor2.setVisible(false);
+						//on met à jour la fenetre
+						((DBTableModel)table.getModel()).update();
 					}
 					progressMonitor2.getSecondaryProgressBar().setValue((Integer)evt.getNewValue());
 					progressMonitor2.getMainProgressBar().setValue(done+(Integer)evt.getNewValue());
