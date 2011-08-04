@@ -220,7 +220,7 @@ public class RadioDataManager extends FileParser {
 			this.conn = DatabaseManager.selectDB(Type.RadioCov, this.name);
 			this.conn.setAutoCommit(false); //fixes performance issue
 		
-			if(!DatabaseManager.databaseExists(this.name)){
+			if(!DatabaseManager.databaseExists(Type.RadioCov, this.name)){
 				
 				System.out.println("(Radio.java) / La base de données n'existe pas" +"");
 				

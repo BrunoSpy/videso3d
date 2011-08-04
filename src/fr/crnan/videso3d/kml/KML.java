@@ -178,7 +178,7 @@ public class KML extends FileParser{
 			//crÃ©ation de la connection à la base de données
 			this.conn = DatabaseManager.selectDB(Type.KML, this.name);
 			this.conn.setAutoCommit(false); //fixes performance issue
-			if(!DatabaseManager.databaseExists(this.name)){
+			if(!DatabaseManager.databaseExists(Type.KML, this.name)){
 				//création de la structure de la base de données
 				DatabaseManager.createKML(this.name,path);
 				//parsing des fichiers et stockage en base

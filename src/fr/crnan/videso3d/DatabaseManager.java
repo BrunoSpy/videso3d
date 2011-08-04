@@ -43,7 +43,7 @@ import javax.swing.event.SwingPropertyChangeSupport;
 /**
  * Gère la base de données
  * @author Bruno Spyckerelle
- * @version 0.8.2
+ * @version 0.8.3
  */
 public final class DatabaseManager {
 	
@@ -308,10 +308,10 @@ public final class DatabaseManager {
 	 * @return Boolean Vrai si la base de données existe
 	 * @throws SQLException 
 	 */
-	public static Boolean databaseExists(String name) throws SQLException{
+	public static Boolean databaseExists(Type type, String name) throws SQLException{
 		Boolean exists = false;
 		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
-		ResultSet result = st.executeQuery("SELECT * FROM databases WHERE name = '"+name+"'");
+		ResultSet result = st.executeQuery("SELECT * FROM databases WHERE name = '"+name+"' and type ='"+type.toString()+"'");
 		if (result.next()) exists = true;
 		result.close();
 		st.close();
@@ -366,7 +366,7 @@ public final class DatabaseManager {
 	}
 
 	public static void addDatabase(String name, Type type) throws SQLException{
-		if(!databaseExists(name)){
+		if(!databaseExists(type, name)){
 			addDatabase(name, type, new SimpleDateFormat().format(new Date()));
 		}
 		selectDatabase(getId(name), type);
@@ -1108,6 +1108,8 @@ public final class DatabaseManager {
 
 	/**
 	 * Sélectionne une base de données à utiliser
+	 * Ne pas oublier d'appeler DatabaseManager.fireBaseSelected(type)
+	 * pour informer les listeners du changement de base
 	 * @param id Id de la base de données
 	 * @param type Type de la base de données
 	 * @throws SQLException 
@@ -1122,13 +1124,26 @@ public final class DatabaseManager {
 		result.close();
 		st.close();
 		DatabaseManager.selectDB(type, name);
-		instance.support.firePropertyChange(BASE_SELECTED, null, type);
 	}
 	
+	/**
+	 * Ne pas oublier d'appeler DatabaseManager.fireBaseSelected(type)
+	 * pour informer les listeners du changement de base
+	 * @param id
+	 * @param type
+	 * @throws SQLException
+	 */
 	public static void selectDatabase(Integer id, String type) throws SQLException {
-			DatabaseManager.selectDatabase(id, stringToType(type));	
+		DatabaseManager.selectDatabase(id, stringToType(type));	
 	}
 
+	/**
+	 * Ne pas oublier d'appeler DatabaseManager.fireBaseSelected(type)
+	 * pour informer les listeners du changement de base
+	 * @param name
+	 * @param type
+	 * @throws SQLException
+	 */
 	public static void selectDatabase(String name, Type type) throws SQLException {
 		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
 		ResultSet rs = st.executeQuery("select id from databases where name ='"+name+"'");
@@ -1568,5 +1583,9 @@ public final class DatabaseManager {
 	
 	public static void removePropertyChangeListener(String propertyName, PropertyChangeListener l){
 		instance.support.removePropertyChangeListener(propertyName, l);
+	}
+	
+	public static void fireBaseSelected(Type type){
+		instance.support.firePropertyChange(BASE_SELECTED, null, type);
 	}
 }

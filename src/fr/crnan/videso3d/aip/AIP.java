@@ -186,7 +186,7 @@ public class AIP extends FileParser{
 		try {
 			//récupération du nom de la base à créer
 			this.createName();
-			if(!DatabaseManager.databaseExists(this.name)){
+			if(!DatabaseManager.databaseExists(Type.AIP, this.name)){
 				//création de la connection à la base de données
 				this.conn = DatabaseManager.selectDB(Type.AIP, this.name);
 				this.conn.setAutoCommit(false); //fixes performance issue

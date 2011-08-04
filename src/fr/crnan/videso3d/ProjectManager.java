@@ -169,7 +169,7 @@ public class ProjectManager extends ProgressSupport {
 			String name = index == -1 ? f.getName() : f.getName().substring(0, index);
 			if(!suffix.isEmpty() && DatabaseManager.stringToType(suffix) != null) {
 				try {
-					if(!DatabaseManager.databaseExists(name)) {
+					if(!DatabaseManager.databaseExists(DatabaseManager.stringToType(suffix), name)) {
 						FileManager.copyFile(f);
 					}
 					DatabaseManager.addDatabase(name, DatabaseManager.stringToType(suffix));
