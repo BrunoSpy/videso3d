@@ -44,6 +44,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingWorker;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -101,6 +102,8 @@ public class DatabaseManagerUI extends JDialog {
 	
 	private void build(){
 		
+		progressMonitor2 = new DoubleProgressMonitor(this, "Import des fichiers sélectionnés", "", 0, 100);
+		
 		table = new JXTable(new DBTableModel());
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.setAutoResizeMode(JXTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -136,18 +139,43 @@ public class DatabaseManagerUI extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				VFileChooser fileChooser = new VFileChooser();
+				final VFileChooser fileChooser = new VFileChooser();
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 				fileChooser.setMultiSelectionEnabled(true);
-				if(fileChooser.showOpenDialog(add) == JFileChooser.APPROVE_OPTION)
+				if(fileChooser.showOpenDialog(add) == JFileChooser.APPROVE_OPTION) {
 					databases = new HashMap<FileParser, File[]>();
-					if(!processFiles(fileChooser.getSelectedFiles())){
-						JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
-								"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-						Logging.logger().warning("Pas de fichier de base de données trouvé");
-					} else {
-						importDatabases();
-					}
+
+					new SwingWorker<Integer, Integer>() {
+
+						boolean databaseFound = false;
+
+						@Override
+						protected Integer doInBackground() throws Exception {
+
+							progressMonitor2.getMainProgressBar().setIndeterminate(true);
+							progressMonitor2.getSecondaryProgressBar().setIndeterminate(true);
+							progressMonitor2.setVisible(true);
+							progressMonitor2.setMainNote("Recherche des bases de données...");
+
+							databaseFound = processFiles(fileChooser.getSelectedFiles());
+
+							return null;
+						}
+
+						@Override
+						protected void done() {
+							if(!databaseFound){
+								progressMonitor2.setVisible(false);
+								JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
+										"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+								Logging.logger().warning("Pas de fichier de base de données trouvé");
+							} else {
+								importDatabases();
+							}
+						}
+
+					}.execute();
+				}
 			}
 		});
 		buttons.add(add);
@@ -175,7 +203,8 @@ public class DatabaseManagerUI extends JDialog {
 		while(files.size() > 0){
 			File file = files.first();
 			if(file.isDirectory()){
-				baseImported = baseImported || processFiles(file.listFiles());
+				boolean temp = processFiles(file.listFiles());
+				baseImported = baseImported || temp;
 			} else {
 				if(MimeUtil.getMimeTypes(file).contains("application/zip")){
 					boolean temp = processFiles(FileManager.unzip(file).toArray(new File[]{}));
@@ -184,7 +213,7 @@ public class DatabaseManagerUI extends JDialog {
 					boolean temp = processFiles(new File[]{FileManager.gunzip(file)});
 					baseImported = baseImported || temp;
 				} else if(MimeUtil.getMimeTypes(file).contains("application/x-tar")){
-					boolean temp = processFiles(FileManager.unzip(file).toArray(new File[]{}));
+					boolean temp = processFiles(FileManager.untar(file).toArray(new File[]{}));
 					baseImported = baseImported || temp;
 				} else { //file not zipped
 					if(AIP.isAIPFile(file)){
@@ -326,8 +355,9 @@ public class DatabaseManagerUI extends JDialog {
 		
 		done = 0;
 		
-		progressMonitor2 = new DoubleProgressMonitor(this, "Import des fichiers sélectionnés", "", 0, max);
-		progressMonitor2.setVisible(true);
+		progressMonitor2.getMainProgressBar().setMaximum(max);
+		progressMonitor2.getMainProgressBar().setIndeterminate(false);
+		progressMonitor2.getSecondaryProgressBar().setIndeterminate(false);
 				
 		iterator = databases.entrySet().iterator();
 		

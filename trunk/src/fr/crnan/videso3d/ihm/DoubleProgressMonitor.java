@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -32,11 +33,11 @@ import javax.swing.BoxLayout;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class DoubleProgressMonitor extends JDialog {
 
-	private final JPanel contentPanel = new JPanel();
+	private final JPanel progressPanel = new JPanel();
 
 	private JProgressBar mainProgressBar;
 	private JProgressBar secondaryProgressBar;
@@ -46,6 +47,8 @@ public class DoubleProgressMonitor extends JDialog {
 	private String mainNote;
 	
 	private boolean cancel = false;
+	private JPanel contentPanel;
+	private JPanel iconPanel;
 	
 	/**
 	 * Create the dialog.
@@ -57,26 +60,36 @@ public class DoubleProgressMonitor extends JDialog {
             int max) {
 		
 		this.setTitle(title);
-		this.note = new JLabel(note);
 		this.setAlwaysOnTop(true);
 		
-		setBounds(100, 100, 378, 196);
+		setBounds(100, 100, 390, 165);
 		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+		contentPanel = new JPanel();
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(new BorderLayout(0, 0));
+		
+		iconPanel = new JPanel();
+		iconPanel.setBorder(new EmptyBorder(0, 5, 0, 5));
+		iconPanel.setLayout(new BorderLayout(0, 0));
+		JLabel label = new JLabel(new ImageIcon(getClass().getResource("/resources/dialog-information.png")));
+		iconPanel.add(label);
+		contentPanel.add(iconPanel, BorderLayout.WEST);
+		this.note = new JLabel(note);
+		contentPanel.add(progressPanel);
+		progressPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		{
 			mainProgressBar = new JProgressBar(min, max);
 			secondaryProgressBar = new JProgressBar();
-			contentPanel.add(Box.createVerticalStrut(10));
-			contentPanel.add(this.note);
-			contentPanel.add(Box.createVerticalStrut(10));
-			contentPanel.add(secondaryProgressBar);
-			contentPanel.add(Box.createVerticalStrut(10));
-			contentPanel.add(mainProgressBar);
+			progressPanel.add(Box.createVerticalStrut(10));
+			progressPanel.add(this.note);
+			progressPanel.add(Box.createVerticalStrut(10));
+			progressPanel.add(secondaryProgressBar);
+			progressPanel.add(Box.createVerticalStrut(10));
+			progressPanel.add(mainProgressBar);
 		}
-		
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+		progressPanel.setLayout(new BoxLayout(progressPanel, BoxLayout.Y_AXIS));
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
