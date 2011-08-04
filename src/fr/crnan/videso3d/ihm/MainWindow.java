@@ -37,6 +37,7 @@ import javax.swing.ToolTipManager;
 
 import org.jdesktop.swingx.plaf.nimbus.NimbusMultiSliderUI;
 
+import bibliothek.extension.gui.dock.theme.EclipseTheme;
 import bibliothek.gui.dock.common.CControl;
 import bibliothek.gui.dock.common.CGrid;
 import bibliothek.gui.dock.common.CLocation;
@@ -63,6 +64,7 @@ import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.ihm.components.AltitudeRangeSlider;
 import fr.crnan.videso3d.ihm.components.ClosableSingleDockable;
 import fr.crnan.videso3d.ihm.components.Omnibox;
+import fr.crnan.videso3d.ihm.components.VDefaultEclipseThemConnector;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
 import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
@@ -213,18 +215,14 @@ public class MainWindow extends JFrame {
 				
 		control = new CControl(this);
 		control.setTheme(ThemeMap.KEY_ECLIPSE_THEME);
+		control.putProperty(EclipseTheme.THEME_CONNECTOR, new VDefaultEclipseThemConnector());
 		control.setGroupBehavior(CGroupBehavior.TOPMOST);
+		control.getContentArea().setBorder(null);
 		this.add(control.getContentArea(), BorderLayout.CENTER);
 		
 		DefaultSingleCDockable dockableDatas = new DefaultSingleCDockable("dataExplorer");
 		DefaultSingleCDockable dockableWWD = new DefaultSingleCDockable("wwd");
 		DefaultSingleCDockable dockableContext = new DefaultSingleCDockable("context");
-		
-		CGrid grid = new CGrid(control);
-		grid.add(0, 0, 1, 1, dockableDatas);
-		grid.add(1, 0, 3, 1, dockableWWD);
-		grid.add(3, 0, 1.2, 1, dockableContext);
-		control.getContentArea().deploy(grid);
 		
 		AltitudeRangeSlider rangeSlider = new AltitudeRangeSlider(wwd);
 		rangeSlider.setUI(new NimbusMultiSliderUI(rangeSlider));
@@ -235,15 +233,25 @@ public class MainWindow extends JFrame {
 		dockableWWD.setTitleShown(false);
 		dockableWWD.add(wwdContainer);
 		
+		//fill dockableDatas with a fake panel to allow a correct layout
 		dockableDatas.add(new JPanel());
 		
 		dockableContext.add(context);
 		dockableContext.setTitleText("Informations");
 		dockableContext.setDefaultLocation(ExtendedMode.MINIMIZED, CLocation.base().minimalEast());
-		dockableContext.setExtendedMode(ExtendedMode.MINIMIZED);
 		dockableContext.setCloseable(false);
 		context.setDockable(dockableContext);
 		
+		//layout of the elements		
+		CGrid grid = new CGrid(control);
+		grid.add(0, 0, 1, 1, dockableDatas);
+		grid.add(1, 0, 3, 1, dockableWWD);
+		grid.add(3, 0, 1.2, 1, dockableContext);
+		control.getContentArea().deploy(grid);
+		//minimizing context
+		dockableContext.setExtendedMode(ExtendedMode.MINIMIZED);
+		
+		//save location of future panel
 		locationDatas = /*CLocation.base().normalWest(0.2);*/dockableDatas.getBaseLocation().aside();
 		
 		for(Type type : DatabaseManager.getSelectedDatabases()){
@@ -301,7 +309,7 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void propertyChange(final PropertyChangeEvent evt) {
-												
+													
 				//précréation des éléments 3D dans un SwingWorker avec ProgressMonitor
 				new SwingWorker<Integer, Integer>(){
 
