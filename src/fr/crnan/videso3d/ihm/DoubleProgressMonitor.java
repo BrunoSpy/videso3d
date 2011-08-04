@@ -124,8 +124,8 @@ public class DoubleProgressMonitor extends JDialog {
 		return this.secondaryProgressBar;
 	}
 	
-	public void setCancel(boolean cancel){
-		if(cancel)
+	public void setCancelled(boolean cancel){
+		if(!cancel)
 			cancelButton.setEnabled(true);
 		this.cancel = cancel;
 	}

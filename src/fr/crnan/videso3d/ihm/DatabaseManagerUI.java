@@ -154,7 +154,7 @@ public class DatabaseManagerUI extends JDialog {
 						@Override
 						protected Integer doInBackground() throws Exception {
 
-							progressMonitor2.setCancel(false);
+							progressMonitor2.setCancelled(false);
 							progressMonitor2.getMainProgressBar().setIndeterminate(true);
 							progressMonitor2.getSecondaryProgressBar().setIndeterminate(true);
 							progressMonitor2.setVisible(true);
