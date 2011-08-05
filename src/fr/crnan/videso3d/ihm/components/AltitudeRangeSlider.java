@@ -20,8 +20,10 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.Iterator;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
+import javax.accessibility.AccessibleContext;
 import javax.swing.JToolTip;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
@@ -31,15 +33,11 @@ import org.jdesktop.swingx.multislider.JXMultiBoundedRangeModel;
 import org.jdesktop.swingx.multislider.JXMultiSlider;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
-import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
-import fr.crnan.videso3d.layers.LayerSet;
-import gov.nasa.worldwind.layers.Layer;
-import gov.nasa.worldwind.layers.LayerList;
 
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.2.0
+ * @version 0.2.1
  */
 public class AltitudeRangeSlider extends JXMultiSlider {
 
@@ -47,6 +45,8 @@ public class AltitudeRangeSlider extends JXMultiSlider {
 	
 	private JToolTip toolTip;
 	private Popup popup;
+	
+	private boolean innerLastModified = true;
 	
 	public AltitudeRangeSlider(VidesoGLCanvas wd){
 		this.wwd = wd;
@@ -56,6 +56,7 @@ public class AltitudeRangeSlider extends JXMultiSlider {
 		this.setOrientation(SwingConstants.VERTICAL);
 		
 		toolTip = this.createToolTip();
+		
 		
 		this.addMouseMotionListener(new MouseMotionListener() {
 			
@@ -67,11 +68,25 @@ public class AltitudeRangeSlider extends JXMultiSlider {
 				setToolTipText("<html><b>Plafond : </b>"+getOuterValue()+
 						"<br /><b>Plancher : </b>"+getInnerValue());
 				showTooltip(e);
-				filterLayers(wwd.getModel().getLayers());
+				wwd.filterLayers(getOuterValue()*30.48, getInnerValue()*30.48);
 			}
 		});
 
-
+		this.addMouseWheelListener(new MouseWheelListener() {
+			
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				if(innerLastModified){
+					setInnerValue(getInnerValue()+e.getWheelRotation()*5);
+				} else {
+					setOuterValue(getOuterValue()+e.getWheelRotation()*5);
+				}
+				setToolTipText("<html><b>Plafond : </b>"+getOuterValue()+
+						"<br /><b>Plancher : </b>"+getInnerValue());
+				wwd.filterLayers(getOuterValue()*30.48, getInnerValue()*30.48);
+			}
+		});
+		
 		this.addMouseListener(new MouseListener() {
 
 			@Override
@@ -93,18 +108,6 @@ public class AltitudeRangeSlider extends JXMultiSlider {
 		});
 	}
 
-	private void filterLayers(Iterable<Layer> layer){
-		Iterator<Layer> iterator = layer.iterator();
-		while(iterator.hasNext()){
-			Layer l = iterator.next();
-			if(l instanceof AltitudeFilterableLayer){
-				((AltitudeFilterableLayer) l).setMaximumViewableAltitude(getOuterValue()*30.47);
-				((AltitudeFilterableLayer) l).setMinimumViewableAltitude(getInnerValue()*30.47);
-			} else if(l instanceof LayerSet) {
-				filterLayers((LayerList)l);
-			}
-		}
-	}
 	
 	private void showTooltip(MouseEvent event){
 		toolTip.setTipText( getToolTipText(event) );
@@ -116,5 +119,50 @@ public class AltitudeRangeSlider extends JXMultiSlider {
 		popup = factory.getPopup(this, toolTip, toolTipLocation.x, toolTipLocation.y);
 		popup.show();
 	}
+
+	/* (non-Javadoc)
+	 * @see org.jdesktop.swingx.multislider.JXMultiSlider#setInnerValue(int)
+	 */
+	@Override
+	public void setInnerValue(int n) {
+		JXMultiBoundedRangeModel m = getModel();
+		int oldValue = m.getInnerValue();
+		if (oldValue == n) {
+			return;
+		}
+		
+		innerLastModified = true;
+		m.setInnerValue(n);
+
+		if (accessibleContext != null) {
+			accessibleContext.firePropertyChange(
+					AccessibleContext.ACCESSIBLE_VALUE_PROPERTY,
+					new Integer(oldValue),
+					new Integer(m.getInnerValue()));
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see org.jdesktop.swingx.multislider.JXMultiSlider#setOuterValue(int)
+	 */
+	@Override
+	public void setOuterValue(int n) {
+		JXMultiBoundedRangeModel m = getModel();
+		int oldValue = m.getOuterValue();
+		if (oldValue == n) {
+			return;
+		}
+		innerLastModified = false;
+		
+		m.setOuterValue(n);
+
+		if (accessibleContext != null) {
+			accessibleContext.firePropertyChange(
+					AccessibleContext.ACCESSIBLE_VALUE_PROPERTY,
+					new Integer(oldValue),
+					new Integer(m.getOuterValue()));
+		}
+	}
+
 	
 }

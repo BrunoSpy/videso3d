@@ -74,7 +74,13 @@ public class ThreePanelsDiffPrinter extends AbstractDiffPrinter {
 		this.numLinesPane = numLines;
 	}
 
-
+	public void changeFiles(Object[] a, Object[] b){
+		file0 = a;
+		file1 = b;
+		this.srcDoc = new DefaultStyledDocument();
+		this.dstDoc = new DefaultStyledDocument();
+		this.numLinesDoc = new DefaultStyledDocument();
+	}
 	
 	/* (non-Javadoc)
 	 * @see fr.crnan.videso3d.util.AbstractDiffPrinter#print_script(fr.crnan.videso3d.util.Diff.change)

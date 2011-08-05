@@ -34,6 +34,7 @@ package fr.crnan.videso3d.ihm;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -55,6 +56,8 @@ import fr.crnan.videso3d.ihm.components.DiffPanel;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -105,14 +108,18 @@ public class FileCompareSelector extends JFrame {
 		typePanel.add(scrollTypes);
 
 
+		JPanel basesPanelContent = new JPanel();
+		basesPanelContent.setAlignmentX(0.3f);
+		basesPanelContent.setBorder(new TitledBorder(null, "Bases \u00E0 comparer", TitledBorder.CENTER, TitledBorder.ABOVE_TOP, null, null));
+		basesPanelContent.setLayout(new BoxLayout(basesPanelContent, BoxLayout.Y_AXIS));
+		
 		basesPanel = new JPanel();
-		basesPanel.setAlignmentX(0.3f);
-		basesPanel.setBorder(new TitledBorder(null, "Bases \u00E0 comparer", TitledBorder.CENTER, TitledBorder.ABOVE_TOP, null, null));
-		basesPanel.setPreferredSize(new Dimension(200,0));
 		basesPanel.setLayout(new BoxLayout(basesPanel, BoxLayout.Y_AXIS));
+		
 		JScrollPane scrollBases = new JScrollPane(basesPanel);
-		scrollBases.setBorder(null);
-		contentPanel.add(scrollBases);
+		basesPanelContent.add(scrollBases);
+		scrollBases.setBorder(BorderFactory.createEmptyBorder());
+		contentPanel.add(basesPanelContent);
 
 		JPanel filesPanel = new JPanel();
 		filesPanel.setAlignmentX(0.3f);
@@ -131,7 +138,7 @@ public class FileCompareSelector extends JFrame {
 				if(((JList) e.getSource()).getModel().getSize()>e.getLastIndex()){
 					for(int i = e.getFirstIndex();i<=e.getLastIndex();i++){
 						if(((JList) e.getSource()).isSelectedIndex(i)){
-							String file = (String) ((JList) e.getSource()).getModel().getElementAt(i);
+							final String file = (String) ((JList) e.getSource()).getModel().getElementAt(i);
 							try {
 								comparePanel.compareFiles(new File(path1, file), new File(path2, file));
 							} catch (IOException e1) {
@@ -147,13 +154,22 @@ public class FileCompareSelector extends JFrame {
 		JScrollPane scrollFiles = new JScrollPane(listFiles);
 		scrollFiles.setBorder(null);
 		filesPanel.add(scrollFiles);
-		
-		
+	
 		comparePanel = new DiffPanel(true);
-		JScrollPane scrollComparePanel = new JScrollPane(comparePanel);
+		
+		final JScrollPane scrollComparePanel = new JScrollPane(comparePanel);
+		scrollComparePanel.getVerticalScrollBar().setUnitIncrement(20);
 		scrollComparePanel.setPreferredSize(new Dimension(0, 500));
 		scrollComparePanel.setBorder(null);
-		
+		scrollComparePanel.setWheelScrollingEnabled(true);
+		comparePanel.addMouseWheelListener(new MouseWheelListener() {
+			
+			@Override
+			public void mouseWheelMoved(MouseWheelEvent e) {
+				scrollComparePanel.dispatchEvent(e);
+			}
+		});
+				
 		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, contentPanel, scrollComparePanel);
 		getContentPane().add(splitPane);
 		
