@@ -48,10 +48,12 @@ import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
+import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
 import fr.crnan.videso3d.layers.FPLTracksLayer;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
 import fr.crnan.videso3d.layers.LPLNTracksLayer;
+import fr.crnan.videso3d.layers.LayerSet;
 import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
@@ -320,6 +322,39 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			}
 
 		}            
+	}
+	
+	/*--------------------------------------------------------------*/
+	/*------------------ Filtre sur les altitudes ------------------*/
+	/*--------------------------------------------------------------*/
+	
+	private double maxAltitude = 800.0*30.48;
+	private double minAltitude = 0.0;
+
+	public void filterLayers(double maxAltitude, double minAltitude){
+		filterLayers(this.getModel().getLayers(), maxAltitude, minAltitude);
+		this.maxAltitude = maxAltitude;
+		this.minAltitude = minAltitude;
+	}
+	
+	private void filterLayers(Iterable<Layer> layers, double maxAltitude, double minAltitude){
+	
+		Iterator<Layer> iterator = layers.iterator();
+
+		while(iterator.hasNext()){
+			Layer l = iterator.next();
+			if(l instanceof AltitudeFilterableLayer){
+				if(this.minAltitude != minAltitude){
+					((AltitudeFilterableLayer) l).setMinimumViewableAltitude(minAltitude);
+				}
+				if(this.maxAltitude != maxAltitude) {
+					((AltitudeFilterableLayer) l).setMaximumViewableAltitude(maxAltitude);
+				}
+
+			} else if(l instanceof LayerSet) {
+				filterLayers((LayerList)l, maxAltitude, minAltitude);
+			}
+		}
 	}
 
 	/*--------------------------------------------------------------*/

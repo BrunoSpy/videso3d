@@ -40,6 +40,7 @@ import java.awt.Color;
 import javax.swing.JScrollPane;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -48,7 +49,6 @@ import javax.swing.text.BadLocationException;
 import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.util.LineHighLighter;
 import fr.crnan.videso3d.util.NoWrapEditorKit;
-import fr.crnan.videso3d.util.diff.AbstractDiffPrinter;
 import fr.crnan.videso3d.util.diff.Diff;
 import fr.crnan.videso3d.util.diff.ThreePanelsDiffPrinter;
 
@@ -66,7 +66,8 @@ public class DiffPanel extends JPanel {
 	private JTextPane paneSrc;
 	private JTextPane paneNumLines;
 	private JTextPane paneDst;
-	
+		
+	private ThreePanelsDiffPrinter panelDiffPrinter;
 	
 	/**
 	 * 
@@ -135,9 +136,6 @@ public class DiffPanel extends JPanel {
 		JLabel titleDst = new JLabel("");
 		if(titled) add(titleDst, gbc_scrollPane);
 		
-		paneSrc.setHighlighter(new LineHighLighter());
-		paneDst.setHighlighter(new LineHighLighter());
-		
 	}
 
 	/**
@@ -166,10 +164,29 @@ public class DiffPanel extends JPanel {
 		String[] stringDst = FileManager.textFiletoArray(dst);
         
 		Diff diff = new Diff(stringSrc, stringDst);
-		
-		AbstractDiffPrinter panelDiffPrinter = new ThreePanelsDiffPrinter(stringSrc, stringDst, paneSrc, paneNumLines, paneDst);
+		if(panelDiffPrinter == null) {
+			panelDiffPrinter = new ThreePanelsDiffPrinter(stringSrc, stringDst, paneSrc, paneNumLines, paneDst);
+			paneSrc.setHighlighter(new LineHighLighter());
+			paneDst.setHighlighter(new LineHighLighter());
+		}
+		else {
+			paneSrc.setHighlighter(new LineHighLighter());
+			paneDst.setHighlighter(new LineHighLighter());
+			panelDiffPrinter.changeFiles(stringSrc, stringDst);
+		}
 		panelDiffPrinter.print_script(diff.diff_2(false));
 	}
 
+	
+	
+	/* (non-Javadoc)
+	 * @see java.awt.Component#addMouseWheelListener(java.awt.event.MouseWheelListener)
+	 */
+	@Override
+	public synchronized void addMouseWheelListener(MouseWheelListener l) {
+		super.addMouseWheelListener(l);
+		paneSrc.addMouseWheelListener(l);
+		paneDst.addMouseWheelListener(l);
+	}
 	
 }

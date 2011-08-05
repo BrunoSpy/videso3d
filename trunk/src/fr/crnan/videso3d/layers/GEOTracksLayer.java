@@ -30,6 +30,7 @@ import javax.swing.SwingWorker;
 import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
+import fr.crnan.videso3d.graphics.AltitudeFilterablePath;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.trajectography.PolygonsSetFilter;
 import gov.nasa.worldwind.WorldWind;
@@ -48,13 +49,13 @@ import gov.nasa.worldwind.util.Logging;
  * @author Bruno Spyckerelle
  * @version 0.4.3
  */
-public class GEOTracksLayer extends TrajectoriesLayer {
+public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFilterableLayer{
 	
 	private List<GEOTrack> tracks = new ArrayList<GEOTrack>();
 	
 	protected HashMap<Integer, String> filters = new HashMap<Integer, String>();
 	
-	protected HashMap<VidesoTrack, Path> lines = new HashMap<VidesoTrack, Path>();
+	protected HashMap<VidesoTrack, AltitudeFilterablePath> lines = new HashMap<VidesoTrack, AltitudeFilterablePath>();
 	
 	/**
 	 * Couleurs des tracks
@@ -126,7 +127,7 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 				}
 			}
 			if(positions.size()>1){ //only add a line if there's enough points
-				Path line = new Path();
+				AltitudeFilterablePath line = new AltitudeFilterablePath();
 				line.setOutlinePickWidth(20);
 				line.setAttributes(normal);
 				line.setHighlightAttributes(highlight);
@@ -678,6 +679,22 @@ public class GEOTracksLayer extends TrajectoriesLayer {
 		} else {
 			return 0;
 		}
+	}
+
+	@Override
+	public void setMaximumViewableAltitude(double altitude) {
+		for(AltitudeFilterablePath p : lines.values()){
+			p.setMaximumViewableAltitude(altitude);
+		}
+		this.update();
+	}
+
+	@Override
+	public void setMinimumViewableAltitude(double altitude) {
+		for(AltitudeFilterablePath p : lines.values()){
+			p.setMinimumViewableAltitude(altitude);
+		}
+		this.update();
 	}
 	
 }
