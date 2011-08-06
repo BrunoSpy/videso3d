@@ -428,12 +428,17 @@ public class MainWindow extends JFrame {
 				this.wwd.toggleLayer(layer, true);
 				//lecture et création des tracks à la volée
 				OPASReader reader = new OPASReader(opasFile, layer);
-				//changement du style en fonction de la conf
-				if(reader.getTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
-					layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
+				if(reader.getTracks().size() > 0){
+					//changement du style en fonction de la conf
+					if(reader.getTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
+						layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
+					}
+					layer.setName(reader.getName());
+					this.addTrajectoriesView(reader);
+				} else {
+					//aucune trajectoire trouvée dans les fichiers
+					opasFile.clear();
 				}
-				layer.setName(reader.getName());
-				this.addTrajectoriesView(reader);
 			} catch (PointNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -445,19 +450,29 @@ public class MainWindow extends JFrame {
 				this.wwd.toggleLayer(layer, true);
 				//lecture et création des tracks à la volée
 				GEOReader reader = new GEOReader(geoFile, layer);
-				//changement du style en fonction de la conf
-				if(reader.getTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
-					layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
+				if(reader.getTracks().size() > 0){
+					//changement du style en fonction de la conf
+					if(reader.getTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
+						layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
+					}
+					layer.setName(reader.getName());
+					this.addTrajectoriesView(reader);
+				} else {
+					//aucune trajectoire trouvée dans les fichiers
+					geoFile.clear();
 				}
-				layer.setName(reader.getName());
-				this.addTrajectoriesView(reader);
 			} catch (PointNotFoundException e) {
 				e.printStackTrace();
 			}
 		}
 		if(lplnFile.size()>0){
 			try {
-				this.addTrajectoriesView(new LPLNReader(lplnFile));
+				LPLNReader reader = new LPLNReader(lplnFile);
+				if(reader.getTracks().size() > 0){
+					this.addTrajectoriesView(new LPLNReader(lplnFile));
+				} else {
+					lplnFile.clear();
+				}
 			} catch (PointNotFoundException e) {
 				Logging.logger().warning("Point non trouvé : "+e.getName());
 				JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Impossible de trouver certains points du fichier.<br /><br />" +
@@ -473,6 +488,8 @@ public class MainWindow extends JFrame {
 					JOptionPane.showMessageDialog(null, msgErreur, "Erreur lors de la lecture du plan de vol", JOptionPane.ERROR_MESSAGE);
 				if(fplR.getTracks().size()>0)
 					this.addTrajectoriesView(fplR);
+				else 
+					fplFile.clear();
 			} catch (PointNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -487,7 +504,13 @@ public class MainWindow extends JFrame {
 	
 	public void addTrajectoriesView(final TrackFilesReader reader){
 		final TrajectoriesView content = new TrajectoriesView(wwd, reader, context);
-		DefaultSingleCDockable dockable = new DefaultSingleCDockable(reader.getName());
+		int i = 0;
+		if(control.getSingleDockable(reader.getName()) != null){
+			do{
+				i++;
+			} while (control.getSingleDockable(reader.getName()+"-"+i) == null);
+		}
+		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?reader.getName():reader.getName()+"-"+i);
 		dockable.setTitleText(reader.getName());
 
 		dockable.setLocation(locationDatas);
