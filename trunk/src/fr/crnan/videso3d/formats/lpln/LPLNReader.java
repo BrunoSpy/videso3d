@@ -98,27 +98,29 @@ public class LPLNReader extends TrackFilesReader{
 						track = new LPLNTrack(sentence.substring(40, 44).trim());
 						track.setIndicatif(sentence.substring(57, 65).trim());
 					}
-					if(sentence.startsWith("AERODROME  DEP.")){
-						track.setDepart(sentence.substring(18, 22));
-					} else if(sentence.startsWith("AERODROME DEST.")) {
-						track.setArrivee(sentence.substring(18,22));
-					} else if(sentence.startsWith("TYPE AVION   ")){
-						track.setType(sentence.substring(14, 22).trim());
-					} else {
-						if(!balisesFound){
-							if(sentence.startsWith(". BALISES")){
-								balisesFound = true;
-							}
+					if(track != null){
+						if(sentence.startsWith("AERODROME  DEP.")){
+							track.setDepart(sentence.substring(18, 22));
+						} else if(sentence.startsWith("AERODROME DEST.")) {
+							track.setArrivee(sentence.substring(18,22));
+						} else if(sentence.startsWith("TYPE AVION   ")){
+							track.setType(sentence.substring(14, 22).trim());
 						} else {
-							if(sentence.startsWith("----------")){
-								count++;
+							if(!balisesFound){
+								if(sentence.startsWith(". BALISES")){
+									balisesFound = true;
+								}
 							} else {
-								if(count < 2){ //à partir de count == 2, l'ensemble des balises est passé
-									try {
-										track.addPoint(new LPLNTrackPoint(sentence));
-									} catch (PointNotFoundException e) {
-										e.printStackTrace();
-										throw e;
+								if(sentence.startsWith("----------")){
+									count++;
+								} else {
+									if(count < 2){ //à partir de count == 2, l'ensemble des balises est passé
+										try {
+											track.addPoint(new LPLNTrackPoint(sentence));
+										} catch (PointNotFoundException e) {
+											e.printStackTrace();
+											throw e;
+										}
 									}
 								}
 							}
