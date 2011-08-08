@@ -335,6 +335,11 @@ public class SkyViewController implements VidesoController {
 	}
 
 	@Override
+	public String toString(){
+		return "SkyView";
+	}
+	
+	@Override
 	public Collection<Object> getObjects(int type) {
 		// TODO Auto-generated method stub
 		return null;

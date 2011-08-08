@@ -23,6 +23,7 @@ import java.awt.event.ItemListener;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -51,8 +52,9 @@ import gov.nasa.worldwind.geom.Position;
  */
 public class Omnibox {
 	
-	private Hashtable<DatabaseManager.Type, Couple<VidesoController, List<Couple<Integer, String>>>> bases = new Hashtable<DatabaseManager.Type, Couple<VidesoController,List<Couple<Integer, String>>>>();
+	private Hashtable<DatabaseManager.Type, List<ItemCouple>> bases = new Hashtable<DatabaseManager.Type, List<ItemCouple>>();
 		
+	private DatabaseManager.Type previouslySelectedBase;
 	private DatabaseManager.Type selectedBase;
 	
 	private HashMap<Type, JRadioButtonMenuItem> buttons = new HashMap<DatabaseManager.Type, JRadioButtonMenuItem>();
@@ -61,7 +63,6 @@ public class Omnibox {
 	private ButtonGroup engines;
 	private JComboBox searchBox;
 	
-	private ContextPanel context;
 	
 	/**
 	 * Creates an omnibox
@@ -69,8 +70,6 @@ public class Omnibox {
 	 * @param c 
 	 */
 	public Omnibox(final VidesoGLCanvas wwd, ContextPanel c){
-		this.context = c;
-
 		chooseButton = new DropDownLabel(new ImageIcon(getClass().getResource("/resources/zoom-original.png")));
 		engines = new ButtonGroup();
 		JRadioButtonMenuItem allEngine = new JRadioButtonMenuItem("Toutes les données", true);
@@ -79,6 +78,7 @@ public class Omnibox {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED){
+					previouslySelectedBase = selectedBase;
 					selectedBase = null;
 					update();
 				}
@@ -131,19 +131,23 @@ public class Omnibox {
 	 * @param controller Controller of the items
 	 * @param items
 	 */
-	public void addDatabase(final DatabaseManager.Type type, VidesoController controller, List<Couple<Integer, String>> items){
+	public void addDatabase(final DatabaseManager.Type type, List<ItemCouple> items){
 		if(items == null) {
-			if(bases.containsKey(type)) removeDatabase(type);
-		} else {
+			if(bases.containsKey(type))
+				removeFromSearchBox(type);
+			removeDatabase(type);
+		}else{
 			if(bases.containsKey(type)) {
+				removeFromSearchBox(type);
 				bases.remove(type);
 			} else {
 				JRadioButtonMenuItem newButton = new JRadioButtonMenuItem(type.toString());
 				newButton.addItemListener(new ItemListener() {
-					
+
 					@Override
 					public void itemStateChanged(ItemEvent e) {
 						if(e.getStateChange() == ItemEvent.SELECTED){
+							previouslySelectedBase = selectedBase;
 							selectedBase = type;
 							update();
 						}
@@ -153,10 +157,12 @@ public class Omnibox {
 				engines.add(newButton);
 				chooseButton.getPopupMenu().add(newButton);		
 			}
-			bases.put(type, new Couple<VidesoController, List<Couple<Integer, String>>>(controller, items));
+			bases.put(type, items);
+			for(ItemCouple item : bases.get(type)){
+				searchBox.addItem(item);
+			}
 		}
-		update();
-	}
+	}	
 	
 	/**
 	 * Removes all items of the specified database
@@ -169,27 +175,40 @@ public class Omnibox {
 			engines.remove(buttons.get(type));
 			chooseButton.getPopupMenu().remove(buttons.get(type));
 		}
-		update();
+	}
+	
+	/**
+	 * Removes all items of the specified type from the searchbox
+	 * @param type 
+	 */
+	public void removeFromSearchBox(DatabaseManager.Type type){
+		for(ItemCouple item : bases.get(type)){
+			searchBox.removeItem(item);
+		}
 	}
 	
 	/**
 	 * Updates the combobox
 	 */
-	private void update(){
-		searchBox.removeAllItems();
-//		searchBox.addItem("");
+	public void update(){
 		if(selectedBase == null){
-			for(Couple<VidesoController, List<Couple<Integer, String>>> items : bases.values()){
-				for(Couple<Integer, String> item : items.getSecond()){
-					searchBox.addItem(new ItemCouple(items.getFirst(), item));
+			Iterator<Type> it = bases.keySet().iterator();
+			while(it.hasNext()){
+				Type type = it.next();
+				if(type!=previouslySelectedBase){
+					for(ItemCouple item : bases.get(type)){
+						searchBox.addItem(item);
+					}
 				}
 			}
 		} else {
-			for(Couple<Integer, String> item : bases.get(selectedBase).getSecond()){
-				searchBox.addItem(new ItemCouple(bases.get(selectedBase).getFirst(), item));
+			searchBox.removeAllItems();
+			for(ItemCouple item : bases.get(selectedBase)){
+				searchBox.addItem(item);
 			}
 		}
 	}
+	
 	
 	public void addActionListener(ActionListener listener){
 		searchBox.addActionListener(listener);
@@ -197,12 +216,10 @@ public class Omnibox {
 	
 	
 	private class ItemCoupleComparator implements Comparator<ItemCouple> {
-
 		@Override
 		public int compare(ItemCouple arg0, ItemCouple arg1) {
 			return arg0.getSecond().getSecond().compareTo(arg1.getSecond().getSecond());
 		}
-		
 	}
 	
 	/**
@@ -210,19 +227,18 @@ public class Omnibox {
 	 * @author Bruno Spyckerelle
 	 * @version 0.1
 	 */
-	private class ItemCouple extends Couple<VidesoController, Couple<Integer, String>>{
-
+	public static class ItemCouple extends Couple<VidesoController, Couple<Integer, String>>{
+		
 		public ItemCouple(VidesoController first, Couple<Integer, String> item) {
 			super(first, item);
 		}
 
-		/* (non-Javadoc)
-		 * @see java.lang.Object#toString()
-		 */
 		@Override
 		public String toString() {
 			return getSecond().getSecond().toString()+" ("+getFirst().toString()+" "+getFirst().type2string(getSecond().getFirst())+")";
 		}
+		
+	
 		
 	}
 	

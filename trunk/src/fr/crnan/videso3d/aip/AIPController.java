@@ -1034,6 +1034,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		return AIP.type2String(type);
 	}
 	
+	@Override
 	public String toString(){
 		return "AIP";
 	}

@@ -269,7 +269,7 @@ public class MainWindow extends JFrame {
 		omniBox = new Omnibox(wwd, context);
 		for(Type t : DatabaseManager.getSelectedDatabases()){
 			try {
-				omniBox.addDatabase(t, DatasManager.getController(t), DatabaseManager.getAllVisibleObjects(t));
+				omniBox.addDatabase(t, DatabaseManager.getAllVisibleObjects(t, omniBox));
 				context.addTaskPane(DatasManager.getContext(t), t);
 				AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(t), t);
 			} catch (SQLException e) {
@@ -337,7 +337,7 @@ public class MainWindow extends JFrame {
 								updateDockables(type, empty);
 								context.addTaskPane(DatasManager.getContext(type), type);
 								AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(type), type);
-								omniBox.addDatabase(type, DatasManager.getView(type).getController(), DatabaseManager.getAllVisibleObjects(type));
+								omniBox.addDatabase(type, DatabaseManager.getAllVisibleObjects(type, omniBox));
 							}
 						} catch (SQLException e) {
 							e.printStackTrace();
