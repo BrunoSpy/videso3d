@@ -15,21 +15,21 @@ import gov.nasa.worldwind.render.airspaces.*;
 public class PolygonSerializer {
 	
 	public void Serialize(ArrayList<Airspace> airspaces,String file)  {
-	//public void Serialize(ArrayList<RadioCovPolygon> airspaces,String file)  {
+		//public void Serialize(ArrayList<RadioCovPolygon> airspaces,String file)  {
 
-try {
-	XStream xstream = new XStream(new DomDriver());	
-	
-	FileOutputStream fos = new FileOutputStream(file);
-	try  {xstream.toXML(airspaces, fos);}
-	finally {
-		fos.close();
+		try {
+			XStream xstream = new XStream(new DomDriver());	
+
+			FileOutputStream fos = new FileOutputStream(file);
+			try  {xstream.toXML(airspaces, fos);}
+			finally {
+				fos.close();
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}				        		            
+
+		System.out.println("Sérialisation terminée");
 	}
-}
-catch(Exception e) {
-	e.printStackTrace();
-}				        		            
-
-System.out.println("Sérialisation terminée");
-}
 }

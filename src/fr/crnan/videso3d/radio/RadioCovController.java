@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.swing.SwingWorker;
+
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.VidesoController;
@@ -47,28 +49,35 @@ public class RadioCovController implements VidesoController {
 	
 	public static final int ANTENNE = 0; 
 	
-	public RadioCovController(VidesoGLCanvas wwd){
+	public RadioCovController(final VidesoGLCanvas wwd){
 		this.wwd = wwd;
 		
 		//Layer des radio couv
 		radioCovLayer = new RadioCovLayer("Radio Coverage",this.wwd);
 
-		try {
-			if(DatabaseManager.getCurrentRadioCov() != null) {
-				ArrayList<String> radioCovPathTab = new ArrayList<String>();
-				radioCovPathTab = DatabaseManager.getCurrentRadioCovPath();
-				for (int i=0;i<radioCovPathTab.size();i++) {
-					this.wwd.firePropertyChange("step", "", "Création des données radio");
-					RadioDataManager radioDataManager = new RadioDataManager(radioCovPathTab.get(i));							
-					this.insertAllRadioCovLayers(radioDataManager.loadData());		
-					for (int j=0;j<radioCovPathTab.size();j++) {
+		
+		new SwingWorker<Void, Void>(){
+			@Override
+			protected Void doInBackground(){
+				try {
+					if(DatabaseManager.getCurrentRadioCov() != null) {
+						ArrayList<String> radioCovPathTab = new ArrayList<String>();
+						radioCovPathTab = DatabaseManager.getCurrentRadioCovPath();
+						for (int i=0;i<radioCovPathTab.size();i++) {
+							wwd.firePropertyChange("step", "", "Création des données radio");
+							RadioDataManager radioDataManager = new RadioDataManager(radioCovPathTab.get(i));							
+							insertAllRadioCovLayers(radioDataManager.loadData());		
+							for (int j=0;j<radioCovPathTab.size();j++) {
+							}
+						}	
 					}
-					
-				}	
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				return null;
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		}.execute();
+
 
 	}
 
