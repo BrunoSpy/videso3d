@@ -340,4 +340,24 @@ public class RadioCovPolygon extends AbstractAirspace implements VidesoObject{
 			// TODO Auto-generated method stub
 			return null;
 		}
+		@Override
+		public boolean isHighlighted() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+		@Override
+		public void setHighlighted(boolean highlighted) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public Object getNormalAttributes() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		@Override
+		public Object getHighlightAttributes() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 }

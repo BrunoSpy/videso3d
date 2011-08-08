@@ -82,6 +82,10 @@ public class Route2D extends DirectedPath implements Route{
 		this.setArrowLength(40000);
 		this.setFollowTerrain(true);
 		this.setAttributes(new BasicShapeAttributes());
+		BasicShapeAttributes attrs = (BasicShapeAttributes) this.getAttributes();
+		attrs.setOutlineMaterial(Material.WHITE);
+		attrs.setOutlineWidth(2.0);
+		this.setHighlightAttributes(attrs);
 	}
 	
 	public Route2D(String name, DatabaseManager.Type base, int type) {
@@ -208,19 +212,6 @@ public class Route2D extends DirectedPath implements Route{
 	@Override
 	public int getType() {
 		return this.type;
-	}
-	
-	@Override
-	public void highlight(boolean highlight) {
-		if(highlight){
-			BasicShapeAttributes attrs = (BasicShapeAttributes) this.getAttributes();
-			attrs.setOutlineMaterial(Material.WHITE);
-			attrs.setOutlineWidth(2.0);
-			this.setAttributes(attrs);
-			
-		} else {
-			this.setColor(this.getName());
-		}
 	}
 	
 	public void setBalises(List<String> balises){
@@ -464,6 +455,10 @@ public class Route2D extends DirectedPath implements Route{
             buffer.put((float) (midPoint.z - referencePoint.z));
         }
 		
+	}
+	@Override
+	public Object getNormalAttributes() {
+		return this.getAttributes();
 	}
 	
 	

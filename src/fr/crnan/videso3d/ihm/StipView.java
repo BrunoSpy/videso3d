@@ -40,7 +40,7 @@ import fr.crnan.videso3d.stip.StipController;
  * @version 0.6.1
  */
 @SuppressWarnings("serial")
-public class StipView extends FilteredMultiTreeTableView{
+public class StipView extends FilteredMultiTreeTableView {
 
 	private HashMap<String, DefaultMutableTreeNode> secteurs = new HashMap<String, DefaultMutableTreeNode>();
 	private HashMap<String, DefaultMutableTreeNode> routes = new HashMap<String, DefaultMutableTreeNode>();

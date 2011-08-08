@@ -66,7 +66,9 @@ import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.avlist.AVList;
 import gov.nasa.worldwind.avlist.AVListImpl;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
+import gov.nasa.worldwindx.examples.util.HighlightController;
 import gov.nasa.worldwindx.examples.util.LayerManagerLayer;
+import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.exception.WWRuntimeException;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Intersection;
@@ -152,6 +154,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		//dragger
 		this.dragger = new DraggerListener(this);
 		this.addSelectListener(dragger);
+		
+		//highlight controller
+		this.addSelectListener(new HighlightController(SelectEvent.ROLLOVER));
 		
 		//mise à jour des calques de WorldWindInstalled
 		firePropertyChange("step", "", "Ajout des layers installés");

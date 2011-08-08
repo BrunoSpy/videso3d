@@ -107,6 +107,12 @@ public class Radar extends SurfaceCircle implements VidesoObject {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+
+	@Override
+	public Object getNormalAttributes() {
+		return this.getAttributes();
+	}
 }
 
 

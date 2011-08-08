@@ -16,7 +16,6 @@
 
 package fr.crnan.videso3d.graphics;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -32,6 +31,7 @@ import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.UserFacingText;
 import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
 import gov.nasa.worldwind.render.markers.Marker;
+import gov.nasa.worldwind.render.markers.MarkerAttributes;
 
 /**
  * Balise 2D projetée sur le terrain.<br />
@@ -54,8 +54,13 @@ public class Balise2D extends MarkerAnnotation implements Balise{
 		this.setDatabaseType(base);
 		this.setType(type);
 		this.setName((String) name);
-		this.getAttributes().setMarkerPixels(3);
-		this.getAttributes().setMaterial(new Material(Pallet.getColorBaliseMarker()));
+		
+		MarkerAttributes normalAttrs = new BasicMarkerAttributes();
+		
+		normalAttrs.setMarkerPixels(3);
+		normalAttrs.setMaterial(new Material(Pallet.getColorBaliseMarker()));
+		
+		this.setNormalAttributes(normalAttrs);
 		
 		if(annotation == null){
 			this.setAnnotation("Balise "+name);
@@ -95,20 +100,6 @@ public class Balise2D extends MarkerAnnotation implements Balise{
 	
 	public Marker getMarker(){
 		return this;
-	}
-	
-	/**
-	 * Met en valeur la balise
-	 * @param bool
-	 */
-	public void highlight(boolean bool){
-		if(bool) {
-			this.getAttributes().setMaterial(Material.YELLOW);
-			this.text.setColor(Color.YELLOW);
-		} else {
-			this.getAttributes().setMaterial(Material.WHITE);
-			this.text.setColor(Color.WHITE);
-		}
 	}
 	
 }

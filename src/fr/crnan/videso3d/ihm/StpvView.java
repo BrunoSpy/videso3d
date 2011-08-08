@@ -77,7 +77,6 @@ public class StpvView extends JPanel implements DataView{
 	
 	private JPanel buildPanel(JPanel panel, String query){
 		panel.setLayout(new GridLayout(0, 3));
-		//int i = 0;
 		try {
 			Statement st = DatabaseManager.getCurrentStpv();
 			ResultSet rs = st.executeQuery(query);
@@ -86,7 +85,6 @@ public class StpvView extends JPanel implements DataView{
 				chk.addItemListener(itemCheckListener);
 				chkList.add(chk);
 				panel.add(chk);	
-				//i++;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -160,6 +158,7 @@ public class StpvView extends JPanel implements DataView{
 	public void showObject(int type, String name) {
 		JCheckBox c = getCheckBox(type, name);
 		if(c!=null)
+			//pas de risque de boucle infinie avec le controller car cette méthode ne déclenche pas d'event
 			c.setSelected(true);	
 	}
 
@@ -167,6 +166,7 @@ public class StpvView extends JPanel implements DataView{
 	public void hideObject(int type, String name) {
 		JCheckBox c = getCheckBox(type, name);
 		if(c!=null)
+			//pas de risque de boucle infinie avec le controller car cette méthode ne déclenche pas d'event
 			c.setSelected(false);
 	}
 

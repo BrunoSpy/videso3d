@@ -61,7 +61,19 @@ public class PolygonEdimap extends SurfacePolygon implements VidesoObject {
 			this.addPoint(iterator.next());
 		}
 		this.setLocations(polyligne);
-				
+			
+//		System.out.println(this.name);
+//		for(LatLon l : polyligne){
+//			String ligne = String.format("%.0f",l.getLatitude().toDMS()[0])+"°";
+//			ligne += String.format("%.0f",l.getLatitude().toDMS()[1])+"\'";
+//			ligne += String.format("%.0f",l.getLatitude().toDMS()[2])+"\"";
+//			ligne += " ";
+//			ligne += String.format("%.0f",l.getLongitude().toDMS()[0])+"°";
+//			ligne += String.format("%.0f",l.getLongitude().toDMS()[1])+"\'";
+//			ligne += String.format("%.0f",l.getLongitude().toDMS()[2])+"\"";
+//			System.out.println(ligne);
+//		}
+		
 		//on applique l'id atc
 		String idAtcName = polyline.getValue("id_atc");
 		if(idAtcName != null) this.applyIdAtc(idAtc.get(idAtcName), palette);
@@ -143,5 +155,10 @@ public class PolygonEdimap extends SurfacePolygon implements VidesoObject {
 	@Override
 	public void setName(String name) {
 		this.nomCarte = name;
+	}
+
+	@Override
+	public Object getNormalAttributes() {
+		return this.getAttributes();
 	}
 }

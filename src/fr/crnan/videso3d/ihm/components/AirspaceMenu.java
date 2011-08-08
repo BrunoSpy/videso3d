@@ -32,6 +32,7 @@ import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
+import fr.crnan.videso3d.ihm.AirspaceAttributesDialog;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.StipController;
@@ -90,33 +91,47 @@ public class AirspaceMenu extends JPopupMenu {
 			});
 			this.add(info);
 			this.add(new JSeparator());
-		}
 		
-		
-		JMenuItem colorItem = new JMenuItem("Couleur...");
-		colorItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Color color = JColorChooser.showDialog(getMenu(), "Couleur", attrs.getMaterial().getDiffuse());
-				if(color != null) {
-					attrs.setMaterial(new Material(color));
-					attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+			JMenuItem colorItem = new JMenuItem("Couleur...");
+			colorItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					new AirspaceAttributesDialog((AirspaceAttributes)(((VidesoObject) airspace).getNormalAttributes()),
+								(AirspaceAttributes)(((VidesoObject) airspace).getHighlightAttributes())).setVisible(true);
+					wwd.redraw();
 				}
-			}
-		});
-		this.add(colorItem);
-		
-		OpacityMenuItem opacityItem = new OpacityMenuItem();
-		opacityItem.setValue((int)(attrs.getOpacity()*100.0));
-		opacityItem.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				JSlider source = (JSlider)e.getSource();
-				attrs.setOpacity(source.getValue()/100.0);
-				wwd.redraw();
-			}
-		});
-		this.add(opacityItem);
+			});
+			this.add(colorItem);
+			
+		} else {
+
+
+			JMenuItem colorItem = new JMenuItem("Couleur...");
+			colorItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Color color = JColorChooser.showDialog(getMenu(), "Couleur", attrs.getMaterial().getDiffuse());
+					if(color != null) {
+						attrs.setMaterial(new Material(color));
+						attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+					}
+				}
+			});
+			this.add(colorItem);
+
+			OpacityMenuItem opacityItem = new OpacityMenuItem();
+			opacityItem.setValue((int)(attrs.getOpacity()*100.0));
+			opacityItem.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					JSlider source = (JSlider)e.getSource();
+					attrs.setOpacity(source.getValue()/100.0);
+					wwd.redraw();
+				}
+			});
+			this.add(opacityItem);
+
+		}
 		this.add(new JSeparator());
 		
 		if(airspace instanceof Polygon){

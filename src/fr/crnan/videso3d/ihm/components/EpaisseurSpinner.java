@@ -13,12 +13,28 @@
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
  */
+package fr.crnan.videso3d.ihm.components;
 
-package fr.crnan.videso3d.graphics;
-/**
- * @author Bruno Spyckerelle
- * @version 1.0
- */
-public interface Balise extends VidesoObject {
+import fr.crnan.videso3d.SimpleGLCanvas;
+import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 
+import javax.swing.JSpinner;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+public class EpaisseurSpinner extends JSpinner {
+
+	public EpaisseurSpinner(final SimpleGLCanvas wwd, final AirspaceAttributes attrs){
+		super();
+		this.setValue(attrs.getOutlineWidth());
+		this.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				attrs.setOutlineWidth((Integer)getValue());
+				wwd.redraw();
+			}
+		});
+	}
+	
 }

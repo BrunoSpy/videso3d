@@ -149,5 +149,10 @@ public class RectangleEdimap extends SurfaceQuad implements VidesoObject{
 	@Override
 	public void setName(String name) {
 		this.nomCarte = name;
+	}
+
+	@Override
+	public Object getNormalAttributes() {
+		return this.getAttributes();
 	}	
 }

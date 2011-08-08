@@ -95,4 +95,9 @@ public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoOb
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	@Override
+	public Object getNormalAttributes() {
+		return this.getAttributes();
+	}
 }

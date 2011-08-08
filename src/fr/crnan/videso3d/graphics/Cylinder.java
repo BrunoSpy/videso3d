@@ -20,12 +20,12 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.Annotation;
+import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.CappedCylinder;
 /**
  * Cylindre 3D
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class Cylinder extends CappedCylinder implements VidesoObject {
 
@@ -36,6 +36,10 @@ public class Cylinder extends CappedCylinder implements VidesoObject {
 	private Type database;
 	
 	private int type;
+	
+	private boolean highlighted = false;
+	private AirspaceAttributes highlightAttrs;
+	private AirspaceAttributes normalAttrs;
 	
 	/**
 	 * 
@@ -100,4 +104,39 @@ public class Cylinder extends CappedCylinder implements VidesoObject {
 		this.name = name;
 	}
 
+	@Override
+	public boolean isHighlighted() {
+		return this.highlighted;
+	}
+
+	@Override
+	public void setHighlighted(boolean highlighted) {
+		if(this.highlighted != highlighted){
+			this.setAttributes(highlighted ? this.getHighlightAttributes() : this.getNormalAttributes());
+			this.highlighted = highlighted;
+		}
+	}
+	
+    public AirspaceAttributes getNormalAttributes() {
+        return this.normalAttrs;
+    }
+
+    public void setNormalAttributes(AirspaceAttributes normalAttrs) {
+        this.normalAttrs = normalAttrs;
+        if(!highlighted) this.setAttributes(this.normalAttrs);
+    }
+    
+    public AirspaceAttributes getHighlightAttributes() {
+        return highlightAttrs == null ? this.normalAttrs : this.highlightAttrs;
+    }
+
+    /**
+     * Specifies highlight attributes.
+     *
+     * @param highlightAttrs highlight attributes. May be null, in which case default attributes are used.
+     */
+    public void setHighlightAttributes(AirspaceAttributes highlightAttrs) {
+        this.highlightAttrs = highlightAttrs;
+        if(highlighted) this.setAttributes(this.highlightAttrs);
+    }
 }

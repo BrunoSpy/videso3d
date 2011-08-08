@@ -17,6 +17,7 @@ package fr.crnan.videso3d.graphics;
 
 import fr.crnan.videso3d.DatabaseManager;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.Highlightable;
 /**
  * Un objet graphique pour Videso comprend 5 éléments :
  * <ul><li>l'objet en lui-même (renderable, airspace, ...)</li>
@@ -25,9 +26,9 @@ import gov.nasa.worldwind.geom.Position;
  * <li>le type de données qu'il représente (géré par le controleur)</li>
  * <li>un nom</li></ul>
  * @author Bruno Spyckerelle
- * @version 2.0.1
+ * @version 2.1.0
  */
-public interface VidesoObject{
+public interface VidesoObject extends Highlightable{
 	
 	/**
 	 * Enregistre le texte de l'annotation
@@ -69,5 +70,8 @@ public interface VidesoObject{
 	public String getName();
 	
 	public void setName(String name);
+	
+	public Object getNormalAttributes();
+	public Object getHighlightAttributes();
 	
 }

@@ -26,6 +26,8 @@ import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
+import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.Box;
 import gov.nasa.worldwind.render.airspaces.TrackAirspace;
 import gov.nasa.worldwind.util.Logging;
@@ -33,7 +35,7 @@ import gov.nasa.worldwind.util.RestorableSupport;
 /**
  * Représentation 3D d'une route sous la forme d'un ruban
  * @author Bruno Spyckerelle
- * @version 0.2.3
+ * @version 0.2.4
  */
 public class Route3D extends TrackAirspace implements VidesoObject, Route {
 
@@ -50,10 +52,15 @@ public class Route3D extends TrackAirspace implements VidesoObject, Route {
 	
 	private DatabaseManager.Type base;
 	
+	private boolean highlighted = false;
+	private AirspaceAttributes highlightAttrs;
+	private AirspaceAttributes normalAttrs;
+	
 	/**
 	 * Nom de la route
 	 */
 	private String name;
+	
 
 	public Route3D(){
 		super();
@@ -251,24 +258,20 @@ public class Route3D extends TrackAirspace implements VidesoObject, Route {
 	private void setDefaultMaterial() {
 		Color color = Color.CYAN;
 		Color outline = Pallet.makeBrighter(color);
-
-		this.getAttributes().setDrawOutline(true);
-		this.getAttributes().setMaterial(new Material(color));
-		this.getAttributes().setOutlineMaterial(new Material(outline));
-		this.getAttributes().setOpacity(0.8);
-		this.getAttributes().setOutlineOpacity(0.9);
-		this.getAttributes().setOutlineWidth(1.0);
-	}
-
-	@Override
-	public void highlight(boolean highlight) {
-		if(highlight){
-			this.getAttributes().setMaterial(Material.YELLOW);
-			this.getAttributes().setOutlineMaterial(Material.YELLOW);
-			this.getAttributes().setOutlineWidth(2.0);
-		} else {
-			this.setDefaultMaterial();
-		}
+		
+		this.normalAttrs = new BasicAirspaceAttributes();
+		this.normalAttrs.setDrawOutline(true);
+		this.normalAttrs.setMaterial(new Material(color));
+		this.normalAttrs.setOutlineMaterial(new Material(outline));
+		this.normalAttrs.setOpacity(0.8);
+		this.normalAttrs.setOutlineOpacity(0.9);
+		this.normalAttrs.setOutlineWidth(1.0);
+		
+		this.setNormalAttributes(this.normalAttrs);
+		
+		AirspaceAttributes attrs = new BasicAirspaceAttributes(this.normalAttrs);
+		attrs.setMaterial(new Material(outline));
+		this.setHighlightAttributes(attrs);
 	}
 	
 	public void setName(String name){
@@ -398,5 +401,40 @@ public class Route3D extends TrackAirspace implements VidesoObject, Route {
 			this.setLocations(locs);
 	}
 
+	@Override
+	public boolean isHighlighted() {
+		return this.highlighted;
+	}
 
+	@Override
+	public void setHighlighted(boolean highlighted) {
+		if(this.highlighted != highlighted){
+			this.setAttributes(highlighted ? this.getHighlightAttributes() : this.getNormalAttributes());
+			this.highlighted = highlighted;
+		}
+	}
+	
+    public AirspaceAttributes getNormalAttributes() {
+        return this.normalAttrs == null ? this.getAttributes() : this.normalAttrs;
+    }
+
+    public void setNormalAttributes(AirspaceAttributes normalAttrs) {
+        this.normalAttrs = normalAttrs;
+        if(!highlighted) this.setAttributes(this.normalAttrs);
+    }
+    
+    public AirspaceAttributes getHighlightAttributes() {
+        return highlightAttrs == null ? this.normalAttrs : this.highlightAttrs;
+    }
+
+    /**
+     * Specifies highlight attributes.
+     *
+     * @param highlightAttrs highlight attributes. May be null, in which case default attributes are used.
+     */
+    public void setHighlightAttributes(AirspaceAttributes highlightAttrs) {
+        this.highlightAttrs = highlightAttrs;
+        if(highlighted) this.setAttributes(this.highlightAttrs);
+    }
+	
 }

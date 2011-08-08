@@ -214,6 +214,27 @@ public class PisteAerodrome implements Aerodrome{
 		inner.setVisible(visible);
 		text.setVisible(visible);
 	}
+
+	@Override
+	public Object getNormalAttributes() {
+		return null;
+	}
+
+	@Override
+	public Object getHighlightAttributes() {
+		return null;
+	}
+
+	@Override
+	public boolean isHighlighted() {
+		return false;
+	}
+
+	@Override
+	public void setHighlighted(boolean highlighted) {
+		this.inner.setHighlighted(highlighted);
+		this.outer.setHighlighted(highlighted);
+	}
 	
 	
 

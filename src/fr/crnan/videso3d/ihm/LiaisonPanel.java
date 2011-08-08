@@ -25,6 +25,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -33,9 +34,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.stpv.StpvController;
 /**
  * Panel de résultats des liaisons privilégiées
  * @author Adrien Vidal
@@ -57,8 +58,11 @@ public class LiaisonPanel extends ResultPanel implements ActionListener{
 		titleTab += " "+searchNum;
 		if(DatasManager.getController(Type.STPV) == null)
 			return;
-		//TODO changer cet appel pour ne plus avoir besoin du contrôleur
-		f = new File(((StpvController)DatasManager.getController(Type.STPV)).getCurrentName()+"_files","CODE");
+		try {
+			f = new File(DatabaseManager.getCurrentName(Type.STPV)+"_files","CODE");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		this.tabPane = tabPane;
 		this.searchNum = Integer.parseInt(searchNum);
 		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));

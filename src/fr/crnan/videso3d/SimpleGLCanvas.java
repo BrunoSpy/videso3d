@@ -22,6 +22,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
+import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.layers.ScalebarLayerNM;
 import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
@@ -33,9 +34,7 @@ import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.CompassLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.WorldMapLayer;
-import gov.nasa.worldwind.render.airspaces.AbstractAirspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
-import gov.nasa.worldwind.render.airspaces.Polygon;
 import gov.nasa.worldwindx.examples.util.HighlightController;
 /**
  * A very simple GLCanvas to displays one object at a time. <br/>
@@ -45,14 +44,14 @@ import gov.nasa.worldwindx.examples.util.HighlightController;
  */
 public class SimpleGLCanvas extends WorldWindowGLCanvas {
 
-	private AbstractAirspace polygon;
+	private VPolygon polygon;
 
 	public SimpleGLCanvas(){
 		super();
 		this.setModel(new BasicModel());
 				
 		//disable selection
-		this.addSelectListener(new HighlightController(this, SelectEvent.ROLLOVER));
+		this.addSelectListener(new HighlightController(SelectEvent.ROLLOVER));
 		
 		//lock axis
 		this.getInputHandler().addMouseListener(new MouseListener() {
@@ -119,14 +118,15 @@ public class SimpleGLCanvas extends WorldWindowGLCanvas {
 		this.getView().setHeading(Angle.fromDegrees(36.3));
 	}
 	
-	public void addSamplePolygon(AirspaceAttributes attrs){
+	public void addSamplePolygon(AirspaceAttributes attrs, AirspaceAttributes attrsHighlight){
 		ArrayList<LatLon> positions = new ArrayList<LatLon>();
 		positions.add(Position.fromDegrees(46.4627, 1.2399));
 		positions.add(Position.fromDegrees(46.4650, 5.3068));
 		positions.add(Position.fromDegrees(49.2736, 5.4163));
 		positions.add(Position.fromDegrees(49.2712, 1.1234));
-		polygon = new Polygon(positions);
-		polygon.setAttributes(attrs);
+		polygon = new VPolygon(positions);
+		polygon.setNormalAttributes(attrs);
+		polygon.setHighlightAttributes(attrsHighlight);
 		polygon.setAltitudes(0, 250e3);
 		AirspaceLayer layer = new AirspaceLayer();
 		layer.addAirspace(polygon);

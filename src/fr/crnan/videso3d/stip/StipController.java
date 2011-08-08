@@ -388,7 +388,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 					Secteur secteur = new Secteur(name, rs.getInt("numero"), DatabaseManager.getCurrentStip());
 					secteur.setConnectionPays(DatabaseManager.getCurrent(DatabaseManager.Type.PAYS));
 					secteur3D.setLocations(secteur.getContour(rs.getInt("flsup")));
-					secteur3D.setAttributes(attrs);
+					secteur3D.setNormalAttributes(attrs);
 					secteur3D.setVisible(false);
 					this.addToSecteursLayer(secteur3D);
 					secteurs.put(name+i.toString(), secteur3D);
@@ -675,7 +675,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 			this.createBalise(text);
 			Balise2D balise = (Balise2D) balises2D.get(text);
 			Balise3D balise3d = (Balise3D) balises3D.get(text);
-			balise.highlight(true);
+			balise.setHighlighted(true);
 			this.unHighlightPrevious(balise);
 			this.unHighlightPrevious(balise3d);
 			highlight = balise;
@@ -705,7 +705,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 				this.setAttributesToSecteur((String) highlight, (AirspaceAttributes) lastAttrs);
 				highlight = null;
 			} else if(highlight instanceof fr.crnan.videso3d.graphics.Balise){
-				((fr.crnan.videso3d.graphics.Balise)highlight).highlight(false);
+				((fr.crnan.videso3d.graphics.Balise)highlight).setHighlighted(false);
 				highlight = null;
 			}
 		}
