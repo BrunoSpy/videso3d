@@ -26,7 +26,7 @@ import gov.nasa.worldwind.render.markers.MarkerAttributes;
 /**
  * {@link BasicMarker} avec {@link VidesoAnnotation} intégré
  * @author  Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public class MarkerAnnotation extends BasicMarker implements VidesoObject {
 
@@ -37,6 +37,12 @@ public class MarkerAnnotation extends BasicMarker implements VidesoObject {
 	private int type;
 	
 	private String name;
+
+	private boolean highlighted = false;
+
+	private MarkerAttributes normalAttrs;
+
+	private MarkerAttributes highlightAttrs;
 	
 	public MarkerAnnotation(Position position, MarkerAttributes attrs) {
 		super(position, attrs);
@@ -93,4 +99,40 @@ public class MarkerAnnotation extends BasicMarker implements VidesoObject {
 		this.name = name;
 	}
 	
+	@Override
+	public boolean isHighlighted() {
+		return this.highlighted ;
+	}
+
+	@Override
+	public void setHighlighted(boolean highlighted) {
+		if(this.highlighted != highlighted){
+			this.setAttributes(highlighted ? this.getHighlightAttributes() : this.getNormalAttributes());
+			this.highlighted = highlighted;
+		}
+	}
+	
+    public MarkerAttributes getNormalAttributes() {
+        return this.normalAttrs;
+    }
+
+    public void setNormalAttributes(MarkerAttributes normalAttrs) {
+        this.normalAttrs = normalAttrs;
+        if(!highlighted) this.setAttributes(this.normalAttrs);
+    }
+    
+    public MarkerAttributes getHighlightAttributes() {
+        return highlightAttrs == null ? this.normalAttrs : this.highlightAttrs;
+    }
+
+    /**
+     * Specifies highlight attributes.
+     *
+     * @param highlightAttrs highlight attributes. May be null, in which case default attributes are used.
+     */
+    public void setHighlightAttributes(MarkerAttributes highlightAttrs) {
+        this.highlightAttrs = highlightAttrs;
+        if(highlighted) this.setAttributes(this.highlightAttrs);
+    }
+
 }

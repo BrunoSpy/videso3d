@@ -54,6 +54,12 @@ public class SimpleStack3D implements Airspace, VidesoObject {
 	
 	private VidesoAnnotation annotation;
 
+	private boolean highlighted = false;
+
+	private AirspaceAttributes normalAttrs ;
+
+	private AirspaceAttributes highlightAttrs;
+
 	/**
 	 * @param name Nom du stack
 	 * @param center Centre du cylindre
@@ -358,6 +364,42 @@ public class SimpleStack3D implements Airspace, VidesoObject {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	@Override
+	public boolean isHighlighted() {
+		return this.highlighted ;
+	}
+
+	@Override
+	public void setHighlighted(boolean highlighted) {
+		if(this.highlighted != highlighted){
+			this.setAttributes(highlighted ? this.getHighlightAttributes() : this.getNormalAttributes());
+			this.highlighted = highlighted;
+		}
+	}
+	
+    public AirspaceAttributes getNormalAttributes() {
+        return this.normalAttrs == null ? this.getAttributes() : this.normalAttrs;
+    }
+
+    public void setNormalAttributes(AirspaceAttributes normalAttrs) {
+        this.normalAttrs = normalAttrs;
+        if(!highlighted) this.setAttributes(this.normalAttrs);
+    }
+    
+    public AirspaceAttributes getHighlightAttributes() {
+        return highlightAttrs == null ? this.normalAttrs : this.highlightAttrs;
+    }
+
+    /**
+     * Specifies highlight attributes.
+     *
+     * @param highlightAttrs highlight attributes. May be null, in which case default attributes are used.
+     */
+    public void setHighlightAttributes(AirspaceAttributes highlightAttrs) {
+        this.highlightAttrs = highlightAttrs;
+        if(highlighted) this.setAttributes(this.highlightAttrs);
+    }
 
 
 	

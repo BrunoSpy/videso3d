@@ -29,6 +29,7 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Airspace;
+import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.Polygon;
 
@@ -51,6 +52,12 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 		private int type;
 		
 		private String name;
+
+		private boolean highlighted;
+
+		private AirspaceAttributes normalAttrs;
+
+		private AirspaceAttributes highlightAttrs;
 		
 		public Volume(int type, double plancher, double plafond){
 			super();
@@ -106,6 +113,41 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 			this.name = name;
 		}
 		
+		@Override
+		public boolean isHighlighted() {
+			return this.highlighted;
+		}
+
+		@Override
+		public void setHighlighted(boolean highlighted) {
+			if(this.highlighted != highlighted){
+				this.setAttributes(highlighted ? this.getHighlightAttributes() : this.getNormalAttributes());
+				this.highlighted = highlighted;
+			}
+		}
+		
+	    public AirspaceAttributes getNormalAttributes() {
+	        return this.normalAttrs;
+	    }
+
+	    public void setNormalAttributes(AirspaceAttributes normalAttrs) {
+	        this.normalAttrs = normalAttrs;
+	        if(!highlighted) this.setAttributes(this.normalAttrs);
+	    }
+	    
+	    public AirspaceAttributes getHighlightAttributes() {
+	        return highlightAttrs == null ? this.normalAttrs : this.highlightAttrs;
+	    }
+
+	    /**
+	     * Specifies highlight attributes.
+	     *
+	     * @param highlightAttrs highlight attributes. May be null, in which case default attributes are used.
+	     */
+	    public void setHighlightAttributes(AirspaceAttributes highlightAttrs) {
+	        this.highlightAttrs = highlightAttrs;
+	        if(highlighted) this.setAttributes(this.highlightAttrs);
+	    }
 	}
 	
 	
@@ -172,5 +214,6 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 			}
 		}
 	}
+	
 	
 }

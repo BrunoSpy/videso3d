@@ -16,13 +16,14 @@
 package fr.crnan.videso3d.stpv;
 
 import java.awt.Color;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
@@ -101,8 +102,8 @@ public class StpvController implements VidesoController {
 
 	@Override
 	public void showObject(int type, String name) {
-		if(mosaiquesLayer.containsKey(type+name)){
-			MosaiqueLayer mos = mosaiquesLayer.get(type+name);
+		if(mosaiquesLayer.containsKey(name)){
+			MosaiqueLayer mos = mosaiquesLayer.get(name);
 			mos.set3D(false);
 			this.toggleLayer(mos, true);
 		} else {
@@ -138,7 +139,7 @@ public class StpvController implements VidesoController {
 												width, height, size, hSens, vSens, numSens, 
 												squares, altitudes, numbers, attr, airspaceAttr, 
 												Type.STPV, MOSAIQUE, name);
-			mosaiquesLayer.put(type+name, mLayer);
+			mosaiquesLayer.put(name, mLayer);
 			mLayer.setName("Mosaïque "+type+" "+name);
 			mLayer.set3D(false);
 			this.toggleLayer(mLayer, true);
@@ -146,27 +147,16 @@ public class StpvController implements VidesoController {
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
 		DatasManager.getView(Type.STPV).showObject(type, name);
 	}
-
-	public String getCurrentName(){
-		String STPVName = null;
-		PreparedStatement st;
-		try {
-			st = DatabaseManager.prepareStatement(DatabaseManager.Type.Databases, "select name from databases where type = ? and selected = ?");
-		
-		st.setString(1, "STPV");
-		st.setInt(2, 1);
-		ResultSet rs = st.executeQuery();
-		STPVName = rs.next() ? rs.getString(1) : null;
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return STPVName;
-	}
 	
 	@Override
 	public void hideObject(int type, String name) {
-		if(mosaiquesLayer.containsKey(type+name)){
-			this.toggleLayer(mosaiquesLayer.get(type+name), false);
+		switch (type) {
+		case MOSAIQUE:
+			if(mosaiquesLayer.containsKey(name))
+				this.toggleLayer(mosaiquesLayer.get(name), false);
+			break;
+		default:
+			break;
 		}
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
 		DatasManager.getView(Type.STPV).hideObject(type, name);
@@ -211,8 +201,15 @@ public class StpvController implements VidesoController {
 
 	@Override
 	public HashMap<Integer, List<String>> getSelectedObjects() {
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<Integer, List<String>> objects = new HashMap<Integer, List<String>>();
+		
+		List<String> mosaiques = new ArrayList<String>();
+		for(Entry<String, MosaiqueLayer> m : mosaiquesLayer.entrySet()){
+			if(m.getValue().isEnabled())
+				mosaiques.add(m.getKey());
+		}
+		objects.put(MOSAIQUE, mosaiques);
+		return objects;
 	}
 
 }

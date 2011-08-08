@@ -55,4 +55,9 @@ public class VSurfacePolyline extends SurfacePolyline implements VidesoObject {
 		this.name = name;
 	}
 
+	@Override
+	public Object getNormalAttributes() {
+		return this.getAttributes();
+	}
+
 }

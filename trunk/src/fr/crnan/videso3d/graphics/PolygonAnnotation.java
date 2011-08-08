@@ -22,10 +22,13 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
+import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Polygon avec Annotation intégrée
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public class PolygonAnnotation extends VPolygon implements VidesoObject{
 
@@ -36,6 +39,12 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
 	private String name;
 	
 	private int type;
+
+	private boolean highlighted = false;
+
+	private AirspaceAttributes normalAttrs;
+
+	private AirspaceAttributes highlightAttrs;
 	
 	public PolygonAnnotation(){
 		super();
@@ -88,4 +97,46 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
 		this.name = name;
 	}
 	
+	@Override
+	public boolean isHighlighted() {
+		return this.highlighted;
+	}
+
+	@Override
+	public void setHighlighted(boolean highlighted) {
+		if(this.highlighted != highlighted){
+			this.setAttributes(highlighted ? this.getHighlightAttributes() : this.getNormalAttributes());
+			this.highlighted = highlighted;
+		}
+	}
+	
+    public AirspaceAttributes getNormalAttributes() {
+        return this.normalAttrs == null ? this.getAttributes() : this.normalAttrs;
+    }
+
+    public void setNormalAttributes(AirspaceAttributes normalAttrs) {
+        this.normalAttrs = normalAttrs;
+        if(!highlighted) this.setAttributes(this.normalAttrs);
+    }
+    
+    /**
+     * At the first call, if null, set it to White
+     */
+    public AirspaceAttributes getHighlightAttributes() {
+    	if(highlightAttrs == null){
+    		highlightAttrs = new BasicAirspaceAttributes(this.getAttributes());
+    		highlightAttrs.setMaterial(Material.WHITE);
+    	}
+        return this.highlightAttrs;
+    }
+
+    /**
+     * Specifies highlight attributes.
+     *
+     * @param highlightAttrs highlight attributes. May be null, in which case default attributes are used.
+     */
+    public void setHighlightAttributes(AirspaceAttributes highlightAttrs) {
+        this.highlightAttrs = highlightAttrs;
+        if(highlighted) this.setAttributes(this.highlightAttrs);
+    }
 }

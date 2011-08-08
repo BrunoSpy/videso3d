@@ -195,4 +195,10 @@ public class EllipseEdimap extends SurfacePolyline implements VidesoObject{
 	public void setName(String name) {
 		this.nomCarte = name;
 	}
+
+
+	@Override
+	public Object getNormalAttributes() {
+		return this.getAttributes();
+	}
 }

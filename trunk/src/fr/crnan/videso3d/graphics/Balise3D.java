@@ -62,6 +62,10 @@ public class Balise3D extends PointPlacemark implements Balise {
 			this.setAnnotation(annotation);
 		}
 		this.setAttributes(ppa);
+		
+		PointPlacemarkAttributes ppaH = new PointPlacemarkAttributes(ppa);
+		ppaH.setLineMaterial(Material.YELLOW);
+		this.setHighlightAttributes(ppaH);
 	}
 	
 	public Balise3D(String balise, Position position, Type base, int type) {
@@ -114,9 +118,9 @@ public class Balise3D extends PointPlacemark implements Balise {
 	}
 
 	@Override
-	public void highlight(boolean b) {
-		// TODO Auto-generated method stub
-		
+	public Object getNormalAttributes() {
+		return this.getAttributes();
 	}
+
 
 }

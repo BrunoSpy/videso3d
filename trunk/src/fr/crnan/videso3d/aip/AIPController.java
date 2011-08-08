@@ -379,7 +379,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			attrs.setOpacity(0.2);
 			attrs.setOutlineOpacity(0.9);
 			attrs.setOutlineWidth(1.5);
-			zone.setAttributes(attrs);
+			zone.setNormalAttributes(attrs);
 
 			zone.setAnnotation("<p><b>"+name+"</b></p>"
 					+"<p>Plafond : "+niveaux.getSecond().getFullText()
@@ -851,9 +851,9 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	
 	private void highlightNavFix(int type, String name){
 		Balise2D navFix = navFixLayer.getBalise(name, type);
-		navFix.highlight(true);
+		navFix.setHighlighted(true);
 		if(lastHighlighted!=null){
-			lastHighlighted.highlight(false);
+			lastHighlighted.setHighlighted(false);
 		}
 		if(lastNavFixAnnotation!=null){
 			lastNavFixAnnotation.getAttributes().setVisible(false);

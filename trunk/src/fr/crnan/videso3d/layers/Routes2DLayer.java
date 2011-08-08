@@ -134,7 +134,7 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 	@Override
 	public void highlight(String name) {
 		Route2D r = this.routes.get(name);
-		r.highlight(true);
+		r.setHighlighted(true);
 		this.displayRoute(r);
 	}
 
@@ -142,7 +142,7 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 	@Override
 	public void unHighlight(String name) {
 		Route2D r = (Route2D) this.getRoute(name);
-		r.highlight(false);
+		r.setHighlighted(false);
 	}
 
 

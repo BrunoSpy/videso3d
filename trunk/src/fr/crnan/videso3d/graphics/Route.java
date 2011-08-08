@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Représentation graphique d'une route
  * @author Bruno Spyckerelle
- * @version 0.2.3
+ * @version 0.2.4
  */
 public interface Route extends VidesoObject{
 
@@ -46,8 +46,6 @@ public interface Route extends VidesoObject{
 	public void addBalise(String balise);
 	
 	public List<String> getBalises();
-	
-	public void highlight(boolean highlight);
 
 	Iterable<? extends LatLon> getLocations();
 
