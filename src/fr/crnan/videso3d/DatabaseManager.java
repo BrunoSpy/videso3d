@@ -18,6 +18,9 @@ package fr.crnan.videso3d;
 
 import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.edimap.Cartes;
+import fr.crnan.videso3d.ihm.components.Omnibox;
+import fr.crnan.videso3d.ihm.components.Omnibox.ItemCouple;
+import fr.crnan.videso3d.skyview.SkyViewController;
 import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.util.Logging;
 
@@ -35,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.event.SwingPropertyChangeSupport;
@@ -908,7 +912,6 @@ public final class DatabaseManager {
 	 * @param name Nom de la base recevant les tables
 	 * @throws SQLException 
 	 */
-	//TODO compléter la base pour les autres types d'objets.
 	public static void createAIP(String name, String path) throws SQLException{
 		Statement st = DatabaseManager.selectDB(Type.AIP, name).createStatement();
 		
@@ -1216,14 +1219,7 @@ public final class DatabaseManager {
 		if(type.equals(Type.Databases)){
 			return DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement(sqlRequest);
 		} else {
-			Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
-			ResultSet result = st.executeQuery("select name from databases where selected = 1 and type = '"+type.toString()+"'");
-			String connectionName = null;
-			if(result.next()) {
-				connectionName = result.getString(1) ;
-			} 
-			result.close();
-			st.close();
+			String connectionName = getCurrentName(type);
 			return connectionName == null ? null : DatabaseManager.selectDB(type, connectionName).prepareStatement(sqlRequest);
 		}
 	}
@@ -1442,33 +1438,32 @@ public final class DatabaseManager {
 	 * @return liste des éléments visibles
 	 * @throws SQLException
 	 */
-	public static List<Couple<Integer, String>> getAllVisibleObjects(Type type) throws SQLException{
-		List<Couple<Integer, String>> items = null;
+	public static List<ItemCouple> getAllVisibleObjects(Type type, Omnibox omnibox) throws SQLException{
+		List<ItemCouple> items = new LinkedList<ItemCouple>();
+		VidesoController controller = DatasManager.getController(type);
 		Statement st;
 		ResultSet rs;
 		switch (type) {
 		case STIP:	
 			st = DatabaseManager.getCurrentStip();
 			if(st != null){
-				items = new ArrayList<Couple<Integer, String>>();
 				rs = st.executeQuery("select name, publicated from balises");
 				while(rs.next()){
-					items.add(new Couple<Integer, String>(StipController.BALISES, rs.getString(1)));
+					items.add(new ItemCouple(controller, new Couple<Integer,String>(StipController.BALISES, rs.getString(1))));
 				}
 				rs = st.executeQuery("select name from routes");
 				while(rs.next()){
-					items.add(new Couple<Integer, String>(StipController.ROUTES, rs.getString(1)));
+					items.add(new ItemCouple(controller, new Couple<Integer,String>(StipController.ROUTES, rs.getString(1))));
 				}
 				rs = st.executeQuery("select nom from secteurs");
 				while(rs.next()){
-					items.add(new Couple<Integer, String>(StipController.SECTEUR, rs.getString(1)));
+					items.add(new ItemCouple(controller, new Couple<Integer,String>(StipController.SECTEUR, rs.getString(1))));
 				}
 			}
 			return items;
 		case AIP:
 			st = DatabaseManager.getCurrentAIP();
 			if(st != null){
-				items = new ArrayList<Couple<Integer, String>>();
 				rs = st.executeQuery("select nom, type from volumes " +
 								"UNION select nom, type from routes " +
 								"UNION select nom, type from NavFix " +
@@ -1482,15 +1477,15 @@ public final class DatabaseManager {
 						PreparedStatement ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select code from aerodromes where nom=?");
 						ps.setString(1, nom);
 						ResultSet rs2 = ps.executeQuery();
-						items.add(new Couple<Integer, String>(typeInt, rs2.getString(1)+" -- "+nom));
+						items.add(new ItemCouple(controller, new Couple<Integer,String>(typeInt, rs2.getString(1)+" -- "+nom)));
 					}else if(typeInt == AIP.CTL){
 						nom = nom.split(" ")[0].trim();
 						if(!CTLset.contains(nom)){
-							items.add(new Couple<Integer, String>(typeInt, nom));	
+							items.add(new ItemCouple(controller, new Couple<Integer,String>(typeInt, nom)));	
 							CTLset.add(nom);
 						}
 					}else{
-						items.add(new Couple<Integer, String>(typeInt, nom));
+						items.add(new ItemCouple(controller, new Couple<Integer,String>(typeInt, nom)));
 					}
 					}catch(Exception e){
 						e.printStackTrace();
@@ -1501,36 +1496,35 @@ public final class DatabaseManager {
 		case Edimap:
 			st = DatabaseManager.getCurrentEdimap();
 			if(st != null){
-				items = new ArrayList<Couple<Integer, String>>();
 				rs = st.executeQuery("select name, type from cartes");
 				while(rs.next()) {
-					items.add(new Couple<Integer, String>(Cartes.string2type(rs.getString(2)), rs.getString(1)));
+					items.add(new ItemCouple(controller, new Couple<Integer,String>(Cartes.string2type(rs.getString(2)), rs.getString(1))));
 				}
 			}
 			return items;
-//		case SkyView:
-//			st = DatabaseManager.getCurrentSkyView();
-//			if(st != null){
-//				items = new LinkedList<Couple<Integer, String>>();
-//				rs = st.executeQuery("select ident from waypoint");
+		case SkyView:
+			st = DatabaseManager.getCurrentSkyView();
+			if(st != null){
+				rs = st.executeQuery("select ident from waypoint");
+				while(rs.next()){
+					items.add(new ItemCouple(controller, new Couple<Integer,String>(SkyViewController.TYPE_WAYPOINT, rs.getString(1))));
+				}
+				rs = st.executeQuery("select ident from airport");
+				while(rs.next()){
+					items.add(new ItemCouple(controller, new Couple<Integer,String>(SkyViewController.TYPE_AIRPORT, rs.getString(1))));
+				}
+//				rs = st.executeQuery("select distinct ident from airway");
 //				while(rs.next()){
-//					items.add(new Couple<Integer, String>(SkyViewController.TYPE_WAYPOINT, rs.getString(1)));
+//					items.add(omnibox.new ItemCouple(controller, new Couple<Integer,String>(SkyViewController.TYPE_ROUTE, rs.getString(1))));
 //				}
-//				rs = st.executeQuery("select ident from airport");
-//				while(rs.next()){
-//					items.add(new Couple<Integer, String>(SkyViewController.TYPE_AIRPORT, rs.getString(1)));
-//				}
-//				rs = st.executeQuery("select ident from airway");
-//				while(rs.next()){
-//					items.add(new Couple<Integer, String>(SkyViewController.TYPE_ROUTE, rs.getString(1)));
-//				}
-//			}
-//			return items;
-		default:
+			}
 			return items;
+		default:
+			return null;
 		}
 	}
-	
+
+
 	/**
 	 * Returns all selected databases but PAYS
 	 * @return liste des bases de données sélectionnées
@@ -1549,7 +1543,7 @@ public final class DatabaseManager {
 		}
 		return bases;
 	}
-	
+
 	/**
 	 * Ajoute un commentaire à la base
 	 * @param id Id de la base concernée
