@@ -40,7 +40,11 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.JTextField;
 /**
  * Dialog to change attributes of a shape
  * @author Bruno Spyckerelle
@@ -64,6 +68,10 @@ public class ShapeAttributesDialog extends JDialog {
 	private AbstractButton couleurContourSurligneBtn;
 	private JLabel couleurContour;
 	private AbstractButton contourColorBtn;
+	private JTextField pointille;
+	private JTextField pointilleSurligne;
+	private JSpinner repetitionSurligne;
+	private JSpinner repetition;
 
 	/**
 	 * Create the dialog.
@@ -78,7 +86,7 @@ public class ShapeAttributesDialog extends JDialog {
 		
 		wwd = SimpleGLCanvasFactory.SimpleGLCanvasPolygonShape(attrsNormal, attrsHighlight);
 		
-		setBounds(100, 100, 851, 615);
+		setBounds(100, 100, 851, 757);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -96,10 +104,31 @@ public class ShapeAttributesDialog extends JDialog {
 		epaisseurContour = new EpaisseurSpinner(wwd, attrsNormal);
 		epaisseurContour.setValue(attrsNormal.getOutlineWidth());
 		
+		pointille = new JTextField();
+		pointille.setText(String.format("%x", (short)attrsNormal.getOutlineStipplePattern()));
+		pointille.setColumns(4);
+		pointille.setToolTipText("Specifies a 16-bit integer that defines which pixels are rendered in the shape's outline.");
+		pointille.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				attrsNormal.setOutlineStipplePattern(Integer.decode("0x"+pointille.getText()).shortValue());
+				wwd.redraw();
+			}
+		});
+		repetition = new JSpinner(new SpinnerNumberModel(attrsNormal.getOutlineStippleFactor(), 0, 10, 1));
+		repetition.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				attrsNormal.setOutlineStippleFactor((Integer)repetition.getValue());
+				wwd.redraw();
+			}
+		});
 		couleurInterieur = new JLabel("          ");
 		interieurColorBtn = new JColorButton(wwd, couleurInterieur, attrsNormal, true);
 		couleurInterieur.setOpaque(true);
-		System.out.println(attrsNormal.getInteriorMaterial().getDiffuse());
+		
 		couleurInterieur.setBackground(attrsNormal.getInteriorMaterial().getDiffuse());
 		
 
@@ -112,7 +141,28 @@ public class ShapeAttributesDialog extends JDialog {
 		couleurContourSurligne.setOpaque(true);
 		
 		opaciteContourSurligne = new OpacitySlider(wwd, attrsHighlight, false);
-
+		pointilleSurligne = new JTextField();
+		pointilleSurligne.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				
+				attrsHighlight.setOutlineStipplePattern(Integer.decode("0x"+pointilleSurligne.getText()).shortValue());
+				wwd.redraw();
+			}
+		});
+		pointilleSurligne.setToolTipText("Specifies a 16-bit integer that defines which pixels are rendered in the shape's outline.");
+		pointilleSurligne.setColumns(4);
+		pointilleSurligne.setText(String.format("%h",(short)attrsHighlight.getOutlineStipplePattern()));
+		repetitionSurligne = new JSpinner(new SpinnerNumberModel(attrsHighlight.getOutlineStippleFactor(), 0, 10, 1));
+		repetitionSurligne.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				attrsHighlight.setOutlineStippleFactor((Integer)repetitionSurligne.getValue());
+				wwd.redraw();
+			}
+		});
 		epaisseurContourSurligne = new EpaisseurSpinner(wwd, attrsHighlight);
 		
 		couleurInterieurSurligne = new JLabel("          ");
@@ -147,12 +197,13 @@ public class ShapeAttributesDialog extends JDialog {
 				attrsN.setInteriorOpacity(attrsNormal.getInteriorOpacity());				
 				attrsN.setOutlineOpacity(attrsNormal.getOutlineOpacity());				
 				attrsN.setOutlineWidth(attrsNormal.getOutlineWidth());
+				attrsN.setDrawOutline(attrsN.isDrawOutline());
 				attrsH.setInteriorMaterial(attrsHighlight.getInteriorMaterial());
 				attrsH.setOutlineMaterial(attrsHighlight.getOutlineMaterial());				
 				attrsH.setInteriorOpacity(attrsHighlight.getInteriorOpacity());				
 				attrsH.setOutlineOpacity(attrsHighlight.getOutlineOpacity());				
 				attrsH.setOutlineWidth(attrsHighlight.getOutlineWidth());
-				
+				attrsH.setDrawOutline(attrsHighlight.isDrawOutline());
 				dispose();
 			}
 		});
@@ -189,123 +240,159 @@ public class ShapeAttributesDialog extends JDialog {
 		JLabel lblEpaisseurContourSurligne = new JLabel("Epaisseur : ");
 		TitledPanel interieurSurligneTitle = new TitledPanel("Intérieur surligné");
 		JLabel lblCouleurInterieurSurligne = new JLabel("Couleur : ");
-		JLabel lblOpaciteInterieurSurligne = new JLabel("Opacité : ");
+		JLabel lblOpaciteInterieurSurligne = new JLabel("Opacité : ");		
+		JLabel lblPointille = new JLabel("Pointillés : ");		
+		JLabel lblRepetition = new JLabel("Répétition : ");		
+		JLabel lblPointilleSurligne = new JLabel("Pointillés : ");		
+		JLabel lblRepetitionSurligne = new JLabel("Répétition : ");
+		
 		
 		GroupLayout gl_attrsPanel = new GroupLayout(attrsPanel);
 		gl_attrsPanel.setHorizontalGroup(
-				gl_attrsPanel.createParallelGroup(Alignment.LEADING)
+			gl_attrsPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_attrsPanel.createSequentialGroup()
-						.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
-								.addComponent(contourTitle, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
+					.addGroup(gl_attrsPanel.createParallelGroup(Alignment.TRAILING)
+						.addComponent(contourTitle, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+						.addGroup(gl_attrsPanel.createSequentialGroup()
+							.addComponent(lblCouleurContour)
+							.addPreferredGap(ComponentPlacement.RELATED, 270, Short.MAX_VALUE)
+							.addComponent(couleurContour)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(contourColorBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(interieurTitle, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+						.addGroup(gl_attrsPanel.createSequentialGroup()
+							.addComponent(lblInterieurCouleur)
+							.addPreferredGap(ComponentPlacement.RELATED, 270, Short.MAX_VALUE)
+							.addComponent(couleurInterieur)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(interieurColorBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_attrsPanel.createSequentialGroup()
+							.addComponent(lblOpaciteInterieur)
+							.addGap(18)
+							.addComponent(opaciteInterieur, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addComponent(contourSurligneTitle, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+						.addGroup(gl_attrsPanel.createSequentialGroup()
+							.addComponent(lblCouleurContourSurligne)
+							.addPreferredGap(ComponentPlacement.RELATED, 270, Short.MAX_VALUE)
+							.addComponent(couleurContourSurligne)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(couleurContourSurligneBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_attrsPanel.createSequentialGroup()
+							.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblOpaciteContourSurligne)
+								.addComponent(lblEpaisseurContourSurligne)
+								.addComponent(lblPointilleSurligne))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(opaciteContourSurligne, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
 								.addGroup(gl_attrsPanel.createSequentialGroup()
-										.addComponent(lblCouleurContour)
-										.addPreferredGap(ComponentPlacement.RELATED, 203, Short.MAX_VALUE)
-										.addComponent(couleurContour)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(contourColorBtn))
-										.addGroup(gl_attrsPanel.createSequentialGroup()
-												.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
-														.addComponent(lblOpacit)
-														.addComponent(lblEpaisseur))
-														.addPreferredGap(ComponentPlacement.RELATED)
-														.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
-																.addComponent(epaisseurContour, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-																.addComponent(opaciteContour, GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)))
-																.addComponent(interieurTitle, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
-																.addGroup(gl_attrsPanel.createSequentialGroup()
-																		.addComponent(lblInterieurCouleur)
-																		.addPreferredGap(ComponentPlacement.RELATED, 203, Short.MAX_VALUE)
-																		.addComponent(couleurInterieur)
-																		.addPreferredGap(ComponentPlacement.RELATED)
-																		.addComponent(interieurColorBtn))
-																		.addGroup(gl_attrsPanel.createSequentialGroup()
-																				.addComponent(lblOpaciteInterieur)
-																				.addGap(18)
-																				.addComponent(opaciteInterieur, GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE))
-																				.addComponent(contourSurligneTitle, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
-																				.addGroup(gl_attrsPanel.createSequentialGroup()
-																						.addComponent(lblCouleurContourSurligne)
-																						.addPreferredGap(ComponentPlacement.RELATED, 203, Short.MAX_VALUE)
-																						.addComponent(couleurContourSurligne)
-																						.addPreferredGap(ComponentPlacement.RELATED)
-																						.addComponent(couleurContourSurligneBtn))
-																						.addGroup(gl_attrsPanel.createSequentialGroup()
-																								.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
-																										.addComponent(lblOpaciteContourSurligne)
-																										.addComponent(lblEpaisseurContourSurligne))
-																										.addPreferredGap(ComponentPlacement.RELATED)
-																										.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
-																												.addComponent(epaisseurContourSurligne, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-																												.addComponent(opaciteContourSurligne, GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)))
-																												.addComponent(interieurSurligneTitle, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 349, Short.MAX_VALUE)
-																												.addGroup(gl_attrsPanel.createSequentialGroup()
-																														.addComponent(lblCouleurInterieurSurligne)
-																														.addPreferredGap(ComponentPlacement.RELATED, 178, Short.MAX_VALUE)
-																														.addComponent(couleurInterieurSurligne)
-																														.addPreferredGap(ComponentPlacement.RELATED)
-																														.addComponent(couleurInterieurSurligneBtn))
-																														.addGroup(gl_attrsPanel.createSequentialGroup()
-																																.addComponent(lblOpaciteInterieurSurligne)
-																																.addGap(18)
-																																.addComponent(opaciteInterieurSurligne, GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)))
-																																.addContainerGap())
-				);
+									.addGroup(gl_attrsPanel.createParallelGroup(Alignment.TRAILING, false)
+										.addComponent(pointilleSurligne, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+										.addComponent(epaisseurContourSurligne, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(lblRepetitionSurligne)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(repetitionSurligne, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+						.addComponent(interieurSurligneTitle, GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+						.addGroup(gl_attrsPanel.createSequentialGroup()
+							.addComponent(lblCouleurInterieurSurligne)
+							.addPreferredGap(ComponentPlacement.RELATED, 306, Short.MAX_VALUE)
+							.addGroup(gl_attrsPanel.createParallelGroup(Alignment.TRAILING)
+								.addComponent(couleurInterieurSurligne)
+								.addComponent(couleurInterieurSurligneBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_attrsPanel.createSequentialGroup()
+							.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblOpacit)
+								.addComponent(lblEpaisseur)
+								.addComponent(lblPointille))
+							.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(opaciteContour, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.addGroup(gl_attrsPanel.createSequentialGroup()
+									.addGroup(gl_attrsPanel.createParallelGroup(Alignment.TRAILING, false)
+										.addComponent(pointille, Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+										.addComponent(epaisseurContour, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(lblRepetition)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(repetition, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
+						.addGroup(gl_attrsPanel.createSequentialGroup()
+							.addComponent(lblOpaciteInterieurSurligne)
+							.addGap(18)
+							.addComponent(opaciteInterieurSurligne, GroupLayout.DEFAULT_SIZE, 341, Short.MAX_VALUE)))
+					.addContainerGap())
+		);
 		gl_attrsPanel.setVerticalGroup(
-				gl_attrsPanel.createParallelGroup(Alignment.LEADING)
+			gl_attrsPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_attrsPanel.createSequentialGroup()
-						.addComponent(contourTitle, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblCouleurContour)
-								.addComponent(contourColorBtn)
-								.addComponent(couleurContour))
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
-										.addComponent(lblOpacit)
-										.addComponent(opaciteContour, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
-												.addComponent(lblEpaisseur)
-												.addComponent(epaisseurContour, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(interieurTitle, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.RELATED)
-												.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
-														.addComponent(lblInterieurCouleur)
-														.addComponent(interieurColorBtn)
-														.addComponent(couleurInterieur))
-														.addPreferredGap(ComponentPlacement.RELATED)
-														.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
-																.addComponent(lblOpaciteInterieur)
-																.addComponent(opaciteInterieur, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-																.addPreferredGap(ComponentPlacement.RELATED)
-																.addComponent(contourSurligneTitle, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-																.addPreferredGap(ComponentPlacement.RELATED)
-																.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
-																		.addComponent(lblCouleurContourSurligne)
-																		.addComponent(couleurContourSurligneBtn)
-																		.addComponent(couleurContourSurligne))
-																		.addPreferredGap(ComponentPlacement.RELATED)
-																		.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
-																				.addComponent(lblOpaciteContourSurligne)
-																				.addComponent(opaciteContourSurligne, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-																				.addPreferredGap(ComponentPlacement.RELATED)
-																				.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
-																						.addComponent(lblEpaisseurContourSurligne)
-																						.addComponent(epaisseurContourSurligne, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-																						.addPreferredGap(ComponentPlacement.RELATED)
-																						.addComponent(interieurSurligneTitle, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-																						.addPreferredGap(ComponentPlacement.RELATED)
-																						.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
-																								.addComponent(lblCouleurInterieurSurligne)
-																								.addComponent(couleurInterieurSurligneBtn)
-																								.addComponent(couleurInterieurSurligne))
-																								.addPreferredGap(ComponentPlacement.RELATED)
-																								.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
-																										.addComponent(lblOpaciteInterieurSurligne)
-																										.addComponent(opaciteInterieurSurligne, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-																										.addContainerGap(20, Short.MAX_VALUE))
-				);
+					.addComponent(contourTitle, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblCouleurContour)
+						.addComponent(contourColorBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(couleurContour))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblOpacit)
+						.addComponent(opaciteContour, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblEpaisseur)
+						.addComponent(epaisseurContour, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(pointille, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblRepetition)
+						.addComponent(repetition, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblPointille))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(interieurTitle, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblInterieurCouleur)
+						.addComponent(interieurColorBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(couleurInterieur))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblOpaciteInterieur)
+						.addComponent(opaciteInterieur, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(contourSurligneTitle, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblCouleurContourSurligne)
+						.addComponent(couleurContourSurligneBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(couleurContourSurligne))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblOpaciteContourSurligne)
+						.addComponent(opaciteContourSurligne, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblEpaisseurContourSurligne)
+						.addComponent(epaisseurContourSurligne, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(pointilleSurligne, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblRepetitionSurligne)
+						.addComponent(repetitionSurligne, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblPointilleSurligne))
+					.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_attrsPanel.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(interieurSurligneTitle, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_attrsPanel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblCouleurInterieurSurligne)
+								.addComponent(couleurInterieurSurligneBtn, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_attrsPanel.createSequentialGroup()
+							.addGap(20)
+							.addComponent(couleurInterieurSurligne)))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_attrsPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblOpaciteInterieurSurligne)
+						.addComponent(opaciteInterieurSurligne, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(136, Short.MAX_VALUE))
+		);
 		attrsPanel.setLayout(gl_attrsPanel);
 	}
 }

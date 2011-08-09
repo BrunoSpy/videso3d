@@ -508,7 +508,7 @@ public class MainWindow extends JFrame {
 		if(control.getSingleDockable(reader.getName()) != null){
 			do{
 				i++;
-			} while (control.getSingleDockable(reader.getName()+"-"+i) == null);
+			} while (control.getSingleDockable(reader.getName()+"-"+i) != null);
 		}
 		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?reader.getName():reader.getName()+"-"+i);
 		dockable.setTitleText(reader.getName());
