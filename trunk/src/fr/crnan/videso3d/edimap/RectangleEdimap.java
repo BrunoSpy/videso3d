@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.edimap;
 
+import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.VidesoAnnotation;
@@ -83,6 +84,10 @@ public class RectangleEdimap extends SurfaceQuad implements VidesoObject{
 			attrs.setInteriorMaterial(new Material(palette.getColor(foregroundColor)));
 			this.setAttributes(attrs);
 		}
+		
+		BasicShapeAttributes attrsH = new BasicShapeAttributes(this.getAttributes());
+		attrsH.setInteriorMaterial(new Material(Pallet.makeBrighter(attrsH.getInteriorMaterial().getDiffuse())));
+		this.setHighlightAttributes(attrsH);
 	}
 
 	/**

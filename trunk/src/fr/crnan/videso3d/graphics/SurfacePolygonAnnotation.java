@@ -19,14 +19,13 @@ package fr.crnan.videso3d.graphics;
 import java.util.List;
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.SurfacePolygon;
 /**
  * SurfacePolygon avec Annotation intégrée
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoObject {
 
@@ -38,16 +37,11 @@ public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoOb
 	
 	private String name;
 	
-	public SurfacePolygonAnnotation(List<LatLonCautra> locations) {
-		super(locations);
-	}
-	
 	/**
 	 * 
 	 * @param locations les coordonnées du polygone
-	 * @param i sert à différencier les signatures des deux constructeurs
 	 */
-	public SurfacePolygonAnnotation(List<LatLon> locations, int i){
+	public SurfacePolygonAnnotation(List<? extends LatLon> locations){
 		super(locations);
 	}
 	

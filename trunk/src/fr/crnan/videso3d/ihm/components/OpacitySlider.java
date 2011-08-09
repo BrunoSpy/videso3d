@@ -16,7 +16,8 @@
 
 package fr.crnan.videso3d.ihm.components;
 
-import fr.crnan.videso3d.SimpleGLCanvas;
+import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
+import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 
 import javax.swing.JSlider;
@@ -25,11 +26,11 @@ import javax.swing.event.ChangeListener;
 /**
  * Slider for opacity
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.2.0
  */
 public class OpacitySlider extends JSlider {
 
-	public OpacitySlider(final SimpleGLCanvas wwd, final AirspaceAttributes attrs, final boolean inner){
+	public OpacitySlider(final WorldWindowGLCanvas wwd, final AirspaceAttributes attrs, final boolean inner){
 		super(0, 100);
 		this.setValue(inner ? (int) (attrs.getOpacity()*100) : (int) (attrs.getOutlineOpacity()*100));
 		this.addChangeListener(new ChangeListener() {
@@ -38,6 +39,22 @@ public class OpacitySlider extends JSlider {
 			public void stateChanged(ChangeEvent e) {
 				if(inner)
 					attrs.setOpacity(getValue()/100.0);
+				else
+					attrs.setOutlineOpacity(getValue()/100.0);
+				wwd.redraw();
+			}
+		});
+	}
+
+	public OpacitySlider(final WorldWindowGLCanvas wwd, final ShapeAttributes attrs, final boolean inner) {
+		super(0, 100);
+		this.setValue(inner ? (int) (attrs.getInteriorOpacity()*100) : (int) (attrs.getOutlineOpacity()*100));
+		this.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(inner)
+					attrs.setInteriorOpacity(getValue()/100.0);
 				else
 					attrs.setOutlineOpacity(getValue()/100.0);
 				wwd.redraw();

@@ -22,6 +22,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
+import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.layers.ScalebarLayerNM;
 import gov.nasa.worldwind.BasicModel;
@@ -33,7 +34,9 @@ import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.CompassLayer;
 import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.layers.WorldMapLayer;
+import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwindx.examples.util.HighlightController;
 /**
@@ -42,19 +45,61 @@ import gov.nasa.worldwindx.examples.util.HighlightController;
  * @author Bruno Spyckerelle
  * @version 0.1.0
  */
-public class SimpleGLCanvas extends WorldWindowGLCanvas {
+public class SimpleGLCanvasFactory {
 
-	private VPolygon polygon;
-
-	public SimpleGLCanvas(){
-		super();
-		this.setModel(new BasicModel());
-				
+	public static WorldWindowGLCanvas SimpleGLCanvasPolygon(AirspaceAttributes attrs, AirspaceAttributes attrsHighlight){
+		WorldWindowGLCanvas wwd = new WorldWindowGLCanvas();
+		applyModel(wwd);
+		ArrayList<LatLon> positions = new ArrayList<LatLon>();
+		positions.add(Position.fromDegrees(46.4627, 1.2399));
+		positions.add(Position.fromDegrees(46.4650, 5.3068));
+		positions.add(Position.fromDegrees(49.2736, 5.4163));
+		positions.add(Position.fromDegrees(49.2712, 1.1234));
+		
+		VPolygon polygon = new VPolygon(positions);
+		polygon.setNormalAttributes(attrs);
+		polygon.setHighlightAttributes(attrsHighlight);
+		polygon.setAltitudes(0, 250e3);
+		AirspaceLayer layer = new AirspaceLayer();
+		layer.addAirspace(polygon);
+		wwd.getModel().getLayers().addIfAbsent(layer);
+		
+		wwd.getView().setEyePosition(Position.fromDegrees(49, 4, 1050e3));
+		wwd.getView().setPitch(Angle.fromDegrees(70));
+		wwd.getView().setHeading(Angle.fromDegrees(36.3));
+		return wwd;
+	}
+	
+	public static WorldWindowGLCanvas SimpleGLCanvasPolygonShape(ShapeAttributes attrsNormal,
+			ShapeAttributes attrsHighlight) {
+		
+		WorldWindowGLCanvas wwd = new WorldWindowGLCanvas();
+		applyModel(wwd);
+		ArrayList<LatLon> positions = new ArrayList<LatLon>();
+		positions.add(Position.fromDegrees(46.4627, 1.2399));
+		positions.add(Position.fromDegrees(46.4650, 5.3068));
+		positions.add(Position.fromDegrees(49.2736, 5.4163));
+		positions.add(Position.fromDegrees(49.2712, 1.1234));
+		SurfacePolygonAnnotation surface = new SurfacePolygonAnnotation(positions);
+		surface.setAttributes(attrsNormal);
+		surface.setHighlightAttributes(attrsHighlight);
+		RenderableLayer layer = new RenderableLayer();
+		layer.addRenderable(surface);
+		wwd.getModel().getLayers().addIfAbsent(layer);
+		
+		wwd.getView().setEyePosition(Position.fromDegrees(48, 3, 850e3));
+		
+		return wwd;
+	}	
+	
+	private static void applyModel(WorldWindowGLCanvas wwd){
+		wwd.setModel(new BasicModel());
+		
 		//disable selection
-		this.addSelectListener(new HighlightController(SelectEvent.ROLLOVER));
+		wwd.addSelectListener(new HighlightController(SelectEvent.ROLLOVER));
 		
 		//lock axis
-		this.getInputHandler().addMouseListener(new MouseListener() {
+		wwd.getInputHandler().addMouseListener(new MouseListener() {
 			
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -82,7 +127,7 @@ public class SimpleGLCanvas extends WorldWindowGLCanvas {
 			}
 		});
 		
-		this.getInputHandler().addMouseWheelListener(new MouseWheelListener() {
+		wwd.getInputHandler().addMouseWheelListener(new MouseWheelListener() {
 			
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
@@ -90,7 +135,7 @@ public class SimpleGLCanvas extends WorldWindowGLCanvas {
 			}
 		});
 		
-		this.getInputHandler().addMouseMotionListener(new MouseMotionListener() {
+		wwd.getInputHandler().addMouseMotionListener(new MouseMotionListener() {
 			
 			@Override
 			public void mouseMoved(MouseEvent e) {
@@ -104,36 +149,13 @@ public class SimpleGLCanvas extends WorldWindowGLCanvas {
 		});
 		
 		//hide compass, ..;
-		for(Layer l : this.getModel().getLayers()){
+		for(Layer l : wwd.getModel().getLayers()){
 			if(l instanceof CompassLayer)
-				this.getModel().getLayers().remove(l);
+				wwd.getModel().getLayers().remove(l);
 			if(l instanceof ScalebarLayerNM)
-				this.getModel().getLayers().remove(l);
+				wwd.getModel().getLayers().remove(l);
 			if(l instanceof WorldMapLayer)
-				this.getModel().getLayers().remove(l);
+				wwd.getModel().getLayers().remove(l);
 		}
-		
-		this.getView().setEyePosition(Position.fromDegrees(49, 4, 1050e3));
-		this.getView().setPitch(Angle.fromDegrees(70));
-		this.getView().setHeading(Angle.fromDegrees(36.3));
-	}
-	
-	public void addSamplePolygon(AirspaceAttributes attrs, AirspaceAttributes attrsHighlight){
-		ArrayList<LatLon> positions = new ArrayList<LatLon>();
-		positions.add(Position.fromDegrees(46.4627, 1.2399));
-		positions.add(Position.fromDegrees(46.4650, 5.3068));
-		positions.add(Position.fromDegrees(49.2736, 5.4163));
-		positions.add(Position.fromDegrees(49.2712, 1.1234));
-		polygon = new VPolygon(positions);
-		polygon.setNormalAttributes(attrs);
-		polygon.setHighlightAttributes(attrsHighlight);
-		polygon.setAltitudes(0, 250e3);
-		AirspaceLayer layer = new AirspaceLayer();
-		layer.addAirspace(polygon);
-		this.getModel().getLayers().addIfAbsent(layer);
-	}
-	
-	public AirspaceAttributes getAirspaceAttributes(){
-		return polygon.getAttributes();
 	}
 }

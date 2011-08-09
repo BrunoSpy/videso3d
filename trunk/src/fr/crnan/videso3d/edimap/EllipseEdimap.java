@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.VidesoAnnotation;
@@ -126,6 +127,10 @@ public class EllipseEdimap extends SurfacePolyline implements VidesoObject{
 		//on applique l'id atc
 		String idAtcName = ellipse.getValue("id_atc");
 		if(idAtcName != null) this.applyIdAtc(idAtc.get(idAtcName), palette);
+		
+		BasicShapeAttributes attrsH = new BasicShapeAttributes(this.getAttributes());
+		attrsH.setInteriorMaterial(new Material(Pallet.makeBrighter(attrsH.getInteriorMaterial().getDiffuse())));
+		this.setHighlightAttributes(attrsH);
 	}
 	
 	
