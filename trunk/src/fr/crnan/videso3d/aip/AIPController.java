@@ -479,21 +479,35 @@ public class AIPController extends ProgressSupport implements VidesoController {
 							loc.clear();
 							loc.add(LatLon.fromDegrees(48, 0));
 						}
-						
+
 						Route2D segment2D = new Route2D(segmentName, routeType, Type.AIP, AIP.AWY);
-						if(routeType == Route.Space.UIR){
-							Sens sens = null;
-							String sensString = segment.getChildText("Circulation");
-							if(sensString.equals("(2=1)") || sensString.equals("(1=2)") || sensString.equals("(0=0)")){
-								sens = Sens.RED;
-							}else if(sensString.equals("(X-1)") || sensString.equals("(1-X)")){
-								sens = Sens.GREEN;
-							}else if(sensString.equals("(X-2)") || sensString.equals("(2-X)") || sensString.equals("(X-0)")){
-								sens = Sens.BLUE;
+						List<Integer> directions = new ArrayList<Integer>();
+						Sens sens = null;
+						String sensString = segment.getChildText("Circulation");
+						if(sensString.equals("(2=1)") || sensString.equals("(1=2)") || sensString.equals("(0=0)")){
+							sens = Sens.RED;
+							for(int i =0; i<loc.size()-1;i++){
+								directions.add(Route2D.LEG_AUTHORIZED);
 							}
-							segment2D.setSens(sens);
+						}else if(sensString.equals("(X-1)") || sensString.equals("(1-X)")){
+							sens = Sens.GREEN;
+							for(int i =0; i<loc.size()-1;i++){
+								if(i==loc.size()/2)
+									directions.add(Route2D.LEG_DIRECT);
+								else
+									directions.add(Route2D.LEG_AUTHORIZED);
+							}
+						}else if(sensString.equals("(X-2)") || sensString.equals("(2-X)") || sensString.equals("(X-0)")){
+							sens = Sens.BLUE;
+							for(int i =0; i<loc.size()-1;i++){
+								if(i==loc.size()/2)
+									directions.add(Route2D.LEG_DIRECT);
+								else
+									directions.add(Route2D.LEG_AUTHORIZED);
+							}
 						}
-						segment2D.setLocations(loc);
+						segment2D.setSens(sens);
+						segment2D.setLocations(loc,directions);
 						segment2D.setAnnotation("<html>Route "+segmentName+"<br/><b>Plancher :</b>"+altis.getFirst().getFullText()
 								+"<br/><b>Plafond :</b>"+altis.getSecond().getFullText()+"</html>");
 						routes2D.addRoute(segment2D, segmentName);
