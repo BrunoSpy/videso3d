@@ -25,6 +25,7 @@ import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
+import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.Polyline;
 import gov.nasa.worldwind.render.SurfacePolyline;
 /**
@@ -72,6 +73,9 @@ public class Profil3D {
 		attrs.setOutlineStippleFactor(5);
 		attrs.setOutlineWidth(3.0);
 		projected.setAttributes(attrs);
+		BasicShapeAttributes attrsH = new BasicShapeAttributes(attrs);
+		attrsH.setInteriorMaterial(new Material(Pallet.makeBrighter(attrs.getInteriorMaterial().getDiffuse())));
+		projected.setHighlightAttributes(attrsH);
 		curtain.setPlain(true);
 		curtain.setColor(insideColor);
 		profil.setColor(outsideColor);
