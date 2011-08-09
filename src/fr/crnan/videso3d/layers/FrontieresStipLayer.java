@@ -58,61 +58,6 @@ public class FrontieresStipLayer extends RenderableLayer {
 		this.setPickEnabled(false);
 		this.setEnabled(true);		
 	}
-//		try {
-//			Statement st = db.getCurrent(Type.PAYS);
-//			ResultSet rs = st.executeQuery("select * from contpays, poinpays where refcontour = 'C0001' and refpoint = ref");
-//			System.out.println("Début");
-//			while (rs.next()){
-//				System.out.println(rs.getDouble("latitude") + ", " + rs.getDouble("longitude")+ ", ");
-//			}
-//			rs = st.executeQuery("select * from contpays, poinpays where refcontour = 'C0002' and refpoint = ref");
-//			while (rs.next()){
-//				System.out.println(rs.getDouble("latitude") + ", " + rs.getDouble("longitude")+ ", ");
-//			}
-//			rs = st.executeQuery("select * from contpays, poinpays where refcontour = 'C0003' and refpoint = ref order by contpays.id DESC");
-//			while (rs.next()){
-//				System.out.println(rs.getDouble("latitude") + ", " + rs.getDouble("longitude")+ ", ");
-//			}
-//			rs = st.executeQuery("select * from contpays, poinpays where refcontour = 'C0004' and refpoint = ref");
-//			while (rs.next()){
-//				System.out.println(rs.getDouble("latitude") + ", " + rs.getDouble("longitude")+ ", ");
-//			}
-//			rs = st.executeQuery("select * from contpays, poinpays where refcontour = 'C0063' and refpoint = ref order by contpays.id DESC");
-//			while (rs.next()){
-//				System.out.println(rs.getDouble("latitude") + ", " + rs.getDouble("longitude")+ ", ");
-//			}
-//			rs = st.executeQuery("select * from contpays, poinpays where refcontour = 'C0064' and refpoint = ref order by contpays.id DESC");
-//			while (rs.next()){
-//				System.out.println(rs.getDouble("latitude") + ", " + rs.getDouble("longitude")+ ", ");
-//			}
-//			rs = st.executeQuery("select * from contpays, poinpays where refcontour = 'C0005' and refpoint = ref order by contpays.id DESC");
-//			while (rs.next()){
-//				System.out.println(rs.getDouble("latitude") + ", " + rs.getDouble("longitude")+ ", ");
-//			}
-//			rs = st.executeQuery("select * from contpays, poinpays where refcontour = 'C0006' and refpoint = ref order by contpays.id DESC");
-//			while (rs.next()){
-//				System.out.println(rs.getDouble("latitude") + ", " + rs.getDouble("longitude")+ ", ");
-//			}
-//			rs = st.executeQuery("select * from contpays, poinpays where refcontour = 'C0007' and refpoint = ref");
-//			while (rs.next()){
-//				System.out.println(rs.getDouble("latitude") + ", " + rs.getDouble("longitude")+ ", ");
-//			}
-//			rs = st.executeQuery("select * from contpays, poinpays where refcontour = 'C0008' and refpoint = ref");
-//			while (rs.next()){
-//				System.out.println(rs.getDouble("latitude") + ", " + rs.getDouble("longitude")+ ", ");
-//			}
-//			rs = st.executeQuery("select * from contpays, poinpays where refcontour = 'C0009' and refpoint = ref");
-//			while (rs.next()){
-//				System.out.println(rs.getDouble("latitude") + ", " + rs.getDouble("longitude")+ ", ");
-//			}
-//			rs = st.executeQuery("select * from contpays, poinpays where refcontour = 'C0010' and refpoint = ref");
-//			while (rs.next()){
-//				System.out.println(rs.getDouble("latitude") + ", " + rs.getDouble("longitude")+ ", ");
-//			}
-//			System.out.println("Fin");
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
 
 	public void setFrance(){
 		setFondPays("France", France.FRANCE);

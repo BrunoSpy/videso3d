@@ -17,6 +17,7 @@
 package fr.crnan.videso3d.graphics;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.LatLon;
@@ -53,6 +54,9 @@ public class Radar extends SurfaceCircle implements VidesoObject {
 		attrs.setInteriorMaterial(Material.BLUE);
 		attrs.setInteriorOpacity(0.5);
 		this.setAttributes(attrs);
+		BasicShapeAttributes attrsH = new BasicShapeAttributes(this.getAttributes());
+		attrsH.setInteriorMaterial(new Material(Pallet.makeBrighter(attrsH.getInteriorMaterial().getDiffuse())));
+		this.setHighlightAttributes(attrsH);
 		this.setName(name);
 		this.setDatabaseType(base);
 		this.setType(type);

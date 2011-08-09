@@ -15,18 +15,13 @@
  */
 package fr.crnan.videso3d;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JColorChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JSlider;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Route2D;
@@ -35,9 +30,9 @@ import fr.crnan.videso3d.graphics.VidesoAnnotation;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
+import fr.crnan.videso3d.ihm.ShapeAttributesDialog;
 import fr.crnan.videso3d.ihm.components.AirspaceMenu;
 import fr.crnan.videso3d.ihm.components.ImageMenu;
-import fr.crnan.videso3d.ihm.components.OpacityMenuItem;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.event.SelectEvent;
@@ -46,9 +41,7 @@ import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.AbstractShape;
 import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.GlobeAnnotation;
-import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.PointPlacemark;
-import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfaceImage;
 import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.Airspace;
@@ -111,7 +104,7 @@ public class AirspaceListener implements SelectListener {
 		if(event.getEventAction() == SelectEvent.HOVER){ //popup tooltip
 				this.doHover(event.getTopObject(),event.getPickPoint());
 		} else if(event.getEventAction() == SelectEvent.RIGHT_CLICK){
-			Object o = event.getTopObject();
+			final Object o = event.getTopObject();
 			if(o instanceof Airspace){
 				AirspaceMenu menu = new AirspaceMenu((Airspace)o, 
 													(AirspaceAttributes) ((Airspace)o).getAttributes(), 
@@ -141,45 +134,25 @@ public class AirspaceListener implements SelectListener {
 
 
 				};
-				JMenuItem colorItem = new JMenuItem("Couleur...");
+				JMenuItem colorItem = new JMenuItem("Propriétés graphiques...");
 
 				//Ajout des listeners en fonction du type d'objet
-				if(o instanceof AbstractShape){
-					final ShapeAttributes lastAttrs = ((AbstractShape) o).getActiveAttributes();
-					OpacityMenuItem opacityItem = new OpacityMenuItem();
+				if(o instanceof SurfaceShape || o instanceof AbstractShape){
 					menu.add(colorItem);
-					menu.add(opacityItem);
 					colorItem.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							Color color = JColorChooser.showDialog(menu, "Couleur du secteur", ((ShapeAttributes)lastAttrs).getInteriorMaterial().getDiffuse());
-							if(color != null) {
-								((ShapeAttributes)lastAttrs).setInteriorMaterial(new Material(color));
-								((ShapeAttributes)lastAttrs).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
-								if(event.getTopObject() instanceof AbstractShape){
-									((AbstractShape)event.getTopObject()).setAttributes((ShapeAttributes) lastAttrs);
-								} else if(event.getTopObject() instanceof SurfaceShape){
-									((SurfaceShape)event.getTopObject()).setAttributes((ShapeAttributes) lastAttrs);
-								}
+							if(o instanceof SurfaceShape){
+								new ShapeAttributesDialog(((SurfaceShape) o).getAttributes(), 
+										((SurfaceShape) o).getHighlightAttributes()).setVisible(true);
+							} else if (o instanceof AbstractShape){
+								new ShapeAttributesDialog(((AbstractShape) o).getAttributes(), 
+										((AbstractShape) o).getHighlightAttributes()).setVisible(true);
 							}
+							wwd.redraw();
 						}
 					});
-					opacityItem.setValue((int)(((ShapeAttributes)lastAttrs).getInteriorOpacity()*100.0));
-					opacityItem.addChangeListener(new ChangeListener() {
-						@Override
-						public void stateChanged(ChangeEvent e) {
-							JSlider source = (JSlider)e.getSource();
-							if(!source.getValueIsAdjusting()){
-								((ShapeAttributes)lastAttrs).setInteriorOpacity(source.getValue()/100.0);
-								if(event.getTopObject() instanceof AbstractShape){
-									((AbstractShape)event.getTopObject()).setAttributes((ShapeAttributes) lastAttrs);
-								} else if(event.getTopObject() instanceof SurfaceShape){
-									((SurfaceShape)event.getTopObject()).setAttributes((ShapeAttributes) lastAttrs);
-								}
-								wwd.redraw();
-							}
-						}
-					});
+					
 					if(event.getTopObject() instanceof Route2D){
 						JMenuItem contextItem = new JMenuItem("Informations...");				
 						menu.add(contextItem);

@@ -15,23 +15,52 @@
  */
 package fr.crnan.videso3d.ihm.components;
 
-import fr.crnan.videso3d.SimpleGLCanvas;
+import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
+import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 
 import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
+/**
+ * 
+ * @author Bruno Spyckerelle
+ * @version 0.2.0
+ */
 public class EpaisseurSpinner extends JSpinner {
 
-	public EpaisseurSpinner(final SimpleGLCanvas wwd, final AirspaceAttributes attrs){
-		super();
+	public EpaisseurSpinner(final WorldWindowGLCanvas wwd, final AirspaceAttributes attrs){
+		super(new SpinnerNumberModel(attrs.getOutlineWidth(), 0.0, 10.0, 0.5));
+		this.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(!attrs.isDrawOutline())
+					attrs.setDrawOutline(true);
+				if(((Double)getValue()).doubleValue() == 0.0)
+					attrs.setDrawOutline(false);
+				else 
+					attrs.setOutlineWidth((Double) getValue());
+				wwd.redraw();
+			}
+		});
+	}
+
+	public EpaisseurSpinner(final WorldWindowGLCanvas wwd, final ShapeAttributes attrs) {
+		
+		super(new SpinnerNumberModel(attrs.getOutlineWidth(), 0.0, 10.0, 0.5));
 		this.setValue(attrs.getOutlineWidth());
 		this.addChangeListener(new ChangeListener() {
 			
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				attrs.setOutlineWidth((Integer)getValue());
+				if(!attrs.isDrawOutline())
+					attrs.setDrawOutline(true);
+				if(((Double)getValue()).doubleValue() == 0.0)
+					attrs.setDrawOutline(false);
+				else 
+					attrs.setOutlineWidth((Double) getValue());
 				wwd.redraw();
 			}
 		});

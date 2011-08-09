@@ -16,11 +16,12 @@
 
 package fr.crnan.videso3d.ihm;
 
-import fr.crnan.videso3d.SimpleGLCanvas;
+import fr.crnan.videso3d.SimpleGLCanvasFactory;
 import fr.crnan.videso3d.ihm.components.EpaisseurSpinner;
 import fr.crnan.videso3d.ihm.components.JColorButton;
 import fr.crnan.videso3d.ihm.components.OpacitySlider;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
+import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 
@@ -49,7 +50,7 @@ import java.awt.GridLayout;
 public class AirspaceAttributesDialog extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private SimpleGLCanvas wwd;
+	private WorldWindowGLCanvas wwd;
 	private JPanel attrsPanel;
 	private JSlider opaciteContour;
 	private JSpinner epaisseurContour;
@@ -74,10 +75,10 @@ public class AirspaceAttributesDialog extends JDialog {
 		
 		this.setModalityType(DEFAULT_MODALITY_TYPE);
 		
-		wwd = new SimpleGLCanvas();
-		
 		final AirspaceAttributes attrsNormal = new BasicAirspaceAttributes(attrsN);
 		final AirspaceAttributes attrsHighlight = new BasicAirspaceAttributes(attrsH);
+		
+		wwd = SimpleGLCanvasFactory.SimpleGLCanvasPolygon(attrsNormal, attrsHighlight);
 		
 		setBounds(100, 100, 851, 545);
 		getContentPane().setLayout(new BorderLayout());
@@ -128,12 +129,8 @@ public class AirspaceAttributesDialog extends JDialog {
 		JPanel wwdPanel = new JPanel();
 		contentPanel.add(wwdPanel);
 		wwdPanel.setLayout(new BorderLayout(0, 0));
-		wwd.addSamplePolygon(attrsNormal, attrsHighlight);
 		wwd.setPreferredSize(new java.awt.Dimension(200, 200));
 		wwdPanel.add(wwd, BorderLayout.CENTER);
-
-
-
 
 		JPanel buttonPane = new JPanel();
 		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));

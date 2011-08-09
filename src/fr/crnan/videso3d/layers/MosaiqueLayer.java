@@ -23,6 +23,7 @@ import java.util.List;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.PolygonAnnotation;
 import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
@@ -32,6 +33,7 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
+import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.UserFacingText;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
@@ -285,7 +287,13 @@ public class MosaiqueLayer extends LayerSet {
 				polygon.setName(name);
 				polygon.setType(type);
 				//polygon.setName(annotation.split("[<>]")[4]);
-				if(attr != null) polygon.setAttributes(attr);
+				if(attr != null) {
+					polygon.setAttributes(attr);
+					
+				}
+				BasicShapeAttributes attrsH = new BasicShapeAttributes(polygon.getAttributes());
+				attrsH.setInteriorMaterial(new Material(Pallet.makeBrighter(attr.getInteriorMaterial().getDiffuse())));
+				polygon.setHighlightAttributes(attrsH);
 				if(annotation != null) polygon.setAnnotation(annotation);
 				this.shapeLayer.addRenderable(polygon);
 		
@@ -321,6 +329,9 @@ public class MosaiqueLayer extends LayerSet {
 				polygon.setType(type);
 				//polygon.setName(annotation.split("[<>]")[4]);
 				if(attr != null) polygon.setAttributes(attr);
+				BasicShapeAttributes attrsH = new BasicShapeAttributes(polygon.getAttributes());
+				attrsH.setInteriorMaterial(new Material(Pallet.makeBrighter(attr.getInteriorMaterial().getDiffuse())));
+				polygon.setHighlightAttributes(attrsH);
 				if(annotation != null) polygon.setAnnotation(annotation);
 				this.shapeLayer.addRenderable(polygon);
 		

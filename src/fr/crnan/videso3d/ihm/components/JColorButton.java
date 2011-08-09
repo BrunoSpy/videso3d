@@ -15,8 +15,9 @@
  */
 package fr.crnan.videso3d.ihm.components;
 
-import fr.crnan.videso3d.SimpleGLCanvas;
+import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 
 import java.awt.Color;
@@ -30,13 +31,13 @@ import javax.swing.JLabel;
 /**
  * JButton that pops up a JColorChooser and change the color of a JLabel
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.2.0
  */
 public class JColorButton extends JButton {
 
 	private JLabel label;
 	
-	public JColorButton(final SimpleGLCanvas wwd, JLabel lbl, final AirspaceAttributes attrs, final boolean inner){
+	public JColorButton(final WorldWindowGLCanvas wwd, JLabel lbl, final AirspaceAttributes attrs, final boolean inner){
 		super(" ");
 		this.setIcon(new ImageIcon(getClass().getResource("/resources/fill-color.png")));
 		this.label = lbl;
@@ -49,6 +50,28 @@ public class JColorButton extends JButton {
 					label.setBackground(color);
 					if(inner)
 						attrs.setMaterial(new Material(color));
+					else
+						attrs.setOutlineMaterial(new Material(color));
+					wwd.redraw();
+				}
+			}
+		});
+	}
+
+	public JColorButton(final WorldWindowGLCanvas wwd, JLabel lbl,
+			final ShapeAttributes attrs, final boolean inner) {
+		super(" ");
+		this.setIcon(new ImageIcon(getClass().getResource("/resources/fill-color.png")));
+		this.label = lbl;
+		this.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Color color = JColorChooser.showDialog(null, "Couleur", label.getBackground());
+				if(color != null){
+					label.setBackground(color);
+					if(inner)
+						attrs.setInteriorMaterial(new Material(color));
 					else
 						attrs.setOutlineMaterial(new Material(color));
 					wwd.redraw();

@@ -127,7 +127,7 @@ public class PisteAerodrome implements Aerodrome{
 		rectInterieur.add(pi2);
 		rectInterieur.add(pi3);
 		rectInterieur.add(pi4);
-		this.inner = new SurfacePolygonAnnotation(rectInterieur,0);
+		this.inner = new SurfacePolygonAnnotation(rectInterieur);
 		//points du rectangle extérieur				
 		List<LatLon> rectExterieur = new LinkedList<LatLon>();
 		LatLon pe1 = LatLon.fromDegrees(lat1+(2*a+b)*largeurCarte, lon1+(2*b-a)*largeurCarte);
@@ -138,7 +138,7 @@ public class PisteAerodrome implements Aerodrome{
 		rectExterieur.add(pe2);
 		rectExterieur.add(pe3);
 		rectExterieur.add(pe4);
-		this.outer = new SurfacePolygonAnnotation(rectExterieur,0);
+		this.outer = new SurfacePolygonAnnotation(rectExterieur);
 	}
 
 
