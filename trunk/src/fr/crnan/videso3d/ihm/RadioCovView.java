@@ -64,10 +64,7 @@ public class RadioCovView extends JPanel implements DataView {
 						
 		try {			
 			if(DatabaseManager.getCurrentRadioCov() != null) { 									
-				initGUI();
-				if (initRadioCovAirspaces()){					
-					feedPanel();
-				}						
+				initGUI();					
 			}
 		}
 		catch (SQLException e) {	
