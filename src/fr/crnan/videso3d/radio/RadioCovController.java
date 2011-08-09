@@ -30,6 +30,7 @@ import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.ihm.RadioCovView;
 import fr.crnan.videso3d.layers.RadioCovLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.airspaces.Airspace;
@@ -76,8 +77,17 @@ public class RadioCovController implements VidesoController {
 				}
 				return null;
 			}
+			
+			@Override
+			protected void done(){
+				RadioCovView radioView  = (RadioCovView)DatasManager.getView(Type.RadioCov);
+				if(radioView.initRadioCovAirspaces())
+					radioView.feedPanel();
+			}
+			
 		}.execute();
 
+		
 
 	}
 
