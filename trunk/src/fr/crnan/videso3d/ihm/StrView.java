@@ -151,7 +151,6 @@ public class StrView extends JPanel implements DataView{
 	
 	private JPanel buildPanel(JPanel panel, String query){
 		panel.setLayout(new GridLayout(0, 3));
-		int i = 0;
 		try {
 			Statement st = DatabaseManager.getCurrentExsa();
 			ResultSet rs = st.executeQuery(query);
@@ -162,14 +161,12 @@ public class StrView extends JPanel implements DataView{
 						chk.addItemListener(itemCheckListener);
 						checkBoxList.add(chk);
 						panel.add(chk);	
-						i++;
 					}
 				} else {
 					JCheckBox chk = new JCheckBox(rs.getString(1));
 					chk.addItemListener(itemCheckListener);
 					checkBoxList.add(chk);
 					panel.add(chk);	
-					i++;
 				}
 			}
 		} catch (SQLException e) {

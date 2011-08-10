@@ -38,7 +38,8 @@ import fr.crnan.videso3d.skyview.SkyViewController;
 /**
  * Interface de sélection de données SkyView
  * @author Bruno Spyckerelle
- * @version 0.3.2
+ * @author Adrien Vidal
+ * @version 0.3.3
  */
 public class SkyView extends FilteredMultiTreeTableView {
 	
@@ -47,9 +48,6 @@ public class SkyView extends FilteredMultiTreeTableView {
 	private FilteredTreeTableModel model;
 	
 	public SkyView(){
-		//	this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		//		panel.setBorder(BorderFactory.createTitledBorder(""));
-		//		this.add(Box.createVerticalGlue());
 		try{
 			if(DatabaseManager.getCurrentSkyView() != null){
 				DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
@@ -60,7 +58,6 @@ public class SkyView extends FilteredMultiTreeTableView {
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
-		//this.add(Box.createVerticalGlue());		
 	}
 
 	@Override
@@ -174,16 +171,12 @@ public class SkyView extends FilteredMultiTreeTableView {
 	
 	@Override
 	public void showObject(int type, String name) {
-		for(DefaultMutableTreeNode node : this.nodes.get(name)){
-			this.model.setValueAt(true, node, 1);
-		}
+		this.model.setValueAt(true, this.nodes.get(name), 1);
 	}
 
 	@Override
 	public void hideObject(int type, String name) {
-		for(DefaultMutableTreeNode node : this.nodes.get(name)){
-			this.model.setValueAt(false, node, 1);
-		}
+		this.model.setValueAt(false, this.nodes.get(name), 1);
 	}
 
 	public static boolean isSkyViewFile(File file) {
