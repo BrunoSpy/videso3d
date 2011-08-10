@@ -158,9 +158,6 @@ public class Omnibox {
 				chooseButton.getPopupMenu().add(newButton);		
 			}
 			bases.put(type, items);
-			for(ItemCouple item : bases.get(type)){
-				searchBox.addItem(item);
-			}
 		}
 	}	
 	
@@ -191,8 +188,10 @@ public class Omnibox {
 	 * Updates the combobox
 	 */
 	public void update(){
+		searchBox.setEnabled(false);
+		chooseButton.setEnabled(false);
 		if(selectedBase == null){
-			Iterator<Type> it = bases.keySet().iterator();
+			final Iterator<Type> it = bases.keySet().iterator();
 			while(it.hasNext()){
 				Type type = it.next();
 				if(type!=previouslySelectedBase){
@@ -207,9 +206,11 @@ public class Omnibox {
 				searchBox.addItem(item);
 			}
 		}
+		searchBox.setEnabled(true);
+		chooseButton.setEnabled(true);
 	}
-	
-	
+
+
 	public void addActionListener(ActionListener listener){
 		searchBox.addActionListener(listener);
 	}
