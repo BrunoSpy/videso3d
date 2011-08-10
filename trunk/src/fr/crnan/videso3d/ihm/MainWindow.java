@@ -117,7 +117,7 @@ public class MainWindow extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	}
 
-	
+
 	public MainWindow(){
 		//Création du splashscreen
 		splashScreen = new SplashScreen();
@@ -320,7 +320,6 @@ public class MainWindow extends JFrame {
 						empty = DatasManager.numberViews() == 0;
 						DatasManager.createDatas(type, wwd);
 						omniBox.addDatabase(type, DatabaseManager.getAllVisibleObjects(type, omniBox));
-						omniBox.addToSearchBox(type);
 						return null;
 					}
 
@@ -329,6 +328,7 @@ public class MainWindow extends JFrame {
 						Type type = (Type) evt.getNewValue();
 							if(DatasManager.getView(type) != null){
 								updateDockables(type, empty);
+								omniBox.addToSearchBox(type);
 								context.addTaskPane(DatasManager.getContext(type), type);
 								AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(type), type);
 							}
