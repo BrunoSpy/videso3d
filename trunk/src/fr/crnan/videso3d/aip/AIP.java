@@ -35,7 +35,6 @@ import org.jdom.JDOMException;
 import org.jdom.filter.Filter;
 import org.jdom.input.SAXBuilder;
 
-
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileParser;
@@ -140,7 +139,7 @@ public class AIP extends FileParser{
 		this.Bals = new ArrayList<Couple<Integer,String>>();
 		this.TrPlas = new ArrayList<Couple<Integer,String>>();
 
-		SAXBuilder sxb = new SAXBuilder();
+		final SAXBuilder sxb = new SAXBuilder();
 		try {
 			this.name = DatabaseManager.getCurrentName(DatabaseManager.Type.AIP);
 			//on récupère le chemin d'accès au fichier xml à parser
@@ -149,7 +148,19 @@ public class AIP extends FileParser{
 			rs = st.executeQuery("select * from clefs where name='path' and type='"+DatabaseManager.getCurrentName(DatabaseManager.Type.AIP)+"'");
 			if(rs.next()){
 				this.fileName = rs.getString(4);
-				document = sxb.build(new File(name+"_files",fileName));
+				//Construction du document dans un autre thread afin de ne pas bloquer l'initialisation
+				new Thread(){
+					@Override
+					public void run(){
+						try {
+							document = sxb.build(new File(name+"_files",fileName));
+						} catch (JDOMException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}.start();
 			}
 			//TODO prendre en compte la possibilité qu'il n'y ait pas de bdd AIP
 			Statement aipDB = DatabaseManager.getCurrentAIP();
@@ -163,10 +174,6 @@ public class AIP extends FileParser{
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (JDOMException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
