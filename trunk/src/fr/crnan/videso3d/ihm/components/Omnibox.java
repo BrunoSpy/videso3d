@@ -168,6 +168,7 @@ public class Omnibox {
 	public void removeDatabase(DatabaseManager.Type type){
 		if(bases.containsKey(type)) {
 			buttons.get(type).setSelected(false);
+			removeFromSearchBox(type);
 			bases.remove(type);
 			engines.remove(buttons.get(type));
 			chooseButton.getPopupMenu().remove(buttons.get(type));
@@ -181,6 +182,12 @@ public class Omnibox {
 	public void removeFromSearchBox(DatabaseManager.Type type){
 		for(ItemCouple item : bases.get(type)){
 			searchBox.removeItem(item);
+		}
+	}
+	
+	public void addToSearchBox(Type type){
+		for(ItemCouple item : bases.get(type)){
+			searchBox.addItem(item);
 		}
 	}
 	
@@ -200,7 +207,7 @@ public class Omnibox {
 					}
 				}
 			}
-		} else {
+		} else if(previouslySelectedBase != selectedBase){
 			searchBox.removeAllItems();
 			for(ItemCouple item : bases.get(selectedBase)){
 				searchBox.addItem(item);

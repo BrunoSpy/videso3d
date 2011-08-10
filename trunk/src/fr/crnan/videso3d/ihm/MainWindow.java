@@ -25,7 +25,6 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.sql.SQLException;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -118,6 +117,7 @@ public class MainWindow extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	}
 
+	
 	public MainWindow(){
 		//Création du splashscreen
 		splashScreen = new SplashScreen();
@@ -285,12 +285,14 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
+				try{
 				Type type = (Type) evt.getNewValue();
 				control.removeSingleDockable(type.toString());
 				DatasManager.deleteDatas(type);
 				omniBox.removeDatabase(type);
 				context.removeTaskPane(type);
 				AnalyzeUI.getContextPanel().removeTaskPane(type);
+				}catch(Exception e){e.printStackTrace();}
 			}
 			
 		});
@@ -317,22 +319,19 @@ public class MainWindow extends JFrame {
 						DatabaseManager.Type type = (Type) evt.getNewValue();
 						empty = DatasManager.numberViews() == 0;
 						DatasManager.createDatas(type, wwd);
+						omniBox.addDatabase(type, DatabaseManager.getAllVisibleObjects(type, omniBox));
+						omniBox.addToSearchBox(type);
 						return null;
 					}
 
 					@Override
 					protected void done() {
 						Type type = (Type) evt.getNewValue();
-						try {
 							if(DatasManager.getView(type) != null){
 								updateDockables(type, empty);
 								context.addTaskPane(DatasManager.getContext(type), type);
 								AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(type), type);
-								omniBox.addDatabase(type, DatabaseManager.getAllVisibleObjects(type, omniBox));
 							}
-						} catch (SQLException e) {
-							e.printStackTrace();
-						}
 						progressMonitor.close();
 					}
 				}.execute();
