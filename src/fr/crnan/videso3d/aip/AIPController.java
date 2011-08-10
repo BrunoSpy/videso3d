@@ -79,7 +79,7 @@ import gov.nasa.worldwind.view.orbit.BasicOrbitView;
 public class AIPController extends ProgressSupport implements VidesoController {
 
 	private VidesoGLCanvas wwd;
-	private AIP aip = new AIP();
+	private AIP aip;
 	
 	private FilterableAirspaceLayer zonesLayer = new FilterableAirspaceLayer();
 	{zonesLayer.setName("Zones");
@@ -114,6 +114,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	private String routeEnCreation = "";
 	
 	public AIPController(VidesoGLCanvas wwd) {
+		aip = new AIP();
 		this.wwd = wwd;
 		this.buildAIP();
 	}
