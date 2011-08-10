@@ -15,6 +15,7 @@
 */
 package fr.crnan.videso3d.graphics;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import gov.nasa.worldwind.geom.LatLon;
@@ -23,7 +24,9 @@ import gov.nasa.worldwind.render.Highlightable;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
-import gov.nasa.worldwind.render.airspaces.Polygon;;
+import gov.nasa.worldwind.render.airspaces.DetailLevel;
+import gov.nasa.worldwind.render.airspaces.Polygon;
+import gov.nasa.worldwind.render.airspaces.ScreenSizeDetailLevel;
 /**
  * Adds the ability to find if a point is inside the Polygon
  * @author Bruno Spyckerelle
@@ -42,6 +45,16 @@ public class VPolygon extends Polygon implements Highlightable{
 
 	public VPolygon() {
 		super();
+		List<DetailLevel> levels = new ArrayList<DetailLevel>();
+        double[] ramp = ScreenSizeDetailLevel.computeDefaultScreenSizeRamp(1);
+
+        DetailLevel level;
+        level = new ScreenSizeDetailLevel(ramp[0], "Detail-Level-0");
+        level.setValue(SUBDIVISIONS, 0);
+        level.setValue(DISABLE_TERRAIN_CONFORMANCE, false);
+        levels.add(level);
+
+        this.setDetailLevels(levels);
 	}
 
 	/**
