@@ -20,6 +20,8 @@ import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -45,27 +47,19 @@ public class SkyView extends FilteredMultiTreeTableView {
 	private FilteredTreeTableModel model;
 	
 	public SkyView(){
-
-	//	this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+		//	this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		//		panel.setBorder(BorderFactory.createTitledBorder(""));
-
-//		this.add(Box.createVerticalGlue());
+		//		this.add(Box.createVerticalGlue());
 		try{
 			if(DatabaseManager.getCurrentSkyView() != null){
-				
-				
 				DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
 				this.fillRootNode(root);
 				this.model = new FilteredTreeTableModel(root);
-
 				this.addTableTree(this.model, null, null);
-				
 			}
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
-
 		//this.add(Box.createVerticalGlue());		
 	}
 
@@ -74,77 +68,109 @@ public class SkyView extends FilteredMultiTreeTableView {
 		return (SkyViewController) DatasManager.getController(Type.SkyView);
 	}
 
-
 	private void fillRootNode(DefaultMutableTreeNode root) {
-
 		try {
 			Statement st = DatabaseManager.getCurrentSkyView();
-			//ajout des routes
+			//Ajout des routes
 			DefaultMutableTreeNode routes = new DefaultMutableTreeNode(new Couple<String, Boolean>("Routes", false));
 			root.add(routes);
-			ResultSet rs = st.executeQuery("select distinct icao from airway order by icao");
-			LinkedList<String> icao = new LinkedList<String>();
+			//HashMap ayant pour clés les codes OACI des pays, et en valeurs un couple contenant le noeud correspondant au pays 
+			//et la liste des routes déjà trouvées pour ce pays
+			HashMap<String, Couple<DefaultMutableTreeNode,LinkedList<String>>> awyStateNodesMap = 
+					new HashMap<String, Couple<DefaultMutableTreeNode,LinkedList<String>>>();
+			ResultSet rs = st.executeQuery("select ident, icao from airway order by ident");
 			while(rs.next()){
-				icao.add(rs.getString(1));
-			}
-			for(String oaci : icao){
-				rs = st.executeQuery("select distinct ident from airway where icao='"+oaci+"' order by ident");
-				DefaultMutableTreeNode state = new DefaultMutableTreeNode(new Couple<String, Boolean>(oaci, false));
-				routes.add(state);
-				while(rs.next()){
-					String name = rs.getString(1);
-					DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(name, false));
-					state.add(node);
-					nodes.put(name, node);
-					
+				String stateName = rs.getString(2);
+				Couple<DefaultMutableTreeNode,LinkedList<String>> stateNode = awyStateNodesMap.get(stateName);
+				//Pour chaque route trouvée, on regarde si le noeud du pays a déjà été créé, et si non, on le crée.
+				if(stateNode==null){
+					stateNode = new Couple<DefaultMutableTreeNode,LinkedList<String>> (new DefaultMutableTreeNode(new Couple<String, Boolean>(stateName, false)), new LinkedList<String>());
+					awyStateNodesMap.put(stateName, stateNode);
 				}
-			}
-			//ajout des waypoints
-			DefaultMutableTreeNode waypoints = new DefaultMutableTreeNode(new Couple<String, Boolean>("Waypoints", false));
-			root.add(waypoints);
-			rs = st.executeQuery("select distinct icao from waypoint order by icao");
-			icao.clear();
-			while(rs.next()){
-				icao.add(rs.getString(1));
-			}
-			for(String oaci : icao){
-				rs = st.executeQuery("select ident from waypoint where icao='"+oaci+"' order by ident");
-				DefaultMutableTreeNode point = new DefaultMutableTreeNode(new Couple<String, Boolean>(oaci, false));
-				waypoints.add(point);
-				while(rs.next()){
-					String name = rs.getString(1);
-					DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(name, false));
-					point.add(node);
-					nodes.put(name, node);
-				}
-			}
-			//ajout des aéroports
-			DefaultMutableTreeNode airports = new DefaultMutableTreeNode(new Couple<String, Boolean>("Airports", false));
-			root.add(airports);
-			rs = st.executeQuery("select distinct icao from airport order by icao");
-			icao.clear();
-			while(rs.next()){
-				icao.add(rs.getString(1));
-			}
-			for(String oaci : icao){
-				rs = st.executeQuery("select ident from airport where icao='"+oaci+"' order by ident");
-				DefaultMutableTreeNode airport = new DefaultMutableTreeNode(new Couple<String, Boolean>(oaci, false));
-				airports.add(airport);
-				while(rs.next()){
-					String name = rs.getString(1);
-					DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(name, false));
-					airport.add(node);
-					nodes.put(name, node);
+
+				String routeName = rs.getString(1);
+				//On vérifie que cette route n'a pas déjà été ajoutée au noeud du pays
+				if(!stateNode.getSecond().contains(routeName)){
+					DefaultMutableTreeNode routeNode = new DefaultMutableTreeNode(new Couple<String, Boolean>(routeName, false));
+					//on rajoute le noeud de la route au noeud du pays
+					stateNode.getFirst().add(routeNode);
+					//on rajoute le nom de la route dans la liste des routes trouvées pour ce pays afin d'éviter les doublons
+					stateNode.getSecond().add(routeName);
+					nodes.put(routeName, routeNode);
 				}
 			}
 			rs.close();
+			//Tri des noeuds des pays : on crée une liste avec tous les codes
+			LinkedList<String> sortedStatesNames = new LinkedList<String>();
+			for(String stateName : awyStateNodesMap.keySet()){
+				sortedStatesNames.add(stateName);
+			}
+			//On trie cette liste
+			Collections.sort(sortedStatesNames);
+			//Ce qui nous permet d'ajouter les noeuds des pays dans le bon ordre.
+			for(String state : sortedStatesNames){
+				routes.add(awyStateNodesMap.get(state).getFirst());
+			}
+			
+			//Ajout des waypoints
+			DefaultMutableTreeNode waypoints = new DefaultMutableTreeNode(new Couple<String, Boolean>("Waypoints", false));
+			root.add(waypoints);
+			fillTypeNode(SkyViewController.TYPE_WAYPOINT,waypoints, st);
+			
+			//Ajout des aéroports
+			DefaultMutableTreeNode airports = new DefaultMutableTreeNode(new Couple<String, Boolean>("Airports", false));
+			root.add(airports);
+			fillTypeNode(SkyViewController.TYPE_AIRPORT,airports, st);
+			
 			st.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
-	
+	private void fillTypeNode(Integer type, DefaultMutableTreeNode typeNode, Statement st){
+		//HashMap ayant pour clés les codes des pays et pour valeurs les noeuds associés.
+		HashMap<String, DefaultMutableTreeNode> wptStateNodesMap = new HashMap<String, DefaultMutableTreeNode>();
+		String query = "select ident, icao from";
+		if(type==SkyViewController.TYPE_WAYPOINT)
+			query+=" waypoint";
+		else if(type==SkyViewController.TYPE_AIRPORT)
+			query+=" airport";
+		query+=" order by ident";
+		ResultSet rs;
+		try {
+			rs = st.executeQuery(query);
+			while(rs.next()){
+				String stateName = rs.getString(2);
+				DefaultMutableTreeNode stateNode = wptStateNodesMap.get(stateName);
+				//Si le noeud corredspondant au pays "stateName" n'existe pas, on le crée 
+				if(stateNode==null){
+					stateNode = new DefaultMutableTreeNode(new Couple<String, Boolean>(stateName, false));
+					wptStateNodesMap.put(stateName, stateNode);
+				}
+				//On crée le noeud du waypoint et on l'ajoute au noeud de son pays
+				String wptName = rs.getString(1);
+				DefaultMutableTreeNode wptNode = new DefaultMutableTreeNode(new Couple<String, Boolean>(wptName, false));
+				stateNode.add(wptNode);
+				nodes.put(wptName, wptNode);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		//Tri des noeuds de pays par ordre alphabétique : on crée une liste contenant tous les codes
+		LinkedList<String> sortedStatesNames = new LinkedList<String>();
+		for(String stateName : wptStateNodesMap.keySet()){
+			sortedStatesNames.add(stateName);
+		}
+		//On trie cette liste
+		Collections.sort(sortedStatesNames);
+		//Et on ajoute les noeuds des pays ainsi triés à leur racine (waypoints ou airports)
+		for(String state : sortedStatesNames){
+			typeNode.add(wptStateNodesMap.get(state));
+		}
+	}
+
 	
 	@Override
 	public void showObject(int type, String name) {

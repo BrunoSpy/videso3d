@@ -148,9 +148,8 @@ public class MainWindow extends JFrame {
 	private void createWwd(){
 		this.wwd = new VidesoGLCanvas();
 		wwd.setPreferredSize(new java.awt.Dimension(0, 0));
-		
 		wwd.setModel(new BasicModel());
-
+		
 		//compter le nombre d'étapes d'init
 		Integer temp = 0;
 		temp += wwd.getNumberInitSteps();
@@ -177,6 +176,10 @@ public class MainWindow extends JFrame {
 					wwd.initialize();
 					for(Type t : DatabaseManager.getSelectedDatabases()) {
 						DatasManager.createDatas(t, wwd);
+					}
+					omniBox = new Omnibox(wwd, context);
+					for(Type t : DatabaseManager.getSelectedDatabases()){
+						omniBox.addDatabase(t, DatabaseManager.getAllVisibleObjects(t, omniBox));
 					}
 					wwd.firePropertyChange("step", "", "Création de l'interface");
 				} catch (Exception e) {
@@ -212,14 +215,13 @@ public class MainWindow extends JFrame {
 
 		//Panneau contextuel
 		context = new ContextPanel();
-				
 		control = new CControl(this);
 		control.setTheme(ThemeMap.KEY_ECLIPSE_THEME);
 		control.putProperty(EclipseTheme.THEME_CONNECTOR, new VDefaultEclipseThemConnector());
 		control.setGroupBehavior(CGroupBehavior.TOPMOST);
 		control.getContentArea().setBorder(null);
 		this.add(control.getContentArea(), BorderLayout.CENTER);
-		
+
 		DefaultSingleCDockable dockableDatas = new DefaultSingleCDockable("dataExplorer");
 		DefaultSingleCDockable dockableWWD = new DefaultSingleCDockable("wwd");
 		DefaultSingleCDockable dockableContext = new DefaultSingleCDockable("context");
@@ -232,7 +234,7 @@ public class MainWindow extends JFrame {
 		wwdContainer.add(wwd, BorderLayout.CENTER);
 		dockableWWD.setTitleShown(false);
 		dockableWWD.add(wwdContainer);
-		
+
 		//fill dockableDatas with a fake panel to allow a correct layout
 		dockableDatas.add(new JPanel());
 		
@@ -250,33 +252,24 @@ public class MainWindow extends JFrame {
 		control.getContentArea().deploy(grid);
 		//minimizing context
 		dockableContext.setExtendedMode(ExtendedMode.MINIMIZED);
-		
+
 		//save location of future panel
 		locationDatas = /*CLocation.base().normalWest(0.2);*/dockableDatas.getBaseLocation().aside();
-		
+
 		for(Type type : DatabaseManager.getSelectedDatabases()){
 			this.updateDockables(type, false);
 		}
-		
+
 		control.removeDockable(dockableDatas);
-		
-		
+
 		airspaceListener = new AirspaceListener(wwd, context);
 		wwd.addSelectListener(airspaceListener);
 
-
-		//initialisation omnibox et contextpanel
-		omniBox = new Omnibox(wwd, context);
-		for(Type t : DatabaseManager.getSelectedDatabases()){
-			try {
-				omniBox.addDatabase(t, DatabaseManager.getAllVisibleObjects(t, omniBox));
-				context.addTaskPane(DatasManager.getContext(t), t);
-				AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(t), t);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		//initialisation contextpanel
+		for(Type t : DatabaseManager.getSelectedDatabases()){	
+			context.addTaskPane(DatasManager.getContext(t), t);
+			AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(t), t);	
 		}
-		
 		
 		//mises à jour en cas de changement de base
 		progressMonitor = new ProgressMonitor(this, "Mise à jour", "", 0, 7, true, false);
@@ -287,8 +280,6 @@ public class MainWindow extends JFrame {
 				progressMonitor.setNote(evt.getNewValue().toString());
 			}
 		});
-
-		
 		//Mise à jour quand une base est déselectionnée ou supprimée
 		DatabaseManager.addPropertyChangeListener(DatabaseManager.BASE_UNSELECTED, new PropertyChangeListener() {
 
@@ -350,18 +341,26 @@ public class MainWindow extends JFrame {
 		
 		//Barre d'actions
 		this.add(new MainToolbar(this, wwd, omniBox), BorderLayout.PAGE_START);
-
 		//Barre de statut
 		this.add(this.createStatusBar(), BorderLayout.SOUTH);
-		
 		//suppression du splashscreen et affichage de la fenêtre
 		splashScreen.dispose();
 		this.pack();
 		//FullScreen
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setVisible(true);
-		
 		firePropertyChange("done", null, true);
+		new SwingWorker<Void,Void>(){
+			@Override
+			protected Void doInBackground() throws Exception {
+				omniBox.update();
+				return null;
+			}
+			@Override
+			protected void done(){
+				System.gc();
+			}
+		}.execute();
 	}
 
 	/**
@@ -384,8 +383,6 @@ public class MainWindow extends JFrame {
 		dockable.add((Component) DatasManager.getView(type));
 		control.addDockable(dockable);
 		dockable.setVisible(true);
-		
-
 	}
 	
 	/**
