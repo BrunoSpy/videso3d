@@ -1513,10 +1513,10 @@ public final class DatabaseManager {
 				while(rs.next()){
 					items.add(new ItemCouple(controller, new Couple<Integer,String>(SkyViewController.TYPE_AIRPORT, rs.getString(1))));
 				}
-//				rs = st.executeQuery("select distinct ident from airway");
-//				while(rs.next()){
-//					items.add(omnibox.new ItemCouple(controller, new Couple<Integer,String>(SkyViewController.TYPE_ROUTE, rs.getString(1))));
-//				}
+				rs = st.executeQuery("select distinct ident from airway");
+				while(rs.next()){
+					items.add(new ItemCouple(controller, new Couple<Integer,String>(SkyViewController.TYPE_ROUTE, rs.getString(1))));
+				}
 			}
 			return items;
 		default:

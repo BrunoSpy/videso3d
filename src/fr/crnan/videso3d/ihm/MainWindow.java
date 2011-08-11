@@ -178,7 +178,7 @@ public class MainWindow extends JFrame {
 					}
 					omniBox = new Omnibox(wwd, context);
 					for(Type t : DatabaseManager.getSelectedDatabases()){
-						omniBox.addDatabase(t, DatabaseManager.getAllVisibleObjects(t, omniBox));
+						omniBox.addDatabase(t, DatabaseManager.getAllVisibleObjects(t, omniBox), false);
 					}
 					wwd.firePropertyChange("step", "", "Création de l'interface");
 				} catch (Exception e) {
@@ -188,6 +188,7 @@ public class MainWindow extends JFrame {
 			}
 			@Override
 			protected void done(){
+				omniBox.update();
 				//une fois terminé, on lance l'application
 				try {
 					launchVideso3D();
@@ -284,7 +285,6 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				try{
 				Type type = (Type) evt.getNewValue();
 				control.removeSingleDockable(type.toString());
 				DatasManager.deleteDatas(type);
@@ -292,7 +292,6 @@ public class MainWindow extends JFrame {
 				context.removeTaskPane(type);
 				AnalyzeUI.getContextPanel().removeTaskPane(type);
 				AnalyzeUI.updateSearchBoxes();
-				}catch(Exception e){e.printStackTrace();}
 			}
 			
 		});
@@ -319,7 +318,7 @@ public class MainWindow extends JFrame {
 						DatabaseManager.Type type = (Type) evt.getNewValue();
 						empty = DatasManager.numberViews() == 0;
 						DatasManager.createDatas(type, wwd);
-						omniBox.addDatabase(type, DatabaseManager.getAllVisibleObjects(type, omniBox));
+						omniBox.addDatabase(type, DatabaseManager.getAllVisibleObjects(type, omniBox), true);
 						return null;
 					}
 
@@ -328,7 +327,6 @@ public class MainWindow extends JFrame {
 						Type type = (Type) evt.getNewValue();
 							if(DatasManager.getView(type) != null){
 								updateDockables(type, empty);
-								omniBox.addToSearchBox(type);
 								context.addTaskPane(DatasManager.getContext(type), type);
 								AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(type), type);
 								AnalyzeUI.updateSearchBoxes();
@@ -350,17 +348,6 @@ public class MainWindow extends JFrame {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setVisible(true);
 		firePropertyChange("done", null, true);
-		new SwingWorker<Void,Void>(){
-			@Override
-			protected Void doInBackground() throws Exception {
-				omniBox.update();
-				return null;
-			}
-			@Override
-			protected void done(){
-				System.gc();
-			}
-		}.execute();
 	}
 
 	/**
