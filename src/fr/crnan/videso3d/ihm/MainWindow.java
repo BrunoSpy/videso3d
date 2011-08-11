@@ -117,7 +117,6 @@ public class MainWindow extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	}
 
-
 	public MainWindow(){
 		//Création du splashscreen
 		splashScreen = new SplashScreen();
@@ -292,6 +291,7 @@ public class MainWindow extends JFrame {
 				omniBox.removeDatabase(type);
 				context.removeTaskPane(type);
 				AnalyzeUI.getContextPanel().removeTaskPane(type);
+				AnalyzeUI.updateSearchBoxes();
 				}catch(Exception e){e.printStackTrace();}
 			}
 			
@@ -331,6 +331,7 @@ public class MainWindow extends JFrame {
 								omniBox.addToSearchBox(type);
 								context.addTaskPane(DatasManager.getContext(type), type);
 								AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(type), type);
+								AnalyzeUI.updateSearchBoxes();
 							}
 						progressMonitor.close();
 					}
