@@ -59,7 +59,7 @@ public class DatabasePolygonAnnotation extends PolygonAnnotation implements Data
 
 	@Override
 	public String getRestorableClassName() {
-		return new PolygonAnnotation().getClass().getName();
+		return PolygonAnnotation.class.getName();
 	}
 	
 }

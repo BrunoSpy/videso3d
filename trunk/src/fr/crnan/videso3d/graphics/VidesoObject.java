@@ -19,10 +19,12 @@ import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Highlightable;
 /**
- * Un objet graphique pour Videso comprend 5 éléments :
+ * Un objet graphique pour Videso comprend 3 éléments :
  * <ul><li>l'objet en lui-même (renderable, airspace, ...)</li>
  * <li>une annotation</li>
  * <li>un nom</li></ul>
+ * Tous les objets pour Videso doivent implémenter {@link Highlightable} et {@link Restorable}<br/>
+ * Un objet pour Videso lié à une base de données doit implémenter {@link DatabaseVidesoObject}
  * @author Bruno Spyckerelle
  * @version 3.0
  */
