@@ -15,49 +15,54 @@
  */
 package fr.crnan.videso3d.graphics;
 
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
-import gov.nasa.worldwind.geom.Position;
 /**
- * Représentation d'un aérodrome dont on ne connaît pas les pistes.
- * @author Adrien Vidal
- * @version 0.1.1
+ * 
+ * @author Bruno Spyckerelle
+ * @version 0.1.0
  */
-public class MarqueurAerodrome extends DatabaseBalise2D implements Aerodrome {
+public class DatabaseRoute3D extends Route3D implements DatabaseVidesoObject{
 
-	String nomPiste = "";
-	
-	public MarqueurAerodrome(int type, String name, Position position,String nomPiste, Type base) {
-		super(name.split("--")[0].trim(), position, "<b>"+name+"</b><br/>Piste "+ nomPiste, base, type);
-		this.nomPiste = nomPiste;
+	private Type base;
+	private int type;
+
+	public DatabaseRoute3D(String name, Space s, DatabaseManager.Type base, int type){
+		super(name, s);
 		this.setDatabaseType(base);
 		this.setType(type);
 	}
 
-	@Override
-	public Position getRefPosition() {
-		return this.getPosition();
-	}
-
-	@Override
-	public String getAnnotationText() {
-		return this.getAnnotation(null).getText();
+	public DatabaseRoute3D(DatabaseManager.Type base, int type) {
+		super();
+		this.setDefaultMaterial();
+		this.setDatabaseType(base);
+		this.setType(type);
 	}
 	
 	@Override
-	public String getNomPiste(){
-		return nomPiste;
+	public DatabaseManager.Type getDatabaseType() {
+		return this.base;
 	}
 
 	@Override
-	public void setVisible(boolean visible) {
-		this.getUserFacingText().setVisible(visible);
+	public void setDatabaseType(DatabaseManager.Type type) {
+		this.base = type;
 	}
 
+	@Override
+	public String getRestorableClassName() {
+		return Route3D.class.getName();
+	}
 	
-	
+	@Override
+	public void setType(int type) {
+		this.type = type;
+	}
 
-
+	@Override
+	public int getType() {
+		return this.type;
+	}
 	
-	
-
 }

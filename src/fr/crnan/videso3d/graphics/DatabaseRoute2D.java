@@ -13,36 +13,53 @@
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package fr.crnan.videso3d.graphics;
 
-import java.util.List;
-
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.geom.LatLonCautra;
+
 /**
  * 
  * @author Bruno Spyckerelle
  * @version 0.1.0
  */
-public class Secteur2D extends SurfacePolygonAnnotation implements DatabaseVidesoObject {
+public class DatabaseRoute2D extends Route2D implements DatabaseVidesoObject {
 
 	private int type;
 	private Type base;
-	private String name;
+
+	public DatabaseRoute2D(String name, Space s, DatabaseManager.Type base, int type){
+		this(base, type);
+		this.setAnnotation("Route "+name);
+		this.setSpace(s);
+		this.setName(name);
+	}
+	public DatabaseRoute2D(DatabaseManager.Type base, int type) {
+		super();
+		this.setDatabaseType(base);
+		this.setType(type);
+		
+	}
 	
-	public Secteur2D(List<LatLonCautra> locations) {
-		super(locations);
-		// TODO Auto-generated constructor stub
+	public DatabaseRoute2D(String name, DatabaseManager.Type base, int type) {
+		this(base, type);
+		this.setName(name);
 	}
 
 	@Override
-	public fr.crnan.videso3d.DatabaseManager.Type getDatabaseType() {
+	public DatabaseManager.Type getDatabaseType() {
 		return this.base;
 	}
 
 	@Override
-	public void setDatabaseType(fr.crnan.videso3d.DatabaseManager.Type type) {
+	public void setDatabaseType(DatabaseManager.Type type) {
 		this.base = type;
+	}
+	
+	@Override
+	public String getRestorableClassName() {
+		return Route2D.class.getName();
 	}
 
 	@Override
@@ -54,21 +71,4 @@ public class Secteur2D extends SurfacePolygonAnnotation implements DatabaseVides
 	public int getType() {
 		return this.type;
 	}
-
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String getName() {
-		return this.name;
-	}
-
-	@Override
-	public String getRestorableClassName() {
-		return SurfacePolygonAnnotation.class.getName();
-	}
-
-	
 }

@@ -16,8 +16,6 @@
 
 package fr.crnan.videso3d.graphics;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.markers.BasicMarker;
 import gov.nasa.worldwind.render.markers.BasicMarkerAttributes;
@@ -31,10 +29,6 @@ import gov.nasa.worldwind.render.markers.MarkerAttributes;
 public class MarkerAnnotation extends BasicMarker implements VidesoObject {
 
 	private VidesoAnnotation annotation;
-	
-	private DatabaseManager.Type base;
-	
-	private int type;
 	
 	private String name;
 
@@ -67,26 +61,6 @@ public class MarkerAnnotation extends BasicMarker implements VidesoObject {
 	public VidesoAnnotation getAnnotation(Position pos){
 		annotation.setPosition(pos);
 		return annotation;
-	}
-
-	@Override
-	public Type getDatabaseType() {
-		return this.base;
-	}
-
-	@Override
-	public void setDatabaseType(Type type) {
-		this.base = type;
-	}
-
-	@Override
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	@Override
-	public int getType() {
-		return this.type;
 	}
 
 	@Override
@@ -134,5 +108,17 @@ public class MarkerAnnotation extends BasicMarker implements VidesoObject {
         this.highlightAttrs = highlightAttrs;
         if(highlighted) this.setAttributes(this.highlightAttrs);
     }
+
+	@Override
+	public String getRestorableState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void restoreState(String stateInXml) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

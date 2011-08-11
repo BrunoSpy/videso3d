@@ -15,33 +15,39 @@
  */
 package fr.crnan.videso3d.graphics;
 
-import java.util.List;
-
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.geom.LatLonCautra;
+import gov.nasa.worldwind.geom.Position;
+
 /**
  * 
  * @author Bruno Spyckerelle
  * @version 0.1.0
  */
-public class Secteur2D extends SurfacePolygonAnnotation implements DatabaseVidesoObject {
+public class DatabaseBalise3D extends Balise3D implements DatabaseVidesoObject {
 
-	private int type;
 	private Type base;
-	private String name;
-	
-	public Secteur2D(List<LatLonCautra> locations) {
-		super(locations);
-		// TODO Auto-generated constructor stub
-	}
+	private int type;
 
+	public DatabaseBalise3D(CharSequence name, Position position, String annotation, DatabaseManager.Type base, int type){
+		super(name, position, annotation);
+		this.setType(type);
+		this.setDatabaseType(base);
+	}
+	
+	public DatabaseBalise3D(String balise, Position position, Type base, int type) {
+		super(balise,  position, null);
+		this.setType(type);
+		this.setDatabaseType(base);
+	}
+	
 	@Override
-	public fr.crnan.videso3d.DatabaseManager.Type getDatabaseType() {
+	public Type getDatabaseType() {
 		return this.base;
 	}
 
 	@Override
-	public void setDatabaseType(fr.crnan.videso3d.DatabaseManager.Type type) {
+	public void setDatabaseType(Type type) {
 		this.base = type;
 	}
 
@@ -54,21 +60,22 @@ public class Secteur2D extends SurfacePolygonAnnotation implements DatabaseVides
 	public int getType() {
 		return this.type;
 	}
-
+	
 	@Override
-	public void setName(String name) {
-		this.name = name;
+	public String getRestorableState() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
-	public String getName() {
-		return this.name;
+	public void restoreState(String stateInXml) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public String getRestorableClassName() {
-		return SurfacePolygonAnnotation.class.getName();
+		return Balise3D.class.getName();
 	}
 
-	
 }

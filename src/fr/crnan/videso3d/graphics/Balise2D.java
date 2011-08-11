@@ -21,7 +21,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import fr.crnan.videso3d.Configuration;
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
@@ -49,10 +48,9 @@ public class Balise2D extends MarkerAnnotation implements Balise{
 	 * @param position Position de la balise
 	 * @param annotation Annotation associée
 	 */
-	public Balise2D(CharSequence name, Position position, String annotation, DatabaseManager.Type base, int type){
+	public Balise2D(CharSequence name, Position position, String annotation){
 		super(position, new BasicMarkerAttributes());
-		this.setDatabaseType(base);
-		this.setType(type);
+		
 		this.setName((String) name);
 		
 		MarkerAttributes normalAttrs = new BasicMarkerAttributes();
@@ -90,8 +88,8 @@ public class Balise2D extends MarkerAnnotation implements Balise{
 	 * @param name Nom de la balise
 	 * @param position {@link LatLon} Position de la balise
 	 */
-	public Balise2D(CharSequence name, Position position, DatabaseManager.Type base, int type){
-		this(name, position, null, base, type);
+	public Balise2D(CharSequence name, Position position){
+		this(name, position, null);
 	}
 	
 	public UserFacingText getUserFacingText(){

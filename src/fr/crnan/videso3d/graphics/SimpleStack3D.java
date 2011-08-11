@@ -22,9 +22,7 @@ import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.Pallet;
-import fr.crnan.videso3d.exsa.STRController;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.avlist.AVList;
 import gov.nasa.worldwind.geom.Extent;
@@ -331,28 +329,6 @@ public class SimpleStack3D implements Airspace, VidesoObject {
 	public VidesoAnnotation getAnnotation(Position pos){
 		annotation.setPosition(pos);
 		return annotation;
-	}
-
-	@Override
-	public Type getDatabaseType() {
-		return Type.EXSA;
-	}
-
-	@Override
-	public void setDatabaseType(Type type) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setType(int type) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public int getType() {
-		return STRController.STACK;
 	}
 
 	@Override

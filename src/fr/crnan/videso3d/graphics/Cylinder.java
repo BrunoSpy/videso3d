@@ -16,7 +16,6 @@
 
 package fr.crnan.videso3d.graphics;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -25,7 +24,7 @@ import gov.nasa.worldwind.render.airspaces.CappedCylinder;
 /**
  * Cylindre 3D
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.2.0
  */
 public class Cylinder extends CappedCylinder implements VidesoObject {
 
@@ -33,29 +32,25 @@ public class Cylinder extends CappedCylinder implements VidesoObject {
 	
 	private VidesoAnnotation annotation;
 	
-	private Type database;
-	
-	private int type;
-	
 	private boolean highlighted = false;
 	private AirspaceAttributes highlightAttrs;
 	private AirspaceAttributes normalAttrs;
 	
+	public Cylinder(){
+		super();
+	}
+	
 	/**
 	 * 
 	 * @param name Nom
-	 * @param database Base de données auquel l'objet est rattaché
-	 * @param type Type de l'objet
 	 * @param center Centre du cylindre
 	 * @param flinf Niveau infèrieur
 	 * @param flsup Niveau supèrieur
 	 * @param rayon Rayon du cylindre en NM
 	 */
-	public Cylinder(String name, Type database, int type, LatLon center, int flinf, int flsup, double rayon){
+	public Cylinder(String name, LatLon center, int flinf, int flsup, double rayon){
 		super(center, rayon*LatLonCautra.NM);
 		this.setName(name);
-		this.setDatabaseType(database);
-		this.setType(type);
 		this.setAltitudes(flinf*30.48, flsup*30.48);
 	}
 	
@@ -72,26 +67,6 @@ public class Cylinder extends CappedCylinder implements VidesoObject {
 	public VidesoAnnotation getAnnotation(Position pos){
 		annotation.setPosition(pos);
 		return annotation;
-	}
-
-	@Override
-	public Type getDatabaseType() {
-		return this.database;
-	}
-
-	@Override
-	public void setDatabaseType(Type type) {
-		this.database = type;
-	}
-
-	@Override
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	@Override
-	public int getType() {
-		return this.type;
 	}
 
 	@Override

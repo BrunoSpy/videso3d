@@ -18,14 +18,13 @@ package fr.crnan.videso3d.edimap;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
+import fr.crnan.videso3d.graphics.DatabaseSurfacePolyline;
 import fr.crnan.videso3d.graphics.VidesoAnnotation;
-import fr.crnan.videso3d.graphics.VidesoObject;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
-import gov.nasa.worldwind.render.SurfacePolyline;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -39,7 +38,7 @@ import java.util.List;
  * @author Adrien Vidal
  * @version 0.2.1
  */
-public class EllipseEdimap extends SurfacePolyline implements VidesoObject{
+public class EllipseEdimap extends DatabaseSurfacePolyline{
 
 	//Nombre de points utilisés pour dessiner l'arc de cercle, par quart de cercle.
 	//Si on a un arc plus petit qu'un quart de cercle, on utilise <i>precision<i/> points, si on a un arc entre un quart de cercle 
@@ -49,7 +48,6 @@ public class EllipseEdimap extends SurfacePolyline implements VidesoObject{
 	private String nomCarte;
 	private int typeCarte=-1;
 	
-	private LinkedList<LatLon> polyligne = new LinkedList<LatLon>();
 	
 	public EllipseEdimap(Entity ellipse,
 			  HashMap<String, LatLonCautra> pointsRef, 
@@ -116,11 +114,11 @@ public class EllipseEdimap extends SurfacePolyline implements VidesoObject{
 		//Nombre de points à utiliser pour dessiner l'arc de cercle.
 		int nbPoints = (int) ((ouvertureAngulaire/90+1)*precision);
 		double pas = ouvertureAngulaire/(nbPoints-1);
-		
+		LinkedList<LatLon> polyligne = new LinkedList<LatLon>();
 		for (int i=0; i<nbPoints; i++){
 			double x = centre.getCautra()[0]+rayon*angle1.addDegrees(pas*i).cos();
 			double y = centre.getCautra()[1]+rayon*angle1.addDegrees(pas*i).sin();
-			this.polyligne.add(LatLonCautra.fromCautra(x, y));
+			polyligne.add(LatLonCautra.fromCautra(x, y));
 		}
 		this.setLocations(polyligne);
 		
@@ -206,4 +204,5 @@ public class EllipseEdimap extends SurfacePolyline implements VidesoObject{
 	public Object getNormalAttributes() {
 		return this.getAttributes();
 	}
+
 }

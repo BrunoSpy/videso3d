@@ -48,7 +48,7 @@ import fr.crnan.videso3d.graphics.Route;
  */
 public class AIP extends FileParser{
 
-	private final Integer numberFiles = 21;
+	private final Integer numberFiles = 22;
 
 	/**
 	 * Le nom de la base de données.
@@ -201,7 +201,6 @@ public class AIP extends FileParser{
 				DatabaseManager.createAIP(this.name,path);
 				//parsing des fichiers et stockage en base
 				this.getFromFiles();
-				this.setProgress(1);
 				this.conn.commit();
 				this.setProgress(this.numberFiles());
 			} else {

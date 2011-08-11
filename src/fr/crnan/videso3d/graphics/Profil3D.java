@@ -107,11 +107,11 @@ public class Profil3D {
 	}
 	
 	public void addBalise(String balise, Position position){
-		this.balises.add(new Balise3D(balise, position, Type.STIP, StipController.BALISES));
+		this.balises.add(new DatabaseBalise3D(balise, position, Type.STIP, StipController.BALISES));
 	}
 	
 	public void addBalise(String balise, String annotation, Position position){
-		this.balises.add(new Balise3D(balise, position, annotation, Type.STIP, StipController.BALISES));
+		this.balises.add(new DatabaseBalise3D(balise, position, annotation, Type.STIP, StipController.BALISES));
 		
 	}
 	

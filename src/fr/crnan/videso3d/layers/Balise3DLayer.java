@@ -22,13 +22,14 @@ import java.util.List;
 
 import fr.crnan.videso3d.graphics.Balise;
 import fr.crnan.videso3d.graphics.Balise3D;
+import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.Renderable;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.2.3
  */
 public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 
@@ -47,7 +48,11 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 
 	@Override
 	public void addBalise(Balise balise) {
-		this.balises.put(balise.getName()+balise.getType(), (Balise3D) balise);
+		if(balise instanceof DatabaseVidesoObject){
+			this.balises.put(balise.getName()+((DatabaseVidesoObject) balise).getType(), (Balise3D) balise);
+		} else {
+			this.balises.put(balise.getName(), (Balise3D) balise);
+		}
 		
 	}
 

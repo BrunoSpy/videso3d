@@ -27,7 +27,6 @@ import java.util.List;
 import com.sun.opengl.util.BufferUtil;
 
 import fr.crnan.videso3d.Couple;
-import fr.crnan.videso3d.DatabaseManager;
 import gov.nasa.worldwind.View;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwindx.examples.util.DirectedPath;
@@ -55,28 +54,16 @@ public class Route2D extends DirectedPath implements Route{
 	
 	private Sens sens;
 	
-	private int type;
-	
 	private String name;
 	
 	private List<String> balises;
-	
-	private DatabaseManager.Type base;
-	
+		
 	private HashMap<Position, Couple<Position, Integer>> directionsMap = new HashMap<Position, Couple<Position,Integer>>();
 
 	private List<Integer> directions;
 	
-	public Route2D(String name, Space s, DatabaseManager.Type base, int type){
-		this(base, type);
-		this.setAnnotation("Route "+name);
-		this.setSpace(s);
-		this.setName(name);
-	}
-	public Route2D(DatabaseManager.Type base, int type) {
+	public Route2D(){
 		super();
-		this.setDatabaseType(base);
-		this.setType(type);
 		this.setAltitudeMode(WorldWind.CLAMP_TO_GROUND);
 		this.setMaxScreenSize(9.0);
 		this.setArrowLength(40000);
@@ -88,20 +75,14 @@ public class Route2D extends DirectedPath implements Route{
 		this.setHighlightAttributes(attrs);
 	}
 	
-	public Route2D(String name, DatabaseManager.Type base, int type) {
-		this(base, type);
+	public Route2D(String name, Space s){
+		this();
+		this.setAnnotation("Route "+name);
+		this.setSpace(s);
 		this.setName(name);
+		
 	}
 
-	@Override
-	public DatabaseManager.Type getDatabaseType() {
-		return this.base;
-	}
-
-	@Override
-	public void setDatabaseType(DatabaseManager.Type type) {
-		this.base = type;
-	}
 	
 	/**
 	 * Affecte la couleur de la route suivant le codage SIA
@@ -202,16 +183,6 @@ public class Route2D extends DirectedPath implements Route{
 	@Override
 	public String getName() {
 		return this.name;
-	}
-
-	@Override
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	@Override
-	public int getType() {
-		return this.type;
 	}
 	
 	public void setBalises(List<String> balises){

@@ -16,7 +16,6 @@
 
 package fr.crnan.videso3d.layers;
 
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,9 +24,9 @@ import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.geom.LatLonCautra;
-import fr.crnan.videso3d.graphics.PolygonAnnotation;
-import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
-import fr.crnan.videso3d.graphics.VSurfacePolyline;
+import fr.crnan.videso3d.graphics.DatabasePolygonAnnotation;
+import fr.crnan.videso3d.graphics.DatabaseSurfacePolygonAnnotation;
+import fr.crnan.videso3d.graphics.DatabaseSurfacePolyline;
 
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -41,7 +40,7 @@ import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
  * Affiche une mosaique (STR ou STPV) en 2D ou en 3D</br>
  * Permet de colorier certains carrés et sous-carrés
  * @author Bruno Spyckerelle
- * @version 0.4.3
+ * @version 0.4.5
  */
 @SuppressWarnings("serial")
 public class MosaiqueLayer extends LayerSet {
@@ -147,7 +146,7 @@ public class MosaiqueLayer extends LayerSet {
 				LinkedList<LatLon> line = new LinkedList<LatLon>();
 				line.add(start);
 				line.add(stop);
-				VSurfacePolyline ligne = new VSurfacePolyline(line);
+				DatabaseSurfacePolyline ligne = new DatabaseSurfacePolyline(line);
 				ligne.setDatabaseType(base);
 				ligne.setType(type);
 				ligne.setName(name);
@@ -165,7 +164,7 @@ public class MosaiqueLayer extends LayerSet {
 				LinkedList<LatLon> line = new LinkedList<LatLon>();
 				line.add(start);
 				line.add(stop);
-				VSurfacePolyline col = new VSurfacePolyline(line);
+				DatabaseSurfacePolyline col = new DatabaseSurfacePolyline(line);
 				col.setDatabaseType(base);
 				col.setType(type);
 				col.setName(name);
@@ -282,7 +281,7 @@ public class MosaiqueLayer extends LayerSet {
 			locations.add(LatLonCautra.fromCautra(origine.getCautra()[0] + (colonne * size) * hsens, origine.getCautra()[1] + (ligne * size + size)*vsens));
 
 			
-				SurfacePolygonAnnotation polygon = new SurfacePolygonAnnotation(locations);
+				DatabaseSurfacePolygonAnnotation polygon = new DatabaseSurfacePolygonAnnotation(locations);
 				polygon.setDatabaseType(base);
 				polygon.setName(name);
 				polygon.setType(type);
@@ -297,7 +296,7 @@ public class MosaiqueLayer extends LayerSet {
 				if(annotation != null) polygon.setAnnotation(annotation);
 				this.shapeLayer.addRenderable(polygon);
 		
-				PolygonAnnotation polyg = new PolygonAnnotation(locations);
+				DatabasePolygonAnnotation polyg = new DatabasePolygonAnnotation(locations);
 				polyg.setDatabaseType(base);
 				polyg.setType(type);
 				polyg.setName(name);
@@ -323,7 +322,7 @@ public class MosaiqueLayer extends LayerSet {
 			locations.add(LatLonCautra.fromCautra(origine.getCautra()[0] + (colonne * size + sousColonne * (size/4)) * hsens, origine.getCautra()[1] + (ligne * size + sousLigne *(size/4) + size/4)*vsens));
 
 	
-				SurfacePolygonAnnotation polygon = new SurfacePolygonAnnotation(locations);
+				DatabaseSurfacePolygonAnnotation polygon = new DatabaseSurfacePolygonAnnotation(locations);
 				polygon.setDatabaseType(base);
 				polygon.setName(name);
 				polygon.setType(type);
@@ -335,7 +334,7 @@ public class MosaiqueLayer extends LayerSet {
 				if(annotation != null) polygon.setAnnotation(annotation);
 				this.shapeLayer.addRenderable(polygon);
 		
-				PolygonAnnotation polyg = new PolygonAnnotation(locations);
+				DatabasePolygonAnnotation polyg = new DatabasePolygonAnnotation(locations);
 				polyg.setDatabaseType(base);
 				polyg.setType(type);
 				polyg.setName(name);

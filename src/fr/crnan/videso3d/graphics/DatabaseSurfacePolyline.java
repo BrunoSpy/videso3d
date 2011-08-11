@@ -12,42 +12,45 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package fr.crnan.videso3d.graphics;
 
-import java.util.List;
+import java.util.LinkedList;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.geom.LatLonCautra;
+import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.render.BasicShapeAttributes;
 /**
  * 
  * @author Bruno Spyckerelle
  * @version 0.1.0
  */
-public class Secteur2D extends SurfacePolygonAnnotation implements DatabaseVidesoObject {
+public class DatabaseSurfacePolyline extends VSurfacePolyline implements DatabaseVidesoObject{
 
+	public DatabaseSurfacePolyline(LinkedList<LatLon> line) {
+		super(line);
+	}
+
+	public DatabaseSurfacePolyline(BasicShapeAttributes basicShapeAttributes) {
+		super(basicShapeAttributes);
+	}
+
+	private Type dataBaseType;
 	private int type;
-	private Type base;
-	private String name;
-	
-	public Secteur2D(List<LatLonCautra> locations) {
-		super(locations);
-		// TODO Auto-generated constructor stub
+
+	@Override
+	public Type getDatabaseType() {
+		return this.dataBaseType;
 	}
 
 	@Override
-	public fr.crnan.videso3d.DatabaseManager.Type getDatabaseType() {
-		return this.base;
-	}
-
-	@Override
-	public void setDatabaseType(fr.crnan.videso3d.DatabaseManager.Type type) {
-		this.base = type;
+	public void setDatabaseType(Type type) {
+		this.dataBaseType = type;
 	}
 
 	@Override
 	public void setType(int type) {
-		this.type = type;
+		this.type = type;	
 	}
 
 	@Override
@@ -56,19 +59,8 @@ public class Secteur2D extends SurfacePolygonAnnotation implements DatabaseVides
 	}
 
 	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String getName() {
-		return this.name;
-	}
-
-	@Override
 	public String getRestorableClassName() {
-		return SurfacePolygonAnnotation.class.getName();
+		return VSurfacePolyline.class.getName();
 	}
-
 	
 }

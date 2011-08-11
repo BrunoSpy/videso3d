@@ -32,6 +32,7 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.ihm.RadioCovView;
 import fr.crnan.videso3d.layers.RadioCovLayer;
+import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 /**
@@ -195,7 +196,13 @@ public class RadioCovController implements VidesoController {
 	}
 
 	@Override
-	public HashMap<Integer, List<String>> getSelectedObjects() {
+	public HashMap<Integer, List<String>> getSelectedObjectsReference() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Restorable> getSelectedObjects() {
 		// TODO Auto-generated method stub
 		return null;
 	}

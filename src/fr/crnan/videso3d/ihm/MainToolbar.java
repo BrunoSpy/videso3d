@@ -145,7 +145,7 @@ public class MainToolbar extends JToolBar {
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				if(fileChooser.showOpenDialog(loadProject) == JFileChooser.APPROVE_OPTION){
 					try {
-						new ProjectManager().loadProject(fileChooser.getSelectedFile());
+						ProjectManager.loadProject(fileChooser.getSelectedFile(), wwd);
 					} catch (FileNotFoundException e1) {
 						e1.printStackTrace();
 					} catch (IOException e1) {

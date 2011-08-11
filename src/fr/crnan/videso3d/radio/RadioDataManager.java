@@ -29,7 +29,7 @@ import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.formats.xml.PolygonDeserializer;
 import fr.crnan.videso3d.formats.xml.SaxonFactory;
-import fr.crnan.videso3d.graphics.VidesoObject;
+import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 
 /**
@@ -121,7 +121,7 @@ public class RadioDataManager extends FileParser {
 			PolygonDeserializer polygonDeserializer = new PolygonDeserializer();			
 			this.airspaces= polygonDeserializer.Deserialize(outputXmlFilePath);
 			for (Airspace airspace : airspaces){
-				((VidesoObject)airspace).setDatabaseType(Type.RadioCov);
+				((DatabaseVidesoObject)airspace).setDatabaseType(Type.RadioCov);
 			}
 //			this.airspaces= polygonDeserializer.Deserialize("e:/radioCoverageData/radioOutput.xml");
 //			test = true;

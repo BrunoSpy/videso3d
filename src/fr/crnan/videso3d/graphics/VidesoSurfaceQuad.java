@@ -13,43 +13,29 @@
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package fr.crnan.videso3d.graphics;
 
-import java.util.List;
-
-import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
-import gov.nasa.worldwind.render.SurfacePolygon;
+import gov.nasa.worldwind.render.SurfaceQuad;
 /**
- * SurfacePolygon avec Annotation intégrée
+ * 
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.1.0
  */
-public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoObject {
+public class VidesoSurfaceQuad extends SurfaceQuad implements VidesoObject{
 
 	private VidesoAnnotation annotation;
-	
 	private String name;
-	
-	/**
-	 * 
-	 * @param locations les coordonnées du polygone
-	 */
-	public SurfacePolygonAnnotation(List<? extends LatLon> locations){
-		super(locations);
-	}
 
-	public SurfacePolygonAnnotation(BasicShapeAttributes basicShapeAttributes) {
+	public VidesoSurfaceQuad(BasicShapeAttributes basicShapeAttributes) {
 		super(basicShapeAttributes);
 	}
-
 
 	@Override
 	public void setAnnotation(String text){
 		if(annotation == null) {
-			annotation = new VidesoAnnotation(text);		
+			annotation = new VidesoAnnotation(text);
 		} else {
 			annotation.setText(text);
 		}
@@ -59,7 +45,7 @@ public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoOb
 		annotation.setPosition(pos);
 		return annotation;
 	}
-
+	
 	@Override
 	public String getName() {
 		return this.name;
@@ -74,4 +60,5 @@ public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoOb
 	public Object getNormalAttributes() {
 		return this.getAttributes();
 	}
+	
 }

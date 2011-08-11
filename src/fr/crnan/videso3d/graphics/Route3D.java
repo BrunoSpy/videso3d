@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -35,9 +34,9 @@ import gov.nasa.worldwind.util.RestorableSupport;
 /**
  * Représentation 3D d'une route sous la forme d'un ruban
  * @author Bruno Spyckerelle
- * @version 0.2.4
+ * @version 0.2.5
  */
-public class Route3D extends TrackAirspace implements VidesoObject, Route {
+public class Route3D extends TrackAirspace implements Route {
 
 	private List<LatLon> locations = new ArrayList<LatLon>();
 	private double width = 1.0;
@@ -45,12 +44,8 @@ public class Route3D extends TrackAirspace implements VidesoObject, Route {
 	private VidesoAnnotation annotation;
 	
 	private Space space;
-	
-	private int type;
-	
+		
 	private List<String> balises;
-	
-	private DatabaseManager.Type base;
 	
 	private boolean highlighted = false;
 	private AirspaceAttributes highlightAttrs;
@@ -78,28 +73,7 @@ public class Route3D extends TrackAirspace implements VidesoObject, Route {
 		this.setName(name);
 	}
 	
-	public Route3D(String name, Space s, DatabaseManager.Type base, int type){
-		this(name, s);
-		this.setDatabaseType(base);
-		this.setType(type);
-	}
-
-	public Route3D(DatabaseManager.Type base, int type) {
-		super();
-		this.setDefaultMaterial();
-		this.setDatabaseType(base);
-		this.setType(type);
-	}
 	
-	@Override
-	public DatabaseManager.Type getDatabaseType() {
-		return this.base;
-	}
-
-	@Override
-	public void setDatabaseType(DatabaseManager.Type type) {
-		this.base = type;
-	}
 	
 	/**
 	 * Type de la Route : UIR ou FIR
@@ -255,7 +229,7 @@ public class Route3D extends TrackAirspace implements VidesoObject, Route {
 
 	}
 
-	private void setDefaultMaterial() {
+	protected void setDefaultMaterial() {
 		Color color = Color.CYAN;
 		Color outline = Pallet.makeBrighter(color);
 		
@@ -307,16 +281,6 @@ public class Route3D extends TrackAirspace implements VidesoObject, Route {
 	@Override
 	public Space getSpace() {
 		return this.space;
-	}
-	
-	@Override
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	@Override
-	public int getType() {
-		return this.type;
 	}
 	
 	public double getWidth()

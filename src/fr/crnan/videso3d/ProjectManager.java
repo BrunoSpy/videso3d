@@ -17,20 +17,30 @@ package fr.crnan.videso3d;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.nio.channels.FileChannel;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
+import gov.nasa.worldwind.Restorable;
+import gov.nasa.worldwind.layers.AirspaceLayer;
+import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.render.Renderable;
+import gov.nasa.worldwind.render.airspaces.Airspace;
 
 /**
  * Load and save projects.<br />
@@ -84,7 +94,7 @@ public class ProjectManager extends ProgressSupport {
 		for(Type type : Type.values()){
 			try {
 				if(DatabaseManager.getCurrent(type) != null && DatasManager.getController(type) != null){
-					HashMap<Integer, List<String>> o = DatasManager.getController(type).getSelectedObjects();
+					HashMap<Integer, List<String>> o = DatasManager.getController(type).getSelectedObjectsReference();
 
 					if(o != null && !o.isEmpty()) {
 						objects.put(type, o);
@@ -104,9 +114,11 @@ public class ProjectManager extends ProgressSupport {
 	/**
 	 * Before invoking this method, <code>prepareSaving</code> has to be called once.
 	 * @param file .vpj file
+	 * @param databasesIncluded If true, include databases into the project file. If not, save each selected object as a standalone object.
 	 * @throws IOException 
+	 * @throws SQLException 
 	 */
-	public void saveProject(File file) throws IOException{
+	public void saveProject(File file, boolean databasesIncluded) throws IOException, SQLException{
 		
 		int index = file.getName().lastIndexOf(".");
 		
@@ -116,36 +128,50 @@ public class ProjectManager extends ProgressSupport {
 		File main = new File(name);
 		main.mkdir();
 		
+		//create xml directory
+		File xmlDir = new File(main.getAbsolutePath()+ "/xml");
+		xmlDir.mkdir();
+		
 		//create databases directory
 		if(!objects.isEmpty()){
 			File databases = new File(main.getAbsolutePath()+"/databases");
 			databases.mkdir();
 
-			try{
 				for(Type type : objects.keySet()){
 
-					//for each database with selected objects, we copy the sqlite file
-					File baseCopy = new File(databases, DatabaseManager.getCurrentName(type)+"."+type);
-					baseCopy.createNewFile();
+					if(databasesIncluded){
+						//for each database with selected objects, we copy the sqlite file
+						File baseCopy = new File(databases, DatabaseManager.getCurrentName(type)+"."+type);
+						baseCopy.createNewFile();
 
-					FileChannel source = new FileInputStream(new File(DatabaseManager.getCurrentName(type))).getChannel();
-					FileChannel destination = new FileOutputStream(baseCopy).getChannel();
+						FileChannel source = new FileInputStream(new File(DatabaseManager.getCurrentName(type))).getChannel();
+						FileChannel destination = new FileOutputStream(baseCopy).getChannel();
 
-					destination.transferFrom(source, 0, source.size());
+						destination.transferFrom(source, 0, source.size());
 
-					source.close();
-					destination.close();
+						source.close();
+						destination.close();
 
-					//then we save the selected objects
-					File selectedObjects = new File(databases, type.toString());
-					selectedObjects.createNewFile();
-					ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(selectedObjects));
-					oos.writeObject(objects.get(type));
-					oos.close();
+						//then we save the selected objects
+						File selectedObjects = new File(databases, type.toString());
+						selectedObjects.createNewFile();
+						ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(selectedObjects));
+						oos.writeObject(objects.get(type));
+						oos.close();
+					} else {
+						DecimalFormat f = new DecimalFormat("####");
+	                    f.setMinimumIntegerDigits(4);
+	                    int count = 0;
+						for(Restorable r : DatasManager.getController(type).getSelectedObjects()){
+							File object = new File(xmlDir, r.getClass().getName()+"-"+type+"-"+f.format(count++)+".xml");
+							PrintWriter of = new PrintWriter(object);
+							of.write(r.getRestorableState());
+							of.flush();
+							of.close();
+						}
+					}
 				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			
 		}
 		//create the zip file
 		FileManager.createZipFile(file, main);
@@ -155,55 +181,104 @@ public class ProjectManager extends ProgressSupport {
 		
 	}
 	
-	public void loadProject(File file) throws FileNotFoundException, IOException, ClassNotFoundException{
+	public static void loadProject(File file, VidesoGLCanvas wwd) throws FileNotFoundException, IOException, ClassNotFoundException{
 		
 		List<File> files = FileManager.unzip(file);
 		
 		int ind = file.getName().lastIndexOf(".");
-		//import databases
+		
 		String path = "temp"+file.getName()+"/"+file.getName().substring(0, ind); //don't forget to delete the extension
+
+		//import databases
 		final File databases = new File(path, "databases");
-		for(File f : databases.listFiles()){
-			int index = f.getName().lastIndexOf(".");
-			final String suffix = index == -1 ? "" : f.getName().substring(index+1);
-			String name = index == -1 ? f.getName() : f.getName().substring(0, index);
-			if(!suffix.isEmpty() && DatabaseManager.stringToType(suffix) != null) {
-				try {
-					if(!DatabaseManager.databaseExists(DatabaseManager.stringToType(suffix), name)) {
-						FileManager.copyFile(f);
+		if(databases.exists()){
+			for(File f : databases.listFiles()){
+				int index = f.getName().lastIndexOf(".");
+				final String suffix = index == -1 ? "" : f.getName().substring(index+1);
+				String name = index == -1 ? f.getName() : f.getName().substring(0, index);
+				final Type type = DatabaseManager.stringToType(suffix);
+				if(!suffix.isEmpty() && type != null) {
+					try {
+						if(!DatabaseManager.databaseExists(type, name)) {
+							FileManager.copyFile(f);
+						}
+						DatabaseManager.addDatabase(name, type);
+						DatabaseManager.fireBaseSelected(type);
+					} catch (SQLException e) {
+						e.printStackTrace();
 					}
-					DatabaseManager.addDatabase(name, DatabaseManager.stringToType(suffix));
-				} catch (SQLException e) {
+					//Once the database is selected and the controller created, check the objects
+					DatasManager.addPropertyChangeListener("done", new PropertyChangeListener() {
+
+						@Override
+						public void propertyChange(PropertyChangeEvent evt) {
+							File objectsFile = new File(databases, suffix);
+							try {
+								ObjectInputStream ois = new ObjectInputStream(new FileInputStream(objectsFile));
+								HashMap<Integer, List<String>> objects = (HashMap<Integer, List<String>>) ois.readObject();
+								for(Integer i : objects.keySet()){
+									for(String n : objects.get(i)){
+										DatasManager.getController(type).showObject(i, n);
+									}
+								}
+							} catch (FileNotFoundException e) {
+								e.printStackTrace();
+							} catch (IOException e) {
+								e.printStackTrace();
+							} catch (ClassNotFoundException e) {
+								e.printStackTrace();
+							}
+							DatasManager.removePropertyChangeListener("done", this); //ensure this is just done once
+						}
+					});
+
+				} 
+			}
+		}
+		//import xml files
+		File xmlDir = new File(path, "xml");
+		if(xmlDir.exists()){
+			AirspaceLayer xmlAirspace = null;
+			RenderableLayer xmlRenderables = null;
+			for(File f : xmlDir.listFiles()){
+				String[] name = f.getName().split("-");
+				try {
+					Class<?> c = Class.forName(name[0]);			
+					Restorable o = (Restorable) c.newInstance();
+					BufferedReader input = new BufferedReader(new FileReader(f));
+					String s = input.readLine();
+					
+					if(o instanceof DatabaseVidesoObject) {
+						Class<?> c2 = Class.forName(((DatabaseVidesoObject) o).getRestorableClassName());
+						o = (Restorable) c2.newInstance();
+						o.restoreState(s);
+					} else {
+						o.restoreState(s);
+					}
+					
+					if(o instanceof Airspace){
+						if(xmlAirspace == null){
+							xmlAirspace = new AirspaceLayer();
+							xmlAirspace.setName("XML Airspaces");
+							wwd.toggleLayer(xmlAirspace, true);
+						}
+						xmlAirspace.addAirspace((Airspace) o);
+					} else if(o instanceof Renderable){
+						if(xmlRenderables == null){
+							xmlRenderables = new RenderableLayer();
+							xmlRenderables.setName("XML Renderables");
+							wwd.toggleLayer(xmlRenderables, true);
+						}
+						xmlRenderables.addRenderable((Renderable) o);
+					}
+
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				}
-				//Once the database is selected and the controller created, check the objects
-				DatasManager.addPropertyChangeListener("done", new PropertyChangeListener() {
-					
-					@Override
-					public void propertyChange(PropertyChangeEvent evt) {
-						File objectsFile = new File(databases, suffix);
-						try {
-							ObjectInputStream ois = new ObjectInputStream(new FileInputStream(objectsFile));
-							HashMap<Integer, List<String>> objects = (HashMap<Integer, List<String>>) ois.readObject();
-							for(Integer i : objects.keySet()){
-								for(String n : objects.get(i)){
-									DatasManager.getController(DatabaseManager.stringToType(suffix)).showObject(i, n);
-								}
-							}
-						} catch (FileNotFoundException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
-						} catch (ClassNotFoundException e) {
-							e.printStackTrace();
-						}
-						DatasManager.removePropertyChangeListener("done", this); //ensure this is just done once
-					}
-				});
-				
-			} 
+			}
 		}
-		
 		//remove temp files
 		FileManager.removeTempFiles();
 	}

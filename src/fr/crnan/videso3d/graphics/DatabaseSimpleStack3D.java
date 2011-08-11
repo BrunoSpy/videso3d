@@ -12,52 +12,53 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 package fr.crnan.videso3d.graphics;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
-import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.geom.LatLon;
 /**
- * Représentation d'un aérodrome dont on ne connaît pas les pistes.
- * @author Adrien Vidal
- * @version 0.1.1
+ * 
+ * @author Bruno Spyckerelle
+ * @version 0.1.0
  */
-public class MarqueurAerodrome extends DatabaseBalise2D implements Aerodrome {
+public class DatabaseSimpleStack3D extends SimpleStack3D implements DatabaseVidesoObject {
 
-	String nomPiste = "";
+	private Type base;
+	private int type;
 	
-	public MarqueurAerodrome(int type, String name, Position position,String nomPiste, Type base) {
-		super(name.split("--")[0].trim(), position, "<b>"+name+"</b><br/>Piste "+ nomPiste, base, type);
-		this.nomPiste = nomPiste;
+	public DatabaseSimpleStack3D(String name, LatLon center, double rayonInt,
+			double rayonExt, int flInf, int flSup, Type base, int type) {
+		super(name, center, rayonInt, rayonExt, flInf, flSup);
 		this.setDatabaseType(base);
 		this.setType(type);
 	}
 
+	
 	@Override
-	public Position getRefPosition() {
-		return this.getPosition();
+	public Type getDatabaseType() {
+		return this.base;
 	}
 
 	@Override
-	public String getAnnotationText() {
-		return this.getAnnotation(null).getText();
-	}
-	
-	@Override
-	public String getNomPiste(){
-		return nomPiste;
+	public void setDatabaseType(Type type) {
+		this.base = type;
 	}
 
 	@Override
-	public void setVisible(boolean visible) {
-		this.getUserFacingText().setVisible(visible);
+	public void setType(int type) {
+		this.type = type;
 	}
 
-	
-	
+	@Override
+	public int getType() {
+		return this.type;
+	}
 
 
+	@Override
+	public String getRestorableClassName() {
+		return SimpleStack3D.class.getName();
+	}
 	
-	
-
 }

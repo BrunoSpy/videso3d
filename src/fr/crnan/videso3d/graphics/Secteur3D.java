@@ -21,14 +21,13 @@ import fr.crnan.videso3d.DatabaseManager;
 /**
  * Représentation 3D d'un secteur de contrôle
  * @author Bruno Spyckerelle
- * @version 0.4
+ * @version 0.4.2
  */
-public class Secteur3D extends PolygonAnnotation {
-
-	/*
-	 * Nom du secteur
-	 */
-	private String name;
+public class Secteur3D extends DatabasePolygonAnnotation {
+	
+	public Secteur3D(){
+		super();
+	}
 	
 	/**
 	 * Crée un secteur 3D
@@ -58,13 +57,8 @@ public class Secteur3D extends PolygonAnnotation {
 	
 	@Override
 	public void setName(String name) {
-		this.name = name;
+		super.setName(name);
 		this.setValue("description", "Secteur "+name);
-	}
-	
-	@Override
-	public String getName(){
-		return this.name;
 	}
 
 }

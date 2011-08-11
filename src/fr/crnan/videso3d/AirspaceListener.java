@@ -24,7 +24,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import fr.crnan.videso3d.graphics.Balise2D;
-import fr.crnan.videso3d.graphics.Route2D;
+import fr.crnan.videso3d.graphics.DatabaseRoute2D;
+import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoAnnotation;
 import fr.crnan.videso3d.graphics.VidesoObject;
@@ -51,7 +52,7 @@ import gov.nasa.worldwind.render.markers.Marker;
 /**
  * Listener d'évènements sur les airspaces et shapes
  * @author Bruno Spyckerelle
- * @version 0.5.0
+ * @version 0.5.1
  */
 public class AirspaceListener implements SelectListener {
 
@@ -153,14 +154,14 @@ public class AirspaceListener implements SelectListener {
 						}
 					});
 					
-					if(event.getTopObject() instanceof Route2D){
+					if(event.getTopObject() instanceof DatabaseRoute2D){
 						JMenuItem contextItem = new JMenuItem("Informations...");				
 						menu.add(contextItem);
 						contextItem.addActionListener(new ActionListener() {
 
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								Route2D route = (Route2D) event.getTopObject();
+								DatabaseRoute2D route = (DatabaseRoute2D) event.getTopObject();
 								context.showInfo(route.getDatabaseType(), route.getType(), route.getName());
 							}
 						});
@@ -171,8 +172,10 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							VidesoObject o = (VidesoObject) event.getTopObject();
-							DatasManager.getController(o.getDatabaseType()).hideObject(o.getType(), o.getName());
+							Object o = event.getTopObject();
+							if(o instanceof DatabaseVidesoObject){
+								DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType()).hideObject(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
+							}						
 						}
 					});
 				} else if(o instanceof Marker || o instanceof PointPlacemark){
@@ -229,8 +232,10 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							VidesoObject o = (VidesoObject) event.getTopObject();
-							DatasManager.getController(o.getDatabaseType()).hideObject(o.getType(), o.getName());
+							Object o = event.getTopObject();
+							if(o instanceof DatabaseVidesoObject){
+								DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType()).hideObject(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
+							}
 						}
 					});
 				}
@@ -275,8 +280,8 @@ public class AirspaceListener implements SelectListener {
 	}
 
 	private void doDoubleClick(Object o){
-		if(o instanceof VidesoObject){
-			this.context.showInfo(((VidesoObject) o).getDatabaseType(), ((VidesoObject) o).getType(), ((VidesoObject) o).getName());
+		if(o instanceof DatabaseVidesoObject){
+			this.context.showInfo(((DatabaseVidesoObject) o).getDatabaseType(), ((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
 		}
 	}
 
