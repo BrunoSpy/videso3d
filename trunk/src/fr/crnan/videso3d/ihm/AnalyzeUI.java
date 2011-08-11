@@ -315,4 +315,8 @@ public final class AnalyzeUI extends JFrame {
 		return getInstance().context;
 	}
 	
+	public static void updateSearchBoxes(){
+		getInstance().searchPanel.updateSearchBoxes();
+	}
+	
 }

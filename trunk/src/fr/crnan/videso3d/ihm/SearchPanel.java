@@ -96,18 +96,7 @@ public class SearchPanel extends JPanel {
 		});
 		
 		//Liste des balises pour l'autocomplétion
-		ArrayList<String> results = new ArrayList<String>();
-		try {
-			Statement st = DatabaseManager.getCurrentStip();
-			if(st != null){
-				ResultSet rs = st.executeQuery("select name from balises UNION select name from routes" /*UNION select nom from secteurs*/);
-				while(rs.next()){
-					results.add(rs.getString(1));
-				}
-			}
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
+		ArrayList<String> results = getAllStipItems();
 		
 		searchField1 = new JComboBox(results.toArray());
 		searchField1.setEditable(true);
@@ -302,5 +291,32 @@ public class SearchPanel extends JPanel {
 	
 	public JComboBox getTypeComboBox(){
 		return typeBox;
+	}
+	
+	public ArrayList<String> getAllStipItems(){
+		ArrayList<String> results = new ArrayList<String>();
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			if(st != null){
+				ResultSet rs = st.executeQuery("select name from balises UNION select name from routes" /*UNION select nom from secteurs*/);
+				while(rs.next()){
+					results.add(rs.getString(1));
+				}
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		return results;
+	}
+	
+	public void updateSearchBoxes(){
+		ArrayList<String> results = getAllStipItems();
+		searchField1.removeAllItems();
+		searchField2.removeAllItems();
+		searchField2.addItem("");
+		for(String item : results){
+			searchField1.addItem(item);
+			searchField2.addItem(item);
+		}
 	}
 }
