@@ -30,6 +30,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.util.Logging;
 /**
@@ -171,7 +172,13 @@ public class EdimapController implements VidesoController {
 	}
 
 	@Override
-	public HashMap<Integer, List<String>> getSelectedObjects() {
+	public HashMap<Integer, List<String>> getSelectedObjectsReference() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Restorable> getSelectedObjects() {
 		// TODO Auto-generated method stub
 		return null;
 	}

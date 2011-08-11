@@ -23,41 +23,30 @@ import java.util.List;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
-import fr.crnan.videso3d.graphics.VidesoAnnotation;
-import fr.crnan.videso3d.graphics.VidesoObject;
+import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
+import fr.crnan.videso3d.graphics.PolygonAnnotation;
 import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Airspace;
-import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
-import gov.nasa.worldwind.render.airspaces.Polygon;
 
 /**
  * Représentation 3D des mosaiques ODS (volume d'interet, de sécurité, ..)
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.2.3
  */
 public class MosaiqueEntity extends LinkedList<Airspace>{
 	
 	private Double plancher = new Double(0);
 	private Double plafond = new Double(660);
 	
-	private class Volume extends Polygon implements VidesoObject {
-		
-		private VidesoAnnotation annotation;
+	private class Volume extends PolygonAnnotation implements DatabaseVidesoObject {
 		
 		private DatabaseManager.Type base;
 		
 		private int type;
 		
 		private String name;
-
-		private boolean highlighted;
-
-		private AirspaceAttributes normalAttrs;
-
-		private AirspaceAttributes highlightAttrs;
 		
 		public Volume(int type, double plancher, double plafond){
 			super();
@@ -66,21 +55,6 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 			this.setAnnotation("<html><b>Volume " + (type==1?"de sécurité.":"d'intérêt.")+"</b><br />" +
 					"<b>Plafond : </b>" + (int) (plafond/30.48) + "<br />" +
 					"<b>Plancher : </b>" + (int) (plancher/30.48) );
-		}
-		
-		@Override
-		public void setAnnotation(String text){
-			if(annotation == null) {
-				annotation = new VidesoAnnotation(text);
-			} else {
-				annotation.setText(text);
-			}
-		}
-		
-		@Override
-		public VidesoAnnotation getAnnotation(Position pos){
-			annotation.setPosition(pos);
-			return annotation;
 		}
 
 		@Override
@@ -112,42 +86,11 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 		public void setName(String name) {
 			this.name = name;
 		}
-		
-		@Override
-		public boolean isHighlighted() {
-			return this.highlighted;
-		}
 
 		@Override
-		public void setHighlighted(boolean highlighted) {
-			if(this.highlighted != highlighted){
-				this.setAttributes(highlighted ? this.getHighlightAttributes() : this.getNormalAttributes());
-				this.highlighted = highlighted;
-			}
+		public String getRestorableClassName() {
+			return PolygonAnnotation.class.getName();
 		}
-		
-	    public AirspaceAttributes getNormalAttributes() {
-	        return this.normalAttrs;
-	    }
-
-	    public void setNormalAttributes(AirspaceAttributes normalAttrs) {
-	        this.normalAttrs = normalAttrs;
-	        if(!highlighted) this.setAttributes(this.normalAttrs);
-	    }
-	    
-	    public AirspaceAttributes getHighlightAttributes() {
-	        return highlightAttrs == null ? this.normalAttrs : this.highlightAttrs;
-	    }
-
-	    /**
-	     * Specifies highlight attributes.
-	     *
-	     * @param highlightAttrs highlight attributes. May be null, in which case default attributes are used.
-	     */
-	    public void setHighlightAttributes(AirspaceAttributes highlightAttrs) {
-	        this.highlightAttrs = highlightAttrs;
-	        if(highlighted) this.setAttributes(this.highlightAttrs);
-	    }
 	}
 	
 	

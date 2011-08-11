@@ -44,6 +44,10 @@ import fr.crnan.videso3d.aip.RoutesSegments.Segment;
 import fr.crnan.videso3d.graphics.Aerodrome;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Balise3D;
+import fr.crnan.videso3d.graphics.DatabaseBalise2D;
+import fr.crnan.videso3d.graphics.DatabaseBalise3D;
+import fr.crnan.videso3d.graphics.DatabaseRoute2D;
+import fr.crnan.videso3d.graphics.DatabaseRoute3D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route.Sens;
 import fr.crnan.videso3d.graphics.MarqueurAerodrome;
@@ -60,6 +64,7 @@ import fr.crnan.videso3d.layers.Balise3DLayer;
 import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
+import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -481,7 +486,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 							loc.add(LatLon.fromDegrees(48, 0));
 						}
 
-						Route2D segment2D = new Route2D(segmentName, routeType, Type.AIP, AIP.AWY);
+						DatabaseRoute2D segment2D = new DatabaseRoute2D(segmentName, routeType, Type.AIP, AIP.AWY);
 						List<Integer> directions = new ArrayList<Integer>();
 						Sens sens = null;
 						String sensString = segment.getChildText("Circulation");
@@ -514,7 +519,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 						routes2D.addRoute(segment2D, segmentName);
 
 						//TODO prendre en compte le sens de circulation pour les routes 3D... 
-						Route3D segment3D = new Route3D(segmentName, routeType, Type.AIP, AIP.AWY);
+						DatabaseRoute3D segment3D = new DatabaseRoute3D(segmentName, routeType, Type.AIP, AIP.AWY);
 						segment3D.setLocations(loc);
 						boolean lowerTerrainConformant = false, upperTerrainConformant = false;
 						if(altis.getFirst().isTerrainConforming()){
@@ -626,7 +631,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			Balise2D navFix = new Balise2D(name, Position.fromDegrees(latitude, longitude), Type.AIP, type);
+			Balise2D navFix = new DatabaseBalise2D(name, Position.fromDegrees(latitude, longitude), Type.AIP, type);
 			String annotation = "<html><b>"+name+"</b><br/><i>Type : </i>"+typeString;
 			if(freq != 0){
 				annotation += "<br/><i>Fréq. : </i>"+freq;
@@ -637,7 +642,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			navFixLayer.addBalise(navFix);
 			navFixLayer.showBalise(navFix);
 			
-			Balise3D navFix3D = new Balise3D(name, Position.fromDegrees(latitude, longitude, 665*30.47), Type.AIP, type);
+			Balise3D navFix3D = new DatabaseBalise3D(name, Position.fromDegrees(latitude, longitude, 665*30.47), Type.AIP, type);
 			navFix3D.setAnnotation(annotation);
 			navFixLayer3D.addBalise(navFix3D);
 			navFixLayer3D.showBalise(navFix3D);
@@ -1160,7 +1165,14 @@ public class AIPController extends ProgressSupport implements VidesoController {
 
 
 	@Override
-	public HashMap<Integer, List<String>> getSelectedObjects() {
+	public HashMap<Integer, List<String>> getSelectedObjectsReference() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Iterable<Restorable> getSelectedObjects() {
 		// TODO Auto-generated method stub
 		return null;
 	}

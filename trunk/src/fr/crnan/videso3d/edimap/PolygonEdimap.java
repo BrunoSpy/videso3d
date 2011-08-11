@@ -18,30 +18,24 @@ package fr.crnan.videso3d.edimap;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.geom.LatLonCautra;
-import fr.crnan.videso3d.graphics.VidesoAnnotation;
-import fr.crnan.videso3d.graphics.VidesoObject;
+import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
+import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
 import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
-import gov.nasa.worldwind.render.SurfacePolygon;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-
 /**
  * Construit une polyline à partir d'une entité Edimap
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
-public class PolygonEdimap extends SurfacePolygon implements VidesoObject {
-	
-	private String name;
-	
-	private String nomCarte;
+public class PolygonEdimap extends SurfacePolygonAnnotation implements DatabaseVidesoObject {
+		
 	private int typeCarte = -1;
 		
 	private HashMap<String, LatLonCautra> pointsRef;
@@ -54,7 +48,7 @@ public class PolygonEdimap extends SurfacePolygon implements VidesoObject {
 			PaletteEdimap palette,
 			HashMap<String, Entity> idAtc){
 		super(new BasicShapeAttributes());
-		this.name = polyline.getValue("name");
+		this.setName(polyline.getValue("name"));
 		this.pointsRef = pointsRef;
 		List<Entity> points = (LinkedList<Entity>) polyline.getEntity("geometry").getValue();
 		Iterator<Entity> iterator = points.iterator();
@@ -120,21 +114,6 @@ public class PolygonEdimap extends SurfacePolygon implements VidesoObject {
 			this.polyligne.add(PointEdimap.fromEntity(point));
 		}
 	}
-	
-	@Override
-	public String getName(){
-		return this.nomCarte;
-	}
-
-	@Override
-	public void setAnnotation(String text) {
-		//Pas d'annotation		
-	}
-
-	@Override
-	public VidesoAnnotation getAnnotation(Position pos) {
-		return null;
-	}
 
 	@Override
 	public Type getDatabaseType() {
@@ -157,12 +136,8 @@ public class PolygonEdimap extends SurfacePolygon implements VidesoObject {
 	}
 
 	@Override
-	public void setName(String name) {
-		this.nomCarte = name;
+	public String getRestorableClassName() {
+		return SurfacePolygonAnnotation.class.getName();
 	}
-
-	@Override
-	public Object getNormalAttributes() {
-		return this.getAttributes();
-	}
+	
 }

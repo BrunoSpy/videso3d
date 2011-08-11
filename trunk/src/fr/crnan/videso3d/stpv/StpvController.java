@@ -33,6 +33,7 @@ import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
+import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
@@ -200,7 +201,7 @@ public class StpvController implements VidesoController {
 	}
 
 	@Override
-	public HashMap<Integer, List<String>> getSelectedObjects() {
+	public HashMap<Integer, List<String>> getSelectedObjectsReference() {
 		HashMap<Integer, List<String>> objects = new HashMap<Integer, List<String>>();
 		
 		List<String> mosaiques = new ArrayList<String>();
@@ -208,8 +209,15 @@ public class StpvController implements VidesoController {
 			if(m.getValue().isEnabled())
 				mosaiques.add(m.getKey());
 		}
-		objects.put(MOSAIQUE, mosaiques);
+		if(!mosaiques.isEmpty())
+			objects.put(MOSAIQUE, mosaiques);
 		return objects;
+	}
+
+	@Override
+	public Iterable<Restorable> getSelectedObjects() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

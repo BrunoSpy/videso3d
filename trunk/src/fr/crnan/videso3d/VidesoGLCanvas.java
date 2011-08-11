@@ -43,10 +43,10 @@ import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.graphics.Aerodrome;
 import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
-import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
 import fr.crnan.videso3d.layers.FPLTracksLayer;
@@ -783,10 +783,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public double computeBestElevation(double distance){
 		return -2e-6*distance*distance+2.3945*distance+175836;
 	}
-
-	
-
-	
 	
 	 
 	public DraggerListener getDraggerListener(){
@@ -810,8 +806,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	}
 	
 	public void deleteAirspace(Airspace airspace){
-		if(airspace instanceof VidesoObject){
-			DatasManager.getController(((VidesoObject) airspace).getDatabaseType()).hideObject(((VidesoObject) airspace).getType(), ((VidesoObject) airspace).getName());
+		if(airspace instanceof DatabaseVidesoObject){
+			DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType()).hideObject(((DatabaseVidesoObject) airspace).getType(), ((DatabaseVidesoObject) airspace).getName());
 		} else {
 			for(Layer l : this.getModel().getLayers()){
 				if(l instanceof AirspaceLayer){

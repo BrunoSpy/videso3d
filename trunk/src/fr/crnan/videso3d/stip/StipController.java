@@ -23,7 +23,9 @@ import java.sql.Statement;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
@@ -34,6 +36,10 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Balise3D;
+import fr.crnan.videso3d.graphics.DatabaseBalise2D;
+import fr.crnan.videso3d.graphics.DatabaseBalise3D;
+import fr.crnan.videso3d.graphics.DatabaseRoute2D;
+import fr.crnan.videso3d.graphics.DatabaseRoute3D;
 import fr.crnan.videso3d.graphics.Route.Space;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
@@ -44,6 +50,7 @@ import fr.crnan.videso3d.layers.Balise3DLayer;
 import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
+import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -322,14 +329,14 @@ public class StipController extends ProgressSupport implements VidesoController 
 					annotation += "</p>";
 
 					if(rs.getBoolean("publicated")) {
-						balise3d = new Balise3D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), plafondMax*30.48), annotation, Type.STIP, StipController.BALISES);
+						balise3d = new DatabaseBalise3D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), plafondMax*30.48), annotation, Type.STIP, StipController.BALISES);
 						balisesPub3D.addBalise(balise3d);
-						balise2d = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), annotation, Type.STIP, StipController.BALISES);
+						balise2d = new DatabaseBalise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), annotation, Type.STIP, StipController.BALISES);
 						balisesPub2D.addBalise(balise2d);	
 					} else {
-						balise3d = new Balise3D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), plafondMax*30.48), annotation, Type.STIP, StipController.BALISES);
+						balise3d = new DatabaseBalise3D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), plafondMax*30.48), annotation, Type.STIP, StipController.BALISES);
 						balisesNP3D.addBalise(balise3d);
-						balise2d = new Balise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), annotation, Type.STIP, StipController.BALISES);
+						balise2d = new DatabaseBalise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), annotation, Type.STIP, StipController.BALISES);
 						balisesNP2D.addBalise(balise2d);
 					}
 					//lien nominal
@@ -450,8 +457,8 @@ public class StipController extends ProgressSupport implements VidesoController 
 		if(!routeEnCreation.equals(name)){
 			routeEnCreation = name;
 			if(this.routes2D.getRoute(name) == null) {
-				Route3D route3D = new Route3D(DatabaseManager.Type.STIP, StipController.ROUTES);
-				Route2D route2D = new Route2D(DatabaseManager.Type.STIP, StipController.ROUTES);
+				DatabaseRoute3D route3D = new DatabaseRoute3D(DatabaseManager.Type.STIP, StipController.ROUTES);
+				DatabaseRoute2D route2D = new DatabaseRoute2D(DatabaseManager.Type.STIP, StipController.ROUTES);
 				List<LatLon> loc = new ArrayList<LatLon>();
 				List<Integer> sens = new ArrayList<Integer>();
 				List<String> balises = new ArrayList<String>();
@@ -537,7 +544,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 	 */
 	public void createIti(String name) {
 		Integer id = new Integer(name);
-		Route2D iti = new Route2D(name, Type.STIP, ITI);
+		DatabaseRoute2D iti = new DatabaseRoute2D(name, Type.STIP, ITI);
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
 			ResultSet rs = st.executeQuery("select * from itis, balitis where itis.id ='"+id+"' and itis.id = balitis.iditi");
@@ -807,7 +814,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 	}
 
 	@Override
-	public HashMap<Integer, List<String>> getSelectedObjects() {
+	public HashMap<Integer, List<String>> getSelectedObjectsReference() {
 		HashMap<Integer, List<String>> objects = new HashMap<Integer, List<String>>();
 		//SECTEUR
 		List<String> secteurs = new ArrayList<String>();
@@ -829,5 +836,21 @@ public class StipController extends ProgressSupport implements VidesoController 
 		return objects;
 	}
 
+	@Override
+	public Iterable<Restorable> getSelectedObjects() {
+		List<Restorable> restorables = new LinkedList<Restorable>();
+		//SECTEUR
+		for(Entry<String, Secteur3D> s : this.secteurs.entrySet()){
+			if(s.getValue().isVisible()){
+				restorables.add(s.getValue());
+			}
+		}
+		//Balise
+		
+		//Routes
+		return restorables;
+	}
+
+	
 	
 }

@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Représentation graphique d'une route
  * @author Bruno Spyckerelle
- * @version 0.2.4
+ * @version 0.2.5
  */
 public interface Route extends VidesoObject{
 
@@ -38,9 +38,7 @@ public interface Route extends VidesoObject{
 	public void setSpace(Space type);
 	
 	public Space getSpace();
-	
-	public String getName();
-	
+		
 	public void setBalises(List<String> balises);
 	
 	public void addBalise(String balise);

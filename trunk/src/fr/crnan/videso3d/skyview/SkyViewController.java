@@ -35,10 +35,13 @@ import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.DatabaseBalise2D;
+import fr.crnan.videso3d.graphics.DatabaseRoute2D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.layers.Balise2DLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
+import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.Layer;
@@ -120,7 +123,7 @@ public class SkyViewController implements VidesoController {
 					Statement st = DatabaseManager.getCurrentSkyView();
 					ResultSet rs = st.executeQuery("select * from airport where ident='"+name+"'");
 					if(rs.next()){
-						Balise2D airport = new Balise2D(name, 
+						Balise2D airport = new DatabaseBalise2D(name, 
 												new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(8), rs.getString(9)), 0), 
 												DatabaseManager.Type.SkyView,
 												SkyViewController.TYPE_AIRPORT);
@@ -141,7 +144,7 @@ public class SkyViewController implements VidesoController {
 					Statement st = DatabaseManager.getCurrentSkyView();
 					ResultSet rs = st.executeQuery("select * from waypoint where ident='"+name+"'");
 					if(rs.next()){
-						Balise2D waypoint = new Balise2D(name, new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(7), rs.getString(8)), 0),
+						DatabaseBalise2D waypoint = new DatabaseBalise2D(name, new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(7), rs.getString(8)), 0),
 								DatabaseManager.Type.SkyView,
 								SkyViewController.TYPE_WAYPOINT);
 						waypoint.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
@@ -240,7 +243,7 @@ public class SkyViewController implements VidesoController {
 			routes.add((LinkedList<Couple<String, String>>) points.clone());
 			//puis on crée les routes 2D
 			for(LinkedList<Couple<String, String>> route : routes){
-				Route2D r = new Route2D(ident, type.equals("H")? Route.Space.UIR : Route.Space.FIR,
+				DatabaseRoute2D r = new DatabaseRoute2D(ident, type.equals("H")? Route.Space.UIR : Route.Space.FIR,
 						Type.SkyView,
 						SkyViewController.TYPE_ROUTE);
 				LinkedList<LatLon> loc = new LinkedList<LatLon>();
@@ -356,7 +359,13 @@ public class SkyViewController implements VidesoController {
 	}
 
 	@Override
-	public HashMap<Integer, List<String>> getSelectedObjects() {
+	public HashMap<Integer, List<String>> getSelectedObjectsReference() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Restorable> getSelectedObjects() {
 		// TODO Auto-generated method stub
 		return null;
 	}

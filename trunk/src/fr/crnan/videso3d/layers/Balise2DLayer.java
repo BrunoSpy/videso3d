@@ -22,6 +22,7 @@ import java.util.List;
 
 import fr.crnan.videso3d.graphics.Balise;
 import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import gov.nasa.worldwind.avlist.AVKey;
 
 /**
@@ -70,7 +71,11 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	 */
 	@Override
 	public void addBalise(Balise balise){
-		this.balises.put(balise.getName()+balise.getType(), (Balise2D) balise);
+		if(balise instanceof DatabaseVidesoObject){
+			this.balises.put(balise.getName()+((DatabaseVidesoObject) balise).getType(), (Balise2D) balise);
+		} else {
+			this.balises.put(balise.getName(), (Balise2D) balise);
+		}
 	}
 	
 	/**

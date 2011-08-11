@@ -35,11 +35,11 @@ import gov.nasa.worldwind.render.UserFacingText;
 /**
  * Représentation d'un aérodrome avec ses pistes
  * @author Adrien Vidal
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class PisteAerodrome implements Aerodrome{
 
-	private SurfacePolygonAnnotation inner, outer;
+	private DatabaseSurfacePolygonAnnotation inner, outer;
 	private String name;
 	private VidesoAnnotation annotation;
 	private UserFacingText text;
@@ -127,7 +127,7 @@ public class PisteAerodrome implements Aerodrome{
 		rectInterieur.add(pi2);
 		rectInterieur.add(pi3);
 		rectInterieur.add(pi4);
-		this.inner = new SurfacePolygonAnnotation(rectInterieur);
+		this.inner = new DatabaseSurfacePolygonAnnotation(rectInterieur);
 		//points du rectangle extérieur				
 		List<LatLon> rectExterieur = new LinkedList<LatLon>();
 		LatLon pe1 = LatLon.fromDegrees(lat1+(2*a+b)*largeurCarte, lon1+(2*b-a)*largeurCarte);
@@ -138,7 +138,7 @@ public class PisteAerodrome implements Aerodrome{
 		rectExterieur.add(pe2);
 		rectExterieur.add(pe3);
 		rectExterieur.add(pe4);
-		this.outer = new SurfacePolygonAnnotation(rectExterieur);
+		this.outer = new DatabaseSurfacePolygonAnnotation(rectExterieur);
 	}
 
 
@@ -234,6 +234,24 @@ public class PisteAerodrome implements Aerodrome{
 	public void setHighlighted(boolean highlighted) {
 		this.inner.setHighlighted(highlighted);
 		this.outer.setHighlighted(highlighted);
+	}
+
+	@Override
+	public String getRestorableClassName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getRestorableState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void restoreState(String stateInXml) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

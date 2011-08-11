@@ -151,7 +151,7 @@ public class AirspaceAttributesDialog extends JDialog {
 				attrsH.setOpacity(attrsHighlight.getOpacity());				
 				attrsH.setOutlineOpacity(attrsHighlight.getOutlineOpacity());				
 				attrsH.setOutlineWidth(attrsHighlight.getOutlineWidth());
-				
+				wwd.shutdown();
 				dispose();
 			}
 		});
@@ -164,6 +164,7 @@ public class AirspaceAttributesDialog extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				wwd.shutdown();
 				dispose();
 			}
 		});

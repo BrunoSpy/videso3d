@@ -38,7 +38,7 @@ import java.util.Collection;
 import java.util.List;
 
 
-public class RadioCovPolygon extends AbstractAirspace implements VidesoObject{
+public class RadioCovPolygon extends AbstractAirspace implements DatabaseVidesoObject{
 
 	private int type;
 	private DatabaseManager.Type base;
@@ -357,6 +357,11 @@ public class RadioCovPolygon extends AbstractAirspace implements VidesoObject{
 		}
 		@Override
 		public Object getHighlightAttributes() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		@Override
+		public String getRestorableClassName() {
 			// TODO Auto-generated method stub
 			return null;
 		}

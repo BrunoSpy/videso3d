@@ -34,10 +34,13 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.Cylinder;
-import fr.crnan.videso3d.graphics.Radar;
+import fr.crnan.videso3d.graphics.DatabaseCylinder;
+import fr.crnan.videso3d.graphics.DatabaseRadar;
+import fr.crnan.videso3d.graphics.DatabaseSimpleStack3D;
 import fr.crnan.videso3d.graphics.SimpleStack3D;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
 
+import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.Layer;
@@ -52,7 +55,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage des éléments Exsa
  * @author Bruno Spyckerelle
- * @version 0.2.0
+ * @version 0.2.1
  */
 public class STRController implements VidesoController {
 
@@ -141,7 +144,7 @@ public class STRController implements VidesoController {
 					Statement st = DatabaseManager.getCurrentExsa();
 					ResultSet rs = st.executeQuery("select * from radrgener, radrtechn where radrgener.name = radrtechn.name and radrgener.name ='"+name+"'");
 					if(rs.next()){
-						Radar radar = new Radar(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")), rs.getInt("portee"), 
+						DatabaseRadar radar = new DatabaseRadar(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")), rs.getInt("portee"), 
 								DatabaseManager.Type.EXSA, STRController.RADAR);
 						radar.setAnnotation("<html><b>Radar : "+name+"</b><br /><br />" +
 								"Portée : "+rs.getInt("portee")+"NM<br />" +
@@ -168,8 +171,9 @@ public class STRController implements VidesoController {
 					Statement st = DatabaseManager.getCurrentExsa();
 					ResultSet rs = st.executeQuery("select * from centstack where name='"+name+"'");
 					if(rs.next()){
-						SimpleStack3D stack = new SimpleStack3D(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")),
-								rs.getDouble("rayonint"), rs.getDouble("rayonext"), rs.getInt("flinf"), rs.getInt("flsup"));
+						DatabaseSimpleStack3D stack = new DatabaseSimpleStack3D(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")),
+								rs.getDouble("rayonint"), rs.getDouble("rayonext"), rs.getInt("flinf"), rs.getInt("flsup"),
+								Type.EXSA, STACK);
 						stack.setAnnotation("<html><b>Stack : "+name+"</b><br /><br />" +
 								"Type : "+rs.getString("type")+"<br />" +
 								"Rayon : "+rs.getInt("rayonint")+" NM<br />" +
@@ -185,10 +189,14 @@ public class STRController implements VidesoController {
 						attrs.setOutlineOpacity(0.9);
 						attrs.setOutlineWidth(1.0);
 						stack.setAttributes(attrs);
+						BasicAirspaceAttributes attrH = new BasicAirspaceAttributes(attrs);
+						attrH.setMaterial(new Material(Pallet.makeBrighter(attrs.getMaterial().getDiffuse())));
+						stack.setHighlightAttributes(attrH);
 						renderableLayer.addRenderable(stack);
 						renderables.put(name, stack);
 						this.toggleLayer(renderableLayer, true);
 					}
+					st.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -203,7 +211,7 @@ public class STRController implements VidesoController {
 					Statement st = DatabaseManager.getCurrentExsa();
 					ResultSet rs = st.executeQuery("select * from centtmaf where name='"+name+"'");
 					if(rs.next()){
-						Cylinder tmaFilet = new Cylinder(name, Type.EXSA, TMA_F, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")),
+						DatabaseCylinder tmaFilet = new DatabaseCylinder(name, Type.EXSA, TMA_F, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")),
 								0, rs.getInt("fl"), rs.getDouble("rayon"));
 						tmaFilet.setAnnotation("<html><b>TMA Filet : "+name+"</b><br /><br />" +
 								"Rayon : "+rs.getInt("rayon")+" NM<br />" +
@@ -540,7 +548,13 @@ public class STRController implements VidesoController {
 	}
 
 	@Override
-	public HashMap<Integer, List<String>> getSelectedObjects() {
+	public HashMap<Integer, List<String>> getSelectedObjectsReference() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Restorable> getSelectedObjects() {
 		// TODO Auto-generated method stub
 		return null;
 	}	

@@ -16,8 +16,6 @@
 
 package fr.crnan.videso3d.graphics;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Position;
@@ -27,20 +25,16 @@ import gov.nasa.worldwind.render.PointPlacemarkAttributes;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class Balise3D extends PointPlacemark implements Balise {
 
-	private int type;
-	private Type base;
 	private String name;
 	
 	private VidesoAnnotation annotation;
 	
-	public Balise3D(CharSequence name, Position position, String annotation, DatabaseManager.Type base, int type){
+	public Balise3D(CharSequence name, Position position, String annotation){
 		super(position);
-		this.setType(type);
-		this.setDatabaseType(base);
 		this.setName((String)name);
 		this.setLabelText((String) name);
 		
@@ -68,8 +62,8 @@ public class Balise3D extends PointPlacemark implements Balise {
 		this.setHighlightAttributes(ppaH);
 	}
 	
-	public Balise3D(String balise, Position position, Type base, int type) {
-		this(balise,  position, null, base, type);
+	public Balise3D(String balise, Position position) {
+		this(balise,  position, null);
 	}
 
 	@Override
@@ -93,26 +87,6 @@ public class Balise3D extends PointPlacemark implements Balise {
 	}
 
 	@Override
-	public Type getDatabaseType() {
-		return this.base;
-	}
-
-	@Override
-	public void setDatabaseType(Type type) {
-		this.base = type;
-	}
-
-	@Override
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	@Override
-	public int getType() {
-		return this.type;
-	}
-
-	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -120,6 +94,18 @@ public class Balise3D extends PointPlacemark implements Balise {
 	@Override
 	public Object getNormalAttributes() {
 		return this.getAttributes();
+	}
+
+	@Override
+	public String getRestorableState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void restoreState(String stateInXml) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

@@ -17,8 +17,12 @@ package fr.crnan.videso3d.graphics;
 
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.UserFacingText;
-
-public interface Aerodrome extends VidesoObject{
+/**
+ * 
+ * @author Adrien Vidal
+ * @version 2.0
+ */
+public interface Aerodrome extends DatabaseVidesoObject{
 
 	public Position getRefPosition();
 	public UserFacingText getUserFacingText();

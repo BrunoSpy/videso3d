@@ -21,12 +21,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.layers.Layer;
 
 /**
  * Controleur d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.3.3
+ * @version 0.3.4
  */
 public interface VidesoController {
 
@@ -131,8 +132,14 @@ public interface VidesoController {
 	public boolean isColorEditable(int type);
 	
 	/**
-	 * Get all selected objects
-	 * @return
+	 * Get all selected objects by their reference i.e. type and name
+	 * @return {@link HashMap}
 	 */
-	public HashMap<Integer, List<String>> getSelectedObjects();
+	public HashMap<Integer, List<String>> getSelectedObjectsReference();
+	
+	/**
+	 * Get all selected objects in their xml format
+	 * @return 
+	 */
+	public Iterable<Restorable> getSelectedObjects();
 }

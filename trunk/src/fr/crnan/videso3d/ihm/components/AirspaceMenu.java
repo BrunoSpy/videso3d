@@ -28,6 +28,7 @@ import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIPController;
+import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoObject;
@@ -80,24 +81,25 @@ public class AirspaceMenu extends JPopupMenu {
 	
 	private void createMenu(){
 		if(airspace instanceof VidesoObject){
-			JMenuItem info = new JMenuItem("Informations...");
-			info.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					VidesoObject o = (VidesoObject) airspace;
-					context.showInfo(o.getDatabaseType(), o.getType(), o.getName());
-				}
-			});
-			this.add(info);
-			this.add(new JSeparator());
-		
+			if(airspace instanceof DatabaseVidesoObject) {
+				JMenuItem info = new JMenuItem("Informations...");
+				info.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent event) {
+						DatabaseVidesoObject o = (DatabaseVidesoObject) airspace;
+						context.showInfo(o.getDatabaseType(), o.getType(), o.getName());
+					}
+				});
+				this.add(info);
+				this.add(new JSeparator());
+			}
 			JMenuItem colorItem = new JMenuItem("Couleur...");
 			colorItem.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					new AirspaceAttributesDialog((AirspaceAttributes)(((VidesoObject) airspace).getNormalAttributes()),
-								(AirspaceAttributes)(((VidesoObject) airspace).getHighlightAttributes())).setVisible(true);
+							(AirspaceAttributes)(((VidesoObject) airspace).getHighlightAttributes())).setVisible(true);
 					wwd.redraw();
 				}
 			});

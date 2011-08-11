@@ -16,9 +16,7 @@
 
 package fr.crnan.videso3d.graphics;
 
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -33,11 +31,6 @@ import gov.nasa.worldwind.render.SurfaceCircle;
 public class Radar extends SurfaceCircle implements VidesoObject {
 	
 	private VidesoAnnotation annotation;
-	
-	private DatabaseManager.Type base;
-	
-	private int type;
-	
 	private String name;
 	
 	/**
@@ -46,7 +39,7 @@ public class Radar extends SurfaceCircle implements VidesoObject {
 	 * @param pos Position du radar
 	 * @param portee Portee du radar
 	 */
-	public Radar(String name, LatLon pos, Integer portee, DatabaseManager.Type base, int type){
+	public Radar(String name, LatLon pos, Integer portee){
 		this.setCenter(pos);
 		this.setRadius(portee*LatLonCautra.NM);
 		this.setAnnotation("Radar "+name+"\nPortée : "+portee+" NM.");
@@ -58,8 +51,6 @@ public class Radar extends SurfaceCircle implements VidesoObject {
 		attrsH.setInteriorMaterial(new Material(Pallet.makeBrighter(attrsH.getInteriorMaterial().getDiffuse())));
 		this.setHighlightAttributes(attrsH);
 		this.setName(name);
-		this.setDatabaseType(base);
-		this.setType(type);
 	}
 	
 	
@@ -80,26 +71,6 @@ public class Radar extends SurfaceCircle implements VidesoObject {
 	public VidesoAnnotation getAnnotation(Position pos){
 		annotation.setPosition(pos);
 		return annotation;
-	}
-	
-	@Override
-	public Type getDatabaseType() {
-		return this.base;
-	}
-
-	@Override
-	public void setDatabaseType(Type type) {
-		this.base = type;
-	}
-	
-	@Override
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	@Override
-	public int getType() {
-		return this.type;
 	}
 	
 	@Override

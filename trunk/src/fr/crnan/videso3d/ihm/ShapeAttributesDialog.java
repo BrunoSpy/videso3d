@@ -153,7 +153,7 @@ public class ShapeAttributesDialog extends JDialog {
 		});
 		pointilleSurligne.setToolTipText("Specifies a 16-bit integer that defines which pixels are rendered in the shape's outline.");
 		pointilleSurligne.setColumns(4);
-		pointilleSurligne.setText(String.format("%h",(short)attrsHighlight.getOutlineStipplePattern()));
+		pointilleSurligne.setText(String.format("%x",(short)attrsHighlight.getOutlineStipplePattern()));
 		repetitionSurligne = new JSpinner(new SpinnerNumberModel(attrsHighlight.getOutlineStippleFactor(), 0, 10, 1));
 		repetitionSurligne.addChangeListener(new ChangeListener() {
 			
@@ -204,6 +204,7 @@ public class ShapeAttributesDialog extends JDialog {
 				attrsH.setOutlineOpacity(attrsHighlight.getOutlineOpacity());				
 				attrsH.setOutlineWidth(attrsHighlight.getOutlineWidth());
 				attrsH.setDrawOutline(attrsHighlight.isDrawOutline());
+				wwd.shutdown();
 				dispose();
 			}
 		});
@@ -216,6 +217,7 @@ public class ShapeAttributesDialog extends JDialog {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				wwd.shutdown();
 				dispose();
 			}
 		});

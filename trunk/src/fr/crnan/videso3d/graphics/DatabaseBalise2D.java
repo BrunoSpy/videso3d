@@ -15,49 +15,55 @@
  */
 package fr.crnan.videso3d.graphics;
 
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import gov.nasa.worldwind.geom.Position;
 /**
- * Représentation d'un aérodrome dont on ne connaît pas les pistes.
- * @author Adrien Vidal
- * @version 0.1.1
+ * 
+ * @author Bruno Spyckerelle
+ * @version 0.1.0
  */
-public class MarqueurAerodrome extends DatabaseBalise2D implements Aerodrome {
-
-	String nomPiste = "";
+public class DatabaseBalise2D extends Balise2D implements DatabaseVidesoObject {
 	
-	public MarqueurAerodrome(int type, String name, Position position,String nomPiste, Type base) {
-		super(name.split("--")[0].trim(), position, "<b>"+name+"</b><br/>Piste "+ nomPiste, base, type);
-		this.nomPiste = nomPiste;
+	private Type dataBaseType;
+	private int type;
+
+	public DatabaseBalise2D(CharSequence name, Position position, String annotation, DatabaseManager.Type base, int type){
+		super(name, position, annotation);
+		
 		this.setDatabaseType(base);
 		this.setType(type);
 	}
 
-	@Override
-	public Position getRefPosition() {
-		return this.getPosition();
-	}
-
-	@Override
-	public String getAnnotationText() {
-		return this.getAnnotation(null).getText();
+	public DatabaseBalise2D(CharSequence name, Position position, DatabaseManager.Type base, int type){
+		super(name, position, null);
+		this.setDatabaseType(base);
+		this.setType(type);
 	}
 	
 	@Override
-	public String getNomPiste(){
-		return nomPiste;
+	public String getRestorableClassName() {
+		return Balise2D.class.getName();
+	}
+
+
+	@Override
+	public Type getDatabaseType() {
+		return this.dataBaseType;
 	}
 
 	@Override
-	public void setVisible(boolean visible) {
-		this.getUserFacingText().setVisible(visible);
+	public void setDatabaseType(Type type) {
+		this.dataBaseType = type;
 	}
 
-	
-	
+	@Override
+	public void setType(int type) {
+		this.type = type;	
+	}
 
-
-	
-	
-
+	@Override
+	public int getType() {
+		return this.type;
+	}
 }

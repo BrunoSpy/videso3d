@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.zip.ZipException;
 
 import javax.swing.BorderFactory;
@@ -32,9 +33,9 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.ProjectManager;
@@ -109,7 +110,7 @@ public class ProjectManagerUI extends JDialog {
 		optionsPanel.setBorder(BorderFactory.createTitledBorder("2. Options"));
 		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.Y_AXIS));
 		Box databasesBox = Box.createHorizontalBox();
-		JCheckBox databases = new JCheckBox("Enregistrer les bases de données");
+		final JCheckBox databases = new JCheckBox("Enregistrer les bases de données");
 		databasesBox.add(databases);
 		databasesBox.add(Box.createHorizontalGlue());
 		optionsPanel.add(databasesBox);
@@ -118,7 +119,9 @@ public class ProjectManagerUI extends JDialog {
 		JPanel filePanel = new JPanel();
 		filePanel.setBorder(BorderFactory.createTitledBorder("3. Choisir l'emplacement du fichier"));
 		filePanel.setLayout(new BoxLayout(filePanel, BoxLayout.X_AXIS));
-		final JLabel filePath = new JLabel("<html><em>Aucun fichier sélectionné</em></html>");
+		final JTextField filePath = new JTextField();
+		filePath.setToolTipText("Chemin complet vers le fichier");
+		filePath.setColumns(30);
 		filePanel.add(filePath);
 		filePanel.add(Box.createHorizontalGlue());
 		JButton fileChooserButton = new JButton(new ImageIcon(getClass().getResource("/resources/load_project_22.png")));
@@ -135,7 +138,10 @@ public class ProjectManagerUI extends JDialog {
 											"Confirmer la suppression du fichier précédent",
 											JOptionPane.OK_CANCEL_OPTION,
 											JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION)) {
-						filePath.setText(file.getAbsolutePath());
+						String path = file.getAbsolutePath();
+						if(!path.toLowerCase().endsWith(".vpj"))
+							path += ".vpj";
+						filePath.setText(path);
 					}
 				}
 			}
@@ -157,13 +163,16 @@ public class ProjectManagerUI extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					projectManager.saveProject(new File(filePath.getText()));
+					projectManager.saveProject(new File(filePath.getText()), databases.isSelected());
+					getThis().dispose();
 				} catch(ZipException e) {
 					JOptionPane.showMessageDialog(null, "Aucun fichier projet sauvé, vérifiez qu'il y a bien des objets à sauver.",
 							"Impossible de créer un fichier projet", JOptionPane.ERROR_MESSAGE);
 					Logging.logger().warning("Impossible de créer un fichier projet");
 					e.printStackTrace();
 				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			}
@@ -176,6 +185,7 @@ public class ProjectManagerUI extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				getThis().setVisible(false);
+				getThis().dispose();
 			}
 		});
 		bottom.add(cancel);

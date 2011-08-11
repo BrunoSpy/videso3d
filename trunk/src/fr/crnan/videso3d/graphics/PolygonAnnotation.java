@@ -18,28 +18,23 @@ package fr.crnan.videso3d.graphics;
 
 import java.util.List;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
+import gov.nasa.worldwind.util.RestorableSupport;
 /**
  * Polygon avec Annotation intégrée
  * @author Bruno Spyckerelle
- * @version 0.3.2
+ * @version 0.4.0
  */
 public class PolygonAnnotation extends VPolygon implements VidesoObject{
 
 	private VidesoAnnotation annotation;
 
-	private DatabaseManager.Type base;
-	
 	private String name;
 	
-	private int type;
-
 	private boolean highlighted = false;
 
 	private AirspaceAttributes normalAttrs;
@@ -53,6 +48,7 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
 	public PolygonAnnotation(List<? extends LatLon> locations) {
 		super(locations);
 	}
+	
 	@Override
 	public void setAnnotation(String text){
 		if(annotation == null) {
@@ -65,26 +61,6 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
 	public VidesoAnnotation getAnnotation(Position pos){
 		annotation.setPosition(pos);
 		return annotation;
-	}
-	
-	@Override
-	public Type getDatabaseType() {
-		return this.base;
-	}
-
-	@Override
-	public void setDatabaseType(Type type) {
-		this.base = type;
-	}
-	
-	@Override
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	@Override
-	public int getType() {
-		return this.type;
 	}
 	
 	@Override
@@ -138,5 +114,24 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
     public void setHighlightAttributes(AirspaceAttributes highlightAttrs) {
         this.highlightAttrs = highlightAttrs;
         if(highlighted) this.setAttributes(this.highlightAttrs);
+    }
+    
+    @Override
+    protected void doGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context)
+    {
+        super.doGetRestorableState(rs, context);
+      
+        rs.addStateValueAsString("annotation", this.getAnnotation(Position.ZERO).getText());
+    }
+
+    @Override
+    protected void doRestoreState(RestorableSupport rs, RestorableSupport.StateObject context)
+    {
+        super.doRestoreState(rs, context);
+        
+        String annotation = rs.getStateValueAsString("annotation");
+        if(annotation != null)
+        	this.setAnnotation(annotation);
+        
     }
 }

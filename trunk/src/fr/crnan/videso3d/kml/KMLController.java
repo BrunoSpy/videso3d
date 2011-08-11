@@ -26,6 +26,7 @@ import java.util.List;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.RenderableLayer;
@@ -220,7 +221,13 @@ public class KMLController extends ProgressSupport implements VidesoController{
 	}
 
 	@Override
-	public HashMap<Integer, List<String>> getSelectedObjects() {
+	public HashMap<Integer, List<String>> getSelectedObjectsReference() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<Restorable> getSelectedObjects() {
 		// TODO Auto-generated method stub
 		return null;
 	}
