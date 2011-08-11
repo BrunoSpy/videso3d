@@ -87,7 +87,9 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
 	}
 	
     public AirspaceAttributes getNormalAttributes() {
-        return this.normalAttrs == null ? this.getAttributes() : this.normalAttrs;
+    	if(this.normalAttrs == null)
+    		this.normalAttrs = this.getAttributes();
+        return this.normalAttrs;
     }
 
     public void setNormalAttributes(AirspaceAttributes normalAttrs) {
@@ -100,7 +102,7 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
      */
     public AirspaceAttributes getHighlightAttributes() {
     	if(highlightAttrs == null){
-    		highlightAttrs = new BasicAirspaceAttributes(this.getAttributes());
+    		highlightAttrs = new BasicAirspaceAttributes(this.getNormalAttributes());
     		highlightAttrs.setMaterial(Material.WHITE);
     	}
         return this.highlightAttrs;
