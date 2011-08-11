@@ -20,14 +20,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButtonMenuItem;
@@ -131,14 +134,11 @@ public class Omnibox {
 	 * @param controller Controller of the items
 	 * @param items
 	 */
-	public void addDatabase(final DatabaseManager.Type type, List<ItemCouple> items){
+	public void addDatabase(final DatabaseManager.Type type, List<ItemCouple> items, boolean update){
 		if(items == null) {
-			if(bases.containsKey(type))
-				removeFromSearchBox(type);
 			removeDatabase(type);
 		}else{
 			if(bases.containsKey(type)) {
-				removeFromSearchBox(type);
 				bases.remove(type);
 			} else {
 				JRadioButtonMenuItem newButton = new JRadioButtonMenuItem(type.toString());
@@ -159,6 +159,8 @@ public class Omnibox {
 			}
 			bases.put(type, items);
 		}
+		if(update)
+			update();
 	}	
 	
 	/**
@@ -168,51 +170,35 @@ public class Omnibox {
 	public void removeDatabase(DatabaseManager.Type type){
 		if(bases.containsKey(type)) {
 			buttons.get(type).setSelected(false);
-			removeFromSearchBox(type);
 			bases.remove(type);
 			engines.remove(buttons.get(type));
 			chooseButton.getPopupMenu().remove(buttons.get(type));
 		}
 	}
-	
-	/**
-	 * Removes all items of the specified type from the searchbox
-	 * @param type 
-	 */
-	public void removeFromSearchBox(DatabaseManager.Type type){
-		for(ItemCouple item : bases.get(type)){
-			searchBox.removeItem(item);
-		}
-	}
-	
-	public void addToSearchBox(Type type){
-		for(ItemCouple item : bases.get(type)){
-			searchBox.addItem(item);
-		}
-	}
-	
+		
 	/**
 	 * Updates the combobox
 	 */
 	public void update(){
 		searchBox.setEnabled(false);
 		chooseButton.setEnabled(false);
+		Vector<ItemCouple> itemsVector = new Vector<ItemCouple>();
 		if(selectedBase == null){
 			final Iterator<Type> it = bases.keySet().iterator();
 			while(it.hasNext()){
 				Type type = it.next();
-				if(type!=previouslySelectedBase){
-					for(ItemCouple item : bases.get(type)){
-						searchBox.addItem(item);
-					}
+				for(ItemCouple item : bases.get(type)){
+					itemsVector.add(item);
 				}
 			}
 		} else if(previouslySelectedBase != selectedBase){
-			searchBox.removeAllItems();
 			for(ItemCouple item : bases.get(selectedBase)){
-				searchBox.addItem(item);
+				itemsVector.add(item);
 			}
 		}
+		Collections.sort(itemsVector, new ItemCoupleComparator());
+		searchBox.setModel(new DefaultComboBoxModel(itemsVector));
+		searchBox.addItem(" ");
 		searchBox.setEnabled(true);
 		chooseButton.setEnabled(true);
 	}

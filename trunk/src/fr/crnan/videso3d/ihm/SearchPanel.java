@@ -38,8 +38,9 @@ import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
+import java.util.Vector;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
@@ -96,17 +97,16 @@ public class SearchPanel extends JPanel {
 		});
 		
 		//Liste des balises pour l'autocomplétion
-		ArrayList<String> results = getAllStipItems();
+		Vector<String> results = getAllStipItems();
 		
-		searchField1 = new JComboBox(results.toArray());
+		searchField1 = new JComboBox(new DefaultComboBoxModel(results));
 		searchField1.setEditable(true);
 		searchField1.setToolTipText("<html>Nom de la balise ou du terrain recherché.<br />Exemple : LF* renverra toutes les informations sur les terrains français.</html>");
 		AutoCompleteDecorator.decorate(searchField1);
 		
-		ArrayList<String> results2 = new ArrayList<String>();
-		results2.add("");
-		results2.addAll(results);
-		searchField2 = new JComboBox(results2.toArray());
+		@SuppressWarnings("unchecked")
+		Vector<String> results2 = (Vector<String>) results.clone();
+		searchField2 = new JComboBox(new DefaultComboBoxModel(results2));
 		searchField2.setEditable(true);
 		AutoCompleteDecorator.decorate(searchField2);
 		
@@ -293,8 +293,13 @@ public class SearchPanel extends JPanel {
 		return typeBox;
 	}
 	
-	public ArrayList<String> getAllStipItems(){
-		ArrayList<String> results = new ArrayList<String>();
+	/**
+	 * 
+	 * @return Un vecteur contenant tous les noms des balises et des routes STIP, avec une chaîne de caratères vide en première position.
+	 */
+	public Vector<String> getAllStipItems(){
+		Vector<String> results = new Vector<String>();
+		results.add("");
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
 			if(st != null){
@@ -310,13 +315,12 @@ public class SearchPanel extends JPanel {
 	}
 	
 	public void updateSearchBoxes(){
-		ArrayList<String> results = getAllStipItems();
-		searchField1.removeAllItems();
-		searchField2.removeAllItems();
-		searchField2.addItem("");
-		for(String item : results){
-			searchField1.addItem(item);
-			searchField2.addItem(item);
-		}
+		Vector<String> results1 = getAllStipItems();
+		searchField1.setModel(new DefaultComboBoxModel(results1));
+		@SuppressWarnings("unchecked")
+		Vector<String> results2 = (Vector<String>) results1.clone();
+		searchField2.setModel(new DefaultComboBoxModel(results2));
+		
+		
 	}
 }
