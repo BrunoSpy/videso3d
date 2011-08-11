@@ -68,14 +68,14 @@ public class AirspaceListener implements SelectListener {
 	final private VidesoGLCanvas wwd;
 
 	final private ContextPanel context;
-	
+
 	private boolean lock = false;
-	
+
 	public AirspaceListener(VidesoGLCanvas wwd, ContextPanel context){
 		this.wwd = wwd;
 		this.context = context;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see gov.nasa.worldwind.event.SelectListener#selected(gov.nasa.worldwind.event.SelectEvent)
 	 */
@@ -85,7 +85,7 @@ public class AirspaceListener implements SelectListener {
 		//suppression tooltip on rollover
 		if (lastToolTip != null										//un tooltip doit préalablement exister
 				&& (event.getTopObject() == null  					//l'objet survolé doit exister
-						|| !event.getTopObject().equals(lastToolTip))) 	//l'objet survolé doit être différent du précédent
+				|| !event.getTopObject().equals(lastToolTip))) 	//l'objet survolé doit être différent du précédent
 
 		{
 			if(lastAnnotation != null) {
@@ -94,22 +94,22 @@ public class AirspaceListener implements SelectListener {
 			}
 			lastToolTip = null;
 		}
-		
+
 		//ne rien faire si locké
 		if(lock)
 			return;
-		
+
 		if(event.getTopObject() == null)
 			return;
-		
+
 		if(event.getEventAction() == SelectEvent.HOVER){ //popup tooltip
-				this.doHover(event.getTopObject(),event.getPickPoint());
+			this.doHover(event.getTopObject(),event.getPickPoint());
 		} else if(event.getEventAction() == SelectEvent.RIGHT_CLICK){
 			final Object o = event.getTopObject();
 			if(o instanceof Airspace){
 				AirspaceMenu menu = new AirspaceMenu((Airspace)o, 
-													(AirspaceAttributes) ((Airspace)o).getAttributes(), 
-													context, wwd){
+						(AirspaceAttributes) ((Airspace)o).getAttributes(), 
+						context, wwd){
 
 					/* (non-Javadoc)
 					 * @see javax.swing.JPopupMenu#setVisible(boolean)
@@ -121,6 +121,18 @@ public class AirspaceListener implements SelectListener {
 					}						
 				};
 				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
+			} else if(o instanceof SurfaceImage){
+				ImageMenu imageMenu = new ImageMenu((SurfaceImage) o, wwd){
+					/* (non-Javadoc)
+					 * @see javax.swing.JPopupMenu#setVisible(boolean)
+					 */
+					@Override
+					public void setVisible(boolean arg0) {
+						super.setVisible(arg0);
+						lock = arg0;
+					}
+				};
+				imageMenu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 			} else {
 				final JPopupMenu menu = new JPopupMenu("Menu"){
 
@@ -153,15 +165,15 @@ public class AirspaceListener implements SelectListener {
 							wwd.redraw();
 						}
 					});
-					
-					if(event.getTopObject() instanceof DatabaseRoute2D){
+
+					if(o instanceof DatabaseRoute2D){
 						JMenuItem contextItem = new JMenuItem("Informations...");				
 						menu.add(contextItem);
 						contextItem.addActionListener(new ActionListener() {
 
 							@Override
 							public void actionPerformed(ActionEvent e) {
-								DatabaseRoute2D route = (DatabaseRoute2D) event.getTopObject();
+								DatabaseRoute2D route = (DatabaseRoute2D) o;
 								context.showInfo(route.getDatabaseType(), route.getType(), route.getName());
 							}
 						});
@@ -172,7 +184,6 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							Object o = event.getTopObject();
 							if(o instanceof DatabaseVidesoObject){
 								DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType()).hideObject(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
 							}						
@@ -185,7 +196,7 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							context.showInfo(fr.crnan.videso3d.DatabaseManager.Type.STIP, StipController.BALISES, ((Balise2D)event.getTopObject()).getName());
+							context.showInfo(fr.crnan.videso3d.DatabaseManager.Type.STIP, StipController.BALISES, ((Balise2D)o).getName());
 						}
 					});
 					JMenu analyseItem = new JMenu("Analyse");
@@ -197,7 +208,7 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
-							AnalyzeUI.showResults("balise", ((Balise2D)event.getTopObject()).getName());
+							AnalyzeUI.showResults("balise", ((Balise2D)o).getName());
 						}
 					});
 					analyseItem.add(analyseBalise);
@@ -205,7 +216,7 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
-							AnalyzeUI.showResults("iti", ((Balise2D)event.getTopObject()).getName());
+							AnalyzeUI.showResults("iti", ((Balise2D)o).getName());
 						}
 					});
 					analyseItem.add(analyseIti);
@@ -213,7 +224,7 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("trajet", ((Balise2D)event.getTopObject()).getName());
+							AnalyzeUI.showResults("trajet", ((Balise2D)o).getName());
 						}
 					});
 					analyseItem.add(analyseTrajet);
@@ -221,7 +232,7 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("route", ((Balise2D)event.getTopObject()).getName());
+							AnalyzeUI.showResults("route", ((Balise2D)o).getName());
 						}
 					});
 					analyseItem.add(analyseRoute);
@@ -232,7 +243,6 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							Object o = event.getTopObject();
 							if(o instanceof DatabaseVidesoObject){
 								DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType()).hideObject(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
 							}
@@ -241,19 +251,6 @@ public class AirspaceListener implements SelectListener {
 				}
 				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 			}
-		} else if(event.getTopObject() instanceof SurfaceImage){
-			ImageMenu imageMenu = new ImageMenu((SurfaceImage) event.getTopObject(), wwd){
-				/* (non-Javadoc)
-				 * @see javax.swing.JPopupMenu#setVisible(boolean)
-				 */
-				@Override
-				public void setVisible(boolean arg0) {
-					super.setVisible(arg0);
-					lock = arg0;
-				}
-			};
-			imageMenu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
-
 		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){ //ouverture du contexte
 			this.doDoubleClick(event.getTopObject());
 		} else if (event.getEventAction() == SelectEvent.LEFT_CLICK){
@@ -314,6 +311,6 @@ public class AirspaceListener implements SelectListener {
 			this.wwd.redraw();
 		}
 	}
-	
+
 
 }
