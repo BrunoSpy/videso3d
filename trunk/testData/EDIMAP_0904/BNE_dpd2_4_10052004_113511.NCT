@@ -1,0 +1,234 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "FOND PUITS 2")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 5)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris")
+)
+(map
+  (name "BNE")
+  (number 4)
+  (comment "")
+  (date 10 05 2004)
+  (heure 11 35 11)
+  (ref_point
+    (name "BNE")
+    (comment "")
+    (value
+      (nautical_mile 64 4670 64 13994)
+    )
+  )
+  (ref_point
+    (name "BNE2")
+    (comment "")
+    (value
+      (nautical_mile 64 4596 64 14075)
+    )
+  )
+  (ref_point
+    (name "BNE3")
+    (comment "")
+    (value
+      (nautical_mile 64 4544 64 14203)
+    )
+  )
+  (ref_point
+    (name "BNE4")
+    (comment "")
+    (value
+      (nautical_mile 64 4545 64 14334)
+    )
+  )
+  (ref_point
+    (name "BNE5")
+    (comment "")
+    (value
+      (nautical_mile 64 4589 64 14447)
+    )
+  )
+  (ref_point
+    (name "BNE6")
+    (comment "")
+    (value
+      (nautical_mile 64 4684 64 14548)
+    )
+  )
+  (ref_point
+    (name "BNE7")
+    (comment "")
+    (value
+      (nautical_mile 64 4822 64 14606)
+    )
+  )
+  (ref_point
+    (name "BNE8")
+    (comment "")
+    (value
+      (nautical_mile 64 4978 64 14599)
+    )
+  )
+  (ref_point
+    (name "BNE9")
+    (comment "")
+    (value
+      (nautical_mile 64 5101 64 14536)
+    )
+  )
+  (ref_point
+    (name "BNE10")
+    (comment "")
+    (value
+      (nautical_mile 64 5624 64 14121)
+    )
+  )
+  (ref_point
+    (name "BNE11")
+    (comment "")
+    (value
+      (nautical_mile 64 5710 64 14021)
+    )
+  )
+  (ref_point
+    (name "BNE12")
+    (comment "")
+    (value
+      (nautical_mile 64 5752 64 13890)
+    )
+  )
+  (ref_point
+    (name "BNE13")
+    (comment "")
+    (value
+      (nautical_mile 64 5743 64 13764)
+    )
+  )
+  (ref_point
+    (name "BNE14")
+    (comment "")
+    (value
+      (nautical_mile 64 5686 64 13645)
+    )
+  )
+  (ref_point
+    (name "BNE15")
+    (comment "")
+    (value
+      (nautical_mile 64 5599 64 13562)
+    )
+  )
+  (ref_point
+    (name "BNE16")
+    (comment "")
+    (value
+      (nautical_mile 64 5482 64 13512)
+    )
+  )
+  (ref_point
+    (name "BNE17")
+    (comment "")
+    (value
+      (nautical_mile 64 5344 64 13511)
+    )
+  )
+  (ref_point
+    (name "BNE18")
+    (comment "")
+    (value
+      (nautical_mile 64 5191 64 13580)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 4)
+    (keyboard 2)
+    (entity
+      (name "1")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "BNE")
+        (point "BNE2")
+        (point "BNE3")
+        (point "BNE4")
+        (point "BNE5")
+        (point "BNE6")
+        (point "BNE7")
+        (point "BNE8")
+        (point "BNE9")
+        (point "BNE10")
+        (point "BNE11")
+        (point "BNE12")
+        (point "BNE13")
+        (point "BNE14")
+        (point "BNE15")
+        (point "BNE16")
+        (point "BNE17")
+        (point "BNE18")
+      )
+      (polygone 1)
+    )
+  )
+)
