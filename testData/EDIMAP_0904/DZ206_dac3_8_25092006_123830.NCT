@@ -1,0 +1,89 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(symbol
+  (name "Symb1")
+  (value "117")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "DEFAUT")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 63)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(map
+  (name "DZ206")
+  (number 8)
+  (comment "")
+  (date 25 09 2006)
+  (heure 12 38 30)
+  (ref_point
+    (name "DZ206")
+    (comment "")
+    (value
+      (nautical_mile 64 4946 64 3775)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 2)
+    (keyboard 3)
+    (entity
+      (name "DZ206")
+      (id_atc "DEFAUT")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4946 64 3775)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "3")
+      (id_atc "DEFAUT")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4877 64 3820)
+      )
+      (text_content "FL220")
+    )
+  )
+)

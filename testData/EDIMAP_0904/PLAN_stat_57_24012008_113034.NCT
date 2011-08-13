@@ -1,0 +1,1206 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(map
+  (name "PLAN")
+  (number 57)
+  (comment "")
+  (date 24 01 2008)
+  (heure 11 30 34)
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 1)
+    (entity
+      (name "1")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11486 64 -801  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "2")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10392 64 1364  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "3")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10869 64 1539  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "4")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11435 64 2756  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "5")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9833 64 1189  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "6")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9170 64 1457  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "7")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8786 64 3541  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "8")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8921 64 4502  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "9")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9739 64 4005  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "10")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11852 64 3135  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "11")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 12278 64 3134  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "12")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7422 64 3344  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "13")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9880 64 -1570  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "14")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9309 64 -2035  0)
+      )
+      (text_content "75")
+    )
+    (entity
+      (name "15")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8505 64 34  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "16")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8855 64 433  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "17")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8377 64 -1098  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "18")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8015 64 -1295  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "19")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9251 64 -3316  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "20")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8341 64 -3169  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "21")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8911 64 -1144  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "22")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6700 64 1938  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "23")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10063 64 -131  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "24")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5887 64 1492  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "25")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4668 64 2508  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "26")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5267 64 4048  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "27")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7213 64 1909  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "28")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8345 64 2884  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "29")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6840 64 1001  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "30")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2843 64 814  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "31")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -2405 64 -653  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "32")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3061 64 2347  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "34")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1852 64 6383  0)
+      )
+      (text_content "45")
+    )
+    (entity
+      (name "35")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1625 64 -1844  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "37")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1518 64 -1917  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "38")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1165 64 6057  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "39")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1407 64 4762  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "40")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1245 64 3966  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "41")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -3511 64 -485  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "42")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1276 64 5970  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "43")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1129 64 6685  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "45")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2000 64 7320  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "46")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4296 64 -1231  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "47")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6822 64 3356  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "48")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1535 64 -37  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "49")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1629 64 7198  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "50")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 117 64 7617  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "51")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 319 64 8209  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "52")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 920 64 8467  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "53")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1654 64 7593  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "54")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2224 64 9223  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "56")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1150 64 11605  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "57")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1219 64 10152  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "58")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11200 64 4148  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "59")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11654 64 4590  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "60")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11689 64 5789  0)
+      )
+      (text_content "95")
+    )
+    (entity
+      (name "61")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 14029 64 3845  0)
+      )
+      (text_content "75")
+    )
+    (entity
+      (name "62")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10277 64 7786  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "63")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11421 64 9223  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "64")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 14026 64 10184  0)
+      )
+      (text_content "75")
+    )
+    (entity
+      (name "65")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 14529 64 4962  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "67")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 12709 64 10189  0)
+      )
+      (text_content "135")
+    )
+    (entity
+      (name "69")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10203 64 8923  0)
+      )
+      (text_content "85")
+    )
+    (entity
+      (name "70")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10352 64 9099  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "71")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8955 64 10822  0)
+      )
+      (text_content "85")
+    )
+    (entity
+      (name "72")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9791 64 11601  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "73")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9933 64 10673  0)
+      )
+      (text_content "85")
+    )
+    (entity
+      (name "74")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10166 64 11242  0)
+      )
+      (text_content "135")
+    )
+    (entity
+      (name "75")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10609 64 10306  0)
+      )
+      (text_content "135")
+    )
+    (entity
+      (name "76")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9719 64 10152  0)
+      )
+      (text_content "105")
+    )
+    (entity
+      (name "77")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8732 64 9738  0)
+      )
+      (text_content "75")
+    )
+    (entity
+      (name "78")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9439 64 10422  0)
+      )
+      (text_content "105")
+    )
+    (entity
+      (name "79")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9486 64 9244  0)
+      )
+      (text_content "75")
+    )
+    (entity
+      (name "80")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9635 64 8680  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "81")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8523 64 12269  0)
+      )
+      (text_content "115")
+    )
+    (entity
+      (name "82")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8025 64 11124  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "86")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6608 64 10797  0)
+      )
+      (text_content "45")
+    )
+    (entity
+      (name "88")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7623 64 11358  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "89")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5034 64 11321  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "95")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -877 64 13238  0)
+      )
+      (text_content "85")
+    )
+    (entity
+      (name "96")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 51 64 11058  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "97")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3152 64 11482  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "98")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2079 64 12289  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "90")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9025 64 5399  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "91")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8106 64 4561  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "92")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9305 64 5748  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "93")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9607 64 6225  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "94")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5835 64 3173  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "99")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4142 64 3813  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "100")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -3700 64 2078  0)
+      )
+      (text_content "95")
+    )
+    (entity
+      (name "101")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -4317 64 5345  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "102")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -4966 64 5481  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "103")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -4361 64 3191  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "104")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -3132 64 1179  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "105")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 92 64 3526  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "106")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1620 64 5228  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "107")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2726 64 3351  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "108")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -3255 64 3962  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "109")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3119 64 -5424  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "110")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 602 64 6392  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "111")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 791 64 4486  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "112")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 485 64 964  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "113")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 98 64 4487  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "114")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1610 64 2754  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "115")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2115 64 3409  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "116")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -5408 64 4239  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "117")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -4928 64 1590  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "118")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -4099 64 -622  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "119")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -3502 64 1663  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "120")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2974 64 4413  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "121")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1271 64 4210  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "122")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2697 64 5374  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "123")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -5173 64 216  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "124")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -3022 64 2652  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "125")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -6031 64 -730  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "126")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3574 64 10262  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "127")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3052 64 10029  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "128")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2825 64 9345  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "129")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2520 64 8757  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "130")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3791 64 4648  0)
+      )
+      (text_content "55")
+    )
+    (entity
+      (name "131")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7131 64 -2072  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "132")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5199 64 3306  0)
+      )
+      (text_content "65")
+    )
+    (entity
+      (name "133")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 13187 64 10033  0)
+      )
+      (text_content "75")
+    )
+    (entity
+      (name "134")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 13683 64 10562  0)
+      )
+      (text_content "75")
+    )
+    (entity
+      (name "135")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2540 64 -979  0)
+      )
+      (text_content "65")
+    )
+  )
+)

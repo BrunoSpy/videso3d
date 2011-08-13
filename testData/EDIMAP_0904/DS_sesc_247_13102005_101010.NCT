@@ -1,0 +1,221 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "BORD SECTEUR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(id_atc
+  (name "FOND SECTEUR")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 4)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(map
+  (name "DS")
+  (number 247)
+  (comment "")
+  (date 13 10 2005)
+  (heure 10 10 10)
+  (ref_point
+    (name "DO31")
+    (comment "")
+    (value
+      (nautical_mile 64 4842 64 4990)
+    )
+  )
+  (ref_point
+    (name "DO22")
+    (comment "")
+    (value
+      (nautical_mile 64 7444 64 5070)
+    )
+  )
+  (ref_point
+    (name "DO43")
+    (comment "")
+    (value
+      (nautical_mile 64 7895 64 4409)
+    )
+  )
+  (ref_point
+    (name "DO44")
+    (comment "")
+    (value
+      (nautical_mile 64 7994 64 4322)
+    )
+  )
+  (ref_point
+    (name "DO58")
+    (comment "")
+    (value
+      (nautical_mile 64 8343 64 4011)
+    )
+  )
+  (ref_point
+    (name "DO81")
+    (comment "")
+    (value
+      (nautical_mile 64 8706 64 3243)
+    )
+  )
+  (ref_point
+    (name "DS1")
+    (comment "")
+    (value
+      (nautical_mile 64 9205 64 2182)
+    )
+  )
+  (ref_point
+    (name "TSP10")
+    (comment "")
+    (value
+      (nautical_mile 64 8671 64 2261)
+    )
+  )
+  (ref_point
+    (name "TS02")
+    (comment "")
+    (value
+      (nautical_mile 64 5937 64 2576)
+    )
+  )
+  (ref_point
+    (name "DO97")
+    (comment "")
+    (value
+      (nautical_mile 64 4374 64 3243)
+    )
+  )
+  (ref_point
+    (name "DO65")
+    (comment "")
+    (value
+      (nautical_mile 64 4428 64 3713)
+    )
+  )
+  (ref_point
+    (name "DO51")
+    (comment "")
+    (value
+      (nautical_mile 64 4528 64 4215)
+    )
+  )
+  (ref_point
+    (name "DO411")
+    (comment "")
+    (value
+      (nautical_mile 64 4546 64 4318)
+    )
+  )
+  (ref_point
+    (name "TS03")
+    (comment "")
+    (value
+      (nautical_mile 64 7371 64 2207)
+    )
+  )
+  (submap
+    (number 1)
+    (name "SDS")
+    (submap_type 5)
+    (entity
+      (name "2")
+      (id_atc "BORD SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DO31")
+        (point "DO22")
+        (point "DO43")
+        (point "DO44")
+        (point "DO58")
+        (point "DO81")
+        (point "DS1")
+        (point "TSP10")
+        (point "TS03")
+        (point "TS02")
+        (point "DO97")
+        (point "DO65")
+        (point "DO51")
+        (point "DO411")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "4")
+      (id_atc "FOND SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DO31")
+        (point "DO22")
+        (point "DO43")
+        (point "DO44")
+        (point "DO58")
+        (point "DO81")
+        (point "DS1")
+        (point "TSP10")
+        (point "TS03")
+        (point "TS02")
+        (point "DO97")
+        (point "DO65")
+        (point "DO51")
+        (point "DO411")
+      )
+      (polygone 1)
+    )
+  )
+)

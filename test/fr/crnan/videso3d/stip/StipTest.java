@@ -23,8 +23,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.crnan.videso3d.DatabaseManager;
@@ -37,10 +37,10 @@ import gov.nasa.worldwind.util.Logging;
  */
 public class StipTest {
 
-	private Stip stip;
+	private static Stip stip;
 	
-	@Before
-	public void setUp(){
+	@BeforeClass
+	public static void setUp(){
 		stip = new Stip("testData/SATIN_1006v2");
 		stip.addPropertyChangeListener(new PropertyChangeListener() {
 			
@@ -66,9 +66,14 @@ public class StipTest {
 		}
 	}
 	
-	@After
-	public void removeAll() throws SQLException{
+	@AfterClass
+	public static void removeAll() throws SQLException{
 		DatabaseManager.deleteDatabase(stip.getName(), Type.STIP);
+	}
+	
+	@Test
+	public void testGetName(){
+		assertEquals("Nom de la base ", "STIP_10-02-11.26-01-11", stip.getName());
 	}
 	
 	@Test

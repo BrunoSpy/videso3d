@@ -19,11 +19,15 @@ package fr.crnan.videso3d;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import fr.crnan.videso3d.edimap.CartesTest;
 import fr.crnan.videso3d.geom.LatLonCautraTest;
 import fr.crnan.videso3d.stip.StipTest;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({StipTest.class, LatLonCautraTest.class})
+@Suite.SuiteClasses({
+	StipTest.class,
+	LatLonCautraTest.class,
+	CartesTest.class})
 /**
  * Runs all unit tests
  * @author Bruno Spyckerelle
