@@ -20,6 +20,7 @@ import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -49,7 +50,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * Gestion des données SkyView
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.1.4
  */
 public class SkyViewController implements VidesoController {
 
@@ -58,9 +59,6 @@ public class SkyViewController implements VidesoController {
 	private Routes2DLayer routes = new Routes2DLayer("Routes SkyView");
 	private Balise2DLayer airports = new Balise2DLayer("Aéroports SkyView");
 	private Balise2DLayer waypoints = new Balise2DLayer("Balises SkyView");
-	
-	private HashMap<String, Balise2D> airportsMap = new HashMap<String, Balise2D>();
-	private HashMap<String, Balise2D> waypointsMap = new HashMap<String, Balise2D>();
 	
 	private HashSet<String> routesList = new HashSet<String>();
 	
@@ -118,7 +116,7 @@ public class SkyViewController implements VidesoController {
 			}
 			break;
 		case TYPE_AIRPORT:
-			if(!airportsMap.containsKey(name)){
+			if(!airports.contains(name)){
 				try {
 					Statement st = DatabaseManager.getCurrentSkyView();
 					ResultSet rs = st.executeQuery("select * from airport where ident='"+name+"'");
@@ -128,7 +126,6 @@ public class SkyViewController implements VidesoController {
 												DatabaseManager.Type.SkyView,
 												SkyViewController.TYPE_AIRPORT);
 						airport.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
-						airportsMap.put(name, airport);
 						airports.addBalise(airport);
 					}
 					st.close();
@@ -139,7 +136,7 @@ public class SkyViewController implements VidesoController {
 			airports.showBalise(name, TYPE_AIRPORT);
 			break;
 		case TYPE_WAYPOINT:
-			if(!waypointsMap.containsKey(name)){
+			if(!waypoints.contains(name)){
 				try{
 					Statement st = DatabaseManager.getCurrentSkyView();
 					ResultSet rs = st.executeQuery("select * from waypoint where ident='"+name+"'");
@@ -148,7 +145,6 @@ public class SkyViewController implements VidesoController {
 								DatabaseManager.Type.SkyView,
 								SkyViewController.TYPE_WAYPOINT);
 						waypoint.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
-						waypointsMap.put(name, waypoint);
 						waypoints.addBalise(waypoint);
 					}
 					st.close();
@@ -360,8 +356,20 @@ public class SkyViewController implements VidesoController {
 
 	@Override
 	public HashMap<Integer, List<String>> getSelectedObjectsReference() {
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<Integer, List<String>> objects = new HashMap<Integer, List<String>>();
+		//routes
+		ArrayList<String> routesUnique = new ArrayList<String>();
+		for(String name : this.routes.getVisibleRoutes()){
+			if(name.endsWith("0")){//only add the name of the route once
+				routesUnique.add(name);
+			}
+		}
+		objects.put(SkyViewController.TYPE_ROUTE, routesUnique);
+		//airports
+		objects.put(TYPE_AIRPORT, this.airports.getVisibleBalises());
+		//waypoints
+		objects.put(TYPE_WAYPOINT, this.waypoints.getVisibleBalises());
+		return objects;
 	}
 
 	@Override

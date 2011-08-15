@@ -21,13 +21,16 @@ import gov.nasa.worldwind.geom.Position;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class DatabaseBalise2D extends Balise2D implements DatabaseVidesoObject {
 	
 	private Type dataBaseType;
 	private int type;
 
+	public DatabaseBalise2D(){
+	}
+	
 	public DatabaseBalise2D(CharSequence name, Position position, String annotation, DatabaseManager.Type base, int type){
 		super(name, position, annotation);
 		

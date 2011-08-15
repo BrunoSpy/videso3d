@@ -17,7 +17,6 @@ package fr.crnan.videso3d.graphics;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.render.markers.MarkerAttributes;
 /**
  * 
  * @author Bruno Spyckerelle
@@ -25,7 +24,7 @@ import gov.nasa.worldwind.render.markers.MarkerAttributes;
  */
 public class DatabaseMarkerAnnotation extends MarkerAnnotation implements DatabaseVidesoObject{
 
-	public DatabaseMarkerAnnotation(Position position, MarkerAttributes attrs) {
+	public DatabaseMarkerAnnotation(Position position, RestorableMarkerAttributes attrs) {
 		super(position, attrs);
 	}
 

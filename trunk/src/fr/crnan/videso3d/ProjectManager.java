@@ -35,7 +35,12 @@ import java.util.List;
 import java.util.Set;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.graphics.Balise;
+import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
+import fr.crnan.videso3d.layers.Balise2DLayer;
+import fr.crnan.videso3d.layers.Balise3DLayer;
 import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.RenderableLayer;
@@ -126,6 +131,9 @@ public class ProjectManager extends ProgressSupport {
 		
 		//create main directory
 		File main = new File(name);
+		if(main.exists()){
+			throw new IOException(main.getAbsolutePath());
+		}
 		main.mkdir();
 		
 		//create xml directory
@@ -240,6 +248,8 @@ public class ProjectManager extends ProgressSupport {
 		if(xmlDir.exists()){
 			AirspaceLayer xmlAirspace = null;
 			RenderableLayer xmlRenderables = null;
+			Balise2DLayer xmlBalises = null;
+			Balise3DLayer xmlBalises3D = null;
 			for(File f : xmlDir.listFiles()){
 				String[] name = f.getName().split("-");
 				try {
@@ -247,6 +257,9 @@ public class ProjectManager extends ProgressSupport {
 					Restorable o = (Restorable) c.newInstance();
 					BufferedReader input = new BufferedReader(new FileReader(f));
 					String s = input.readLine();
+					while(input.ready()){
+						s += input.readLine();
+					}
 					
 					if(o instanceof DatabaseVidesoObject) {
 						Class<?> c2 = Class.forName(((DatabaseVidesoObject) o).getRestorableClassName());
@@ -270,6 +283,20 @@ public class ProjectManager extends ProgressSupport {
 							wwd.toggleLayer(xmlRenderables, true);
 						}
 						xmlRenderables.addRenderable((Renderable) o);
+					} else if(o instanceof Balise2D){
+						if(xmlBalises == null){
+							xmlBalises = new Balise2DLayer("XML Balises 2D");
+							wwd.toggleLayer(xmlBalises, true);
+						}
+						xmlBalises.addBalise((Balise) o);
+						xmlBalises.showBalise((Balise) o);
+					} else if(o instanceof Balise3D){
+						if(xmlBalises3D == null){
+							xmlBalises3D = new Balise3DLayer("XML Balises 3D");
+							wwd.toggleLayer(xmlBalises3D, true);
+						}
+						xmlBalises3D.addBalise((Balise) o);
+						xmlBalises3D.showBalise((Balise) o);
 					}
 
 				} catch (InstantiationException e) {

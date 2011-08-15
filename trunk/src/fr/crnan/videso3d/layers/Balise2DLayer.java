@@ -237,4 +237,14 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 		}
 		return balisesList;
 	}
+	
+	@Override
+	public void removeBalise(Balise balise) {
+		this.hideBalise(balise);
+		if(balise instanceof DatabaseVidesoObject){
+			this.balises.remove(balise.getName()+((DatabaseVidesoObject) balise).getType());
+		} else {
+			this.balises.remove(balise.getName());
+		}
+	}
 }
