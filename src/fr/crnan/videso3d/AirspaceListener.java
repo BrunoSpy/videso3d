@@ -23,6 +23,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.DatabaseRoute2D;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
@@ -190,53 +191,59 @@ public class AirspaceListener implements SelectListener {
 						}
 					});
 				} else if(o instanceof Marker || o instanceof PointPlacemark){
-					JMenuItem contextItem = new JMenuItem("Informations...");				
-					menu.add(contextItem);
-					contextItem.addActionListener(new ActionListener() {
+					if(o instanceof DatabaseVidesoObject){
+						JMenuItem contextItem = new JMenuItem("Informations...");				
+						menu.add(contextItem);
+						contextItem.addActionListener(new ActionListener() {
 
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							context.showInfo(fr.crnan.videso3d.DatabaseManager.Type.STIP, StipController.BALISES, ((Balise2D)o).getName());
-						}
-					});
-					JMenu analyseItem = new JMenu("Analyse");
-					JMenuItem analyseIti = new JMenuItem("Itinéraires");
-					JMenuItem analyseTrajet = new JMenuItem("Trajets");
-					JMenuItem analyseRoute = new JMenuItem("Routes");
-					JMenuItem analyseBalise = new JMenuItem("Balise");
-					analyseBalise.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								context.showInfo(((DatabaseVidesoObject) o).getDatabaseType(),
+										((DatabaseVidesoObject) o).getType(), ((VidesoObject)o).getName());
+							}
+						});
 
-						@Override
-						public void actionPerformed(ActionEvent arg0) {
-							AnalyzeUI.showResults("balise", ((Balise2D)o).getName());
-						}
-					});
-					analyseItem.add(analyseBalise);
-					analyseIti.addActionListener(new ActionListener() {
+						if(((DatabaseVidesoObject) o).getDatabaseType().equals(Type.STIP)){
+							JMenu analyseItem = new JMenu("Analyse");
+							JMenuItem analyseIti = new JMenuItem("Itinéraires");
+							JMenuItem analyseTrajet = new JMenuItem("Trajets");
+							JMenuItem analyseRoute = new JMenuItem("Routes");
+							JMenuItem analyseBalise = new JMenuItem("Balise");
+							analyseBalise.addActionListener(new ActionListener() {
 
-						@Override
-						public void actionPerformed(ActionEvent arg0) {
-							AnalyzeUI.showResults("iti", ((Balise2D)o).getName());
-						}
-					});
-					analyseItem.add(analyseIti);
-					analyseTrajet.addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent arg0) {
+									AnalyzeUI.showResults("balise", ((VidesoObject)o).getName());
+								}
+							});
+							analyseItem.add(analyseBalise);
+							analyseIti.addActionListener(new ActionListener() {
 
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("trajet", ((Balise2D)o).getName());
-						}
-					});
-					analyseItem.add(analyseTrajet);
-					analyseRoute.addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent arg0) {
+									AnalyzeUI.showResults("iti", ((VidesoObject)o).getName());
+								}
+							});
+							analyseItem.add(analyseIti);
+							analyseTrajet.addActionListener(new ActionListener() {
 
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							AnalyzeUI.showResults("route", ((Balise2D)o).getName());
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									AnalyzeUI.showResults("trajet", ((VidesoObject)o).getName());
+								}
+							});
+							analyseItem.add(analyseTrajet);
+							analyseRoute.addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									AnalyzeUI.showResults("route", ((VidesoObject)o).getName());
+								}
+							});
+							analyseItem.add(analyseRoute);
+							menu.add(analyseItem);
 						}
-					});
-					analyseItem.add(analyseRoute);
-					menu.add(analyseItem);
+					}
 					JMenuItem supprItem = new JMenuItem("Supprimer");				
 					menu.add(supprItem);
 					supprItem.addActionListener(new ActionListener() {

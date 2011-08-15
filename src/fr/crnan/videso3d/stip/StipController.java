@@ -846,7 +846,12 @@ public class StipController extends ProgressSupport implements VidesoController 
 			}
 		}
 		//Balise
-		
+		for(String b : this.balisesNP2D.getVisibleBalises()){
+			restorables.add(this.balisesNP2D.getBalise(b, BALISES));
+		}
+		for(String b : this.balisesPub2D.getVisibleBalises()){
+			restorables.add(this.balisesPub2D.getBalise(b, BALISES));
+		}
 		//Routes
 		return restorables;
 	}

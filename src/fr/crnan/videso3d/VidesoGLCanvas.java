@@ -42,6 +42,7 @@ import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.graphics.Aerodrome;
+import fr.crnan.videso3d.graphics.Balise;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.Route;
@@ -49,6 +50,7 @@ import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
+import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.layers.FPLTracksLayer;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
@@ -802,6 +804,26 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		} else {
 			this.toggleLayer(scale, false);
 			this.removeSelectListener(scale);
+		}
+	}
+	
+	public void delete(Object o){
+		if(o instanceof Airspace){
+			this.deleteAirspace((Airspace) o);
+		} else if(o instanceof Balise){
+			this.deleteBalise((Balise) o);
+		}
+	}
+	
+	public void deleteBalise(Balise balise){
+		if(balise instanceof DatabaseVidesoObject){
+			DatasManager.getController(((DatabaseVidesoObject) balise).getDatabaseType()).hideObject(((DatabaseVidesoObject) balise).getType(), ((DatabaseVidesoObject) balise).getName());
+		} else {
+			for(Layer l : this.getModel().getLayers()){
+				if(l instanceof BaliseLayer){
+					((BaliseLayer) l).removeBalise(balise);
+				}
+			}
 		}
 	}
 	

@@ -171,6 +171,9 @@ public class ProjectManagerUI extends JDialog {
 					Logging.logger().warning("Impossible de créer un fichier projet");
 					e.printStackTrace();
 				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null, "Un répertoire du même nom existe déjà.\n Veuillez choisir un autre nom de projet ou supprimer le répertoire suivant : \n"+e.getMessage(),
+							"Impossible de créer un fichier projet", JOptionPane.ERROR_MESSAGE);
+					Logging.logger().warning("Impossible de créer un fichier projet");
 					e.printStackTrace();
 				} catch (SQLException e) {
 					e.printStackTrace();
