@@ -180,8 +180,6 @@ public class Omnibox {
 	 * Updates the combobox
 	 */
 	public void update(){
-		searchBox.setEnabled(false);
-		chooseButton.setEnabled(false);
 		Vector<ItemCouple> itemsVector = new Vector<ItemCouple>();
 		if(selectedBase == null){
 			final Iterator<Type> it = bases.keySet().iterator();
@@ -199,8 +197,6 @@ public class Omnibox {
 		Collections.sort(itemsVector, new ItemCoupleComparator());
 		searchBox.setModel(new DefaultComboBoxModel(itemsVector));
 		searchBox.addItem(" ");
-		searchBox.setEnabled(true);
-		chooseButton.setEnabled(true);
 	}
 
 
