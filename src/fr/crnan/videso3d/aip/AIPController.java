@@ -174,6 +174,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			navFixLayer3D = new Balise3DLayer("NavFix AIP");	
 			this.toggleLayer(navFixLayer3D, false);
 		}
+		this.wwd.firePropertyChange("step", "", "Création des aéroports AIP");
 		if(arptLayer != null){
 			arptLayer.removeAllAirports();
 			this.toggleLayer(arptLayer, true);

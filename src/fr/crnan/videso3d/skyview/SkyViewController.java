@@ -77,6 +77,20 @@ public class SkyViewController implements VidesoController {
 	@Override
 	public void highlight(int type, String name) {
 		this.showObject(type, name);
+		Object object = null;
+		switch(type){
+		case TYPE_ROUTE : 
+			object = routes.getRoute(name+"0");
+			break;
+		case TYPE_WAYPOINT :
+			object = waypoints.getBalise(name,type);
+			break;
+		case TYPE_AIRPORT :
+			object = airports.getBalise(name, type);
+			break;
+		default : break;
+		}
+		this.wwd.centerView(object);
 	}
 
 	@Override
