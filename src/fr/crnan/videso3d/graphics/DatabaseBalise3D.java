@@ -22,13 +22,17 @@ import gov.nasa.worldwind.geom.Position;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class DatabaseBalise3D extends Balise3D implements DatabaseVidesoObject {
 
 	private Type base;
 	private int type;
 
+	public DatabaseBalise3D(){
+		super();
+	}
+	
 	public DatabaseBalise3D(CharSequence name, Position position, String annotation, DatabaseManager.Type base, int type){
 		super(name, position, annotation);
 		this.setType(type);
@@ -59,18 +63,6 @@ public class DatabaseBalise3D extends Balise3D implements DatabaseVidesoObject {
 	@Override
 	public int getType() {
 		return this.type;
-	}
-	
-	@Override
-	public String getRestorableState() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void restoreState(String stateInXml) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

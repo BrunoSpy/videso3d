@@ -378,11 +378,14 @@ public class SkyViewController implements VidesoController {
 				routesUnique.add(name);
 			}
 		}
-		objects.put(SkyViewController.TYPE_ROUTE, routesUnique);
+		if(!routesUnique.isEmpty())
+			objects.put(SkyViewController.TYPE_ROUTE, routesUnique);
 		//airports
-		objects.put(TYPE_AIRPORT, this.airports.getVisibleBalises());
+		if(!this.airports.getVisibleBalises().isEmpty())
+			objects.put(TYPE_AIRPORT, this.airports.getVisibleBalises());
 		//waypoints
-		objects.put(TYPE_WAYPOINT, this.waypoints.getVisibleBalises());
+		if(!this.waypoints.getVisibleBalises().isEmpty())
+			objects.put(TYPE_WAYPOINT, this.waypoints.getVisibleBalises());
 		return objects;
 	}
 
