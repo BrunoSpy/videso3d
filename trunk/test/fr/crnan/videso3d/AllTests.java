@@ -19,6 +19,7 @@ package fr.crnan.videso3d;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import fr.crnan.videso3d.aip.AIPTest;
 import fr.crnan.videso3d.edimap.CartesTest;
 import fr.crnan.videso3d.geom.LatLonCautraTest;
 import fr.crnan.videso3d.stip.StipTest;
@@ -27,7 +28,8 @@ import fr.crnan.videso3d.stip.StipTest;
 @Suite.SuiteClasses({
 	StipTest.class,
 	LatLonCautraTest.class,
-	CartesTest.class})
+	CartesTest.class, 
+	AIPTest.class})
 /**
  * Runs all unit tests
  * @author Bruno Spyckerelle

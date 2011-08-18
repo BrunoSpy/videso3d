@@ -21,7 +21,8 @@ import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.PointPlacemark;
-import gov.nasa.worldwind.render.PointPlacemarkAttributes;
+import gov.nasa.worldwind.util.Logging;
+import gov.nasa.worldwind.util.RestorableSupport;
 /**
  * 
  * @author Bruno Spyckerelle
@@ -33,19 +34,27 @@ public class Balise3D extends PointPlacemark implements Balise {
 	
 	private VidesoAnnotation annotation;
 	
-	public Balise3D(CharSequence name, Position position, String annotation){
-		super(position);
-		this.setName((String)name);
-		this.setLabelText((String) name);
-		
-		this.setValue(AVKey.DISPLAY_NAME, annotation);
-		this.setAltitudeMode(WorldWind.ABSOLUTE);
+	public Balise3D(){
+		this(Position.ZERO);
+	}
+	
+	public Balise3D(Position pos){
+		super(pos);
 		this.setApplyVerticalExaggeration(true);
 		this.setLineEnabled(true);
 		this.setLinePickWidth(200);
 		this.setEnableBatchPicking(false);
+		this.setAttributes(new RestorablePointPlacemarkAttributes());
+		this.setHighlightAttributes(new RestorablePointPlacemarkAttributes());
+		this.setAltitudeMode(WorldWind.ABSOLUTE);
+	}
+	
+	public Balise3D(CharSequence name, Position position, String annotation){
+		this(position);
+		this.setName((String)name);		
+		this.setValue(AVKey.DISPLAY_NAME, annotation);
 		
-		PointPlacemarkAttributes ppa = new PointPlacemarkAttributes();
+		RestorablePointPlacemarkAttributes ppa = new RestorablePointPlacemarkAttributes();
 		ppa.setLineWidth(2d);
 		ppa.setLineMaterial(Material.WHITE);
 		ppa.setUsePointAsDefaultImage(true);
@@ -57,7 +66,7 @@ public class Balise3D extends PointPlacemark implements Balise {
 		}
 		this.setAttributes(ppa);
 		
-		PointPlacemarkAttributes ppaH = new PointPlacemarkAttributes(ppa);
+		RestorablePointPlacemarkAttributes ppaH = new RestorablePointPlacemarkAttributes(ppa);
 		ppaH.setLineMaterial(Material.YELLOW);
 		this.setHighlightAttributes(ppaH);
 	}
@@ -89,24 +98,100 @@ public class Balise3D extends PointPlacemark implements Balise {
 	@Override
 	public void setName(String name) {
 		this.name = name;
+		this.setLabelText((String) name);
 	}
 
 	@Override
-	public Object getNormalAttributes() {
-		return this.getAttributes();
+	public RestorablePointPlacemarkAttributes getNormalAttributes() {
+		return (RestorablePointPlacemarkAttributes) this.getAttributes();
 	}
+	
+	 /* ********************************************* */
+    /* ************* Restorable ******************** */
+    /* ********************************************* */
+    
+    @Override
+    public String getRestorableState() {
+        RestorableSupport rs = RestorableSupport.newRestorableSupport();
+        this.doGetRestorableState(rs, null);
 
-	@Override
-	public String getRestorableState() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+        return rs.getStateAsXml();
+    }
 
-	@Override
-	public void restoreState(String stateInXml) {
-		// TODO Auto-generated method stub
-		
-	}
+    protected void doGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context)
+    {
+        // Method is invoked by subclasses to have superclass add its state and only its state
+        this.doMyGetRestorableState(rs, context);
+    }
+
+    private void doMyGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context) {
+    	
+    	if(this.getPosition() != null) rs.addStateValueAsPosition(context, "position", this.getPosition());
+    	
+    	rs.addStateValueAsString(context, "name", this.getName());
+    	
+        this.getNormalAttributes().getRestorableState(rs, rs.addStateObject(context, "normalAttributes"));
+        if(highlightAttrs != null) {
+        	((RestorablePointPlacemarkAttributes) this.highlightAttrs).getRestorableState(rs, rs.addStateObject(context, "highlightAttributes"));
+        }
+        
+        rs.addStateValueAsString(context, "annotation", this.annotation.getText(), true);
+    }
+
+    @Override
+    public void restoreState(String stateInXml)
+    {
+    	if (stateInXml == null)
+    	{
+    		String message = Logging.getMessage("nullValue.StringIsNull");
+    		Logging.logger().severe(message);
+    		throw new IllegalArgumentException(message);
+    	}
+
+    	RestorableSupport rs;
+    	try
+    	{
+    		rs = RestorableSupport.parse(stateInXml);
+    	}
+    	catch (Exception e)
+    	{
+    		// Parsing the document specified by stateInXml failed.
+    		String message = Logging.getMessage("generic.ExceptionAttemptingToParseStateXml", stateInXml);
+    		Logging.logger().severe(message);
+    		throw new IllegalArgumentException(message, e);
+    	}
+
+    	this.doRestoreState(rs, null);
+    }
+
+    protected void doRestoreState(RestorableSupport rs, RestorableSupport.StateObject context) {
+    	// Method is invoked by subclasses to have superclass add its state and only its state
+    	this.doMyRestoreState(rs, context);
+    }
+
+    private void doMyRestoreState(RestorableSupport rs, RestorableSupport.StateObject context) {
+    	Position pos = rs.getStateValueAsPosition(context, "position");
+    	if(pos != null)
+    		this.setPosition(pos);
+
+    	String name = rs.getStateValueAsString(context, "name");
+    	if(name != null)
+    		this.setName(name);
+    	
+    	RestorableSupport.StateObject so = rs.getStateObject(context, "normalAttributes");
+    	if (so != null){
+    		((RestorablePointPlacemarkAttributes) this.getNormalAttributes()).restoreState(rs, so);
+    		this.setAttributes(this.getNormalAttributes());
+    	}
+    	
+    	RestorableSupport.StateObject soh = rs.getStateObject(context, "highlightAttributes");
+    	if (soh != null)
+    		((RestorablePointPlacemarkAttributes) this.getHighlightAttributes()).restoreState(rs, soh);
+    	
+    	String annotation = rs.getStateValueAsString(context, "annotation");
+    	if(annotation != null)
+    		this.setAnnotation(annotation);
+    }
 
 
 }

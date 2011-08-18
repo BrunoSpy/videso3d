@@ -78,8 +78,8 @@ public class RestorableMarkerAttributes extends BasicMarkerAttributes {
         }
         
         Double min = rs.getStateValueAsDouble(so, "minMarkerSize");
-     //   if (min != null)
-    //        this.setMinMarkerSize(min);
+        if (min != null)
+            this.setMinMarkerSize(min);
         
         Double max = rs.getStateValueAsDouble(so, "maxMarkerSize");
         if (max != null)
