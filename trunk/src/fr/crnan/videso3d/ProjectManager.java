@@ -189,18 +189,24 @@ public class ProjectManager extends ProgressSupport {
 		
 	}
 	
-	public static void loadProject(File file, VidesoGLCanvas wwd) throws FileNotFoundException, IOException, ClassNotFoundException{
+	public void loadProject(File file, VidesoGLCanvas wwd) throws FileNotFoundException, IOException, ClassNotFoundException{
 		
-		List<File> files = FileManager.unzip(file);
+		FileManager.unzip(file);
 		
 		int ind = file.getName().lastIndexOf(".");
 		
 		String path = "temp"+file.getName()+"/"+file.getName().substring(0, ind); //don't forget to delete the extension
-
+		
+		int max = FileManager.getFilesCount(new File(path));
+		this.fireTaskStarts(max);
+		
+		int progress = 0;
 		//import databases
 		final File databases = new File(path, "databases");
 		if(databases.exists()){
 			for(File f : databases.listFiles()){
+				this.fireTaskProgress(progress++);
+				this.fireTaskInfo(f.getName());
 				int index = f.getName().lastIndexOf(".");
 				final String suffix = index == -1 ? "" : f.getName().substring(index+1);
 				String name = index == -1 ? f.getName() : f.getName().substring(0, index);
@@ -251,6 +257,8 @@ public class ProjectManager extends ProgressSupport {
 			Balise2DLayer xmlBalises = null;
 			Balise3DLayer xmlBalises3D = null;
 			for(File f : xmlDir.listFiles()){
+				this.fireTaskProgress(progress++);
+				this.fireTaskInfo(f.getName());
 				String[] name = f.getName().split("-");
 				try {
 					Class<?> c = Class.forName(name[0]);			
@@ -308,6 +316,7 @@ public class ProjectManager extends ProgressSupport {
 		}
 		//remove temp files
 		FileManager.removeTempFiles();
+		this.fireTaskProgress(max);
 	}
 	
 }

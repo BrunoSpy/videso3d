@@ -70,6 +70,7 @@ import javax.swing.text.*;
  * <ul>
  * <li>automatic progress at each call of setNote</li>
  * <li>optional cancel button</li>
+ * <li>modalityType</li>
  * </ul>
  * Also adds the ability to reset the timer.
  * </p>
@@ -97,8 +98,8 @@ public class ProgressMonitor extends Object implements Accessible
     private int             max;
 	private boolean automaticProgress = false;
 	private boolean isCancelShown = true;
-
-
+	private boolean onTop = true;
+	
     /**
      * Constructs a graphic object that shows progress, typically by filling
      * in a rectangular bar as the process nears completion.
@@ -166,8 +167,7 @@ public class ProgressMonitor extends Object implements Accessible
             T0 = System.currentTimeMillis();
         }
     }
-
-
+    
     private class ProgressOptionPane extends JOptionPane
     {
         ProgressOptionPane(Object messageList) {
@@ -206,6 +206,13 @@ public class ProgressMonitor extends Object implements Accessible
         }
     }
 
+    /**
+     * {@link JDialog#setAlwaysOnTop(boolean)}
+     * @param top
+     */
+    public void setAlwaysOnTop(boolean top){
+    	this.onTop = top;
+    }
 
     /**
      * Indicate the progress of the operation being monitored.
@@ -251,6 +258,7 @@ public class ProgressMonitor extends Object implements Accessible
                             UIManager.getString(
                                 "ProgressMonitor.progressText"));
                         dialog.setModal(false);
+                        dialog.setAlwaysOnTop(onTop);
                         dialog.show();
                     }
                 }

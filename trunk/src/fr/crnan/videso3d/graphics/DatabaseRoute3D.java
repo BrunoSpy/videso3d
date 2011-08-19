@@ -27,6 +27,10 @@ public class DatabaseRoute3D extends Route3D implements DatabaseVidesoObject{
 	private Type base;
 	private int type;
 
+	public DatabaseRoute3D(){
+		super();
+	}
+	
 	public DatabaseRoute3D(String name, Space s, DatabaseManager.Type base, int type){
 		super(name, s);
 		this.setDatabaseType(base);
@@ -35,7 +39,6 @@ public class DatabaseRoute3D extends Route3D implements DatabaseVidesoObject{
 
 	public DatabaseRoute3D(DatabaseManager.Type base, int type) {
 		super();
-		this.setDefaultMaterial();
 		this.setDatabaseType(base);
 		this.setType(type);
 	}

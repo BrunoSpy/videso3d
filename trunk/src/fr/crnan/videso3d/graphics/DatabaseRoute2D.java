@@ -22,13 +22,17 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class DatabaseRoute2D extends Route2D implements DatabaseVidesoObject {
 
 	private int type;
 	private Type base;
 
+	public DatabaseRoute2D(){
+		super();
+	}
+	
 	public DatabaseRoute2D(String name, Space s, DatabaseManager.Type base, int type){
 		this(base, type);
 		this.setAnnotation("Route "+name);

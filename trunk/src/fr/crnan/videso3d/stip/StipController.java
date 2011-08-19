@@ -867,6 +867,15 @@ public class StipController extends ProgressSupport implements VidesoController 
 			}
 		}
 		//Routes
+		if(this.routes3D.isEnabled()){
+			for(String r : this.routes3D.getVisibleRoutes()){
+				restorables.add(this.routes3D.getRoute(r));
+			}
+		} else {
+			for(String r : this.routes2D.getVisibleRoutes()){
+				restorables.add(this.routes2D.getRoute(r));
+			}
+		}
 		return restorables;
 	}
 

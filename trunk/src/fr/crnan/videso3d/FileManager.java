@@ -41,10 +41,27 @@ import com.ice.tar.TarInputStream;
  * Manages several kind of files.<br />
  * Manages compressed files.
  * @author Bruno Spyckerelle
- * @version 0.5.1
+ * @version 0.5.2
  */
 public class FileManager {
 
+	/**
+	 * Counts the number of files in a directory
+	 * @param file
+	 * @return
+	 */
+	public static int getFilesCount(File file){
+		int count = 0;
+		if(file.isDirectory()){
+			for(File f : file.listFiles()){
+				count += getFilesCount(f);
+			}
+			return count;
+		} else {
+			return 1;
+		}
+	}
+	
 	/** 
 	 * Read a text file into an array of String.
 	 */
@@ -336,7 +353,8 @@ public class FileManager {
 	}
 	
 	/**
-	 * Unzip file and return the list of unzipped files
+	 * Unzip file to a temporary repertory and return the list of unzipped files<br />
+	 * WARNING : if the temporary repertory already exists, it will be deleted before unzipping the new file.
 	 * @param file File to unzip
 	 * @return List of unzipped files
 	 */
@@ -350,6 +368,9 @@ public class FileManager {
 			int count;
 			String repName = "temp"+file.getName();
 			File newRep = new File(repName);
+			if(newRep.exists()){
+				FileManager.deleteFile(newRep);
+			}
 			newRep.mkdirs();
 			while((entree = zip.getNextEntry()) != null){
 				File newFile = new File(repName+"/"+entree.getName());

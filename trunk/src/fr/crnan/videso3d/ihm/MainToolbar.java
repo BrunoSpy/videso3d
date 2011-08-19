@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -44,6 +46,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
+import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.ProjectManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.fpl.FPLFileFilter;
@@ -68,7 +71,7 @@ import gov.nasa.worldwindx.examples.util.ShapeUtils;
 /**
  * Toolbar of the main window
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class MainToolbar extends JToolBar {
 
@@ -141,18 +144,49 @@ public class MainToolbar extends JToolBar {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				VFileChooser fileChooser = new VFileChooser();
+				final VFileChooser fileChooser = new VFileChooser();
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				if(fileChooser.showOpenDialog(loadProject) == JFileChooser.APPROVE_OPTION){
-					try {
-						ProjectManager.loadProject(fileChooser.getSelectedFile(), wwd);
-					} catch (FileNotFoundException e1) {
-						e1.printStackTrace();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					} catch (ClassNotFoundException e1) {
-						e1.printStackTrace();
-					}
+
+					final ProjectManager project = new ProjectManager();
+					final ProgressMonitor monitor = new ProgressMonitor(null, "Import d'un fichier projet",
+							"Import ...", 0, 100, true, true);
+					project.addPropertyChangeListener(new PropertyChangeListener() {
+
+						@Override
+						public void propertyChange(PropertyChangeEvent evt) {
+							if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
+								monitor.setMaximum((Integer) evt.getNewValue());
+							} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
+								if(monitor.isCanceled()){
+
+								} else {
+									monitor.setNote((String) evt.getNewValue());
+								}
+							} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
+								monitor.setProgress((Integer) evt.getNewValue());
+							}
+						}
+					});
+					new SwingWorker<Void, Void>(){
+
+						@Override
+						protected Void doInBackground() throws Exception {
+							try {
+								project.loadProject(fileChooser.getSelectedFile(), wwd);
+							} catch (FileNotFoundException e1) {
+								e1.printStackTrace();
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							} catch (ClassNotFoundException e1) {
+								e1.printStackTrace();
+							}
+							return null;
+						}
+
+					}.execute();
+
+
 				}
 			}
 		});
