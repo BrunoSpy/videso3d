@@ -94,12 +94,14 @@ public class Route3D extends TrackAirspace implements Route {
 
 	@Override
 	public void setAnnotation(String text) {
-		if(annotation == null) this.annotation = new VidesoAnnotation("Route "+this.getName());
+		if(annotation == null)
+			this.annotation = new VidesoAnnotation("");
 		this.annotation.setText(text);
 	}
 	
 	public VidesoAnnotation getAnnotation(Position pos){
-		if(annotation == null) this.annotation = new VidesoAnnotation("Route "+this.getName());
+		if(annotation == null)
+			this.annotation = new VidesoAnnotation("Route "+this.getName());
 		annotation.setPosition(pos);
 		return this.annotation;
 	}
@@ -349,6 +351,13 @@ public class Route3D extends TrackAirspace implements Route {
 
 		rs.addStateValueAsDouble(context, "width", this.width);
 		rs.addStateValueAsLatLonList(context, "locations", this.locations);
+		
+		rs.addStateValueAsString(context, "name", this.getName());
+		
+		if(this.annotation != null)
+			rs.addStateValueAsString(context, "annotation", this.annotation.getText(), true);
+		
+		this.getNormalAttributes().getRestorableState(rs, rs.addStateObject(context, "hightlightAttributes"));
 	}
 
 	@Override
@@ -356,6 +365,14 @@ public class Route3D extends TrackAirspace implements Route {
 	{
 		super.doRestoreState(rs, context);
 
+		String s = rs.getStateValueAsString(context, "annotation");
+		if(s != null)
+			this.setAnnotation(s);
+		
+		s = rs.getStateValueAsString(context, "name");
+		if(s != null)
+			this.setName(s);
+		
 		Double d = rs.getStateValueAsDouble(context, "width");
 		if (d != null)
 			this.setWidth(d);
@@ -363,6 +380,10 @@ public class Route3D extends TrackAirspace implements Route {
 		List<LatLon> locs = rs.getStateValueAsLatLonList(context, "locations");
 		if (locs != null)
 			this.setLocations(locs);
+		
+		RestorableSupport.StateObject so = rs.getStateObject(context, "highlightAttributes");
+        if (so != null)
+            this.getHighlightAttributes().restoreState(rs, so);
 	}
 
 	@Override
@@ -401,4 +422,6 @@ public class Route3D extends TrackAirspace implements Route {
         if(highlighted) this.setAttributes(this.highlightAttrs);
     }
 	
+    
+    
 }

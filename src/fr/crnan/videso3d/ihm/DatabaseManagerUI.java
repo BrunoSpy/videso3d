@@ -426,7 +426,6 @@ public class DatabaseManagerUI extends JDialog {
 						//annulation du parsing
 						//on n'utilise pas SwingWorker.cancel(true) à cause des effets de bord avec sqlite
 						//la fin de l'annulation est faite lorsque "done" est reçu
-						
 					}
 					progressMonitor2.getSecondaryProgressBar().setValue((Integer)evt.getNewValue());
 					progressMonitor2.getMainProgressBar().setValue(done+(Integer)evt.getNewValue());
