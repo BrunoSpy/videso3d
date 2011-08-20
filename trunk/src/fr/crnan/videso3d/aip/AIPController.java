@@ -49,7 +49,7 @@ import fr.crnan.videso3d.graphics.DatabaseBalise3D;
 import fr.crnan.videso3d.graphics.DatabaseRoute2D;
 import fr.crnan.videso3d.graphics.DatabaseRoute3D;
 import fr.crnan.videso3d.graphics.Route;
-import fr.crnan.videso3d.graphics.Route.Sens;
+import fr.crnan.videso3d.graphics.Route.Parity;
 import fr.crnan.videso3d.graphics.MarqueurAerodrome;
 import fr.crnan.videso3d.graphics.PisteAerodrome;
 import fr.crnan.videso3d.graphics.Route2D;
@@ -489,15 +489,15 @@ public class AIPController extends ProgressSupport implements VidesoController {
 
 						DatabaseRoute2D segment2D = new DatabaseRoute2D(segmentName, routeType, Type.AIP, AIP.AWY);
 						List<Integer> directions = new ArrayList<Integer>();
-						Sens sens = null;
+						Parity sens = null;
 						String sensString = segment.getChildText("Circulation");
 						if(sensString.equals("(2=1)") || sensString.equals("(1=2)") || sensString.equals("(0=0)")){
-							sens = Sens.RED;
+							sens = Parity.RED;
 							for(int i =0; i<loc.size()-1;i++){
 								directions.add(Route2D.LEG_AUTHORIZED);
 							}
 						}else if(sensString.equals("(X-1)") || sensString.equals("(1-X)")){
-							sens = Sens.GREEN;
+							sens = Parity.GREEN;
 							for(int i =0; i<loc.size()-1;i++){
 								if(i==loc.size()/2)
 									directions.add(Route2D.LEG_DIRECT);
@@ -505,7 +505,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 									directions.add(Route2D.LEG_AUTHORIZED);
 							}
 						}else if(sensString.equals("(X-2)") || sensString.equals("(2-X)") || sensString.equals("(X-0)")){
-							sens = Sens.BLUE;
+							sens = Parity.BLUE;
 							for(int i =0; i<loc.size()-1;i++){
 								if(i==loc.size()/2)
 									directions.add(Route2D.LEG_DIRECT);
@@ -513,7 +513,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 									directions.add(Route2D.LEG_AUTHORIZED);
 							}
 						}
-						segment2D.setSens(sens);
+						segment2D.setParity(sens);
 						segment2D.setLocations(loc,directions);
 						segment2D.setAnnotation("<html>Route "+segmentName+"<br/><b>Plancher :</b>"+altis.getFirst().getFullText()
 								+"<br/><b>Plafond :</b>"+altis.getSecond().getFullText()+"</html>");
@@ -529,6 +529,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 						if(altis.getSecond().isTerrainConforming()){
 							upperTerrainConformant=true;
 						}
+						segment3D.setParity(sens);
 						segment3D.setTerrainConforming(lowerTerrainConformant, upperTerrainConformant);
 						segment3D.setAltitudes(altis.getFirst().getMeters(), altis.getSecond().getMeters());	
 						segment3D.setAnnotation("<html>Route "+segmentName+"<br/><b>Plancher :</b>"+altis.getFirst().getFullText()

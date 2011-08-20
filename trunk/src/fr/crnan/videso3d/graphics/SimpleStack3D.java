@@ -37,10 +37,12 @@ import gov.nasa.worldwind.render.airspaces.AirspaceRenderer;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.CappedCylinder;
 import gov.nasa.worldwind.render.airspaces.DetailLevel;
+import gov.nasa.worldwind.util.Logging;
+import gov.nasa.worldwind.util.RestorableSupport;
 /**
  * Représentation simple d'un stack par un cylindre et son volume de protection.
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class SimpleStack3D implements Airspace, VidesoObject {
 
@@ -58,6 +60,11 @@ public class SimpleStack3D implements Airspace, VidesoObject {
 
 	private AirspaceAttributes highlightAttrs;
 
+	public SimpleStack3D(){
+		this.stack = new CappedCylinder();
+		this.protec = new CappedCylinder();
+	}
+	
 	/**
 	 * @param name Nom du stack
 	 * @param center Centre du cylindre
@@ -83,14 +90,83 @@ public class SimpleStack3D implements Airspace, VidesoObject {
 
 	@Override
 	public String getRestorableState() {
-		// TODO Auto-generated method stub
-		return null;
+		RestorableSupport rs = RestorableSupport.newRestorableSupport();
+        this.doGetRestorableState(rs, null);
+
+        return rs.getStateAsXml();
+	}
+
+	protected void doGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context){
+		// Method is invoked by subclasses to have superclass add its state and only its state
+		this.doMyGetRestorableState(rs, context);
+	}
+
+	private void doMyGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context){
+		
+		rs.addStateValueAsString(context, "stack", this.stack.getRestorableState());
+		rs.addStateValueAsString(context, "protec", this.protec.getRestorableState());
+		
+		this.getHighlightAttributes().getRestorableState(rs, rs.addStateObject(context, "highlightattributes"));
+		
+		 rs.addStateValueAsString(context, "annotation", this.getAnnotation(Position.ZERO).getText());
+		 
+		 if(this.getName() != null)
+			 rs.addStateValueAsString(context, "name", this.getName());
 	}
 
 	@Override
 	public void restoreState(String stateInXml) {
-		// TODO Auto-generated method stub
-		
+		 if (stateInXml == null)
+	        {
+	            String message = Logging.getMessage("nullValue.StringIsNull");
+	            Logging.logger().severe(message);
+	            throw new IllegalArgumentException(message);
+	        }
+
+	        RestorableSupport rs;
+	        try
+	        {
+	            rs = RestorableSupport.parse(stateInXml);
+	        }
+	        catch (Exception e)
+	        {
+	            // Parsing the document specified by stateInXml failed.
+	            String message = Logging.getMessage("generic.ExceptionAttemptingToParseStateXml", stateInXml);
+	            Logging.logger().severe(message);
+	            throw new IllegalArgumentException(message, e);
+	        }
+
+	        this.doRestoreState(rs, null);		
+	}
+
+	protected void doRestoreState(RestorableSupport rs, RestorableSupport.StateObject context)   {
+		// Method is invoked by subclasses to have superclass add its state and only its state
+		this.doMyRestoreState(rs, context);
+	}
+
+	private void doMyRestoreState(RestorableSupport rs, RestorableSupport.StateObject context){
+		String s= rs.getStateValueAsString(context, "stack");
+		if(s != null )
+			this.stack.restoreState(s);
+
+		s = rs.getStateValueAsString(context, "protec");
+		if(s != null )
+			this.protec.restoreState(s);
+
+		RestorableSupport.StateObject soh = rs.getStateObject(context, "highlightattributes");
+		if (soh != null)
+			this.getHighlightAttributes().restoreState(rs, soh);
+
+		s = rs.getStateValueAsString(context, "name");
+		if(s != null)
+			this.setName(s);
+
+		s = rs.getStateValueAsString(context, "annotation");
+		if(s != null)
+			this.setAnnotation(s);
+
+
+
 	}
 
 	@Override
@@ -168,14 +244,12 @@ public class SimpleStack3D implements Airspace, VidesoObject {
 
 	@Override
 	public AVList copy() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.stack.copy();
 	}
 
 	@Override
 	public AVList clearList() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.stack.clearList();
 	}
 
 	@Override
@@ -301,8 +375,7 @@ public class SimpleStack3D implements Airspace, VidesoObject {
 
 	@Override
 	public String[] getAltitudeDatum() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.stack.getAltitudeDatum();
 	}
 
 	@Override
@@ -327,6 +400,8 @@ public class SimpleStack3D implements Airspace, VidesoObject {
 	
 	@Override
 	public VidesoAnnotation getAnnotation(Position pos){
+		if(this.annotation == null)
+			this.annotation = new VidesoAnnotation(this.getName());
 		annotation.setPosition(pos);
 		return annotation;
 	}
@@ -355,7 +430,10 @@ public class SimpleStack3D implements Airspace, VidesoObject {
 	}
 	
     public AirspaceAttributes getNormalAttributes() {
-        return this.normalAttrs == null ? this.getAttributes() : this.normalAttrs;
+    	if(this.normalAttrs == null){
+    		this.normalAttrs = new BasicAirspaceAttributes(this.getAttributes());
+    	}
+        return this.normalAttrs;
     }
 
     public void setNormalAttributes(AirspaceAttributes normalAttrs) {
@@ -364,7 +442,11 @@ public class SimpleStack3D implements Airspace, VidesoObject {
     }
     
     public AirspaceAttributes getHighlightAttributes() {
-        return highlightAttrs == null ? this.normalAttrs : this.highlightAttrs;
+    	if(highlightAttrs == null){
+    		highlightAttrs = new BasicAirspaceAttributes(this.getNormalAttributes());
+    		highlightAttrs.setMaterial(Material.WHITE);
+    	}
+        return this.highlightAttrs;
     }
 
     /**

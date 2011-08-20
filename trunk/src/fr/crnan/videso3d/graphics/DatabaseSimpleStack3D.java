@@ -20,12 +20,16 @@ import gov.nasa.worldwind.geom.LatLon;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class DatabaseSimpleStack3D extends SimpleStack3D implements DatabaseVidesoObject {
 
 	private Type base;
 	private int type;
+	
+	public DatabaseSimpleStack3D(){
+		super();
+	}
 	
 	public DatabaseSimpleStack3D(String name, LatLon center, double rayonInt,
 			double rayonExt, int flInf, int flSup, Type base, int type) {

@@ -40,6 +40,8 @@ import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.terrain.Terrain;
+import gov.nasa.worldwind.util.RestorableSupport;
+import gov.nasa.worldwind.util.RestorableSupport.StateObject;
 /**
  * Route en 2D.<br />
  * Couleurs respectant le codage SIA
@@ -52,7 +54,7 @@ public class Route2D extends DirectedPath implements Route{
 	
 	private Space space;
 	
-	private Sens sens;
+	private Parity parity;
 	
 	private String name;
 	
@@ -113,8 +115,8 @@ public class Route2D extends DirectedPath implements Route{
 			}
 			break;
 		case UIR:
-			if(sens!=null){
-				switch (sens){
+			if(parity!=null){
+				switch (parity){
 				case RED :
 					attrs.setOutlineMaterial(Material.RED);
 					break;
@@ -173,13 +175,19 @@ public class Route2D extends DirectedPath implements Route{
 		if(this.name != temp && this.space != null) this.setColor(this.name);
 	}
 	
-	public void setSens(Sens sens){
-		Sens temp = this.sens;
-		this.sens = sens;
-		if(this.sens != temp && this.name != null) this.setColor(this.name);
+	@Override
+	public void setParity(Parity p){
+		Parity temp = this.parity;
+		this.parity = p;
+		if(this.parity != temp && this.name != null) this.setColor(this.name);
 		
 	}
 
+	@Override
+	public Parity getParity(){
+		return this.parity;
+	}
+	
 	@Override
 	public String getName() {
 		return this.name;
@@ -432,5 +440,89 @@ public class Route2D extends DirectedPath implements Route{
 		return this.getAttributes();
 	}
 	
+	@Override
+	protected void doGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject so) {
+		super.doGetRestorableState(rs, so);
+			
+		if(this.getPositions()!= null){
+			rs.addStateValueAsLatLonList(so, "locations", this.getPositions());
+		}
+		
+		if(this.directions != null){
+			RestorableSupport.StateObject stateObject = rs.addStateObject(so, "directions");
+			if (stateObject != null) {
+				for (Integer d : this.directions){
+					rs.addStateValueAsInteger(stateObject, "direction", d);
+				}
+			}
+		}
+		
+		if(this.getName() != null)
+			rs.addStateValueAsString(so, "name", this.getName());
+		
+		if(this.annotation != null)
+			rs.addStateValueAsString(so, "annotation", this.annotation.getText(), true);
+		
+		if(this.getSpace() != null)
+			rs.addStateValueAsString(so, "space", this.getSpace().toString());
+		
+		if(this.getParity() != null)
+			rs.addStateValueAsString(so, "parity", this.getParity().toString());
+	}
+	
+	@Override
+	protected void doRestoreState(RestorableSupport rs, RestorableSupport.StateObject context) {
+		super.doRestoreState(rs, context);
+		
+		String s = rs.getStateValueAsString(context, "space");
+		if(s != null) {
+			if(s.equals(Space.FIR.toString())){
+				this.setSpace(Space.FIR);
+			} else if(s.equals(Space.UIR.toString())) {
+				this.setSpace(Space.UIR);
+			}
+		}
+			
+		s = rs.getStateValueAsString(context, "parity");
+		if(s != null){
+			if(s.equals(Parity.RED.toString())){
+				this.setParity(Parity.RED);
+			} else if(s.equals(Parity.GREEN.toString())) {
+				this.setParity(Parity.GREEN);
+			} else if(s.equals(Parity.BLUE.toString())){
+				this.setParity(Parity.BLUE);
+			}
+		}
+		
+		List<LatLon> loc = rs.getStateValueAsLatLonList(context, "locations");
+		if(loc != null){
+			StateObject directions = rs.getStateObject(context, "directions");
+			if(directions != null){
+				RestorableSupport.StateObject[] dsos = rs.getAllStateObjects(directions, "direction");
+				if (dsos != null && dsos.length != 0){
+					List<Integer> directionsList = new ArrayList<Integer>(dsos.length);
+					for (RestorableSupport.StateObject dso : dsos){
+						if (dso != null) {
+							Integer d = rs.getStateObjectAsInteger(dso);
+							if (d != null)
+								directionsList.add(d);
+						}
+					}
+					this.setLocations(loc, directionsList);
+				}
+			} else {
+				this.setLocations(loc);
+			}
+		}
+		
+		s = rs.getStateValueAsString(context, "name");
+		if(s != null)
+			this.setName(s);
+		
+		s = rs.getStateValueAsString(context, "annotation");
+		if(s != null)
+			this.setAnnotation(s);
+		
+	}
 	
 }

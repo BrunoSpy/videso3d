@@ -123,7 +123,7 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
     {
         super.doGetRestorableState(rs, context);
       
-        rs.addStateValueAsString("annotation", this.getAnnotation(Position.ZERO).getText());
+        rs.addStateValueAsString(context, "annotation", this.getAnnotation(Position.ZERO).getText());
     }
 
     @Override
@@ -131,7 +131,7 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
     {
         super.doRestoreState(rs, context);
         
-        String annotation = rs.getStateValueAsString("annotation");
+        String annotation = rs.getStateValueAsString(context, "annotation");
         if(annotation != null)
         	this.setAnnotation(annotation);
         

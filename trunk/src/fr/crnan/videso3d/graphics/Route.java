@@ -33,12 +33,16 @@ public interface Route extends VidesoObject{
 	
 	public static enum Space {FIR, UIR};
 	
-	public static enum Sens {RED, GREEN, BLUE};
+	public static enum Parity {RED, GREEN, BLUE};
 	
 	public void setSpace(Space type);
 	
 	public Space getSpace();
 		
+	public void setParity(Parity p);
+	
+	public Parity getParity();
+	
 	public void setBalises(List<String> balises);
 	
 	public void addBalise(String balise);

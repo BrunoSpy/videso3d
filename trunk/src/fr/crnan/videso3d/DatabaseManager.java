@@ -1130,6 +1130,23 @@ public final class DatabaseManager {
 	}
 	
 	/**
+	 * Selectionne la base la plus récente
+	 * @param type Type de la base de données à sélectionner
+	 * @return true si une base a été sélectionnée
+	 * @throws SQLException 
+	 */
+	public static boolean selectDatabase(Type type) throws SQLException{
+		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+		ResultSet rs = st.executeQuery("select max(id) from databases where type ='"+type.toString()+"'");
+		if(rs.next()){
+			selectDatabase(rs.getInt(1), type);
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
 	 * Ne pas oublier d'appeler DatabaseManager.fireBaseSelected(type)
 	 * pour informer les listeners du changement de base
 	 * @param id

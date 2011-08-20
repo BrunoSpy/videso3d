@@ -20,10 +20,12 @@ import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
@@ -37,6 +39,7 @@ import fr.crnan.videso3d.graphics.Cylinder;
 import fr.crnan.videso3d.graphics.DatabaseCylinder;
 import fr.crnan.videso3d.graphics.DatabaseRadar;
 import fr.crnan.videso3d.graphics.DatabaseSimpleStack3D;
+import fr.crnan.videso3d.graphics.Radar;
 import fr.crnan.videso3d.graphics.SimpleStack3D;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
 
@@ -47,6 +50,7 @@ import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
@@ -71,7 +75,7 @@ public class STRController implements VidesoController {
 	/**
 	 * Liste des radars et stacks affichés
 	 */
-	private HashMap<String, Object> renderables = new HashMap<String, Object>();
+	private HashMap<String, Renderable> renderables = new HashMap<String, Renderable>();
 	
 	private VidesoGLCanvas wwd;
 	
@@ -139,7 +143,7 @@ public class STRController implements VidesoController {
 			this.toggleLayer(this.createMosaiqueLayer(type, name), true);
 			break;
 		case RADAR:
-			if(!renderables.containsKey(name)){
+			if(!renderables.containsKey(type+"-"+name)){
 				try {
 					Statement st = DatabaseManager.getCurrentExsa();
 					ResultSet rs = st.executeQuery("select * from radrgener, radrtechn where radrgener.name = radrtechn.name and radrgener.name ='"+name+"'");
@@ -154,19 +158,19 @@ public class STRController implements VidesoController {
 								"Tour d'antenne : "+rs.getInt("vitesse")+"s<br />" +
 										"</html>");
 						renderableLayer.addRenderable(radar);
-						renderables.put(name, radar);
+						renderables.put(type+"-"+name, radar);
 						this.toggleLayer(renderableLayer, true);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			} else {
-				((SurfaceShape) this.renderables.get(name)).setVisible(true);
+				((SurfaceShape) this.renderables.get(type+"-"+name)).setVisible(true);
 			}
 			this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
 			break;
 		case STACK:
-			if(!renderables.containsKey(name)){
+			if(!renderables.containsKey(type+"-"+name)){
 				try {
 					Statement st = DatabaseManager.getCurrentExsa();
 					ResultSet rs = st.executeQuery("select * from centstack where name='"+name+"'");
@@ -193,7 +197,7 @@ public class STRController implements VidesoController {
 						attrH.setMaterial(new Material(Pallet.makeBrighter(attrs.getMaterial().getDiffuse())));
 						stack.setHighlightAttributes(attrH);
 						renderableLayer.addRenderable(stack);
-						renderables.put(name, stack);
+						renderables.put(type+"-"+name, stack);
 						this.toggleLayer(renderableLayer, true);
 					}
 					st.close();
@@ -201,12 +205,12 @@ public class STRController implements VidesoController {
 					e.printStackTrace();
 				}
 			} else {
-				((SimpleStack3D) this.renderables.get(name)).setVisible(true);
+				((SimpleStack3D) this.renderables.get(type+"-"+name)).setVisible(true);
 			}
 			this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
 			break;
 		case TMA_F:
-			if(!renderables.containsKey(name)){
+			if(!renderables.containsKey(type+"-"+name)){
 				try {
 					Statement st = DatabaseManager.getCurrentExsa();
 					ResultSet rs = st.executeQuery("select * from centtmaf where name='"+name+"'");
@@ -227,14 +231,14 @@ public class STRController implements VidesoController {
 						attrs.setOutlineWidth(1.0);
 						tmaFilet.setAttributes(attrs);
 						renderableLayer.addRenderable(tmaFilet);
-						renderables.put(name, tmaFilet);
+						renderables.put(type+"-"+name, tmaFilet);
 						this.toggleLayer(renderableLayer, true);
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
 			} else {
-				((Cylinder) this.renderables.get(name)).setVisible(true);
+				((Cylinder) this.renderables.get(type+"-"+name)).setVisible(true);
 			}
 			this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
 			break;
@@ -257,8 +261,8 @@ public class STRController implements VidesoController {
 	 */
 	private MosaiqueLayer createMosaiqueLayer(int type, String name){
 
-		if(mosaiquesLayer.containsKey(type+name)){
-			MosaiqueLayer mos = mosaiquesLayer.get(type+name);
+		if(mosaiquesLayer.containsKey(type+"-"+name)){
+			MosaiqueLayer mos = mosaiquesLayer.get(type+"-"+name);
 			mos.set3D(!flat);
 			return mos;
 		} else {
@@ -470,7 +474,7 @@ public class STRController implements VidesoController {
 													height, size, hSens, vSens, numSens, squares,
 													altitudes, numbers, attr, airspaceAttr,
 													Type.EXSA, type, name);
-			mosaiquesLayer.put(type+name, mLayer);
+			mosaiquesLayer.put(type+"-"+name, mLayer);
 			mLayer.setName("Mosaïque "+type+" "+name);
 			mLayer.set3D(!flat);
 			return mLayer;
@@ -480,22 +484,22 @@ public class STRController implements VidesoController {
 	@Override
 	public void hideObject(int type, String name) {
 		if(type == RADAR){
-			if(renderables.containsKey(name)){
-				((SurfaceShape) renderables.get(name)).setVisible(false);
+			if(renderables.containsKey(type+"-"+name)){
+				((SurfaceShape) renderables.get(type+"-"+name)).setVisible(false);
 				this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
 			}
 		} else if(type == STACK){
-			if(renderables.containsKey(name)){
-				((SimpleStack3D) renderables.get(name)).setVisible(false);
+			if(renderables.containsKey(type+"-"+name)){
+				((SimpleStack3D) renderables.get(type+"-"+name)).setVisible(false);
 				this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
 			}
 		} else if(type == TMA_F) { 
-			if(renderables.containsKey(name)){
-				((Cylinder) renderables.get(name)).setVisible(false);
+			if(renderables.containsKey(type+"-"+name)){
+				((Cylinder) renderables.get(type+"-"+name)).setVisible(false);
 				this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
 			}
 		}else {
-			this.toggleLayer(this.mosaiquesLayer.get(type+name), false);
+			this.toggleLayer(this.mosaiquesLayer.get(type+"-"+name), false);
 		}
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
 		DatasManager.getView(Type.EXSA).hideObject(type, name);
@@ -549,14 +553,61 @@ public class STRController implements VidesoController {
 
 	@Override
 	public HashMap<Integer, List<String>> getSelectedObjectsReference() {
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<Integer, List<String>> objects = new HashMap<Integer, List<String>>();
+		//mosaiques
+		for(Entry<String, MosaiqueLayer> e : this.mosaiquesLayer.entrySet()){
+			if(e.getValue().isEnabled()){
+				String[] names = e.getKey().split("-");
+				int type = new Integer(names[0]);
+				if(!objects.containsKey(type)){
+					objects.put(type, new ArrayList<String>());
+				}
+				objects.get(type).add(names[1]);
+			}
+		}
+		//stacks, radars et tma_f
+		for(Entry<String, Renderable> e : renderables.entrySet()){
+			String[] names = e.getKey().split("-");
+			int type = new Integer(names[0]);
+			boolean visible = false;
+			if(type == RADAR){
+				visible = ((Radar) e.getValue()).isVisible();
+			} else if(type == STACK){
+				visible = ((SimpleStack3D) e.getValue()).isVisible();
+			} else if(type == TMA_F) { 
+				visible = ((Cylinder) e.getValue()).isVisible();
+			}
+			if(visible){
+				if(!objects.containsKey(type)){
+					objects.put(type, new ArrayList<String>());
+				}
+				objects.get(type).add(names[1]);
+			}
+		}
+			
+		return objects;
 	}
 
 	@Override
 	public Iterable<Restorable> getSelectedObjects() {
-		// TODO Auto-generated method stub
-		return null;
-	}	
+		ArrayList<Restorable> restorables = new ArrayList<Restorable>();
+		//stacks, radars et tma_f
+		for(Entry<String, Renderable> e : renderables.entrySet()){
+			String[] names = e.getKey().split("-");
+			int type = new Integer(names[0]);
+			boolean visible = false;
+			if(type == RADAR){
+				visible = ((Radar) e.getValue()).isVisible();
+			} else if(type == STACK){
+				visible = ((SimpleStack3D) e.getValue()).isVisible();
+			} else if(type == TMA_F) { 
+				visible = ((Cylinder) e.getValue()).isVisible();
+			}
+			if(visible){
+				restorables.add((Restorable) e.getValue());
+			}
+		}
+		return restorables;
+	}
 
 }
