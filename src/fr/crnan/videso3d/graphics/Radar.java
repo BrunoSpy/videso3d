@@ -23,6 +23,7 @@ import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.SurfaceCircle;
+import gov.nasa.worldwind.util.RestorableSupport;
 /**
  * Représentation graphique de la portée d'un radar
  * @author Bruno Spyckerelle
@@ -32,7 +33,11 @@ public class Radar extends SurfaceCircle implements VidesoObject {
 	
 	private VidesoAnnotation annotation;
 	private String name;
-	
+
+	public Radar(){
+		super();
+	}
+
 	/**
 	 * Construit un radar
 	 * @param name Nom du radar
@@ -40,9 +45,7 @@ public class Radar extends SurfaceCircle implements VidesoObject {
 	 * @param portee Portee du radar
 	 */
 	public Radar(String name, LatLon pos, Integer portee){
-		this.setCenter(pos);
-		this.setRadius(portee*LatLonCautra.NM);
-		this.setAnnotation("Radar "+name+"\nPortée : "+portee+" NM.");
+		this();
 		BasicShapeAttributes attrs = new BasicShapeAttributes();
 		attrs.setInteriorMaterial(Material.BLUE);
 		attrs.setInteriorOpacity(0.5);
@@ -50,6 +53,9 @@ public class Radar extends SurfaceCircle implements VidesoObject {
 		BasicShapeAttributes attrsH = new BasicShapeAttributes(this.getAttributes());
 		attrsH.setInteriorMaterial(new Material(Pallet.makeBrighter(attrsH.getInteriorMaterial().getDiffuse())));
 		this.setHighlightAttributes(attrsH);
+		this.setCenter(pos);
+		this.setRadius(portee*LatLonCautra.NM);
+		this.setAnnotation("Radar "+name+"\nPortée : "+portee+" NM.");
 		this.setName(name);
 	}
 	
@@ -69,6 +75,8 @@ public class Radar extends SurfaceCircle implements VidesoObject {
 	 * @see fr.crnan.videso3d.graphics.ObjectAnnotation#getAnnotation(gov.nasa.worldwind.geom.Position)
 	 */
 	public VidesoAnnotation getAnnotation(Position pos){
+		if(this.annotation == null)
+			this.annotation = new VidesoAnnotation(this.getName());
 		annotation.setPosition(pos);
 		return annotation;
 	}
@@ -88,6 +96,33 @@ public class Radar extends SurfaceCircle implements VidesoObject {
 	public Object getNormalAttributes() {
 		return this.getAttributes();
 	}
+	
+	 @Override
+	 protected void doGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context)
+	 {
+		 super.doGetRestorableState(rs, context);
+
+		 rs.addStateValueAsString(context, "annotation", this.getAnnotation(Position.ZERO).getText());
+		 
+		 if(this.getName() != null)
+			 rs.addStateValueAsString(context, "name", this.getName());
+		 
+	 }
+
+	 @Override
+	 protected void doRestoreState(RestorableSupport rs, RestorableSupport.StateObject context)
+	 {
+		 super.doRestoreState(rs, context);
+
+		 String s = rs.getStateValueAsString(context, "name");
+		 if(s != null)
+			 this.setName(s);
+		 
+		 s = rs.getStateValueAsString(context, "annotation");
+		 if(s != null)
+			 this.setAnnotation(s);
+
+	 }
 }
 
 

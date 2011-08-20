@@ -20,6 +20,8 @@ import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -46,7 +48,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * IHM to choose which objects to save
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class ProjectManagerUI extends JDialog {
 	
@@ -111,8 +113,32 @@ public class ProjectManagerUI extends JDialog {
 		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.Y_AXIS));
 		Box databasesBox = Box.createHorizontalBox();
 		final JCheckBox databases = new JCheckBox("Enregistrer les bases de données");
+		databases.setEnabled(false);
+		databases.setToolTipText("<html>Lorsque vous enregistrez uniquement un lien vers les objets affichés, vous devez avoir une base de données compatible pour restaurer le fichier.<br />" +
+				"En cochant cette case, vous enregistrez dans le fichier projet la base ayant servi à créer les données.<br/>" +
+				"Le fichier résultant sera alors plus volumineux, mais il sera complètement autonome.</html>");
 		databasesBox.add(databases);
 		databasesBox.add(Box.createHorizontalGlue());
+		final JCheckBox links = new JCheckBox("Enregistrer un lien vers les objets");
+		links.setToolTipText("<html>En cochant cette case, vous enregistrerez uniquement un lien vers les objets affichés.<br />" +
+				"Une base de données est nécessaire pour restaurer le fichier projet résultant.</html>");
+		links.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED){
+					databases.setEnabled(true);
+					databases.setSelected(true);
+				} else {
+					databases.setSelected(false);
+					databases.setEnabled(false);
+				}
+			}
+		});
+		Box linksBox = Box.createHorizontalBox();
+		linksBox.add(links);
+		linksBox.add(Box.createHorizontalGlue());		
+		optionsPanel.add(linksBox);
 		optionsPanel.add(databasesBox);
 		content.add(optionsPanel);
 		
@@ -163,7 +189,7 @@ public class ProjectManagerUI extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					projectManager.saveProject(new File(filePath.getText()), databases.isSelected());
+					projectManager.saveProject(new File(filePath.getText()), databases.isSelected(), links.isSelected());
 					getThis().dispose();
 				} catch(ZipException e) {
 					JOptionPane.showMessageDialog(null, "Aucun fichier projet sauvé, vérifiez qu'il y a bien des objets à sauver.",

@@ -23,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -45,7 +46,6 @@ import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.Renderable;
-import gov.nasa.worldwind.render.airspaces.Airspace;
 
 /**
  * Load and save projects.<br />
@@ -119,11 +119,12 @@ public class ProjectManager extends ProgressSupport {
 	/**
 	 * Before invoking this method, <code>prepareSaving</code> has to be called once.
 	 * @param file .vpj file
-	 * @param databasesIncluded If true, include databases into the project file. If not, save each selected object as a standalone object.
+	 * @param databasesIncluded If true, include databases into the project file. Only usefull if <code>onlyLinks</code> is true
+	 * @param onlyLinks If true, save links to databases. If false, save standalone objects.
 	 * @throws IOException 
 	 * @throws SQLException 
 	 */
-	public void saveProject(File file, boolean databasesIncluded) throws IOException, SQLException{
+	public void saveProject(File file, boolean databasesIncluded, boolean onlyLinks) throws IOException, SQLException{
 		
 		int index = file.getName().lastIndexOf(".");
 		
@@ -147,19 +148,20 @@ public class ProjectManager extends ProgressSupport {
 
 				for(Type type : objects.keySet()){
 
-					if(databasesIncluded){
-						//for each database with selected objects, we copy the sqlite file
-						File baseCopy = new File(databases, DatabaseManager.getCurrentName(type)+"."+type);
-						baseCopy.createNewFile();
+					if(onlyLinks){
+						if(databasesIncluded){
+							//for each database with selected objects, we copy the sqlite file
+							File baseCopy = new File(databases, DatabaseManager.getCurrentName(type)+"."+type);
+							baseCopy.createNewFile();
 
-						FileChannel source = new FileInputStream(new File(DatabaseManager.getCurrentName(type))).getChannel();
-						FileChannel destination = new FileOutputStream(baseCopy).getChannel();
+							FileChannel source = new FileInputStream(new File(DatabaseManager.getCurrentName(type))).getChannel();
+							FileChannel destination = new FileOutputStream(baseCopy).getChannel();
 
-						destination.transferFrom(source, 0, source.size());
+							destination.transferFrom(source, 0, source.size());
 
-						source.close();
-						destination.close();
-
+							source.close();
+							destination.close();
+						}
 						//then we save the selected objects
 						File selectedObjects = new File(databases, type.toString());
 						selectedObjects.createNewFile();
@@ -209,9 +211,9 @@ public class ProjectManager extends ProgressSupport {
 				this.fireTaskInfo(f.getName());
 				int index = f.getName().lastIndexOf(".");
 				final String suffix = index == -1 ? "" : f.getName().substring(index+1);
-				String name = index == -1 ? f.getName() : f.getName().substring(0, index);
-				final Type type = DatabaseManager.stringToType(suffix);
-				if(!suffix.isEmpty() && type != null) {
+				final String name = index == -1 ? f.getName() : f.getName().substring(0, index);
+				final Type type = DatabaseManager.stringToType(index == -1 ? name : suffix);
+				if(!suffix.isEmpty() && type != null) { //base de données existantes
 					try {
 						if(!DatabaseManager.databaseExists(type, name)) {
 							FileManager.copyFile(f);
@@ -221,32 +223,42 @@ public class ProjectManager extends ProgressSupport {
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-					//Once the database is selected and the controller created, check the objects
-					DatasManager.addPropertyChangeListener("done", new PropertyChangeListener() {
+					
 
+				} else if(suffix.isEmpty() && type != null){ //on links to objects, without databases
+					if(databases.listFiles(new FilenameFilter() {//verify that there's no database of this type
+						
 						@Override
-						public void propertyChange(PropertyChangeEvent evt) {
-							File objectsFile = new File(databases, suffix);
+						public boolean accept(File dir, String name) {
+							return name.endsWith("."+type);
+						}
+					}).length ==0){ 
+						if(DatasManager.getController(type) == null) {
+							//ask the DatabaseManager to select a base
 							try {
-								ObjectInputStream ois = new ObjectInputStream(new FileInputStream(objectsFile));
-								HashMap<Integer, List<String>> objects = (HashMap<Integer, List<String>>) ois.readObject();
-								for(Integer i : objects.keySet()){
-									for(String n : objects.get(i)){
-										DatasManager.getController(type).showObject(i, n);
-									}
+								if(DatabaseManager.selectDatabase(type)){
+									DatabaseManager.fireBaseSelected(type);
+								} else {
+									//TODO informer d'une erreur
 								}
-							} catch (FileNotFoundException e) {
-								e.printStackTrace();
-							} catch (IOException e) {
-								e.printStackTrace();
-							} catch (ClassNotFoundException e) {
+							} catch (SQLException e) {
 								e.printStackTrace();
 							}
-							DatasManager.removePropertyChangeListener("done", this); //ensure this is just done once
+						} else {
+							selectObjectWithController(databases, name, type);
 						}
-					});
+						
+					}
+				}
+				//Once the database is selected and the controller created, check the objects
+				DatasManager.addPropertyChangeListener("done", new PropertyChangeListener() {
 
-				} 
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						selectObjectWithController(databases, suffix.isEmpty() ? name : suffix, type);
+						DatasManager.removePropertyChangeListener("done", this); //ensure this is just done once
+					}
+				});
 			}
 		}
 		//import xml files
@@ -277,14 +289,7 @@ public class ProjectManager extends ProgressSupport {
 						o.restoreState(s);
 					}
 					
-					if(o instanceof Airspace){
-						if(xmlAirspace == null){
-							xmlAirspace = new AirspaceLayer();
-							xmlAirspace.setName("XML Airspaces");
-							wwd.toggleLayer(xmlAirspace, true);
-						}
-						xmlAirspace.addAirspace((Airspace) o);
-					} else if(o instanceof Renderable){
+					if(o instanceof Renderable){
 						if(xmlRenderables == null){
 							xmlRenderables = new RenderableLayer();
 							xmlRenderables.setName("XML Renderables");
@@ -317,6 +322,25 @@ public class ProjectManager extends ProgressSupport {
 		//remove temp files
 		FileManager.removeTempFiles();
 		this.fireTaskProgress(max);
+	}
+	
+	private void selectObjectWithController(File databases, String suffix, Type type){
+		File objectsFile = new File(databases, suffix);
+		try {
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(objectsFile));
+			HashMap<Integer, List<String>> objects = (HashMap<Integer, List<String>>) ois.readObject();
+			for(Integer i : objects.keySet()){
+				for(String n : objects.get(i)){
+					DatasManager.getController(type).showObject(i, n);
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

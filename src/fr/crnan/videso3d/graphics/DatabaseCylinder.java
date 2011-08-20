@@ -24,6 +24,10 @@ import gov.nasa.worldwind.geom.LatLon;
  */
 public class DatabaseCylinder extends Cylinder implements DatabaseVidesoObject{
 
+	public DatabaseCylinder(){
+		super();
+	}
+	
 	public DatabaseCylinder(String name, Type database, int type,
 			LatLon center, int flinf, int flsup, double rayon) {
 		super(name, center, flinf, flsup, rayon);

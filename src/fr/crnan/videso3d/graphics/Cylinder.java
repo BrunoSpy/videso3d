@@ -19,8 +19,11 @@ package fr.crnan.videso3d.graphics;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
+import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwind.render.airspaces.CappedCylinder;
+import gov.nasa.worldwind.util.RestorableSupport;
 /**
  * Cylindre 3D
  * @author Bruno Spyckerelle
@@ -93,6 +96,9 @@ public class Cylinder extends CappedCylinder implements VidesoObject {
 	}
 	
     public AirspaceAttributes getNormalAttributes() {
+    	if(this.normalAttrs == null){
+    		this.normalAttrs = new BasicAirspaceAttributes(this.getAttributes());
+    	}
         return this.normalAttrs;
     }
 
@@ -102,7 +108,11 @@ public class Cylinder extends CappedCylinder implements VidesoObject {
     }
     
     public AirspaceAttributes getHighlightAttributes() {
-        return highlightAttrs == null ? this.normalAttrs : this.highlightAttrs;
+    	if(highlightAttrs == null){
+    		highlightAttrs = new BasicAirspaceAttributes(this.getNormalAttributes());
+    		highlightAttrs.setMaterial(Material.WHITE);
+    	}
+        return this.highlightAttrs;
     }
 
     /**
@@ -114,4 +124,35 @@ public class Cylinder extends CappedCylinder implements VidesoObject {
         this.highlightAttrs = highlightAttrs;
         if(highlighted) this.setAttributes(this.highlightAttrs);
     }
+    
+    @Override
+	 protected void doGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context) {
+		 super.doGetRestorableState(rs, context);
+
+		 this.getHighlightAttributes().getRestorableState(rs, rs.addStateObject(context, "highlightattributes"));
+		 
+		 rs.addStateValueAsString(context, "annotation", this.getAnnotation(Position.ZERO).getText());
+		 
+		 if(this.getName() != null)
+			 rs.addStateValueAsString(context, "name", this.getName());	 
+	 }
+
+	 @Override
+	 protected void doRestoreState(RestorableSupport rs, RestorableSupport.StateObject context)
+	 {
+		 super.doRestoreState(rs, context);
+
+		 RestorableSupport.StateObject soh = rs.getStateObject(context, "highlightattributes");
+		 if (soh != null)
+			 this.getHighlightAttributes().restoreState(rs, soh);
+
+		 String s = rs.getStateValueAsString(context, "name");
+		 if(s != null)
+			 this.setName(s);
+		 
+		 s = rs.getStateValueAsString(context, "annotation");
+		 if(s != null)
+			 this.setAnnotation(s);
+
+	 }
 }

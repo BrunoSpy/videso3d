@@ -20,10 +20,14 @@ import gov.nasa.worldwind.geom.LatLon;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class DatabaseRadar extends Radar implements DatabaseVidesoObject{
 
+	public DatabaseRadar(){
+		super();
+	}
+	
 	public DatabaseRadar(String name, LatLon pos, Integer portee, Type base,
 			int type) {
 		super(name, pos, portee);

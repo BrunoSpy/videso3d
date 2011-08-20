@@ -34,7 +34,7 @@ import gov.nasa.worldwind.util.RestorableSupport;
 /**
  * Représentation 3D d'une route sous la forme d'un ruban
  * @author Bruno Spyckerelle
- * @version 0.2.5
+ * @version 0.2.6
  */
 public class Route3D extends TrackAirspace implements Route {
 
@@ -55,6 +55,7 @@ public class Route3D extends TrackAirspace implements Route {
 	 * Nom de la route
 	 */
 	private String name;
+	private Parity parity;
 	
 
 	public Route3D(){
@@ -77,7 +78,7 @@ public class Route3D extends TrackAirspace implements Route {
 	
 	/**
 	 * Type de la Route : UIR ou FIR
-	 * @param type {@link Espace}
+	 * @param type {@link Space}
 	 */
 	@Override
 	public void setSpace(Space type){
@@ -92,6 +93,78 @@ public class Route3D extends TrackAirspace implements Route {
 		}
 	}
 
+	@Override
+	public void setParity(Parity p){
+		Parity temp = this.parity;
+		this.parity = p;
+		if(this.parity != temp && this.name != null) this.setColor(this.name);
+		
+	}
+
+	@Override
+	public Parity getParity(){
+		return this.parity;
+	}
+	
+	/**
+	 * Affecte la couleur de la route suivant le codage SIA
+	 * @param name Nom de la route
+	 * @param type {@link Espace} de la route
+	 */
+	private void setColor(String name) {
+		AirspaceAttributes attrs = this.getNormalAttributes();
+		switch (space) {
+		case FIR:
+			Character c = name.charAt(0);
+			switch (c) {
+			case 'A':
+				attrs.setOutlineMaterial(Material.YELLOW);
+				attrs.setMaterial(new Material(Pallet.makeBrighter(Color.YELLOW)));
+				break;
+			case 'G' :
+				attrs.setOutlineMaterial(Material.GREEN);
+				attrs.setMaterial(new Material(Pallet.makeBrighter(Color.GREEN)));
+				break;
+			case 'B' :
+				attrs.setOutlineMaterial(Material.BLUE);
+				attrs.setMaterial(new Material(Pallet.makeBrighter(Color.BLUE)));
+				break;
+			case 'R' :
+				attrs.setOutlineMaterial(Material.RED);
+				attrs.setMaterial(new Material(Pallet.makeBrighter(Color.RED)));
+				break;
+			default:
+				attrs.setOutlineMaterial(Material.BLACK);
+				attrs.setMaterial(new Material(Pallet.makeBrighter(Color.BLACK)));
+				break;
+			}
+			break;
+		case UIR:
+			if(parity!=null) {
+				switch (parity) {
+				case RED :
+					attrs.setOutlineMaterial(Material.RED);
+					attrs.setMaterial(new Material(Pallet.makeBrighter(Color.RED)));
+					break;
+				case GREEN :
+					attrs.setOutlineMaterial(Material.GREEN);
+					attrs.setMaterial(new Material(Pallet.makeBrighter(Color.GREEN)));
+					break;
+				case BLUE :
+					attrs.setOutlineMaterial(Material.BLUE);
+					attrs.setMaterial(new Material(Pallet.makeBrighter(Color.BLUE)));
+					break;
+				}
+			} else {
+				attrs.setOutlineMaterial(Material.BLACK);
+				attrs.setMaterial(new Material(Pallet.makeBrighter(Color.BLACK)));
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	
 	@Override
 	public void setAnnotation(String text) {
 		if(annotation == null)
