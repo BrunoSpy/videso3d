@@ -149,9 +149,10 @@ public class AIP extends FileParser{
 			if(rs.next()){
 				this.fileName = rs.getString(4);
 				//Construction du document dans un autre thread afin de ne pas bloquer l'initialisation
-				new Thread(){
-					@Override
-					public void run(){
+				//TODO trouver une autre méthode car cela empêche le chargement d'un projet
+//				new Thread(){
+//					@Override
+//					public void run(){
 						try {
 							document = sxb.build(new File(name+"_files",fileName));
 						} catch (JDOMException e) {
@@ -159,8 +160,8 @@ public class AIP extends FileParser{
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
-					}
-				}.start();
+//					}
+//				}.start();
 			}
 			//TODO prendre en compte la possibilité qu'il n'y ait pas de bdd AIP
 			Statement aipDB = DatabaseManager.getCurrentAIP();
