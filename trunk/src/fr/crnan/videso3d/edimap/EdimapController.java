@@ -19,9 +19,9 @@ package fr.crnan.videso3d.edimap;
 import java.awt.Color;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -36,16 +36,11 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Contrôle l'affichage des éléments Edimap
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.2.0
  */
 public class EdimapController implements VidesoController {
 
 	private VidesoGLCanvas wwd;
-	
-	/**
-	 * Liste des layers Edimap
-	 */
-	private List<Layer> layers = new LinkedList<Layer>();
 	
 	private Cartes cartes;
 	
@@ -57,19 +52,12 @@ public class EdimapController implements VidesoController {
 	
 	@Override
 	public void addLayer(String name, Layer layer) {
-		if(!layers.contains(layer)){
-			this.layers.add(layer);
-			try {
-				this.wwd.addLayer(layer);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		this.wwd.addLayer(layer);
 	}
+	
 	@Override
 	public void removeLayer(String name, Layer layer) {
 		this.wwd.removeLayer(layer);
-		this.layers.remove(layer);
 	}
 
 	@Override
@@ -79,10 +67,9 @@ public class EdimapController implements VidesoController {
 
 	@Override
 	public void removeAllLayers() {
-		for(Layer layer : layers){
-			this.wwd.removeLayer(layer);
+		for(Carte c : this.cartes.getCartes()){
+			this.wwd.removeLayer(c);
 		}
-		this.layers.clear();
 	}
 
 	@Override
@@ -95,7 +82,7 @@ public class EdimapController implements VidesoController {
 	
 	@Override
 	public void reset() {
-		for(Layer l : layers){
+		for(Layer l : this.cartes.getCartes()){
 			this.toggleLayer(l, false);
 		}
 	}
@@ -173,13 +160,26 @@ public class EdimapController implements VidesoController {
 
 	@Override
 	public HashMap<Integer, List<String>> getSelectedObjectsReference() {
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<Integer, List<String>> objects = new HashMap<Integer, List<String>>();
+		for(Carte c : this.cartes.getCartes()){
+			if(c.isEnabled()){
+				if(!objects.containsKey(c.getType())){
+					objects.put(c.getType(), new ArrayList<String>());
+				}
+				objects.get(c.getType()).add(c.getName());
+			}
+		}
+		return objects;
 	}
 
 	@Override
 	public Iterable<Restorable> getSelectedObjects() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Restorable> restorables = new ArrayList<Restorable>();
+		for(Carte carte : this.cartes.getCartes()){
+			if(carte.isEnabled()){
+				restorables.add(carte);
+			}
+		}
+		return restorables;
 	}
 }

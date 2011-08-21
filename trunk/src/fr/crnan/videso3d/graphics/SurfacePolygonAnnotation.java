@@ -22,16 +22,22 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.SurfacePolygon;
+import gov.nasa.worldwind.util.RestorableSupport;
+import gov.nasa.worldwind.util.RestorableSupport.StateObject;
 /**
  * SurfacePolygon avec Annotation intégrée
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.1.4
  */
 public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoObject {
 
 	private VidesoAnnotation annotation;
 	
 	private String name;
+	
+	public SurfacePolygonAnnotation(){
+		super();
+	}
 	
 	/**
 	 * 
@@ -56,6 +62,11 @@ public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoOb
 	}
 	@Override
 	public VidesoAnnotation getAnnotation(Position pos){
+		if(this.annotation == null){
+			if(this.getName() == null)
+				return null;
+			this.annotation = new VidesoAnnotation(this.getName());
+		}
 		annotation.setPosition(pos);
 		return annotation;
 	}
@@ -74,4 +85,28 @@ public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoOb
 	public Object getNormalAttributes() {
 		return this.getAttributes();
 	}
+
+	@Override
+	protected void doGetRestorableState(RestorableSupport rs,
+			StateObject context) {
+		super.doGetRestorableState(rs, context);
+		
+		if(this.getName() != null) rs.addStateValueAsString(context, "name", this.getName());
+		if(this.annotation != null) rs.addStateValueAsString(context, "annotation", this.annotation.getText(), true);
+	}
+
+	@Override
+	protected void doRestoreState(RestorableSupport rs, StateObject context) {
+		super.doRestoreState(rs, context);
+		
+		String s = rs.getStateValueAsString(context, "name");
+		if(s != null)
+			this.setName(s);
+		
+		s = rs.getStateValueAsString(context, "annotation");
+		if(s != null)
+			this.setAnnotation(s);
+	}
+	
+	
 }

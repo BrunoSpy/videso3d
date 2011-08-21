@@ -607,6 +607,11 @@ public class STRController implements VidesoController {
 				restorables.add((Restorable) e.getValue());
 			}
 		}
+		//mosaiques
+		for(Layer l : mosaiquesLayer.values()){
+			if(l.isEnabled())
+				restorables.add(l);
+		}
 		return restorables;
 	}
 

@@ -209,7 +209,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	 * Ajoute un calque à la fin de la liste. Le calque est affiché par défaut. 
 	 * @param layer Calque à ajouter
 	 */
-	public void addLayer(Layer layer) throws Exception{
+	public void addLayer(Layer layer) {
 		this.toggleLayer(layer, true);
 	}
 

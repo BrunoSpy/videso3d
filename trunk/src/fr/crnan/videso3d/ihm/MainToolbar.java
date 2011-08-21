@@ -38,12 +38,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import fr.crnan.videso3d.CompatibilityVersionException;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.ProgressSupport;
@@ -83,7 +85,7 @@ public class MainToolbar extends JToolBar {
 		this.wwd = ww;
 		this.mainWindow = parent;
 		this.omniBox = box;
-
+		
 		//Configuration
 		final JButton config = new JButton(new ImageIcon(getClass().getResource("/resources/configure.png")));
 		config.setToolTipText("Configurer les paramètres généraux de l'application");
@@ -151,6 +153,8 @@ public class MainToolbar extends JToolBar {
 					final ProjectManager project = new ProjectManager();
 					final ProgressMonitor monitor = new ProgressMonitor(null, "Import d'un fichier projet",
 							"Import ...", 0, 100, true, true);
+					monitor.setMillisToPopup(0);
+					monitor.setMillisToDecideToPopup(0);
 					project.addPropertyChangeListener(new PropertyChangeListener() {
 
 						@Override
@@ -173,7 +177,16 @@ public class MainToolbar extends JToolBar {
 						@Override
 						protected Void doInBackground() throws Exception {
 							try {
-								project.loadProject(fileChooser.getSelectedFile(), wwd);
+								project.loadProject(fileChooser.getSelectedFile(), wwd, false);
+							} catch (CompatibilityVersionException e) {
+								if(JOptionPane.showConfirmDialog(null, "<html>Le fichier que souhaitez importer n'est pas compatible avec la version de Videso que vous utilisez.<br/>" +
+										"Souhaitez vous tout de même l'importer ?<br/><br/>" +
+										"<b>Avertissement : </b>L'import d'un fichier non compatible peut faire planter l'application.<br/><br/>" +
+										"<i>Information : </i> Version du fichier : "+e.getMessage()+"</html>",
+										"Version du fichier incompatible.", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE)
+										== JOptionPane.YES_OPTION) {
+									project.loadProject(fileChooser.getSelectedFile(), wwd, true);
+								}
 							} catch (FileNotFoundException e1) {
 								e1.printStackTrace();
 							} catch (IOException e1) {

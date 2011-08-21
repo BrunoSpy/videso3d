@@ -35,7 +35,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 /**
  * Jeu de cartes Edimap
  * @author Bruno Spyckerelle
- * @version 0.5.1
+ * @version 0.5.2
  */
 public class Cartes extends FileParser {
 
@@ -85,7 +85,7 @@ public class Cartes extends FileParser {
 	/**
 	 * Liste des cartes crées
 	 */
-	HashMap<String, Carte> cartes = new HashMap<String, Carte>();
+	private HashMap<String, Carte> cartes = new HashMap<String, Carte>();
 
 	public static final int EDIMAP_STATIC = 0;
 	public static final int EDIMAP_DYNAMIC = 1;
@@ -116,8 +116,8 @@ public class Cartes extends FileParser {
 
 	/**
 	 * Récupère les données du fichier carac_jeu et les stocke en base de données
+	 * @param absoluteDirPath
 	 * @param carac_jeu String Chemin vers le fichier carac_jeu
-	 * @param db Gestionnaire de base de données
 	 */
 	public Cartes(String absoluteDirPath, String carac_jeu) {
 		this.path = absoluteDirPath;
@@ -350,7 +350,14 @@ public class Cartes extends FileParser {
 		}
 	}
 
-
+	/**
+	 * Toutes les cartes créées
+	 * @return
+	 */
+	public Iterable<Carte> getCartes(){
+		return this.cartes.values();
+	}
+	
 	private void setPalette(){
 		try {
 			NectarReader paletteFichier = new NectarReader();

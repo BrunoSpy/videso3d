@@ -43,7 +43,7 @@ import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.layers.Balise2DLayer;
 import fr.crnan.videso3d.layers.Balise3DLayer;
 import gov.nasa.worldwind.Restorable;
-import gov.nasa.worldwind.layers.AirspaceLayer;
+import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.Renderable;
 
@@ -59,6 +59,7 @@ import gov.nasa.worldwind.render.Renderable;
  * <ul>
  * <li> (R) project_name : main directory
  * <ul>
+ * <li> (F) version : compatibility</li>
  * <li> (R) images : geotiff images</li>
  * <li> (R) xml : 3D objects
  * <ul><li>files whose name is the class of the object</li></ul></li>
@@ -137,6 +138,14 @@ public class ProjectManager extends ProgressSupport {
 		}
 		main.mkdir();
 		
+		//Save version
+		File version = new File(main, "version");
+		version.createNewFile();
+		PrintWriter writer = new PrintWriter(version);
+		writer.write(Videso3D.VERSION);
+		writer.flush();
+		writer.close();
+		
 		//create xml directory
 		File xmlDir = new File(main.getAbsolutePath()+ "/xml");
 		xmlDir.mkdir();
@@ -191,7 +200,18 @@ public class ProjectManager extends ProgressSupport {
 		
 	}
 	
-	public void loadProject(File file, VidesoGLCanvas wwd) throws FileNotFoundException, IOException, ClassNotFoundException{
+	/**
+	 * 
+	 * @param file
+	 * @param wwd
+	 * @param force Don't check version of the file
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 * @throws CompatibilityVersionException
+	 */
+	public void loadProject(File file, VidesoGLCanvas wwd, boolean force)
+			throws FileNotFoundException, IOException, ClassNotFoundException, CompatibilityVersionException {
 		
 		FileManager.unzip(file);
 		
@@ -203,6 +223,29 @@ public class ProjectManager extends ProgressSupport {
 		this.fireTaskStarts(max);
 		
 		int progress = 0;
+		
+		//check version
+		if(!force){
+			File version = new File(path, "version");
+			BufferedReader reader = new BufferedReader(new FileReader(version));
+			if(reader.ready()){
+				String lin = reader.readLine();
+				String[] line = lin.split("\\.");
+				String[] currentVersion = Videso3D.VERSION.split("\\.");
+				int major = new Integer(line[0]);
+				int minor = new Integer(line[1]);
+				int majorCurrent = new Integer(currentVersion[0]);
+				int minorCurrent = new Integer(currentVersion[1]);
+				if(major > majorCurrent) {
+					throw new CompatibilityVersionException(line[0]+"."+line[1]+"."+line[2]);
+				} else {
+					if(minor > minorCurrent) {
+						throw new CompatibilityVersionException(line[0]+"."+line[1]+"."+line[2]);
+					} 
+				}
+			}
+		}
+		
 		//import databases
 		final File databases = new File(path, "databases");
 		if(databases.exists()){
@@ -264,7 +307,6 @@ public class ProjectManager extends ProgressSupport {
 		//import xml files
 		File xmlDir = new File(path, "xml");
 		if(xmlDir.exists()){
-			AirspaceLayer xmlAirspace = null;
 			RenderableLayer xmlRenderables = null;
 			Balise2DLayer xmlBalises = null;
 			Balise3DLayer xmlBalises3D = null;
@@ -310,6 +352,8 @@ public class ProjectManager extends ProgressSupport {
 						}
 						xmlBalises3D.addBalise((Balise) o);
 						xmlBalises3D.showBalise((Balise) o);
+					} else if(o instanceof Layer) {
+						wwd.toggleLayer((Layer) o, true);
 					}
 
 				} catch (InstantiationException e) {
@@ -323,7 +367,7 @@ public class ProjectManager extends ProgressSupport {
 		FileManager.removeTempFiles();
 		this.fireTaskProgress(max);
 	}
-	
+
 	private void selectObjectWithController(File databases, String suffix, Type type){
 		File objectsFile = new File(databases, suffix);
 		try {
