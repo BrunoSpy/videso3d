@@ -24,7 +24,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.DatabaseRoute2D;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.VPolygon;
@@ -36,7 +35,6 @@ import fr.crnan.videso3d.ihm.ShapeAttributesDialog;
 import fr.crnan.videso3d.ihm.components.AirspaceMenu;
 import fr.crnan.videso3d.ihm.components.ImageMenu;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
-import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.geom.Position;

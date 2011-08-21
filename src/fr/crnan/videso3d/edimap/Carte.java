@@ -15,11 +15,25 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
+import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
+import fr.crnan.videso3d.graphics.PolygonAnnotation;
+import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
+import fr.crnan.videso3d.graphics.VidesoAnnotation;
 import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.LayerSet;
 import fr.crnan.videso3d.layers.TextLayer;
+import gov.nasa.worldwind.Restorable;
+import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.render.GeographicText;
+import gov.nasa.worldwind.render.Renderable;
+import gov.nasa.worldwind.render.UserFacingText;
+import gov.nasa.worldwind.render.airspaces.Airspace;
+import gov.nasa.worldwind.util.Logging;
+import gov.nasa.worldwind.util.RestorableSupport;
+import gov.nasa.worldwind.util.RestorableSupport.StateObject;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,9 +42,9 @@ import java.util.List;
 /**
  * Carte Edimap
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3.0
  */
-public class Carte extends LayerSet {
+public class Carte extends LayerSet implements DatabaseVidesoObject{
 	/**
 	 * Ensemble des points de référence de la carte
 	 */
@@ -41,6 +55,7 @@ public class Carte extends LayerSet {
 	 */
 	private HashMap<String, Entity> idAtc;
 	
+	private int type;
 	
 	private String name;
 	
@@ -51,10 +66,19 @@ public class Carte extends LayerSet {
 	private FilterableAirspaceLayer airspaceLayer = new FilterableAirspaceLayer();
 	private TextLayer textLayer = new TextLayer("Textes Edimap");
 	
+	public Carte(){
+		super();
+		this.add(surfaceLayer);
+		this.add(airspaceLayer);
+		this.add(textLayer);
+	}
+	
 	public Carte(Entity carte, PaletteEdimap palette, int typeCarte){
 		this.add(surfaceLayer);
 		this.add(airspaceLayer);
 		this.add(textLayer);
+		
+		this.setType(typeCarte);
 		
 		Entity map = carte.getEntity("map");
 		this.name = map.getValue("name");
@@ -125,5 +149,172 @@ public class Carte extends LayerSet {
 	public String getName() {
 		return name;
 	}	
+	
+	@Override
+	public String getRestorableState() {
+		RestorableSupport rs = RestorableSupport.newRestorableSupport();
+        this.doGetRestorableState(rs, null);
+
+        return rs.getStateAsXml();
+	}
+
+	protected void doGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context) {
+        // Method is invoked by subclasses to have superclass add its state and only its state
+        this.doMyGetRestorableState(rs, context);
+    }
+
+    private void doMyGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context) {
+    	RestorableSupport.StateObject airspace = rs.addStateObject(context, "airspaceLayer");
+    	for(Airspace r : airspaceLayer.getAirspaces()){
+    		rs.addStateValueAsString(airspace, "airspace", r.getRestorableState());
+    	}
+    	
+    	StateObject text = rs.addStateObject(context, "textLayer");
+    	for(GeographicText t : this.textLayer.getActiveGeographicTexts()){
+    		rs.addStateValueAsString(text, "numero", t.getText().toString());
+    		rs.addStateValueAsPosition(text, "position", t.getPosition());
+    		rs.addStateValueAsColor(text, "color", t.getColor());
+    	}
+    	
+    	StateObject shape = rs.addStateObject(context, "shapeLayer");
+    	for(Renderable r : this.surfaceLayer.getRenderables()){
+    		rs.addStateValueAsString(shape, "shape", ((Restorable)r).getRestorableState());
+    	}
+    	
+
+    }
+
+    public void restoreState(String stateInXml){
+        if (stateInXml == null)
+        {
+            String message = Logging.getMessage("nullValue.StringIsNull");
+            Logging.logger().severe(message);
+            throw new IllegalArgumentException(message);
+        }
+
+        RestorableSupport rs;
+        try
+        {
+            rs = RestorableSupport.parse(stateInXml);
+        }
+        catch (Exception e)
+        {
+            // Parsing the document specified by stateInXml failed.
+            String message = Logging.getMessage("generic.ExceptionAttemptingToParseStateXml", stateInXml);
+            Logging.logger().severe(message);
+            throw new IllegalArgumentException(message, e);
+        }
+
+        this.doRestoreState(rs, null);
+    }
+
+    protected void doRestoreState(RestorableSupport rs, RestorableSupport.StateObject context)
+    {
+        // Method is invoked by subclasses to have superclass add its state and only its state
+        this.doMyRestoreState(rs, context);
+    }
+
+    private void doMyRestoreState(RestorableSupport rs, RestorableSupport.StateObject context) {
+
+    	RestorableSupport.StateObject airspace = rs.getStateObject(context, "airspaceLayer");
+    	StateObject[] airspacesSo = rs.getAllStateObjects(airspace, "airspace");
+    	if(airspacesSo != null && airspacesSo.length > 0){
+    		for(StateObject sso : airspacesSo){
+    			if(sso != null){
+    				PolygonAnnotation polygon = new PolygonAnnotation();
+    				polygon.restoreState(rs.getStateObjectAsString(sso));
+    				airspaceLayer.addAirspace(polygon);
+    			}
+    		}
+    	}
+
+    	StateObject txt = rs.getStateObject(context, "textLayer");
+    	StateObject[] texts = rs.getAllStateObjects(txt, "numero");
+    	StateObject[] pos = rs.getAllStateObjects(txt, "position");
+    	StateObject[] colors = rs.getAllStateObjects(txt, "color");
+    	if(texts != null && pos != null && texts.length>0 && colors.length>0 && texts.length == pos.length && texts.length == colors.length){
+    		for(int i = 0; i<texts.length;i++){
+    			StateObject tso = texts[i];
+    			StateObject pso = pos[i];
+    			StateObject cso = colors[i];
+    			if(tso != null && pso != null){
+    				UserFacingText uft = new UserFacingText(rs.getStateObjectAsString(tso), rs.getStateObjectAsPosition(pso));
+    				uft.setColor(rs.getStateObjectAsColor(cso));
+    				this.textLayer.addGeographicText(uft);
+    			}
+    		}
+    	}
+
+    	StateObject shape = rs.getStateObject(context, "shapeLayer");
+    	StateObject[] shapes = rs.getAllStateObjects(shape, "shape");
+    	if(shapes !=null && shapes.length>0){
+    		for(StateObject sso : shapes){
+    			if(sso != null){
+    				SurfacePolygonAnnotation polygon = new SurfacePolygonAnnotation();
+    				polygon.restoreState(rs.getStateObjectAsString(sso));
+    				this.surfaceLayer.addRenderable(polygon);
+    			}
+    		}
+    	}
+
+    }
+
+	@Override
+	public void setAnnotation(String text) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public VidesoAnnotation getAnnotation(Position pos) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object getNormalAttributes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object getHighlightAttributes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isHighlighted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setHighlighted(boolean highlighted) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Type getDatabaseType() {
+		return Type.Edimap;
+	}
+
+	@Override
+	public void setDatabaseType(Type type) {}
+
+	@Override
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	@Override
+	public int getType() {
+		return this.type;
+	}
+
+	@Override
+	public String getRestorableClassName() {
+		return this.getClass().getName();
+	}
 	
 }

@@ -27,22 +27,31 @@ import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.DatabasePolygonAnnotation;
 import fr.crnan.videso3d.graphics.DatabaseSurfacePolygonAnnotation;
 import fr.crnan.videso3d.graphics.DatabaseSurfacePolyline;
+import fr.crnan.videso3d.graphics.PolygonAnnotation;
+import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
+import fr.crnan.videso3d.graphics.VSurfacePolyline;
 
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
+import gov.nasa.worldwind.render.GeographicText;
 import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.render.ShapeAttributes;
+import gov.nasa.worldwind.render.SurfacePolyline;
 import gov.nasa.worldwind.render.UserFacingText;
+import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
+import gov.nasa.worldwind.util.Logging;
+import gov.nasa.worldwind.util.RestorableSupport;
+import gov.nasa.worldwind.util.RestorableSupport.StateObject;
 /**
  * Affiche une mosaique (STR ou STPV) en 2D ou en 3D</br>
  * Permet de colorier certains carrés et sous-carrés
  * @author Bruno Spyckerelle
- * @version 0.4.5
+ * @version 0.5.0
  */
-@SuppressWarnings("serial")
 public class MosaiqueLayer extends LayerSet {
 
 	/**
@@ -91,6 +100,13 @@ public class MosaiqueLayer extends LayerSet {
 	 */
 	private RenderableLayer grilleLayer = new RenderableLayer();
 	
+	public MosaiqueLayer(){
+		super();
+		this.add(textLayer);
+		this.add(shapeLayer);
+		this.add(grilleLayer);
+	}
+	
 	/**
 	 * Création d'une mosaïque</br>
 	 * @param annotationTitle {@link String} Titre des annotations des carrés
@@ -126,9 +142,7 @@ public class MosaiqueLayer extends LayerSet {
 			DatabaseManager.Type base, 
 			int type,
 			String name){
-		this.add(textLayer);
-		this.add(shapeLayer);
-		this.add(grilleLayer);
+		this();
 		
 		int hsens = hSens == RIGHT_LEFT ? -1 : 1;
 		int vsens = vSens == TOP_DOWN ? -1 : 1;
@@ -363,4 +377,134 @@ public class MosaiqueLayer extends LayerSet {
 			}
 		}
 	}
+	
+	@Override
+	public String getRestorableState() {
+		RestorableSupport rs = RestorableSupport.newRestorableSupport();
+        this.doGetRestorableState(rs, null);
+
+        return rs.getStateAsXml();
+	}
+
+	protected void doGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context) {
+        // Method is invoked by subclasses to have superclass add its state and only its state
+        this.doMyGetRestorableState(rs, context);
+    }
+
+    private void doMyGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context) {
+    	RestorableSupport.StateObject airspace = rs.addStateObject(context, "airspaceLayer");
+    	for(Airspace r : airspaceLayer.getAirspaces()){
+    		rs.addStateValueAsString(airspace, "airspace", r.getRestorableState());
+    	}
+    	
+    	StateObject grille = rs.addStateObject(context, "grilleLayer");
+    	for(Renderable r : this.grilleLayer.getRenderables()){
+    		rs.addStateValueAsString(grille, "ligne", ((SurfacePolyline)r).getRestorableState());
+    	}
+    	
+    	StateObject text = rs.addStateObject(context, "textLayer");
+    	for(GeographicText t : this.textLayer.getActiveGeographicTexts()){
+    		rs.addStateValueAsString(text, "numero", t.getText().toString());
+    		rs.addStateValueAsPosition(text, "position", t.getPosition());
+    		rs.addStateValueAsColor(text, "color", t.getColor());
+    	}
+    	
+    	StateObject shape = rs.addStateObject(context, "shapeLayer");
+    	for(Renderable r : this.shapeLayer.getRenderables()){
+    		rs.addStateValueAsString(shape, "shape", ((SurfacePolygonAnnotation)r).getRestorableState());
+    	}
+    	
+    	rs.addStateValueAsBoolean(context, "3d", this.threeD);
+    }
+
+    public void restoreState(String stateInXml){
+        if (stateInXml == null)
+        {
+            String message = Logging.getMessage("nullValue.StringIsNull");
+            Logging.logger().severe(message);
+            throw new IllegalArgumentException(message);
+        }
+
+        RestorableSupport rs;
+        try
+        {
+            rs = RestorableSupport.parse(stateInXml);
+        }
+        catch (Exception e)
+        {
+            // Parsing the document specified by stateInXml failed.
+            String message = Logging.getMessage("generic.ExceptionAttemptingToParseStateXml", stateInXml);
+            Logging.logger().severe(message);
+            throw new IllegalArgumentException(message, e);
+        }
+
+        this.doRestoreState(rs, null);
+    }
+
+    protected void doRestoreState(RestorableSupport rs, RestorableSupport.StateObject context)
+    {
+        // Method is invoked by subclasses to have superclass add its state and only its state
+        this.doMyRestoreState(rs, context);
+    }
+
+    private void doMyRestoreState(RestorableSupport rs, RestorableSupport.StateObject context) {
+
+    	RestorableSupport.StateObject airspace = rs.getStateObject(context, "airspaceLayer");
+    	StateObject[] airspacesSo = rs.getAllStateObjects(airspace, "airspace");
+    	if(airspacesSo != null && airspacesSo.length > 0){
+    		for(StateObject sso : airspacesSo){
+    			if(sso != null){
+    				PolygonAnnotation polygon = new PolygonAnnotation();
+    				polygon.restoreState(rs.getStateObjectAsString(sso));
+    				airspaceLayer.addAirspace(polygon);
+    			}
+    		}
+    	}
+
+    	StateObject grille = rs.getStateObject(context, "grilleLayer");
+    	StateObject[] grillesSo = rs.getAllStateObjects(grille, "ligne");
+    	if(grillesSo != null && grillesSo.length > 0){
+    		for(StateObject gso : grillesSo){
+    			if(gso != null) {
+    				VSurfacePolyline line = new VSurfacePolyline();
+    				line.restoreState(rs.getStateObjectAsString(gso));
+    				this.grilleLayer.addRenderable(line);
+    			}
+    		}
+    	}
+
+    	StateObject txt = rs.getStateObject(context, "textLayer");
+    	StateObject[] texts = rs.getAllStateObjects(txt, "numero");
+    	StateObject[] pos = rs.getAllStateObjects(txt, "position");
+    	StateObject[] colors = rs.getAllStateObjects(txt, "color");
+    	if(texts != null && pos != null && colors.length>0 && texts.length == pos.length && texts.length == colors.length){
+    		for(int i = 0; i<texts.length;i++){
+    			StateObject tso = texts[i];
+    			StateObject pso = pos[i];
+    			StateObject cso = colors[i];
+    			if(tso != null && pso != null){
+    				UserFacingText uft = new UserFacingText(rs.getStateObjectAsString(tso), rs.getStateObjectAsPosition(pso));
+    				uft.setColor(rs.getStateObjectAsColor(cso));
+    				this.textLayer.addGeographicText(uft);
+    			}
+    		}
+    	}
+
+    	StateObject shape = rs.getStateObject(context, "shapeLayer");
+    	StateObject[] shapes = rs.getAllStateObjects(shape, "shape");
+    	if(shapes !=null && shapes.length>0){
+    		for(StateObject sso : shapes){
+    			if(sso != null){
+    				SurfacePolygonAnnotation polygon = new SurfacePolygonAnnotation();
+    				polygon.restoreState(rs.getStateObjectAsString(sso));
+    				this.shapeLayer.addRenderable(polygon);
+    			}
+    		}
+    	}
+
+    	Boolean b = rs.getStateValueAsBoolean(context, "3d");
+    	if(b != null){
+    		this.set3D(b);
+    	}
+    }
 }

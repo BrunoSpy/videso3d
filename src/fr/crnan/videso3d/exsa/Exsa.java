@@ -62,7 +62,6 @@ public class Exsa extends FileParser {
 	/**
 	 * Construit la base de données à partir du fichier path 
 	 * @param path Chemin vers le fichier
-	 * @param db Gestionnaire de bdd
 	 */
 	public Exsa(String path) {
 		super(path);

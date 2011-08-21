@@ -41,7 +41,7 @@ import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.1.4
  */
 public class StpvController implements VidesoController {
 
@@ -216,8 +216,12 @@ public class StpvController implements VidesoController {
 
 	@Override
 	public Iterable<Restorable> getSelectedObjects() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Restorable> restorables = new ArrayList<Restorable>();
+		for(Layer l : mosaiquesLayer.values()){
+			if(l.isEnabled())
+				restorables.add(l);
+		}
+		return restorables;
 	}
 
 }
