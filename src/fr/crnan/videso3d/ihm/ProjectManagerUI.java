@@ -22,6 +22,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -38,8 +40,10 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.ProjectManager;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
@@ -48,7 +52,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * IHM to choose which objects to save
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class ProjectManagerUI extends JDialog {
 	
@@ -90,6 +94,7 @@ public class ProjectManagerUI extends JDialog {
 		this.setVisible(false);
 	}
 	
+	private boolean success;
 	private void build() {
 		
 		this.add(new TitledPanel("Création d'un fichier projet"), BorderLayout.NORTH);
@@ -188,22 +193,68 @@ public class ProjectManagerUI extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					projectManager.saveProject(new File(filePath.getText()), databases.isSelected(), links.isSelected());
-					getThis().dispose();
-				} catch(ZipException e) {
-					JOptionPane.showMessageDialog(null, "Aucun fichier projet sauvé, vérifiez qu'il y a bien des objets à sauver.",
-							"Impossible de créer un fichier projet", JOptionPane.ERROR_MESSAGE);
-					Logging.logger().warning("Impossible de créer un fichier projet");
-					e.printStackTrace();
-				} catch (IOException e) {
-					JOptionPane.showMessageDialog(null, "Un répertoire du même nom existe déjà.\n Veuillez choisir un autre nom de projet ou supprimer le répertoire suivant : \n"+e.getMessage(),
-							"Impossible de créer un fichier projet", JOptionPane.ERROR_MESSAGE);
-					Logging.logger().warning("Impossible de créer un fichier projet");
-					e.printStackTrace();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				
+					final ProgressMonitor monitor = new ProgressMonitor(null, "Enregistrement du projet", "Enregistrement des objets...",
+							0, 100, false, false, true);
+					monitor.setAlwaysOnTop(true);
+					monitor.setMillisToDecideToPopup(0);
+					monitor.setMillisToPopup(0);
+					monitor.setProgress(1);
+					
+					projectManager.addPropertyChangeListener(ProgressSupport.TASK_PROGRESS,	new PropertyChangeListener() {
+						
+						@Override
+						public void propertyChange(PropertyChangeEvent evt) {
+							if(((Integer)evt.getNewValue()).intValue() == 100){
+								monitor.setProgress(100);
+								if(success){
+									JOptionPane.showMessageDialog(null, "Le fichier projet a été correctement enregistré.", "Confirmation",
+											JOptionPane.INFORMATION_MESSAGE);
+								} else {
+									monitor.setProgress(100);
+									JOptionPane.showMessageDialog(null, "L'enregistrement du projet a rencontré un problème.", "Erreur",
+											JOptionPane.ERROR_MESSAGE);
+								}
+							}
+						}
+					});
+									
+					new SwingWorker<Boolean, Void>(){
+
+						@Override
+						protected Boolean doInBackground() throws Exception {
+							try {
+								getThis().setVisible(false);
+								success = projectManager.saveProject(new File(filePath.getText()), 
+										databases.isSelected(),
+										links.isSelected());
+								
+							} catch(ZipException e) {
+								success = false;
+								projectManager.fireTaskProgress(100);
+								JOptionPane.showMessageDialog(null, "Aucun fichier projet sauvé, vérifiez qu'il y a bien des objets à sauver.",
+										"Impossible de créer un fichier projet", JOptionPane.ERROR_MESSAGE);
+								Logging.logger().warning("Impossible de créer un fichier projet");
+								e.printStackTrace();
+								
+							} catch (IOException e) {
+								success = false;
+								projectManager.fireTaskProgress(100);
+								JOptionPane.showMessageDialog(null, "Un répertoire du même nom existe déjà.\n Veuillez choisir un autre nom de projet ou supprimer le répertoire suivant : \n"+e.getMessage(),
+										"Impossible de créer un fichier projet", JOptionPane.ERROR_MESSAGE);
+								Logging.logger().warning("Impossible de créer un fichier projet");
+								e.printStackTrace();
+							} catch (Exception e) {
+								success = false;
+								projectManager.fireTaskProgress(100);
+								e.printStackTrace();
+							}
+							projectManager.fireTaskProgress(100);
+							return success;
+						}
+					}.execute();
+					
+				
 			}
 		});
 		bottom.add(save);

@@ -476,7 +476,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 				String segmentName = buildSegmentName(routeName, segment.getChildText("Sequence"));
 				if(routes2D.getRoute(segmentName)==null){
 					if(!segment.getChildText("Circulation").equals("(XxX)")){
-						routesSegments.addSegment(segmentName, previousNavFix, navFixExtremite, routeName, Integer.parseInt(routeID), display);
+						routesSegments.addSegment(segmentName, previousNavFix, navFixExtremite, routeName, type, Integer.parseInt(routeID), display);
 						previousNavFix = navFixExtremite;
 						Couple<Altitude,Altitude> altis = aip.getLevels(segment);
 						ArrayList<LatLon> loc = new ArrayList<LatLon>();
@@ -1168,8 +1168,17 @@ public class AIPController extends ProgressSupport implements VidesoController {
 
 	@Override
 	public HashMap<Integer, List<String>> getSelectedObjectsReference() {
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<Integer, List<String>> objects = new HashMap<Integer, List<String>>();
+		//routes
+		for(RoutesSegments.Route r : this.routesSegments.getRoutes()){
+			if(r.isVisible()){
+				if(!objects.containsKey(r.getType())){
+					objects.put(r.getType(), new ArrayList<String>());
+				}
+				objects.get(r.getType()).add(r.getName());
+			}
+		}
+		return objects ;
 	}
 
 

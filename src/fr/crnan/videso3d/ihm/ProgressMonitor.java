@@ -99,6 +99,7 @@ public class ProgressMonitor extends Object implements Accessible
 	private boolean automaticProgress = false;
 	private boolean isCancelShown = true;
 	private boolean onTop = true;
+	private boolean indeterminate = false;
 	
     /**
      * Constructs a graphic object that shows progress, typically by filling
@@ -137,12 +138,24 @@ public class ProgressMonitor extends Object implements Accessible
             int min,
             int max, 
             boolean automaticProgress,
-            boolean showCancel) {
+            boolean showCancel,
+            boolean indeterminate) {
     	this(parentComponent, message, note, min, max, null);
     	this.automaticProgress = automaticProgress;
     	this.isCancelShown = showCancel;
+    	this.indeterminate = indeterminate;
     }
 
+    public ProgressMonitor(Component parentComponent,
+            Object message,
+            String note,
+            int min,
+            int max, 
+            boolean automaticProgress,
+            boolean showCancel) {
+    	this(parentComponent, message, note, min, max, automaticProgress, showCancel, false);
+    }
+    
     private ProgressMonitor(Component parentComponent,
                             Object message,
                             String note,
@@ -250,6 +263,7 @@ public class ProgressMonitor extends Object implements Accessible
                         myBar.setMinimum(min);
                         myBar.setMaximum(max);
                         myBar.setValue(nv);
+                        myBar.setIndeterminate(this.indeterminate);
                         if (note != null) noteLabel = new JLabel(note);
                         pane = new ProgressOptionPane(new Object[] {message,
                                                                     noteLabel,

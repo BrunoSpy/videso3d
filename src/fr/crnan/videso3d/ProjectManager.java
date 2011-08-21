@@ -29,8 +29,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.nio.channels.FileChannel;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -122,10 +125,11 @@ public class ProjectManager extends ProgressSupport {
 	 * @param file .vpj file
 	 * @param databasesIncluded If true, include databases into the project file. Only usefull if <code>onlyLinks</code> is true
 	 * @param onlyLinks If true, save links to databases. If false, save standalone objects.
+	 * @return True if successfull
 	 * @throws IOException 
 	 * @throws SQLException 
 	 */
-	public void saveProject(File file, boolean databasesIncluded, boolean onlyLinks) throws IOException, SQLException{
+	public boolean saveProject(File file, boolean databasesIncluded, boolean onlyLinks) throws IOException, SQLException{
 		
 		int index = file.getName().lastIndexOf(".");
 		
@@ -159,17 +163,55 @@ public class ProjectManager extends ProgressSupport {
 
 					if(onlyLinks){
 						if(databasesIncluded){
+							String currentName = DatabaseManager.getCurrentName(type);
 							//for each database with selected objects, we copy the sqlite file
-							File baseCopy = new File(databases, DatabaseManager.getCurrentName(type)+"."+type);
+							File baseCopy = new File(databases, currentName+"."+type);
 							baseCopy.createNewFile();
 
-							FileChannel source = new FileInputStream(new File(DatabaseManager.getCurrentName(type))).getChannel();
+							FileChannel source = new FileInputStream(new File(currentName)).getChannel();
 							FileChannel destination = new FileOutputStream(baseCopy).getChannel();
 
 							destination.transferFrom(source, 0, source.size());
 
 							source.close();
 							destination.close();
+							
+							//save the keys
+							List<String[]> clefs = new ArrayList<String[]>();
+							Statement st = DatabaseManager.getCurrent(Type.Databases);
+							ResultSet rs = st.executeQuery("select * from clefs where type='"+currentName+"'");
+							while(rs.next()){
+								clefs.add(new String[]{rs.getString("name"), rs.getString("value")});
+							}
+							st.close();
+							
+							if(!clefs.isEmpty()){
+								File clefsFile = new File(databases, currentName+"_clefs");
+								clefsFile.createNewFile();
+								ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(clefsFile));
+								oos.writeObject(clefs);
+								oos.close();
+							}								
+							
+							//and we copy the associated files
+							File filesDir = new File(currentName+"_files");
+							if(filesDir.exists() && filesDir.isDirectory()){
+								File baseFiles = new File(databases, currentName+"_files");
+								baseFiles.mkdirs();
+								for(File f : filesDir.listFiles()) {
+									File copy = new File(baseFiles, f.getName());
+									copy.createNewFile();
+
+									source = new FileInputStream(f).getChannel();
+									destination = new FileOutputStream(copy).getChannel();
+
+									destination.transferFrom(source, 0, source.size());
+
+									source.close();
+									destination.close();
+									
+								}
+							}
 						}
 						//then we save the selected objects
 						File selectedObjects = new File(databases, type.toString());
@@ -197,6 +239,8 @@ public class ProjectManager extends ProgressSupport {
 		
 		//delete main directory
 		FileManager.deleteFile(main);
+				
+		return true;
 		
 	}
 	
@@ -250,6 +294,8 @@ public class ProjectManager extends ProgressSupport {
 		final File databases = new File(path, "databases");
 		if(databases.exists()){
 			for(File f : databases.listFiles()){
+				if(f.isDirectory())//only files
+					continue;
 				this.fireTaskProgress(progress++);
 				this.fireTaskInfo(f.getName());
 				int index = f.getName().lastIndexOf(".");
@@ -259,7 +305,26 @@ public class ProjectManager extends ProgressSupport {
 				if(!suffix.isEmpty() && type != null) { //base de données existantes
 					try {
 						if(!DatabaseManager.databaseExists(type, name)) {
-							FileManager.copyFile(f);
+							//sqlite database
+							FileManager.copyFileAs(f.getAbsolutePath(), name);
+							//associated files
+							File filesDir = new File(databases, name+"_files");
+							if(filesDir.exists() && filesDir.isDirectory()){
+								for(File filesBase : filesDir.listFiles()){
+									FileManager.copyFile(filesBase, name+"_files");
+								}
+							}
+							//clefs
+							File clefsFile = new File(databases, name+"_clefs");
+							if(clefsFile.exists()){
+								ObjectInputStream ois = new ObjectInputStream(new FileInputStream(clefsFile));
+								List<String[]> clefs = (List<String[]>) ois.readObject();
+								Statement st = DatabaseManager.getCurrent(Type.Databases);
+								for(String[] c : clefs){
+									st.executeUpdate("insert into clefs (name, type, value) values ('"+c[0]+"', '"+name+"', '"+c[1]+"')");
+								}
+								st.close();
+							}
 						}
 						DatabaseManager.addDatabase(name, type);
 						DatabaseManager.fireBaseSelected(type);
@@ -268,14 +333,15 @@ public class ProjectManager extends ProgressSupport {
 					}
 					
 
-				} else if(suffix.isEmpty() && type != null){ //on links to objects, without databases
+				} else if(suffix.isEmpty() && type != null){ //only links to objects, without databases
+					
 					if(databases.listFiles(new FilenameFilter() {//verify that there's no database of this type
 						
 						@Override
 						public boolean accept(File dir, String name) {
 							return name.endsWith("."+type);
 						}
-					}).length ==0){ 
+					}).length ==0){
 						if(DatasManager.getController(type) == null) {
 							//ask the DatabaseManager to select a base
 							try {

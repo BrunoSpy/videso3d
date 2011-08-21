@@ -24,20 +24,26 @@ import fr.crnan.videso3d.Couple;
  * Classe permettant de stocker les noms des segments avec les routes auxquelles ils appartiennent, ainsi que les balises aux extremités de 
  * chaque segment.
  * @author A. Vidal
- * @version 0.1.1
+ * @author Bruno Spyckerelle
+ * @version 0.1.2
  */
 public class RoutesSegments{
 
 	private ArrayList<Route> routes = new ArrayList<Route>();
 	
+	public ArrayList<Route> getRoutes(){
+		return this.routes;
+	}
+	
 	/**
 	 * Ajoute un segment dans la liste correspondant à sa route
 	 * @param segmentName Le nom du segment
 	 * @param routeName Le nom de la route à laquelle le segment appartient
-	 * @param display true si la route est affichée. Ce paramètre n'est pris en compte que pour le premier segment 
+	 * @param routeType Le type de la route
+	 * @param visible true si la route est affichée. Ce paramètre n'est pris en compte que pour le premier segment 
 	 * et sera valable pour l'ensemble de la route.
 	 */
-	public void addSegment(String segmentName, String bal1, String bal2, String routeName, int pkRoute, boolean visible){
+	public void addSegment(String segmentName, String bal1, String bal2, String routeName, int routeType, int pkRoute, boolean visible){
 		Segment segment = new Segment(segmentName, bal1, bal2);
 		boolean routeExists = false;
 		for(Route r : routes){
@@ -46,7 +52,7 @@ public class RoutesSegments{
 			}
 		}
 		if(!routeExists){
-			Route route = new Route(routeName, pkRoute, visible);
+			Route route = new Route(routeName, routeType, pkRoute, visible);
 			route.add(segment);
 			routes.add(route);
 		}
@@ -101,15 +107,21 @@ public class RoutesSegments{
 		private int pk;
 		private boolean visible;
 		private boolean navFixsVisible = false;
+		private int type;
 		
-		public Route(String name, int pk, boolean visible){
+		public Route(String name, int routeType, int pk, boolean visible){
 			this.name = name;
+			this.type = routeType;
 			this.pk  = pk;
 			this.visible = visible;
 		}
 		
 		public String getName(){
 			return name;
+		}
+		
+		public int getType(){
+			return this.type;
 		}
 		
 		public int getPk(){
