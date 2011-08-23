@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -81,7 +82,7 @@ public class MainToolbar extends JToolBar {
 	private MainWindow mainWindow;
 	private Omnibox omniBox;
 
-	public MainToolbar(MainWindow parent, VidesoGLCanvas ww, Omnibox box) {
+	public MainToolbar(final MainWindow parent, VidesoGLCanvas ww, Omnibox box) {
 		this.wwd = ww;
 		this.mainWindow = parent;
 		this.omniBox = box;
@@ -177,7 +178,7 @@ public class MainToolbar extends JToolBar {
 						@Override
 						protected Void doInBackground() throws Exception {
 							try {
-								project.loadProject(fileChooser.getSelectedFile(), wwd, false);
+								project.loadProject(fileChooser.getSelectedFile(), wwd, parent, false);
 							} catch (CompatibilityVersionException e) {
 								if(JOptionPane.showConfirmDialog(null, "<html>Le fichier que souhaitez importer n'est pas compatible avec la version de Videso que vous utilisez.<br/>" +
 										"Souhaitez vous tout de même l'importer ?<br/><br/>" +
@@ -185,7 +186,7 @@ public class MainToolbar extends JToolBar {
 										"<i>Information : </i> Version du fichier : "+e.getMessage()+"</html>",
 										"Version du fichier incompatible.", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE)
 										== JOptionPane.YES_OPTION) {
-									project.loadProject(fileChooser.getSelectedFile(), wwd, true);
+									project.loadProject(fileChooser.getSelectedFile(), wwd, parent, true);
 								}
 							} catch (FileNotFoundException e1) {
 								e1.printStackTrace();
@@ -193,6 +194,8 @@ public class MainToolbar extends JToolBar {
 								e1.printStackTrace();
 							} catch (ClassNotFoundException e1) {
 								e1.printStackTrace();
+							} catch (Exception e){
+								e.printStackTrace();
 							}
 							return null;
 						}
@@ -211,7 +214,7 @@ public class MainToolbar extends JToolBar {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new ProjectManagerUI(mainWindow);
+				new ProjectManagerUI(mainWindow, wwd);
 			}
 		});
 
@@ -254,8 +257,15 @@ public class MainToolbar extends JToolBar {
 				VFileChooser file = new VFileChooser();
 				file.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				file.setMultiSelectionEnabled(true);
+				ArrayList<String> imgFilter = new ArrayList<String>();
+				for(String s : ImageIO.getReaderFormatNames()){
+					imgFilter.add(s);
+				}
+				imgFilter.add("gtif");
+				imgFilter.add("gtiff");
+				imgFilter.add("geotiff");
 				file.addChoosableFileFilter(
-						new FileNameExtensionFilter("Images", ImageIO.getReaderFormatNames()));
+						new FileNameExtensionFilter("Images", imgFilter.toArray(new String[]{})));
 				if(file.showOpenDialog(null) == VFileChooser.APPROVE_OPTION){
 					wwd.getImagesController().addEditableImages(file.getSelectedFiles());
 				}

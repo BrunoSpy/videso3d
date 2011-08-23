@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d;
 
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
@@ -39,16 +40,29 @@ import java.util.List;
 import java.util.Set;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.formats.VidesoTrack;
+import fr.crnan.videso3d.formats.geo.GEOReader;
+import fr.crnan.videso3d.formats.geo.GEOTrack;
+import fr.crnan.videso3d.formats.geo.GEOWriter;
+import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
+import fr.crnan.videso3d.formats.images.ImageUtils;
 import fr.crnan.videso3d.graphics.Balise;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
+import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
+import fr.crnan.videso3d.ihm.MainWindow;
 import fr.crnan.videso3d.layers.Balise2DLayer;
 import fr.crnan.videso3d.layers.Balise3DLayer;
+import fr.crnan.videso3d.layers.GEOTracksLayer;
+import fr.crnan.videso3d.layers.TrajectoriesLayer;
+import fr.crnan.videso3d.stip.PointNotFoundException;
 import gov.nasa.worldwind.Restorable;
+import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.Renderable;
+import gov.nasa.worldwind.render.airspaces.Airspace;
 
 /**
  * Load and save projects.<br />
@@ -81,12 +95,27 @@ import gov.nasa.worldwind.render.Renderable;
 public class ProjectManager extends ProgressSupport {
 
 	private HashMap<Type, HashMap<Integer, List<String>>> objects;
+	private List<EditableSurfaceImage> images;
+
+	private boolean otherObjects = false;
+	private boolean trajectories = false;
+	
+	private static final String RENDERABLE_LAYER_NAME = "XML Renderables";
+
+	private static final String BALISES2D_LAYER_NAME = "XML Balises 2D";
+
+	private static final String BALISES3D_LAYER_NAME = "XML Balises 3D";
+	
+	private static final String AIRSPACE_LAYER_NAME = "XML Airspaces";
+
+	private VidesoGLCanvas wwd;
 	
 	public ProjectManager(){
 		super();
 		objects = new HashMap<DatabaseManager.Type, HashMap<Integer,List<String>>>();
+		images = new ArrayList<EditableSurfaceImage>();
 	}
-	
+
 	/**
 	 * 
 	 * @return Set of exportables types
@@ -94,11 +123,12 @@ public class ProjectManager extends ProgressSupport {
 	public Set<Type> getTypes(){
 		return objects.keySet();
 	}
-	
+
 	/**
 	 * Creates list of objects in order to allow the selection of objects to be saved
 	 */
-	public void prepareSaving(){
+	public void prepareSaving(VidesoGLCanvas ww){
+		this.wwd = ww;
 		//Objets des bases de données
 		for(Type type : Type.values()){
 			try {
@@ -114,26 +144,57 @@ public class ProjectManager extends ProgressSupport {
 			}
 
 		}
-		
+
 		//images
-		
+		if(!wwd.getImagesController().getImages().isEmpty()){
+			this.images = wwd.getImagesController().getImages();
+		}
+
 		//trajectoires
+		for(Layer l : wwd.getModel().getLayers()){
+			if(l instanceof GEOTracksLayer){
+				this.trajectories = true;
+				break;
+			}
+		}
+		
+		//other objects
+		if(PolygonEditorsManager.getLayer().getAirspaces().iterator().hasNext())
+			this.otherObjects = true;
+		for(Layer l : wwd.getModel().getLayers()){
+			if(l.getName().equals(RENDERABLE_LAYER_NAME) || 
+					l.getName().equals(BALISES2D_LAYER_NAME) || 
+					l.getName().equals(BALISES3D_LAYER_NAME) ||
+					l.getName().equals(AIRSPACE_LAYER_NAME)){
+				this.otherObjects = true;
+				break;
+			}
+		}
 	}
-	
+
 	/**
 	 * Before invoking this method, <code>prepareSaving</code> has to be called once.
 	 * @param file .vpj file
+	 * @param types Types d'objets à enregistrer
+	 * @param images Nom de images à enregistrer
+	 * @param trajectories Nom des trajectoires à enregistrer
 	 * @param databasesIncluded If true, include databases into the project file. Only usefull if <code>onlyLinks</code> is true
 	 * @param onlyLinks If true, save links to databases. If false, save standalone objects.
 	 * @return True if successfull
 	 * @throws IOException 
 	 * @throws SQLException 
 	 */
-	public boolean saveProject(File file, boolean databasesIncluded, boolean onlyLinks) throws IOException, SQLException{
-		
+	public boolean saveProject(File file, Set<String> types,  Set<String> images,  Set<String> trajectories, 
+			boolean databasesIncluded, boolean onlyLinks) throws IOException, SQLException{
+
 		int index = file.getName().lastIndexOf(".");
-		
+
 		String name = file.getName().substring(0, index);
+
+		//count for xml files
+		DecimalFormat format = new DecimalFormat("####");
+		format.setMinimumIntegerDigits(4);
+		int count = 0;
 		
 		//create main directory
 		File main = new File(name);
@@ -141,7 +202,7 @@ public class ProjectManager extends ProgressSupport {
 			throw new IOException(main.getAbsolutePath());
 		}
 		main.mkdir();
-		
+
 		//Save version
 		File version = new File(main, "version");
 		version.createNewFile();
@@ -149,18 +210,20 @@ public class ProjectManager extends ProgressSupport {
 		writer.write(Videso3D.VERSION);
 		writer.flush();
 		writer.close();
-		
+
 		//create xml directory
 		File xmlDir = new File(main.getAbsolutePath()+ "/xml");
 		xmlDir.mkdir();
-		
+
 		//create databases directory
-		if(!objects.isEmpty()){
+		if(types != null && !types.isEmpty()){
 			File databases = new File(main.getAbsolutePath()+"/databases");
 			databases.mkdir();
 
-				for(Type type : objects.keySet()){
+			for(String t : types){
 
+				Type type = DatabaseManager.stringToType(t);
+				if(type != null) {
 					if(onlyLinks){
 						if(databasesIncluded){
 							String currentName = DatabaseManager.getCurrentName(type);
@@ -175,7 +238,7 @@ public class ProjectManager extends ProgressSupport {
 
 							source.close();
 							destination.close();
-							
+
 							//save the keys
 							List<String[]> clefs = new ArrayList<String[]>();
 							Statement st = DatabaseManager.getCurrent(Type.Databases);
@@ -184,7 +247,7 @@ public class ProjectManager extends ProgressSupport {
 								clefs.add(new String[]{rs.getString("name"), rs.getString("value")});
 							}
 							st.close();
-							
+
 							if(!clefs.isEmpty()){
 								File clefsFile = new File(databases, currentName+"_clefs");
 								clefsFile.createNewFile();
@@ -192,7 +255,7 @@ public class ProjectManager extends ProgressSupport {
 								oos.writeObject(clefs);
 								oos.close();
 							}								
-							
+
 							//and we copy the associated files
 							File filesDir = new File(currentName+"_files");
 							if(filesDir.exists() && filesDir.isDirectory()){
@@ -209,7 +272,7 @@ public class ProjectManager extends ProgressSupport {
 
 									source.close();
 									destination.close();
-									
+
 								}
 							}
 						}
@@ -220,28 +283,97 @@ public class ProjectManager extends ProgressSupport {
 						oos.writeObject(objects.get(type));
 						oos.close();
 					} else {
-						DecimalFormat f = new DecimalFormat("####");
-	                    f.setMinimumIntegerDigits(4);
-	                    int count = 0;
 						for(Restorable r : DatasManager.getController(type).getSelectedObjects()){
-							File object = new File(xmlDir, r.getClass().getName()+"-"+type+"-"+f.format(count++)+".xml");
-							PrintWriter of = new PrintWriter(object);
-							of.write(r.getRestorableState());
-							of.flush();
-							of.close();
+							this.saveObjectInXml(r, new File(xmlDir, r.getClass().getName()+"-"+type+"-"+format.format(count++)+".xml"));
 						}
 					}
-				}
-			
+				} 
+			}
+
 		}
+
+		//save images
+		File imagesDir = new File(main.getAbsolutePath()+ "/images");
+		imagesDir.mkdir();
+		for(EditableSurfaceImage si : this.getImages()){
+			if(images.contains(si.getName())){
+				int idx = si.getName().lastIndexOf(".");
+				String newName = si.getName();
+				if(idx != -1){
+					newName = si.getName().substring(0, idx);
+				}
+				File img = new File(imagesDir, newName+".gtif");
+				ImageUtils.writeImageToFile(si.getSector(), (BufferedImage) si.getImageSource(), img);
+			}
+		}
+
+		//trajectoires
+		File trajectoDir = new File(main, "trajectory");
+		trajectoDir.mkdirs();
+		for(Layer l : wwd.getModel().getLayers()){
+			if(l instanceof GEOTracksLayer && trajectories.contains(l.getName())){
+				GEOWriter geoWriter = new GEOWriter(trajectoDir.getAbsolutePath()+"/"+l.getName(), true);
+				for(VidesoTrack track : ((GEOTracksLayer) l).getSelectedTracks()){
+					geoWriter.writeTrack((GEOTrack) track);
+				}
+				geoWriter.close();
+			}
+		}
+
+		//other objects
+		//objects previously loaded with a project
+		if(types != null && types.contains("Autres objets affichés.")){
+			for(Layer l : wwd.getModel().getLayers()){
+				if(l.getName().equals(AIRSPACE_LAYER_NAME)){
+					for(Airspace r : ((AirspaceLayer) l).getAirspaces()){
+						this.saveObjectInXml(
+								(Restorable) r, 
+								new File(xmlDir, r.getClass().getName()+"-"+format.format(count++)+".xml"));
+					}
+				} else if(l.getName().equals(RENDERABLE_LAYER_NAME)){
+					for(Renderable r : ((RenderableLayer) l).getRenderables()){
+						if(r instanceof Restorable){
+							this.saveObjectInXml(
+									(Restorable) r, 
+									new File(xmlDir, r.getClass().getName()+"-"+format.format(count++)+".xml"));
+						}
+					}
+				} else if(l.getName().equals(BALISES2D_LAYER_NAME)){
+					for(String s : ((Balise2DLayer)l).getVisibleBalises()){
+						Balise2D b = ((Balise2DLayer)l).getBalise(s);
+						this.saveObjectInXml(b, new File(xmlDir, b.getClass().getName()+"-"+format.format(count++)+".xml"));
+					}
+				} else if(l.getName().equals(BALISES3D_LAYER_NAME)){
+					for(String s : ((Balise3DLayer)l).getVisibleBalises()){
+						Balise3D b = ((Balise3DLayer)l).getBalise(s);
+						this.saveObjectInXml(b, new File(xmlDir, b.getClass().getName()+"-"+format.format(count++)+".xml"));
+					}
+				}
+			}
+		}
+		for(Airspace a : PolygonEditorsManager.getLayer().getAirspaces()){
+			if(a.isVisible())
+				this.saveObjectInXml(a, new File(xmlDir, a.getClass().getName()+"-"+format.format(count++)+".xml"));
+		}
+		
+		//globe parameters
+		this.saveObjectInXml(this.wwd.getView(), new File(main, "globe.xml"));
+		
 		//create the zip file
 		FileManager.createZipFile(file, main);
-		
+
 		//delete main directory
 		FileManager.deleteFile(main);
-				
+
 		return true;
-		
+
+	}
+
+	private void saveObjectInXml(Restorable object, File file) throws FileNotFoundException{
+		PrintWriter of = new PrintWriter(file);
+		of.write(object.getRestorableState());
+		of.flush();
+		of.close();
 	}
 	
 	/**
@@ -253,21 +385,23 @@ public class ProjectManager extends ProgressSupport {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 * @throws CompatibilityVersionException
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
 	 */
-	public void loadProject(File file, VidesoGLCanvas wwd, boolean force)
-			throws FileNotFoundException, IOException, ClassNotFoundException, CompatibilityVersionException {
-		
+	public void loadProject(File file, VidesoGLCanvas wwd, MainWindow window, boolean force)
+			throws FileNotFoundException, IOException, ClassNotFoundException, CompatibilityVersionException, InstantiationException, IllegalAccessException {
+
 		FileManager.unzip(file);
-		
+
 		int ind = file.getName().lastIndexOf(".");
-		
+
 		String path = "temp"+file.getName()+"/"+file.getName().substring(0, ind); //don't forget to delete the extension
-		
+
 		int max = FileManager.getFilesCount(new File(path));
 		this.fireTaskStarts(max);
-		
+
 		int progress = 0;
-		
+
 		//check version
 		if(!force){
 			File version = new File(path, "version");
@@ -289,7 +423,7 @@ public class ProjectManager extends ProgressSupport {
 				}
 			}
 		}
-		
+
 		//import databases
 		final File databases = new File(path, "databases");
 		if(databases.exists()){
@@ -331,12 +465,12 @@ public class ProjectManager extends ProgressSupport {
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-					
+
 
 				} else if(suffix.isEmpty() && type != null){ //only links to objects, without databases
-					
+
 					if(databases.listFiles(new FilenameFilter() {//verify that there's no database of this type
-						
+
 						@Override
 						public boolean accept(File dir, String name) {
 							return name.endsWith("."+type);
@@ -356,7 +490,7 @@ public class ProjectManager extends ProgressSupport {
 						} else {
 							selectObjectWithController(databases, name, type);
 						}
-						
+
 					}
 				}
 				//Once the database is selected and the controller created, check the objects
@@ -372,62 +506,94 @@ public class ProjectManager extends ProgressSupport {
 		}
 		//import xml files
 		File xmlDir = new File(path, "xml");
-		if(xmlDir.exists()){
+		if(xmlDir.exists() && xmlDir.isDirectory()){
 			RenderableLayer xmlRenderables = null;
 			Balise2DLayer xmlBalises = null;
 			Balise3DLayer xmlBalises3D = null;
+			AirspaceLayer xmlAirspaces = null;
 			for(File f : xmlDir.listFiles()){
 				this.fireTaskProgress(progress++);
 				this.fireTaskInfo(f.getName());
 				String[] name = f.getName().split("-");
-				try {
-					Class<?> c = Class.forName(name[0]);			
-					Restorable o = (Restorable) c.newInstance();
-					BufferedReader input = new BufferedReader(new FileReader(f));
-					String s = input.readLine();
-					while(input.ready()){
-						s += input.readLine();
-					}
-					
-					if(o instanceof DatabaseVidesoObject) {
-						Class<?> c2 = Class.forName(((DatabaseVidesoObject) o).getRestorableClassName());
-						o = (Restorable) c2.newInstance();
-						o.restoreState(s);
-					} else {
-						o.restoreState(s);
-					}
-					
-					if(o instanceof Renderable){
-						if(xmlRenderables == null){
-							xmlRenderables = new RenderableLayer();
-							xmlRenderables.setName("XML Renderables");
-							wwd.toggleLayer(xmlRenderables, true);
-						}
-						xmlRenderables.addRenderable((Renderable) o);
-					} else if(o instanceof Balise2D){
-						if(xmlBalises == null){
-							xmlBalises = new Balise2DLayer("XML Balises 2D");
-							wwd.toggleLayer(xmlBalises, true);
-						}
-						xmlBalises.addBalise((Balise) o);
-						xmlBalises.showBalise((Balise) o);
-					} else if(o instanceof Balise3D){
-						if(xmlBalises3D == null){
-							xmlBalises3D = new Balise3DLayer("XML Balises 3D");
-							wwd.toggleLayer(xmlBalises3D, true);
-						}
-						xmlBalises3D.addBalise((Balise) o);
-						xmlBalises3D.showBalise((Balise) o);
-					} else if(o instanceof Layer) {
-						wwd.toggleLayer((Layer) o, true);
-					}
 
-				} catch (InstantiationException e) {
-					e.printStackTrace();
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
+				Class<?> c = Class.forName(name[0]);			
+				Restorable o = (Restorable) c.newInstance();
+				BufferedReader input = new BufferedReader(new FileReader(f));
+				String s = input.readLine();
+				while(input.ready()){
+					s += input.readLine();
+				}
+				if(o instanceof DatabaseVidesoObject) {
+					Class<?> c2 = Class.forName(((DatabaseVidesoObject) o).getRestorableClassName());
+					o = (Restorable) c2.newInstance();
+					o.restoreState(s);
+				} else {
+					o.restoreState(s);
+				}
+				if(o instanceof Airspace){
+					if(xmlAirspaces == null){
+						xmlAirspaces = new AirspaceLayer();
+						xmlAirspaces.setName(AIRSPACE_LAYER_NAME);
+						wwd.toggleLayer(xmlAirspaces, true);
+					}
+					xmlAirspaces.addAirspace((Airspace) o);
+				} else if(o instanceof Renderable){
+					if(xmlRenderables == null){
+						xmlRenderables = new RenderableLayer();
+						xmlRenderables.setName(RENDERABLE_LAYER_NAME);
+						wwd.toggleLayer(xmlRenderables, true);
+					}
+					xmlRenderables.addRenderable((Renderable) o);
+				} else if(o instanceof Balise2D){
+					if(xmlBalises == null){
+						xmlBalises = new Balise2DLayer(BALISES2D_LAYER_NAME);
+						wwd.toggleLayer(xmlBalises, true);
+					}
+					xmlBalises.addBalise((Balise) o);
+					xmlBalises.showBalise((Balise) o);
+				} else if(o instanceof Balise3D){
+					if(xmlBalises3D == null){
+						xmlBalises3D = new Balise3DLayer(BALISES3D_LAYER_NAME);
+						wwd.toggleLayer(xmlBalises3D, true);
+					}
+					xmlBalises3D.addBalise((Balise) o);
+					xmlBalises3D.showBalise((Balise) o);
+				} else if(o instanceof Layer) {
+					wwd.toggleLayer((Layer) o, true);
 				}
 			}
+		}
+
+		//load images
+		File imageDir = new File(path, "images");
+		if(imageDir.exists() && imageDir.isDirectory()){
+			for(File i : imageDir.listFiles()){
+				this.fireTaskProgress(progress++);
+				wwd.getImagesController().addEditableImages(new File[]{i});
+			}
+		}
+
+		//trajectories
+		File trajectoDir = new File(path, "trajectory");
+		if(trajectoDir.exists() && trajectoDir.isDirectory()){
+			for(File t : trajectoDir.listFiles()){
+				this.fireTaskProgress(progress++);
+				window.addTrajectoriesViews(new File[]{t});
+			}
+		}
+		
+		//globe
+		File globe = new File(path, "globe.xml");
+		if(globe.exists()){
+			this.fireTaskProgress(progress++);
+			
+			BufferedReader input = new BufferedReader(new FileReader(globe));
+			String s = "";
+			while(input.ready()){
+				s += input.readLine();
+			}
+			wwd.getView().stopMovement();
+			wwd.getView().restoreState(s);
 		}
 		//remove temp files
 		FileManager.removeTempFiles();
@@ -452,5 +618,34 @@ public class ProjectManager extends ProgressSupport {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * Exportable images
+	 * @return List of exportable images
+	 */
+	public List<EditableSurfaceImage> getImages() {
+		return this.images;
+	}
+
+	public boolean isOtherObjects() {
+		return otherObjects;
+	}
+
+	public boolean isTrajectories(){
+		return trajectories;
+	}
 	
+	/**
+	 * 
+	 * @return Trajectories layers, only GEO for the moment
+	 */
+	public List<TrajectoriesLayer> getTrajectoriesLayers(){
+		List<TrajectoriesLayer> layers = new ArrayList<TrajectoriesLayer>();
+		for(Layer l : this.wwd.getModel().getLayers()){
+			if(l instanceof GEOTracksLayer && !((GEOTracksLayer)l).getSelectedTracks().isEmpty()){
+				layers.add((TrajectoriesLayer) l);
+			}
+		}
+		return layers;
+	}
 }
