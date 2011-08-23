@@ -222,5 +222,6 @@ public class ImageUtils {
 
 		GeotiffWriter writer = new GeotiffWriter(gtFile);
 		writer.write(BufferedImageRaster.wrapAsGeoreferencedRaster(image, params));
+		writer.close();
 	}
 }

@@ -80,4 +80,8 @@ public final class PolygonEditorsManager {
 	public static boolean isEditing(Polygon polygon){
 		return instance.polygonEditors.containsKey(polygon);
 	}
+	
+	public static AirspaceLayer getLayer(){
+		return instance.editorLayer;
+	}
 }

@@ -20,9 +20,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 
 import org.w3c.dom.Document;
@@ -40,6 +41,7 @@ import gov.nasa.worldwind.data.TiledImageProducer;
 import gov.nasa.worldwindx.examples.dataimport.DataInstallUtil;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.render.SurfaceImage;
 import gov.nasa.worldwind.util.Logging;
 import gov.nasa.worldwind.util.WWIO;
@@ -47,7 +49,7 @@ import gov.nasa.worldwind.util.WWIO;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class ImagesController {
 
@@ -72,27 +74,21 @@ public class ImagesController {
 
 			@Override
 			protected Integer doInBackground() throws Exception {
-				for (final File file : images) {
+				for(final File file : images) {
 					final BufferedImage image = ImageIO.read(file);
 					if (image == null)
 						return null;
-
+					
 					final SurfaceImage si = ImageUtils.createGeoreferencedSurfaceImage(file, image);
+					EditableSurfaceImage editSi;
 					if (si == null)	{
-						EditableSurfaceImage editSi = new EditableSurfaceImage(ImageUtils.createNonGeoreferencedSurfaceImage(file, image, wwd), wwd);
-						imagesLayer.addRenderable(editSi);
-						wwd.toggleLayer(imagesLayer, true);
-						return null;
+						editSi = new EditableSurfaceImage(file.getName(), ImageUtils.createNonGeoreferencedSurfaceImage(file, image, wwd), wwd);
+					} else {	
+						editSi = new EditableSurfaceImage(file.getName(), si, wwd);
 					}
-
-					SwingUtilities.invokeLater(new Runnable(){
-						public void run()	{
-							EditableSurfaceImage editSi = new EditableSurfaceImage(si, wwd);
-							imagesLayer.addRenderable(editSi);
-							wwd.toggleLayer(imagesLayer, true);
-						}
-					});
-                }
+					imagesLayer.addRenderable(editSi);
+					wwd.toggleLayer(imagesLayer, true);
+				}
 				return null;
 			}
 		}.execute();
@@ -104,6 +100,19 @@ public class ImagesController {
 		if(image instanceof EditableSurfaceImage){
 			((EditableSurfaceImage) image).getEditor().setArmed(false);
 		}
+	}
+	
+	/**
+	 * 
+	 * @return A list of all displayed images
+	 */
+	public List<EditableSurfaceImage> getImages(){
+		List<EditableSurfaceImage> images = new ArrayList<EditableSurfaceImage>();
+		for(Renderable r : this.imagesLayer.getRenderables()){
+			if(r instanceof EditableSurfaceImage)
+				images.add((EditableSurfaceImage) r);
+		}
+		return images;
 	}
 	
 	/**

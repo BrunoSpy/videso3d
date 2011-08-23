@@ -26,7 +26,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipException;
 
 import javax.swing.BorderFactory;
@@ -45,8 +47,12 @@ import javax.swing.SwingWorker;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.ProjectManager;
+import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
+import fr.crnan.videso3d.layers.GEOTracksLayer;
+import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import gov.nasa.worldwind.util.Logging;
 
 /**
@@ -58,13 +64,21 @@ public class ProjectManagerUI extends JDialog {
 	
 	private ProjectManager projectManager;
 	
-	public ProjectManagerUI(Window parent){
+	private Set<String> types;
+	private Set<String> imageList;
+	private Set<String> trajectories;
+	
+	public ProjectManagerUI(Window parent, VidesoGLCanvas wwd){
 		super(parent);
 			
 		projectManager = new ProjectManager();
-		projectManager.prepareSaving();
+		projectManager.prepareSaving(wwd);
 
-		if(projectManager.getTypes().isEmpty()){
+		types = new HashSet<String>();
+		imageList = new HashSet<String>();
+		trajectories = new HashSet<String>();
+		
+		if(projectManager.getTypes().isEmpty() && projectManager.getImages().isEmpty() && !projectManager.isOtherObjects()){
 			error();
 		} else {
 
@@ -101,20 +115,108 @@ public class ProjectManagerUI extends JDialog {
 		
 		Box content = Box.createVerticalBox();
 		
-		JPanel list = new JPanel();
-		list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
-		list.setBorder(BorderFactory.createTitledBorder("1. Choisir les données à exporter :"));
-		for(Type type : this.projectManager.getTypes()){
-			Box element = Box.createHorizontalBox();
-			JCheckBox checkbox = new JCheckBox(type.toString());
-			element.add(checkbox);
-			element.add(Box.createHorizontalGlue());
-			list.add(element);
+		int i = 0;
+		if(!this.projectManager.getTypes().isEmpty() || this.projectManager.isOtherObjects()){
+			i++;
+			JPanel list = new JPanel();
+			list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
+			list.setBorder(BorderFactory.createTitledBorder(i+". Choisir les données à exporter :"));
+			for(Type type : this.projectManager.getTypes()){
+				Box element = Box.createHorizontalBox();
+				JCheckBox checkbox = new JCheckBox(type.toString());
+				checkbox.addItemListener(new ItemListener() {
+					
+					@Override
+					public void itemStateChanged(ItemEvent e) {
+						if(e.getStateChange() == ItemEvent.SELECTED){
+							types.add(((JCheckBox)e.getSource()).getText());
+						} else {
+							types.remove(((JCheckBox)e.getSource()).getText());
+						}
+					}
+				});
+				element.add(checkbox);
+				element.add(Box.createHorizontalGlue());
+				list.add(element);
+			}
+			if(this.projectManager.isOtherObjects()){
+				Box element = Box.createHorizontalBox();
+				JCheckBox checkbox = new JCheckBox("Autres objets affichés.");
+				checkbox.addItemListener(new ItemListener() {
+
+					@Override
+					public void itemStateChanged(ItemEvent e) {
+						if(e.getStateChange() == ItemEvent.SELECTED){
+							types.add(((JCheckBox)e.getSource()).getText());
+						} else {
+							types.remove(((JCheckBox)e.getSource()).getText());
+						}
+					}
+				});
+				element.add(checkbox);
+				element.add(Box.createHorizontalGlue());
+				list.add(element);
+			}
+			content.add(list);
 		}
-		content.add(list);
+		
+		List<EditableSurfaceImage> imagesList = this.projectManager.getImages();
+		
+		if(imagesList != null && !imagesList.isEmpty()){
+			i++;
+			JPanel images = new JPanel();
+			images.setLayout(new BoxLayout(images, BoxLayout.Y_AXIS));
+			images.setBorder(BorderFactory.createTitledBorder(i+". Choisir les images à exporter :"));
+			for(EditableSurfaceImage si : imagesList){
+				
+				Box element = Box.createHorizontalBox();
+				JCheckBox chkbx = new JCheckBox(si.getName());
+				chkbx.addItemListener(new ItemListener() {
+
+					@Override
+					public void itemStateChanged(ItemEvent e) {
+						if(e.getStateChange() == ItemEvent.SELECTED){
+							imageList.add(((JCheckBox)e.getSource()).getText());
+						} else {
+							imageList.remove(((JCheckBox)e.getSource()).getText());
+						}
+					}
+				});
+				element.add(chkbx);
+				element.add(Box.createHorizontalGlue());
+				images.add(element);
+			}
+			content.add(images);
+		}
+		
+		if(this.projectManager.isTrajectories()){
+			i++;
+			JPanel trajecto = new JPanel();
+			trajecto.setLayout(new BoxLayout(trajecto, BoxLayout.Y_AXIS));
+			trajecto.setBorder(BorderFactory.createTitledBorder(i+". Choisir les trajectoires à exporter :"));
+			for(TrajectoriesLayer l : this.projectManager.getTrajectoriesLayers()){
+				Box element = Box.createHorizontalBox();
+				JCheckBox chkbx = new JCheckBox(l.getName());
+				chkbx.addItemListener(new ItemListener() {
+
+					@Override
+					public void itemStateChanged(ItemEvent e) {
+						if(e.getStateChange() == ItemEvent.SELECTED){
+							trajectories.add(((JCheckBox)e.getSource()).getText());
+						} else {
+							trajectories.remove(((JCheckBox)e.getSource()).getText());
+						}
+					}
+				});
+				element.add(chkbx);
+				element.add(Box.createHorizontalGlue());
+				trajecto.add(element);
+			}
+			content.add(trajecto);
+		}
 		
 		JPanel optionsPanel = new JPanel();
-		optionsPanel.setBorder(BorderFactory.createTitledBorder("2. Options"));
+		optionsPanel.setBorder(BorderFactory.createTitledBorder((1+i)+". Options"));
 		optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.Y_AXIS));
 		Box databasesBox = Box.createHorizontalBox();
 		final JCheckBox databases = new JCheckBox("Enregistrer les bases de données");
@@ -145,10 +247,14 @@ public class ProjectManagerUI extends JDialog {
 		linksBox.add(Box.createHorizontalGlue());		
 		optionsPanel.add(linksBox);
 		optionsPanel.add(databasesBox);
-		content.add(optionsPanel);
+		
+		if(!this.projectManager.getTypes().isEmpty()){
+			i++;
+			content.add(optionsPanel);
+		} 
 		
 		JPanel filePanel = new JPanel();
-		filePanel.setBorder(BorderFactory.createTitledBorder("3. Choisir l'emplacement du fichier"));
+		filePanel.setBorder(BorderFactory.createTitledBorder((1+i)+". Choisir l'emplacement du fichier"));
 		filePanel.setLayout(new BoxLayout(filePanel, BoxLayout.X_AXIS));
 		final JTextField filePath = new JTextField();
 		filePath.setToolTipText("Chemin complet vers le fichier");
@@ -226,6 +332,9 @@ public class ProjectManagerUI extends JDialog {
 							try {
 								getThis().setVisible(false);
 								success = projectManager.saveProject(new File(filePath.getText()), 
+										types,
+										imageList,
+										trajectories,
 										databases.isSelected(),
 										links.isSelected());
 								
