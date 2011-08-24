@@ -29,7 +29,7 @@ import gov.nasa.worldwind.render.Renderable;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.2.3
+ * @version 0.2.4
  */
 public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 
@@ -174,12 +174,17 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 	}
 
 	@Override
-	public List<String> getVisibleBalises() {
+	public List<String> getVisibleBalisesNames() {
 		List<String> balisesList = new ArrayList<String>();
 		for(Balise b : balisesActives){
 			balisesList.add(b.getName());
 		}
 		return balisesList;
+	}
+	
+	@Override
+	public List<Balise3D> getVisibleBalises() {
+		return this.balisesActives;
 	}
 	
 	@Override

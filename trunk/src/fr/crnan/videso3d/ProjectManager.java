@@ -41,7 +41,6 @@ import java.util.Set;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.formats.VidesoTrack;
-import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.geo.GEOWriter;
 import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
@@ -50,17 +49,19 @@ import fr.crnan.videso3d.graphics.Balise;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
+import fr.crnan.videso3d.graphics.RestorableUserFacingText;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.MainWindow;
 import fr.crnan.videso3d.layers.Balise2DLayer;
 import fr.crnan.videso3d.layers.Balise3DLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
+import fr.crnan.videso3d.layers.TextLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
-import fr.crnan.videso3d.stip.PointNotFoundException;
 import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.render.GeographicText;
 import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 
@@ -108,6 +109,8 @@ public class ProjectManager extends ProgressSupport {
 	
 	private static final String AIRSPACE_LAYER_NAME = "XML Airspaces";
 
+	private static final String TEXT_LAYER_NAME = "XML Texts";
+	
 	private VidesoGLCanvas wwd;
 	
 	public ProjectManager(){
@@ -339,13 +342,11 @@ public class ProjectManager extends ProgressSupport {
 						}
 					}
 				} else if(l.getName().equals(BALISES2D_LAYER_NAME)){
-					for(String s : ((Balise2DLayer)l).getVisibleBalises()){
-						Balise2D b = ((Balise2DLayer)l).getBalise(s);
+					for(Balise2D b : ((Balise2DLayer)l).getVisibleBalises()){
 						this.saveObjectInXml(b, new File(xmlDir, b.getClass().getName()+"-"+format.format(count++)+".xml"));
 					}
 				} else if(l.getName().equals(BALISES3D_LAYER_NAME)){
-					for(String s : ((Balise3DLayer)l).getVisibleBalises()){
-						Balise3D b = ((Balise3DLayer)l).getBalise(s);
+					for(Balise3D b : ((Balise3DLayer)l).getVisibleBalises()){
 						this.saveObjectInXml(b, new File(xmlDir, b.getClass().getName()+"-"+format.format(count++)+".xml"));
 					}
 				}
@@ -511,6 +512,7 @@ public class ProjectManager extends ProgressSupport {
 			Balise2DLayer xmlBalises = null;
 			Balise3DLayer xmlBalises3D = null;
 			AirspaceLayer xmlAirspaces = null;
+			TextLayer xmlTexts = null;
 			for(File f : xmlDir.listFiles()){
 				this.fireTaskProgress(progress++);
 				this.fireTaskInfo(f.getName());
@@ -558,7 +560,13 @@ public class ProjectManager extends ProgressSupport {
 					}
 					xmlBalises3D.addBalise((Balise) o);
 					xmlBalises3D.showBalise((Balise) o);
-				} else if(o instanceof Layer) {
+				} else if(o instanceof RestorableUserFacingText){
+					if(xmlTexts == null){
+						xmlTexts = new TextLayer(TEXT_LAYER_NAME);
+						wwd.toggleLayer(xmlTexts, true);
+					}
+					xmlTexts.addGeographicText((GeographicText) o);
+				}else if(o instanceof Layer) {
 					wwd.toggleLayer((Layer) o, true);
 				}
 			}

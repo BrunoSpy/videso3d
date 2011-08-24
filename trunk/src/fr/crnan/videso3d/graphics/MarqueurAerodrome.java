@@ -20,11 +20,15 @@ import gov.nasa.worldwind.geom.Position;
 /**
  * Représentation d'un aérodrome dont on ne connaît pas les pistes.
  * @author Adrien Vidal
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class MarqueurAerodrome extends DatabaseBalise2D implements Aerodrome {
 
-	String nomPiste = "";
+	private String nomPiste = "";
+	
+	public MarqueurAerodrome(){
+		super();
+	}
 	
 	public MarqueurAerodrome(int type, String name, Position position,String nomPiste, Type base) {
 		super(name.split("--")[0].trim(), position, "<b>"+name+"</b><br/>Piste "+ nomPiste, base, type);
@@ -51,6 +55,11 @@ public class MarqueurAerodrome extends DatabaseBalise2D implements Aerodrome {
 	@Override
 	public void setVisible(boolean visible) {
 		this.getUserFacingText().setVisible(visible);
+	}
+
+	@Override
+	public boolean isVisible() {
+		return this.getUserFacingText().isVisible();
 	}
 
 	

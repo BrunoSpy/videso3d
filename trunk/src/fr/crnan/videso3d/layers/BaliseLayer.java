@@ -23,7 +23,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.2.3
  */
 public interface BaliseLayer extends Layer {
 
@@ -93,12 +93,23 @@ public interface BaliseLayer extends Layer {
 	 */
 	public void eraseAllBalises();
 
-	public List<String> getVisibleBalises();
-
+	/**
+	 * 
+	 * @return Names of visible balises
+	 */
+	public List<String> getVisibleBalisesNames();
+	
+	/**
+	 * 
+	 * @return Visible balises
+	 */
+	public List<? extends Balise> getVisibleBalises();
 	/**
 	 * Supprime une balise du calque
 	 * Si affichée, enlève la balise de la vue
 	 * @param balise
 	 */
 	public void removeBalise(Balise balise);
+
+	
 }

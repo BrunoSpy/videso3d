@@ -20,16 +20,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import fr.crnan.videso3d.graphics.Aerodrome;
 import fr.crnan.videso3d.graphics.MarqueurAerodrome;
 import fr.crnan.videso3d.graphics.PisteAerodrome;
+import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.render.GeographicText;
+import gov.nasa.worldwind.render.markers.Marker;
 
 /**
  * Layer contenant les aérodromes.<br />
  * @author Adrien Vidal
+ * @author Bruno Spyckerelle
+ * @version 0.1.1
  */
 public class AirportLayer extends LayerSet {
 
@@ -60,8 +66,7 @@ public class AirportLayer extends LayerSet {
 		if(!pistes.containsKey(nomComplet)){
 			pistes.put(nomComplet, arpt);
 			if(arpt instanceof PisteAerodrome){
-				airportsLayer.addRenderable(((PisteAerodrome) arpt).getInnerRectangle());
-				airportsLayer.addRenderable(((PisteAerodrome) arpt).getOuterRectangle());
+				airportsLayer.addRenderable((PisteAerodrome) arpt);
 			}
 			if(!texts.contains((String)arpt.getUserFacingText().getText())){
 				textLayer.addGeographicText(arpt.getUserFacingText());
@@ -116,5 +121,25 @@ public class AirportLayer extends LayerSet {
 		}
 		return aerodromes.isEmpty()? null : aerodromes;
 	}
-	
+		
+	public List<Restorable> getVisibleRestorables(){
+		ArrayList<Restorable> restorables = new ArrayList<Restorable>();
+		for(GeographicText t : textLayer.getActiveGeographicTexts()){
+			if(t instanceof Restorable){
+				restorables.add((Restorable) t);
+			}
+		}
+		for(Marker m : this.markerLayer.getMarkers()){
+			if(m instanceof Restorable){
+				restorables.add((Restorable) m);
+			}
+		}
+		for(Aerodrome a : pistes.values()){
+			if(a.isVisible()){
+				restorables.add(a);
+			}
+		}
+			
+		return restorables;
+	}
 }
