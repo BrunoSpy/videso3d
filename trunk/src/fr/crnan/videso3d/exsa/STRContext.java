@@ -34,7 +34,7 @@ import fr.crnan.videso3d.ihm.components.VXTable;
  * 
  * @author Bruno Spyckerelle
  * @author Adrien Vidal
- * @version 0.1
+ * @version 0.1.1
  */
 public class STRContext extends Context {
 
@@ -47,7 +47,6 @@ public class STRContext extends Context {
 	}
 
 	private List<JXTaskPane> showVVFInfos(String name){
-		String vvfName = name.split("\\s+")[1];
 		JXTaskPane infos = new JXTaskPane();
 		infos.setTitle("Suites de codes associées au VVF");
 		ArrayList<String> debut = new ArrayList<String>();
@@ -55,7 +54,7 @@ public class STRContext extends Context {
 		ArrayList<String> espaces = new ArrayList<String>();
 		try {
 			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.EXSA, "select * from centscodf where vvf = ?");
-			st.setString(1, vvfName);
+			st.setString(1, name);
 			ResultSet rs = st.executeQuery();
 			while(rs.next()){
 				debut.add(rs.getString(3));
