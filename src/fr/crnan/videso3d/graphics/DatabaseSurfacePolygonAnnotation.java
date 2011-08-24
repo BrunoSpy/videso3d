@@ -24,10 +24,14 @@ import gov.nasa.worldwind.geom.LatLon;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class DatabaseSurfacePolygonAnnotation extends SurfacePolygonAnnotation implements DatabaseVidesoObject{
 
+	public DatabaseSurfacePolygonAnnotation(){
+		super();
+	}
+	
 	public DatabaseSurfacePolygonAnnotation(List<? extends LatLon> locations) {
 		super(locations);
 	}

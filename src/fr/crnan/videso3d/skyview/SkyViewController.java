@@ -50,7 +50,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * Gestion des données SkyView
  * @author Bruno Spyckerelle
- * @version 0.1.4
+ * @version 0.1.5
  */
 public class SkyViewController implements VidesoController {
 
@@ -381,18 +381,26 @@ public class SkyViewController implements VidesoController {
 		if(!routesUnique.isEmpty())
 			objects.put(SkyViewController.TYPE_ROUTE, routesUnique);
 		//airports
-		if(!this.airports.getVisibleBalises().isEmpty())
-			objects.put(TYPE_AIRPORT, this.airports.getVisibleBalises());
+		if(!this.airports.getVisibleBalisesNames().isEmpty())
+			objects.put(TYPE_AIRPORT, this.airports.getVisibleBalisesNames());
 		//waypoints
-		if(!this.waypoints.getVisibleBalises().isEmpty())
-			objects.put(TYPE_WAYPOINT, this.waypoints.getVisibleBalises());
+		if(!this.waypoints.getVisibleBalisesNames().isEmpty())
+			objects.put(TYPE_WAYPOINT, this.waypoints.getVisibleBalisesNames());
 		return objects;
 	}
 
 	@Override
 	public Iterable<Restorable> getSelectedObjects() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Restorable> restorables = new ArrayList<Restorable>();
+		//routes
+		for(String r : this.routes.getVisibleRoutes()){
+			restorables.add(this.routes.getRoute(r));
+		}
+		//airports
+		restorables.addAll(this.airports.getVisibleBalises());
+		//waypoints
+		restorables.addAll(this.waypoints.getVisibleBalises());
+		return restorables;
 	}
 	
 }

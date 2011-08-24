@@ -21,36 +21,40 @@ import java.awt.Font;
 import java.util.LinkedList;
 import java.util.List;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
+import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.render.Material;
+import gov.nasa.worldwind.render.PreRenderable;
+import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.SurfacePolygon;
 import gov.nasa.worldwind.render.UserFacingText;
+import gov.nasa.worldwind.util.Logging;
+import gov.nasa.worldwind.util.RestorableSupport;
 
 /**
  * Représentation d'un aérodrome avec ses pistes
  * @author Adrien Vidal
- * @version 0.1.2
+ * @author Bruno Spyckerelle
+ * @version 0.1.3
  */
-public class PisteAerodrome implements Aerodrome{
+public class PisteAerodrome implements PreRenderable, Renderable, Aerodrome{
 
-	private DatabaseSurfacePolygonAnnotation inner, outer;
+	protected SurfacePolygonAnnotation inner, outer;
 	private String name;
 	private VidesoAnnotation annotation;
-	private UserFacingText text;
+	private RestorableUserFacingText text;
 	private Position refPosition;
-	private DatabaseManager.Type base;
-	private int type;
 	private String nomPiste = "";
 	
-	public PisteAerodrome(int type, String name, String nomPiste, double lat1, double lon1, double lat2, double lon2, double largeur, Position ref, DatabaseManager.Type base){
-		this.setDatabaseType(base);
-		this.setType(type);
+	public PisteAerodrome(){
+		super();
+	}
+	
+	public PisteAerodrome(String name, String nomPiste, double lat1, double lon1, double lat2, double lon2, double largeur, Position ref){
 		this.nomPiste = nomPiste;
 		this.name = name.split("--")[0].trim();
 		this.setAnnotation("<b>"+name+"</b><br/>Piste "+ nomPiste);
@@ -60,24 +64,22 @@ public class PisteAerodrome implements Aerodrome{
 		ShapeAttributes innerAttrs = new BasicShapeAttributes();
 		innerAttrs.setInteriorMaterial(new Material(Color.WHITE));
 		innerAttrs.setInteriorOpacity(0.8);
-		this.inner.setAttributes(innerAttrs);
-		this.inner.setAnnotation("<b>"+name+"</b><br/>Piste "+ nomPiste);
-		this.inner.setDatabaseType(base);
-		this.inner.setType(type);
-		this.inner.setName(name);
+		this.getInnerRectangle().setAttributes(innerAttrs);
+		((VidesoObject) this.getInnerRectangle()).setAnnotation("<b>"+name+"</b><br/>Piste "+ nomPiste);
+
+		((VidesoObject) this.getInnerRectangle()).setName(name);
 		ShapeAttributes outerAttrs = new BasicShapeAttributes();
 		outerAttrs.setInteriorMaterial(new Material(new Color(0,0,150)));
 		outerAttrs.setInteriorOpacity(0.4);
 		outerAttrs.setOutlineMaterial(new Material(Color.BLACK));
 		outerAttrs.setOutlineOpacity(1);
 		outerAttrs.setDrawOutline(true);
-		this.outer.setAttributes(outerAttrs);
-		this.outer.setAnnotation("<b>"+name+"</b><br/>Piste "+ nomPiste);
-		this.outer.setDatabaseType(base);
-		this.outer.setType(type);
-		this.outer.setName(name);
+		this.getOuterRectangle().setAttributes(outerAttrs);
+		((VidesoObject) this.getOuterRectangle()).setAnnotation("<b>"+name+"</b><br/>Piste "+ nomPiste);
 
-		this.text = new UserFacingText(name.split("--")[0].trim(), ref.add(Position.fromDegrees(-0.015, 0)));
+		((VidesoObject) this.getOuterRectangle()).setName(name);
+
+		this.text = new RestorableUserFacingText(name.split("--")[0].trim(), ref.add(Position.fromDegrees(-0.015, 0)));
 		this.text.setFont(new Font("Sans Serif", Font.PLAIN, 9));
 		this.text.setColor(Pallet.getColorBaliseText());
 	}
@@ -98,10 +100,14 @@ public class PisteAerodrome implements Aerodrome{
 	}
 	
 	public SurfacePolygon getInnerRectangle(){
+		if(this.inner == null)
+			this.setInnerRectangle(new SurfacePolygonAnnotation());
 		return inner;
 	}
 	
 	public SurfacePolygon getOuterRectangle(){
+		if(this.outer == null)
+			this.setOuterRectangle(new SurfacePolygonAnnotation());
 		return outer;
 	}
 	
@@ -127,7 +133,7 @@ public class PisteAerodrome implements Aerodrome{
 		rectInterieur.add(pi2);
 		rectInterieur.add(pi3);
 		rectInterieur.add(pi4);
-		this.inner = new DatabaseSurfacePolygonAnnotation(rectInterieur);
+		this.getInnerRectangle().setLocations(rectInterieur);
 		//points du rectangle extérieur				
 		List<LatLon> rectExterieur = new LinkedList<LatLon>();
 		LatLon pe1 = LatLon.fromDegrees(lat1+(2*a+b)*largeurCarte, lon1+(2*b-a)*largeurCarte);
@@ -138,9 +144,8 @@ public class PisteAerodrome implements Aerodrome{
 		rectExterieur.add(pe2);
 		rectExterieur.add(pe3);
 		rectExterieur.add(pe4);
-		this.outer = new DatabaseSurfacePolygonAnnotation(rectExterieur);
+		this.getOuterRectangle().setLocations(rectExterieur);
 	}
-
 
 	@Override
 	public void setAnnotation(String text) {
@@ -158,35 +163,6 @@ public class PisteAerodrome implements Aerodrome{
 		return annotation;
 	}
 
-	
-	@Override
-	public Type getDatabaseType() {
-		return this.base;
-	}
-
-	/**
-	 * Non implémenté
-	 */
-	@Override
-	public void setDatabaseType(Type base) {
-		this.base = base;
-	}
-
-	/**
-	 * Non implémenté
-	 */
-	@Override
-	public void setType(int type) {
-		this.type = type;
-	}
-
-	/**
-	 * Non implémenté
-	 */
-	@Override
-	public int getType() {
-		return this.type;
-	}
 
 	/**
 	 * Non implémenté
@@ -210,11 +186,16 @@ public class PisteAerodrome implements Aerodrome{
 	
 	@Override
 	public void setVisible(boolean visible){
-		outer.setVisible(visible);
-		inner.setVisible(visible);
+		this.getInnerRectangle().setVisible(visible);
+		this.getOuterRectangle().setVisible(visible);
 		text.setVisible(visible);
 	}
 
+	@Override
+	public boolean isVisible(){
+		return outer.isVisible();
+	}
+	
 	@Override
 	public Object getNormalAttributes() {
 		return null;
@@ -232,29 +213,106 @@ public class PisteAerodrome implements Aerodrome{
 
 	@Override
 	public void setHighlighted(boolean highlighted) {
-		this.inner.setHighlighted(highlighted);
-		this.outer.setHighlighted(highlighted);
-	}
-
-	@Override
-	public String getRestorableClassName() {
-		// TODO Auto-generated method stub
-		return null;
+		this.getInnerRectangle().setHighlighted(highlighted);
+		this.getOuterRectangle().setHighlighted(highlighted);
 	}
 
 	@Override
 	public String getRestorableState() {
-		// TODO Auto-generated method stub
-		return null;
+		RestorableSupport rs = RestorableSupport.newRestorableSupport();
+        this.doGetRestorableState(rs, null);
+
+        return rs.getStateAsXml();
+	}
+
+	protected void doGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context){
+		// Method is invoked by subclasses to have superclass add its state and only its state
+		this.doMyGetRestorableState(rs, context);
+	}
+
+	private void doMyGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context){
+		
+		if(this.text !=null)
+			rs.addStateValueAsString(context, "text", this.text.getRestorableState());
+		
+		rs.addStateValueAsString(context, "inner", this.getInnerRectangle().getRestorableState());
+		
+		rs.addStateValueAsString(context, "outer", this.getOuterRectangle().getRestorableState());
+		
+		if(this.refPosition != null) rs.addStateValueAsPosition(context, "refposition", getRefPosition());
 	}
 
 	@Override
 	public void restoreState(String stateInXml) {
-		// TODO Auto-generated method stub
+		 if (stateInXml == null)
+	        {
+	            String message = Logging.getMessage("nullValue.StringIsNull");
+	            Logging.logger().severe(message);
+	            throw new IllegalArgumentException(message);
+	        }
+
+	        RestorableSupport rs;
+	        try
+	        {
+	            rs = RestorableSupport.parse(stateInXml);
+	        }
+	        catch (Exception e)
+	        {
+	            // Parsing the document specified by stateInXml failed.
+	            String message = Logging.getMessage("generic.ExceptionAttemptingToParseStateXml", stateInXml);
+	            Logging.logger().severe(message);
+	            throw new IllegalArgumentException(message, e);
+	        }
+
+	        this.doRestoreState(rs, null);		
+	}
+
+	protected void doRestoreState(RestorableSupport rs, RestorableSupport.StateObject context)   {
+		// Method is invoked by subclasses to have superclass add its state and only its state
+		this.doMyRestoreState(rs, context);
+	}
+
+	private void doMyRestoreState(RestorableSupport rs, RestorableSupport.StateObject context){
+		String s = rs.getStateValueAsString(context, "text");
+		if(s != null){
+			if(this.text == null){
+				this.text = new RestorableUserFacingText();
+			}
+			this.text.restoreState(s);
+		}
+		
+		s = rs.getStateValueAsString(context, "inner");
+		if(s != null)
+			this.getInnerRectangle().restoreState(s);
+		
+		s = rs.getStateValueAsString(context, "outer");
+		if(s != null)
+			this.getOuterRectangle().restoreState(s);
+		
+		Position p = rs.getStateValueAsPosition(context, "refposition");
+		if(p != null)
+			this.refPosition = p;
 		
 	}
-	
-	
 
+	@Override
+	public void render(DrawContext dc) {
+		this.getInnerRectangle().render(dc);
+		this.getOuterRectangle().render(dc);
+	}
 	
+	public void setInnerRectangle(SurfacePolygonAnnotation polygon){
+		this.inner = polygon;
+	}
+
+	public void setOuterRectangle(SurfacePolygonAnnotation polygon){
+		this.outer = polygon;
+	}
+
+	@Override
+	public void preRender(DrawContext dc) {
+		this.getInnerRectangle().preRender(dc);
+		this.getOuterRectangle().preRender(dc);
+	}
+
 }

@@ -827,11 +827,11 @@ public class StipController extends ProgressSupport implements VidesoController 
 		//BALISES
 		List<String> balis = new ArrayList<String>();
 		if(this.balisesNP2D.isEnabled()){
-			balis.addAll(balisesNP2D.getVisibleBalises());
-			balis.addAll(balisesPub2D.getVisibleBalises());
+			balis.addAll(balisesNP2D.getVisibleBalisesNames());
+			balis.addAll(balisesPub2D.getVisibleBalisesNames());
 		} else {
-			balis.addAll(balisesNP3D.getVisibleBalises());
-			balis.addAll(balisesPub3D.getVisibleBalises());
+			balis.addAll(balisesNP3D.getVisibleBalisesNames());
+			balis.addAll(balisesPub3D.getVisibleBalisesNames());
 		}
 		if(!balis.isEmpty()) objects.put(BALISES, balis);
 		//ROUTES
@@ -852,19 +852,11 @@ public class StipController extends ProgressSupport implements VidesoController 
 		}
 		//Balise
 		if(this.balisesNP2D.isEnabled()){
-			for(String b : this.balisesNP2D.getVisibleBalises()){
-				restorables.add(this.balisesNP2D.getBalise(b, BALISES));
-			}
-			for(String b : this.balisesPub2D.getVisibleBalises()){
-				restorables.add(this.balisesPub2D.getBalise(b, BALISES));
-			}
+			restorables.addAll(this.balisesNP2D.getVisibleBalises());
+			restorables.addAll(this.balisesPub2D.getVisibleBalises());
 		} else {
-			for(String b : this.balisesNP3D.getVisibleBalises()){
-				restorables.add(this.balisesNP3D.getBalise(b, BALISES));
-			}
-			for(String b : this.balisesPub3D.getVisibleBalises()){
-				restorables.add(this.balisesPub3D.getBalise(b, BALISES));
-			}
+			restorables.addAll(this.balisesNP3D.getVisibleBalises());
+			restorables.addAll(this.balisesPub3D.getVisibleBalises());
 		}
 		//Routes
 		if(this.routes3D.isEnabled()){

@@ -20,9 +20,9 @@ import gov.nasa.worldwind.render.UserFacingText;
 /**
  * 
  * @author Adrien Vidal
- * @version 2.0
+ * @version 2.1
  */
-public interface Aerodrome extends DatabaseVidesoObject{
+public interface Aerodrome extends VidesoObject{
 
 	public Position getRefPosition();
 	public UserFacingText getUserFacingText();
@@ -30,4 +30,5 @@ public interface Aerodrome extends DatabaseVidesoObject{
 	public String getAnnotationText();
 	public String getNomPiste();
 	public void setVisible(boolean b);
+	public boolean isVisible();
 }

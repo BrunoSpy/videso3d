@@ -46,12 +46,12 @@ import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.DatabaseBalise2D;
 import fr.crnan.videso3d.graphics.DatabaseBalise3D;
+import fr.crnan.videso3d.graphics.DatabasePisteAerodrome;
 import fr.crnan.videso3d.graphics.DatabaseRoute2D;
 import fr.crnan.videso3d.graphics.DatabaseRoute3D;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route.Parity;
 import fr.crnan.videso3d.graphics.MarqueurAerodrome;
-import fr.crnan.videso3d.graphics.PisteAerodrome;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.graphics.Route3D;
 import fr.crnan.videso3d.graphics.Secteur3D;
@@ -711,7 +711,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 						double lat2 = rs2.getDouble("lat2");
 						double lon2 = rs2.getDouble("lon2");
 						double largeur = rs2.getDouble("largeur");
-						PisteAerodrome piste = new PisteAerodrome(type, nom, nomPiste, lat1, lon1, lat2, lon2, largeur, Position.fromDegrees(latRef, lonRef), Type.AIP);
+						DatabasePisteAerodrome piste = new DatabasePisteAerodrome(type, nom, nomPiste, lat1, lon1, lat2, lon2, largeur, Position.fromDegrees(latRef, lonRef), Type.AIP);
 						arptLayer.addAirport(piste);
 					}else{
 						MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), nomPiste, DatabaseManager.Type.AIP);
@@ -1184,7 +1184,26 @@ public class AIPController extends ProgressSupport implements VidesoController {
 
 	@Override
 	public Iterable<Restorable> getSelectedObjects() {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Restorable> restorables = new ArrayList<Restorable>();
+		if(this.routes2D.isEnabled()){
+			for(String r : this.routes2D.getVisibleRoutes()){
+				restorables.add(this.routes2D.getRoute(r));
+			}
+		} else {
+			for(String r : this.routes3D.getVisibleRoutes()){
+				restorables.add(this.routes3D.getRoute(r));
+			}
+		}
+		if(this.navFixLayer.isEnabled()){
+			restorables.addAll(this.navFixLayer.getVisibleBalises());
+		} else {
+			restorables.addAll(this.navFixLayer3D.getVisibleBalises());
+		}
+		for(Secteur3D s : this.zones.values()){
+			if(s.isVisible())
+				restorables.add(s);
+		}
+		restorables.addAll(this.arptLayer.getVisibleRestorables());
+		return restorables;
 	}
 }

@@ -230,12 +230,17 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	}
 
 	@Override
-	public List<String> getVisibleBalises() {
+	public List<String> getVisibleBalisesNames() {
 		List<String> balisesList = new ArrayList<String>();
 		for(Balise b : balisesActives){
 			balisesList.add(b.getName());
 		}
 		return balisesList;
+	}
+	
+	@Override
+	public List<Balise2D> getVisibleBalises() {
+		return this.balisesActives;
 	}
 	
 	@Override
