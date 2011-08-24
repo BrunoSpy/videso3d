@@ -25,6 +25,8 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -48,10 +50,13 @@ import bibliothek.gui.dock.common.mode.ExtendedMode;
 import bibliothek.gui.dock.common.theme.ThemeMap;
 
 import fr.crnan.videso3d.AirspaceListener;
+import fr.crnan.videso3d.ProgressSupport;
+import fr.crnan.videso3d.CompatibilityVersionException;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.ProjectManager;
 import fr.crnan.videso3d.SplashScreen;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -76,7 +81,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3.10
+ * @version 0.3.11
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -514,5 +519,65 @@ public class MainWindow extends JFrame {
 			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
 		});
 	}
+
+	/**
+	 * 
+	 * @param file Project to load
+	 */
+	public void loadProject(final File file){
+		final ProjectManager project = new ProjectManager();
+		final ProgressMonitor monitor = new ProgressMonitor(null, "Import d'un fichier projet",
+				"Import ...", 0, 100, true, true);
+		monitor.setMillisToPopup(0);
+		monitor.setMillisToDecideToPopup(0);
+		project.addPropertyChangeListener(new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
+					monitor.setMaximum((Integer) evt.getNewValue());
+				} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
+					if(monitor.isCanceled()){
+
+					} else {
+						monitor.setNote((String) evt.getNewValue());
+					}
+				} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
+					monitor.setProgress((Integer) evt.getNewValue());
+				}
+			}
+		});
+		new SwingWorker<Void, Void>(){
+
+			@Override
+			protected Void doInBackground() throws Exception {
+				try {
+					project.loadProject(file, wwd, getThis(), false);
+				} catch (CompatibilityVersionException e) {
+					if(JOptionPane.showConfirmDialog(null, "<html>Le fichier que souhaitez importer n'est pas compatible avec la version de Videso que vous utilisez.<br/>" +
+							"Souhaitez vous tout de même l'importer ?<br/><br/>" +
+							"<b>Avertissement : </b>L'import d'un fichier non compatible peut faire planter l'application.<br/><br/>" +
+							"<i>Information : </i> Version du fichier : "+e.getMessage()+"</html>",
+							"Version du fichier incompatible.", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE)
+							== JOptionPane.YES_OPTION) {
+						project.loadProject(file, wwd, getThis(), true);
+					}
+				} catch (FileNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (Exception e){
+					e.printStackTrace();
+				}
+				return null;
+			}
+
+		}.execute();
+	}
 	
+	private MainWindow getThis(){
+		return this;
+	}
 }

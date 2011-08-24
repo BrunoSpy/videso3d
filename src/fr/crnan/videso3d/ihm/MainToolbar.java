@@ -21,8 +21,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,18 +37,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import fr.crnan.videso3d.CompatibilityVersionException;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
-import fr.crnan.videso3d.ProgressSupport;
-import fr.crnan.videso3d.ProjectManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.fpl.FPLFileFilter;
 import fr.crnan.videso3d.formats.geo.GEOFileFilter;
@@ -74,7 +68,7 @@ import gov.nasa.worldwindx.examples.util.ShapeUtils;
 /**
  * Toolbar of the main window
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class MainToolbar extends JToolBar {
 
@@ -150,59 +144,7 @@ public class MainToolbar extends JToolBar {
 				final VFileChooser fileChooser = new VFileChooser();
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				if(fileChooser.showOpenDialog(loadProject) == JFileChooser.APPROVE_OPTION){
-
-					final ProjectManager project = new ProjectManager();
-					final ProgressMonitor monitor = new ProgressMonitor(null, "Import d'un fichier projet",
-							"Import ...", 0, 100, true, true);
-					monitor.setMillisToPopup(0);
-					monitor.setMillisToDecideToPopup(0);
-					project.addPropertyChangeListener(new PropertyChangeListener() {
-
-						@Override
-						public void propertyChange(PropertyChangeEvent evt) {
-							if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
-								monitor.setMaximum((Integer) evt.getNewValue());
-							} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
-								if(monitor.isCanceled()){
-
-								} else {
-									monitor.setNote((String) evt.getNewValue());
-								}
-							} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
-								monitor.setProgress((Integer) evt.getNewValue());
-							}
-						}
-					});
-					new SwingWorker<Void, Void>(){
-
-						@Override
-						protected Void doInBackground() throws Exception {
-							try {
-								project.loadProject(fileChooser.getSelectedFile(), wwd, parent, false);
-							} catch (CompatibilityVersionException e) {
-								if(JOptionPane.showConfirmDialog(null, "<html>Le fichier que souhaitez importer n'est pas compatible avec la version de Videso que vous utilisez.<br/>" +
-										"Souhaitez vous tout de même l'importer ?<br/><br/>" +
-										"<b>Avertissement : </b>L'import d'un fichier non compatible peut faire planter l'application.<br/><br/>" +
-										"<i>Information : </i> Version du fichier : "+e.getMessage()+"</html>",
-										"Version du fichier incompatible.", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE)
-										== JOptionPane.YES_OPTION) {
-									project.loadProject(fileChooser.getSelectedFile(), wwd, parent, true);
-								}
-							} catch (FileNotFoundException e1) {
-								e1.printStackTrace();
-							} catch (IOException e1) {
-								e1.printStackTrace();
-							} catch (ClassNotFoundException e1) {
-								e1.printStackTrace();
-							} catch (Exception e){
-								e.printStackTrace();
-							}
-							return null;
-						}
-
-					}.execute();
-
-
+					parent.loadProject(fileChooser.getSelectedFile());
 				}
 			}
 		});

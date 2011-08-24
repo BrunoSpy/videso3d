@@ -31,7 +31,7 @@ import gov.nasa.worldwind.util.Logging;
 
 /**
  * @author Bruno Spyckerelle
- * @version 0.3.0
+ * @version 0.3.1
  */
 public class Videso3D {
 
@@ -75,8 +75,14 @@ public class Videso3D {
 								
 								@Override
 								public void propertyChange(PropertyChangeEvent e) {
-									File[] files = {new File(arg0)};
-									main.addTrajectoriesViews(files);
+									File file = new File(arg0);
+									int index = file.getName().lastIndexOf(".");
+									String suffix = index == -1 ? "" : file.getName().substring(index+1);
+									if(suffix.equalsIgnoreCase("vpj")){
+										main.loadProject(file);
+									} else if(suffix.equalsIgnoreCase("geo")){
+										main.addTrajectoriesViews(new File[]{file});
+									}
 								}
 							});
 							
