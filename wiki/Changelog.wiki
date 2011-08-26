@@ -1,0 +1,193 @@
+= Version 0.10 (en cours) =
+
+== 0.10.1 (en cours) ==
+  * IHM
+    * Nouvelle IHM : les différents éléments sont à présent séparables et autonomes (dockables)
+    * Amélioration de l'IHM d'analyse afin de pouvoir faire des recherches avancées
+    * Possibilité de changer l'affichage d'un groupe d'objets
+    * IHM de configuration des paramètres graphiques des objets 3D
+    * IHM de configuration des paramètres graphiques des objets 2D
+  * Enregistrer et charger des fichiers projets Videso :
+    * ces fichiers contiennent tous les objets affichés
+    * ils peuvent soit contenir les bases de données sources, soit une copie de l'objet en soi
+  * IHM de comparaison de fichiers (diff entre deux fichiers)
+  * Possibilité d'importer plusieurs bases de données en même temps 
+  
+= Version 0.9 =
+
+ == 0.9.0 ==
+  * Module trajectographie
+    * Possibilité de créer des polygones 3D et les enregistrer
+    * Possibilité de filtrer les trajectoires contenues dans un polygone (créé via l'outil de création, ou sélectionné parmi les polygones disponibles dans le sélecteur de données)
+    * Comptage des trajectoires passant dans les polygones de filtrage
+    * Calcul des secteurs traversés par une trajectoire
+    * Calcul de la distance parcourue par une trajectoire
+    * Calcul de la répartition en niveau des trajectoires affichées
+    * Export CSV de la liste des trajectoires affichées
+    * Double-cliquer sur une trajectoire dans le tableau centre la vue sur cette trajectoire
+  * STR
+    * Affichage des codes affectés aux VVF
+  * Stip
+    * Affichage du sens de parcours des routes lorsqu'elles sont affichées en 2D
+    * Modification de l'IHM afin de permettre la sélection rapide de tous les secteurs d'un centre
+  * Autres
+    * Possibilité d'éditer des polygones
+    * Amélioration du temps de lancement de l'application
+    * Affichage en projection 2D fonctionnelle : les volumes 3D ne disparaissent plus lorsqu'on passe en vue 2D
+    * Affichage progressif des éléments
+    * Possibilité d'afficher un fond uni pour toute l'europe
+    * Amélioration du positionnement des annotations
+
+ == 0.9.1 ==
+  * STR
+    * Affichage de la table CENT_TMA_F (zones TMA Filet)
+    * Affichage des STACKS
+  * Stpv
+    * Affichage des STARS (LIEU 90) dans la vue d'analyse
+
+ == 0.9.2 ==
+  * Généralités
+    * Import d'images
+    * Déplacement et édition d'images
+    * Export d'images au format GeoTiff
+  * Stip
+    * Possibilité de modifier la couleur d'un groupe de secteurs
+  * Edimap
+    * Affichage des éléments de type TextEdimap
+  * Trajectographie
+    * Possibilité de supprimer des trajectoires
+
+ == 0.9.3 ==
+  * Stip
+    * Possibilité de copier les résultats des éléments ITI, Trajet, Connexion, Balise
+    * Afficher les itis sur le globe
+  * Stpv
+    * Possibilité de copier les résultats des éléments LIEU90 (Stars)
+    * Possibilité de rechercher des liaisons privilégiées
+
+= Version 0.8 =
+
+ == 0.8.0 ==
+ 
+  * Import des données SIA
+  * Import des données SkyView
+  * Possibilité de faire des filtres de couleur pour les trajectoires
+  * Ajout des informations contextuelles pour les radars
+  * Ajout de la fréquence des secteurs si elle est connue
+  
+ == 0.8.1 ==
+ 
+  * Captures d'écran
+  * Prise en compte de nouvelles données AIP (balise, routes)
+  * Import d'images géoréférencées
+  * Amélioration de la boite de recherche universelle
+  
+ == 0.8.2 ==
+  * Import des plans de vol au format FPL
+  * Affichage d'une échelle verticale
+  * Différenciation des volumes de sécurité et des volumes d'intérêt
+  * Prise en compte de nouvelles données AIP
+  
+ == 0.8.3 ==
+  * Amélioration des performances d'affichage des trajectoires
+  * Nouvelle interface de gestion des trajectoires affichées
+  * Export des trajectoires affichées au format GEO
+  * IHM d'import de plans de vols
+  * Filtrage des objets affichés par altitude
+  
+= Version 0.7 =
+
+ == 0.7.0 ==
+ 
+  * IHM d'analyse des données STIP et STPV
+  * Panneau d'informations contextuelles
+  * Visualisation des couvertures radios
+  * Visualisation des volumes d'intérêt ODS
+  * Import des données compressées
+  * Ajout de commentaires dans le gestionnaire de base de données
+  * Possibilité de réinitialiser la vue 3D
+  
+ == 0.7.1 ==
+ 
+  * Amélioration de l'affichage de l'analyse des balises
+  * Correction de la description des balises
+  
+ == 0.7.2 ==
+ 
+  * Prise en compte du fichier STIP CONNEX
+  * Possibilité d'afficher les balises d'une route
+ 
+ == 0.7.3 ==
+  * Prise en compte du fichier STIP BALINT
+  * Interaction directe avec les bases sélectionnées dnas le gestionnaire de bases de données
+  * Amélioration de la vue contextuelle
+
+ == 0.7.4 ==
+  * Corrections de bug
+
+= Version 0.6 =
+
+ == 0.6.0 ==
+  * Ajout d'un splashscreen
+  * Support des fichiers trajectoires au format OPAS
+  * Affichage des routes en 2D
+  * Pouvoir changer l'opacité d'un objet
+  
+ == 0.6.1 ==
+  * Import des trajectoires au format Elvira (geo)
+  * Filtrage des trajectoires
+  * Prise en compte des fichiers BOA non formatés
+  
+ == 0.6.2 ==
+  * Pouvoir supprimer des onglets
+  * Classer les entrées dans le gestionnaire de base de données
+  * Afficher les caractéritiques des radars
+  
+ == 0.6.3 ==
+  * Possibilité d'ajouter des fonds de cartes
+  * Echelle en NM
+  
+ == 0.6.4 ==
+  * Import des trajectoires au format LPLN
+  * Surlignement des trajectoires sélectionnées
+  * Ajout d'une fenêtre de configuration pour :
+    * Configurer un proxy
+    * Changer la couleur de certains éléments
+
+= Version 0.5 =
+
+  * Support de cartes Edimap
+  * Informations des carrés des mosaïques
+  * Affichage des mosaiques en 3D
+  * Informations sur les balises STIP
+  * Améliorations des performances
+
+= Version 0.4 =
+
+  * Meilleure interface de sélection des objets
+  * Ajout des coordonnées Cautra dans la barre de status
+  * Affichage des distances en NM dans l'outil de mesure
+  * Changement de couleur des secteurs
+  * Correction de l'affichage des routes
+  * Amélioration de la barre de recherche 
+
+= Version 0.3 =
+
+  * Recherche d'objets avec autocomplétion
+  * Layer Manager
+  * Ajouts d'annotations pour les secteurs
+  * Ajout d'un outil de mesure
+  * Possibilité d'utiliser une vue projetée avec plusieurs projections disponibles
+  * Affichage des mosaïques STPV
+  * Ajout d'une barre de status
+
+= Version 0.2 =
+
+  * Affichage des données STR
+  * Widget pour l'exagération verticale
+  * Affichage de la progression de la mise à jour des objets 3D
+
+= Version 0.1 =
+
+  * Portage de la version Qt en Swing
+  * Affichage des données Stip
