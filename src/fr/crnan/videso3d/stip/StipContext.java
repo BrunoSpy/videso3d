@@ -73,8 +73,7 @@ public class StipContext extends Context {
 			taskpane2.setTitle("Eléments Stip");
 			try {
 				final Statement st = DatabaseManager.getCurrentStip();
-				ResultSet rs = st.executeQuery("select * from secteurs where nom='"+name+"'");
-				rs = st.executeQuery("select name from balises where sect1 ='"+name+"' or " +
+				ResultSet rs = st.executeQuery("select name from balises where sect1 ='"+name+"' or " +
 						"sect2 ='"+name+"' or " +
 						"sect3 ='"+name+"' or " +
 						"sect4 ='"+name+"' or " +
@@ -200,17 +199,46 @@ public class StipContext extends Context {
 			taskpane2 = new JXTaskPane();
 			taskpane2.setTitle("Eléments Stip");
 			try{
-				final Statement st = DatabaseManager.getCurrentStip();		
+				final Statement st = DatabaseManager.getCurrentStip();	
+				ResultSet rs = st.executeQuery("select route from routebalise where balise='"+name+"'");
+				final ArrayList<String> routesList = new ArrayList<String>();
+				while(rs.next()){
+					routesList.add(rs.getString(1));
+				}
 				taskpane2.add(new AbstractAction() {
 					{
-						putValue(Action.NAME, "Appartient à "+(st.executeQuery("select COUNT(*) from routebalise where balise = '"+name+"'")).getInt(1)+" routes.");
+						putValue(Action.NAME, "Appartient à "+routesList.size()+" routes.");
 					}
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						AnalyzeUI.showResults(false, "route", name, "", "");
 					}
 				});
-
+				taskpane2.add(new AbstractAction() {
+					boolean show = true;
+					{
+						putValue(Action.NAME, "Afficher les routes.");
+					}
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(show){
+							for(String route : routesList){
+								getController().showObject(StipController.ROUTES, route);
+								getController().showRoutesBalises(route);
+							}
+							show = false;
+							putValue(Action.NAME, "Cacher les routes.");
+						}else{
+							for(String route : routesList){
+								getController().hideObject(StipController.ROUTES, route);
+								getController().hideRoutesBalises(route);
+								getController().showObject(StipController.BALISES, name);
+							}
+							show = true;
+							putValue(Action.NAME, "Afficher les routes.");
+						}
+					}
+				});
 				taskpane2.add(new AbstractAction() {
 					{
 						putValue(Action.NAME, "Appartient à "+(st.executeQuery("select COUNT(*) from balitis where balitis.balise = '"+name+"'")).getInt(1)+" itis.");
