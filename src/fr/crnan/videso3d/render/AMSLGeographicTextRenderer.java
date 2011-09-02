@@ -358,7 +358,6 @@ public class AMSLGeographicTextRenderer extends GeographicTextRenderer {
 		}
 	}
 
-	@SuppressWarnings({"UnusedDeclaration"})
 	protected double[] computeDistanceScaleAndOpacity(DrawContext dc, OrderedText ot)
 	{
 		if (!this.isDistanceScaling)
@@ -576,13 +575,11 @@ public class AMSLGeographicTextRenderer extends GeographicTextRenderer {
 	 *
 	 * @return the final draw point for the given rectangle lower left corner or <code>null</code>.
 	 */
-	@SuppressWarnings({"UnusedDeclaration"})
 	protected Point.Float computeDrawPoint(DrawContext dc, Rectangle2D rect, Vec4 screenPoint)
 	{
 		return new Point.Float((float) (screenPoint.x - rect.getWidth() / 2d), (float) (screenPoint.y));
 	}
 
-	@SuppressWarnings({"UnusedDeclaration"})
 	protected void setDepthFunc(DrawContext dc, OrderedText uText, Vec4 screenPoint)
 	{
 		GL gl = dc.getGL();

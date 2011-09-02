@@ -29,9 +29,6 @@ public abstract class XMLReader implements Reader {
 		}
 		catch (FileNotFoundException e) {
         	e.printStackTrace();        	
-        } 
-        catch (IOException ioe) {
-			ioe.printStackTrace();			
         }	
         return null;
 	}	

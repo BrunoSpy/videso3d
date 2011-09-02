@@ -62,7 +62,6 @@ public class Geometrie{
 				LatLon latLon = parseLatLon(locs[1]);
 				locations.add(latLon);
 			}	
-			int nbreducs=0;
 			boolean stepReduced = false; 
 			for (int i=2;i<locs.length;i+=step){
 				if(!locs[i].isEmpty()){
@@ -72,7 +71,7 @@ public class Geometrie{
 						stepReduced=false;
 					}else{
 						i-=Math.min(i-3, 2*step-1);
-						stepReduced = true;nbreducs++;
+						stepReduced = true;
 					}
 				}
 			}

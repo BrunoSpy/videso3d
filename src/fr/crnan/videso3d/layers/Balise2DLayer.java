@@ -74,8 +74,14 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 		if(balise instanceof DatabaseVidesoObject){
 			this.balises.put(balise.getName()+((DatabaseVidesoObject) balise).getType(), (Balise2D) balise);
 		} else {
-			this.balises.put(balise.getName(), (Balise2D) balise);
+			if(!balises.containsKey(balise.getName()))
+				this.balises.put(balise.getName(), (Balise2D) balise);
 		}
+	}
+	
+	public void addBaliseActive(Balise balise){
+		addBalise(balise);
+		this.balisesActives.add(balises.get(balise.getName()+((DatabaseVidesoObject) balise).getType()));
 	}
 	
 	/**
@@ -86,7 +92,8 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	@Override
 	public void addBalises(Iterable<? extends Balise> balises) {
 		for(Balise b : balises){
-			this.balises.put(b.getName(), (Balise2D) b);
+			if(!this.balises.containsKey(b.getName()))
+				this.balises.put(b.getName(), (Balise2D) b);
 		}
 	}
 	
@@ -95,9 +102,14 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	 */
 	@Override
 	public void showAll(){
-		for(Balise2D b : balises.values()){
-			this.showBalise(b);
+		markerLayer.removeAllMarkers();
+		textLayer.removeAllGeographicTexts();
+		for(Balise2D b : balisesActives){
+			textLayer.addGeographicText(((Balise2D) b).getUserFacingText());
+			markerLayer.addMarkerToList(((Balise2D) b).getMarker());
 		}
+		markerLayer.updateMarkers();
+		this.firePropertyChange(AVKey.LAYER, null, this);		
 	}
 
 	
@@ -108,10 +120,20 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 			this.showBalise(b);
 		}
 	}
+	
+	public void hideAll(){
+		if(!this.isLocked()){
+			balisesActives.clear();
+			textLayer.removeAllGeographicTexts();
+			markerLayer.removeAllMarkers();
+			this.firePropertyChange(AVKey.LAYER, null, this);
+		}
+	}
+	
 	@Override
 	public void hideBalise(String name, int type) {
 		Balise2D b = balises.get(name+type);
-		if(name != null){
+		if(b != null){
 			this.hideBalise(b);
 		}
 	}
