@@ -106,9 +106,7 @@ public class LatLonCautra extends LatLon {
 		double[] corrige;
 		Couple<Double,Double> ecart = new Couple<Double,Double>(0.,0.);
 		boolean exit=false;
-		int compteur=0;
 		do{
-			compteur+=1;
 			result = LatLonCautra.fromDegrees(result.latitude.degrees-ecart.getSecond()/60.0, result.longitude.degrees-ecart.getFirst()/60.0);
 			corrige = LatLonCautra.fromDegrees(result.latitude.degrees, result.longitude.degrees).getCautra();
 			ecart = new Couple<Double,Double>(corrige[0]-x,corrige[1]-y);

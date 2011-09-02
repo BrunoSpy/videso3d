@@ -100,6 +100,7 @@ public class StpvView extends JPanel implements DataView{
 				c.setSelected(false);
 			}
 		}
+		getController().reset();
 	}
 	
 	/*---------------------------------------------------------*/

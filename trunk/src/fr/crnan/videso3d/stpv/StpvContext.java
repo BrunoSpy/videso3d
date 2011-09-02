@@ -31,6 +31,8 @@ import org.jdesktop.swingx.JXTaskPane;
 
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 /**
  * 
@@ -133,6 +135,15 @@ public class StpvContext extends Context {
 				if(DatabaseManager.getCurrentStpv() == null){
 					taskpane.add(new JLabel("<html><i>Aucune base STPV configurée.</i></html>"));
 				} else {
+					taskpane.add(new AbstractAction() {
+						{
+							putValue(Action.NAME, "Afficher la STAR sur la vue 3D");
+						}
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							DatasManager.getController(Type.STPV).highlight(StpvController.STAR, name);
+						}
+					});
 					Statement st3 = DatabaseManager.getCurrentStpv();
 					ResultSet rs3 = st3.executeQuery("select * from lieu90 where id = '"+id+"'");
 					if(rs3.next()){

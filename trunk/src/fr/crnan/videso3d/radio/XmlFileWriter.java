@@ -27,7 +27,6 @@ package fr.crnan.videso3d.radio;
 // TODO : Ajouter le nom du fichier xml a prendre en compte dans le répertoire.
 
 import java.io.*;
-import fr.crnan.videso3d.radio.FilePatterns;
 
 public class XmlFileWriter {
 

@@ -27,7 +27,12 @@ import gov.nasa.worldwind.render.markers.Marker;
  * @version 0.2
  */
 public class BaliseMarkerLayer extends MarkerLayer {
-
+	/*
+	 * Liste de markers à ajouter aux markers existants.
+	 */
+	private LinkedList<Marker> markersList = new LinkedList<Marker>();
+	
+	
 	public BaliseMarkerLayer(){
 		super();
 		this.setKeepSeparated(false);
@@ -39,20 +44,40 @@ public class BaliseMarkerLayer extends MarkerLayer {
 	/**
 	 * Ajoute un {@link Marker} à l'ensemble existant
 	 * @param marker {@link Marker} à ajouter
-	 */
+	 */	
 	public void addMarker(Marker marker){
-		LinkedList<Marker> markersList = new LinkedList<Marker>();
-		markersList.add(marker);
+		LinkedList<Marker> tempMarkersList = new LinkedList<Marker>();
+		tempMarkersList.add(marker);
 		//ajoute les markers précédents si besoin
 		if(this.getMarkers() != null){
 			Iterator<Marker> iterator = this.getMarkers().iterator();
 			while(iterator.hasNext()){
-				markersList.add(iterator.next());
+				tempMarkersList.add(iterator.next());
 			}
 		}
-		this.setMarkers(markersList);
+		this.setMarkers(tempMarkersList);
+
 	}
 	
+	public void addMarkerToList(Marker marker){
+		markersList.add(marker);
+	}
+	/**
+	 * Affiche les markers contenus dans la liste en plus de ceux déjà affichés.
+	 */
+	@SuppressWarnings("unchecked")
+	public void updateMarkers(){
+		if(!markersList.isEmpty()){
+			if(this.getMarkers() != null){
+				Iterator<Marker> iterator = this.getMarkers().iterator();
+				while(iterator.hasNext()){
+					markersList.add(iterator.next());
+				}
+			}
+			this.setMarkers((LinkedList<Marker>) markersList.clone());
+			markersList.clear();
+		}
+	}
 	/**
 	 * Enlève un marker au layer. Si il n'existe pas, ne fait rien.
 	 * @param marker Marker à enlever
@@ -67,6 +92,10 @@ public class BaliseMarkerLayer extends MarkerLayer {
 			}
 		}
 		this.setMarkers(markersList);
+	}
+	
+	public void removeAllMarkers(){
+		this.setMarkers(new LinkedList<Marker>());
 	}
 	
 }

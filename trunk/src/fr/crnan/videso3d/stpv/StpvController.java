@@ -32,9 +32,16 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.geom.LatLonCautra;
+import fr.crnan.videso3d.graphics.DatabaseRoute2D;
+import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.layers.MosaiqueLayer;
+import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.Restorable;
+import gov.nasa.worldwind.avlist.AVKey;
+import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 
@@ -58,11 +65,27 @@ public class StpvController implements VidesoController {
 	 */
 	private HashMap<String, MosaiqueLayer> mosaiquesLayer = new HashMap<String, MosaiqueLayer>();
 	
+	/**
+	 * Layer pour les stars
+	 */
+	private RenderableLayer starsLayer;
+	
+	private HashMap<String, Route2D> stars = new HashMap<String, Route2D>();
+	
 	private VidesoGLCanvas wwd;
 	
 	public StpvController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
 		this.wwd.firePropertyChange("step", "", "Création des éléments STPV");
+		if(starsLayer != null){
+			starsLayer.removeAllRenderables();
+			this.toggleLayer(starsLayer, true);
+			stars.clear();
+		} else {
+			starsLayer = new RenderableLayer();
+			starsLayer.setName("Stpv STARs");
+			this.toggleLayer(starsLayer, true);
+		}
 	}
 	
 	@Override
@@ -72,20 +95,14 @@ public class StpvController implements VidesoController {
 
 	@Override
 	public void unHighlight(int type, String name) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void addLayer(String name, Layer layer) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void removeLayer(String name, Layer layer) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -103,51 +120,117 @@ public class StpvController implements VidesoController {
 
 	@Override
 	public void showObject(int type, String name) {
-		if(mosaiquesLayer.containsKey(name)){
-			MosaiqueLayer mos = mosaiquesLayer.get(name);
-			mos.set3D(false);
-			this.toggleLayer(mos, true);
-		} else {
-			String annotationTitle = null;
-			Boolean grille = true;
-			LatLonCautra origine = null; 
-			Integer width = 0;
-			Integer height = 0;
-			Integer size = 0; 
-			int hSens = 0; 
-			int vSens = 0;
-			int numSens = 0;
-			List<Couple<Integer, Integer>> squares = null;
-			List<Couple<Double, Double>> altitudes = null;
-			Boolean numbers = true;
-			ShapeAttributes attr = null;
-			AirspaceAttributes airspaceAttr = null;
-			try {
-				Statement st = DatabaseManager.getCurrentStpv();
-				ResultSet rs = st.executeQuery("select * from mosaique where type ='"+name+"'");
-				origine = LatLonCautra.fromCautra(rs.getDouble("xcautra")-512, rs.getDouble("ycautra")-512);
-				width = rs.getInt("nombre");
-				height = rs.getInt("nombre");
-				size = rs.getInt("carre");
-				hSens = MosaiqueLayer.BOTTOM_UP;
-				vSens = MosaiqueLayer.LEFT_RIGHT;
-				numSens = MosaiqueLayer.HORIZONTAL_FIRST;
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+		switch(type){
+		case MOSAIQUE :
+			if(mosaiquesLayer.containsKey(name)){
+				MosaiqueLayer mos = mosaiquesLayer.get(name);
+				mos.set3D(false);
+				this.toggleLayer(mos, true);
+			} else {
+				String annotationTitle = null;
+				Boolean grille = true;
+				LatLonCautra origine = null; 
+				Integer width = 0;
+				Integer height = 0;
+				Integer size = 0; 
+				int hSens = 0; 
+				int vSens = 0;
+				int numSens = 0;
+				List<Couple<Integer, Integer>> squares = null;
+				List<Couple<Double, Double>> altitudes = null;
+				Boolean numbers = true;
+				ShapeAttributes attr = null;
+				AirspaceAttributes airspaceAttr = null;
+				try {
+					Statement st = DatabaseManager.getCurrentStpv();
+					ResultSet rs = st.executeQuery("select * from mosaique where type ='"+name+"'");
+					origine = LatLonCautra.fromCautra(rs.getDouble("xcautra")-512, rs.getDouble("ycautra")-512);
+					width = rs.getInt("nombre");
+					height = rs.getInt("nombre");
+					size = rs.getInt("carre");
+					hSens = MosaiqueLayer.BOTTOM_UP;
+					vSens = MosaiqueLayer.LEFT_RIGHT;
+					numSens = MosaiqueLayer.HORIZONTAL_FIRST;
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 
-			MosaiqueLayer mLayer = new MosaiqueLayer(annotationTitle, grille, origine, 
-												width, height, size, hSens, vSens, numSens, 
-												squares, altitudes, numbers, attr, airspaceAttr, 
-												Type.STPV, MOSAIQUE, name);
-			mosaiquesLayer.put(name, mLayer);
-			mLayer.setName("Mosaïque "+type+" "+name);
-			mLayer.set3D(false);
-			this.toggleLayer(mLayer, true);
+				MosaiqueLayer mLayer = new MosaiqueLayer(annotationTitle, grille, origine, 
+						width, height, size, hSens, vSens, numSens, 
+						squares, altitudes, numbers, attr, airspaceAttr, 
+						Type.STPV, MOSAIQUE, name);
+				mosaiquesLayer.put(name, mLayer);
+				mLayer.setName("Mosaïque "+type+" "+name);
+				mLayer.set3D(false);
+				this.toggleLayer(mLayer, true);
+			}
+			break;
+		case STAR :
+			if(this.stars.containsKey(name)){
+				this.stars.get(name).setVisible(true);
+			} else {
+				this.createStar(name);
+			}
+			for(String balise : this.stars.get(name).getBalises()){
+				DatasManager.getController(Type.STIP).showObject(StipController.BALISES, balise);
+			}
+			break;
+		default : 
+			break;
 		}
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
 		DatasManager.getView(Type.STPV).showObject(type, name);
 	}
+
+
+	private void createStar(String name) {
+		Integer id = new Integer(name);
+		DatabaseRoute2D star = new DatabaseRoute2D(name, Type.STPV, STAR);
+		try {
+			Statement st = DatabaseManager.getCurrentStpv();
+			ResultSet rs = st.executeQuery("select name from lieu901 where lieu90='"+id+"'");
+			String annotation = "<html><b>STAR ";
+			if(rs.next()){
+				String starName = rs.getString(1);
+				if(rs.next()){
+					String secondStarName = rs.getString(1);
+					annotation+=starName+"/"+secondStarName.charAt(secondStarName.length()-1)+"</b><br/>";
+				}else{
+					annotation+= starName+"</b><br/>";
+				}
+			}
+			rs = st.executeQuery("select * from lieu90 where id ='"+id+"'");
+			ArrayList<String> balises = new ArrayList<String>();
+			ArrayList<LatLon> pos = new ArrayList<LatLon>();
+			if(rs.next()){
+				for(int i=4; i<12; i++){
+					String balise = rs.getString(i);
+					if(!balise.isEmpty())
+						balises.add(rs.getString(i));
+					else
+						break;
+				}
+				annotation+=((rs.getBoolean(12)?"Hélices ":"") + (rs.getBoolean(13)?"Réacteurs<br/>":"<br/>") 
+						+ (rs.getBoolean(14)?"FIR ":"") + (rs.getBoolean(15)?"UIR":""));
+			}
+			for(String balise : balises){
+				st = DatabaseManager.getCurrentStip();
+				rs = st.executeQuery("select latitude, longitude from balises where name ='"+balise+"'");
+				pos.add(LatLon.fromDegrees(rs.getDouble(1), rs.getDouble(2)));
+			}
+			star.setLocations(pos);
+			star.setBalises(balises);
+			star.setAnnotation(annotation);
+			st.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.stars.put(name, star);
+		this.starsLayer.addRenderable(star);
+		this.starsLayer.firePropertyChange(AVKey.LAYER, null, this.starsLayer);
+	}
+	
 	
 	@Override
 	public void hideObject(int type, String name) {
@@ -156,6 +239,13 @@ public class StpvController implements VidesoController {
 			if(mosaiquesLayer.containsKey(name))
 				this.toggleLayer(mosaiquesLayer.get(name), false);
 			break;
+		case STAR :
+			if(this.stars.containsKey(name)){
+				this.stars.get(name).setVisible(false);
+				for(String balise : this.stars.get(name).getBalises()){
+					DatasManager.getController(Type.STIP).showObject(StipController.BALISES, balise);
+				}
+			}
 		default:
 			break;
 		}
@@ -167,17 +257,19 @@ public class StpvController implements VidesoController {
 	public void set2D(Boolean flat) {}
 
 	@Override
-	public void reset() {}
+	public void reset() {
+		for(Renderable r : this.starsLayer.getRenderables()){
+			((Route2D) r).setVisible(false);
+		}
+	}
 
 	@Override
 	public int string2type(String type) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public String type2string(int type) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

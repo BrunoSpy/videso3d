@@ -30,9 +30,6 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import java.util.ArrayList;
 
 import fr.crnan.videso3d.graphics.*;
-import gov.nasa.worldwind.render.airspaces.Airspace;
-
-import java.io.*;
 
 public class RadioXMLReader extends XMLReader{	
 	
