@@ -16,86 +16,171 @@
 
 package fr.crnan.videso3d.layers;
 
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.HashSet;
+import java.util.Set;
 
-import gov.nasa.worldwind.layers.MarkerLayer;
+import gov.nasa.worldwind.layers.AbstractLayer;
+import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.render.markers.Marker;
+import gov.nasa.worldwind.render.markers.MarkerRenderer;
+import gov.nasa.worldwind.terrain.SectorGeometryList;
+import gov.nasa.worldwind.util.Logging;
 /**
  * MarkerLayer avec une possibilité d'ajouter des Marker à l'ensemble existant
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.3.0
  */
-public class BaliseMarkerLayer extends MarkerLayer {
-	/*
-	 * Liste de markers à ajouter aux markers existants.
-	 */
-	private LinkedList<Marker> markersList = new LinkedList<Marker>();
+public class BaliseMarkerLayer extends AbstractLayer {
 	
 	
+	private MarkerRenderer markerRenderer = new MarkerRenderer();
+	private Set<Marker> markers;
+
 	public BaliseMarkerLayer(){
 		super();
 		this.setKeepSeparated(false);
 		this.setMinActiveAltitude(0);
 		//inutile d'afficher le point avant 1000km d'altitude
 		this.setMaxActiveAltitude(10e5);
+		this.markers = new HashSet<Marker>();
 	}
-	
-	/**
-	 * Ajoute un {@link Marker} à l'ensemble existant
-	 * @param marker {@link Marker} à ajouter
-	 */	
-	public void addMarker(Marker marker){
-		LinkedList<Marker> tempMarkersList = new LinkedList<Marker>();
-		tempMarkersList.add(marker);
-		//ajoute les markers précédents si besoin
-		if(this.getMarkers() != null){
-			Iterator<Marker> iterator = this.getMarkers().iterator();
-			while(iterator.hasNext()){
-				tempMarkersList.add(iterator.next());
-			}
-		}
-		this.setMarkers(tempMarkersList);
 
-	}
-	
-	public void addMarkerToList(Marker marker){
-		markersList.add(marker);
-	}
-	/**
-	 * Affiche les markers contenus dans la liste en plus de ceux déjà affichés.
-	 */
-	@SuppressWarnings("unchecked")
-	public void updateMarkers(){
-		if(!markersList.isEmpty()){
-			if(this.getMarkers() != null){
-				Iterator<Marker> iterator = this.getMarkers().iterator();
-				while(iterator.hasNext()){
-					markersList.add(iterator.next());
-				}
-			}
-			this.setMarkers((LinkedList<Marker>) markersList.clone());
-			markersList.clear();
+	public BaliseMarkerLayer(Iterable<Marker> markers){
+		this();
+		for(Marker m : markers){
+			this.markers.add(m);
 		}
 	}
+
+	public Iterable<Marker> getMarkers(){
+		return markers;
+	}
+
+
 	/**
-	 * Enlève un marker au layer. Si il n'existe pas, ne fait rien.
-	 * @param marker Marker à enlever
+	 * 
+	 * @param markers If null, remove all markers
 	 */
-	public void removeMarker(Marker marker){
-		LinkedList<Marker> markersList = new LinkedList<Marker>();
-		if(this.getMarkers() != null) {
-			for(Marker m : this.getMarkers()){
-				if(!m.equals(marker)){
-					markersList.add(m);
-				}
+	public void setMarkers(Iterable<Marker> markers) {
+		this.markers.clear();
+		if(markers != null) {			
+			for(Marker m : markers){
+				this.markers.add(m);
 			}
 		}
-		this.setMarkers(markersList);
 	}
-	
-	public void removeAllMarkers(){
-		this.setMarkers(new LinkedList<Marker>());
+
+	public double getElevation()	{
+		return this.getMarkerRenderer().getElevation();
 	}
-	
+
+	public void setElevation(double elevation){
+		this.getMarkerRenderer().setElevation(elevation);
+	}
+
+    public boolean isOverrideMarkerElevation(){
+		return this.getMarkerRenderer().isOverrideMarkerElevation();
+	}
+
+	public void setOverrideMarkerElevation(boolean overrideMarkerElevation){
+		this.getMarkerRenderer().setOverrideMarkerElevation(overrideMarkerElevation);
+	}
+
+	public boolean isKeepSeparated(){
+		return this.getMarkerRenderer().isKeepSeparated();
+	}
+
+	public void setKeepSeparated(boolean keepSeparated)	{
+		this.getMarkerRenderer().setKeepSeparated(keepSeparated);
+	}
+
+	public boolean isEnablePickSizeReturn()	{
+		return this.getMarkerRenderer().isEnablePickSizeReturn();
+	}
+
+	public void setEnablePickSizeReturn(boolean enablePickSizeReturn)	{
+		this.getMarkerRenderer().setEnablePickSizeReturn(enablePickSizeReturn);
+	}
+
+	/**
+	 * Opacity is not applied to layers of this type because each marker has an attribute set with opacity control.
+	 *
+	 * @param opacity the current opacity value, which is ignored by this layer.
+	 */
+	 @Override
+	 public void setOpacity(double opacity) {
+		 super.setOpacity(opacity);
+	 }
+
+	 /**
+	  * Returns the layer's opacity value, which is ignored by this layer because each of its markers has an attribute
+	  * with its own opacity control.
+	  *
+	  * @return The layer opacity, a value between 0 and 1.
+	  */
+	 @Override
+	 public double getOpacity() {
+		 return super.getOpacity();
+	 }
+
+	 protected MarkerRenderer getMarkerRenderer() {
+		 return markerRenderer;
+	 }
+
+	 protected void setMarkerRenderer(MarkerRenderer markerRenderer) {
+		 this.markerRenderer = markerRenderer;
+	 }
+
+	 protected void doRender(DrawContext dc){
+		 this.draw(dc, null);
+	 }
+
+	 @Override
+	 protected void doPick(DrawContext dc, java.awt.Point pickPoint) {
+		 this.draw(dc, pickPoint);
+	 }
+
+	 protected void draw(DrawContext dc, java.awt.Point pickPoint) {
+		 if (this.markers == null)
+			 return;
+
+		 if (dc.getVisibleSector() == null)
+			 return;
+
+		 SectorGeometryList geos = dc.getSurfaceGeometry();
+		 if (geos == null)
+			 return;
+
+		 // Adds markers to the draw context's ordered renderable queue. During picking, this gets the pick point and the
+		 // current layer from the draw context.
+		 this.getMarkerRenderer().render(dc, this.markers);
+	 }
+
+	 @Override
+	 public String toString() {
+		 return Logging.getMessage("layers.MarkerLayer.Name");
+	 }
+
+
+
+	 /**
+	  * Ajoute un {@link Marker} à l'ensemble existant
+	  * @param marker {@link Marker} à ajouter
+	  */	
+	 public void addMarker(Marker marker){
+		this.markers.add(marker);
+	 }
+
+	 /**
+	  * Enlève un marker au layer. Si il n'existe pas, ne fait rien.
+	  * @param marker Marker à enlever
+	  */
+	 public void removeMarker(Marker marker){
+		this.markers.remove(marker);
+	 }
+
+	 public void removeAllMarkers(){
+		 this.markers.clear();
+	 }
+
 }

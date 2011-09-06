@@ -93,7 +93,7 @@ public class AirportLayer extends LayerSet {
 	}
 	
 	public void removeAllAirports(){
-		markerLayer.setMarkers(null);
+		markerLayer.removeAllMarkers();
 		for(Aerodrome a : pistes.values()){
 			a.setVisible(false);
 		}
