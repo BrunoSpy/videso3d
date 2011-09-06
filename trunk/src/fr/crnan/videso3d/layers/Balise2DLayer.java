@@ -29,7 +29,7 @@ import gov.nasa.worldwind.avlist.AVKey;
  * Layer contenant les balises.<br />
  * Permet d'afficher une ou plusieurs balises selon leur nom.
  * @author Bruno Spyckerelle
- * @version 0.3.3
+ * @version 0.3.4
  */
 public class Balise2DLayer extends LayerSet implements BaliseLayer{
 
@@ -106,9 +106,8 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 		textLayer.removeAllGeographicTexts();
 		for(Balise2D b : balisesActives){
 			textLayer.addGeographicText(((Balise2D) b).getUserFacingText());
-			markerLayer.addMarkerToList(((Balise2D) b).getMarker());
+			markerLayer.addMarker(((Balise2D) b).getMarker());
 		}
-		markerLayer.updateMarkers();
 		this.firePropertyChange(AVKey.LAYER, null, this);		
 	}
 
@@ -195,7 +194,7 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	public void removeAllBalises(){
 		if(!this.isLocked()){
 			textLayer.removeAllGeographicTexts();
-			markerLayer.setMarkers(null);
+			markerLayer.removeAllMarkers();
 			balisesActives.clear();
 			this.firePropertyChange(AVKey.LAYER, null, this);
 		}
@@ -206,7 +205,7 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	 */
 	public void eraseAllBalises(){
 		textLayer.removeAllGeographicTexts();
-		markerLayer.setMarkers(null);
+		markerLayer.removeAllMarkers();
 		balisesActives.clear();
 		balises.clear();
 	}
