@@ -43,7 +43,7 @@ public class PointEdimap extends LatLonCautra {
      * ou simplement :
      *    (nautical_mile 64 5038 64 1397)
 	 * @param point
-	 * @return
+	 * @return {@link LatLonCautra}
 	 */
 	public static LatLonCautra fromEntity(Entity point){
 		String[] xY;

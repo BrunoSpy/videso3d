@@ -30,9 +30,9 @@ import java.util.List;
 /**
  * Rectangle
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.2.3
  */
-public class RectangleEdimap extends VidesoSurfaceQuad implements DatabaseVidesoObject{
+public class RectangleEdimap extends VidesoSurfaceQuad implements DatabaseVidesoObject {
 
 	private int typeCarte=-1;
 	
@@ -71,8 +71,8 @@ public class RectangleEdimap extends VidesoSurfaceQuad implements DatabaseVideso
 		String idAtcName = entity.getValue("id_atc");
 		if(idAtcName != null) this.applyIdAtc(idAtc.get(idAtcName), palette);
 		//si des paramètres supplémentaires sont présents, ils écrasent ceux présents dans l'id atc
-	//	String priority = entity.getValue("priority");
-	//	if(priority != null) this.setZValue(new Double(priority));
+		String priority = entity.getValue("priority");
+		if(priority != null) this.setPriority(new Integer(priority));
 		String foregroundColor = entity.getValue("foreground_color");
 		if(foregroundColor != null){
 			ShapeAttributes attrs = this.getAttributes();
@@ -89,8 +89,8 @@ public class RectangleEdimap extends VidesoSurfaceQuad implements DatabaseVideso
 	 * Applique les paramètres contenus dans l'id atc
 	 */
 	private void applyIdAtc(Entity idAtc, PaletteEdimap palette) {
-//		String priority = idAtc.getValue("priority");
-//		if(priority != null) this.setZValue(new Double(priority));
+		String priority = idAtc.getValue("priority");
+		if(priority != null) this.setPriority(new Integer(priority));
 		String foregroundColor = idAtc.getValue("foreground_color");
 		BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());
 		String fill = idAtc.getValue("fill_visibility");
@@ -134,5 +134,6 @@ public class RectangleEdimap extends VidesoSurfaceQuad implements DatabaseVideso
 		return VidesoSurfaceQuad.class.getName();
 	}
 
+	
 	
 }

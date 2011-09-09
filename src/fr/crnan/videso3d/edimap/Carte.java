@@ -22,11 +22,10 @@ import fr.crnan.videso3d.graphics.PolygonAnnotation;
 import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
 import fr.crnan.videso3d.graphics.VidesoAnnotation;
 import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
-import fr.crnan.videso3d.layers.LayerSet;
+import fr.crnan.videso3d.layers.PriorityRenderableLayer;
 import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.GeographicText;
 import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.render.UserFacingText;
@@ -36,15 +35,17 @@ import gov.nasa.worldwind.util.RestorableSupport;
 import gov.nasa.worldwind.util.RestorableSupport.StateObject;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Carte Edimap
  * @author Bruno Spyckerelle
  * @version 0.3.0
  */
-public class Carte extends LayerSet implements DatabaseVidesoObject{
+public class Carte implements DatabaseVidesoObject{
 	/**
 	 * Ensemble des points de référence de la carte
 	 */
@@ -62,21 +63,38 @@ public class Carte extends LayerSet implements DatabaseVidesoObject{
 	/**
 	 * Layers
 	 */
-	private RenderableLayer surfaceLayer = new RenderableLayer();
-	private FilterableAirspaceLayer airspaceLayer = new FilterableAirspaceLayer();
-	private TextLayer textLayer = new TextLayer("Textes Edimap");
+	private PriorityRenderableLayer surfaceLayer;
+	private FilterableAirspaceLayer airspaceLayer;
+	private TextLayer textLayer;
 	
+	private Set<Renderable> renderables;
+	private Set<Airspace> airspaces;
+	private Set<UserFacingText> texts;
+
+	private boolean visible = false;
+		
 	public Carte(){
 		super();
-		this.add(surfaceLayer);
-		this.add(airspaceLayer);
-		this.add(textLayer);
+		
+		renderables = new HashSet<Renderable>();
+		airspaces = new HashSet<Airspace>();
+		texts = new HashSet<UserFacingText>();
 	}
 	
-	public Carte(Entity carte, PaletteEdimap palette, int typeCarte){
-		this.add(surfaceLayer);
-		this.add(airspaceLayer);
-		this.add(textLayer);
+	public Carte(PriorityRenderableLayer surfaceLayer, FilterableAirspaceLayer airspaceLayer, TextLayer textLayer){
+		super();
+		
+		this.setLayers(surfaceLayer, airspaceLayer, textLayer);
+		
+		renderables = new HashSet<Renderable>();
+		airspaces = new HashSet<Airspace>();
+		texts = new HashSet<UserFacingText>();
+	}
+	
+	public Carte(Entity carte, PaletteEdimap palette, int typeCarte,
+			PriorityRenderableLayer surfaceLayer, FilterableAirspaceLayer airspaceLayer, TextLayer textLayer){
+		
+		this(surfaceLayer, airspaceLayer, textLayer);
 		
 		this.setType(typeCarte);
 		
@@ -107,33 +125,33 @@ public class Carte extends LayerSet implements DatabaseVidesoObject{
 					PolygonEdimap polygon = new PolygonEdimap(entity, pointsRef, palette, idAtc);
 					polygon.setName(name);
 					polygon.setType(typeCarte);
-					this.surfaceLayer.addRenderable(polygon);
+					this.renderables.add(polygon);
 				} else { //polyligne
 					PolylineEdimap polyline = new PolylineEdimap(entity, pointsRef, palette, idAtc);
 					polyline.setName(name);
 					polyline.setType(typeCarte);
-					this.surfaceLayer.addRenderable(polyline);
+					this.renderables.add(polyline);
 				}
 				
 			} else if(type.equalsIgnoreCase("LineEntity")) {
 				PolylineEdimap polyline = new PolylineEdimap(entity, pointsRef, palette, idAtc);
 				polyline.setName(name);
 				polyline.setType(typeCarte);
-				this.surfaceLayer.addRenderable(polyline);
+				this.renderables.add(polyline);
 			} else if(type.equalsIgnoreCase("RectangleEntity")){
 				RectangleEdimap rectangle = new RectangleEdimap(entity, pointsRef, palette, idAtc);
 				rectangle.setName(name);
 				rectangle.setType(typeCarte);
-				this.surfaceLayer.addRenderable(rectangle);
+				this.renderables.add(rectangle);
 			} else if(type.equalsIgnoreCase("TextEntity")){
-				this.textLayer.addGeographicText(new TextEdimap(entity, pointsRef, palette, idAtc));
+				this.texts.add(new TextEdimap(entity, pointsRef, palette, idAtc));
 			} else if(type.equalsIgnoreCase("EllipseEntity")){
 				EllipseEdimap ellipse = new EllipseEdimap(entity, pointsRef, palette, idAtc);
 				ellipse.setName(name);
 				ellipse.setType(typeCarte);
-				this.surfaceLayer.addRenderable(ellipse);
+				this.renderables.add(ellipse);
 			} else if(type.equalsIgnoreCase("MosaiqueEntity")) {
-				this.airspaceLayer.addAirspaces(new MosaiqueEntity(entity, name, pointsRef));
+				this.airspaces.addAll(new MosaiqueEntity(entity, name, pointsRef));
 			}
 		}
 //		Iterator<Entry<String, PointEdimap>> ite = pointsRef.entrySet().iterator();
@@ -143,6 +161,47 @@ public class Carte extends LayerSet implements DatabaseVidesoObject{
 //		}
 	}
 
+	public void setLayers(PriorityRenderableLayer surfaceLayer, FilterableAirspaceLayer airspaceLayer, TextLayer textLayer){
+		this.surfaceLayer = surfaceLayer;
+		this.airspaceLayer = airspaceLayer;
+		this.textLayer = textLayer;
+	}
+	
+	public void setVisible(boolean visible){
+		if(this.airspaceLayer == null || this.surfaceLayer == null || this.textLayer == null){
+			Logging.logger().severe("Unable to change visibility of "+this.getName()+" because layers aren't set");
+			return;
+		}
+		if(this.visible  != visible){
+			this.visible = visible;
+			if(!this.visible){
+				for(Airspace a : this.airspaces){
+					this.airspaceLayer.removeAirspace(a);
+				}
+				for(Renderable r : this.renderables){
+					this.surfaceLayer.removeRenderable(r);
+				}
+				for(UserFacingText t : texts){
+					this.textLayer.removeGeographicText(t);
+				}
+			} else {
+				for(Airspace a : this.airspaces){
+					this.airspaceLayer.addAirspace(a);
+				}
+				for(Renderable r : this.renderables){
+					this.surfaceLayer.addRenderable(r);
+				}
+				for(UserFacingText t : texts){
+					this.textLayer.addGeographicText(t);
+				}
+			}
+		}
+	}
+	
+	public boolean isVisible(){
+		return this.visible;
+	}
+	
 	/**
 	 * @return the name
 	 */
@@ -165,19 +224,19 @@ public class Carte extends LayerSet implements DatabaseVidesoObject{
 
     private void doMyGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context) {
     	RestorableSupport.StateObject airspace = rs.addStateObject(context, "airspaceLayer");
-    	for(Airspace r : airspaceLayer.getAirspaces()){
+    	for(Airspace r : this.airspaces){
     		rs.addStateValueAsString(airspace, "airspace", r.getRestorableState());
     	}
     	
     	StateObject text = rs.addStateObject(context, "textLayer");
-    	for(GeographicText t : this.textLayer.getActiveGeographicTexts()){
+    	for(GeographicText t : this.texts){
     		rs.addStateValueAsString(text, "numero", t.getText().toString());
     		rs.addStateValueAsPosition(text, "position", t.getPosition());
     		rs.addStateValueAsColor(text, "color", t.getColor());
     	}
     	
     	StateObject shape = rs.addStateObject(context, "shapeLayer");
-    	for(Renderable r : this.surfaceLayer.getRenderables()){
+    	for(Renderable r : this.renderables){
     		rs.addStateValueAsString(shape, "shape", ((Restorable)r).getRestorableState());
     	}
     	
@@ -223,7 +282,7 @@ public class Carte extends LayerSet implements DatabaseVidesoObject{
     			if(sso != null){
     				PolygonAnnotation polygon = new PolygonAnnotation();
     				polygon.restoreState(rs.getStateObjectAsString(sso));
-    				airspaceLayer.addAirspace(polygon);
+    				this.airspaces.add(polygon);
     			}
     		}
     	}
@@ -240,7 +299,7 @@ public class Carte extends LayerSet implements DatabaseVidesoObject{
     			if(tso != null && pso != null){
     				UserFacingText uft = new UserFacingText(rs.getStateObjectAsString(tso), rs.getStateObjectAsPosition(pso));
     				uft.setColor(rs.getStateObjectAsColor(cso));
-    				this.textLayer.addGeographicText(uft);
+    				this.texts.add(uft);
     			}
     		}
     	}
@@ -252,7 +311,7 @@ public class Carte extends LayerSet implements DatabaseVidesoObject{
     			if(sso != null){
     				SurfacePolygonAnnotation polygon = new SurfacePolygonAnnotation();
     				polygon.restoreState(rs.getStateObjectAsString(sso));
-    				this.surfaceLayer.addRenderable(polygon);
+    				this.renderables.add(polygon);
     			}
     		}
     	}
@@ -315,6 +374,11 @@ public class Carte extends LayerSet implements DatabaseVidesoObject{
 	@Override
 	public String getRestorableClassName() {
 		return this.getClass().getName();
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

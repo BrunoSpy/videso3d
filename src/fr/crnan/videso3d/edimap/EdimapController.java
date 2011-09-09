@@ -31,12 +31,13 @@ import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import gov.nasa.worldwind.Restorable;
+import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.util.Logging;
 /**
  * Contrôle l'affichage des éléments Edimap
  * @author Bruno Spyckerelle
- * @version 0.2.0
+ * @version 0.2.1
  */
 public class EdimapController implements VidesoController {
 
@@ -48,6 +49,7 @@ public class EdimapController implements VidesoController {
 		this.wwd = wwd;
 		this.wwd.firePropertyChange("step", "", "Création de cartes Edimap");
 		cartes = new Cartes();
+		this.wwd.toggleLayer(cartes.getLayer(), true);
 	}
 	
 	@Override
@@ -67,9 +69,7 @@ public class EdimapController implements VidesoController {
 
 	@Override
 	public void removeAllLayers() {
-		for(Carte c : this.cartes.getCartes()){
-			this.wwd.removeLayer(c);
-		}
+		this.wwd.removeLayer(this.cartes.getLayer());
 	}
 
 	@Override
@@ -82,9 +82,7 @@ public class EdimapController implements VidesoController {
 	
 	@Override
 	public void reset() {
-		for(Layer l : this.cartes.getCartes()){
-			this.toggleLayer(l, false);
-		}
+		this.toggleLayer(this.cartes.getLayer(), false);
 	}
 
 	@Override
@@ -100,8 +98,8 @@ public class EdimapController implements VidesoController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.addLayer(name, carte);
-		this.toggleLayer(carte, true);
+		carte.setVisible(true);
+		this.cartes.getLayer().firePropertyChange(AVKey.LAYER, null, this.cartes.getLayer());
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
 		DatasManager.getView(Type.Edimap).showObject(type, name);
 	}
@@ -116,7 +114,8 @@ public class EdimapController implements VidesoController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.toggleLayer(carte, false);
+		carte.setVisible(false);
+		this.cartes.getLayer().firePropertyChange(AVKey.LAYER, null, this.cartes.getLayer());
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
 		DatasManager.getView(Type.Edimap).hideObject(type, name);
 	}
@@ -162,7 +161,7 @@ public class EdimapController implements VidesoController {
 	public HashMap<Integer, List<String>> getSelectedObjectsReference() {
 		HashMap<Integer, List<String>> objects = new HashMap<Integer, List<String>>();
 		for(Carte c : this.cartes.getCartes()){
-			if(c.isEnabled()){
+			if(c.isVisible()){
 				if(!objects.containsKey(c.getType())){
 					objects.put(c.getType(), new ArrayList<String>());
 				}
@@ -176,7 +175,7 @@ public class EdimapController implements VidesoController {
 	public Iterable<Restorable> getSelectedObjects() {
 		List<Restorable> restorables = new ArrayList<Restorable>();
 		for(Carte carte : this.cartes.getCartes()){
-			if(carte.isEnabled()){
+			if(carte.isVisible()){
 				restorables.add(carte);
 			}
 		}

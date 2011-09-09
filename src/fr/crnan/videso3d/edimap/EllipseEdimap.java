@@ -36,9 +36,9 @@ import java.util.List;
  * Le  type de construction est ignoré ici.
  * @author Bruno Spyckerelle
  * @author Adrien Vidal
- * @version 0.2.1
+ * @version 0.2.2
  */
-public class EllipseEdimap extends DatabaseSurfacePolyline{
+public class EllipseEdimap extends DatabaseSurfacePolyline {
 
 	//Nombre de points utilisés pour dessiner l'arc de cercle, par quart de cercle.
 	//Si on a un arc plus petit qu'un quart de cercle, on utilise <i>precision<i/> points, si on a un arc entre un quart de cercle 
@@ -47,8 +47,7 @@ public class EllipseEdimap extends DatabaseSurfacePolyline{
 	
 	private String nomCarte;
 	private int typeCarte=-1;
-	
-	
+
 	public EllipseEdimap(Entity ellipse,
 			  HashMap<String, LatLonCautra> pointsRef, 
 			  PaletteEdimap palette,
@@ -126,6 +125,10 @@ public class EllipseEdimap extends DatabaseSurfacePolyline{
 		String idAtcName = ellipse.getValue("id_atc");
 		if(idAtcName != null) this.applyIdAtc(idAtc.get(idAtcName), palette);
 		
+		//paramètres spécifiques
+		String priority = ellipse.getValue("priority");
+		if(priority != null) this.setPriority(new Integer(priority));
+		
 		BasicShapeAttributes attrsH = new BasicShapeAttributes(this.getAttributes());
 		attrsH.setInteriorMaterial(new Material(Pallet.makeBrighter(attrsH.getInteriorMaterial().getDiffuse())));
 		this.setHighlightAttributes(attrsH);
@@ -136,10 +139,10 @@ public class EllipseEdimap extends DatabaseSurfacePolyline{
 	 * Applique les paramètres contenus dans l'id atc
 	 */
 	private void applyIdAtc(Entity idAtc, PaletteEdimap palette) {
-//		String priority = idAtc.getValue("priority");
-//		if(priority != null) {
-//			this.setZValue(new Double(priority));
-//		}
+		String priority = idAtc.getValue("priority");
+		if(priority != null) {
+			this.setPriority(new Integer(priority));
+		}
 		String foregroundColor = idAtc.getValue("foreground_color");
 		
 		BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());

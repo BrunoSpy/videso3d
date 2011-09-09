@@ -18,15 +18,18 @@ package fr.crnan.videso3d.graphics;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.SurfaceQuad;
+import gov.nasa.worldwind.util.RestorableSupport;
+import gov.nasa.worldwind.util.RestorableSupport.StateObject;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
-public class VidesoSurfaceQuad extends SurfaceQuad implements VidesoObject{
+public class VidesoSurfaceQuad extends SurfaceQuad implements VidesoObject, PriorityRenderable{
 
 	private VidesoAnnotation annotation;
 	private String name;
+	private int priority = 0;
 
 	public VidesoSurfaceQuad(BasicShapeAttributes basicShapeAttributes) {
 		super(basicShapeAttributes);
@@ -61,4 +64,41 @@ public class VidesoSurfaceQuad extends SurfaceQuad implements VidesoObject{
 		return this.getAttributes();
 	}
 	
+	
+	@Override
+	public int getPriority() {
+		return this.priority  ;
+	}
+
+	@Override
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+	
+	@Override
+	protected void doGetRestorableState(RestorableSupport rs,
+			StateObject context) {
+		super.doGetRestorableState(rs, context);
+		
+		if(this.getName() != null) rs.addStateValueAsString(context, "name", this.getName());
+		if(this.annotation != null) rs.addStateValueAsString(context, "annotation", this.annotation.getText(), true);
+		rs.addStateValueAsInteger(context, "priority", this.getPriority());
+	}
+
+	@Override
+	protected void doRestoreState(RestorableSupport rs, StateObject context) {
+		super.doRestoreState(rs, context);
+		
+		String s = rs.getStateValueAsString(context, "name");
+		if(s != null)
+			this.setName(s);
+		
+		s = rs.getStateValueAsString(context, "annotation");
+		if(s != null)
+			this.setAnnotation(s);
+		
+		Integer i = rs.getStateValueAsInteger(context, "priority");
+		if(i != null)
+			this.setPriority(i);
+	}
 }

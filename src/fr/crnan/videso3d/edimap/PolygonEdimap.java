@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Construit une polyline à partir d'une entité Edimap
  * @author Bruno Spyckerelle
- * @version 0.3.2
+ * @version 0.3.4
  */
 public class PolygonEdimap extends SurfacePolygonAnnotation implements DatabaseVidesoObject {
 		
@@ -41,6 +41,10 @@ public class PolygonEdimap extends SurfacePolygonAnnotation implements DatabaseV
 	private HashMap<String, LatLonCautra> pointsRef;
 		
 	private LinkedList<LatLon> polyligne = new LinkedList<LatLon>();
+	
+	public PolygonEdimap(){
+		super();
+	}
 	
 	@SuppressWarnings("unchecked")
 	public PolygonEdimap(Entity polyline,
@@ -56,26 +60,14 @@ public class PolygonEdimap extends SurfacePolygonAnnotation implements DatabaseV
 			this.addPoint(iterator.next());
 		}
 		this.setLocations(polyligne);
-			
-//		System.out.println(this.name);
-//		for(LatLon l : polyligne){
-//			String ligne = String.format("%.0f",l.getLatitude().toDMS()[0])+"°";
-//			ligne += String.format("%.0f",l.getLatitude().toDMS()[1])+"\'";
-//			ligne += String.format("%.0f",l.getLatitude().toDMS()[2])+"\"";
-//			ligne += " ";
-//			ligne += String.format("%.0f",l.getLongitude().toDMS()[0])+"°";
-//			ligne += String.format("%.0f",l.getLongitude().toDMS()[1])+"\'";
-//			ligne += String.format("%.0f",l.getLongitude().toDMS()[2])+"\"";
-//			System.out.println(ligne);
-//		}
-		
+	
 		//on applique l'id atc
 		String idAtcName = polyline.getValue("id_atc");
 		if(idAtcName != null) this.applyIdAtc(idAtc.get(idAtcName), palette);
 		
 		//paramètres spécifiques
-	//	String priority = polyline.getValue("priority");
-	//	if(priority != null) this.setZValue(new Double(priority));
+		String priority = polyline.getValue("priority");
+		if(priority != null) this.setPriority(new Integer(priority));
 		String foregroundColor = polyline.getValue("foreground_color");
 		if(foregroundColor != null) {
 			BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());
@@ -92,10 +84,10 @@ public class PolygonEdimap extends SurfacePolygonAnnotation implements DatabaseV
 	 * Applique les paramètres contenus dans l'id atc
 	 */
 	private void applyIdAtc(Entity idAtc, PaletteEdimap palette) {
-//		String priority = idAtc.getValue("priority");
-//		if(priority != null) {
-//			this.setZValue(new Double(priority));
-//		}
+		String priority = idAtc.getValue("priority");
+		if(priority != null) {
+			this.setPriority(new Integer(priority));
+		}
 		String foregroundColor = idAtc.getValue("foreground_color");
 		BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());
 		attrs.setInteriorMaterial(new Material(palette.getColor(foregroundColor)));
@@ -139,5 +131,7 @@ public class PolygonEdimap extends SurfacePolygonAnnotation implements DatabaseV
 	public String getRestorableClassName() {
 		return SurfacePolygonAnnotation.class.getName();
 	}
+
+
 	
 }

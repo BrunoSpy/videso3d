@@ -31,6 +31,11 @@ import java.util.List;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
+import fr.crnan.videso3d.layers.LayerSet;
+import fr.crnan.videso3d.layers.PriorityRenderableLayer;
+import fr.crnan.videso3d.layers.TextLayer;
+import gov.nasa.worldwind.layers.Layer;
 
 /**
  * Jeu de cartes Edimap
@@ -93,6 +98,14 @@ public class Cartes extends FileParser {
 	public static final int EDIMAP_VOLUME = 3;
 
 	/**
+	 * Layers partagés pour les cartes
+	 */
+	private LayerSet layers;
+	private PriorityRenderableLayer surfaceLayer;
+	private FilterableAirspaceLayer airspaceLayer;
+	private TextLayer textLayer;
+	
+	/**
 	 * Récupère les données du fichier carac_jeu
 	 * @param path String Chemin vers le fichier carac_jeu
 	 * @throws FileNotFoundException 
@@ -128,6 +141,7 @@ public class Cartes extends FileParser {
 	 * Récupère les données des cartes en base de données
 	 */
 	public Cartes(){
+				
 		this.cartesDynamiques = new ArrayList<Entity>();
 		this.cartesStatiques = new ArrayList<Entity>();		
 		this.secteurs = new ArrayList<Entity>();
@@ -170,7 +184,15 @@ public class Cartes extends FileParser {
 					this.volumes.add(carte);
 				}
 			}
-
+			this.layers = new LayerSet();
+			this.layers.setName("Edimap "+this.version);
+			this.airspaceLayer = new FilterableAirspaceLayer();
+			this.surfaceLayer = new PriorityRenderableLayer();
+			this.textLayer = new TextLayer(this.version);
+			this.layers.add(surfaceLayer);
+			this.layers.add(textLayer);
+			this.layers.add(airspaceLayer);
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -344,7 +366,8 @@ public class Cartes extends FileParser {
 			}
 			//		this.setProgress(carte.getProgress());
 			carte.doInBackground();
-			Carte c = new Carte(carte.getEntity(), this.getPalette(), Cartes.string2type(type));
+			Carte c = new Carte(carte.getEntity(), this.getPalette(), Cartes.string2type(type), 
+								surfaceLayer, airspaceLayer, textLayer);
 			cartes.put(name+type, c);
 			return c;
 		}
@@ -461,6 +484,14 @@ public class Cartes extends FileParser {
 	@Override
 	public Type getType() {
 		return Type.Edimap;
+	}
+
+	/**
+	 * 
+	 * @return {@link LayerSet} containing all elements from each activated map
+	 */
+	public Layer getLayer() {
+		return this.layers;
 	}
 
 }
