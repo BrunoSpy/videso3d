@@ -29,11 +29,13 @@ import gov.nasa.worldwind.util.RestorableSupport.StateObject;
  * @author Bruno Spyckerelle
  * @version 0.1.4
  */
-public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoObject {
+public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoObject, PriorityRenderable {
 
 	private VidesoAnnotation annotation;
 	
 	private String name;
+
+	private int priority = 1;
 	
 	public SurfacePolygonAnnotation(){
 		super();
@@ -87,12 +89,23 @@ public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoOb
 	}
 
 	@Override
+	public int getPriority() {
+		return this.priority;
+	}
+
+	@Override
+	public void setPriority(int priority) {
+		this.priority  = priority;
+	}
+	
+	@Override
 	protected void doGetRestorableState(RestorableSupport rs,
 			StateObject context) {
 		super.doGetRestorableState(rs, context);
 		
 		if(this.getName() != null) rs.addStateValueAsString(context, "name", this.getName());
 		if(this.annotation != null) rs.addStateValueAsString(context, "annotation", this.annotation.getText(), true);
+		rs.addStateValueAsInteger(context, "priority", this.getPriority());
 	}
 
 	@Override
@@ -106,6 +119,10 @@ public class SurfacePolygonAnnotation extends SurfacePolygon implements VidesoOb
 		s = rs.getStateValueAsString(context, "annotation");
 		if(s != null)
 			this.setAnnotation(s);
+		
+		Integer i = rs.getStateValueAsInteger(context, "priority");
+		if(i != null)
+			this.setPriority(i);
 	}
 	
 	

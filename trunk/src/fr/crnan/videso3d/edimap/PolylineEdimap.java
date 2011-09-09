@@ -33,7 +33,7 @@ import java.util.List;
  * @author Bruno Spyckerelle
  * @version 0.2.2
  */
-public class PolylineEdimap extends DatabaseSurfacePolyline{
+public class PolylineEdimap extends DatabaseSurfacePolyline {
 
 	private int typeCarte= -1;
 		
@@ -55,26 +55,14 @@ public class PolylineEdimap extends DatabaseSurfacePolyline{
 			this.addPoint(iterator.next());
 		}
 		this.setLocations(polyligne);
-	
-//		System.out.println(this.name);
-//		for(LatLon l : polyligne){
-//			String ligne = String.format("%.0f",l.getLatitude().toDMS()[0])+"°";
-//			ligne += String.format("%.0f",l.getLatitude().toDMS()[1])+"\'";
-//			ligne += String.format("%.0f",l.getLatitude().toDMS()[2])+"\"";
-//			ligne += " ";
-//			ligne += String.format("%.0f",l.getLongitude().toDMS()[0])+"°";
-//			ligne += String.format("%.0f",l.getLongitude().toDMS()[1])+"\'";
-//			ligne += String.format("%.0f",l.getLongitude().toDMS()[2])+"\"";
-//			System.out.println(ligne);
-//		}
 		
 		//on applique l'id atc
 		String idAtcName = polyline.getValue("id_atc");
 		if(idAtcName != null) this.applyIdAtc(idAtc.get(idAtcName), palette);
 		
 		//paramètres spécifiques
-	//	String priority = polyline.getValue("priority");
-	//	if(priority != null) this.setZValue(new Double(priority));
+		String priority = polyline.getValue("priority");
+		if(priority != null) this.setPriority(new Integer(priority));
 		String foregroundColor = polyline.getValue("foreground_color");
 		if(foregroundColor != null) {
 			BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());
@@ -91,10 +79,10 @@ public class PolylineEdimap extends DatabaseSurfacePolyline{
 	 * Applique les paramètres contenus dans l'id atc
 	 */
 	private void applyIdAtc(Entity idAtc, PaletteEdimap palette) {
-//		String priority = idAtc.getValue("priority");
-//		if(priority != null) {
-//			this.setZValue(new Double(priority));
-//		}
+		String priority = idAtc.getValue("priority");
+		if(priority != null) {
+			this.setPriority(new Integer(priority));
+		}
 		String foregroundColor = idAtc.getValue("foreground_color");
 		
 		BasicShapeAttributes attrs = new BasicShapeAttributes(this.getAttributes());

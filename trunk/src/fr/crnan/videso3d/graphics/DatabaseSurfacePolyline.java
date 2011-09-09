@@ -23,7 +23,7 @@ import gov.nasa.worldwind.render.BasicShapeAttributes;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class DatabaseSurfacePolyline extends VSurfacePolyline implements DatabaseVidesoObject{
 
@@ -33,6 +33,10 @@ public class DatabaseSurfacePolyline extends VSurfacePolyline implements Databas
 
 	public DatabaseSurfacePolyline(BasicShapeAttributes basicShapeAttributes) {
 		super(basicShapeAttributes);
+	}
+
+	public DatabaseSurfacePolyline() {
+		super(new BasicShapeAttributes());
 	}
 
 	private Type dataBaseType;

@@ -21,14 +21,17 @@ import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.SurfacePolyline;
+import gov.nasa.worldwind.util.RestorableSupport;
+import gov.nasa.worldwind.util.RestorableSupport.StateObject;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.2.0
+ * @version 0.2.1
  */
-public class VSurfacePolyline extends SurfacePolyline implements VidesoObject {
+public class VSurfacePolyline extends SurfacePolyline implements VidesoObject, PriorityRenderable {
 
 	private String name;
+	private int priority = 1;
 	
 	public VSurfacePolyline(){
 		super();
@@ -63,6 +66,33 @@ public class VSurfacePolyline extends SurfacePolyline implements VidesoObject {
 	@Override
 	public Object getNormalAttributes() {
 		return this.getAttributes();
+	}
+	
+	@Override
+	public int getPriority() {
+		return this.priority   ;
+	}
+
+	@Override
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+	
+	@Override
+	protected void doGetRestorableState(RestorableSupport rs,
+			StateObject context) {
+		super.doGetRestorableState(rs, context);
+		
+		rs.addStateValueAsInteger(context, "priority", this.getPriority());
+	}
+
+	@Override
+	protected void doRestoreState(RestorableSupport rs, StateObject context) {
+		super.doRestoreState(rs, context);
+		
+		Integer i = rs.getStateValueAsInteger(context, "priority");
+		if(i != null)
+			this.setPriority(i);
 	}
 
 }

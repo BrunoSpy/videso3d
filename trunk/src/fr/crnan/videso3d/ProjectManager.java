@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Set;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.edimap.Carte;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.geo.GEOWriter;
@@ -54,7 +55,9 @@ import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.MainWindow;
 import fr.crnan.videso3d.layers.Balise2DLayer;
 import fr.crnan.videso3d.layers.Balise3DLayer;
+import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
+import fr.crnan.videso3d.layers.PriorityRenderableLayer;
 import fr.crnan.videso3d.layers.TextLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import gov.nasa.worldwind.Restorable;
@@ -389,9 +392,11 @@ public class ProjectManager extends ProgressSupport {
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
-	public void loadProject(File file, VidesoGLCanvas wwd, MainWindow window, boolean force)
+	public void loadProject(File file, VidesoGLCanvas ww, MainWindow window, boolean force)
 			throws FileNotFoundException, IOException, ClassNotFoundException, CompatibilityVersionException, InstantiationException, IllegalAccessException {
 
+		this.wwd = ww;
+		
 		FileManager.unzip(file);
 
 		int ind = file.getName().lastIndexOf(".");
@@ -508,11 +513,6 @@ public class ProjectManager extends ProgressSupport {
 		//import xml files
 		File xmlDir = new File(path, "xml");
 		if(xmlDir.exists() && xmlDir.isDirectory()){
-			RenderableLayer xmlRenderables = null;
-			Balise2DLayer xmlBalises = null;
-			Balise3DLayer xmlBalises3D = null;
-			AirspaceLayer xmlAirspaces = null;
-			TextLayer xmlTexts = null;
 			for(File f : xmlDir.listFiles()){
 				this.fireTaskProgress(progress++);
 				this.fireTaskInfo(f.getName());
@@ -532,40 +532,24 @@ public class ProjectManager extends ProgressSupport {
 				} else {
 					o.restoreState(s);
 				}
-				if(o instanceof Airspace){
-					if(xmlAirspaces == null){
-						xmlAirspaces = new AirspaceLayer();
-						xmlAirspaces.setName(AIRSPACE_LAYER_NAME);
-						wwd.toggleLayer(xmlAirspaces, true);
-					}
-					xmlAirspaces.addAirspace((Airspace) o);
+				if(o instanceof Carte){
+					PriorityRenderableLayer renderableLayer = (PriorityRenderableLayer) this.getLayer(RENDERABLE_LAYER_NAME);
+					FilterableAirspaceLayer airspaceLayer = (FilterableAirspaceLayer) this.getLayer(AIRSPACE_LAYER_NAME);
+					TextLayer textLayer = (TextLayer) this.getLayer(TEXT_LAYER_NAME);
+					((Carte) o).setLayers(renderableLayer, airspaceLayer, textLayer);
+					((Carte) o).setVisible(true);
+				} else if(o instanceof Airspace){
+					((AirspaceLayer) this.getLayer(AIRSPACE_LAYER_NAME)).addAirspace((Airspace) o);
 				} else if(o instanceof Renderable){
-					if(xmlRenderables == null){
-						xmlRenderables = new RenderableLayer();
-						xmlRenderables.setName(RENDERABLE_LAYER_NAME);
-						wwd.toggleLayer(xmlRenderables, true);
-					}
-					xmlRenderables.addRenderable((Renderable) o);
+					((RenderableLayer) this.getLayer(RENDERABLE_LAYER_NAME)).addRenderable((Renderable) o);
 				} else if(o instanceof Balise2D){
-					if(xmlBalises == null){
-						xmlBalises = new Balise2DLayer(BALISES2D_LAYER_NAME);
-						wwd.toggleLayer(xmlBalises, true);
-					}
-					xmlBalises.addBalise((Balise) o);
-					xmlBalises.showBalise((Balise) o);
+					((Balise2DLayer) this.getLayer(BALISES2D_LAYER_NAME)).addBalise((Balise) o);
+					((Balise2DLayer) this.getLayer(BALISES2D_LAYER_NAME)).showBalise((Balise) o);
 				} else if(o instanceof Balise3D){
-					if(xmlBalises3D == null){
-						xmlBalises3D = new Balise3DLayer(BALISES3D_LAYER_NAME);
-						wwd.toggleLayer(xmlBalises3D, true);
-					}
-					xmlBalises3D.addBalise((Balise) o);
-					xmlBalises3D.showBalise((Balise) o);
+					((Balise3DLayer) this.getLayer(BALISES3D_LAYER_NAME)).addBalise((Balise) o);
+					((Balise3DLayer) this.getLayer(BALISES3D_LAYER_NAME)).showBalise((Balise) o);
 				} else if(o instanceof RestorableUserFacingText){
-					if(xmlTexts == null){
-						xmlTexts = new TextLayer(TEXT_LAYER_NAME);
-						wwd.toggleLayer(xmlTexts, true);
-					}
-					xmlTexts.addGeographicText((GeographicText) o);
+					((TextLayer) this.getLayer(TEXT_LAYER_NAME)).addGeographicText((GeographicText) o);
 				}else if(o instanceof Layer) {
 					wwd.toggleLayer((Layer) o, true);
 				}
@@ -626,7 +610,51 @@ public class ProjectManager extends ProgressSupport {
 			e.printStackTrace();
 		}
 	}
+	
+	private PriorityRenderableLayer xmlRenderables = null;
+	private Balise2DLayer xmlBalises = null;
+	private Balise3DLayer xmlBalises3D = null;
+	private FilterableAirspaceLayer xmlAirspaces = null;
+	private TextLayer xmlTexts = null;
 
+	public Layer getLayer(String name){
+		
+		if(name.equals(AIRSPACE_LAYER_NAME)){
+			if(xmlAirspaces == null){
+				xmlAirspaces = new FilterableAirspaceLayer();
+				xmlAirspaces.setName(AIRSPACE_LAYER_NAME);
+				wwd.toggleLayer(xmlAirspaces, true);
+			}
+			return xmlAirspaces;
+		} else if(name.equals(RENDERABLE_LAYER_NAME)){
+			if(xmlRenderables == null){
+				xmlRenderables = new PriorityRenderableLayer();
+				xmlRenderables.setName(RENDERABLE_LAYER_NAME);
+				wwd.toggleLayer(xmlRenderables, true);
+			}
+			return xmlRenderables;
+		} else if(name.equals(BALISES2D_LAYER_NAME)){
+			if(xmlBalises == null){
+				xmlBalises = new Balise2DLayer(BALISES2D_LAYER_NAME);
+				wwd.toggleLayer(xmlBalises, true);
+			}
+			return xmlBalises;
+		} else if(name.equals(BALISES3D_LAYER_NAME)){
+			if(xmlBalises3D == null){
+				xmlBalises3D = new Balise3DLayer(BALISES3D_LAYER_NAME);
+				wwd.toggleLayer(xmlBalises3D, true);
+			}
+			return xmlBalises3D;
+		} else if(name.equals(TEXT_LAYER_NAME)){
+			if(xmlTexts == null){
+				xmlTexts = new TextLayer(TEXT_LAYER_NAME);
+				wwd.toggleLayer(xmlTexts, true);
+			}
+			return xmlTexts;
+		}
+		return null;
+	}
+	
 	/**
 	 * Exportable images
 	 * @return List of exportable images
