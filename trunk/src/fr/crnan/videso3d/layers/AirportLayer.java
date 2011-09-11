@@ -121,6 +121,16 @@ public class AirportLayer extends LayerSet {
 		}
 		return aerodromes.isEmpty()? null : aerodromes;
 	}
+	
+	public List<Aerodrome> getVisiblePistes(){
+		ArrayList<Aerodrome> pistes = new ArrayList<Aerodrome>();
+		for(Aerodrome a : this.pistes.values()){
+			if(a.isVisible()){
+				pistes.add(a);
+			}
+		}
+		return pistes;
+	}
 		
 	public List<Restorable> getVisibleRestorables(){
 		ArrayList<Restorable> restorables = new ArrayList<Restorable>();

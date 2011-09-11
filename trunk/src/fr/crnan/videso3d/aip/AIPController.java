@@ -49,6 +49,7 @@ import fr.crnan.videso3d.graphics.DatabaseBalise3D;
 import fr.crnan.videso3d.graphics.DatabasePisteAerodrome;
 import fr.crnan.videso3d.graphics.DatabaseRoute2D;
 import fr.crnan.videso3d.graphics.DatabaseRoute3D;
+import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route.Parity;
 import fr.crnan.videso3d.graphics.MarqueurAerodrome;
@@ -731,11 +732,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	
 	private void removeAerodrome(int type, String nom){
 		arptLayer.hideAirport(nom);
-	}
-	
-	
-	
-	
+	}	
 
 	@Override
 	public void set2D(Boolean flat) {		
@@ -1176,6 +1173,37 @@ public class AIPController extends ProgressSupport implements VidesoController {
 					objects.put(r.getType(), new ArrayList<String>());
 				}
 				objects.get(r.getType()).add(r.getName());
+			}
+		}
+		//navfix
+		for(Balise2D b : this.navFixLayer.getVisibleBalises()){
+			Integer type = ((DatabaseBalise2D)b).getType();
+			String name = ((DatabaseBalise2D)b).getName();
+			if(!objects.containsKey(type)){
+				objects.put(type, new ArrayList<String>());
+			}
+			objects.get(type).add(name);
+		}
+		//zones
+		for(Secteur3D s : this.zones.values()){
+			if(s.isVisible()){
+				Integer type = s.getType();
+				String name = s.getName();
+				if(!objects.containsKey(type)){
+					objects.put(type, new ArrayList<String>());
+				}
+				objects.get(type).add(name);
+			}
+		}
+		//airports
+		for(Aerodrome a : this.arptLayer.getVisiblePistes()){
+			Integer type = ((DatabaseVidesoObject)a).getType();
+			String name = ((DatabaseVidesoObject)a).getName();
+			if(!objects.containsKey(type)){
+				objects.put(type, new ArrayList<String>());
+			}
+			if(!objects.get(type).contains(name)){
+				objects.get(type).add(name);
 			}
 		}
 		return objects ;
