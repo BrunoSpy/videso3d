@@ -99,6 +99,7 @@ public class EdimapController implements VidesoController {
 			e.printStackTrace();
 		}
 		carte.setVisible(true);
+		this.toggleLayer(this.cartes.getLayer(), true);
 		this.cartes.getLayer().firePropertyChange(AVKey.LAYER, null, this.cartes.getLayer());
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
 		DatasManager.getView(Type.Edimap).showObject(type, name);
