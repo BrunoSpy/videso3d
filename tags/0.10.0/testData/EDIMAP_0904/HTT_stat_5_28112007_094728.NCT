@@ -1,0 +1,150 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SIV")
+  (line_width 2)
+  (line_style "SingleLineMixed")
+  (priority 28)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "SIV_PREACTIVE")
+  (id_atc_predorm "SIV_PREACTIVE")
+)
+(id_atc
+  (name "SIV_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLineMixed")
+  (priority 28)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "HTT")
+  (number 5)
+  (comment "")
+  (date 28 11 2007)
+  (heure 09 47 28)
+  (ref_point
+    (name "HTT01")
+    (comment "TMA HTT ")
+    (value
+      (nautical_mile 64 3525 64 7032)
+    )
+  )
+  (ref_point
+    (name "HTT02")
+    (comment "TMA HTT ")
+    (value
+      (nautical_mile 64 3883 64 6667)
+    )
+  )
+  (ref_point
+    (name "HTT03")
+    (comment "TMA HTT ")
+    (value
+      (nautical_mile 64 2725 64 5541)
+    )
+  )
+  (ref_point
+    (name "HTT04")
+    (comment "TMA HTT ")
+    (value
+      (nautical_mile 64 2243 64 4715)
+    )
+  )
+  (ref_point
+    (name "HTT05")
+    (comment "TMA HTT ")
+    (value
+      (nautical_mile 64 1800 64 4978)
+    )
+  )
+  (ref_point
+    (name "HTT06")
+    (comment "TMA HTT ")
+    (value
+      (nautical_mile 64 2322 64 5863)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 1)
+    (entity
+      (name "1")
+      (id_atc "SIV")
+      (shape "PolylineEntity")
+      (geometry
+        (point "HTT01")
+        (point "HTT02")
+        (point "HTT03")
+        (point "HTT04")
+        (point "HTT05")
+        (point "HTT06")
+      )
+      (polygone 1)
+      (line_width 2)
+      (line_style "SingleLine")
+      (priority 28)
+      (text_font "1")
+      (fill_visibility 0)
+      (designabilite 0)
+      (foreground_color "Vert salle de bain")
+    )
+    (entity
+      (name "2")
+      (id_atc "SIV")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2691 64 6136  0)
+      )
+      (text_content "2500/3500")
+      (line_width 2)
+      (line_style "SingleLine")
+      (priority 28)
+      (text_font "1")
+      (fill_visibility 0)
+      (designabilite 0)
+      (foreground_color "Vert salle de bain")
+    )
+  )
+)

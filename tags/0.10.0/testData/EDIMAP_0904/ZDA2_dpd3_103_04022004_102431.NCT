@@ -1,0 +1,201 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "TEXTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+  (id_atc_preactif "TEXTE PREACTIVABLE")
+  (id_atc_predorm "TEXTE PREACTIVABLE")
+)
+(id_atc
+  (name "TEXTE PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "BORD_ZDA")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZDA_PREACTIVE")
+  (id_atc_predorm "BORD_ZDA_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZDA_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "ZDA2")
+  (number 103)
+  (comment "CTL importe de VIDEOMAP")
+  (date 04 02 2004)
+  (heure 10 24 31)
+  (ref_point
+    (name "ZDA21")
+    (comment "")
+    (value
+      (nautical_mile 64 7217 64 8717)
+    )
+  )
+  (ref_point
+    (name "ZDA22")
+    (comment "")
+    (value
+      (nautical_mile 64 6747 64 9596)
+    )
+  )
+  (ref_point
+    (name "ZDA23")
+    (comment "")
+    (value
+      (nautical_mile 64 6855 64 10251)
+    )
+  )
+  (ref_point
+    (name "ZDA24")
+    (comment "")
+    (value
+      (nautical_mile 64 7208 64 10834)
+    )
+  )
+  (ref_point
+    (name "ZDA25")
+    (comment "")
+    (value
+      (nautical_mile 64 7948 64 10864)
+    )
+  )
+  (ref_point
+    (name "ZDA26")
+    (comment "")
+    (value
+      (nautical_mile 64 9148 64 9286)
+    )
+  )
+  (ref_point
+    (name "ZDA2")
+    (comment "")
+    (value
+      (nautical_mile 64 7326 64 10443)
+    )
+  )
+  (ref_point
+    (name "ZDA2T1")
+    (comment "")
+    (value
+      (nautical_mile 64 8691 64 10632)
+    )
+  )
+  (ref_point
+    (name "ZDA2T2")
+    (comment "")
+    (value
+      (nautical_mile 64 9031 64 9805)
+    )
+  )
+  (ref_point
+    (name "ZDA17")
+    (comment "")
+    (value
+      (nautical_mile 64 8070 64 10419)
+    )
+  )
+  (submap
+    (number 1)
+    (name "ZDA2")
+    (submap_type 4)
+    (keyboard 3)
+    (entity
+      (name "838")
+      (id_atc "BORD_ZDA_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ZDA21")
+        (point "ZDA22")
+        (point "ZDA23")
+        (point "ZDA24")
+        (point "ZDA25")
+        (point "ZDA17")
+        (point "ZDA2T1")
+        (point "ZDA2T2")
+        (point "ZDA26")
+        (point "ZDA21")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "TEXT_ZDA2")
+      (id_atc "TEXTE PREACTIVABLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ZDA2")
+      )
+      (text_content "FL195")
+    )
+  )
+)

@@ -1,0 +1,260 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "LIMITE SECTEUR")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris clair")
+)
+(id_atc
+  (name "BORD SECTEUR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(id_atc
+  (name "FOND SECTEUR")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 4)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(map
+  (name "OT")
+  (number 17)
+  (comment "")
+  (date 04 10 2005)
+  (heure 13 56 46)
+  (ref_point
+    (name "OT1")
+    (comment "")
+    (value
+      (nautical_mile 64 4639 64 6349)
+    )
+  )
+  (ref_point
+    (name "OT7")
+    (comment "")
+    (value
+      (nautical_mile 64 4249 64 2159)
+    )
+  )
+  (ref_point
+    (name "OT11")
+    (comment "")
+    (value
+      (nautical_mile 64 2636 64 2841)
+    )
+  )
+  (ref_point
+    (name "OT12")
+    (comment "")
+    (value
+      (nautical_mile 64 2788 64 4174)
+    )
+  )
+  (ref_point
+    (name "OT1PT1")
+    (comment "")
+    (value
+      (nautical_mile 64 683 64 641)
+    )
+  )
+  (ref_point
+    (name "OY8")
+    (comment "")
+    (value
+      (nautical_mile 64 2071 64 3084)
+    )
+  )
+  (ref_point
+    (name "RT5")
+    (comment "")
+    (value
+      (nautical_mile 64 2788 64 4174)
+    )
+  )
+  (ref_point
+    (name "RT4")
+    (comment "")
+    (value
+      (nautical_mile 64 4639 64 6349)
+    )
+  )
+  (ref_point
+    (name "TS8")
+    (comment "")
+    (value
+      (nautical_mile 64 4760 64 6141)
+    )
+  )
+  (ref_point
+    (name "OT1PT7")
+    (comment "")
+    (value
+      (nautical_mile 64 4816 64 5556)
+    )
+  )
+  (ref_point
+    (name "OT1PT8")
+    (comment "")
+    (value
+      (nautical_mile 64 4865 64 5043)
+    )
+  )
+  (ref_point
+    (name "DS1PT7")
+    (comment "")
+    (value
+      (nautical_mile 64 4842 64 4990)
+    )
+  )
+  (ref_point
+    (name "DS1PT6")
+    (comment "")
+    (value
+      (nautical_mile 64 4585 64 4407)
+    )
+  )
+  (ref_point
+    (name "TS14")
+    (comment "")
+    (value
+      (nautical_mile 64 4546 64 4318)
+    )
+  )
+  (ref_point
+    (name "DS1PT4")
+    (comment "")
+    (value
+      (nautical_mile 64 4525 64 4214)
+    )
+  )
+  (ref_point
+    (name "TS20")
+    (comment "")
+    (value
+      (nautical_mile 64 4428 64 3713)
+    )
+  )
+  (ref_point
+    (name "SFIR13")
+    (comment "")
+    (value
+      (nautical_mile 64 4249 64 2159)
+    )
+  )
+  (ref_point
+    (name "OT1PT14")
+    (comment "")
+    (value
+      (nautical_mile 64 3843 64 676)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 5)
+    (entity
+      (name "5")
+      (id_atc "LIMITE SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "OT7")
+        (point "OT11")
+        (point "OT12")
+        (point "OT1")
+      )
+    )
+    (entity
+      (name "2")
+      (id_atc "BORD SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "OT1PT1")
+        (point "OY8")
+        (point "RT5")
+        (point "RT4")
+        (point "TS8")
+        (point "OT1PT7")
+        (point "OT1PT8")
+        (point "DS1PT7")
+        (point "DS1PT6")
+        (point "TS14")
+        (point "DS1PT4")
+        (point "TS20")
+        (point "SFIR13")
+        (point "OT1PT14")
+        (point "OT1PT1")
+      )
+    )
+    (entity
+      (name "3")
+      (id_atc "FOND SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "OT1PT1")
+        (point "OY8")
+        (point "RT5")
+        (point "RT4")
+        (point "TS8")
+        (point "OT1PT7")
+        (point "OT1PT8")
+        (point "DS1PT7")
+        (point "DS1PT6")
+        (point "TS14")
+        (point "DS1PT4")
+        (point "TS20")
+        (point "SFIR13")
+        (point "OT1PT14")
+      )
+      (polygone 1)
+    )
+  )
+)

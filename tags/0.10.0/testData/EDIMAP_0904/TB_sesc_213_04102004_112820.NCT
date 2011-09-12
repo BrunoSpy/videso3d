@@ -1,0 +1,250 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "FOND SECTEUR")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 4)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(id_atc
+  (name "BORD SECTEUR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(map
+  (name "TB")
+  (number 213)
+  (comment "")
+  (date 04 10 2004)
+  (heure 11 28 20)
+  (ref_point
+    (name "TB1")
+    (comment "")
+    (value
+      (nautical_mile 64 7157 64 8244)
+    )
+  )
+  (ref_point
+    (name "TB2")
+    (comment "")
+    (value
+      (nautical_mile 64 4887 64 14353)
+    )
+  )
+  (ref_point
+    (name "TB3")
+    (comment "")
+    (value
+      (nautical_mile 64 3563 64 15414)
+    )
+  )
+  (ref_point
+    (name "TB4")
+    (comment "")
+    (value
+      (nautical_mile 64 4846 64 15893)
+    )
+  )
+  (ref_point
+    (name "TB5")
+    (comment "")
+    (value
+      (nautical_mile 64 6190 64 15826)
+    )
+  )
+  (ref_point
+    (name "TB6")
+    (comment "")
+    (value
+      (nautical_mile 64 6452 64 14778)
+    )
+  )
+  (ref_point
+    (name "TB7")
+    (comment "")
+    (value
+      (nautical_mile 64 7155 64 14461)
+    )
+  )
+  (ref_point
+    (name "TB8")
+    (comment "")
+    (value
+      (nautical_mile 64 7362 64 14656)
+    )
+  )
+  (ref_point
+    (name "TB9")
+    (comment "")
+    (value
+      (nautical_mile 64 7693 64 14694)
+    )
+  )
+  (ref_point
+    (name "TB10")
+    (comment "")
+    (value
+      (nautical_mile 64 8051 64 13982)
+    )
+  )
+  (ref_point
+    (name "TB11")
+    (comment "")
+    (value
+      (nautical_mile 64 8247 64 13695)
+    )
+  )
+  (ref_point
+    (name "TB12")
+    (comment "")
+    (value
+      (nautical_mile 64 8917 64 13571)
+    )
+  )
+  (ref_point
+    (name "TB13")
+    (comment "")
+    (value
+      (nautical_mile 64 9129 64 12943)
+    )
+  )
+  (ref_point
+    (name "TB14")
+    (comment "")
+    (value
+      (nautical_mile 64 9336 64 13117)
+    )
+  )
+  (ref_point
+    (name "TB15")
+    (comment "")
+    (value
+      (nautical_mile 64 8021 64 9609)
+    )
+  )
+  (ref_point
+    (name "TB16")
+    (comment "")
+    (value
+      (nautical_mile 64 8318 64 8504)
+    )
+  )
+  (ref_point
+    (name "TB17")
+    (comment "")
+    (value
+      (nautical_mile 64 7601 64 8322)
+    )
+  )
+  (submap
+    (number 1)
+    (name "TB")
+    (submap_type 5)
+    (entity
+      (name "855")
+      (id_atc "FOND SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "TB1")
+        (point "TB17")
+        (point "TB16")
+        (point "TB15")
+        (point "TB14")
+        (point "TB13")
+        (point "TB12")
+        (point "TB11")
+        (point "TB10")
+        (point "TB9")
+        (point "TB8")
+        (point "TB7")
+        (point "TB6")
+        (point "TB5")
+        (point "TB4")
+        (point "TB3")
+        (point "TB2")
+        (point "TB1")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "856")
+      (id_atc "BORD SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "TB1")
+        (point "TB17")
+        (point "TB16")
+        (point "TB15")
+        (point "TB14")
+        (point "TB13")
+        (point "TB12")
+        (point "TB11")
+        (point "TB10")
+        (point "TB9")
+        (point "TB8")
+        (point "TB7")
+        (point "TB6")
+        (point "TB5")
+        (point "TB4")
+        (point "TB3")
+        (point "TB2")
+        (point "TB1")
+      )
+      (polygone 1)
+    )
+  )
+)

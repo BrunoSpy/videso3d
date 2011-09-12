@@ -1,0 +1,221 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SIV_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLineMixed")
+  (priority 28)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "TEXTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+  (id_atc_preactif "TEXTE PREACTIVABLE")
+  (id_atc_predorm "TEXTE PREACTIVABLE")
+)
+(id_atc
+  (name "TEXTE PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "LIMITE SECTEUR 1")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 32)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(map
+  (name "SIBL")
+  (number 7)
+  (comment "")
+  (date 31 07 2007)
+  (heure 12 50 54)
+  (ref_point
+    (name "SBL1")
+    (comment "")
+    (value
+      (nautical_mile 64 5694 64 391)
+    )
+  )
+  (ref_point
+    (name "SBL2")
+    (comment "")
+    (value
+      (nautical_mile 64 7481 64 -826)
+    )
+  )
+  (ref_point
+    (name "SBL3")
+    (comment "")
+    (value
+      (nautical_mile 64 7793 64 -2716)
+    )
+  )
+  (ref_point
+    (name "SBL4")
+    (comment "")
+    (value
+      (nautical_mile 64 6897 64 -2731)
+    )
+  )
+  (ref_point
+    (name "SBL5")
+    (comment "")
+    (value
+      (nautical_mile 64 6664 64 -2855)
+    )
+  )
+  (ref_point
+    (name "SBL6")
+    (comment "")
+    (value
+      (nautical_mile 64 6752 64 -5656)
+    )
+  )
+  (ref_point
+    (name "SBL7")
+    (comment "")
+    (value
+      (nautical_mile 64 254 64 -5762)
+    )
+  )
+  (ref_point
+    (name "SBL8")
+    (comment "")
+    (value
+      (nautical_mile 64 -405 64 -5121)
+    )
+  )
+  (ref_point
+    (name "SBL9")
+    (comment "")
+    (value
+      (nautical_mile 64 2436 64 -2147)
+    )
+  )
+  (ref_point
+    (name "SBL10")
+    (comment "")
+    (value
+      (nautical_mile 64 3077 64 -2218)
+    )
+  )
+  (ref_point
+    (name "SBL11")
+    (comment "")
+    (value
+      (nautical_mile 64 3074 64 -1579)
+    )
+  )
+  (ref_point
+    (name "SBL12")
+    (comment "")
+    (value
+      (nautical_mile 64 4396 64 -1736)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 2)
+    (keyboard 3)
+    (entity
+      (name "1")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SBL1")
+        (point "SBL2")
+        (point "SBL3")
+        (point "SBL4")
+        (point "SBL5")
+        (point "SBL6")
+        (point "SBL7")
+        (point "SBL8")
+        (point "SBL9")
+        (point "SBL10")
+        (point "SBL11")
+        (point "SBL12")
+      )
+      (polygone 1)
+      (line_width 2)
+      (line_style "SingleLineDashed")
+      (priority 32)
+      (text_font "1")
+      (fill_visibility 0)
+      (designabilite 0)
+      (foreground_color "Noir")
+    )
+    (entity
+      (name "2")
+      (id_atc "TEXTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5786 64 -1291  0)
+      )
+      (text_content "SIV LFBL")
+    )
+    (entity
+      (name "3")
+      (id_atc "TEXTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5689 64 -2201  0)
+      )
+      (text_content "SFC/FL115")
+    )
+  )
+)
