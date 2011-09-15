@@ -1,6 +1,6 @@
-= Version 0.10 (en cours) =
+= Version 0.10 =
 
-== 0.10.1 (en cours) ==
+== 0.10.0 ==
   * IHM
     * Nouvelle IHM : les différents éléments sont à présent séparables et autonomes (dockables)
     * Amélioration de l'IHM d'analyse afin de pouvoir faire des recherches avancées
