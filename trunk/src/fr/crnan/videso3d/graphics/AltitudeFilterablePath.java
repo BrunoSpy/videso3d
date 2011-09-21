@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.graphics;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -37,6 +38,7 @@ public class AltitudeFilterablePath extends Path {
 	private double maxAltitude = 800.0*30.48;
 	private double minAltitude = 0.0;
 	
+	private ArrayList<Position> usefullPositions;
 	
 	public void setMaximumViewableAltitude(double altitude) {
 		this.maxAltitude = altitude;
@@ -53,19 +55,24 @@ public class AltitudeFilterablePath extends Path {
 	protected void makeTessellatedPositions(DrawContext dc, PathData pathData) {
 
 		//compute usefull positions
-		ArrayList<Position> usefullPositions = this.computeUsefullPositions(this.positions);
+		usefullPositions = this.computeUsefullPositions(this.positions);
 		
 		if (usefullPositions.size() < 2)
             return;
 
-        if (pathData.getTessellatedPositions() == null)
+        if (pathData.getTessellatedPositions() == null|| pathData.getTessellatedPositions().size() < this.usefullPositions.size())
         {
             int size = (this.numSubsegments * (usefullPositions.size() - 1) + 1) * (this.isExtrude() ? 2 : 1);
             pathData.setTessellatedPositions(new ArrayList<Position>(size));
+            pathData.setTessellatedColors((this.positionColors != null) ? new ArrayList<Color>(size) : null);
         }
         else
         {
             pathData.getTessellatedPositions().clear();
+           
+            if (pathData.getTessellatedColors() != null)
+                pathData.getTessellatedColors().clear();
+            
         }
 
         if (pathData.getPolePositions() == null || pathData.getPolePositions().capacity() < usefullPositions.size() * 2)
@@ -73,34 +80,61 @@ public class AltitudeFilterablePath extends Path {
         else
             pathData.getPolePositions().clear();     
         
-        Iterator<? extends Position> iter = usefullPositions.iterator();
+        if (pathData.getPositionPoints() == null || pathData.getPositionPoints().capacity() < this.usefullPositions.size())
+            pathData.setPositionPoints(BufferUtil.newIntBuffer(this.usefullPositions.size()));
+        else
+            pathData.getPositionPoints().clear();
+
+        this.makePositions(dc, pathData);
+
+        ((ArrayList<Position>) pathData.getTessellatedPositions()).trimToSize();
+        pathData.getPolePositions().flip();
+        pathData.getPositionPoints().flip();
+
+        if (pathData.getTessellatedColors() != null)
+            ((ArrayList<Color>) pathData.getTessellatedColors()).trimToSize();
+	}
+
+    protected void makePositions(DrawContext dc, PathData pathData)
+    {
+        Iterator<? extends Position> iter = this.usefullPositions.iterator();
         Position posA = iter.next();
-        this.addTessellatedPosition(posA, true, pathData); // add the first position of the path
+        int ordinalA = 0;
+        Color colorA = this.getColor(posA, ordinalA);
+
+        this.addTessellatedPosition(posA, colorA, ordinalA, pathData); // add the first position of the path
 
         // Tessellate each segment of the path.
         Vec4 ptA = this.computePoint(dc.getTerrain(), posA);
 
-        for (int i = 1; i <= usefullPositions.size(); i++)
+        while (iter.hasNext())
         {
-            Position posB;
-            if (i < usefullPositions.size())
-                posB = iter.next();
-            else
-                break;
-
+            Position posB = iter.next();
+            int ordinalB = ordinalA + 1;
+            Color colorB = this.getColor(posB, ordinalB);
             Vec4 ptB = this.computePoint(dc.getTerrain(), posB);
 
-            // If the segment is very small or not visible, don't tessellate it, just add the segment's end position.
-            if (this.isSmall(dc, ptA, ptB, 8) || !this.isSegmentVisible(dc, posA, posB, ptA, ptB))
-                this.addTessellatedPosition(posB, true, pathData);
+            if (iter.hasNext()) // if this is not the final position
+            {
+                // If the segment is very small or not visible, don't tessellate, just add the segment's end position.
+                if (this.isSmall(dc, ptA, ptB, 8) || !this.isSegmentVisible(dc, posA, posB, ptA, ptB))
+                    this.addTessellatedPosition(posB, colorB, ordinalB, pathData);
+                else
+                    this.makeSegment(dc, posA, posB, ptA, ptB, colorA, colorB, ordinalA, ordinalB, pathData);
+            }
             else
-                this.makeSegment(dc, posA, posB, ptA, ptB, pathData);
+            {
+                // Add the final point.
+                this.addTessellatedPosition(posB, colorB, ordinalB, pathData);
+            }
 
             posA = posB;
             ptA = ptB;
+            ordinalA = ordinalB;
+            colorA = colorB;
         }
-	}
-
+    }
+	
 	private ArrayList<Position> computeUsefullPositions(
 			Iterable<? extends Position> positions) {
 		ArrayList<Position> newPositions = new ArrayList<Position>();
