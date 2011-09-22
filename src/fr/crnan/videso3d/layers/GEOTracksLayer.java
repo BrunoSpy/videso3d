@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.swing.SwingWorker;
 
 import fr.crnan.videso3d.Configuration;
+import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.graphics.AltitudeFilterablePath;
@@ -40,6 +41,7 @@ import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.Path;
+import gov.nasa.worldwind.render.Path.PositionColors;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.tracks.TrackPoint;
@@ -47,7 +49,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Layer contenant des tracks Elvira GEO et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.4.3
+ * @version 0.4.4
  */
 public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFilterableLayer{
 	
@@ -88,6 +90,19 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	 */
 	private double precision = 0.0;
 	
+	/**
+	 * Shaded color support
+	 */
+	private double minAltitude = 0.0;
+	private double maxAltitude = 400.0*30.47;
+	private Color minAltitudeColor = Color.GREEN;
+	private Color maxAltitudeColor = Color.RED;
+	/**
+	 * Multicolor
+	 */
+	private Double[] altitudes = {0.0, 50.0*30.47, 195*30.47, 300*30.47, 600*30.47};
+	private Color[] multicolors = {Color.WHITE, Color.GREEN, Color.ORANGE, Color.RED};	
+	
 	public GEOTracksLayer(){
 		super();
 		this.add(layer);
@@ -111,7 +126,38 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 			Path line = this.lines.get(track);
 			if(line != null){
 				line.setExtrude(this.getStyle() == TrajectoriesLayer.STYLE_CURTAIN);
-		//		line.setDrawVerticals(!(this.getStyle() == TrajectoriesLayer.STYLE_CURTAIN));
+				if(this.getStyle() == TrajectoriesLayer.STYLE_MULTI_COLOR){
+					line.setPositionColors(new PositionColors() {
+						
+						@Override
+						public Color getColor(Position position, int ordinal) {
+							double altitude = position.getElevation();
+							if(altitude < altitudes[0])
+								return multicolors[0];
+							for(int i = 0; i< multicolors.length;i++){
+								if(altitude > altitudes[i] && altitude <= altitudes[i+1])
+									return multicolors[i];
+							}
+							return multicolors[multicolors.length-1];
+						}
+					});
+				} else if(this.getStyle() == TrajectoriesLayer.STYLE_SHADED){
+					line.setPositionColors(new PositionColors() {
+
+						@Override
+						public Color getColor(Position position, int ordinal) {
+							double altitude = position.getElevation();
+							if(altitude<=minAltitude)
+								return minAltitudeColor;
+							if(altitude>=maxAltitude)
+								return maxAltitudeColor;
+							return new Color (  (float)(((altitude-minAltitude)*(maxAltitudeColor.getRed()/255.0)+(maxAltitude-altitude)*(minAltitudeColor.getRed()/255.0))/(maxAltitude-minAltitude)),
+									(float)(((altitude-minAltitude)*(maxAltitudeColor.getGreen()/255.0)+(maxAltitude-altitude)*(minAltitudeColor.getGreen()/255.0))/(maxAltitude-minAltitude)),
+									(float)(((altitude-minAltitude)*(maxAltitudeColor.getBlue()/255.0)+(maxAltitude-altitude)*(minAltitudeColor.getBlue()/255.0))/(maxAltitude-minAltitude)));
+						}
+					});
+				}
+				//	line.setDrawVerticals(!(this.getStyle() == TrajectoriesLayer.STYLE_CURTAIN));
 			}
 		} else {
 			List<Position> positions = new ArrayList<Position>();
@@ -421,7 +467,10 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	 */
 	public void setStyle(int style) {
 		if(style != this.style) {
-			if(style == TrajectoriesLayer.STYLE_SIMPLE || this.tracks.size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) {
+			if(style == TrajectoriesLayer.STYLE_SIMPLE || 
+					style == TrajectoriesLayer.STYLE_SHADED || 
+					style == TrajectoriesLayer.STYLE_MULTI_COLOR ||
+					this.tracks.size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) {
 				this.style = style;
 				{
 					//display bug when changing extrude -> delete and redraw lines
@@ -429,7 +478,7 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 					this.layer.removeAllRenderables();
 				}
 				this.update();
-			} else {
+			}  else {
 				Logging.logger().warning("Style inchangé car nombre de tracks trop important.");
 			}
 		}
@@ -541,6 +590,8 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 		List<Integer> styles = new ArrayList<Integer>();
 		if(this.tracks.size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) styles.add(TrajectoriesLayer.STYLE_CURTAIN);
 		styles.add(TrajectoriesLayer.STYLE_SIMPLE);
+		styles.add(TrajectoriesLayer.STYLE_SHADED);
+		styles.add(TrajectoriesLayer.STYLE_MULTI_COLOR);
 		return styles;
 	}
 
@@ -695,6 +746,46 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 			p.setMinimumViewableAltitude(altitude);
 		}
 		this.update();
+	}
+
+	@Override
+	public void setShadedColors(double minAltitude, double maxAltitude,
+			Color minAltitudeColor, Color maxAltitudeColor) {
+		this.maxAltitude = maxAltitude;
+		this.minAltitude = minAltitude;
+		this.minAltitudeColor = minAltitudeColor;
+		this.maxAltitudeColor = maxAltitudeColor;
+	}
+
+	@Override
+	public double getMinAltitude() {
+		return this.minAltitude;
+	}
+
+	@Override
+	public double getMaxAltitude() {
+		return this.maxAltitude;
+	}
+
+	@Override
+	public Color getMinAltitudeColor() {
+		return this.minAltitudeColor;
+	}
+
+	@Override
+	public Color getMaxAltitudeColor() {
+		return this.maxAltitudeColor;
+	}
+
+	@Override
+	public void setMultiColors(Double[] altitudes, Color[] colors) {
+		this.altitudes = altitudes;
+		this.multicolors = colors;
+	}
+
+	@Override
+	public Couple<Double[], Color[]> getMultiColors() {
+		return new Couple<Double[], Color[]>(this.altitudes, this.multicolors);
 	}
 	
 }

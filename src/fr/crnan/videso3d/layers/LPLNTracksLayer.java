@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
@@ -389,6 +390,49 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	public void removePolygonFilter(PolygonsSetFilter polygons) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setShadedColors(double minAltitude, double maxAltitude,
+			Color firstColor, Color secondColor) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public double getMinAltitude() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public double getMaxAltitude() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public Color getMinAltitudeColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Color getMaxAltitudeColor() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setMultiColors(Double[] altitudes, Color[] colors) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Couple<Double[], Color[]> getMultiColors() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

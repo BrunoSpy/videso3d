@@ -19,13 +19,14 @@ import java.awt.Color;
 import java.util.Collection;
 import java.util.List;
 
+import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.trajectography.PolygonsSetFilter;
 import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer contenant des trajectoires et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.5.1
+ * @version 0.5.2
  */
 public abstract class TrajectoriesLayer extends LayerSet {
 
@@ -53,10 +54,13 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 */
 	public final static int STYLE_PROFIL = 3;
 	/**
-	 * Une polyligne dont la couleur change en fonction de l'altitude
+	 * Une polyligne dont avec un gradient de couleur en fcontion de l'altitude
 	 */
 	public final static int STYLE_SHADED = 4;
-	
+	/**
+	 * Une polyligne avec plusieurs couleurs en fonction de l'altitude
+	 */
+	public final static int STYLE_MULTI_COLOR = 5;
 	
 	private boolean disjunctive = true; //"or" by default
 	
@@ -175,7 +179,8 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	public abstract void setTracksHighlightable(Boolean b);
 	
 	/**
-	 * Change le style parmi <code>TrajectoriesLayer.STYLE_SIMPLE</code>, <code>TrajectoriesLayer.STYLE_SHADED</code>, <code>TrajectoriesLayer.STYLE_CURTAIN</code> et <code>TrajectoriesLayer.STYLE_PROFIL</code>
+	 * Change le style parmi <code>TrajectoriesLayer.STYLE_SIMPLE</code>, <code>TrajectoriesLayer.STYLE_SHADED</code>, <code>TrajectoriesLayer.STYLE_MULTICOLOR</code>,
+	 * <code>TrajectoriesLayer.STYLE_CURTAIN</code> et <code>TrajectoriesLayer.STYLE_PROFIL</code>
 	 * @param style
 	 */
 	public abstract void setStyle(int style);
@@ -198,6 +203,20 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	public abstract Color getDefaultInsideColor();
 	
 	public abstract void setDefaultInsideColor(Color color);
+	
+	public abstract void setShadedColors(double minAltitude, double maxAltitude, Color firstColor, Color secondColor);
+	
+	public abstract double getMinAltitude();
+	
+	public abstract double getMaxAltitude();
+	
+	public abstract Color getMinAltitudeColor();
+	
+	public abstract Color getMaxAltitudeColor();
+	
+	public abstract void setMultiColors(Double[] altitudes, Color[] colors);
+	
+	public abstract Couple<Double[], Color[]> getMultiColors();
 	
 	public abstract double getDefaultOpacity();
 	

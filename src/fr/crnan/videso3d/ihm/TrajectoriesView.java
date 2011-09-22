@@ -332,19 +332,11 @@ public class TrajectoriesView extends JPanel {
 	}
 	
 	private JXTaskPane createStylePane(){
-		JXTaskPane stylePane = new JXTaskPane("Style des trajectoires");
+		final JXTaskPane stylePane = new JXTaskPane("Style des trajectoires");
 		stylePane.setCollapsed(true);
 		
 		stylePane.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 0;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1;
 		
-		stylePane.add(new JLabel("Style du tracé"), c);
-		
-		c.gridx = 1;
 		final JComboBox styles = new JComboBox();
 		for(Integer style : layer.getStylesAvailable()){
 			switch(style) {
@@ -359,6 +351,9 @@ public class TrajectoriesView extends JPanel {
 				break;
 			case TrajectoriesLayer.STYLE_SIMPLE:
 				styles.addItem("Fil de fer");
+				break;
+			case TrajectoriesLayer.STYLE_MULTI_COLOR:
+				styles.addItem("Fil de fer multicolor");
 				break;
 			}
 		}
@@ -376,49 +371,215 @@ public class TrajectoriesView extends JPanel {
 		case TrajectoriesLayer.STYLE_SIMPLE:
 			styles.setSelectedItem("Fil de fer");
 			break;
+		case TrajectoriesLayer.STYLE_MULTI_COLOR:
+			styles.setSelectedItem("Fil de fer multicolor");
+			break;
 		}
 		
-		stylePane.add(styles, c);
+		styles.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				updateStylePane(styles, stylePane, null, null);
+			}
+		});
+				
+		updateStylePane(styles, stylePane, null, null);
 		
+		return stylePane;
+	}
+	
+	private List<JButton> colorButtons;
+	private List<JTextField> altitudeFields;
+	private void updateStylePane(final JComboBox styles, final JXTaskPane stylePane, List<JButton> colorButton, List<JTextField> altitudeField){
+		this.colorButtons = colorButton;
+		this.altitudeFields = altitudeField;
+		stylePane.removeAll();
+		int i = 0;
+
+		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 0;
-		c.gridy = 1;
-		
-		stylePane.add(new JLabel("Couleur interne"), c);
+		c.gridy = 0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1;
+
+		stylePane.add(new JLabel("Style du tracé"), c);
 		
 		c.gridx = 1;
 		
+		stylePane.add(styles, c);
+		
+		/******** Couleur interne *******/
+
 		final JButton changeColor1 = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
 		changeColor1.setBackground(layer.getDefaultInsideColor());
 		changeColor1.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changeColor1.setBackground(JColorChooser.showDialog(null, "Couleur", changeColor1.getBackground()));
 			}
 		});
-		stylePane.add(changeColor1, c);
 		
-		c.gridx = 0;
-		c.gridy = 2;
-		
-		stylePane.add(new JLabel("Couleur externe"), c);
-		
-		c.gridx = 1;
+		if(styles.getSelectedItem().equals("Fil de fer") ||
+				styles.getSelectedItem().equals("Rideau") ||
+				styles.getSelectedItem().equals("Profil avec balises")) {
+			i++;
+			c.gridx = 0;
+			c.gridy = 1;
+
+			stylePane.add(new JLabel("Couleur interne"), c);
+
+			c.gridx = 1;
+			stylePane.add(changeColor1, c);
+		}
+		/******** Couleur externe *******/
 		
 		final JButton changeColor2 = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
 		changeColor2.setBackground(layer.getDefaultOutsideColor());
 		changeColor2.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changeColor2.setBackground(JColorChooser.showDialog(null, "Couleur", changeColor2.getBackground()));
 			}
 		});
-		stylePane.add(changeColor2, c);
+
+		if(styles.getSelectedItem().equals("Rideau") ||
+				styles.getSelectedItem().equals("Profil avec balises")){
+			
+			c.gridx = 0;
+			c.gridy = 1+i;
+			stylePane.add(new JLabel("Couleur externe"), c);
+
+			c.gridx = 1;
+			stylePane.add(changeColor2, c);
+			i++;
+		}
+
+		/******** Dégradé de couleur *********/
+		
+		final JButton minColor = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
+		minColor.setBackground(layer.getMinAltitudeColor());
+		minColor.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				minColor.setBackground(JColorChooser.showDialog(null, "Couleur", minColor.getBackground()));
+			}
+		});
+		
+		final JButton maxColor = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
+		maxColor.setBackground(layer.getMaxAltitudeColor());
+		maxColor.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				maxColor.setBackground(JColorChooser.showDialog(null, "Couleur", maxColor.getBackground()));
+			}
+		});
+		
+		final JTextField minAltitude = new JTextField();
+		minAltitude.setText(""+layer.getMinAltitude()/30.47);
+		
+		final JTextField maxAltitude = new JTextField();
+		maxAltitude.setText(""+layer.getMaxAltitude()/30.47);
+		
+		if(styles.getSelectedItem().equals("Fil de fer dégradé")) {
+			c.gridx = 0;
+			c.gridy = 1+i;
+			
+			stylePane.add(new JLabel("Alt. Max : "),c);
+			
+			c.gridx = 1;
+			stylePane.add(maxAltitude,c);
+			
+			c.gridx = 2;
+			stylePane.add(maxColor, c);
+			
+			i++;
+			
+			c.gridx = 0;
+			c.gridy = 1+i;
+			
+			stylePane.add(new JLabel("Alt. Min : "),c);
+			
+			c.gridx = 1;
+			stylePane.add(minAltitude,c);
+			
+			c.gridx = 2;
+			stylePane.add(minColor, c);
+			
+			i++;
+		}
+
+		/******** Multicolor *******/
+
+		if(colorButtons == null){
+			colorButtons = new ArrayList<JButton>();
+			altitudeFields = new ArrayList<JTextField>();
+			for(int j = 0; j<layer.getMultiColors().getSecond().length;j++){
+				final JButton button = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
+				button.setBackground(layer.getMultiColors().getSecond()[j]);
+				button.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						button.setBackground(JColorChooser.showDialog(null, "Couleur", button.getBackground()));
+					}
+				});
+				colorButtons.add(button);
+				altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[j]/30.47));
+			}
+			altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[layer.getMultiColors().getFirst().length-1]/30.47));
+		}
+		if(styles.getSelectedItem().equals("Fil de fer multicolor")) {
+			int j = 1;
+			for(JButton button : colorButtons){
+				c.gridx = 0;
+				c.gridy = 1+i;
+				stylePane.add(new JLabel("Tranche "+j+" : "),c);
+				c.gridx = 1;
+				stylePane.add(altitudeFields.get(j-1),c);
+				c.gridx = 2;
+				stylePane.add(button,c);
+				i++;
+				j++;
+			}
+			c.gridx = 0;
+			c.gridy = 1+i;
+			stylePane.add(new JLabel("Tranche "+j+" : "),c);
+			c.gridx = 1;
+			stylePane.add(altitudeFields.get(j-1),c);
+			c.gridx = 2;
+			JButton plus = new JButton("+");
+			plus.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final JButton button = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
+					button.setBackground(layer.getMultiColors().getSecond()[layer.getMultiColors().getSecond().length-1]);
+					button.addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							button.setBackground(JColorChooser.showDialog(null, "Couleur", button.getBackground()));
+						}
+					});
+					colorButtons.add(button);
+					altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[layer.getMultiColors().getFirst().length-1]/30.47));
+					updateStylePane(styles, stylePane, colorButtons, altitudeFields);
+				}
+			});
+			stylePane.add(plus,c);
+			i++;
+		}
+		
+		/******** Opacité *******/
 		
 		c.gridx = 0;
-		c.gridy = 3;
-		
+		c.gridy = 1+i;
+
 		stylePane.add(new JLabel("Opacité"), c);
 		
 		c.gridx = 1;
@@ -429,8 +590,10 @@ public class TrajectoriesView extends JPanel {
 		
 		stylePane.add(opacity, c);
 		
+		/******** Largeur *******/
+		
 		c.gridx = 0;
-		c.gridy = 4;
+		c.gridy = 2+i;
 		
 		stylePane.add(new JLabel("Largeur du tracé"), c);
 		
@@ -443,7 +606,7 @@ public class TrajectoriesView extends JPanel {
 		stylePane.add(width, c);
 		
 		c.gridx = 1;
-		c.gridy = 5;
+		c.gridy = 3+i;
 		
 		JButton validate = new JButton("Valider");
 		
@@ -460,19 +623,31 @@ public class TrajectoriesView extends JPanel {
 					layer.setStyle(TrajectoriesLayer.STYLE_SHADED);
 				} else if(itemSelected.equals("Profil")){
 					layer.setStyle(TrajectoriesLayer.STYLE_PROFIL);
+				} else if(itemSelected.equals("Fil de fer multicolor")){
+					layer.setStyle(TrajectoriesLayer.STYLE_MULTI_COLOR);
 				}
 				layer.setDefaultOutsideColor(changeColor2.getBackground());
 				layer.setDefaultInsideColor(changeColor1.getBackground());
 				layer.setDefaultWidth(Double.parseDouble(width.getText()));
 				layer.setDefaultOpacity(Double.parseDouble(opacity.getText())/100.0);
+				layer.setShadedColors(Double.parseDouble(minAltitude.getText())*30.47, Double.parseDouble(maxAltitude.getText())*30.47,
+								minColor.getBackground(), maxColor.getBackground());
+				ArrayList<Double> altitudes = new ArrayList<Double>();
+				for(JTextField field : altitudeFields){
+					altitudes.add(Double.parseDouble(field.getText())*30.47);
+				}
+				ArrayList<Color> colors = new ArrayList<Color>();
+				for(JButton color : colorButtons){
+					colors.add(color.getBackground());
+				}
+				layer.setMultiColors(altitudes.toArray(new Double[]{}), colors.toArray(new Color[]{}));
 				layer.update();
 			}
 		});
 		
 		stylePane.add(validate, c);	
-
 		
-		return stylePane;
+		stylePane.validate();
 	}
 	
 	private JXTaskPane createColorFilterPane(){
