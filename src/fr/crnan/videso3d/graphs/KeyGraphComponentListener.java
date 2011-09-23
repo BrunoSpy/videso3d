@@ -22,6 +22,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -76,17 +77,19 @@ public class KeyGraphComponentListener implements KeyListener, ClipboardOwner {
 			clipBoard.setContents(new StringSelection(selection), this);
 		} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_A){
 			this.graph.getSelectionModel().clear();
+			ArrayList<Object> cells = new ArrayList<Object>();
 			for(int i=0;i<this.graph.getModel().getChildCount(graph.getDefaultParent());i++){
 				mxCell cell = (mxCell)this.graph.getModel().getChildAt(this.graph.getDefaultParent(), i);
 				if(cell.getChildCount()>1){
 					//TODO do it recursively
 					for(int j = 0;j<cell.getChildCount(); j++){
-						this.graph.getSelectionModel().addCell(cell.getChildAt(j));
+						cells.add(cell.getChildAt(j));
 					}
 				} else {
-					this.graph.getSelectionModel().addCell(cell);
+					cells.add(cell);
 				}
 			}
+			this.graph.getSelectionModel().addCells(cells.toArray());
 		}
 	}
 
