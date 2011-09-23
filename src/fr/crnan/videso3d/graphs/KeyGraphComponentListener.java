@@ -77,7 +77,15 @@ public class KeyGraphComponentListener implements KeyListener, ClipboardOwner {
 		} else if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_A){
 			this.graph.getSelectionModel().clear();
 			for(int i=0;i<this.graph.getModel().getChildCount(graph.getDefaultParent());i++){
-				this.graph.getSelectionModel().addCell(this.graph.getModel().getChildAt(this.graph.getDefaultParent(), i));
+				mxCell cell = (mxCell)this.graph.getModel().getChildAt(this.graph.getDefaultParent(), i);
+				if(cell.getChildCount()>1){
+					//TODO do it recursively
+					for(int j = 0;j<cell.getChildCount(); j++){
+						this.graph.getSelectionModel().addCell(cell.getChildAt(j));
+					}
+				} else {
+					this.graph.getSelectionModel().addCell(cell);
+				}
 			}
 		}
 	}
