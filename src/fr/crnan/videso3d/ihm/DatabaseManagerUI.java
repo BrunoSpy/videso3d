@@ -625,11 +625,14 @@ public class DatabaseManagerUI extends JDialog {
 				}
 			} else if (source == delete) {				
 				try {
-					FileManager.deleteFile(new File(table.getModel().getValueAt(index, 1)+"_files"));
-					Integer id = (Integer)((DBTableModel)table.getModel()).getId(index);
-					DatabaseManager.deleteDatabase(id);
-					((DBTableModel)table.getModel()).delete(index);
-					
+					if(JOptionPane.showConfirmDialog(table, "Supprimer une base de données supprimera définitivement toutes les données associées.\n" +
+							"Confirmez vous la suppresion de la base de données "+table.getModel().getValueAt(index, 1)+" ?", "Suppression d'une base de données", JOptionPane.YES_NO_OPTION) 
+							== JOptionPane.YES_OPTION){
+						FileManager.deleteFile(new File(table.getModel().getValueAt(index, 1)+"_files"));
+						Integer id = (Integer)((DBTableModel)table.getModel()).getId(index);
+						DatabaseManager.deleteDatabase(id);
+						((DBTableModel)table.getModel()).delete(index);
+					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
