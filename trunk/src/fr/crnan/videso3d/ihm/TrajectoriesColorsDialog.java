@@ -33,11 +33,11 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import fr.crnan.videso3d.Triplet;
-import fr.crnan.videso3d.layers.TrajectoriesLayer;
+import fr.crnan.videso3d.trajectography.TracksModel;
 /**
  * IHM de configuration des filtres de couleurs pour les chevelus
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class TrajectoriesColorsDialog extends JPanel {
 
@@ -152,7 +152,7 @@ public class TrajectoriesColorsDialog extends JPanel {
 
 			champs = new JComboBox();
 			for(int i=1;i<6;i++){
-				champs.addItem(TrajectoriesLayer.type2string(i));
+				champs.addItem(TracksModel.type2string(i));
 			}
 			if(param.getFirst() != null) champs.setSelectedItem(param.getFirst());
 			this.add(champs);

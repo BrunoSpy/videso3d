@@ -19,11 +19,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.crnan.videso3d.formats.VidesoTrack;
+import fr.crnan.videso3d.trajectography.TracksModel;
 import gov.nasa.worldwind.tracks.TrackSegment;
 /**
  * Track provenant d'un LPLN
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.0
  */
 public class LPLNTrack implements VidesoTrack {
 
@@ -74,11 +75,13 @@ public class LPLNTrack implements VidesoTrack {
 	public void setType(String type){
 		this.type = type;
 	}
-	
+
+	@Override
 	public String getType() {
 		return this.type;
 	}
 
+	@Override
 	public String getIndicatif() {
 		return this.indicatif;
 	}
@@ -86,7 +89,8 @@ public class LPLNTrack implements VidesoTrack {
 	public void setArrivee(String arrivee){
 		this.arrivee = arrivee;
 	}
-	
+
+	@Override
 	public String getArrivee() {
 		return this.arrivee;
 	}
@@ -94,7 +98,8 @@ public class LPLNTrack implements VidesoTrack {
 	public void setDepart(String depart){
 		this.depart = depart;
 	}
-	
+
+	@Override
 	public String getDepart() {
 		return this.depart;
 	}
@@ -102,5 +107,32 @@ public class LPLNTrack implements VidesoTrack {
 	public void setIndicatif(String indicatif) {
 		this.indicatif = indicatif;
 	}
+	
+	@Override
+	public Integer getNumTraj() {
+		return null;
+	}
 
+	@Override
+	public String getIaf() {
+		return null;
+	}
+	
+	@Override
+	public boolean isFieldAvailable(int field) {
+		switch (field) {
+		case TracksModel.FIELD_ADEP:
+			return true;
+		case TracksModel.FIELD_ADEST:
+			return true;
+		case TracksModel.FIELD_IAF:
+			return false;
+		case TracksModel.FIELD_INDICATIF:
+			return true;
+		case TracksModel.FIELD_TYPE_AVION:
+			return true;
+		default:
+			return false;
+		}
+	}
 }

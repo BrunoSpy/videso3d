@@ -12,16 +12,16 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ */
 package fr.crnan.videso3d.layers;
 
 import java.awt.Color;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+
+import javax.swing.event.TableModelEvent;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.Pallet;
@@ -29,113 +29,114 @@ import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrackPoint;
 import fr.crnan.videso3d.graphics.Profil3D;
-import fr.crnan.videso3d.trajectography.PolygonsSetFilter;
+import fr.crnan.videso3d.trajectography.TracksModel;
+import fr.crnan.videso3d.trajectography.TracksModelListener;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer d'accueil pour des trajectoires issues d'un LPLN
  * @author Bruno Spyckerelle
- * @version 0.3.2
+ * @version 0.4.0
  */
 public class LPLNTracksLayer extends TrajectoriesLayer {
 
 	private ProfilLayer layer = new ProfilLayer("LPLN");
-	
-	private HashMap<LPLNTrack, Boolean> tracks = new HashMap<LPLNTrack, Boolean>();
-	
+
 	private HashMap<LPLNTrack, Profil3D> profils = new HashMap<LPLNTrack, Profil3D>();
-	
-	private Set<LPLNTrack> selectedTracks = null;
-	
+
 	private String name = "LPLN";
-	
+
 	private int style = TrajectoriesLayer.STYLE_PROFIL;
-	
+
 	protected Color defaultInsideColor = Pallet.makeBrighter(Color.BLUE);
-	
+
 	protected Color defaultOutsideColor = Color.BLUE;
-	
+
 	protected double defaultWidth = 1.0;
 
 	protected double defaultOpacity = 0.3;
-	
-	public LPLNTracksLayer(){
-		super();
+
+	private TracksModel model;
+
+	public LPLNTracksLayer(TracksModel model){
+		super(model);
 		this.add(layer);
 		this.setDefaultInsideColor(defaultInsideColor);
 		this.setDefaultOutsideColor(this.defaultOutsideColor);
 	}
-	
-	@Override
-	public void addFilter(int field, String regexp) {
-		Collection<LPLNTrack> tracks;
-		if(!this.isFilterDisjunctive()){
-			if(selectedTracks == null) {
-				this.selectedTracks = new HashSet<LPLNTrack>();
-				tracks = this.tracks.keySet();
-			} else {
-				tracks = new HashSet<LPLNTrack>(this.selectedTracks);
-				this.selectedTracks.clear();
-			}
-		} else {
-			this.selectedTracks = new HashSet<LPLNTrack>();
-			tracks = this.tracks.keySet();
-		}
-		switch (field) {
-		case FIELD_ADEST:
-			for(LPLNTrack track : tracks){
-				if(track.getArrivee().matches(regexp)){
-					this.addSelectedTrack(track);
-				}
-			}
-			break;
-		case FIELD_IAF:
-			//Field not supported
-			//TODO Throw Exception ?
-			break;
-		case FIELD_ADEP:
-			for(LPLNTrack track : tracks){
-				if(track.getDepart().matches(regexp)){
-					this.addSelectedTrack(track);
-				}
-			}
-			break;	
-		case FIELD_INDICATIF:
-			for(LPLNTrack track : tracks){
-				if(track.getIndicatif().matches(regexp)){
-					this.addSelectedTrack(track);
-				}
-			}
-			break;
-		case FIELD_TYPE_AVION:
-			for(LPLNTrack track : tracks){
-				if(track.getType().matches(regexp)){
-					this.addSelectedTrack(track);
-				}
-			}
-			break;
-		default:
-			break;
-		}
-	}
-
-	private void addTrack(LPLNTrack track){
-		this.tracks.put(track, true);
-		this.showTrack(track);
-	}
-	
 
 	@Override
-	public void removeTracks(List<Track> selectedTracks) {
-		for(Track track : selectedTracks){
-			this.tracks.remove(track);
-			this.profils.remove(track);
-			this.selectedTracks.remove(track);
-		}
-		this.update();
+	public TracksModel getModel() {
+		return this.model;
 	}
-	
+
+	@Override
+	public void setModel(TracksModel model) {
+		this.model = model;
+		this.model.addTableModelListener(new TracksModelListener() {
+
+			@Override
+			public void tableChanged(TableModelEvent e) {}
+
+			@Override
+			public void trackAdded(VidesoTrack track) {
+				showTrack((LPLNTrack) track);
+			}
+
+			@Override
+			public void trackVisibilityChanged(VidesoTrack track,
+					boolean visible) {
+				if(visible){
+					showTrack((LPLNTrack) track);
+				} else {
+					hideTrack((LPLNTrack) track);
+				}
+			}
+
+			@Override
+			public void trackSelectionChanged(VidesoTrack track,
+					boolean selected) {
+				highlightTrack(track, selected);				
+			}
+
+			@Override
+			public void trackRemoved(VidesoTrack track) {
+				removeTrack((LPLNTrack) track);
+			}
+
+			@Override
+			public void trackVisibilityChanged(Collection<VidesoTrack> track,
+					boolean visible) {
+				for(VidesoTrack t : track){
+					trackVisibilityChanged(t, visible);
+				}
+			}
+
+			@Override
+			public void trackSelectionChanged(Collection<VidesoTrack> track,
+					boolean selected) {
+				for(VidesoTrack t : track){
+					trackSelectionChanged(t, selected);
+				}
+			}
+
+			@Override
+			public void trackAdded(Collection<VidesoTrack> track) {
+				for(VidesoTrack t : track){
+					trackAdded(t);
+				}				
+			}
+
+			@Override
+			public void trackRemoved(Collection<VidesoTrack> track) {
+				for(VidesoTrack t : track){
+					trackRemoved(t);
+				}
+			}
+		});
+	}
+
 	protected void showTrack(LPLNTrack track){
 		if(profils.containsKey(track)){
 			this.layer.addProfil3D(profils.get(track));
@@ -152,39 +153,34 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 				this.layer.addProfil3D(profil);
 			}
 		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
+	}
+
+	protected void removeTrack(LPLNTrack track){
+		Profil3D profil = this.profils.get(track);
+		if(profil != null){
+			this.layer.remove(profil);
+			this.firePropertyChange(AVKey.LAYER, null, this);
+			this.profils.remove(track);
+		}
+	}
+	
+	protected void hideTrack(LPLNTrack track){
+		Profil3D profil = this.profils.get(track);
+		if(profil != null){
+			this.layer.remove(profil);
+			this.firePropertyChange(AVKey.LAYER, null, this);
+		}
 	}
 	
 	@Override
-	public void addTrack(VidesoTrack track) {
-		if(track instanceof LPLNTrack){
-			this.addTrack((LPLNTrack)track);
-		}
-	}
-
-	@Override
-	public Collection<LPLNTrack> getSelectedTracks() {
-		return this.selectedTracks == null ? tracks.keySet() : selectedTracks;
-	}
-
-	@Override
-	public void removeFilter() {
-		this.selectedTracks = null;
-		this.update();
-	}
-
-	@Override
 	public void update() {
 		this.layer.removeAllRenderables();
-		for(LPLNTrack track : (selectedTracks == null ? tracks.keySet() : selectedTracks)){
-			if(this.isVisible(track)) this.showTrack(track);
+		for(VidesoTrack track : this.getModel().getVisibleTracks()){
+			this.showTrack((LPLNTrack) track);
 		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
 
-	}
-
-	private void addSelectedTrack(LPLNTrack track) {
-		if(selectedTracks == null) this.selectedTracks = new HashSet<LPLNTrack>();
-		this.selectedTracks.add(track);
 	}
 
 	@Override
@@ -196,18 +192,6 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
-	@Override
-	public Boolean isVisible(Track track) {
-		return tracks.get(track);
-	}
-
-	@Override
-	public void setVisible(Boolean b, Track track) {
-		tracks.put((LPLNTrack) track, b);
-		this.update();
-	}
-	
-	
 	@Override
 	public Boolean isTrackHideable() {
 		return true;
@@ -231,9 +215,9 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	 */
 	public void setStyle(int style) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
 	public String getName() {
 		return this.name;
@@ -247,15 +231,15 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	@Override
 	public void addFilterColor(int field, String regexp, Color color) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void resetFilterColor() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	protected HashMap<LPLNTrack, Profil3D> getProfils(){
 		return profils;
 	}
@@ -320,7 +304,7 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		this.firePropertyChange(AVKey.LAYER, null, this);
 
 	}
-	
+
 	@Override
 	public int getStyle() {
 		return this.style;
@@ -339,64 +323,10 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	}
 
 	@Override
-	public List<? extends VidesoTrack> getTracks() {
-		List<LPLNTrack> tracksList = new LinkedList<LPLNTrack>();
-		tracksList.addAll(this.tracks.keySet());
-		return tracksList;
-	}
-
-	@Override
-	public boolean isPolygonFilterable() {
-		return false;
-	}
-
-	@Override
-	public void addPolygonFilter(PolygonsSetFilter polygon) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void disablePolygonFilter(PolygonsSetFilter polygon) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void enablePolygonFilter(PolygonsSetFilter polygon) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean isPolygonFilterActive(PolygonsSetFilter polygon) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public int getNumberTrajectories(PolygonsSetFilter polygon) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public List<PolygonsSetFilter> getPolygonFilters() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void removePolygonFilter(PolygonsSetFilter polygons) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void setShadedColors(double minAltitude, double maxAltitude,
 			Color firstColor, Color secondColor) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -426,7 +356,7 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	@Override
 	public void setMultiColors(Double[] altitudes, Color[] colors) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -434,6 +364,5 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 }

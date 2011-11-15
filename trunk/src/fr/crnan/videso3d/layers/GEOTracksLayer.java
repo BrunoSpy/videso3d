@@ -16,24 +16,22 @@
 package fr.crnan.videso3d.layers;
 
 import java.awt.Color;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
-import javax.swing.SwingWorker;
+import javax.swing.event.TableModelEvent;
 
 import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.graphics.AltitudeFilterablePath;
-import fr.crnan.videso3d.graphics.VPolygon;
-import fr.crnan.videso3d.trajectography.PolygonsSetFilter;
+import fr.crnan.videso3d.trajectography.TracksModel;
+import fr.crnan.videso3d.trajectography.TracksModelListener;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Position;
@@ -52,11 +50,9 @@ import gov.nasa.worldwind.util.Logging;
  * @version 0.4.4
  */
 public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFilterableLayer{
-	
-	private List<GEOTrack> tracks = new ArrayList<GEOTrack>();
-	
-	protected HashMap<Integer, String> filters = new HashMap<Integer, String>();
-	
+		
+	private TracksModel model;
+		
 	protected HashMap<VidesoTrack, AltitudeFilterablePath> lines = new HashMap<VidesoTrack, AltitudeFilterablePath>();
 	
 	/**
@@ -79,11 +75,7 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	private ShapeAttributes normal = new BasicShapeAttributes();
 	
 	private ShapeAttributes highlight = new BasicShapeAttributes();
-	
-	/**
-	 * Filtres par polygone
-	 */
-	private HashSet<PolygonsSetFilter> polygonFilters;
+
 	
 	/**
 	 * Drops point if the previous is less <code>precision</code> far from the previous point
@@ -103,25 +95,104 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	private Double[] altitudes = {0.0, 50.0*30.47, 195*30.47, 300*30.47, 600*30.47};
 	private Color[] multicolors = {Color.WHITE, Color.GREEN, Color.ORANGE, Color.RED};	
 	
-	public GEOTracksLayer(){
-		super();
+	public GEOTracksLayer(TracksModel model){
+		super(model);
 		this.add(layer);
 		this.setPickEnabled(true);
 		this.setDefaultMaterial();
 	}
 
 	public GEOTracksLayer(Boolean tracksHideable, Boolean tracksHighlightable){
-		this();
+		this(new TracksModel());
 		this.setTracksHighlightable(tracksHighlightable);
 		this.setTracksHideable(tracksHideable);
 	}
 	
-	private void addTrack(GEOTrack track){
-		this.tracks.add(track);
-		this.showTrack(track);
-	}
+	@Override
+	public void setModel(TracksModel model){
+		this.model = model;
+		this.model.addTableModelListener(new TracksModelListener() {
+			
+			@Override
+			public void tableChanged(TableModelEvent e) {}
+			
+			@Override
+			public void trackAdded(VidesoTrack track) {
+				showTrack(track);
+			}
 
-	protected void showTrack(VidesoTrack track){
+			@Override
+			public void trackVisibilityChanged(VidesoTrack track,
+					boolean visible) {
+				Path line = lines.get(track);
+				if(line != null) {
+					line.setVisible(visible);
+					layer.firePropertyChange(AVKey.LAYER, null, layer);
+				}
+			}
+
+			@Override
+			public void trackSelectionChanged(VidesoTrack track,
+					boolean selected) {
+				Path line = lines.get(track);
+				if(line != null){
+					line.setHighlighted(selected);		
+					layer.firePropertyChange(AVKey.LAYER, null, layer);
+				}
+			}
+
+			@Override
+			public void trackRemoved(VidesoTrack track) {
+				removeTrack(track);
+			}
+
+			@Override
+			public void trackVisibilityChanged(Collection<VidesoTrack> track,
+					boolean visible) {
+				for(VidesoTrack t : track){
+					trackVisibilityChanged(t, visible);
+				}
+			}
+
+			@Override
+			public void trackSelectionChanged(Collection<VidesoTrack> track,
+					boolean selected) {
+				for(VidesoTrack t : track){
+					trackSelectionChanged(t, selected);
+				}
+			}
+
+			@Override
+			public void trackAdded(Collection<VidesoTrack> track) {
+				for(VidesoTrack t : track){
+					trackAdded(t);
+				}				
+			}
+
+			@Override
+			public void trackRemoved(Collection<VidesoTrack> track) {
+				for(VidesoTrack t : track){
+					trackRemoved(t);
+				}
+			}
+		});
+	}
+	
+	@Override
+	public TracksModel getModel(){
+		return this.model;
+	}
+	
+	protected void removeTrack(VidesoTrack track){
+		Path line = this.lines.get(track);
+		if(line != null){
+			this.lines.remove(track);
+			this.layer.removeRenderable(line);
+			this.layer.firePropertyChange(AVKey.LAYER, null, this.layer);
+		}
+	}
+	
+	protected void showTrack(final VidesoTrack track){
 		if(this.lines.containsKey(track)){
 			Path line = this.lines.get(track);
 			if(line != null){
@@ -183,115 +254,21 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 				line.setAltitudeMode(WorldWind.ABSOLUTE);
 				line.setPositions(positions);
 				lines.put(track, line);
+				//track highlight
+				line.addPropertyChangeListener("HIGHLIGHT", new PropertyChangeListener() {
+					
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						getModel().setSelected((Boolean) evt.getNewValue(), track);
+					}
+				});
 				this.layer.addRenderable(line);
 				this.layer.firePropertyChange(AVKey.LAYER, null, this.layer);
 			}
 		}
 	}
 
-	@Override
-	public void addTrack(VidesoTrack track) {
-		this.addTrack((GEOTrack)track);
-	}
-
-	@Override
-	public void addFilter(int field, String regexp) {
-		this.filters.put(field, regexp);
-	}
-
-	protected void applyFilters(){
-		if(filters.size() == 0) {
-			for(Path p : this.lines.values()){
-				p.setVisible(true);
-			}
-			return;
-		}
-		for(Path p : this.lines.values()){
-			p.setVisible(!this.isFilterDisjunctive());
-		}
-		for(Entry<Integer, String> filter : filters.entrySet()) {
-			switch (filter.getKey()) {
-			case FIELD_ADEST:
-				for(GEOTrack track : tracks){				
-					if(track.getArrivee().matches(filter.getValue())){
-						if(this.isFilterDisjunctive()){
-							Path line = this.lines.get(track);
-							if(line != null)
-								line.setVisible(true);
-						}
-					} else {
-						if(!this.isFilterDisjunctive()){
-							Path line = this.lines.get(track);
-							if(line != null)
-								line.setVisible(false);
-						}
-					}
-				}
-				break;
-			case FIELD_IAF:
-				//Field not supported
-				//TODO Throw Exception ?
-				break;
-			case FIELD_ADEP:
-				for(GEOTrack track : tracks){
-					if(track.getDepart().matches(filter.getValue())){
-						if(this.isFilterDisjunctive()){
-							Path line = this.lines.get(track);
-							if(line != null)
-								line.setVisible(true);
-						}
-					} else {
-						if(!this.isFilterDisjunctive()){
-							Path line = this.lines.get(track);
-							if(line != null)
-								line.setVisible(false);
-						}
-
-					}
-				}
-				break;	
-			case FIELD_INDICATIF:
-				for(GEOTrack track : tracks){
-					if(track.getIndicatif().matches(filter.getValue())){
-						if(this.isFilterDisjunctive()){
-							Path line = this.lines.get(track);
-							if(line != null)
-								line.setVisible(true);
-						}
-					} else {
-						if(!this.isFilterDisjunctive()){
-							Path line = this.lines.get(track);
-							if(line != null)
-								line.setVisible(false);
-						}
-
-					}
-				}
-				break;
-			case FIELD_TYPE_AVION:
-				for(GEOTrack track : tracks){
-					if(track.getType().matches(filter.getValue())){
-						if(this.isFilterDisjunctive()){
-							Path line = this.lines.get(track);
-							if(line != null)
-								line.setVisible(true);
-						}
-					} else {
-						if(!this.isFilterDisjunctive()){
-							Path line = this.lines.get(track);
-							if(line != null)
-								line.setVisible(false);
-						}
-
-					}
-				}
-				break;
-			default:
-				break;
-			}
-		}		
-		this.firePropertyChange(AVKey.LAYER, null, this);
-	}
+	
 	
 	@Override
 	public void addFilterColor(int field, String regexp, Color color){
@@ -303,40 +280,40 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 		attrs.setOutlineMaterial(new Material(color));
 		this.colors.add(attrs);
 		switch (field) {
-		case FIELD_ADEST:
-			for(GEOTrack track : tracks){
-				if(track.getArrivee().matches(regexp)){
+		case TracksModel.FIELD_ADEST:
+			for(VidesoTrack track : this.getModel().getVisibleTracks()){
+				if(((GEOTrack) track).getArrivee().matches(regexp)){
 					this.highlightTrack(track, false);
 					Path line = this.lines.get(track);
 					if(line != null) line.setAttributes(attrs);
 				}
 			}
 			break;
-		case FIELD_IAF:
+		case TracksModel.FIELD_IAF:
 			//Field not supported
 			//TODO Throw Exception ?
 			break;
-		case FIELD_ADEP:
-			for(GEOTrack track : tracks){
-				if(track.getDepart().matches(regexp)){
+		case TracksModel.FIELD_ADEP:
+			for(VidesoTrack track : this.getModel().getVisibleTracks()){
+				if(((GEOTrack) track).getDepart().matches(regexp)){
 					this.highlightTrack(track, false);
 					Path line = this.lines.get(track);
 					if(line != null) line.setAttributes(attrs);
 				}
 			}
 			break;	
-		case FIELD_INDICATIF:
-			for(GEOTrack track : tracks){
-				if(track.getIndicatif().matches(regexp)){
+		case TracksModel.FIELD_INDICATIF:
+			for(VidesoTrack track : this.getModel().getVisibleTracks()){
+				if(((GEOTrack) track).getIndicatif().matches(regexp)){
 					this.highlightTrack(track, false);
 					Path line = this.lines.get(track);
 					if(line != null) line.setAttributes(attrs);
 				}
 			}
 			break;
-		case FIELD_TYPE_AVION:
-			for(GEOTrack track : tracks){
-				if(track.getType().matches(regexp)){
+		case TracksModel.FIELD_TYPE_AVION:
+			for(VidesoTrack track : this.getModel().getVisibleTracks()){
+				if(((GEOTrack) track).getType().matches(regexp)){
 					this.highlightTrack(track, false);
 					Path line = this.lines.get(track);
 					if(line != null) line.setAttributes(attrs);
@@ -358,47 +335,12 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	}
 
 	@Override
-	public void removeFilter() {
-		this.filters.clear();
-		this.firePropertyChange(AVKey.LAYER, null, this);
-	}
-
-	@Override
 	public void update() {
-		for(GEOTrack track : tracks){
+		for(VidesoTrack track : this.getModel().getVisibleTracks()){
 			this.showTrack(track);
 		}
-		this.applyFilters();
 		//mettre à jour les filtres volumiques
-		this.updatePolygonFilters();
 		this.firePropertyChange(AVKey.LAYER, null, this);
-	}
-
-	@Override
-	public Collection<VidesoTrack> getSelectedTracks(){
-		Set<VidesoTrack> selectedTracks = new HashSet<VidesoTrack>();
-		for(GEOTrack track : tracks){
-			Path line = lines.get(track);
-			if(line != null) {
-				if(line.isVisible()) selectedTracks.add(track);
-			}
-		}
-		return selectedTracks;
-	}
-
-	private Collection<Path> getSelectedPaths(){
-		Set<Path> selected = new HashSet<Path>();
-		for(Path line : lines.values()){
-			if(line != null) {
-				if(line.isVisible()) selected.add(line);
-			}
-		}
-		return selected;
-	}
-	
-	@Override
-	public List<? extends VidesoTrack> getTracks() {
-		return this.tracks;
 	}
 
 	@Override
@@ -412,19 +354,19 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 		}
 	}
 
-	@Override
-	public Boolean isVisible(Track track) {
-		Path line = this.lines.get(track);
-		if(line != null)
-			return line.isVisible();
-		return false;
-	}
-
-	@Override
-	public void setVisible(Boolean b, Track track) {
-		Path line = this.lines.get(track);
-		if(line != null) line.setVisible(b);
-	}
+//	@Override
+//	public Boolean isVisible(Track track) {
+//		Path line = this.lines.get(track);
+//		if(line != null)
+//			return line.isVisible();
+//		return false;
+//	}
+//
+//	@Override
+//	public void setVisible(Boolean b, Track track) {
+//		Path line = this.lines.get(track);
+//		if(line != null) line.setVisible(b);
+//	}
 
 	@Override
 	public Boolean isTrackHideable() {
@@ -447,18 +389,6 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	 * Always true
 	 */
 	public void setTracksHighlightable(Boolean b) {}
-
-	@Override
-	public void removeTracks(List<Track> selectedTracks) {
-		this.tracks.removeAll(selectedTracks);
-		for(Track track : selectedTracks){
-			Path line = this.lines.get(track);
-			line.setVisible(false);
-			this.remove(line);
-			this.lines.remove(track);
-		}
-		this.update();
-	}
 	
 	@Override
 	/**
@@ -470,7 +400,7 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 			if(style == TrajectoriesLayer.STYLE_SIMPLE || 
 					style == TrajectoriesLayer.STYLE_SHADED || 
 					style == TrajectoriesLayer.STYLE_MULTI_COLOR ||
-					this.tracks.size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) {
+					this.getModel().getVisibleTracks().size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) {
 				this.style = style;
 				{
 					//display bug when changing extrude -> delete and redraw lines
@@ -588,149 +518,14 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	@Override
 	public List<Integer> getStylesAvailable() {
 		List<Integer> styles = new ArrayList<Integer>();
-		if(this.tracks.size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) styles.add(TrajectoriesLayer.STYLE_CURTAIN);
+		if(this.getModel().getVisibleTracks().size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) styles.add(TrajectoriesLayer.STYLE_CURTAIN);
 		styles.add(TrajectoriesLayer.STYLE_SIMPLE);
 		styles.add(TrajectoriesLayer.STYLE_SHADED);
 		styles.add(TrajectoriesLayer.STYLE_MULTI_COLOR);
 		return styles;
 	}
 
-	private int getNumberPolygonFiltersActives(){
-		int i = 0;
-		for(PolygonsSetFilter p : this.polygonFilters){
-			if(p.isActive()){
-				i ++;
-			}
-		}
-		return i;
-	}
 	
-	private void updatePolygonFilters(){
-		new SwingWorker<Integer, Integer>() {
-			@Override
-			protected Integer doInBackground() throws Exception {
-				doUpdatePolygonFilters();
-				return null;
-			}
-		}.execute();
-	}
-	
-	private void doUpdatePolygonFilters(){
-		this.firePropertyChange("change", -1, this.getNumberPolygonFiltersActives()*this.getSelectedTracks().size());
-		if(this.polygonFilters == null)
-			return;
-		for(PolygonsSetFilter polygon : this.polygonFilters){
-			polygon.setContainedTrajectories(0);
-		}
-		Collection<Path> paths = getSelectedPaths(); //ne pas afficher des trajectoires déjà filtrées
-		if(this.polygonFilters != null && this.polygonFilters.size() != 0 && this.getNumberPolygonFiltersActives() != 0){
-			for(Path p : paths)
-				p.setVisible(false);
-			int i = 0;
-			for(PolygonsSetFilter set : this.polygonFilters){
-				if(set.isActive()){
-					for(Path p : paths){
-						i++;
-						this.firePropertyChange("progress", i-1, i);
-						Iterator<VPolygon> polygons = set.getPolygons().iterator();
-						boolean contain = false;
-						while(polygons.hasNext() && !contain){
-							VPolygon polygon = polygons.next();
-							Iterator<? extends Position> positions = p.getPositions().iterator();
-							while(positions.hasNext() && !contain){
-								if(polygon.contains(positions.next())){
-									p.setVisible(true);
-									contain = true;
-									set.setContainedTrajectories(set.getContainedTrajectories()+1);
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		this.firePropertyChange(AVKey.LAYER, null, this);
-	}
-
-	@Override
-	public void addPolygonFilter(PolygonsSetFilter polygons) {
-		if(polygons == null){
-			Logging.logger().severe("Trying to add null polygon filter");
-			return;
-		}
-		if(this.polygonFilters ==  null) this.polygonFilters = new HashSet<PolygonsSetFilter>();
-		boolean exist = false;
-		Iterator<PolygonsSetFilter> filters = this.polygonFilters.iterator();
-		while(filters.hasNext() && !exist){
-			if(filters.next().getPolygons().containsAll(polygons.getPolygons())){
-				exist =  true;
-			}
-		}
-		if(!exist){
-			this.polygonFilters.add(polygons);
-		}
-		this.update();
-	}
-	
-	@Override
-	public void disablePolygonFilter(PolygonsSetFilter polygons) {
-		if(!this.polygonFilters.contains(polygons)){
-			Logging.logger().severe("Trying to disable a non-existing filter");
-			return;
-		}
-		if(polygons.isActive()){
-			polygons.setActive(false);
-			this.update();
-		}
-	}
-	
-	@Override
-	public void enablePolygonFilter(PolygonsSetFilter polygons) {
-		if(!this.polygonFilters.contains(polygons)){
-			Logging.logger().severe("Trying to enable a non-existing filter");
-			return;
-		}
-		if(!polygons.isActive()){
-			polygons.setActive(true);
-			this.update();
-		}
-	}
-	
-	@Override
-	public boolean isPolygonFilterActive(PolygonsSetFilter polygon){
-		return polygon.isActive();
-	}
-	
-	@Override
-	public boolean isPolygonFilterable() {
-		return true;
-	}
-
-	@Override
-	public List<PolygonsSetFilter> getPolygonFilters() {
-		if(this.polygonFilters == null){
-			return null;
-		} else {
-			return new ArrayList<PolygonsSetFilter>(this.polygonFilters);
-		}
-	}
-
-	@Override
-	public void removePolygonFilter(PolygonsSetFilter polygons) {
-		if(polygonFilters != null && this.polygonFilters.contains(polygons)) {
-			this.polygonFilters.remove(polygons);
-			this.update();
-		}
-	}
-	
-	@Override
-	public int getNumberTrajectories(PolygonsSetFilter polygon) {
-		if(this.polygonFilters.contains(polygon)){
-			return polygon.getContainedTrajectories();
-		} else {
-			return 0;
-		}
-	}
 
 	@Override
 	public void setMaximumViewableAltitude(double altitude) {

@@ -29,10 +29,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Vector;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.ToolTipManager;
 
@@ -69,10 +71,13 @@ import fr.crnan.videso3d.ihm.components.AltitudeRangeSlider;
 import fr.crnan.videso3d.ihm.components.ClosableSingleDockable;
 import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.VDefaultEclipseThemConnector;
+import fr.crnan.videso3d.layers.FPLTracksLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
+import fr.crnan.videso3d.layers.LPLNTracksLayer;
 import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.PointNotFoundException;
+import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import gov.nasa.worldwind.BasicModel;
@@ -81,7 +86,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3.11
+ * @version 0.3.12
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -122,6 +127,9 @@ public class MainWindow extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	}
 
+	private JToolBar drawToolbar;
+	private JPanel toolbars;
+	
 	public MainWindow(){
 		//Création du splashscreen
 		splashScreen = new SplashScreen();
@@ -343,7 +351,10 @@ public class MainWindow extends JFrame {
 		});
 		
 		//Barre d'actions
-		this.add(new MainToolbar(this, wwd, omniBox), BorderLayout.PAGE_START);
+		toolbars = new JPanel();
+		toolbars.setLayout(new BoxLayout(toolbars, BoxLayout.Y_AXIS));
+		toolbars.add(new MainToolbar(this, wwd, omniBox));
+		this.add(toolbars, BorderLayout.PAGE_START);
 		//Barre de statut
 		this.add(this.createStatusBar(), BorderLayout.SOUTH);
 		//suppression du splashscreen et affichage de la fenêtre
@@ -412,18 +423,18 @@ public class MainWindow extends JFrame {
 		
 		if(opasFile.size()>0){
 			try{
-				OPASTracksLayer layer = new OPASTracksLayer();
+				OPASTracksLayer layer = new OPASTracksLayer(new TracksModel());
 				layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
 				this.wwd.toggleLayer(layer, true);
 				//lecture et création des tracks à la volée
-				OPASReader reader = new OPASReader(opasFile, layer);
-				if(reader.getTracks().size() > 0){
+				OPASReader reader = new OPASReader(opasFile, layer.getModel());
+				if(reader.getModel().getAllTracks().size() > 0){
 					//changement du style en fonction de la conf
-					if(reader.getTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
+					if(reader.getModel().getAllTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
 						layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
 					}
 					layer.setName(reader.getName());
-					this.addTrajectoriesView(reader);
+					this.addTrajectoriesView(reader, layer);
 				} else {
 					//aucune trajectoire trouvée dans les fichiers
 					opasFile.clear();
@@ -434,18 +445,18 @@ public class MainWindow extends JFrame {
 		}
 		if(geoFile.size()>0){
 			try{
-				GEOTracksLayer layer = new GEOTracksLayer();
+				GEOTracksLayer layer = new GEOTracksLayer(new TracksModel());
 				layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
 				this.wwd.toggleLayer(layer, true);
 				//lecture et création des tracks à la volée
-				GEOReader reader = new GEOReader(geoFile, layer);
-				if(reader.getTracks().size() > 0){
+				GEOReader reader = new GEOReader(geoFile, layer.getModel());
+				if(reader.getModel().getAllTracks().size() > 0){
 					//changement du style en fonction de la conf
-					if(reader.getTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
+					if(reader.getModel().getAllTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
 						layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
 					}
 					layer.setName(reader.getName());
-					this.addTrajectoriesView(reader);
+					this.addTrajectoriesView(reader, layer);
 				} else {
 					//aucune trajectoire trouvée dans les fichiers
 					geoFile.clear();
@@ -456,9 +467,10 @@ public class MainWindow extends JFrame {
 		}
 		if(lplnFile.size()>0){
 			try {
-				LPLNReader reader = new LPLNReader(lplnFile);
-				if(reader.getTracks().size() > 0){
-					this.addTrajectoriesView(new LPLNReader(lplnFile));
+				LPLNTracksLayer layer = new LPLNTracksLayer(new TracksModel());
+				LPLNReader reader = new LPLNReader(lplnFile, layer.getModel());
+				if(reader.getModel().getAllTracks().size() > 0){
+					this.addTrajectoriesView(reader, layer);
 				} else {
 					lplnFile.clear();
 				}
@@ -471,12 +483,13 @@ public class MainWindow extends JFrame {
 		}
 		if(fplFile.size()>0){
 			try {
-				FPLReader fplR = new FPLReader(fplFile);
+				FPLTracksLayer layer = new FPLTracksLayer(new TracksModel());
+				FPLReader fplR = new FPLReader(fplFile, layer.getModel());
 				String msgErreur = fplR.getErrorMessage();
 				if(!msgErreur.isEmpty())
 					JOptionPane.showMessageDialog(null, msgErreur, "Erreur lors de la lecture du plan de vol", JOptionPane.ERROR_MESSAGE);
-				if(fplR.getTracks().size()>0)
-					this.addTrajectoriesView(fplR);
+				if(fplR.getModel().getAllTracks().size()>0)
+					this.addTrajectoriesView(fplR, layer);
 				else 
 					fplFile.clear();
 			} catch (PointNotFoundException e) {
@@ -491,8 +504,8 @@ public class MainWindow extends JFrame {
 	
 	}
 	
-	public void addTrajectoriesView(final TrackFilesReader reader){
-		final TrajectoriesView content = new TrajectoriesView(wwd, reader, context);
+	public void addTrajectoriesView(final TrackFilesReader reader, final TrajectoriesLayer layer){
+		final TrajectoriesView content = new TrajectoriesView(wwd, reader, layer, context);
 		int i = 0;
 		if(control.getSingleDockable(reader.getName()) != null){
 			do{
@@ -512,7 +525,7 @@ public class MainWindow extends JFrame {
 			
 			@Override
 			public void visibilityChanged(CDockable dockable) {
-					wwd.removeLayer(content.getLayer());
+					wwd.removeLayer(layer);
 			}
 				
 			@Override
@@ -579,5 +592,19 @@ public class MainWindow extends JFrame {
 	
 	private MainWindow getThis(){
 		return this;
+	}
+
+	public void setDrawToolbar(boolean selected) {
+		if(drawToolbar == null){
+			this.drawToolbar = new DrawToolbar(wwd);
+			this.drawToolbar.setFloatable(true);
+		}
+		if(selected){
+			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
+			this.validate();
+		} else {
+			this.toolbars.remove(drawToolbar);
+			this.validate();
+		}
 	}
 }

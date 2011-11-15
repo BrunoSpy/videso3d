@@ -24,6 +24,7 @@ import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrackPoint;
 import fr.crnan.videso3d.formats.fpl.FPLTrack;
 import fr.crnan.videso3d.graphics.Profil3D;
+import fr.crnan.videso3d.trajectography.TracksModel;
 
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Position;
@@ -32,7 +33,7 @@ import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer d'accueil pour les trajectoires plan de vol.
  * @author Adrien Vidal
- *
+ * @version 0.1.1
  */
 public class FPLTracksLayer extends LPLNTracksLayer {
 		
@@ -41,8 +42,8 @@ public class FPLTracksLayer extends LPLNTracksLayer {
 	 */
 	private MultiValueMap<FPLTrack, Profil3D> profils = new MultiValueMap<FPLTrack, Profil3D>();
 	
-	public FPLTracksLayer(){
-		super();
+	public FPLTracksLayer(TracksModel model){
+		super(model);
 		this.setName("PLN");
 		this.getLayer().setName("PLN");
 	}

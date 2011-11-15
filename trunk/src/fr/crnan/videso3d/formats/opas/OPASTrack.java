@@ -20,12 +20,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.crnan.videso3d.formats.VidesoTrack;
+import fr.crnan.videso3d.trajectography.TracksModel;
 import gov.nasa.worldwind.tracks.TrackSegment;
 
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class OPASTrack implements VidesoTrack{
 
@@ -75,16 +76,12 @@ public class OPASTrack implements VidesoTrack{
 		return indicatif;
 	}
 
-
-
 	/**
 	 * @return the depart
 	 */
 	public String getDepart() {
 		return depart;
 	}
-
-
 
 	/**
 	 * @return the arrivee
@@ -93,13 +90,40 @@ public class OPASTrack implements VidesoTrack{
 		return arrivee;
 	}
 
-
-
 	/**
 	 * @return the sid
 	 */
 	public String getIaf() {
 		return iaf;
 	}
+	
+	@Override
+	public String getType() {
+		return null;
+	}
+
+	@Override
+	public Integer getNumTraj() {
+		return null;
+	}
+	
+	@Override
+	public boolean isFieldAvailable(int field) {
+		switch (field) {
+		case TracksModel.FIELD_ADEP:
+			return true;
+		case TracksModel.FIELD_ADEST:
+			return true;
+		case TracksModel.FIELD_IAF:
+			return true;
+		case TracksModel.FIELD_INDICATIF:
+			return true;
+		case TracksModel.FIELD_TYPE_AVION:
+			return false;
+		default:
+			return false;
+		}
+	}
+
 
 }

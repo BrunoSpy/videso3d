@@ -7,9 +7,10 @@ All Rights Reserved.
 
 package gov.nasa.worldwindx.examples.util;
 
+import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.event.*;
 import gov.nasa.worldwind.render.Highlightable;
-import gov.nasa.worldwind.util.Logging;
+import gov.nasa.worldwindx.applications.worldwindow.util.Util;
 
 /**
  * Controls highlighting of shapes implementing {@link Highlightable} in response to pick events. Monitors a specified
@@ -21,18 +22,28 @@ import gov.nasa.worldwind.util.Logging;
  */
 public class HighlightController implements SelectListener
 {
+    protected WorldWindow wwd;
     protected Object highlightEventType = SelectEvent.ROLLOVER;
     protected Highlightable lastHighlightObject;
 
     /**
      * Creates a controller for a specified World Window.
      *
+     * @param wwd                the World Window to monitor.
      * @param highlightEventType the type of {@link SelectEvent} to highlight in response to. The default is {@link
      *                           SelectEvent#ROLLOVER}.
      */
-    public HighlightController(Object highlightEventType)
+    public HighlightController(WorldWindow wwd, Object highlightEventType)
     {
+        this.wwd = wwd;
         this.highlightEventType = highlightEventType;
+
+        this.wwd.addSelectListener(this);
+    }
+
+    public void dispose()
+    {
+        this.wwd.removeSelectListener(this);
     }
 
     public void selected(SelectEvent event)
@@ -45,7 +56,7 @@ public class HighlightController implements SelectListener
         catch (Exception e)
         {
             // Wrap the handler in a try/catch to keep exceptions from bubbling up
-            Logging.logger().warning(e.getMessage() != null ? e.getMessage() : e.toString());
+            Util.getLogger().warning(e.getMessage() != null ? e.getMessage() : e.toString());
         }
     }
 

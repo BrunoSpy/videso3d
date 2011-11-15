@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.crnan.videso3d.formats.VidesoTrack;
+import fr.crnan.videso3d.trajectography.TracksModel;
 import gov.nasa.worldwind.tracks.TrackSegment;
 /**
  * Track provenant d'un fichier Elvira GEO.
@@ -76,24 +77,54 @@ public class GEOTrack implements VidesoTrack {
 		this.trackPoints.add(new GEOTrackPoint(sentence));
 	}
 	
+	@Override
 	public String getIndicatif() {
 		return indicatif;
 	}
 
+	@Override
 	public String getDepart() {
 		return depart;
 	}
 
+	@Override
 	public String getArrivee() {
 		return arrivee;
 	}
 
+	@Override
 	public String getType() {
 		return type;
 	}
-
+	
+	@Override
 	public Integer getNumTraj(){
 		return numTraj;
 	}
+	
+	@Override
+	public String getIaf() {
+		return null;
+	}
+	
+	@Override
+	public boolean isFieldAvailable(int field) {
+		switch (field) {
+		case TracksModel.FIELD_ADEP:
+			return true;
+		case TracksModel.FIELD_ADEST:
+			return true;
+		case TracksModel.FIELD_IAF:
+			return false;
+		case TracksModel.FIELD_INDICATIF:
+			return true;
+		case TracksModel.FIELD_TYPE_AVION:
+			return true;
+		default:
+			return false;
+		}
+	}
 
+
+	
 }

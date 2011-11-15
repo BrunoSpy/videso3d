@@ -53,6 +53,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 
 import org.jdesktop.swingx.JXTable;
@@ -66,24 +67,22 @@ import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.geo.GEOWriter;
-import fr.crnan.videso3d.formats.lpln.LPLNTrack;
-import fr.crnan.videso3d.formats.opas.OPASTrack;
+import fr.crnan.videso3d.formats.lpln.LPLNReader;
+import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.ihm.components.VXTable;
-import fr.crnan.videso3d.layers.GEOTracksLayer;
-import fr.crnan.videso3d.layers.LPLNTracksLayer;
-import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.trajectography.PolygonsSetFilter;
 import fr.crnan.videso3d.trajectography.TrackContext;
+import fr.crnan.videso3d.trajectography.TracksModel;
+import fr.crnan.videso3d.trajectography.TracksModelListener;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.Layer;
-import gov.nasa.worldwind.tracks.Track;
 
 /**
  * Panel de sélection des trajectoires affichées
  * @author Bruno Spyckerelle
- * @version 0.4.2
+ * @version 0.5.0
  */
 public class TrajectoriesView extends JPanel {
 
@@ -91,19 +90,19 @@ public class TrajectoriesView extends JPanel {
 	
 	private List<Triplet<String, String, Color>> colorFilters;
 	
-	private TrajectoriesLayer layer;
-
 	private VidesoGLCanvas wwd;
 	
 	private ContextPanel context;
 	
 	private TrackContext trackContext;
 	
-	public TrajectoriesView(final VidesoGLCanvas wwd, final TrackFilesReader reader, final ContextPanel contxt){
+	private TrajectoriesLayer layer;
+	
+	public TrajectoriesView(final VidesoGLCanvas wwd, final TrackFilesReader reader, TrajectoriesLayer l, final ContextPanel contxt){
 		this.context = contxt;
-		this.layer = reader.getLayer() == null ? wwd.addTrajectoires(reader) : reader.getLayer();
+		this.layer = l;
 		this.wwd = wwd;
-		this.trackContext = new TrackContext(this.layer, reader, null, this.wwd.getModel().getGlobe());
+		this.trackContext = new TrackContext(reader, null, this.wwd.getModel().getGlobe());
 
 		final JXTaskPane filterPolygonPane = this.createPolygonFilterPane();
 		
@@ -113,8 +112,8 @@ public class TrajectoriesView extends JPanel {
 		scrollContent.setBorder(null);
 		this.add(scrollContent, BorderLayout.CENTER);		
 		
-		final JXTaskPane table = new JXTaskPane("Trajectoires affichées ("+layer.getSelectedTracks().size()+")");
-		final VXTable pistes = new VXTable(new TrackTableModel());
+		final JXTaskPane table = new JXTaskPane("Trajectoires affichées ("+reader.getModel().getVisibleTracks().size()+")");
+		final VXTable pistes = new VXTable(reader.getModel());
 		pistes.setFillsViewportHeight(true);
 		//listener pour le highlight des lignes sélectionnées
 		pistes.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -124,14 +123,58 @@ public class TrajectoriesView extends JPanel {
 				if(!e.getValueIsAdjusting()){
 					if(e.getFirstIndex() != -1){
 						for(int i = e.getFirstIndex(); i <= e.getLastIndex(); i++){
-							layer.highlightTrack(
-									(Track)((TrackTableModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(i)),
-									pistes.isRowSelected(i));
+							reader.getModel().setSelected(pistes.isRowSelected(i), 
+									(VidesoTrack) ((TracksModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(i)));
 						}
 					}
 				}
 			}
 		});
+		//synchronize selection with model
+		reader.getModel().addTableModelListener(new TracksModelListener() {
+			
+			@Override
+			public void tableChanged(TableModelEvent e) {}
+			
+			@Override
+			public void trackVisibilityChanged(Collection<VidesoTrack> track,
+					boolean visible) {}
+			
+			@Override
+			public void trackVisibilityChanged(VidesoTrack track, boolean visible) {}
+			
+			@Override
+			public void trackSelectionChanged(Collection<VidesoTrack> tracks,
+					boolean selected) {
+				for(VidesoTrack t : tracks){
+					trackSelectionChanged(t, selected);
+				}
+			}
+			
+			@Override
+			public void trackSelectionChanged(VidesoTrack track, boolean selected) {
+				int index = pistes.convertRowIndexToView(layer.getModel().getRow(track));
+				if(selected){
+					pistes.getSelectionModel().addSelectionInterval(index, index);
+				} else {
+					pistes.getSelectionModel().removeSelectionInterval(index, index);
+				}
+			}
+			
+			@Override
+			public void trackRemoved(Collection<VidesoTrack> track) {}
+			
+			@Override
+			public void trackRemoved(VidesoTrack track) {}
+			
+			@Override
+			public void trackAdded(Collection<VidesoTrack> track) {}
+			
+			@Override
+			public void trackAdded(VidesoTrack track) {}
+			
+		});
+		
 		pistes.addMouseListener(new MouseListener() {
 			
 			@Override
@@ -150,15 +193,15 @@ public class TrajectoriesView extends JPanel {
 			public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 2){
 					int row = pistes.rowAtPoint(e.getPoint());
-					final VidesoTrack t = (VidesoTrack)((TrackTableModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(row));
+					final VidesoTrack t = (VidesoTrack)((TracksModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(row));
 					trackContext.updateTrackPane(t);
 					context.setTaskPanes(trackContext.getTaskPanes(0, null));
 					context.open();
 					wwd.centerView(t);
 				} else if(e.getClickCount() == 1 && e.getButton() == MouseEvent.BUTTON3 && pistes.getSelectedRows().length > 0){
-					final List<Track> selectedTracks = new ArrayList<Track>();
+					final List<VidesoTrack> selectedTracks = new ArrayList<VidesoTrack>();
 					for(int row : pistes.getSelectedRows()){
-						selectedTracks.add((Track)((TrackTableModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(row)));
+						selectedTracks.add((VidesoTrack)((TracksModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(row)));
 					}
 					final JPopupMenu menu = new JPopupMenu();
 					JMenuItem delete = new JMenuItem("Supprimer les trajectoires sélectionnées...");
@@ -168,7 +211,9 @@ public class TrajectoriesView extends JPanel {
 						public void actionPerformed(ActionEvent e) {
 							if(JOptionPane.showConfirmDialog(menu, "La suppression des trajectoires est définitive.\n\n Confirmer la suppression des "+(selectedTracks.size())+" trajectoires ?", "Suppression des trajectoires", JOptionPane.OK_CANCEL_OPTION,
 										JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION){
-								layer.removeTracks(selectedTracks);
+								for(VidesoTrack track : selectedTracks){
+									reader.getModel().removeTrack(track);
+								}
 							}
 						}
 					});
@@ -178,14 +223,13 @@ public class TrajectoriesView extends JPanel {
 			}
 		});		
 
-		if(layer instanceof LPLNTracksLayer){
+		if(reader instanceof LPLNReader){
 			pistes.getColumnExt("IAF").setVisible(false);
-		} else if (layer instanceof GEOTracksLayer) {
+		} else if (reader instanceof GEOReader) {
 			pistes.getColumnExt("IAF").setVisible(false);
-		} else if (layer instanceof OPASTracksLayer) {
+		} else if (reader instanceof OPASReader) {
 			pistes.getColumnExt("Type").setVisible(false);
 		}
-		pistes.getColumnExt("Affiché").setVisible(layer.isTrackHideable());
 		pistes.setColumnControlVisible(true);
 		pistes.packAll();
 		
@@ -198,15 +242,15 @@ public class TrajectoriesView extends JPanel {
 		content.add(this.createFilterPane(), null);
 		if(layer.isTrackColorFiltrable()) content.add(this.createColorFilterPane(), null);
 		content.add(filterPolygonPane, null);
-		filterPolygonPane.setVisible(layer.getPolygonFilters() != null && layer.getPolygonFilters().size()>0);
+		filterPolygonPane.setVisible(layer.getModel().getPolygonFilters() != null && layer.getModel().getPolygonFilters().size()>0);
 		content.add(table, null);
 		
-		this.layer.addPropertyChangeListener(AVKey.LAYER, new PropertyChangeListener() {
+		layer.addPropertyChangeListener(AVKey.LAYER, new PropertyChangeListener() {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent arg0) {
-				table.setTitle("Trajectoires affichées ("+layer.getSelectedTracks().size()+")");
-				filterPolygonPane.setVisible((layer.getPolygonFilters() != null && layer.getPolygonFilters().size() > 0));
+				table.setTitle("Trajectoires affichées ("+layer.getModel().getVisibleTracks().size()+")");
+				filterPolygonPane.setVisible((layer.getModel().getPolygonFilters() != null && layer.getModel().getPolygonFilters().size() > 0));
 			}
 		});
 		
@@ -227,7 +271,7 @@ public class TrajectoriesView extends JPanel {
 												JOptionPane.OK_CANCEL_OPTION,
 												JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION)) {
 
-							Collection<? extends VidesoTrack> tracks = layer.getSelectedTracks();
+							Collection<? extends VidesoTrack> tracks = layer.getModel().getVisibleTracks();
 							final javax.swing.ProgressMonitor progress = new javax.swing.ProgressMonitor(null, "Sauvegarde des trajectoires sélectionnées", "",
 									0, tracks.size()-1);
 							progress.setMillisToDecideToPopup(0);
@@ -239,7 +283,7 @@ public class TrajectoriesView extends JPanel {
 								throws Exception {
 									GEOWriter writer = new GEOWriter(file, true);
 									int i = 0;
-									for(VidesoTrack track : layer.getSelectedTracks()){
+									for(VidesoTrack track : layer.getModel().getVisibleTracks()){
 										if(progress.isCanceled()){
 											writer.cancel();
 											return null;
@@ -421,8 +465,7 @@ public class TrajectoriesView extends JPanel {
 			}
 		});
 		
-		if(styles.getSelectedItem().equals("Fil de fer") ||
-				styles.getSelectedItem().equals("Rideau") ||
+		if(	styles.getSelectedItem().equals("Rideau") ||
 				styles.getSelectedItem().equals("Profil avec balises")) {
 			i++;
 			c.gridx = 0;
@@ -445,7 +488,8 @@ public class TrajectoriesView extends JPanel {
 			}
 		});
 
-		if(styles.getSelectedItem().equals("Rideau") ||
+		if(styles.getSelectedItem().equals("Fil de fer") ||
+				styles.getSelectedItem().equals("Rideau") ||
 				styles.getSelectedItem().equals("Profil avec balises")){
 			
 			c.gridx = 0;
@@ -663,7 +707,7 @@ public class TrajectoriesView extends JPanel {
 				layer.resetFilterColor();
 				if(p.getNewValue() != null) {
 					for(Triplet<String, String, Color> filter : (List<Triplet<String, String, Color>>)p.getNewValue()){
-						layer.addFilterColor(TrajectoriesLayer.string2type(filter.getFirst()), filter.getSecond(), filter.getThird());
+						layer.addFilterColor(TracksModel.string2type(filter.getFirst()), filter.getSecond(), filter.getThird());
 					}
 				}
 			}
@@ -745,23 +789,23 @@ public class TrajectoriesView extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				layer.removeFilter();
+				layer.getModel().removeFilter();
 				if(!indicField.getText().isEmpty()){
-					layer.addFilter(TrajectoriesLayer.FIELD_INDICATIF, indicField.getText());
+					layer.getModel().addFilter(TracksModel.FIELD_INDICATIF, indicField.getText());
 				}
 				if(!aDepField.getText().isEmpty()){
-					layer.addFilter(TrajectoriesLayer.FIELD_ADEP, aDepField.getText());
+					layer.getModel().addFilter(TracksModel.FIELD_ADEP, aDepField.getText());
 				}
 				if(!aDestField.getText().isEmpty()){
-					layer.addFilter(TrajectoriesLayer.FIELD_ADEST, aDestField.getText());
+					layer.getModel().addFilter(TracksModel.FIELD_ADEST, aDestField.getText());
 				}
 				if(!iafField.getText().isEmpty()){
-					layer.addFilter(TrajectoriesLayer.FIELD_IAF, iafField.getText());
+					layer.getModel().addFilter(TracksModel.FIELD_IAF, iafField.getText());
 				}
 				if(!typeField.getText().isEmpty()){
-					layer.addFilter(TrajectoriesLayer.FIELD_TYPE_AVION, typeField.getText());
+					layer.getModel().addFilter(TracksModel.FIELD_TYPE_AVION, typeField.getText());
 				}
-				layer.update();
+				layer.getModel().applyFilters();
 				trackContext.updateLayerPane();
 			}
 		});
@@ -775,8 +819,8 @@ public class TrajectoriesView extends JPanel {
 				aDestField.setText("");
 				iafField.setText("");
 				typeField.setText("");
-				layer.removeFilter();
-				layer.update();
+				layer.getModel().removeFilter();
+				layer.getModel().applyFilters();
 				trackContext.updateLayerPane();
 			}
 		});
@@ -799,7 +843,7 @@ public class TrajectoriesView extends JPanel {
 			
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				layer.setFilterDisjunctive(!(e.getStateChange() == ItemEvent.SELECTED));
+				layer.getModel().setFilterDisjunctive(!(e.getStateChange() == ItemEvent.SELECTED));
 			}
 		});
 		JRadioButton ou = new JRadioButton("Ou");
@@ -830,148 +874,7 @@ public class TrajectoriesView extends JPanel {
 		return this.layer;
 	}
 	
-	private class TrackTableModel extends AbstractTableModel {
 
-		String[] columnNames = {"Indicatif", "Départ", "Arrivée", "IAF", "Type", "Affiché"};
-
-		Object[] tracks = null;
-
-		Collection<? extends Track> tracksCollection;
-		
-		public TrackTableModel(){
-			super();
-			tracks = layer.getSelectedTracks().toArray();//TODO gérer les mauvais fichiers
-			tracksCollection = layer.getSelectedTracks();
-			layer.addPropertyChangeListener(AVKey.LAYER, new PropertyChangeListener() {
-				@Override
-				public void propertyChange(PropertyChangeEvent evt) {
-					if(!tracksCollection.equals(layer.getSelectedTracks())){
-						tracks = layer.getSelectedTracks().toArray();
-						tracksCollection = layer.getSelectedTracks();
-						fireTableDataChanged();
-					}
-				}
-			});
-		}
-		
-		public Object getTrackAt(int row){
-			return tracks[row];
-		}
-		
-		@Override
-		public String getColumnName(int col) {
-	        return columnNames[col];
-	    }
-
-		
-		@Override
-		public int getColumnCount() {
-			return columnNames.length;
-		}
-
-		@Override
-		public int getRowCount() {
-			return tracks.length;
-		}
-
-		@Override
-		public Object getValueAt(int row, int col) {
-			Track t = (Track) tracks[row];
-			if(t instanceof GEOTrack){
-				switch (col) {
-				case 0:
-					return ((GEOTrack)t).getIndicatif();
-				case 1:
-					return ((GEOTrack)t).getDepart();
-				case 2:
-					return ((GEOTrack)t).getArrivee();
-				case 3:
-					return "";
-				case 4:
-					return ((GEOTrack)t).getType();
-				case 5:
-					return layer.isVisible((Track)t);
-				default:
-					return "";
-				}
-			} else if(t instanceof OPASTrack){
-				switch (col) {
-				case 0:
-					return ((OPASTrack)t).getIndicatif();
-				case 1:
-					return ((OPASTrack)t).getDepart();
-				case 2:
-					return ((OPASTrack)t).getArrivee();
-				case 3:
-					return ((OPASTrack)t).getIaf();
-				case 4:
-					return "";
-				case 5:
-					return layer.isVisible((Track)t);
-				default:
-					return "";
-				}
-			} else if(t instanceof LPLNTrack) {
-				switch (col) {
-				case 0:
-					return ((LPLNTrack)t).getIndicatif();
-				case 1:
-					return ((LPLNTrack)t).getDepart();
-				case 2:
-					return ((LPLNTrack)t).getArrivee();
-				case 3:
-					return "";
-				case 4:
-					return ((LPLNTrack)t).getType();
-				case 5:
-					return layer.isVisible((Track)t);
-				default:
-					return "";
-				}
-			} else {
-				return "";
-			}
-		}
-
-		
-		/* (non-Javadoc)
-		 * @see javax.swing.table.AbstractTableModel#getColumnClass(int)
-		 */
-		@Override
-		public Class<?> getColumnClass(int columnIndex) {
-			if(columnIndex == 5){
-				return Boolean.class;
-			} else {
-				return String.class;
-			}
-		}
-
-		/* (non-Javadoc)
-		 * @see javax.swing.table.AbstractTableModel#isCellEditable(int, int)
-		 */
-		@Override
-		public boolean isCellEditable(int rowIndex, int columnIndex) {
-			if(columnIndex == 5){
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		/* (non-Javadoc)
-		 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
-		 */
-		@Override
-		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-			if(columnIndex == 5){
-				layer.setVisible((Boolean)aValue, (Track)tracks[rowIndex]);
-				fireTableDataChanged();
-			}
-		}
-
-		
-		
-	}
 	
 	private class PolygonTableModel extends AbstractTableModel {
 
@@ -981,15 +884,15 @@ public class TrajectoriesView extends JPanel {
 						
 		public PolygonTableModel(){
 			super();
-			if(layer.getPolygonFilters() != null){
-				this.polygons = layer.getPolygonFilters();
+			if(layer.getModel().getPolygonFilters() != null){
+				this.polygons = layer.getModel().getPolygonFilters();
 			}
 			
 			layer.addPropertyChangeListener(AVKey.LAYER, new PropertyChangeListener() {
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
-					if(layer.getPolygonFilters() != null){
-						polygons = layer.getPolygonFilters();
+					if(layer.getModel().getPolygonFilters() != null){
+						polygons = layer.getModel().getPolygonFilters();
 						fireTableDataChanged();
 					}
 				}
@@ -999,7 +902,7 @@ public class TrajectoriesView extends JPanel {
 		public void deleteRow(int rowModel) {
 			PolygonsSetFilter filters = (PolygonsSetFilter) this.polygons.get(rowModel);
 			this.polygons.remove(rowModel);
-			layer.removePolygonFilter(filters);
+			layer.getModel().removePolygonFilter(filters);
 			this.fireTableDataChanged();
 		}
 		
@@ -1071,9 +974,9 @@ public class TrajectoriesView extends JPanel {
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			if(columnIndex == 2){
 				if((Boolean) aValue){
-					layer.enablePolygonFilter(this.polygons.get(rowIndex));
+					layer.getModel().enablePolygonFilter(this.polygons.get(rowIndex));
 				} else {
-					layer.disablePolygonFilter(this.polygons.get(rowIndex));
+					layer.getModel().disablePolygonFilter(this.polygons.get(rowIndex));
 				}
 				fireTableDataChanged();
 			}

@@ -31,13 +31,8 @@ import javax.xml.xpath.XPath;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.VidesoTrack;
-import fr.crnan.videso3d.formats.fpl.FPLReader;
-import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.images.ImagesController;
-import fr.crnan.videso3d.formats.lpln.LPLNReader;
-import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
@@ -51,13 +46,8 @@ import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
 import fr.crnan.videso3d.layers.BaliseLayer;
-import fr.crnan.videso3d.layers.FPLTracksLayer;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
-import fr.crnan.videso3d.layers.GEOTracksLayer;
-import fr.crnan.videso3d.layers.LPLNTracksLayer;
 import fr.crnan.videso3d.layers.LayerSet;
-import fr.crnan.videso3d.layers.OPASTracksLayer;
-import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.layers.VerticalScaleBar;
 import fr.crnan.videso3d.util.VMeasureTool;
@@ -99,7 +89,7 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.9.3
+ * @version 0.9.4
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas {
@@ -133,6 +123,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	
 	private DraggerListener dragger;
 
+	private HighlightController highlightController;
+	
 	private boolean europe = false;
 	
 	/**
@@ -153,12 +145,16 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		layerManager.setEnabled(false); //réduit par défaut
 		this.getModel().getLayers().add(0, layerManager);
 		
+		//screenselector
+		new ScreenSelectListener(this);		
+		
 		//dragger
 		this.dragger = new DraggerListener(this);
 		this.addSelectListener(dragger);
 		
 		//highlight controller
-		this.addSelectListener(new HighlightController(SelectEvent.ROLLOVER));
+		highlightController = new HighlightController(this, SelectEvent.ROLLOVER);
+		this.addSelectListener(highlightController);
 		
 		//mise à jour des calques de WorldWindInstalled
 		firePropertyChange("step", "", "Ajout des layers installés");
@@ -243,6 +239,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			this.imagesController = new ImagesController(this);
 		}
 		return this.imagesController;
+	}
+	
+	public HighlightController getHighlightController(){
+		return highlightController;
 	}
 	
 	/**
@@ -487,96 +487,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 
 	public void setFrontieresEurope(boolean b){
 		europe = b;
-	}
-
-	/*-------------------------------------------------------------------*/
-	/*----------------- Gestion des trajectoires       ------------------*/
-	/*-------------------------------------------------------------------*/    
-
-	//TODO créer le controleur correspondant
-	
-	
-
-	/**
-	 * Ajoute les trajectoires à la vue
-	 * @param reader {@link TrackFilesReader}
-	 */
-	public TrajectoriesLayer addTrajectoires(TrackFilesReader reader){
-		if(reader instanceof LPLNReader){
-			return this.addTrajectoires((LPLNReader)reader);
-		} else if(reader instanceof GEOReader){
-			return this.addTrajectoires((GEOReader)reader);
-		} else if(reader instanceof OPASReader){
-			return this.addTrajectoires((OPASReader)reader);
-		} else if(reader instanceof FPLReader){
-			return this.addTrajectoires((FPLReader)reader);
-		}
-		return null;
-	}
-	/**
-	 * Ajoute des trajectoires au format LPLN
-	 * @param lpln
-	 * @return {@link Layer}
-	 */
-	private TrajectoriesLayer addTrajectoires(LPLNReader lpln){
-		LPLNTracksLayer trajLayer = new LPLNTracksLayer();
-		trajLayer.setName(lpln.getName());
-		this.toggleLayer(trajLayer, true);
-		for(VidesoTrack track : lpln.getTracks()){
-			trajLayer.addTrack(track);
-		}
-		return trajLayer;
-	}
-
-	/**
-	 * Ajoute les trajectoires au format Elvira GEO
-	 * @param geo
-	 * @return {@link Layer}
-	 */
-	private TrajectoriesLayer addTrajectoires(GEOReader geo) {
-		GEOTracksLayer trajLayer = new GEOTracksLayer();
-		trajLayer.setName(geo.getName());
-		if(geo.getTracks().size() > Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))) {
-			//au delà de x tracks, on change les paramètres de façon à ne pas perdre en perfo
-			trajLayer.setStyle(TrajectoriesLayer.STYLE_SIMPLE);
-			if(geo.getTracks().size() > Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))){
-				trajLayer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.02")));
-			}
-		}
-		this.toggleLayer(trajLayer, true);
-
-		for(VidesoTrack track : geo.getTracks()){
-			trajLayer.addTrack(track);
-		}
-		return trajLayer;
-	}
-
-	/**
-	 * Ajoute les trajectoires au format OPAS
-	 * @param opas
-	 */
-	public TrajectoriesLayer addTrajectoires(OPASReader opas) {
-		OPASTracksLayer trajLayer = new OPASTracksLayer();
-		trajLayer.setName(opas.getName());
-		this.toggleLayer(trajLayer, true);
-		for(VidesoTrack track : opas.getTracks()){
-			trajLayer.addTrack(track);
-		}
-		return trajLayer;
-	}
-	
-	/**
-	 * Ajoute les trajectoires plan de vol
-	 * @param fplR
-	 */
-	public TrajectoriesLayer addTrajectoires(FPLReader fplR) {
-		FPLTracksLayer trajLayer = new FPLTracksLayer();
-		trajLayer.setName(fplR.getName());
-		this.toggleLayer(trajLayer, true);
-		for(VidesoTrack track : fplR.getTracks()){
-			trajLayer.addTrack(track);
-		}
-		return trajLayer;
 	}
 	
 	

@@ -94,7 +94,7 @@ import gov.nasa.worldwind.render.airspaces.Airspace;
  * <li>
  * </ul>
  * @author Bruno Spyckerelle
- * @version 0.0.2
+ * @version 0.0.3
  */
 public class ProjectManager extends ProgressSupport {
 
@@ -319,7 +319,7 @@ public class ProjectManager extends ProgressSupport {
 		for(Layer l : wwd.getModel().getLayers()){
 			if(l instanceof GEOTracksLayer && trajectories.contains(l.getName())){
 				GEOWriter geoWriter = new GEOWriter(trajectoDir.getAbsolutePath()+"/"+l.getName(), true);
-				for(VidesoTrack track : ((GEOTracksLayer) l).getSelectedTracks()){
+				for(VidesoTrack track : ((GEOTracksLayer) l).getModel().getVisibleTracks()){
 					geoWriter.writeTrack((GEOTrack) track);
 				}
 				geoWriter.close();
@@ -678,7 +678,7 @@ public class ProjectManager extends ProgressSupport {
 	public List<TrajectoriesLayer> getTrajectoriesLayers(){
 		List<TrajectoriesLayer> layers = new ArrayList<TrajectoriesLayer>();
 		for(Layer l : this.wwd.getModel().getLayers()){
-			if(l instanceof GEOTracksLayer && !((GEOTracksLayer)l).getSelectedTracks().isEmpty()){
+			if(l instanceof GEOTracksLayer && !((GEOTracksLayer)l).getModel().getVisibleTracks().isEmpty()){
 				layers.add((TrajectoriesLayer) l);
 			}
 		}

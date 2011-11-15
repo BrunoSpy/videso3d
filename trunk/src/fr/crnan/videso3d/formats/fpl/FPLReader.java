@@ -37,6 +37,7 @@ import fr.crnan.videso3d.formats.lpln.LPLNTrackPoint;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.ihm.components.ProgressMonitorInputStream;
 import fr.crnan.videso3d.stip.PointNotFoundException;
+import fr.crnan.videso3d.trajectography.TracksModel;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 
@@ -63,6 +64,14 @@ public class FPLReader extends TrackFilesReader {
 	}
 
 
+	public FPLReader(File selectedFile, TracksModel model) throws PointNotFoundException {
+		super(selectedFile, model);
+	}
+
+	public FPLReader(Vector<File> files, TracksModel model) throws PointNotFoundException{
+		super(files, model);
+	}
+	
 	public FPLReader(File selectedFile) throws PointNotFoundException {
 		super(selectedFile);
 	}
@@ -183,7 +192,7 @@ public class FPLReader extends TrackFilesReader {
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
 		if(track.getNumPoints()>1){
-			this.getTracks().add(track);
+			this.getModel().getAllTracks().add(track);
 		}else{
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
@@ -226,7 +235,7 @@ public class FPLReader extends TrackFilesReader {
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
 		if(track.getNumPoints()>0){
-			this.getTracks().add(track);
+			this.getModel().getAllTracks().add(track);
 		}else{
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
