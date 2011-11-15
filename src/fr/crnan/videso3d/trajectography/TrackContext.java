@@ -50,7 +50,6 @@ import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.ihm.ProgressMonitor;
 import fr.crnan.videso3d.ihm.components.VXTable;
-import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.globes.Globe;
 /**
@@ -60,7 +59,6 @@ import gov.nasa.worldwind.globes.Globe;
  */
 public class TrackContext extends Context {
 
-	private TrajectoriesLayer layer;
 	private TrackFilesReader reader;
 	private Globe globe;	
 	private VidesoTrack track;
@@ -70,8 +68,7 @@ public class TrackContext extends Context {
 	private JXTaskPane layerPane;
 	private TracksStatsProducer stats;
 	
-	public TrackContext(TrajectoriesLayer layer, TrackFilesReader reader, VidesoTrack track, Globe globe){
-		this.layer = layer;
+	public TrackContext(TrackFilesReader reader, VidesoTrack track, Globe globe){
 		this.reader = reader;
 		this.globe = globe;
 		this.track = track;
@@ -98,7 +95,7 @@ public class TrackContext extends Context {
 				listFiles +
 		"</ul></html>"));
 
-		taskPane1.add(new JLabel("<html><b>Nombre de trajectoires : </b>"+reader.getTracks().size()));
+		taskPane1.add(new JLabel("<html><b>Nombre de trajectoires : </b>"+reader.getModel().getVisibleTracks().size()));
 
 		taskpanes.add(taskPane1);	
 		
@@ -139,7 +136,7 @@ public class TrackContext extends Context {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
-				progress.setMaximum(layer.getSelectedTracks().size());
+				progress.setMaximum(reader.getModel().getVisibleTracks().size());
 				progress.setNote("Calcul de la répartition en tranches de niveau des trajectoires");
 				progress.resetTimer();
 				this.setEnabled(false);
@@ -151,7 +148,7 @@ public class TrackContext extends Context {
 					protected Integer doInBackground() throws Exception {
 						double[] lengths = new double[66];
 						int p = 1;
-						for(VidesoTrack track : layer.getSelectedTracks()){
+						for(VidesoTrack track : reader.getModel().getVisibleTracks()){
 							progress.setProgress(p++);
 							double[] temp = stats.computeLengthRepartition(track, globe,10);
 

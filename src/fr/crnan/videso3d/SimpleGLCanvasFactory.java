@@ -43,7 +43,7 @@ import gov.nasa.worldwindx.examples.util.HighlightController;
  * A very simple GLCanvas to displays one object at a time. <br/>
  * No mouse interaction allowed.
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class SimpleGLCanvasFactory {
 
@@ -96,7 +96,7 @@ public class SimpleGLCanvasFactory {
 		wwd.setModel(new BasicModel());
 		
 		//disable selection
-		wwd.addSelectListener(new HighlightController(SelectEvent.ROLLOVER));
+		wwd.addSelectListener(new HighlightController(wwd, SelectEvent.ROLLOVER));
 		
 		//lock axis
 		wwd.getInputHandler().addMouseListener(new MouseListener() {

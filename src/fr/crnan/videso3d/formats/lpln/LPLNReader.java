@@ -17,6 +17,7 @@ package fr.crnan.videso3d.formats.lpln;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.stip.PointNotFoundException;
+import fr.crnan.videso3d.trajectography.TracksModel;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,10 +34,18 @@ import javax.swing.ProgressMonitorInputStream;
  * Lecteur de fichier LPLN.<br />
  * Un LPLN ne contenant pas les coordonnées des balises, un liaison à une base de donnée Stip est nécessaire.
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class LPLNReader extends TrackFilesReader{
 		
+	public LPLNReader(File selectedFile, TracksModel model) throws PointNotFoundException {
+		super(selectedFile, model);
+	}
+
+	public LPLNReader(Vector<File> files, TracksModel model) throws PointNotFoundException {
+		super(files, model);
+	}
+	
 	public LPLNReader(File selectedFile) throws PointNotFoundException {
 		super(selectedFile);
 	}
@@ -90,7 +99,7 @@ public class LPLNReader extends TrackFilesReader{
 					if(sentence.startsWith("-                           NUMERO PLN")){
 						//nouveau track et enregistrement du précédent si besoin
 						if(track != null) {
-							if(track.getNumPoints() > 0) this.getTracks().add(track);
+							if(track.getNumPoints() > 0) this.getModel().getAllTracks().add(track);
 							//réinitialisation des compteurs
 							count=0;
 							balisesFound = false;

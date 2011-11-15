@@ -39,6 +39,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
 import fr.crnan.videso3d.formats.fpl.FPLReader;
+import fr.crnan.videso3d.layers.FPLTracksLayer;
 
 /**
  * Fenêtre permettant à l'utilisateur de taper son plan de vol ou de le rentrer par copier/coller. Accepte les plans de vol au format IvanWeb et les 
@@ -162,8 +163,8 @@ public class FPLImportUI extends JFrame implements ActionListener{
 					if(!msgErreur.isEmpty()){
 						JOptionPane.showMessageDialog(null, msgErreur, "Erreur lors de la lecture du plan de vol", JOptionPane.ERROR_MESSAGE);
 					}
-					if(fplR.getTracks().size()>0)
-						mainWindow.addTrajectoriesView(fplR);
+					if(fplR.getModel().getAllTracks().size()>0)
+						mainWindow.addTrajectoriesView(fplR, new FPLTracksLayer(fplR.getModel()));
 				}
 				
 				private String parseFPL(LinkedList<String> pln){

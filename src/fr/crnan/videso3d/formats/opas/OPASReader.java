@@ -28,30 +28,32 @@ import java.util.Vector;
 import javax.swing.ProgressMonitorInputStream;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
-import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.stip.PointNotFoundException;
+import fr.crnan.videso3d.trajectography.TracksModel;
 
 /**
  * Lecteur de fichier OPAS
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.3.0
  */
 public class OPASReader extends TrackFilesReader{
 		
-	public OPASReader(Vector<File> files, OPASTracksLayer layer) throws PointNotFoundException{
-		super(files, layer);
+	public OPASReader(Vector<File> files, TracksModel model) throws PointNotFoundException{
+		super(files, model);
 	}
 	
-	public OPASReader(File selectedFile, OPASTracksLayer layer) throws PointNotFoundException {
-		super(selectedFile, layer);
+	public OPASReader(File selectedFile, TracksModel model) throws PointNotFoundException {
+		super(selectedFile, model);
 	}
 	
 	public OPASReader(Vector<File> files) throws PointNotFoundException{
 		super(files);
+		this.setModel(new TracksModel());
 	}
 	
 	public OPASReader(File selectedFile) throws PointNotFoundException {
 		super(selectedFile);
+		this.setModel(new TracksModel());
 	}
 
 	/**
@@ -99,11 +101,7 @@ public class OPASReader extends TrackFilesReader{
         		{
         			if(sentence.startsWith("Simulation de")){ //nouveau track
         				if(track != null) {//on enregistre le précédent
-        					if(this.getLayer() != null) {
-        						this.getLayer().addTrack(track);
-        					} else {
-        						this.getTracks().add(track);
-        					}
+        					this.getModel().addTrack(track);
         				}
         				String[] words = sentence.split("\\s+");
         				track = new OPASTrack(words[2], (words[6].split(":"))[1], (words[7].split(":"))[1], (words[8].split(":"))[1]);
@@ -114,11 +112,7 @@ public class OPASReader extends TrackFilesReader{
         	}
         	//last Track
         	if(track != null) {
-        		if(this.getLayer() != null) {
-        			this.getLayer().addTrack(track);
-        		} else {
-        			this.getTracks().add(track);
-        		}
+        		this.getModel().addTrack(track);
         	}
         }
         catch (NoSuchElementException e)

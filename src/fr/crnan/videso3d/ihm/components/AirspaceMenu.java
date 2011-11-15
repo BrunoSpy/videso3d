@@ -172,7 +172,7 @@ public class AirspaceMenu extends JPopupMenu {
 		List<TrajectoriesLayer> trajLayers = new ArrayList<TrajectoriesLayer>();
 		for(Layer l : this.wwd.getModel().getLayers()){
 			if(l instanceof TrajectoriesLayer){
-				if(((TrajectoriesLayer) l).isPolygonFilterable())
+			//	if(((TrajectoriesLayer) l).isPolygonFilterable())
 					trajLayers.add((TrajectoriesLayer) l);
 			}
 		}
@@ -200,7 +200,7 @@ public class AirspaceMenu extends JPopupMenu {
 							filter = new PolygonsSetFilter(name, polygons);
 						}
 						
-						l.addPolygonFilter(filter);
+						l.getModel().addPolygonFilter(filter);
 					}
 				});
 				filter.add(layer);

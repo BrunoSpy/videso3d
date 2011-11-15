@@ -15,6 +15,7 @@
 */
 package fr.crnan.videso3d.formats;
 
+import fr.crnan.videso3d.trajectography.TracksModel;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.tracks.TrackPoint;
 
@@ -24,11 +25,29 @@ import java.util.List;
  * 
  * @author Adrien Vidal
  * @author Bruno Spyckerelle
- * @version 0.2.0
+ * @version 0.3.0
  */
 public interface VidesoTrack extends Track{
 
 	public List<? extends TrackPoint> getTrackPoints();
 	
+	public String getIndicatif();
+
+	public String getDepart();
+
+	public String getArrivee();
+
+	public String getType();
+
+	public Integer getNumTraj();
 	
+	public String getIaf();
+	
+	/**
+	 * Returns true if the field is supported by the track.<br />
+	 * List of available fields is defined by {@link TracksModel}
+	 * @param field
+	 * @return
+	 */
+	public boolean isFieldAvailable(int field);
 }

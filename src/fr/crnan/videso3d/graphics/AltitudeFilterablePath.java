@@ -21,7 +21,6 @@ import java.util.Iterator;
 
 import com.sun.opengl.util.BufferUtil;
 
-
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.geom.Vec4;
 import gov.nasa.worldwind.render.DrawContext;
@@ -30,7 +29,7 @@ import gov.nasa.worldwind.render.Path;
  * Filters segments of the Path that are that fully inside maxAltitude and minAltitude<br/>
  * If the path is splitted in mulptiple visible segments, only the first one will be displayed
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  *
  */
 public class AltitudeFilterablePath extends Path {
@@ -154,5 +153,16 @@ public class AltitudeFilterablePath extends Path {
 		return pos.getAltitude() <= maxAltitude && pos.getAltitude() >= minAltitude;
 	}
 
+	/* (non-Javadoc)
+	 * @see gov.nasa.worldwind.render.AbstractShape#setHighlighted(boolean)
+	 */
+	@Override
+	public void setHighlighted(boolean highlighted) {
+		boolean old = isHighlighted();
+		super.setHighlighted(highlighted);
+		firePropertyChange("HIGHLIGHT", old, highlighted);
+	}
+
+	
 
 }

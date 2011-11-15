@@ -16,8 +16,8 @@
 package fr.crnan.videso3d.formats.geo;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
-import fr.crnan.videso3d.layers.GEOTracksLayer;
 import fr.crnan.videso3d.stip.PointNotFoundException;
+import fr.crnan.videso3d.trajectography.TracksModel;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,7 +33,7 @@ import javax.swing.ProgressMonitorInputStream;
 /**
  * Lecteur de fichiers Elvira GEO.<br />
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 public class GEOReader extends TrackFilesReader{
 	
@@ -41,18 +41,20 @@ public class GEOReader extends TrackFilesReader{
 	
 	public GEOReader(Vector<File> files) throws PointNotFoundException {
 		super(files);
+		this.setModel(new TracksModel());
 	}
 	
 	public GEOReader(File selectedFile) throws PointNotFoundException {
 		super(selectedFile);
+		this.setModel(new TracksModel());
 	}
 
-	public GEOReader(File selectedFile, GEOTracksLayer layer) throws PointNotFoundException {
-		super(selectedFile, layer);
+	public GEOReader(File selectedFile, TracksModel model) throws PointNotFoundException {
+		super(selectedFile, model);
 	}
 	
-	public GEOReader(Vector<File> geoFile, GEOTracksLayer layer) throws PointNotFoundException {
-		super(geoFile, layer);
+	public GEOReader(Vector<File> geoFile, TracksModel model) throws PointNotFoundException {
+		super(geoFile, model);
 	}
 
 	public static Boolean isGeoFile(File file){
@@ -98,12 +100,7 @@ public class GEOReader extends TrackFilesReader{
         			if(!sentence.startsWith("!")  && !sentence.startsWith("Voie")){
         				if(track == null || track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0){
         					if(track != null) {
-        						//if layer is set, create immediately the track instead of memorizing it
-        		            	if(this.getLayer() != null) {
-        		            		this.getLayer().addTrack(track);
-        		            	} else {
-        		            		this.getTracks().add(track);
-        		            	}
+        						this.getModel().addTrack(track);
         					}
         					track = new GEOTrack(sentence);
         				} else {
@@ -115,11 +112,7 @@ public class GEOReader extends TrackFilesReader{
         	//last Track
         	if(track != null){
         		//if layer is set, create immediately the track instead of memorizing it
-            	if(this.getLayer() != null) {
-            		this.getLayer().addTrack(track);
-            	} else {
-            		this.getTracks().add(track);
-            	}
+            	this.getModel().addTrack(track);
         	}
         }
         catch (NoSuchElementException e)

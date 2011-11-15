@@ -16,8 +16,8 @@
 
 package fr.crnan.videso3d.formats;
 
-import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.PointNotFoundException;
+import fr.crnan.videso3d.trajectography.TracksModel;
 import gov.nasa.worldwind.util.Logging;
 
 import java.io.File;
@@ -31,22 +31,20 @@ import java.util.Vector;
 /**
  * Lecteur de fichiers trace radar
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.4.0
  */
 public abstract class TrackFilesReader {
 
 	private String name;
-	
-	private TrajectoriesLayer layer = null;
-	
+		
 	private List<File> files = new ArrayList<File>();
 	
-	private List<VidesoTrack> tracks = new ArrayList<VidesoTrack>();
+	private TracksModel model;
 	
 	public TrackFilesReader(){}
 	
-	public TrackFilesReader(Vector<File> files, TrajectoriesLayer layer) throws PointNotFoundException {
-		this.setLayer(layer);
+	public TrackFilesReader(Vector<File> files, TracksModel model) throws PointNotFoundException {
+		this.setModel(model);
 		for(File f : files){
 			try {
 				this.files.add(f);
@@ -57,8 +55,8 @@ public abstract class TrackFilesReader {
 		}
 	}
 	
-	public TrackFilesReader(File selectedFile, TrajectoriesLayer layer) throws PointNotFoundException {
-		this.setLayer(layer);
+	public TrackFilesReader(File selectedFile, TracksModel model) throws PointNotFoundException {
+		this.setModel(model);
 		try {
 			this.files.add(selectedFile);
 			this.readFile(selectedFile.getAbsolutePath());
@@ -68,11 +66,11 @@ public abstract class TrackFilesReader {
 	}
 	
 	public TrackFilesReader(Vector<File> files) throws PointNotFoundException {
-		this(files, null);
+		this(files, new TracksModel());
 	}
 	
 	public TrackFilesReader(File selectedFile) throws PointNotFoundException {
-		this(selectedFile, null);
+		this(selectedFile, new TracksModel());
 	}
 	
 	/**
@@ -113,23 +111,14 @@ public abstract class TrackFilesReader {
 		return name;
 	}
 	
-	public void setLayer(TrajectoriesLayer layer) {
-		this.layer = layer;
-	}
-
-	public TrajectoriesLayer getLayer() {
-		return this.layer;
-	}
-	
 	protected abstract void doReadStream(FileInputStream fis) throws PointNotFoundException;
 	
-	public List<VidesoTrack> getTracks(){
-		if(this.tracks.isEmpty()){
-			if(this.layer != null){
-				return (List<VidesoTrack>) this.layer.getTracks();
-			}
-		}
-		return this.tracks;
+	public TracksModel getModel(){
+		return this.model;
+	}
+	
+	public void setModel(TracksModel model){
+		this.model = model;
 	}
 	
 	public List<File> getFiles(){

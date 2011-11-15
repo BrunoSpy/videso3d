@@ -16,16 +16,12 @@
 package fr.crnan.videso3d.layers;
 
 import java.awt.Color;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.formats.VidesoTrack;
-import fr.crnan.videso3d.formats.opas.OPASTrack;
+import fr.crnan.videso3d.trajectography.TracksModel;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
@@ -34,105 +30,13 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Layer contenant des tracks OPAS et permettant un affichage sélectif
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.3.0
  */
 public class OPASTracksLayer extends GEOTracksLayer {
-
-	private List<OPASTrack> tracks = new LinkedList<OPASTrack>();
 	
-	@Override
-	public void addTrack(final VidesoTrack track) {
-		this.tracks.add((OPASTrack) track);
-		this.showTrack(track);
+	public OPASTracksLayer(TracksModel model) {
+		super(model);
 	}
-	
-	@Override
-	protected void applyFilters() {
-		if(filters.size() == 0)
-			return;
-		for(Path p : this.lines.values()){
-			p.setVisible(!this.isFilterDisjunctive());
-		}
-		
-		for(Entry<Integer, String> filter : filters.entrySet()) {
-		switch (filter.getKey()) {
-		case FIELD_ADEST:
-			for(OPASTrack track : tracks){
-				if(track.getArrivee().matches(filter.getValue())){
-					if(this.isFilterDisjunctive()){
-						Path line = this.lines.get(track);
-						if(line != null)
-							line.setVisible(true);
-					}
-				} else {
-					if(!this.isFilterDisjunctive()){
-						Path line = this.lines.get(track);
-						if(line != null)
-							line.setVisible(false);
-					}
-				}
-			}
-			break;
-		case FIELD_IAF:
-			for(OPASTrack track : tracks){
-				if(track.getIaf().matches(filter.getValue())){
-					if(this.isFilterDisjunctive()){
-						Path line = this.lines.get(track);
-						if(line != null)
-							line.setVisible(true);
-					}
-				} else {
-					if(!this.isFilterDisjunctive()){
-						Path line = this.lines.get(track);
-						if(line != null)
-							line.setVisible(false);
-					}
-				}
-			}
-			break;
-		case FIELD_ADEP:
-			for(OPASTrack track : tracks){
-				if(track.getDepart().matches(filter.getValue())){
-					if(this.isFilterDisjunctive()){
-						Path line = this.lines.get(track);
-						if(line != null)
-							line.setVisible(true);
-					}
-				} else {
-					if(!this.isFilterDisjunctive()){
-						Path line = this.lines.get(track);
-						if(line != null)
-							line.setVisible(false);
-					}
-				}
-			}
-			break;	
-		case FIELD_INDICATIF:
-			for(OPASTrack track : tracks){
-				if(track.getIndicatif().matches(filter.getValue())){
-					if(this.isFilterDisjunctive()){
-						Path line = this.lines.get(track);
-						if(line != null)
-							line.setVisible(true);
-					}
-				} else {
-					if(!this.isFilterDisjunctive()){
-						Path line = this.lines.get(track);
-						if(line != null)
-							line.setVisible(false);
-					}
-				}
-			}
-			break;
-		case FIELD_TYPE_AVION:
-			//TODO Throw EXception ?
-			break;
-		default:
-			break;
-		}
-		}
-	}
-
 
 	@Override
 	public void addFilterColor(int field, String regexp, Color color){
@@ -144,8 +48,8 @@ public class OPASTracksLayer extends GEOTracksLayer {
 		attrs.setOutlineMaterial(new Material(color));
 		this.colors.add(attrs);
 		switch (field) {
-		case FIELD_ADEST:
-			for(OPASTrack track : tracks){
+		case TracksModel.FIELD_ADEST:
+			for(VidesoTrack track : getModel().getVisibleTracks()){
 				if(track.getArrivee().matches(regexp)){
 					this.highlightTrack(track, false);
 					Path line = this.lines.get(track);
@@ -153,8 +57,8 @@ public class OPASTracksLayer extends GEOTracksLayer {
 				}
 			}
 			break;
-		case FIELD_IAF:
-			for(OPASTrack track : tracks){
+		case TracksModel.FIELD_IAF:
+			for(VidesoTrack track : getModel().getVisibleTracks()){
 				if(track.getIaf().matches(regexp)){
 					this.highlightTrack(track, false);
 					Path line = this.lines.get(track);
@@ -162,8 +66,8 @@ public class OPASTracksLayer extends GEOTracksLayer {
 				}
 			}
 			break;
-		case FIELD_ADEP:
-			for(OPASTrack track : tracks){
+		case TracksModel.FIELD_ADEP:
+			for(VidesoTrack track : getModel().getVisibleTracks()){
 				if(track.getDepart().matches(regexp)){
 					this.highlightTrack(track, false);
 					Path line = this.lines.get(track);
@@ -171,8 +75,8 @@ public class OPASTracksLayer extends GEOTracksLayer {
 				}
 			}
 			break;	
-		case FIELD_INDICATIF:
-			for(OPASTrack track : tracks){
+		case TracksModel.FIELD_INDICATIF:
+			for(VidesoTrack track : getModel().getVisibleTracks()){
 				if(track.getIndicatif().matches(regexp)){
 					this.highlightTrack(track, false);
 					Path line = this.lines.get(track);
@@ -180,7 +84,7 @@ public class OPASTracksLayer extends GEOTracksLayer {
 				}
 			}
 			break;
-		case FIELD_TYPE_AVION:
+		case TracksModel.FIELD_TYPE_AVION:
 			break;
 		default:
 			break;
@@ -189,23 +93,10 @@ public class OPASTracksLayer extends GEOTracksLayer {
 	
 	@Override
 	public void update() {
-		for(OPASTrack track : tracks){
+		for(VidesoTrack track : getModel().getVisibleTracks()){
 			this.showTrack(track);
 		}
-		this.applyFilters();
 		this.firePropertyChange(AVKey.LAYER, null, this);
-	}
-	
-	@Override
-	public Collection<VidesoTrack> getSelectedTracks(){
-		Set<VidesoTrack> selectedTracks = new HashSet<VidesoTrack>();
-		for(OPASTrack track : tracks){
-			Path line = lines.get(track);
-			if(line != null) {
-				if(line.isVisible()) selectedTracks.add(track);
-			}
-		}
-		return selectedTracks;
 	}
 	
 	@Override
@@ -215,7 +106,7 @@ public class OPASTracksLayer extends GEOTracksLayer {
 	 */
 	public void setStyle(int style) {
 		if(style != this.getStyle()) {
-			if(style == TrajectoriesLayer.STYLE_SIMPLE || this.tracks.size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) {
+			if(style == TrajectoriesLayer.STYLE_SIMPLE || this.getModel().getVisibleTracks().size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) {
 				this.style = style;
 				{
 					//display bug when changing extrude -> delete and redraw lines
@@ -232,14 +123,9 @@ public class OPASTracksLayer extends GEOTracksLayer {
 	@Override
 	public List<Integer> getStylesAvailable() {
 		List<Integer> styles = new LinkedList<Integer>();
-		if(this.tracks.size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) styles.add(TrajectoriesLayer.STYLE_CURTAIN);
+		if(this.getModel().getAllTracks().size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) styles.add(TrajectoriesLayer.STYLE_CURTAIN);
 		styles.add(TrajectoriesLayer.STYLE_SIMPLE);
 		return styles;
-	}
-	
-	@Override
-	public List<? extends VidesoTrack> getTracks() {
-		return this.tracks;
 	}
 	
 }
