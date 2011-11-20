@@ -3,7 +3,7 @@
 
 Videso 3D est logiciel de visualisation en 3D de différentes données provenant des systèmes de la navigation aérienne française.
 
-Il se destine en particulier aux différentes subdivisions des services d'exploitation des CRNA.
+Il se destine en particulier aux différentes subdivisions des services d'exploitation des [http://fr.wikipedia.org/wiki/Centre_en_route_de_la_navigation_a%C3%A9rienne CRNA].
 
 Voici un aperçu de la version 0.7.
 
