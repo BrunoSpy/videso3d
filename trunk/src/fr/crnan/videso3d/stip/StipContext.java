@@ -126,7 +126,7 @@ public class StipContext extends Context {
 				Latitude lat = new Latitude(coor.getLatitude().degrees);
 				Longitude lon = new Longitude(coor.getLongitude().degrees);
 				final String latitude = lat.getDegres()+"°"+lat.getMinutes()+"\'"+lat.getSecondes()+"\" N";
-				final String longitude = Math.abs(lon.getDegres())+"°"+lon.getMinutes()+"\'"+lon.getSecondes()+"\""+ (lon.getDegres() < 0 ? "E" : "O");
+				final String longitude = Math.abs(lon.getDegres())+"°"+lon.getMinutes()+"\'"+lon.getSecondes()+"\""+ lon.getSens();
 
 				final boolean pub = rs.getBoolean(3);
 				taskpane1.add(new JLabel("<html><b>Publiée</b> : "+(pub?"oui":"non")+"</html>"));
