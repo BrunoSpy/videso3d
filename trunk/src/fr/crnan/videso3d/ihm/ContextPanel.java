@@ -35,12 +35,14 @@ import bibliothek.gui.dock.common.mode.ExtendedMode;
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.stip.StipController;
+import fr.crnan.videso3d.stpv.StpvController;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
- * @version 0.4.4
+ * @version 0.4.5
  */
 public class ContextPanel extends JPanel{
 
@@ -112,14 +114,15 @@ public class ContextPanel extends JPanel{
 				switch (type) {
 				case StipController.ROUTES:
 					this.addTaskpanes(Type.STIP, type, name);
+					this.addTaskpanes(Type.AIP, AIP.AWY, name);
 					break;
 				case StipController.SECTEUR:
 					this.addTaskpanes(Type.STIP, type, name);
-					this.addTaskpanes(Type.STPV, type, name);
+					this.addTaskpanes(Type.STPV, StpvController.SECTEUR, name);
 					break;
 				case StipController.BALISES:
 					this.addTaskpanes(Type.STIP, type, name);
-					this.addTaskpanes(Type.STPV, type, name);
+					this.addTaskpanes(Type.STPV, StpvController.BALISE, name);
 					break;
 				case StipController.ITI:
 					this.addTaskpanes(Type.STIP, type, name);
@@ -130,6 +133,15 @@ public class ContextPanel extends JPanel{
 				case StipController.TRAJET:
 					this.addTaskpanes(Type.STIP, type, name);
 					break;
+				}
+				break;
+			case AIP:
+				if(type == AIP.WPT){
+					this.addTaskpanes(Type.STIP, StipController.BALISES, name);
+					this.addTaskpanes(Type.STPV, StpvController.BALISE, name);
+					this.addTaskpanes(base, type, name);
+				} else {
+					this.addTaskpanes(base, type, name);
 				}
 				break;
 			default:

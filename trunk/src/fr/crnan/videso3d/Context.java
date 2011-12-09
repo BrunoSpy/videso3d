@@ -30,7 +30,7 @@ public abstract class Context {
 	 * Get  informations
 	 * @param type
 	 * @param name
-	 * @return
+	 * @return liste des {@link JXTaskPane}
 	 */
 	public abstract List<JXTaskPane> getTaskPanes(int type, String name);
 	

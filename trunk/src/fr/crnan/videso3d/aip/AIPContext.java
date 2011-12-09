@@ -37,6 +37,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.aip.AIP.Altitude;
 import fr.crnan.videso3d.graphics.Route;
+import fr.crnan.videso3d.graphics.Route.Space;
 import fr.crnan.videso3d.graphics.Route2D;
 import fr.crnan.videso3d.ihm.ContextPanel;
 /**
@@ -57,7 +58,7 @@ public class AIPContext extends Context {
 		if(type<AIP.AWY){
 			return showZoneInfos(type, name);
 		}else if(type>=AIP.AWY && type <AIP.DMEATT){
-			return showRouteInfos(getController().getRoutes2DLayer().getRoute(name));
+			return showRouteInfos(name);
 		}else if(type>=AIP.DMEATT && type<AIP.AERODROME){
 			return showNavFixInfos(type, name);
 		}else if(type>=AIP.AERODROME){
@@ -71,7 +72,7 @@ public class AIPContext extends Context {
 		String zoneID = AIP.getID(type, name);
 		
 		JXTaskPane infos = new JXTaskPane();
-		infos.setTitle("Informations diverses");
+		infos.setTitle("Éléments AIP");
 		String classe = getController().getAIP().getZoneAttributeValue(zoneID, "Classe");
 		String hor = getController().getAIP().getZoneAttributeValue(zoneID, "HorTxt");
 		String act = getController().getAIP().getZoneAttributeValue(zoneID, "Activite");
@@ -99,45 +100,99 @@ public class AIPContext extends Context {
 	}
 	
 	
-	public List<JXTaskPane> showRouteInfos(Route segment) {
+	public List<JXTaskPane> showRouteInfos(String name) {
+		LinkedList<JXTaskPane> taskPanesList = new LinkedList<JXTaskPane>();
+		
+		Route segment = getController().getRoutes2DLayer().getRoute(name);
 		AIP aip = getController().getAIP();
-		String[] splittedSegmentName = segment.getName().split("-");
 		String routeName = "";
-		if(splittedSegmentName.length >2){
-			routeName = (splittedSegmentName[0]+"-"+splittedSegmentName[1]).trim();
-		}else{
-			routeName = splittedSegmentName[0].trim();
+		fr.crnan.videso3d.graphics.Route.Space type = null;
+		String sequence = "";
+		
+		if(segment == null){
+			//pas de segment, on recherche la route AIP correspondante
+			try {
+				Statement st = DatabaseManager.getCurrentAIP();
+				ResultSet rs = st.executeQuery("select nom, type from routes");
+				String routeAIPName = null;
+				while(rs.next() && routeAIPName == null){
+					if(name.equalsIgnoreCase(rs.getString(1).replaceAll(" ", ""))){
+						routeAIPName = rs.getString(1);
+						if(rs.getString(2).equals("AWY")) {
+							type = Space.FIR;
+						} else {
+							type = Space.UIR;
+						}
+					}
+				}
+				if(routeAIPName != null) {
+					routeName = routeAIPName;
+				} else {
+					//aucune route AIP trouvée
+					return null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		} else {
+			String[] splittedSegmentName = segment.getName().split("-");
+			
+			if(splittedSegmentName.length >2){
+				routeName = (splittedSegmentName[0]+"-"+splittedSegmentName[1]).trim();
+			}else{
+				routeName = splittedSegmentName[0].trim();
+			}
+			sequence = splittedSegmentName[splittedSegmentName.length-1].trim();
+			type = segment.getSpace();
 		}
 
-		String sequence = splittedSegmentName[splittedSegmentName.length-1].trim();
-		fr.crnan.videso3d.graphics.Route.Space type = segment.getSpace();
 		String pkRoute = null;
 		String typeRoute = aip.RouteType2AIPType(routeName, type);
-		StringBuilder ACCTraverses = new StringBuilder();
+
 		try {
 			pkRoute = getController().getRouteIDFromSegmentName(routeName, typeRoute);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		Element maRoute = aip.findElement(aip.getDocumentRoot().getChild("RouteS"), pkRoute);
+		taskPanesList.add(routeInfos(maRoute, typeRoute, pkRoute));
+
+		if(segment != null){
+			//éléments du segment AIP
+			List<Element> segmentsXML = aip.findElementsByChildId(aip.getDocumentRoot().getChild("SegmentS"), "Route", pkRoute);
+			Element monSegmentXML = null;
+			for(Element segmentXML : segmentsXML){
+				if(segmentXML.getChildText("Sequence").equals(sequence)){
+					monSegmentXML = segmentXML;
+				}
+			}		
+			
+			
+			
+			taskPanesList.add(segmentRouteInfos(segment, monSegmentXML, routeName, sequence, typeRoute));
+		}
+				
+		
+		return taskPanesList;
+	}
+
+
+	private JXTaskPane routeInfos(Element maRoute, String typeRoute, String pkRoute){
+		StringBuilder ACCTraverses = new StringBuilder();
+		try {	
 			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nomACC from ACCTraverses where routes_pk = ?");
 			st.setString(1, pkRoute);
 			ResultSet rs = st.executeQuery();
 			while(rs.next()){
 				ACCTraverses.append(rs.getString(1)+" ");
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		List<Element> segmentsXML = aip.findElementsByChildId(aip.getDocumentRoot().getChild("SegmentS"), "Route", pkRoute);
-		Element monSegmentXML = null;
-		for(Element segmentXML : segmentsXML){
-			if(segmentXML.getChildText("Sequence").equals(sequence)){
-				monSegmentXML = segmentXML;
-			}
-		}		
-		
-		Element maRoute = aip.findElement(aip.getDocumentRoot().getChild("RouteS"), pkRoute);
-		
+
 		JXTaskPane infosRoute = new JXTaskPane();
-		infosRoute.setTitle("Informations sur la route");
+		infosRoute.setTitle("Eléments AIP sur la route");
 		String CRType = maRoute.getChildText("TypeCompteRendu");
 		String rmqRoute = maRoute.getChildText("Remarque");
 		infosRoute.add(new JLabel("<html><b>Type de la route</b> : " + typeRoute+"</html>"));
@@ -165,9 +220,13 @@ public class AIPContext extends Context {
 				
 			}
 		});
-		
+		return infosRoute;
+	}
+	
+	private JXTaskPane segmentRouteInfos(Route segment, Element monSegmentXML, String routeName, String sequence, String typeRoute){
+		AIP aip = getController().getAIP();
 		final JXTaskPane infosSegment = new JXTaskPane();
-		infosSegment.setTitle("Informations sur le segment");
+		infosSegment.setTitle("Éléments sur le segment");
 		String CR = aip.getChildText(monSegmentXML, "CompteRendu");
 		String circul = aip.getChildText(monSegmentXML, "Circulation");
 		String rnp = aip.getChildText(monSegmentXML, "CodeRnp");
@@ -227,16 +286,12 @@ public class AIPContext extends Context {
 			};
 			infosSegment.add(next);
 		}
-		LinkedList<JXTaskPane> taskPanesList = new LinkedList<JXTaskPane>();
-		taskPanesList.add(infosRoute);
-		taskPanesList.add(infosSegment);
-		return taskPanesList;
+		return infosSegment;
 	}
-
-
+	
 	private List<JXTaskPane> showNavFixInfos(int type, String name){
 		LinkedList<JXTaskPane> taskPanesList = new LinkedList<JXTaskPane>();
-		final JXTaskPane infosNavFix = new JXTaskPane(name);
+		final JXTaskPane infosNavFix = new JXTaskPane("Eléments AIP");
 		AIP aip = getController().getAIP();
 
 		float latitude = 0, longitude = 0;
