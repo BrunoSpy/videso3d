@@ -13,6 +13,15 @@
   * IHM de comparaison de fichiers (diff entre deux fichiers)
   * Possibilité d'importer plusieurs bases de données en même temps 
   
+== 0.10.1 ==
+  * Module trajectographie
+    * Possibilité de sélectionner les trajectoires directement depuis la vue 3D (Ctrl+clic gauche)
+    * Nouveau style d'affichage des trajectoires : dégradé de couleur
+    * Nouveau style d'affichage des trajectoires : couleur en fonction de l'altitude
+
+  * Informations contextuelles
+    * Fusion des informations provenant de différentes sources
+
 = Version 0.9 =
 
  == 0.9.0 ==
