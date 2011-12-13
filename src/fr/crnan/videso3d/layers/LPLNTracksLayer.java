@@ -37,7 +37,7 @@ import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer d'accueil pour des trajectoires issues d'un LPLN
  * @author Bruno Spyckerelle
- * @version 0.4.0
+ * @version 0.4.1
  */
 public class LPLNTracksLayer extends TrajectoriesLayer {
 
@@ -159,7 +159,7 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	protected void removeTrack(LPLNTrack track){
 		Profil3D profil = this.profils.get(track);
 		if(profil != null){
-			this.layer.remove(profil);
+			this.layer.removeProfil3D(profil);
 			this.firePropertyChange(AVKey.LAYER, null, this);
 			this.profils.remove(track);
 		}
@@ -168,7 +168,7 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	protected void hideTrack(LPLNTrack track){
 		Profil3D profil = this.profils.get(track);
 		if(profil != null){
-			this.layer.remove(profil);
+			this.layer.removeProfil3D(profil);
 			this.firePropertyChange(AVKey.LAYER, null, this);
 		}
 	}

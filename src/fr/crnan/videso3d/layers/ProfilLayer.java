@@ -15,12 +15,13 @@
 */
 package fr.crnan.videso3d.layers;
 
+import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.Profil3D;
 import gov.nasa.worldwind.layers.RenderableLayer;
 /**
  * Layer d'accueil pour des {@link Profil3D}
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 @SuppressWarnings("serial")
 public class ProfilLayer extends LayerSet {
@@ -60,5 +61,16 @@ public class ProfilLayer extends LayerSet {
 		this.shapeLayer.removeAllRenderables();
 		this.renderableLayer.removeAllRenderables();
 		this.baliseLayer.eraseAllBalises();
+	}
+	
+	public void removeProfil3D(Profil3D profil){
+		this.shapeLayer.removeRenderable(profil.getProjection());
+		this.renderableLayer.removeRenderable(profil.getProfil());
+		if(profil.isPlain()) this.renderableLayer.removeRenderable(profil.getCurtain());
+		if(profil.withMarkers()) {
+			for(Balise3D b : profil.getBalises()){
+				this.baliseLayer.removeBalise(b);
+			}
+		}
 	}
 }

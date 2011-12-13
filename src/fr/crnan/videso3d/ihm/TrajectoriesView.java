@@ -502,107 +502,69 @@ public class TrajectoriesView extends JPanel {
 		}
 
 		/******** Dégradé de couleur *********/
-		
-		final JButton minColor = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
-		minColor.setBackground(layer.getMinAltitudeColor());
-		minColor.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				minColor.setBackground(JColorChooser.showDialog(null, "Couleur", minColor.getBackground()));
-			}
-		});
-		
-		final JButton maxColor = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
-		maxColor.setBackground(layer.getMaxAltitudeColor());
-		maxColor.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				maxColor.setBackground(JColorChooser.showDialog(null, "Couleur", maxColor.getBackground()));
-			}
-		});
-		
 		final JTextField minAltitude = new JTextField();
-		minAltitude.setText(""+layer.getMinAltitude()/30.47);
-		
 		final JTextField maxAltitude = new JTextField();
-		maxAltitude.setText(""+layer.getMaxAltitude()/30.47);
-		
-		if(styles.getSelectedItem().equals("Fil de fer dégradé")) {
-			c.gridx = 0;
-			c.gridy = 1+i;
-			
-			stylePane.add(new JLabel("Alt. Max : "),c);
-			
-			c.gridx = 1;
-			stylePane.add(maxAltitude,c);
-			
-			c.gridx = 2;
-			stylePane.add(maxColor, c);
-			
-			i++;
-			
-			c.gridx = 0;
-			c.gridy = 1+i;
-			
-			stylePane.add(new JLabel("Alt. Min : "),c);
-			
-			c.gridx = 1;
-			stylePane.add(minAltitude,c);
-			
-			c.gridx = 2;
-			stylePane.add(minColor, c);
-			
-			i++;
-		}
+		final JButton minColor = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
+		final JButton maxColor = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
+		if(layer.getStylesAvailable().contains(TrajectoriesLayer.STYLE_SHADED)){
+			minColor.setBackground(layer.getMinAltitudeColor());
+			minColor.addActionListener(new ActionListener() {
 
-		/******** Multicolor *******/
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					minColor.setBackground(JColorChooser.showDialog(null, "Couleur", minColor.getBackground()));
+				}
+			});
 
-		if(colorButtons == null){
-			colorButtons = new ArrayList<JButton>();
-			altitudeFields = new ArrayList<JTextField>();
-			for(int j = 0; j<layer.getMultiColors().getSecond().length;j++){
-				final JButton button = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
-				button.setBackground(layer.getMultiColors().getSecond()[j]);
-				button.addActionListener(new ActionListener() {
+			maxColor.setBackground(layer.getMaxAltitudeColor());
+			maxColor.addActionListener(new ActionListener() {
 
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						button.setBackground(JColorChooser.showDialog(null, "Couleur", button.getBackground()));
-					}
-				});
-				colorButtons.add(button);
-				altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[j]/30.47));
-			}
-			altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[layer.getMultiColors().getFirst().length-1]/30.47));
-		}
-		if(styles.getSelectedItem().equals("Fil de fer multicolor")) {
-			int j = 1;
-			for(JButton button : colorButtons){
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					maxColor.setBackground(JColorChooser.showDialog(null, "Couleur", maxColor.getBackground()));
+				}
+			});
+
+			minAltitude.setText(""+layer.getMinAltitude()/30.47);
+
+			maxAltitude.setText(""+layer.getMaxAltitude()/30.47);
+
+			if(styles.getSelectedItem().equals("Fil de fer dégradé")) {
 				c.gridx = 0;
 				c.gridy = 1+i;
-				stylePane.add(new JLabel("Tranche "+j+" : "),c);
+
+				stylePane.add(new JLabel("Alt. Max : "),c);
+
 				c.gridx = 1;
-				stylePane.add(altitudeFields.get(j-1),c);
+				stylePane.add(maxAltitude,c);
+
 				c.gridx = 2;
-				stylePane.add(button,c);
+				stylePane.add(maxColor, c);
+
 				i++;
-				j++;
+
+				c.gridx = 0;
+				c.gridy = 1+i;
+
+				stylePane.add(new JLabel("Alt. Min : "),c);
+
+				c.gridx = 1;
+				stylePane.add(minAltitude,c);
+
+				c.gridx = 2;
+				stylePane.add(minColor, c);
+
+				i++;
 			}
-			c.gridx = 0;
-			c.gridy = 1+i;
-			stylePane.add(new JLabel("Tranche "+j+" : "),c);
-			c.gridx = 1;
-			stylePane.add(altitudeFields.get(j-1),c);
-			c.gridx = 2;
-			JButton plus = new JButton("+");
-			plus.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
+		}
+		/******** Multicolor *******/
+		if(layer.getStylesAvailable().contains(TrajectoriesLayer.STYLE_MULTI_COLOR)){
+			if(colorButtons == null){
+				colorButtons = new ArrayList<JButton>();
+				altitudeFields = new ArrayList<JTextField>();
+				for(int j = 0; j<layer.getMultiColors().getSecond().length;j++){
 					final JButton button = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
-					button.setBackground(layer.getMultiColors().getSecond()[layer.getMultiColors().getSecond().length-1]);
+					button.setBackground(layer.getMultiColors().getSecond()[j]);
 					button.addActionListener(new ActionListener() {
 
 						@Override
@@ -611,14 +573,52 @@ public class TrajectoriesView extends JPanel {
 						}
 					});
 					colorButtons.add(button);
-					altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[layer.getMultiColors().getFirst().length-1]/30.47));
-					updateStylePane(styles, stylePane, colorButtons, altitudeFields);
+					altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[j]/30.47));
 				}
-			});
-			stylePane.add(plus,c);
-			i++;
+				altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[layer.getMultiColors().getFirst().length-1]/30.47));
+			}
+			if(styles.getSelectedItem().equals("Fil de fer multicolor")) {
+				int j = 1;
+				for(JButton button : colorButtons){
+					c.gridx = 0;
+					c.gridy = 1+i;
+					stylePane.add(new JLabel("Tranche "+j+" : "),c);
+					c.gridx = 1;
+					stylePane.add(altitudeFields.get(j-1),c);
+					c.gridx = 2;
+					stylePane.add(button,c);
+					i++;
+					j++;
+				}
+				c.gridx = 0;
+				c.gridy = 1+i;
+				stylePane.add(new JLabel("Tranche "+j+" : "),c);
+				c.gridx = 1;
+				stylePane.add(altitudeFields.get(j-1),c);
+				c.gridx = 2;
+				JButton plus = new JButton("+");
+				plus.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						final JButton button = new JButton(new ImageIcon(getClass().getResource("/resources/fill-color.png"))); 
+						button.setBackground(layer.getMultiColors().getSecond()[layer.getMultiColors().getSecond().length-1]);
+						button.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								button.setBackground(JColorChooser.showDialog(null, "Couleur", button.getBackground()));
+							}
+						});
+						colorButtons.add(button);
+						altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[layer.getMultiColors().getFirst().length-1]/30.47));
+						updateStylePane(styles, stylePane, colorButtons, altitudeFields);
+					}
+				});
+				stylePane.add(plus,c);
+				i++;
+			}
 		}
-		
 		/******** Opacité *******/
 		
 		c.gridx = 0;
@@ -674,8 +674,10 @@ public class TrajectoriesView extends JPanel {
 				layer.setDefaultInsideColor(changeColor1.getBackground());
 				layer.setDefaultWidth(Double.parseDouble(width.getText()));
 				layer.setDefaultOpacity(Double.parseDouble(opacity.getText())/100.0);
-				layer.setShadedColors(Double.parseDouble(minAltitude.getText())*30.47, Double.parseDouble(maxAltitude.getText())*30.47,
-								minColor.getBackground(), maxColor.getBackground());
+				if(layer.getStylesAvailable().contains(TrajectoriesLayer.STYLE_SHADED)){
+					layer.setShadedColors(Double.parseDouble(minAltitude.getText())*30.47, Double.parseDouble(maxAltitude.getText())*30.47,
+							minColor.getBackground(), maxColor.getBackground());
+				}
 				ArrayList<Double> altitudes = new ArrayList<Double>();
 				for(JTextField field : altitudeFields){
 					altitudes.add(Double.parseDouble(field.getText())*30.47);

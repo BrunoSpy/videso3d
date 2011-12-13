@@ -49,7 +49,9 @@ import bibliothek.gui.dock.common.event.CDockableStateListener;
 import bibliothek.gui.dock.common.group.CGroupBehavior;
 import bibliothek.gui.dock.common.intern.CDockable;
 import bibliothek.gui.dock.common.mode.ExtendedMode;
+import bibliothek.gui.dock.common.theme.CEclipseTheme;
 import bibliothek.gui.dock.common.theme.ThemeMap;
+import bibliothek.gui.dock.util.Priority;
 
 import fr.crnan.videso3d.AirspaceListener;
 import fr.crnan.videso3d.ProgressSupport;
@@ -80,6 +82,10 @@ import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
+import glass.eclipse.theme.CGlassEclipseTabPainter;
+import glass.eclipse.theme.CGlassStationPaint;
+import glass.eclipse.theme.CMiniPreviewMovingImageFactory;
+import glass.eclipse.theme.EclipseThemeExtension;
 import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.util.Logging;
 
@@ -231,6 +237,12 @@ public class MainWindow extends JFrame {
 		control = new CControl(this);
 		control.setTheme(ThemeMap.KEY_ECLIPSE_THEME);
 		control.putProperty(EclipseTheme.THEME_CONNECTOR, new VDefaultEclipseThemConnector());
+		//glass l&f
+		control.putProperty(EclipseThemeExtension.GLASS_FACTORY, null);
+		control.putProperty(EclipseTheme.TAB_PAINTER, CGlassEclipseTabPainter.FACTORY);
+		((CEclipseTheme)control.intern().getController().getTheme()).intern().setMovingImageFactory(new CMiniPreviewMovingImageFactory(128), Priority.CLIENT);
+	     ((CEclipseTheme)control.intern().getController().getTheme()).intern().setPaint(new CGlassStationPaint(), Priority.CLIENT);
+		
 		control.setGroupBehavior(CGroupBehavior.TOPMOST);
 		control.getContentArea().setBorder(null);
 		this.add(control.getContentArea(), BorderLayout.CENTER);
@@ -469,6 +481,7 @@ public class MainWindow extends JFrame {
 			try {
 				LPLNTracksLayer layer = new LPLNTracksLayer(new TracksModel());
 				LPLNReader reader = new LPLNReader(lplnFile, layer.getModel());
+				this.wwd.toggleLayer(layer, true);
 				if(reader.getModel().getAllTracks().size() > 0){
 					this.addTrajectoriesView(reader, layer);
 				} else {
@@ -485,6 +498,7 @@ public class MainWindow extends JFrame {
 			try {
 				FPLTracksLayer layer = new FPLTracksLayer(new TracksModel());
 				FPLReader fplR = new FPLReader(fplFile, layer.getModel());
+				this.wwd.toggleLayer(layer, true);
 				String msgErreur = fplR.getErrorMessage();
 				if(!msgErreur.isEmpty())
 					JOptionPane.showMessageDialog(null, msgErreur, "Erreur lors de la lecture du plan de vol", JOptionPane.ERROR_MESSAGE);
