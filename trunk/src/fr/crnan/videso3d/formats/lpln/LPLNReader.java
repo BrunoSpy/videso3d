@@ -99,7 +99,7 @@ public class LPLNReader extends TrackFilesReader{
 					if(sentence.startsWith("-                           NUMERO PLN")){
 						//nouveau track et enregistrement du précédent si besoin
 						if(track != null) {
-							if(track.getNumPoints() > 0) this.getModel().getAllTracks().add(track);
+							if(track.getNumPoints() > 0) this.getModel().addTrack(track);
 							//réinitialisation des compteurs
 							count=0;
 							balisesFound = false;
