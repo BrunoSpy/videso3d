@@ -58,7 +58,10 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	protected double defaultOpacity = 0.3;
 
 	private TracksModel model;
-
+	
+	private Double[] altitudes = {0.0, 50.0*30.47, 195*30.47, 300*30.47, 600*30.47};
+	private Color[] multicolors = {Color.WHITE, Color.GREEN, Color.ORANGE, Color.RED};	
+	
 	public LPLNTracksLayer(TracksModel model){
 		super(model);
 		this.add(layer);
@@ -355,14 +358,13 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 
 	@Override
 	public void setMultiColors(Double[] altitudes, Color[] colors) {
-		// TODO Auto-generated method stub
-
+		this.altitudes = altitudes;
+		this.multicolors = colors;
 	}
 
 	@Override
 	public Couple<Double[], Color[]> getMultiColors() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Couple<Double[], Color[]>(this.altitudes, this.multicolors);
 	}
 
 }

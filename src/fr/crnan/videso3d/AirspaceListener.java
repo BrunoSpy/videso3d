@@ -24,6 +24,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.edimap.EdimapController;
 import fr.crnan.videso3d.graphics.DatabaseRoute2D;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.VPolygon;
@@ -164,7 +165,20 @@ public class AirspaceListener implements SelectListener {
 							wwd.redraw();
 						}
 					});
+					//TODO
+					VidesoController c = DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType());
+					if(c instanceof EdimapController && o instanceof SurfaceShape){
+						JMenuItem locationsItem = new JMenuItem("Afficher/Cacher les coordonnées");
+						menu.add(locationsItem);
+						locationsItem.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								VidesoController c = DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType());
+								((EdimapController)c).showLocations(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
 
+							}
+						});
+					}
 					if(o instanceof DatabaseRoute2D){
 						JMenuItem contextItem = new JMenuItem("Informations...");				
 						menu.add(contextItem);

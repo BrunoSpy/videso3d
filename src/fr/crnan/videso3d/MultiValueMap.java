@@ -64,4 +64,7 @@ public class MultiValueMap<T, U> {
 		return values;
 	}
 	
+	public void remove(T key){
+		map.remove(key);
+	}
 }

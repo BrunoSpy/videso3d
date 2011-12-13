@@ -116,6 +116,7 @@ public class EdimapController implements VidesoController {
 			e.printStackTrace();
 		}
 		carte.setVisible(false);
+		carte.setLocationsVisible(false);
 		this.cartes.getLayer().firePropertyChange(AVKey.LAYER, null, this.cartes.getLayer());
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
 		DatasManager.getView(Type.Edimap).hideObject(type, name);
@@ -181,5 +182,21 @@ public class EdimapController implements VidesoController {
 			}
 		}
 		return restorables;
+	}
+	
+	//TODO
+	public void showLocations(int type, String name){
+		Carte carte = null;
+		try {
+			carte = cartes.getCarte(name, type2string(type));
+		} catch (FileNotFoundException e) {
+			Logging.logger().severe("La carte "+e.getMessage()+" est inexistante.");
+			JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />La carte demandée n'a pas pû être trouvée.<br /><br />" +
+					"<b>Solution :</b><br />Supprimez la base des cartes et réimportez là.</html>", "Erreur", JOptionPane.ERROR_MESSAGE);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		carte.showLocations();
 	}
 }

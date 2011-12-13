@@ -44,6 +44,7 @@ import org.jdesktop.swingx.JXTreeTable;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.ihm.ProgressMonitor;
+import fr.crnan.videso3d.skyview.SkyViewController;
 
 
 /**
@@ -92,12 +93,12 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 		}else{
 			tablePanel.setBorder(BorderFactory.createTitledBorder(""));
 		}
-			
-		
+
+
 		final JXTreeTable treeTable = new JXTreeTable();
 		tables.add(new JXTreeTable());
-		
-		
+
+
 		model.addTreeModelListener(new TreeModelListener() {
 
 			@Override
@@ -108,7 +109,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 					treeTable.expandAll();
 				}
 			}
-			
+
 
 			@Override
 			public void treeNodesRemoved(TreeModelEvent e) {}
@@ -116,26 +117,50 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 			@Override
 			public void treeNodesInserted(TreeModelEvent e) {}
 
-			@Override
+			
 			@SuppressWarnings("unchecked")
+			@Override
 			public void treeNodesChanged(TreeModelEvent e) {
-				String type = ((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[1])).getUserObject()).getFirst();
-				Couple<String, Boolean> source = (Couple<String, Boolean>) ((DefaultMutableTreeNode)e.getTreePath().getLastPathComponent()).getUserObject();
-				if(source.getSecond()){
-					getController().showObject(getController().string2type(type), source.getFirst());
-				} else {
-					getController().hideObject(getController().string2type(type), source.getFirst());
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.getTreePath().getLastPathComponent();
+				Couple<String, Boolean> source = (Couple<String, Boolean>)node.getUserObject();
+				int type = getController().string2type(((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[1])).getUserObject()).getFirst());
+				if(getController() instanceof SkyViewController && type == SkyViewController.TYPE_WAYPOINT){
+					if(!node.isLeaf()){
+						if(source.getSecond()){
+							if(e.getPath().length==3)
+								((SkyViewController)getController()).showAllWaypoints(((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getFirst());
+							else
+								((SkyViewController)getController()).showAllWaypoints(null);
+						} else {
+							if(e.getPath().length==3)
+								((SkyViewController)getController()).hideAllWaypoints(((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getFirst());
+							else
+								((SkyViewController)getController()).hideAllWaypoints(null);
+						}
+					}else{
+						if(source.getSecond()){
+							getController().showObject(type, source.getFirst());
+						} else {
+							getController().hideObject(type, source.getFirst());
+						}
+					}
+				}else{
+					if(node.isLeaf()){
+						if(source.getSecond()){
+							getController().showObject(type, source.getFirst());
+						} else {
+							getController().hideObject(type, source.getFirst());
+						}
+					}
 				}
-
 			}
-			
-			
+
 		});
-		
+
 		final ProgressMonitor progress = new ProgressMonitor(this, "Affichage des objets...", "", 0, 1, false, false);
 		progress.setMillisToPopup(1000);
 		model.addPropertyChangeListener(new PropertyChangeListener() {
-			
+
 			@Override
 			public void propertyChange(PropertyChangeEvent p) {
 				if(p.getPropertyName().equals("change")){
@@ -146,14 +171,14 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 				}
 			}
 		});
-		
+
 		treeTable.setTableHeader(null);
 		treeTable.setRootVisible(false);
 		treeTable.setTreeTableModel(model);
 		treeTable.setOpaque(false);
 		treeTable.setBackground(new Color(214, 217, 223));
 		treeTable.getColumnExt(1).setMaxWidth(15);
-				
+
 		//Ajout du filtre
 		filtre.addActionListener(new ActionListener() {
 
@@ -166,7 +191,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 				}
 			}
 		});	
-		
+
 		JScrollPane scrollPane = new JScrollPane(treeTable);
 		scrollPane.setBorder(null);
 		tablePanel.add(scrollPane);
@@ -184,7 +209,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 				panel.add(splitPanes, BorderLayout.CENTER);
 				splitPanes.add(titledPanel);
 			}
-			
+
 		}else{
 			if(numberTables == 0) {
 				panel.add(tablePanel, BorderLayout.CENTER);
@@ -195,18 +220,18 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 				panel.add(splitPanes, BorderLayout.CENTER);
 				splitPanes.add(tablePanel);
 			}
-			
+
 		}
-		
-		
+
+
 		treeTable.addMouseListener(new MouseAdapter(){
 			@Override
+			@SuppressWarnings("unchecked")
 			public void mouseClicked(MouseEvent e){
 				if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2){
 					int row = treeTable.rowAtPoint(e.getPoint());  
 					Object[] path = treeTable.getPathForRow(row).getPath();
-					if(path.length>2){
-						@SuppressWarnings("unchecked")
+					if(((DefaultMutableTreeNode)path[path.length-1]).isLeaf()){
 						String type = ((Couple<String, Boolean>)((DefaultMutableTreeNode)path[1]).getUserObject()).getFirst();
 						String name = (String) treeTable.getValueAt(row, 0);
 						getController().highlight(getController().string2type(type),name);
@@ -215,9 +240,9 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 				} else if(e.getButton() == MouseEvent.BUTTON3) {
 					final int row = treeTable.rowAtPoint(e.getPoint());
 					final Object[] path = treeTable.getPathForRow(row).getPath();
-					
+
 					if(getController().isColorEditable(getController().string2type(((Couple<String, Boolean>)((DefaultMutableTreeNode)path[1]).getUserObject()).getFirst()))){
-					
+
 						final JPopupMenu menu = new JPopupMenu();
 						JMenuItem color = new JMenuItem("Changer la couleur ...");
 						color.addActionListener(new ActionListener() {
@@ -243,9 +268,10 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 				}
 			}
 		});
-		
+
 		numberTables++;
 	}
+
 	
 	@Override
 	public void reset() {

@@ -520,6 +520,7 @@ public class MainWindow extends JFrame {
 	
 	public void addTrajectoriesView(final TrackFilesReader reader, final TrajectoriesLayer layer){
 		final TrajectoriesView content = new TrajectoriesView(wwd, reader, layer, context);
+		this.wwd.toggleLayer(layer, true);
 		int i = 0;
 		if(control.getSingleDockable(reader.getName()) != null){
 			do{
@@ -608,17 +609,17 @@ public class MainWindow extends JFrame {
 		return this;
 	}
 
-	public void setDrawToolbar(boolean selected) {
-		if(drawToolbar == null){
-			this.drawToolbar = new DrawToolbar(wwd);
-			this.drawToolbar.setFloatable(true);
-		}
-		if(selected){
-			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
-			this.validate();
-		} else {
-			this.toolbars.remove(drawToolbar);
-			this.validate();
-		}
-	}
+//	public void setDrawToolbar(boolean selected) {
+//		if(drawToolbar == null){
+//			this.drawToolbar = new DrawToolbar(wwd);
+//			this.drawToolbar.setFloatable(true);
+//		}
+//		if(selected){
+//			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
+//			this.validate();
+//		} else {
+//			this.toolbars.remove(drawToolbar);
+//			this.validate();
+//		}
+//	}
 }

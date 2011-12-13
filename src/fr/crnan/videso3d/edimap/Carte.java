@@ -34,6 +34,7 @@ import gov.nasa.worldwind.util.Logging;
 import gov.nasa.worldwind.util.RestorableSupport;
 import gov.nasa.worldwind.util.RestorableSupport.StateObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -70,7 +71,10 @@ public class Carte implements DatabaseVidesoObject{
 	private Set<Renderable> renderables;
 	private Set<Airspace> airspaces;
 	private Set<UserFacingText> texts;
-
+//	TODO
+	private ArrayList<UserFacingText> locationTexts = new ArrayList<UserFacingText>();
+	private boolean locationsVisible = false;
+	
 	private boolean visible = false;
 		
 	public Carte(){
@@ -184,6 +188,7 @@ public class Carte implements DatabaseVidesoObject{
 				for(UserFacingText t : texts){
 					this.textLayer.removeGeographicText(t);
 				}
+				//TODO setLocationsVisible(false);
 			} else {
 				for(Airspace a : this.airspaces){
 					this.airspaceLayer.addAirspace(a);
@@ -195,6 +200,31 @@ public class Carte implements DatabaseVidesoObject{
 					this.textLayer.addGeographicText(t);
 				}
 			}
+		}
+	}
+	//TODO
+	public void showLocations(){
+		if(locationsVisible){
+			locationsVisible = false;
+			for(UserFacingText location : locationTexts){
+				this.textLayer.removeGeographicText(location);
+			}
+		}else{
+			locationsVisible = true;
+			for(LatLonCautra l : pointsRef.values()){
+				String latString = l.getLatitude().toDMSString();
+				latString = (l.getLatitude().degrees>0? latString+"N" : latString.substring(1)+"S");
+				String lonString = l.getLongitude().toDMSString();
+				lonString = (l.getLongitude().degrees>0? lonString+"E" : lonString.substring(1)+"W");
+				UserFacingText location = new UserFacingText(latString+"   "+lonString, new Position(l,0));
+				locationTexts.add(location);
+				this.textLayer.addGeographicText(location);
+			}
+		}
+	}
+	public void setLocationsVisible(boolean visible){
+		if(visible && !locationsVisible || !visible && locationsVisible){
+			showLocations();
 		}
 	}
 	

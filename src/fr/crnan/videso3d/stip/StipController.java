@@ -219,6 +219,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 			
 			this.routes2D.hideRoute(name);
 			this.routes3D.hideRoute(name);
+			hideRoutesBalises(name);
 			break;
 		case BALISES://Balises Pub
 			this.balisesPub2D.hideBalise(name, type);
