@@ -32,7 +32,7 @@ import org.jdesktop.swingx.treetable.AbstractTreeTableModel;
 import fr.crnan.videso3d.Couple;
 
 /**
- * TreeTableModel suitable for SkyView and AIP GUI
+ * TreeTableModel suitable for STIP, SkyView and AIP GUI
  * @author Bruno Spyckerelle
  * @version 0.2
  */
@@ -180,16 +180,16 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 	public void setValueAt(final Object value, final Object node, final int column) {
 		new SwingWorker<Integer, Integer>() {
 			protected Integer doInBackground() throws Exception {
-				setValueAt(value, node, column, true);
+				setValueAt(value, node, column, true, true);
 				return 1;
 			};
 		}.execute();
 	}
 
-	private void setValueAt(Object value, Object node, int column, boolean first){
+	@SuppressWarnings("unchecked")
+	private void setValueAt(Object value, Object node, int column, boolean first, boolean fireEvent){
 		
 		if(column == 1){
-
 			DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
 			Boolean old = ((Couple<String, Boolean>)((DefaultMutableTreeNode)treeNode).getUserObject()).getSecond();
 			//do nothing if old value equals new value
@@ -201,13 +201,13 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 				if((Boolean) value)
 					this.support.firePropertyChange("change", -1, this.getLeafsCount(node, !((Boolean) value)));
 			}
-			//ne pas changer la valuer des nodes non affichés
+			//ne pas changer la valeur des nodes non affichés
 			if(filter != null){
 				if(!treeNode.isLeaf()){
 					((Couple<String, Boolean>) treeNode.getUserObject()).setSecond((Boolean)value);
 					for(int i=0;i<treeNode.getChildCount();i++){
 						DefaultMutableTreeNode child = (DefaultMutableTreeNode) treeNode.getChildAt(i);
-						setValueAt(value, child, column, false);
+						setValueAt(value, child, column, false, true);
 					}
 				} else {
 					if(this.filter.isShown((DefaultMutableTreeNode) node)){
@@ -219,19 +219,30 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 					}
 				}
 			} else {
-				
 				((Couple<String, Boolean>) treeNode.getUserObject()).setSecond((Boolean)value);
 				if(!treeNode.isLeaf()){
-					for(int i=0;i<treeNode.getChildCount();i++){
-						DefaultMutableTreeNode child = (DefaultMutableTreeNode) treeNode.getChildAt(i);
-						setValueAt(value, child, column, false);
-					}
+					try{
+						if(fireEvent)
+							this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);
+
+						String nodeName = ((Couple<String, Boolean>) treeNode.getUserObject()).getFirst();
+						if(nodeName.equals("Waypoints"))
+							fireEvent = false;
+						else if(treeNode.getParent() instanceof Couple<?, ?>){
+							if(((Couple<String, Boolean>)((DefaultMutableTreeNode)treeNode.getParent()).getUserObject()).getFirst().equals("Waypoints"))
+								fireEvent = false;
+						}
+						for(int i=0;i<treeNode.getChildCount();i++){
+							DefaultMutableTreeNode child = (DefaultMutableTreeNode) treeNode.getChildAt(i);
+							setValueAt(value, child, column, false, fireEvent);
+						}
+					}catch(Exception e){e.printStackTrace();}
 				} else {
 					count++;
 					if((Boolean) value) 
-						this.support.firePropertyChange("progress", count-1, count);		
-					this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);
-					
+						this.support.firePropertyChange("progress", count-1, count);
+					if(fireEvent)
+						this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);	
 				}
 			}
 		}
@@ -239,7 +250,6 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 	
 	@Override
 	public int getIndexOfChild(Object parent, Object child) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

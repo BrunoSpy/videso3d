@@ -207,13 +207,13 @@ public class SkyViewController implements VidesoController {
 		this.waypoints.removeAllBalises();
 	}
 
+
+
 	private List<Route2D> createRoute(String ident){
 		try {
 			Statement st = DatabaseManager.getCurrentSkyView();
 			ResultSet rs = st.executeQuery("select from_fix_ident, from_ident_icao, to_fix_ident, to_ident_icao, levl from airway where ident = '"+ident+"'");
-			LinkedList<LinkedList<Couple<String,String>>> routes = new LinkedList<LinkedList<Couple<String,String>>>();
 			LinkedList<Couple<String,String>> points = new LinkedList<Couple<String,String>>();
-			LinkedList<Route2D> routes2D = new LinkedList<Route2D>();
 			boolean first = true;
 			String type = "";
 			LinkedList<Couple<Couple<String,String>,Couple<String,String>>> couples = new LinkedList<Couple<Couple<String,String>,Couple<String,String>>>();
@@ -232,26 +232,73 @@ public class SkyViewController implements VidesoController {
 					}
 				}
 			}
-			while(!couples.isEmpty()){
-				int startLength = couples.size();
-				Iterator<Couple<Couple<String, String>, Couple<String, String>>> iterator = couples.iterator();
-				while(iterator.hasNext()){
-					Couple<Couple<String, String>, Couple<String, String>> couple = iterator.next();
-					if(this.insertSegment(points, couple.getFirst(), couple.getSecond())){
-						iterator.remove();
-					}
-				}
-				if(startLength == couples.size()){//plus de possibilités d'allonger le tronçon, enregistrer la route et commencer un deuxième tronçon
-					routes.add((LinkedList<Couple<String, String>>) points.clone());
-					points.clear();
-					points.add(couples.getFirst().getFirst());
-					points.add(couples.getFirst().getSecond());
-					couples.removeFirst();
+			return createRoute(ident, type, points, couples);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	private List<Route2D> createRoute(String ident, 
+			String type, 
+			LinkedList<Couple<String,String>> points, 
+			LinkedList<Couple<Couple<String,String>,Couple<String,String>>> couples){
+
+		LinkedList<Route2D> routes2D = new LinkedList<Route2D>();
+		LinkedList<LinkedList<Couple<String,String>>> routes = new LinkedList<LinkedList<Couple<String,String>>>();
+		
+		while(!couples.isEmpty()){
+			int startLength = couples.size();
+			Iterator<Couple<Couple<String, String>, Couple<String, String>>> iterator = couples.iterator();
+			while(iterator.hasNext()){
+				Couple<Couple<String, String>, Couple<String, String>> couple = iterator.next();
+				if(this.insertSegment(points, couple.getFirst(), couple.getSecond())){
+					iterator.remove();
 				}
 			}
-			//on enregistre le dernier tronçon
-			routes.add((LinkedList<Couple<String, String>>) points.clone());
-			//puis on crée les routes 2D
+			if(startLength == couples.size()){//plus de possibilités d'allonger le tronçon, enregistrer la route et commencer un deuxième tronçon
+				routes.add((LinkedList<Couple<String, String>>) points.clone());
+				points.clear();
+				points.add(couples.getFirst().getFirst());
+				points.add(couples.getFirst().getSecond());
+				couples.removeFirst();
+			}
+		}
+		//on enregistre le dernier tronçon
+		routes.add((LinkedList<Couple<String, String>>) points.clone());
+		//puis on crée les routes 2D
+
+		try {
+			Statement st = DatabaseManager.getCurrentSkyView();
+			ResultSet rs;
+			HashMap<String, Couple<String, String>> pointsRoute = new HashMap<String, Couple<String,String>>();
+			StringBuilder queryWaypoint = new StringBuilder("select ident, latitude, longitude from waypoint where");
+			StringBuilder queryNavAid = new StringBuilder("select ident, latitude, longitude from navaid where");
+			for(LinkedList<Couple<String, String>> route : routes){
+				for(Couple<String, String> p : route){
+					if(p.getFirst().length()>3){
+						queryWaypoint.append(" (ident='"+p.getFirst()+"' AND icao='"+p.getSecond()+"') OR");
+					}else{
+						queryNavAid.append(" (ident='"+p.getFirst()+"' AND icao='"+p.getSecond()+"') OR");
+					}
+				}
+			}
+			if(queryWaypoint.length()>56){
+				queryWaypoint.delete(queryWaypoint.length()-3,queryWaypoint.length());
+				rs = st.executeQuery(queryWaypoint.toString());
+				while(rs.next()){
+					pointsRoute.put(rs.getString(1), new Couple<String, String>(rs.getString(2), rs.getString(3)));
+				}
+			}
+			if(queryNavAid.length()>56){
+				queryNavAid.delete(queryNavAid.length()-3,queryNavAid.length());
+				rs = st.executeQuery(queryNavAid.toString());
+				while(rs.next()){
+					pointsRoute.put(rs.getString(1), new Couple<String, String>(rs.getString(2), rs.getString(3)));
+				}
+			}
 			for(LinkedList<Couple<String, String>> route : routes){
 				DatabaseRoute2D r = new DatabaseRoute2D(ident, type.equals("H")? Route.Space.UIR : Route.Space.FIR,
 						Type.SkyView,
@@ -259,33 +306,22 @@ public class SkyViewController implements VidesoController {
 				LinkedList<LatLon> loc = new LinkedList<LatLon>();
 				LinkedList<String> balises = new LinkedList<String>();
 				for(Couple<String, String> p : route){
-					if(p.getFirst().length() == 5){
-						rs = st.executeQuery("select * from waypoint where ident='"+p.getFirst()+"' and icao='"+p.getSecond()+"'");
-						if(rs.next()){
-							LatLon latlon = LatLonUtils.computeLatLonFromSkyviewString(rs.getString(7), rs.getString(8));
-							loc.add(latlon);
-							balises.add(p.getFirst());
-						}
-					}else {
-						rs = st.executeQuery("select * from navaid where ident='"+p+"' and icao='"+p.getSecond()+"'");
-						if(rs.next()){
-							LatLon latlon = LatLonUtils.computeLatLonFromSkyviewString(rs.getString(7), rs.getString(8));
-							loc.add(latlon);
-							balises.add(p.getFirst());
-						}
-					}
+					Couple<String, String> coords = pointsRoute.get(p.getFirst());
+					LatLon latlon = LatLonUtils.computeLatLonFromSkyviewString(coords.getFirst(), coords.getSecond());
+					loc.add(latlon);
+					balises.add(p.getFirst());
 				}
 				r.setLocations(loc);
 				r.setBalises(balises);
 				routes2D.add(r);
 			}
 			st.close();
-			return routes2D;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return routes2D;
 	}
+
 	
 	/**
 	 * Essaye d'ajouter un segment à une route
@@ -354,7 +390,6 @@ public class SkyViewController implements VidesoController {
 	
 	@Override
 	public Collection<Object> getObjects(int type) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -401,6 +436,50 @@ public class SkyViewController implements VidesoController {
 		//waypoints
 		restorables.addAll(this.waypoints.getVisibleBalises());
 		return restorables;
+	}
+	
+		
+	
+	/**
+	 * Affiche tous les waypoints du pays passé en paramètre. Si <code>state</code> est null, affiche les waypoints de tous les pays.
+	 * @param pays Le pays dont on veut afficher les waypoints.
+	 */
+	public void showAllWaypoints(String pays){
+		try{
+			Statement st = DatabaseManager.getCurrentSkyView();
+			String query = "select ident, name, latitude, longitude from waypoint";
+			if(pays!=null)
+				query+=" where icao='"+pays+"'";
+			ResultSet rs = st.executeQuery(query);
+			while(rs.next()){
+				String ident = rs.getString(1);
+				DatabaseBalise2D waypoint = new DatabaseBalise2D(ident, new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(3), rs.getString(4)), 0),
+						DatabaseManager.Type.SkyView,
+						SkyViewController.TYPE_WAYPOINT);
+				waypoint.setAnnotation("<b>"+ident+"</b><br /><br />"+rs.getString(2));
+				waypoints.addBaliseActive(waypoint);
+			}
+			waypoints.showAll();
+			st.close();
+		} catch (SQLException e){
+			e.printStackTrace();
+		}
+	}
+
+	public void hideAllWaypoints(String pays) {
+		try{
+			if(pays!=null){
+				Statement st = DatabaseManager.getCurrentSkyView();
+				ResultSet rs = st.executeQuery("select ident from waypoint where icao='"+pays+"'");
+				while(rs.next()){
+					waypoints.hideBalise(rs.getString(1), TYPE_WAYPOINT);
+				}
+			}else{
+				waypoints.hideAll();
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 	}
 	
 }

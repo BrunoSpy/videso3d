@@ -19,6 +19,7 @@ import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;
 
+
 import fr.crnan.videso3d.MultiValueMap;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrackPoint;
@@ -114,6 +115,29 @@ public class FPLTracksLayer extends LPLNTracksLayer {
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
+	@Override
+	protected void removeTrack(LPLNTrack track){
+		List<Profil3D> profilList = this.profils.get((FPLTrack)track);
+		if(profilList != null){
+			for(Profil3D profil : profilList){
+			this.getLayer().removeProfil3D(profil);
+			}
+			this.firePropertyChange(AVKey.LAYER, null, this);
+			this.profils.remove((FPLTrack)track);
+		}
+	}
+	
+	@Override
+	protected void hideTrack(LPLNTrack track){
+		List<Profil3D> profilList = this.profils.get((FPLTrack)track);
+		if(profilList != null){
+			for(Profil3D profil : profilList){
+				this.getLayer().removeProfil3D(profil);
+			}
+			this.firePropertyChange(AVKey.LAYER, null, this);
+		}
+	}
+	
 	/**
 	 * 
 	 * @param balises
@@ -199,6 +223,8 @@ public class FPLTracksLayer extends LPLNTracksLayer {
 		}
 		this.defaultWidth = width;
 	}
+	
+	
 	
 }
 	

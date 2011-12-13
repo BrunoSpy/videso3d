@@ -60,6 +60,7 @@ public class FPLReader extends TrackFilesReader {
 
 
 	public FPLReader() {
+		this.setModel(new TracksModel());
 		this.setName("?");
 	}
 
@@ -192,7 +193,7 @@ public class FPLReader extends TrackFilesReader {
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
 		if(track.getNumPoints()>1){
-			this.getModel().getAllTracks().add(track);
+			this.getModel().addTrack(track);
 		}else{
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
