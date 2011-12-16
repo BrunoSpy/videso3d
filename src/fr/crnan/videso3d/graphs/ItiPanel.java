@@ -63,9 +63,15 @@ public class ItiPanel extends ResultGraphPanel {
 	public ItiPanel(boolean advanced, String... criteria) {
 		super(advanced, criteria);
 		if(advanced){
-			for(int i = 0;i<criteria.length;i++){
-				if(!criteria[i].isEmpty() && i != 4 && i != 5){
+			int nbBalises = Integer.parseInt(criteria[8]);
+			for(int i = 0;i<9+nbBalises;i++){
+				if(!criteria[i].isEmpty() && i != 4 && i != 5 && i!=8){
 					titleTab += " + "+criteria[i];
+				}
+			}
+			for(int i=9+nbBalises;i<criteria.length;i++){
+				if(!criteria[i].isEmpty() ){
+					titleTab += " - "+criteria[i];
 				}
 			}
 		} else {
@@ -81,6 +87,7 @@ public class ItiPanel extends ResultGraphPanel {
 			String last = criteria[7].trim();
 			Integer flInf = criteria[2].trim().isEmpty() ? 0 : new Integer(criteria[2]);
 			Integer flSup = criteria[3].trim().isEmpty() ? 800 : new Integer(criteria[3]);
+			int nbBalises = Integer.parseInt(criteria[8]);
 			
 			ArrayList<String> sql = new ArrayList<String>();
 			if(!entree.isEmpty())
@@ -104,11 +111,10 @@ public class ItiPanel extends ResultGraphPanel {
 			if(flSup<800)
 				sql.add("select id as iditi from itis where flsup "+criteria[5]+"'"+flSup+"'");
 			
-			for(int i=8;i<criteria.length;i++){
+			for(int i=9;i<9+nbBalises;i++){
 				if(!criteria[i].trim().isEmpty())
 					sql.add("select iditi from balitis where balise "+forgeSql(criteria[i].trim()));
 			}
-			
 			String sqlQuery = "";
 			for(int i=0;i<sql.size();i++){
 				if(i==0){
@@ -117,7 +123,12 @@ public class ItiPanel extends ResultGraphPanel {
 					sqlQuery += " INTERSECT "+sql.get(i);
 				}
 			}
-			
+			for(int i=9+nbBalises;i<criteria.length;i++){
+				if(!criteria[i].trim().isEmpty())
+					sqlQuery+=" EXCEPT select iditi from balitis where balise "+forgeSql(criteria[i].trim());
+			}
+		
+			//TODO pourquoi cette méthode est appelée 2 fois ?
 			return sqlQuery;
 		} else {
 			String balise1 = criteria[0];

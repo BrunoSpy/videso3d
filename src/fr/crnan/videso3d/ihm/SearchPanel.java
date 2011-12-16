@@ -52,6 +52,7 @@ import javax.swing.JButton;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.ihm.components.JUpperCaseComboBox;
 import fr.crnan.videso3d.ihm.components.TypeComboBox;
 
 /**
@@ -60,8 +61,8 @@ import fr.crnan.videso3d.ihm.components.TypeComboBox;
  * @version 0.1.0
  */
 public class SearchPanel extends JPanel {
-	private JComboBox searchField1;
-	private JComboBox searchField2;
+	private JUpperCaseComboBox searchField1;
+	private JUpperCaseComboBox searchField2;
 	private JTextField numLiaison;
 	private JPanel defaultSearchPanel;
 	private JComboBox typeBox;
@@ -99,14 +100,14 @@ public class SearchPanel extends JPanel {
 		//Liste des balises pour l'autocomplétion
 		Vector<String> results = getAllStipItems();
 		
-		searchField1 = new JComboBox(new DefaultComboBoxModel(results));
+		searchField1 = new JUpperCaseComboBox(new DefaultComboBoxModel(results));
 		searchField1.setEditable(true);
 		searchField1.setToolTipText("<html>Nom de la balise ou du terrain recherché.<br />Exemple : LF* renverra toutes les informations sur les terrains français.</html>");
 		AutoCompleteDecorator.decorate(searchField1);
 		
 		@SuppressWarnings("unchecked")
 		Vector<String> results2 = (Vector<String>) results.clone();
-		searchField2 = new JComboBox(new DefaultComboBoxModel(results2));
+		searchField2 = new JUpperCaseComboBox(new DefaultComboBoxModel(results2));
 		searchField2.setEditable(true);
 		AutoCompleteDecorator.decorate(searchField2);
 		
