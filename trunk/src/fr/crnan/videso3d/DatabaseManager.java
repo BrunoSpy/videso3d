@@ -719,6 +719,16 @@ public final class DatabaseManager {
 				"balise varchar(10), " +
 				"appartient boolean, " +
 		"sens varchar(1))");
+		//table contenant les entrées des routes
+		st.executeUpdate("create table routeentrees (id integer primary key autoincrement, " +
+				"route varchar(7), " +
+				"routeid int, " +
+				"entree varchar(1))");
+		//table contenant les sorties des routes
+				st.executeUpdate("create table routesorties (id integer primary key autoincrement, " +
+						"route varchar(7), " +
+						"routeid int, " +
+						"sortie varchar(1))");
 		//table contenant les itis
 		st.executeUpdate("create table itis (id integer primary key autoincrement, " +
 				"entree varchar(5), " +

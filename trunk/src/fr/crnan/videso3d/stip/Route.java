@@ -22,7 +22,7 @@ import fr.crnan.videso3d.Couple;
 /**
  * Représentation d'une route définie dans le fichier stip ROUTE
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2
  */
 public class Route {
 	/**
@@ -37,6 +37,14 @@ public class Route {
 	 * Sens de parcours de la route entre deux balises
 	 */
 	private List<String> sens = new LinkedList<String>();
+	/**
+	 * Entrées
+	 */
+	private List<String> entrees = new LinkedList<String>();
+	/**
+	 * Sorties
+	 */
+	private List<String> sorties = new LinkedList<String>();	
 	/**
 	 * Sens de parcours d'une route entre deux balises
 	 * @author Bruno Spyckerelle
@@ -54,12 +62,22 @@ public class Route {
 	
 	/**
 	 * Représentation d'une route définie par le fichier ROUTE
-	 * @param line
+	 * @param name nom de la route
 	 */
-	public Route(String line){
-		this.setName(line.substring(0,7).trim());
-		this.setEspace(line.substring(11, 12));
-		this.addBalises(line.substring(15,80));
+	public Route(String name){
+		this.setName(name);
+	}
+	
+	public void addEntrees(String line){
+		for(String e : line.split("\\s+")){
+			entrees.add(e);
+		}
+	}
+	
+	public void addSorties(String line){
+		for(String s : line.split("\\s+")){
+			sorties.add(s);
+		}
 	}
 	
 //	public Route(QSqlRecord record){
@@ -133,6 +151,17 @@ public class Route {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+	/**
+	 * @return entrees
+	 */
+	public List<String> getEntrees() {
+		return entrees;
+	}
+	/**
+	 * @return sorties
+	 */
+	public List<String> getSorties() {
+		return sorties;
+	}
 	
 }

@@ -303,7 +303,31 @@ public class StipContext extends Context {
 				int id = st.executeQuery("select id from routes where name ='"+name+"'").getInt(1);
 				ResultSet rs = st.executeQuery("select * from routes where id='"+id+"'");		
 				taskpane1.add(new JLabel("<html><b>Espace</b> : "+(rs.getString(3).equals("U")?"UIR":"FIR")+"</html>"));
-
+				
+				rs = st.executeQuery("select entree from routeentrees where routeid = '"+id+"'");
+				String entrees = "";
+				if(rs.next()){
+					entrees = "<html><b>Entrées</b> : "+rs.getString(1);
+				}
+				while(rs.next()){
+					entrees += " "+rs.getString(1);
+				}
+				if(!entrees.isEmpty()){
+					taskpane1.add(new JLabel(entrees));
+				}
+				
+				rs = st.executeQuery("select sortie from routesorties where routeid = '"+id+"'");
+				String sorties = "";
+				if(rs.next()){
+					sorties = "<html><b>Sorties</b> : "+rs.getString(1);
+				}
+				while(rs.next()){
+					sorties += " "+rs.getString(1);
+				}
+				if(!sorties.isEmpty()){
+					taskpane1.add(new JLabel(sorties));
+				}
+				
 				taskpane1.add(new AbstractAction() {
 					{
 						putValue(Action.NAME, "<html>Afficher/centrer la route.</html>");
