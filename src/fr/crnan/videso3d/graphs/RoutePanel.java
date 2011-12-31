@@ -36,7 +36,7 @@ import fr.crnan.videso3d.stip.StipController;
 /**
  * Affichage des résultats de type Route
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class RoutePanel extends ResultGraphPanel {
 
@@ -97,6 +97,16 @@ public class RoutePanel extends ResultGraphPanel {
 						String name = rs.getString(4); 
 						if(idRoute != rs.getInt(1)){
 							count++;
+							//ajout des sorties à la dernière route
+							if(idRoute != 0){
+								ResultSet rsSorties = DatabaseManager.getCurrentStip().executeQuery("select routesorties.sortie, routes.id from routes, routesorties where routes.id = routesorties.routeid and routes.id = '"+idRoute+"'");
+								while(rsSorties.next()){
+									mxCell sortie = (mxCell) graph.insertVertex(route, null, rsSorties.getString(1), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTravers);
+									graph.insertEdge(route, null, "", first, sortie, GraphStyle.edgeRouteSensUnique);
+								}
+								rsSorties.close();
+							}
+							
 							idRoute = rs.getInt(1);
 							//nouvelle route
 							route = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, new CellContent(Type.STIP, StipController.ROUTES, idRoute, rs.getString(2)), 0, 0, 80, 50, GraphStyle.groupStyleHorizontal);
@@ -107,6 +117,13 @@ public class RoutePanel extends ResultGraphPanel {
 										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
 							first = (mxCell) graph.insertVertex(route, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							first.setConnectable(false);
+							//insertion des entrees
+							ResultSet rsEntrees = DatabaseManager.getCurrentStip().executeQuery("select routeentrees.entree, routes.id from routes, routeentrees where routes.id = routeentrees.routeid and routes.id = '"+idRoute+"'");
+							while(rsEntrees.next()){
+								mxCell entree = (mxCell) graph.insertVertex(route, null, rsEntrees.getString(1), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTravers);
+								graph.insertEdge(route, null, "", entree, first, GraphStyle.edgeRouteSensUnique);
+							}
+							rsEntrees.close();
 							sens = rs.getString(6);
 						} else {
 							String style = rs.getBoolean(5) ? 
@@ -130,6 +147,16 @@ public class RoutePanel extends ResultGraphPanel {
 						}
 					}
 
+					//ajout des sorties à la dernière route
+					if(idRoute != 0){
+						ResultSet rsSorties = DatabaseManager.getCurrentStip().executeQuery("select routesorties.sortie, routes.id from routes, routesorties where routes.id = routesorties.routeid and routes.id = '"+idRoute+"'");
+						while(rsSorties.next()){
+							mxCell sortie = (mxCell) graph.insertVertex(route, null, rsSorties.getString(1), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTravers);
+							graph.insertEdge(route, null, "", first, sortie, GraphStyle.edgeRouteSensUnique);
+						}
+						rsSorties.close();
+					}
+					
 					fireNumberResults(count);
 					
 					progressBar.setValue(2);

@@ -29,7 +29,7 @@ import fr.crnan.videso3d.ihm.ResultPanel;
 /**
  * Panneau de résultats représentés sous forme de graphe
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public abstract class ResultGraphPanel extends ResultPanel  {
 
@@ -50,6 +50,7 @@ public abstract class ResultGraphPanel extends ResultPanel  {
 		layout.setParallelEdgeSpacing(5.0);
 		layout.setInterRankCellSpacing(20.0);//edge size
 		layout.setInterHierarchySpacing(10.0);
+		layout.setIntraCellSpacing(10.0);//espace entre deux lignes
 
 		this.progressBar.setVisible(false);
 

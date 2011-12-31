@@ -452,21 +452,26 @@ public class Stip extends FileParser{
 		while (in.ready()){
 			String line = in.readLine();
 			if(!line.startsWith("FORMAT") && line.length()>9){
-				if(line.substring(7, 9).compareTo("RO") == 0){//TODO traiter les lignes ES
-					if(line.substring(0, 7).trim().compareTo(name) == 0) {
-						route.addBalises(line.substring(15, 80));
-					} else {
-						//nouvelle route on insère la route précédente avant d'en créer une nouvelle
-						if(route != null) {
-							try {
-								this.insertRoute(route);
-							} catch (SQLException e) {
-								e.printStackTrace();
-							}
+				if(line.substring(0, 7).trim().compareTo(name) != 0){
+					if(route != null){//nouvelle route on insère la route précédente avant d'en créer une nouvelle
+						try {
+							this.insertRoute(route);
+						} catch (SQLException e) {
+							e.printStackTrace();
 						}
-						route = new Route(line);
-						name = route.getName();
 					}
+					name = line.substring(0, 7).trim();
+					route = new Route(name);
+					route.setEspace(line.substring(11, 12));
+				}
+
+				String typeLigne  = line.substring(7, 9);
+				if(typeLigne.compareTo("RO") == 0){
+					route.addBalises(line.substring(15, 80));
+				} else if(typeLigne.compareTo("ES") == 0) {
+					route.addEntrees(line.substring(15, 80));
+				} else if(typeLigne.compareTo("SO") == 0) {
+					route.addSorties(line.substring(15, 80));
 				}
 			}
 		}
@@ -514,6 +519,32 @@ public class Stip extends FileParser{
 		}
 		insert.executeBatch();
 		insert.close();
+		//insertion des entrees
+		if(!route.getEntrees().isEmpty()){
+			insert = this.conn.prepareStatement("insert into routeentrees (route, routeid, entree) " +
+					"values (?, ?, ?)");
+			insert.setString(1, route.getName());
+			insert.setInt(2, id);
+			for(String e : route.getEntrees()){
+				insert.setString(3, e);
+				insert.addBatch();
+			}
+			insert.executeBatch();
+			insert.close();
+		}
+		//insertion des sorties
+		if(!route.getSorties().isEmpty()){
+			insert = this.conn.prepareStatement("insert into routesorties (route, routeid, sortie) " +
+					"values (?, ?, ?)");
+			insert.setString(1, route.getName());
+			insert.setInt(2, id);
+			for(String e : route.getSorties()){
+				insert.setString(3, e);
+				insert.addBatch();
+			}
+			insert.executeBatch();
+			insert.close();
+		}
 	}
 
 	/**
