@@ -1,6 +1,16 @@
 #summary Captures d'écran
 #labels Featured
 
+= Version 0.10 =
+
+|| <img src ="http://videso3d.googlecode.com/svn/wiki/img/videso_0_10_1.png" /> ||
+|| Trajectoires coloriées en fonction de l'altitude ||
+
+= Version 0.9 =
+
+|| <img src ="http://videso3d.googlecode.com/svn/wiki/img/videso_0_9.png" /> ||
+|| Filtrage et comptage des trajectoires passant dans un volume ||
+
 = Version 0.8 =
 
 || <img src ="http://videso3d.googlecode.com/svn/wiki/img/videso_0_8_aip.png" /> ||
