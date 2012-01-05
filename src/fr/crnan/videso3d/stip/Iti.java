@@ -57,7 +57,11 @@ public class Iti {
 		this.setEntree(line.substring(7, 12).trim());
 		this.setSortie(line.substring(15, 20).trim());
 		this.setFlinf(new Integer(line.substring(23, 26)));
-		this.setFlsup(new Integer(line.substring(31, 34)));
+		if(line.length() > 33){
+			this.setFlsup(new Integer(line.substring(31, 34)));
+		} else {
+			this.setFlsup(800);
+		}
 	}
 
 	/**
