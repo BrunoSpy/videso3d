@@ -154,7 +154,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		
 		//highlight controller
 		highlightController = new HighlightController(this, SelectEvent.ROLLOVER);
-		this.addSelectListener(highlightController);
 		
 		//mise à jour des calques de WorldWindInstalled
 		firePropertyChange("step", "", "Ajout des layers installés");
