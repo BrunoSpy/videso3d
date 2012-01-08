@@ -35,6 +35,7 @@ import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.ihm.ShapeAttributesDialog;
 import fr.crnan.videso3d.ihm.components.AirspaceMenu;
 import fr.crnan.videso3d.ihm.components.ImageMenu;
+import fr.crnan.videso3d.ihm.components.MultipleSelectionMenu;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
@@ -105,6 +106,13 @@ public class AirspaceListener implements SelectListener {
 		if(event.getEventAction() == SelectEvent.HOVER){ //popup tooltip
 			this.doHover(event.getTopObject(),event.getPickPoint());
 		} else if(event.getEventAction() == SelectEvent.RIGHT_CLICK){
+			
+			if(this.wwd.getSelectedObjects().size() != 0){
+				MultipleSelectionMenu menu = new MultipleSelectionMenu(this.wwd.getSelectedObjects(), wwd);
+				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
+				return;
+			}
+			
 			final Object o = event.getTopObject();
 			if(o instanceof Airspace){
 				AirspaceMenu menu = new AirspaceMenu((Airspace)o, 

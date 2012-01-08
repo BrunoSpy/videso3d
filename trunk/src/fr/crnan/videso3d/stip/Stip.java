@@ -38,6 +38,8 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.geom.Latitude;
+import fr.crnan.videso3d.geom.Longitude;
 
 /**
  * Lecteur de fichiers STIP
@@ -1116,6 +1118,80 @@ public class Stip extends FileParser{
 		return connex;
 	}
 	
+	private static String baliseToString(int id){
+		String balise = new String();
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select * from balises where id = '"+id+"'");
+			String name = rs.getString(2);
+			int size = name.length();
+			for(int i = 6;i>size;i--){
+				name+=" ";
+			}
+			balise+="1 "+name;
+			if(!rs.getBoolean(3)){
+				balise+="            PNP";
+			}
+			balise+="\n";
+			Latitude lat = new Latitude(rs.getDouble(4));
+			Longitude lon = new Longitude(rs.getDouble(5));
+			String line2 = "2 "+name+
+					String.format(lat.getDegres().toString(), "%2.0d")+
+					String.format(lat.getMinutes().toString(), "%2.0d")+
+					String.format(lon.getDegres().toString(), "%2.0d")+
+					String.format(lon.getMinutes().toString(), "%2.0d")+
+					lon.getSens()+" "+
+					rs.getString(6)+" "+
+					rs.getString(7);
+			size = line2.length();
+			for(int i = 60;i>size;i--){
+				line2+=" ";
+			}
+			line2 += rs.getString(8)+"\n";
+			balise += line2;
+			
+			balise += "3 "+name;
+			boolean stop = false;
+			for(int i=1;i<=6;i+=2){
+				if(rs.getInt(i+9) == -1){
+					stop = true;
+					break;
+				}
+				balise+= rs.getString(i+9).equals("660") ? "*** " : String.format(rs.getString(i+9),"%3.0d")+" ";
+				balise+= rs.getString(i+8)+"                  ";
+			}
+			balise+="\n";
+			if(!stop){
+				stop = false;
+				balise +="31"+name;
+				for(int i=1;i<=6;i+=2){
+					if(rs.getInt(i+15) == -1){
+						stop = true;
+						break;
+					}
+					balise+= rs.getString(i+15).equals("660") ? "*** " : String.format(rs.getString(i+15),"%3.0d")+" ";
+					balise+= rs.getString(i+14)+"                  ";
+				}
+				balise += "\n";
+			}
+			if(!stop){
+				stop = false;
+				balise +="32"+name;
+				for(int i=1;i<=6;i+=2){
+					if(rs.getInt(i+21) == -1){
+						stop = true;
+						break;
+					}
+					balise+= rs.getString(i+21).equals("660") ? "*** " : String.format(rs.getString(i+21),"%3.0d")+" ";
+					balise+= rs.getString(i+20)+"                  ";
+				}
+			}
+		} catch(SQLException e){
+			e.printStackTrace();
+		}
+		return balise;
+	}
+	
 	/**
 	 * 
 	 * @param type from {@link StipController}
@@ -1130,11 +1206,43 @@ public class Stip extends FileParser{
 			return trajetToString(id);
 		case StipController.CONNEXION:
 			return connexToString(id);
+		case StipController.BALISES:
+			return baliseToString(id);
 		default:
 			return null;
 		}
 	}
 
+	/**
+	 * 
+	 * @param type from {@link StipController}
+	 * @param name
+	 * @return
+	 */
+	public static String getString(int type, String name){
+		switch (type) {
+		case StipController.ITI:
+			return itiToString(new Integer(name));
+		case StipController.TRAJET:
+			//TODO
+		case StipController.CONNEXION:
+			//TODO
+		case StipController.BALISES:
+			try {
+				Statement st = DatabaseManager.getCurrentStip();
+				ResultSet rs = st.executeQuery("select id from balises where name = '"+name+"'");
+				if(rs.next())
+					return baliseToString(rs.getInt(1));
+				else 
+					return "";
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		default:
+			return null;
+		}
+	}
+	
 	@Override
 	public String getName() {
 		return this.name;
