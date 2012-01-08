@@ -19,6 +19,11 @@ package fr.crnan.videso3d;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -31,6 +36,7 @@ import javax.xml.xpath.XPath;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.images.ImagesController;
 import fr.crnan.videso3d.geom.LatLonUtils;
@@ -44,12 +50,14 @@ import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
+import fr.crnan.videso3d.ihm.components.VidesoGLCanvasKeyListener;
 import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
 import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.layers.LayerSet;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.layers.VerticalScaleBar;
+import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.util.VMeasureTool;
 
 import gov.nasa.worldwind.Factory;
@@ -89,10 +97,10 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.9.4
+ * @version 0.9.5
  */
 @SuppressWarnings("serial")
-public class VidesoGLCanvas extends WorldWindowGLCanvas {
+public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwner{
 
 	/**
 	 * Layer contenant les annotations
@@ -125,6 +133,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 
 	private HighlightController highlightController;
 	
+	private ScreenSelectListener screenSelectListener;
+	
 	private boolean europe = false;
 	
 	/**
@@ -145,8 +155,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 		layerManager.setEnabled(false); //réduit par défaut
 		this.getModel().getLayers().add(0, layerManager);
 		
+		//keylistener
+		this.addKeyListener(new VidesoGLCanvasKeyListener(this));
+		
 		//screenselector
-		new ScreenSelectListener(this);		
+		screenSelectListener = new ScreenSelectListener(this);		
 		
 		//dragger
 		this.dragger = new DraggerListener(this);
@@ -243,6 +256,37 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 	public HighlightController getHighlightController(){
 		return highlightController;
 	}
+	
+	/*--------------------------------------------------------------*/
+	/*-------------------------- Clipboard -------------------------*/
+	/*--------------------------------------------------------------*/
+	
+	/**
+	 * @return Objects selected with CTRL+Left click
+	 */
+	public List<?> getSelectedObjects(){
+		return screenSelectListener.getSelectedObjects();
+	}
+	
+	public void copySelectedObjectsToClipboard(){
+		Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		String selection = new String("");
+		for(Object o : getSelectedObjects()){
+			if(o instanceof DatabaseVidesoObject){
+				if(((DatabaseVidesoObject) o).getDatabaseType().compareTo(Type.STIP) == 0){
+					selection += Stip.getString(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
+					selection += "\n";
+				}
+			}
+		}
+		clipBoard.setContents(new StringSelection(selection), this);
+	}
+	
+
+	@Override
+	public void lostOwnership(Clipboard clipboard, Transferable contents) {	}
+	
+	/*--------------------------------------------------------------*/
 	
 	/**
 	 * Mets à jour les layers installés dans WorldWindInstalled
@@ -751,4 +795,5 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas {
 			}
 		}
 	}
+
 }

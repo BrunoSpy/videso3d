@@ -103,7 +103,7 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
     public AirspaceAttributes getHighlightAttributes() {
     	if(highlightAttrs == null){
     		highlightAttrs = new BasicAirspaceAttributes(this.getNormalAttributes());
-    		highlightAttrs.setMaterial(Material.WHITE);
+    		highlightAttrs.setMaterial(Material.YELLOW);
     	}
         return this.highlightAttrs;
     }
