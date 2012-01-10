@@ -599,15 +599,18 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		fr.crnan.videso3d.aip.RoutesSegments.Route routeAIP = routesSegments.getSegmentOfRoute(Integer.parseInt(pkRoute));
 		if(display){
 			for(Couple<String,String> navFix : navFixExtremites){			
 				showObject(AIP.string2type(navFix.getSecond()), navFix.getFirst());
 			}
+			if(routeAIP != null)
 			routesSegments.getSegmentOfRoute(Integer.parseInt(pkRoute)).setNavFixsVisible(true);
 		}else{
 			for(Couple<String,String> navFix : navFixExtremites){			
 				hideObject(AIP.string2type(navFix.getSecond()), navFix.getFirst());
 			}
+			if(routeAIP != null)
 			routesSegments.getSegmentOfRoute(Integer.parseInt(pkRoute)).setNavFixsVisible(false);
 		}
 	}
