@@ -174,18 +174,20 @@ public class AirspaceListener implements SelectListener {
 						}
 					});
 					//TODO
-					VidesoController c = DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType());
-					if(c instanceof EdimapController && o instanceof SurfaceShape){
-						JMenuItem locationsItem = new JMenuItem("Afficher/Cacher les coordonnées");
-						menu.add(locationsItem);
-						locationsItem.addActionListener(new ActionListener() {
-							@Override
-							public void actionPerformed(ActionEvent arg0) {
-								VidesoController c = DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType());
-								((EdimapController)c).showLocations(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
+					if(o instanceof DatabaseVidesoObject){
+						VidesoController c = DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType());
+						if(c instanceof EdimapController && o instanceof SurfaceShape){
+							JMenuItem locationsItem = new JMenuItem("Afficher/Cacher les coordonnées");
+							menu.add(locationsItem);
+							locationsItem.addActionListener(new ActionListener() {
+								@Override
+								public void actionPerformed(ActionEvent arg0) {
+									VidesoController c = DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType());
+									((EdimapController)c).showLocations(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
 
-							}
-						});
+								}
+							});
+						}
 					}
 					if(o instanceof DatabaseRoute2D){
 						JMenuItem contextItem = new JMenuItem("Informations...");				
