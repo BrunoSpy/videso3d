@@ -57,6 +57,8 @@ public class MultipleSelectionMenu extends JPopupMenu{
 				}
 			}
 		});
+		
+		this.add(delete);
 	}
 
 }
