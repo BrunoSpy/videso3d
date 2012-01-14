@@ -20,7 +20,9 @@ import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.PolygonAnnotation;
 import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
+import fr.crnan.videso3d.graphics.VSurfacePolyline;
 import fr.crnan.videso3d.graphics.VidesoAnnotation;
+import fr.crnan.videso3d.graphics.VidesoSurfaceQuad;
 import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.PriorityRenderableLayer;
 import fr.crnan.videso3d.layers.TextLayer;
@@ -267,7 +269,13 @@ public class Carte implements DatabaseVidesoObject{
     	
     	StateObject shape = rs.addStateObject(context, "shapeLayer");
     	for(Renderable r : this.renderables){
-    		rs.addStateValueAsString(shape, "shape", ((Restorable)r).getRestorableState());
+    		String type = "";
+    		
+    		if(r instanceof PolygonEdimap) type = "shape";
+    		else if(r instanceof PolylineEdimap || r instanceof EllipseEdimap) type = "polyline";
+    		else if(r instanceof RectangleEdimap) type = "rectangle";
+    		
+    		if(!type.isEmpty()) rs.addStateValueAsString(shape, type, ((Restorable)r).getRestorableState());
     	}
     	
 
@@ -335,6 +343,7 @@ public class Carte implements DatabaseVidesoObject{
     	}
 
     	StateObject shape = rs.getStateObject(context, "shapeLayer");
+    	
     	StateObject[] shapes = rs.getAllStateObjects(shape, "shape");
     	if(shapes !=null && shapes.length>0){
     		for(StateObject sso : shapes){
@@ -342,6 +351,28 @@ public class Carte implements DatabaseVidesoObject{
     				SurfacePolygonAnnotation polygon = new SurfacePolygonAnnotation();
     				polygon.restoreState(rs.getStateObjectAsString(sso));
     				this.renderables.add(polygon);
+    			}
+    		}
+    	}
+
+    	shapes = rs.getAllStateObjects(shape, "polyline");
+    	if(shapes !=null && shapes.length>0){
+    		for(StateObject sso : shapes){
+    			if(sso != null){
+    				VSurfacePolyline sh = new VSurfacePolyline();
+    				sh.restoreState(rs.getStateObjectAsString(sso));
+    				this.renderables.add(sh);
+    			}
+    		}
+    	}
+    	
+    	shapes = rs.getAllStateObjects(shape, "rectangle");
+    	if(shapes !=null && shapes.length>0){
+    		for(StateObject sso : shapes){
+    			if(sso != null){
+    				VidesoSurfaceQuad sh = new VidesoSurfaceQuad();
+    				sh.restoreState(rs.getStateObjectAsString(sso));
+    				this.renderables.add(sh);
     			}
     		}
     	}

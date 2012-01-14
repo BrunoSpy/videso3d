@@ -23,7 +23,7 @@ import gov.nasa.worldwind.util.RestorableSupport.StateObject;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class VidesoSurfaceQuad extends SurfaceQuad implements VidesoObject, PriorityRenderable{
 
@@ -35,6 +35,10 @@ public class VidesoSurfaceQuad extends SurfaceQuad implements VidesoObject, Prio
 		super(basicShapeAttributes);
 	}
 
+	public VidesoSurfaceQuad(){
+		super(new BasicShapeAttributes());
+	}
+	
 	@Override
 	public void setAnnotation(String text){
 		if(annotation == null) {
