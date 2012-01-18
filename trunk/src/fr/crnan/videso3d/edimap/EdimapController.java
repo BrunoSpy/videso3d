@@ -37,7 +37,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Contrôle l'affichage des éléments Edimap
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 public class EdimapController implements VidesoController {
 
@@ -98,11 +98,13 @@ public class EdimapController implements VidesoController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		carte.setVisible(true);
-		this.toggleLayer(this.cartes.getLayer(), true);
-		this.cartes.getLayer().firePropertyChange(AVKey.LAYER, null, this.cartes.getLayer());
-		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(Type.Edimap).showObject(type, name);
+		if(carte != null) {
+			carte.setVisible(true);
+			this.toggleLayer(this.cartes.getLayer(), true);
+			this.cartes.getLayer().firePropertyChange(AVKey.LAYER, null, this.cartes.getLayer());
+			//synchroniser la vue si l'appel n'a pas été fait par la vue
+			DatasManager.getView(Type.Edimap).showObject(type, name);
+		}
 	}
 
 	@Override
@@ -115,11 +117,13 @@ public class EdimapController implements VidesoController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		carte.setVisible(false);
-		carte.setLocationsVisible(false);
-		this.cartes.getLayer().firePropertyChange(AVKey.LAYER, null, this.cartes.getLayer());
-		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(Type.Edimap).hideObject(type, name);
+		if(carte != null){
+			carte.setVisible(false);
+			carte.setLocationsVisible(false);
+			this.cartes.getLayer().firePropertyChange(AVKey.LAYER, null, this.cartes.getLayer());
+			//synchroniser la vue si l'appel n'a pas été fait par la vue
+			DatasManager.getView(Type.Edimap).hideObject(type, name);
+		}
 	}
 
 	@Override
@@ -197,6 +201,8 @@ public class EdimapController implements VidesoController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		carte.showLocations();
+		if(carte != null){
+			carte.showLocations();
+		}
 	}
 }
