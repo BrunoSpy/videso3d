@@ -18,6 +18,13 @@ package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.ClipboardOwner;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -33,6 +40,8 @@ import org.jdesktop.swingx.JXTable;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
+import fr.crnan.videso3d.stip.Stip;
+import fr.crnan.videso3d.stip.StipController;
 
 /**
  * Résultats de données Stip/Stpv sur une balise/terrain
@@ -312,17 +321,32 @@ public class BaliseResultPanel extends ResultPanel {
 	}
 
 	private Component createConsignesTable(String balise) {
-		JXTable table = new JXTable();
+		final JXTable table = new JXTable(){
+			@Override
+			protected void processKeyEvent(KeyEvent e){
+				String consignes = new String();
+				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
+					int[] rows = this.getSelectedRows();
+					for(int i=0; i< rows.length; i++){
+						int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+						consignes += Stip.getString(StipController.CONSIGNE, id)+"\n";
+					}
+					consignes+="\n";
+					Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					StringSelection ss = new StringSelection(consignes);
+					clipBoard.setContents(ss , ss);
+				}
+			}
+		};
 		table.setHorizontalScrollEnabled(true);
 		table.setEditable(false);
 		table.setColumnControlVisible(true);
-		String[] columns = {"Type", "Terrain", "Balise", "Niveau", "Ecart", "Eveil", "Act", "Mod", "Base"};
+		String[] columns = {"Type", "Terrain", "Balise", "Niveau", "Ecart", "Eveil", "Act", "Mod", "Base", "id"};
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setColumnIdentifiers(columns);
-
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
-			String query = "select type, oaci, balise, niveau, ecart, eve, act, mod, base from consignes where oaci "+forgeSql(balise);
+			String query = "select type, oaci, balise, niveau, ecart, eve, act, mod, base, id from consignes where oaci "+forgeSql(balise);
 			ResultSet rs = st.executeQuery("select oaci from consignes where oaci "+forgeSql(balise));
 			if(rs.next() && !balise.endsWith("*")){//ajout des consignes en 999 si la recherche concerne un terrain
 				query += " or oaci ='"+balise.substring(0, 3)+"9' ";
@@ -345,6 +369,7 @@ public class BaliseResultPanel extends ResultPanel {
 		}
 		if(model.getRowCount() > 0){
 			table.setModel(model);
+			table.removeColumn(table.getColumn(table.getColumnCount()-1));
 			table.packAll();
 
 			JPanel consignes = new JPanel();

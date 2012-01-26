@@ -73,7 +73,6 @@ public class Carte implements DatabaseVidesoObject{
 	private Set<Renderable> renderables;
 	private Set<Airspace> airspaces;
 	private Set<UserFacingText> texts;
-//	TODO
 	private ArrayList<UserFacingText> locationTexts = new ArrayList<UserFacingText>();
 	private boolean locationsVisible = false;
 	
@@ -190,7 +189,7 @@ public class Carte implements DatabaseVidesoObject{
 				for(UserFacingText t : texts){
 					this.textLayer.removeGeographicText(t);
 				}
-				//TODO setLocationsVisible(false);
+				setLocationsVisible(false);
 			} else {
 				for(Airspace a : this.airspaces){
 					this.airspaceLayer.addAirspace(a);
@@ -204,14 +203,14 @@ public class Carte implements DatabaseVidesoObject{
 			}
 		}
 	}
-	//TODO
-	public void showLocations(){
-		if(locationsVisible){
+
+	public void setLocationsVisible(boolean visible){
+		if(!visible && locationsVisible){
 			locationsVisible = false;
 			for(UserFacingText location : locationTexts){
 				this.textLayer.removeGeographicText(location);
 			}
-		}else{
+		}else if(visible && !locationsVisible){
 			locationsVisible = true;
 			for(LatLonCautra l : pointsRef.values()){
 				String latString = l.getLatitude().toDMSString();
@@ -224,10 +223,9 @@ public class Carte implements DatabaseVidesoObject{
 			}
 		}
 	}
-	public void setLocationsVisible(boolean visible){
-		if(visible && !locationsVisible || !visible && locationsVisible){
-			showLocations();
-		}
+	
+	public boolean areLocationsVisible(){
+		return locationsVisible;
 	}
 	
 	public boolean isVisible(){

@@ -1192,6 +1192,41 @@ public class Stip extends FileParser{
 		return balise;
 	}
 	
+	private static String consigneToString(int id){
+		String consigne = new String();
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select type, oaci, balise, niveau, ecart, eve, act, mod, base from consignes where id = '"+id+"'");
+			consigne += rs.getString(1)+" ";
+			consigne += rs.getString(2)+" ";
+			String balise = rs.getString(3);
+			consigne += balise;
+			if(balise.length()==3)
+				consigne+="   ";
+			else if (balise.length()==5)
+				consigne+=" ";
+			else if( balise.length()==4)
+				consigne+="  ";
+			for(int j=4; j<6; j++){
+				String niveau = rs.getString(j);
+				if(niveau.length()==1)
+					consigne += "00"+niveau+" ";
+				else if(niveau.length()==2)
+					consigne += "0"+niveau+" ";
+				else
+					consigne += niveau+" ";
+			}						
+			consigne += rs.getInt(6)==1?"EVE ":"    ";
+			consigne += rs.getInt(7)==1?"ACT ":"    ";
+			consigne += rs.getInt(8)==1?"MOD ":"    ";
+			consigne += rs.getInt(9);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return consigne;
+		
+	}
+	
 	/**
 	 * 
 	 * @param type from {@link StipController}
@@ -1208,6 +1243,8 @@ public class Stip extends FileParser{
 			return connexToString(id);
 		case StipController.BALISES:
 			return baliseToString(id);
+		case StipController.CONSIGNE:
+			return consigneToString(id);
 		default:
 			return null;
 		}

@@ -177,13 +177,16 @@ public class AirspaceListener implements SelectListener {
 					if(o instanceof DatabaseVidesoObject){
 						VidesoController c = DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType());
 						if(c instanceof EdimapController && o instanceof SurfaceShape){
-							JMenuItem locationsItem = new JMenuItem("Afficher/Cacher les coordonnées");
+							final int type = ((DatabaseVidesoObject) o).getType();
+							final String name = ((DatabaseVidesoObject) o).getName();
+							final boolean locationsVisible = ((EdimapController)c).areLocationsVisible(type, name);
+							JMenuItem locationsItem = new JMenuItem((locationsVisible ? "Cacher" : "Afficher") +" les coordonnées");
 							menu.add(locationsItem);
 							locationsItem.addActionListener(new ActionListener() {
 								@Override
 								public void actionPerformed(ActionEvent arg0) {
 									VidesoController c = DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType());
-									((EdimapController)c).showLocations(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
+									((EdimapController)c).setLocationsVisible(type, name, !locationsVisible);
 
 								}
 							});

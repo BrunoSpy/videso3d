@@ -122,6 +122,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 	public final static int ITI = 3;
 	public final static int CONNEXION = 4;
 	public final static int TRAJET = 5;
+	public final static int CONSIGNE = 6;
 	
 	public StipController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
