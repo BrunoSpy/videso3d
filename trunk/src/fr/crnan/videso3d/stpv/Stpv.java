@@ -33,6 +33,7 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.stip.StipController;
 
 /**
@@ -296,9 +297,13 @@ public class Stpv extends FileParser{
 		String conf1 = line.substring(20, 21).trim();
 		String terrain2 = "";
 		String conf2 = "";
-		if(line.length()>34){
+		try{
+		if(line.length()>31){
 			terrain2 = line.substring(26, 30).trim();
-			conf2 = line.substring(32, 33).trim();
+			conf2 = line.substring(32).trim();
+		}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 		st.executeUpdate("update lieu91 set terrain1 ='"+terrain1+"', " +
 				"conf1 = '"+conf1+"', " +
@@ -368,18 +373,45 @@ public class Stpv extends FileParser{
 
 
 	private void insertLieu27(String line) throws SQLException {
-		PreparedStatement insert = this.conn.prepareStatement("insert into lieu27 (oaci, balise, niveau) values (?, ?, ?)");
+		PreparedStatement insert = this.conn.prepareStatement("insert into lieu27 (oaci, balise, niveau, rerfl) values (?, ?, ?, ?)");
 		insert.setString(1, line.substring(8, 12).trim());
 		insert.setString(2, line.substring(14, 19).trim());
 		insert.setInt(3, new Integer(line.substring(20, 23).trim()));
+		try{
+			if(line.length()>30){
+				String rerfl = line.length()==31?line.substring(26):line.substring(26, 31);
+				insert.setString(4, rerfl.equals("RERFL")?"oui":"non");
+			}
+			else 
+				insert.setString(4, "non");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		insert.executeUpdate();
 	}
 
 	private void insertLieu26(String line) throws SQLException {
-		PreparedStatement insert = this.conn.prepareStatement("insert into lieu26 (oaci, balise, niveau) values (?, ?, ?)");
+		PreparedStatement insert = this.conn.prepareStatement("insert into lieu26 (oaci, balise, niveau, actau, rerfl) values (?, ?, ?, ?, ?)");
 		insert.setString(1, line.substring(8, 12).trim());
 		insert.setString(2, line.substring(14, 19).trim());
 		insert.setInt(3, new Integer(line.substring(20, 23).trim()));
+
+		try{
+			if(line.length()>30){
+				String actau = line.length()==31?line.substring(26):line.substring(26, 31);
+				insert.setString(4, actau.equals("ACTAU")?"oui":"non");
+				}
+			else 
+				insert.setString(4, "non");
+			if(line.length()>36){
+				String rerfl = line.length()==37?line.substring(32):line.substring(32, 37);
+				insert.setString(5, rerfl.equals("RERFL")?"oui":"non");
+			}
+			else
+				insert.setString(5, "non");
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		insert.executeUpdate();
 	}
 
@@ -456,6 +488,162 @@ public class Stpv extends FileParser{
 	
 	/**
 	 * 
+	 * @param id
+	 * @return
+	 */
+	private static String tflToString(int id){
+		String tfl = new String();
+		try {
+			Statement st = DatabaseManager.getCurrentStpv();
+			ResultSet rs = st.executeQuery("select * from lieu91 where id ='"+id+"'");
+			if(rs.next()){
+				tfl += "LIEU 91 ";
+				String terrain = rs.getString(2);
+				for(int i=0; i<4-terrain.length(); i++){
+					terrain += " ";
+				}
+				tfl += terrain+"  "+rs.getString(3)+"   ";
+				String sect1 = rs.getString(4);
+				String sect2 = rs.getString(5);
+				if(sect1.length()==1)
+					sect1 += " ";
+				if(sect2.length()==1)
+					sect2 += " ";
+				tfl += sect1+"    "+sect2+"    "+Stip.completerBalise(rs.getString(6))+" "+Stip.completerBalise(rs.getString(7))+" ";
+				String piste = rs.getString(8);
+				if(piste.length()==1)
+					piste += "  ";
+				if(piste.length()==0)
+					piste += "   ";
+				tfl += piste+"   "+rs.getString(9)+"     "+Stip.completerNiveau(rs.getString(10));
+				String terrain1 = rs.getString(11);
+				String terrain2 = rs.getString(13);
+				if(terrain1 != null){
+					tfl += "\nLIEU 91S"+terrain+"  "+terrain1+"  "+rs.getString(12);
+					if(terrain2 != null){
+						tfl += "     "+terrain2+"  "+rs.getString(14);
+					}
+				}				
+			}
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return tfl;
+	}
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private static String citypairToString(int id){
+		String citypair = new String();
+		try {
+			Statement st = DatabaseManager.getCurrentStpv();
+			ResultSet rs = st.executeQuery("select depart, arrivee, fl from lieu8 where id ='"+id+"'");
+			if(rs.next()){
+				citypair +="LIEU 8  "+rs.getString(1)+"  "+rs.getString(2)+"    "+Stip.completerNiveau(rs.getString(3));
+			}
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return citypair;
+	}
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private static String xflToString(int id){
+		String xfl = new String();
+		try {
+			Statement st = DatabaseManager.getCurrentStpv();
+			ResultSet rs = st.executeQuery("select oaci, bal1, xfl1 from lieu6 where oaci = (select oaci from lieu6 where id='"+id+"') order by id");
+			if(rs.next()){
+				xfl += "LIEU 6  "+Stip.completerBalise(rs.getString(1))+" "+Stip.completerBalise(rs.getString(2))+"   "+Stip.completerNiveau(rs.getString(3));
+			}
+			while(rs.next()){
+				xfl +=" "+Stip.completerBalise(rs.getString(2))+"   "+Stip.completerNiveau(rs.getString(3));
+			}
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return xfl;
+	}
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private static String nivTabEntreeToString(int id){
+		String nivTab = new String();
+		try {
+			Statement st = DatabaseManager.getCurrentStpv();
+			ResultSet rs = st.executeQuery("select * from lieu26 where oaci = (select oaci from lieu26 where id='"+id+"') order by id");
+			//un compteur pour savoir si c'est le premier lieu26 pour ce terrain ou non, afin de déterminer si c'est un LIEU 26 ou LIEU 26B.
+			int i=0;
+			while(rs.next()){
+				if(rs.getInt(1)==id){
+					nivTab += "LIEU 26"+(i!=0?"B":" ")+rs.getString(2)+"  "+Stip.completerBalise(rs.getString(3))+" "+Stip.completerNiveau(rs.getString(4));
+					String actauto = rs.getString(5);
+					String rerfl = rs.getString(6);
+					if(rerfl.equals("oui")){
+						if(actauto.equals("oui"))
+							nivTab += "   ACTAU RERFL";
+						else
+							nivTab += "         RERFL";
+					}else{
+						if(actauto.equals("oui"))
+							nivTab += "   ACTAU";
+					}
+					break;
+				}
+				i++;
+			}
+		
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return nivTab;
+	}
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private static String nivTabSortieToString(int id){
+		String nivTab = new String();
+		try {
+			Statement st = DatabaseManager.getCurrentStpv();
+			ResultSet rs = st.executeQuery("select * from lieu27 where oaci = (select oaci from lieu27 where id='"+id+"') order by id");
+			//un compteur pour savoir si c'est le premier lieu27 pour ce terrain ou non, afin de déterminer si c'est un LIEU 26 ou LIEU 26B.
+			int i=0;
+			while(rs.next()){
+				if(rs.getInt(1)==id){
+					nivTab += "LIEU 27"+(i!=0?"B":" ")+rs.getString(2)+"  "+Stip.completerBalise(rs.getString(3))+" "
+							+Stip.completerNiveau(rs.getString(4))+(rs.getString(5).equals("oui")?"   RERFL":"");
+					break;
+				}
+				i++;
+			}
+		
+			rs.close();
+			st.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return nivTab;
+	}
+	/**
+	 * 
 	 * @param type from {@link StipController}
 	 * @param id
 	 * @return
@@ -464,6 +652,16 @@ public class Stpv extends FileParser{
 		switch (type) {
 		case StpvController.STAR:
 			return starToString(id);
+		case StpvController.TFL:
+			return tflToString(id);
+		case StpvController.CITYPAIR:
+			return citypairToString(id);
+		case StpvController.XFL:
+			return xflToString(id);
+		case StpvController.NIV_TAB_ENTREE:
+			return nivTabEntreeToString(id);
+		case StpvController.NIV_TAB_SORTIE:
+			return nivTabSortieToString(id);
 		default:
 			return null;
 		}

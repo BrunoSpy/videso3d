@@ -20,15 +20,13 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashSet;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -42,6 +40,8 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.stip.StipController;
+import fr.crnan.videso3d.stpv.Stpv;
+import fr.crnan.videso3d.stpv.StpvController;
 
 /**
  * Résultats de données Stip/Stpv sur une balise/terrain
@@ -120,18 +120,34 @@ public class BaliseResultPanel extends ResultPanel {
 
 
 	private Component createLieu91Table(String balise) {
-
-		JXTable table = new JXTable();
+		final JXTable table = new JXTable(){
+			//Redéfinition de processKeyEvent pour faire le copier/coller au même format que dans la BDS
+			@Override
+			protected void processKeyEvent(KeyEvent e){
+				String tfl = new String();
+				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
+					int[] rows = this.getSelectedRows();
+					for(int i=0; i< rows.length; i++){
+						int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+						tfl += Stpv.getString(StpvController.TFL, id)+"\n";
+					}
+					tfl+="\n";
+					Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					StringSelection ss = new StringSelection(tfl);
+					clipBoard.setContents(ss , ss);
+				}
+			}
+		};
 		table.setHorizontalScrollEnabled(true);
 		table.setEditable(false);
 		table.setColumnControlVisible(true);
-		String[] columns = {"Terrain", "Type", "Donnant", "Recevant", "Balise 1", "Balise 2", "Piste", "Avion", "TFL", "Terrain 1", "Conf 1", "Terrain 2", "Conf 2"};
+		String[] columns = {"Terrain", "Type", "Donnant", "Recevant", "Balise 1", "Balise 2", "Piste", "Avion", "TFL", "Terrain 1", "Conf 1", "Terrain 2", "Conf 2", "id"};
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setColumnIdentifiers(columns);
 
 		try {
 			Statement st = DatabaseManager.getCurrentStpv();
-			ResultSet rs = st.executeQuery("select oaci, indicateur, secteur_donnant, secteur_recevant, bal1, bal2, piste, avion, tfl, terrain1, conf1, terrain2, conf2 from lieu91 where oaci "+forgeSql(balise)+" or bal1 "+forgeSql(balise)+ " or bal2 "+forgeSql(balise));
+			ResultSet rs = st.executeQuery("select oaci, indicateur, secteur_donnant, secteur_recevant, bal1, bal2, piste, avion, tfl, terrain1, conf1, terrain2, conf2, id from lieu91 where oaci "+forgeSql(balise)+" or bal1 "+forgeSql(balise)+ " or bal2 "+forgeSql(balise));
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnCount = rsmd.getColumnCount();
 			while(rs.next()){
@@ -148,6 +164,7 @@ public class BaliseResultPanel extends ResultPanel {
 		}
 		if(model.getRowCount() > 0){
 			table.setModel(model);
+			table.removeColumn(table.getColumn(table.getColumnCount()-1));
 			table.packAll();
 
 			JPanel lieux91 = new JPanel();
@@ -163,17 +180,34 @@ public class BaliseResultPanel extends ResultPanel {
 
 
 	private Component createLieu8Table(String balise) {
-		JXTable table = new JXTable();
+		final JXTable table = new JXTable(){
+			//Redéfinition de processKeyEvent pour faire le copier/coller au même format que dans la BDS STPV
+			@Override
+			protected void processKeyEvent(KeyEvent e){
+				String lieu8 = new String();
+				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
+					int[] rows = this.getSelectedRows();
+					for(int i=0; i< rows.length; i++){
+						int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+						lieu8 += Stpv.getString(StpvController.CITYPAIR, id)+"\n";
+					}
+					lieu8+="\n";
+					Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					StringSelection ss = new StringSelection(lieu8);
+					clipBoard.setContents(ss , ss);
+				}
+			}
+		};
 		table.setHorizontalScrollEnabled(true);
 		table.setEditable(false);
 		table.setColumnControlVisible(true);
-		String[] columns = {"Départ", "Arrivée", "Niveau"};
+		String[] columns = {"Départ", "Arrivée", "Niveau", "id"};
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setColumnIdentifiers(columns);
 
 		try {
 			Statement st = DatabaseManager.getCurrentStpv();
-			ResultSet rs = st.executeQuery("select depart, arrivee, fl from lieu8 where depart "+forgeSql(balise)+" or arrivee "+forgeSql(balise));
+			ResultSet rs = st.executeQuery("select depart, arrivee, fl, id from lieu8 where depart "+forgeSql(balise)+" or arrivee "+forgeSql(balise));
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnCount = rsmd.getColumnCount();
 			while(rs.next()){
@@ -190,6 +224,7 @@ public class BaliseResultPanel extends ResultPanel {
 		
 			table.setModel(model);
 			table.packAll();
+			table.removeColumn(table.getColumn(table.getColumnCount()-1));
 
 			JPanel lieux8 = new JPanel();
 			lieux8.setLayout(new BorderLayout());
@@ -204,17 +239,38 @@ public class BaliseResultPanel extends ResultPanel {
 
 
 	private Component createLieu6Table(String balise) {
-		JXTable table = new JXTable();
+		final JXTable table = new JXTable(){
+			//Redéfinition de processKeyEvent pour faire le copier/coller au même format que dans la BDS STPV
+			@Override
+			protected void processKeyEvent(KeyEvent e){
+				String lieu6 = new String();
+				HashSet<String> listeTerrains = new HashSet<String>();
+				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
+					int[] rows = this.getSelectedRows();
+					for(int i=0; i< rows.length; i++){
+						String terrain = (String)this.getModel().getValueAt(this.getSelectedRows()[i], 0);
+						if(listeTerrains.add(terrain)){
+							int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+							lieu6 += Stpv.getString(StpvController.XFL, id)+"\n";
+						}
+					}
+					lieu6+="\n";
+					Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					StringSelection ss = new StringSelection(lieu6);
+					clipBoard.setContents(ss , ss);
+				}
+			}
+		};
 		table.setHorizontalScrollEnabled(true);
 		table.setEditable(false);
 		table.setColumnControlVisible(true);
-		String[] columns = {"Terrain", "Balise", "Niveau"};
+		String[] columns = {"Terrain", "Balise", "Niveau", "id"};
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setColumnIdentifiers(columns);
 
 		try {
 			Statement st = DatabaseManager.getCurrentStpv();
-			ResultSet rs = st.executeQuery("select oaci, bal1, xfl1 from lieu6 where oaci "+forgeSql(balise)+" or bal1 "+forgeSql(balise));
+			ResultSet rs = st.executeQuery("select oaci, bal1, xfl1, id from lieu6 where oaci "+forgeSql(balise)+" or bal1 "+forgeSql(balise));
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnCount = rsmd.getColumnCount();
 			while(rs.next()){
@@ -231,6 +287,7 @@ public class BaliseResultPanel extends ResultPanel {
 		}
 		if(model.getRowCount() > 0){
 			table.setModel(model);
+			table.removeColumn(table.getColumn(table.getColumnCount()-1));
 			table.packAll();
 
 			JPanel lieux6 = new JPanel();
@@ -244,17 +301,34 @@ public class BaliseResultPanel extends ResultPanel {
 	}
 
 	private Component createLieu27Table(String balise) {
-		JXTable table = new JXTable();
+		final JXTable table = new JXTable(){
+			//Redéfinition de processKeyEvent pour faire le copier/coller au même format que dans la BDS STPV
+			@Override
+			protected void processKeyEvent(KeyEvent e){
+				String lieu27 = new String();
+				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
+					int[] rows = this.getSelectedRows();
+					for(int i=0; i< rows.length; i++){
+						int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+						lieu27 += Stpv.getString(StpvController.NIV_TAB_SORTIE, id)+"\n";
+					}
+					lieu27+="\n";
+					Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					StringSelection ss = new StringSelection(lieu27);
+					clipBoard.setContents(ss , ss);
+				}
+			}
+		};
 		table.setHorizontalScrollEnabled(true);
 		table.setEditable(false);
 		table.setColumnControlVisible(true);
-		String[] columns = {"Terrain", "Balise", "Niveau"};
+		String[] columns = {"Terrain", "Balise", "Niveau", "Rév. RFL", "id"};
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setColumnIdentifiers(columns);
 
 		try {
 			Statement st = DatabaseManager.getCurrentStpv();
-			ResultSet rs = st.executeQuery("select oaci, balise, niveau from lieu27 where oaci "+forgeSql(balise)+" or balise "+forgeSql(balise));
+			ResultSet rs = st.executeQuery("select oaci, balise, niveau, rerfl, id from lieu27 where oaci "+forgeSql(balise)+" or balise "+forgeSql(balise));
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnCount = rsmd.getColumnCount();
 			while(rs.next()){
@@ -270,6 +344,7 @@ public class BaliseResultPanel extends ResultPanel {
 
 		if(model.getRowCount() > 0){
 			table.setModel(model);
+			table.removeColumn(table.getColumn(table.getColumnCount()-1));
 			table.packAll();
 
 			JPanel lieux27 = new JPanel();
@@ -283,17 +358,34 @@ public class BaliseResultPanel extends ResultPanel {
 	}
 
 	private Component createLieu26Table(String balise) {
-		JXTable table = new JXTable();
+		final JXTable table = new JXTable(){
+			//Redéfinition de processKeyEvent pour faire le copier/coller au même format que dans la BDS STPV
+			@Override
+			protected void processKeyEvent(KeyEvent e){
+				String lieu26 = new String();
+				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
+					int[] rows = this.getSelectedRows();
+					for(int i=0; i< rows.length; i++){
+						int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+						lieu26 += Stpv.getString(StpvController.NIV_TAB_ENTREE, id)+"\n";
+					}
+					lieu26+="\n";
+					Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					StringSelection ss = new StringSelection(lieu26);
+					clipBoard.setContents(ss , ss);
+				}
+			}
+		};
 		table.setHorizontalScrollEnabled(true);
 		table.setEditable(false);
 		table.setColumnControlVisible(true);
-		String[] columns = {"Terrain", "Balise", "Niveau"};
+		String[] columns = {"Terrain", "Balise", "Niveau", "Act Auto", "Rév. RFL", "id"};
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setColumnIdentifiers(columns);
 
 		try {
 			Statement st = DatabaseManager.getCurrentStpv();
-			ResultSet rs = st.executeQuery("select oaci, balise, niveau from lieu26 where oaci "+forgeSql(balise)+" or balise "+forgeSql(balise));
+			ResultSet rs = st.executeQuery("select oaci, balise, niveau, actau, rerfl, id from lieu26 where oaci "+forgeSql(balise)+" or balise "+forgeSql(balise));
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnCount = rsmd.getColumnCount();
 			while(rs.next()){
@@ -308,6 +400,7 @@ public class BaliseResultPanel extends ResultPanel {
 		}
 		if(model.getRowCount() > 0){
 			table.setModel(model);
+			table.removeColumn(table.getColumn(table.getColumnCount()-1));
 			table.packAll();
 
 			JPanel lieux26 = new JPanel();
@@ -322,6 +415,7 @@ public class BaliseResultPanel extends ResultPanel {
 
 	private Component createConsignesTable(String balise) {
 		final JXTable table = new JXTable(){
+			//Redéfinition de processKeyEvent pour faire le copier/coller au même format que dans les fichiers SATIN
 			@Override
 			protected void processKeyEvent(KeyEvent e){
 				String consignes = new String();
@@ -383,17 +477,34 @@ public class BaliseResultPanel extends ResultPanel {
 	}
 
 	private Component createBalintTable(String balise){
-		JXTable table = new JXTable();
+		final JXTable table = new JXTable(){
+			//Redéfinition de processKeyEvent pour faire le copier/coller au même format que dans les fichiers SATIN
+			@Override
+			protected void processKeyEvent(KeyEvent e){
+				String balint = new String();
+				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
+					int[] rows = this.getSelectedRows();
+					for(int i=0; i< rows.length; i++){
+						int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+						balint += Stip.getString(StipController.BALINT, id)+"\n";
+					}
+					balint+="\n";
+					Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+					StringSelection ss = new StringSelection(balint);
+					clipBoard.setContents(ss , ss);
+				}
+			}
+		};
 		table.setHorizontalScrollEnabled(true);
 		table.setEditable(false);
 		table.setColumnControlVisible(true);
-		String[] columns = {"UIR", "FIR", "Balise 1", "Balise", "Travers", "Balise 2"};
+		String[] columns = {"UIR", "FIR", "Balise 1", "Balise", "Travers", "Balise 2", "id"};
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setColumnIdentifiers(columns);
 
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
-			ResultSet rs = st.executeQuery("select uir, fir, bal1, balise, appartient, bal2 from balint where bal1 "+forgeSql(balise)+" or bal2 "+forgeSql(balise)+" or balise "+forgeSql(balise));
+			ResultSet rs = st.executeQuery("select uir, fir, bal1, balise, appartient, bal2, id from balint where bal1 "+forgeSql(balise)+" or bal2 "+forgeSql(balise)+" or balise "+forgeSql(balise));
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int columnCount = rsmd.getColumnCount();
 			while(rs.next()){
@@ -417,6 +528,7 @@ public class BaliseResultPanel extends ResultPanel {
 		}
 		if(model.getRowCount() > 0){
 			table.setModel(model);
+			table.removeColumn(table.getColumn(table.getColumnCount()-1));
 			table.packAll();
 
 			JPanel balint = new JPanel();
