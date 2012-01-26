@@ -60,6 +60,16 @@ public class StpvController implements VidesoController {
 	
 	public static final int STAR = 3;
 	
+	public static final int TFL = 4;
+	
+	public static final int CITYPAIR = 5;
+	
+	public static final int XFL = 6;
+	
+	public static final int NIV_TAB_ENTREE = 7;
+	
+	public static final int NIV_TAB_SORTIE = 8;
+	
 	/**
 	 * Liste des layers Mosaiques
 	 */

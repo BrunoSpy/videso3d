@@ -464,11 +464,11 @@ public class Stip extends FileParser{
 					}
 					name = line.substring(0, 7).trim();
 					route = new Route(name);
-					route.setEspace(line.substring(11, 12));
 				}
 
 				String typeLigne  = line.substring(7, 9);
 				if(typeLigne.compareTo("RO") == 0){
+					route.setEspace(line.substring(11, 12));
 					route.addBalises(line.substring(15, 80));
 				} else if(typeLigne.compareTo("ES") == 0) {
 					route.addEntrees(line.substring(15, 80));
@@ -1192,6 +1192,24 @@ public class Stip extends FileParser{
 		return balise;
 	}
 	
+	private static String balintToString(int id){
+		String balint = new String();
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select fir, uir, bal1, bal2, balise, appartient from balint where id = '"+id+"'");
+			balint += rs.getInt(1)==0?"    ":"FIR ";
+			balint += rs.getInt(2)==0?"    ":"UIR ";
+			balint += completerBalise(rs.getString(3))+"   ";
+			balint += completerBalise(rs.getString(4))+"   ";
+			balint += completerBalise(rs.getString(5));
+			if(rs.getInt(6)==1)
+				balint+="/";
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return balint;
+	}
+	
 	private static String consigneToString(int id){
 		String consigne = new String();
 		try {
@@ -1200,22 +1218,9 @@ public class Stip extends FileParser{
 			consigne += rs.getString(1)+" ";
 			consigne += rs.getString(2)+" ";
 			String balise = rs.getString(3);
-			consigne += balise;
-			if(balise.length()==3)
-				consigne+="   ";
-			else if (balise.length()==5)
-				consigne+=" ";
-			else if( balise.length()==4)
-				consigne+="  ";
-			for(int j=4; j<6; j++){
-				String niveau = rs.getString(j);
-				if(niveau.length()==1)
-					consigne += "00"+niveau+" ";
-				else if(niveau.length()==2)
-					consigne += "0"+niveau+" ";
-				else
-					consigne += niveau+" ";
-			}						
+			consigne += completerBalise(balise)+" ";
+			consigne+= Stip.completerNiveau(rs.getString(4));
+			consigne+= Stip.completerNiveau(rs.getString(5));
 			consigne += rs.getInt(6)==1?"EVE ":"    ";
 			consigne += rs.getInt(7)==1?"ACT ":"    ";
 			consigne += rs.getInt(8)==1?"MOD ":"    ";
@@ -1224,7 +1229,31 @@ public class Stip extends FileParser{
 			e.printStackTrace();
 		}
 		return consigne;
-		
+	}
+	
+	/**
+	 * Complète par des espaces les noms des balises pour avoir 5 caractères.
+	 * @param balise
+	 * @return
+	 */
+	public static String completerBalise(String balise){
+		if(balise.length()==5)
+			return balise;
+		if(balise.length()==3)
+			return balise+"  ";
+		if(balise.length()==4)
+			return balise+" ";
+		if(balise.length()==2)
+			return balise+"   ";
+		return balise;
+	}
+	
+	public static String completerNiveau(String niveau){
+		if(niveau.length()==2)
+			return "0"+niveau;
+		if(niveau.length()==1)
+			return "00"+niveau;
+		return niveau;
 	}
 	
 	/**
@@ -1245,6 +1274,8 @@ public class Stip extends FileParser{
 			return baliseToString(id);
 		case StipController.CONSIGNE:
 			return consigneToString(id);
+		case StipController.BALINT:
+			return balintToString(id);
 		default:
 			return null;
 		}

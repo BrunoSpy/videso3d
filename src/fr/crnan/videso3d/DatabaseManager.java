@@ -550,11 +550,14 @@ public final class DatabaseManager {
 		st.executeUpdate("create table lieu26 (id integer primary key autoincrement, " +
 				"oaci varchar(4), " +
 				"balise varchar(5), " +
-				"niveau int)");
+				"niveau int, "+
+				"actau int, "+
+				"rerfl int)");
 		st.executeUpdate("create table lieu27 (id integer primary key autoincrement, " +
 				"oaci varchar(4), " +
 				"balise varchar(5), " +
-				"niveau int)");
+				"niveau int, "+
+				"rerfl int)");
 		st.executeUpdate("create table lieu6 (id integer primary key autoincrement, " +
 				"oaci varchar(4), " +
 				"bal1 varchar(5), " +
