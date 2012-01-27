@@ -1,0 +1,278 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "LIMITE SECTEUR")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris clair")
+)
+(id_atc
+  (name "BORD SECTEUR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(id_atc
+  (name "FOND SECTEUR")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 4)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(map
+  (name "AR")
+  (number 215)
+  (comment "")
+  (date 13 10 2004)
+  (heure 09 14 25)
+  (ref_point
+    (name "AR8")
+    (comment "")
+    (value
+      (nautical_mile 64 12771 64 4153)
+    )
+  )
+  (ref_point
+    (name "AR9")
+    (comment "")
+    (value
+      (nautical_mile 64 11892 64 2817)
+    )
+  )
+  (ref_point
+    (name "SU6")
+    (comment "")
+    (value
+      (nautical_mile 64 8955 64 5598)
+    )
+  )
+  (ref_point
+    (name "SU7")
+    (comment "")
+    (value
+      (nautical_mile 64 10250 64 6044)
+    )
+  )
+  (ref_point
+    (name "SFIR8")
+    (comment "")
+    (value
+      (nautical_mile 64 11436 64 5209)
+    )
+  )
+  (ref_point
+    (name "AR0")
+    (comment "")
+    (value
+      (nautical_mile 64 10482 64 5898)
+    )
+  )
+  (ref_point
+    (name "AR1")
+    (comment "")
+    (value
+      (nautical_mile 64 10250 64 6044)
+    )
+  )
+  (ref_point
+    (name "AR2")
+    (comment "")
+    (value
+      (nautical_mile 64 9711 64 6388)
+    )
+  )
+  (ref_point
+    (name "AR3")
+    (comment "")
+    (value
+      (nautical_mile 64 9273 64 6758)
+    )
+  )
+  (ref_point
+    (name "AR4")
+    (comment "")
+    (value
+      (nautical_mile 64 8916 64 6864)
+    )
+  )
+  (ref_point
+    (name "SFIR5")
+    (comment "")
+    (value
+      (nautical_mile 64 7935 64 6564)
+    )
+  )
+  (ref_point
+    (name "SFIR6")
+    (comment "")
+    (value
+      (nautical_mile 64 11892 64 2817)
+    )
+  )
+  (ref_point
+    (name "SFIR9")
+    (comment "")
+    (value
+      (nautical_mile 64 12771 64 4153)
+    )
+  )
+  (ref_point
+    (name "S6B")
+    (comment "")
+    (value
+      (nautical_mile 64 13315 64 3706)
+    )
+  )
+  (ref_point
+    (name "S30B")
+    (comment "")
+    (value
+      (nautical_mile 64 12157 64 2569)
+    )
+  )
+  (submap
+    (number 1)
+    (name "AR")
+    (submap_type 5)
+    (entity
+      (name "847")
+      (id_atc "LIMITE SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "AR9")
+        (point "AR8")
+      )
+    )
+    (entity
+      (name "4")
+      (id_atc "LIMITE SECTEUR")
+      (shape "LineEntity")
+      (geometry
+        (point "SU6")
+        (point "SU7")
+      )
+    )
+    (entity
+      (name "3")
+      (id_atc "BORD SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SFIR8")
+        (point "AR0")
+        (point "AR1")
+        (point "AR2")
+        (point "AR3")
+        (point "AR4")
+        (point "SFIR5")
+        (point "SFIR6")
+        (point "SFIR9")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "5")
+      (id_atc "FOND SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SFIR8")
+        (point "AR0")
+        (point "AR1")
+        (point "AR2")
+        (point "AR3")
+        (point "AR4")
+        (point "SFIR5")
+        (point "SFIR6")
+        (point "SFIR9")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "6")
+      (id_atc "FOND SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SFIR6")
+        (point "SFIR9")
+        (point "S6B")
+        (point "S30B")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "7")
+      (id_atc "BORD SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SFIR9")
+        (point "S6B")
+        (point "S30B")
+        (point "SFIR6")
+      )
+    )
+    (entity
+      (name "8")
+      (id_atc "LIMITE SECTEUR")
+      (shape "LineEntity")
+      (geometry
+        (point "SFIR9")
+        (point "SFIR6")
+      )
+    )
+  )
+)

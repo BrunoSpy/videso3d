@@ -1,0 +1,1760 @@
+FORMAT : STIP       VERSION CA : 10-02-11  LIVRAISON : 26-01-11  PART : CONNEX  
+B999   A   265 800  000      NATS   ATREX  NATS1  ATREX  VESAN  ATREX           
+B999   A   265 800  000      RATUK  ATREX  SOVAT  ATREX                         
+B999   A   265 800  000      UTELA  CLM    KOPOR  CLM    VESAN  CLM             
+B999   A   265 800  000      RATUK  CLM    SOVAT  CLM                           
+B999   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+B999   A   265 800  000      SOVAT  DIDOR                                       
+B999   A   000 800  000      ETIKI  REGHI  48N9W  REGHI                         
+B999   A   000 800  000      SIVIR  RIVAK  46N9W  RIVAK                         
+B999   A   000 800  000      SEPAL  LAPEX  47N9W  LAPEX                         
+B999   D   000 800  000      LAPEX  47N9W  LAPEX  SEPAL                         
+B999   D   000 800  000      RIVAK  46N9W  RIVAK  SIVIR                         
+B999   D   000 800  000      REGHI  48N9W  REGHI  ETIKI                         
+C999   A   265 800  000      NATS   ATREX  NATS1  ATREX  VESAN  ATREX           
+C999   A   265 800  000      RATUK  ATREX  SOVAT  ATREX                         
+C999   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+C999   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+C999   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+C999   A   265 800  000      SOVAT  DIDOR                                       
+C999   A   000 800  000      ETIKI  REGHI  48N9W  REGHI                         
+C999   A   000 800  000      SIVIR  RIVAK  46N9W  RIVAK                         
+C999   A   000 800  000      SEPAL  LAPEX  47N9W  LAPEX                         
+C999   D   000 800  000      LAPEX  47N9W  LAPEX  SEPAL                         
+C999   D   000 800  000      REGHI  48N9W  REGHI  ETIKI                         
+C999   D   000 800  000      RIVAK  46N9W  RIVAK  SIVIR                         
+C999   D   000 800  000      PHILI  RATKA                                       
+D999   A   000 800  000      MLA    ANETO                                       
+D999   A   000 800  000      1CSO   KAMER  CSO    KAMER                         
+D999   A   000 800  000      2ANB   MOUET  ANB    MOUET                         
+D999   A   000 800  000      1ZEM   OTARO  ZEM    OTARO                         
+D999   A   000 800  000      2ZEM   REQIN  ZEM    REQIN                         
+D999   A   000 800  000      1ANB   SALMA  ANB    SALMA                         
+D999   A   000 800  000      DOPEL  TABOT                                       
+D999   A   000 800  000      2CSO   CIRTA  CSO    CIRTA                         
+D999   D   000 800  000      CIRTA  CSO    CIRTA  2CSO                          
+D999   D   000 800  000      OTARO  ZEM    OTARO  1ZEM                          
+D999   D   000 800  000      SALMA  ANB    SALMA  1ANB                          
+D999   D   000 800  000      REQIN  ZEM    REQIN  2ZEM                          
+D999   D   000 800  000      MOUET  ANB    MOUET  2ANB                          
+D999   D   000 800  000      KAMER  CSO    KAMER  1CSO                          
+DA99   A   005 800  000      VERSO  PIVUS                                       
+DAAS   A   005 800  000      TAJ1   KAMER  TAJEN  KAMER                         
+EB99   A   005 800  000      ROBAL  CMB    CIV    CMB                           
+EBAW   A   000      000      RODRI  BAMES                                       
+EBAW   A   000      000      UTELA  CLM    KOPOR  CLM    RODRI  CLM             
+EBAW   A   000      000      RODRI  CMB                                         
+EBAW   A   000      000      RODRI  EVX                                         
+EBAW   D   195 800  000      GTQ    RITAX  GTQ    ROUSY                         
+EBAW   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EBBE   D   195 800  000      GTQ    RITAX  GTQ    ROUSY                         
+EBBR   A   000      000      RODRI  BAMES                                       
+EBBR   A   000      000      UTELA  CLM    KOPOR  CLM    RODRI  CLM             
+EBBR   A   000      000      RODRI  CMB                                         
+EBBR   A   000      000      RODRI  EVX                                         
+EBBR   D   200 800  000      GTQ    RITAX  GTQ    ROUSY                         
+EBCI   A   000 800  000      NIVOR  ARVOL                                       
+EBCI   A   000 800  000      CMB    PERON  ARVOL  PERON  NIVOR  PERON           
+EBCI   A   000 800  000      CMB    NURMO  ARVOL  NURMO  NIVOR  NURMO           
+EBCI   D   195 800  000      GTQ    RITAX  GTQ    ROUSY                         
+EBCV   A   195 800  000      PODEM  BAMES  SOMIL  BAMES  PERON  BAMES           
+EBCV   A   195 800  000      CMB    BAMES  CMB2   BAMES  ROBAL  BAMES           
+EBCV   A   195 800  000      CIV    BAMES                                       
+EBCV   A   195 800  000      PODEM  EVX    SOMIL  EVX    PERON  EVX             
+EBCV   A   195 800  000      CMB    EVX    CMB2   EVX    ROBAL  EVX             
+EBCV   A   195 800  000      CIV    EVX                                         
+EBCV   A   195 800  000      MTD    KOPOR  NURMO  KOPOR  PERON  KOPOR           
+EBCV   A   195 800  000      CMB    KOPOR  CMB2   KOPOR  ROBAL  KOPOR           
+EBCV   A   195 800  000      CIV    KOPOR                                       
+EBCV   D   195 800  000      GTQ    RITAX  GTQ    ROUSY                         
+EBKT   A   195 800  000      PODEM  BAMES  SOMIL  BAMES  PERON  BAMES           
+EBKT   A   195 800  000      CMB    BAMES  CMB2   BAMES  ROBAL  BAMES           
+EBKT   A   195 800  000      CIV    BAMES                                       
+EBKT   A   195 800  000      PODEM  EVX    SOMIL  EVX    PERON  EVX             
+EBKT   A   195 800  000      CMB    EVX    CMB2   EVX    ROBAL  EVX             
+EBKT   A   195 800  000      CIV    EVX                                         
+EBKT   A   195 800  000      MTD    KOPOR  NURMO  KOPOR  PERON  KOPOR           
+EBKT   A   195 800  000      CMB    KOPOR  CMB2   KOPOR  ROBAL  KOPOR           
+EBKT   A   195 800  000      CIV    KOPOR                                       
+EBLG   A   195 800  000      PODEM  BAMES  SOMIL  BAMES  UNTB1  BAMES           
+EBLG   A   195 800  000      PERON  BAMES  CMB    BAMES  CMB2   BAMES           
+EBLG   A   195 800  000      ROBAL  BAMES  CIV    BAMES                         
+EBLG   A   195 800  000      PODEM  EVX    SOMIL  EVX    UNTB1  EVX             
+EBLG   A   195 800  000      PERON  EVX    CMB    EVX    CMB2   EVX             
+EBLG   A   195 800  000      ROBAL  EVX    CIV    EVX                           
+EBLG   A   005 800  000      NIPS   NIPOR  SUIPE  NIPOR  MMD    NIPOR           
+EBLG   A   005 800  000      LIMGO  NIPOR                                       
+EBLG   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EBMB   A   000      000      RODRI  BAMES                                       
+EBMB   A   000      000      UTELA  CLM    KOPOR  CLM    RODRI  CLM             
+EBMB   A   000      000      RODRI  CMB                                         
+EBMB   A   000      000      RODRI  EVX                                         
+EBMB   D   195 800  000      GTQ    RITAX  GTQ    ROUSY                         
+EBMB   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EBOS   A   005 800  000      CMB2   CMB    VEKIN  CMB    ADUTO  CMB             
+EBOS   A   005 800  000      FERDI  CMB                                         
+EDDH   A   265 800  000      MTD    KOPOR  NURMO  KOPOR  CMB    KOPOR           
+EDDH   A   265 800  000      CMB2   KOPOR  VEKIN  KOPOR  ADUTO  KOPOR           
+EDDH   A   265 800  000      FERDI  KOPOR                                       
+EDDK   A   005 195  000      NOR    DIK                                         
+EDDK   D   200 800  000      GTQ    RITAX  GTQ    ROUSY                         
+EDDL   A   005 195  000      NOR    DIK                                         
+EDDL   A   265 800  000      IBERA  SORAL  DIK    SORAL  ARCKY  SORAL           
+EDDL   D   200 800  000      GTQ    RITAX  GTQ    ROUSY                         
+EDDR   D   000      000      GTQ    SBN    GTQ    MAKOT  GTQ    10GTQ           
+EDDS   A   000      000      OBORN  POGOL  LUPEN  POGOL  SUL    POGOL           
+EDLN   A   005 800  000      NIPS   NIPOR  SUIPE  NIPOR  MMD    NIPOR           
+EDLN   A   005 800  000      LIMGO  NIPOR                                       
+EDRZ   A   005 800  000      NIPS   NIPOR  SUIPE  NIPOR  MMD    NIPOR           
+EDRZ   A   005 800  000      LIMGO  NIPOR                                       
+EDRZ   D   005 800  000      GTQ    SBN    GTQ    MAKOT  GTQ    10GTQ           
+EDSB   A   195 800  000      SRN/   GEN    SUL    GEN    KBA    GEN             
+EDSB   A   195 800  000      KBA1   GEN                                         
+EDSB   A   000 800  000      ABKUT  LADAT                                       
+EDSB   A   000 800  000      KRH    LBU    KBA    LBU    KBA1   LBU             
+EDSB   A   000 195  000      KBA    LUPEN  KBA1   LUPEN                         
+EDSB   A   000 800  000      WIL    SPR    TRA    SPR    SUL    SPR             
+EDSB   A   000 800  000      KBA    SPR    KBA1   SPR                           
+EDSB   A   000 800  000      SUL    TGO    KBA    TGO    KBA1   TGO             
+EDSB   A   000 800  000      KBA    SUL    KBA1   SUL                           
+EDSB   A   000      000      OBORN  POGOL  LUPEN  POGOL  KBA    POGOL           
+EDSB   A   000      000      KBA1   POGOL                                       
+EDSB   A   195 800  000      SOREM  GTQ    LUPEN  GTQ    KBA    GTQ             
+EDSB   A   195 800  000      KBA1   GTQ                                         
+EDSB   D   000 800  000      EPL    EDSB   EPL    STR    EPL    OBORN           
+EDSB   D   000 800  000      EPL    POGOL                                       
+EDSB   D   005 800  000      MIRGU  EDSB   MIRGU  STR    MIRGU  OBORN           
+EDSB   D   000 800  000      NATOR  EDSB   NATOR  TUBLO  NATOR  LUGUS           
+EDSB   D   000 800  000      UBASI  EDSB   UBASI  GAGSI                         
+EDTB   A   000      000      OBORN  POGOL  LUPEN  POGOL  DENEL  POGOL           
+EDTB   A   000      000      SUL    POGOL                                       
+EDTD   A   195 245  000      HR/    LUL    HOC    LUL    TRA    LUL             
+EDTD   A   000 800  000      OBORN  POGOL  LUPEN  POGOL  DENEL  POGOL           
+EDTD   A   000 800  000      SUL    POGOL                                       
+EDTF   A   000 800  000      OBORN  POGOL  LUPEN  POGOL  DENEL  POGOL           
+EDTF   A   000 800  000      SUL    POGOL                                       
+EDTL   A   000      000      KRH    LBU    KBA    LBU    LHR    LBU             
+EDTL   A   005 800  000      OBORN  POGOL  LUPEN  POGOL  LHR    POGOL           
+EDTL   A   000      000      KBA    SUL    LHR    SUL                           
+EDTL   D   000 800  000      EPL    EDTL   EPL    OBORN  EPL    POGOL           
+EDTL   D   000      000      SUL    EDTL   SUL    XLHR                          
+EDTL   D   000      000      LBU    EDTL   LBU    XLHR   LBU    SUL             
+EDTL   D   000      000      LBU    TGO                                         
+EDTL   D   005 800  000      MIRGU  EDTL   MIRGU  OBORN                         
+EDTO   A   000 800  000      OBORN  POGOL  LUPEN  POGOL  DENEL  POGOL           
+EDTO   A   000 800  000      SUL    POGOL                                       
+EG99   D   000 800  000      DPE    SFD    DPE    XIDIL                         
+EG99   D   000 800  000      ETRAT  SITET                                       
+EG99   D   000 800  000      RINTI  DVR                                         
+EG99   D   000 800  000      VEULE  XAMAB  VEULE  XAMO/                         
+EGAA   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGBB   A   265 800  000      UTELA  CLM    KOPOR  CLM    ABUDA  CLM             
+EGBB   A   265 800  000      DIMAL  CLM    ALESO  CLM                           
+EGBB   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABNUR  DIDOR           
+EGBB   A   265 800  000      DIMAL  DIDOR  ALESO  DIDOR                         
+EGBB   D   195 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGBE   A   265 800  000      UTELA  CLM    KOPOR  CLM    ABUDA  CLM             
+EGBE   A   265 800  000      DIMAL  CLM    ALESO  CLM                           
+EGBE   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABNUR  DIDOR           
+EGBE   A   265 800  000      DIMAL  DIDOR  ALESO  DIDOR                         
+EGBJ   A   265 800  000      UTELA  CLM    KOPOR  CLM    ABUDA  CLM             
+EGBJ   A   265 800  000      DIMAL  CLM    ALESO  CLM                           
+EGBJ   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABNUR  DIDOR           
+EGBJ   A   265 800  000      DIMAL  DIDOR  ALESO  DIDOR                         
+EGBJ   D   195 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGCC   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGDL   A   265 800  000      UTELA  CLM    KOPOR  CLM    ABUDA  CLM             
+EGDL   A   265 800  000      DIMAL  CLM    ALESO  CLM                           
+EGDL   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABNUR  DIDOR           
+EGDL   A   265 800  000      DIMAL  DIDOR  ALESO  DIDOR                         
+EGDM   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGDM   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGDM   A   265 800  000      NITAR  DIDOR  GUBAR  DIDOR  GURLU  DIDOR           
+EGFF   A   265 800  000      UTELA  CLM    KOPOR  CLM    ABUDA  CLM             
+EGFF   A   265 800  000      DIMAL  CLM    ALESO  CLM                           
+EGFF   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABNUR  DIDOR           
+EGFF   A   265 800  000      DIMAL  DIDOR  ALESO  DIDOR                         
+EGFF   D   195 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGGD   A   265 800  000      UTELA  CLM    KOPOR  CLM    ABUDA  CLM             
+EGGD   A   265 800  000      DIMAL  CLM    ALESO  CLM                           
+EGGD   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABNUR  DIDOR           
+EGGD   A   265 800  000      DIMAL  DIDOR  ALESO  DIDOR                         
+EGGW   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGGW   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGGW   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGGW   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGGW   D   000      000      ETRAT  SITET                                       
+EGGW   D   195 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGHD   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGHD   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGHD   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGHD   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGHH   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGHH   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGHH   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGHH   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGHI   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGHI   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGHI   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGHI   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGHL   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGHL   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGHL   A   265 800  000      NITAR  DIDOR  GUBAR  DIDOR  GURLU  DIDOR           
+EGHQ   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGHQ   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGHQ   D   265 800  000      DIDOR  NITAR  DIDOR  GUBAR  DIDOR  GURLU           
+EGHR   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGHR   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGHR   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGHR   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGJA   A   000      000      AGANO  CEN    ALD    CEN                           
+EGJA   A   000      000      MINQI  DIN    JSY    DIN    ALD    DIN             
+EGJA   A   000      000      EPATI  NEVIL  BENIX  NEVIL  AGANO  NEVIL           
+EGJA   A   000      000      ALD    NEVIL                                       
+EGJA   D   000      000      CEN    EGJA   CEN    JSY    CEN    LUSIT           
+EGJA   D   000      000      NEVIL  EGJA   NEVIL  AGANO  NEVIL  BENIX           
+EGJA   D   000      000      NEVIL  EPATI                                       
+EGJA   D   000      000      DIN    EGJA   DIN    JSY    DIN    MINQI           
+EGJB   A   000 800  000      SENLO  CEN    BEVAV  CEN    GUR    CEN             
+EGJB   A   000      000      ANGLO  NEVIL  DIKRO  NEVIL  BEVAV  NEVIL           
+EGJB   A   000      000      JSY    NEVIL  GUR    NEVIL                         
+EGJB   D   200 800  000      BHD    EGJB   BHD    SKESO  BHD    SKERY           
+EGJB   D   005 095  000      CEN    EGJB   CEN    LUSIT                         
+EGJB   D   095 800  000      CEN    EGJB   CEN    ORVAL  CEN    KOKOS           
+EGJB   D   000 800  000      DIN    EGJB   DIN    LERAK                         
+EGJJ   A   000      000      SENLO  CEN    BEVAV  CEN    JW     CEN             
+EGJJ   A   000      000      ANGLO  NEVIL  DIKRO  NEVIL  BEVAV  NEVIL           
+EGJJ   A   000      000      JW     NEVIL                                       
+EGJJ   A   000      000      MINQI  DIN    JW     DIN                           
+EGJJ   D   005 095  000      CEN    EGJJ   CEN    LUSIT                         
+EGJJ   D   095 800  000      CEN    EGJJ   CEN    ORVAL  CEN    KOKOS           
+EGJJ   D   195 800  000      GARMI  EGJJ   GARMI  KETIK  GARMI  BENIX           
+EGJJ   D   195 800  000      GARMI  AKIKI                                       
+EGJJ   D   005 800  000      KOTEM  EGJJ   KOTEM  KETIK  KOTEM  AKIKI           
+EGJJ   D   005 800  000      KOTEM  EPAT1                                       
+EGKA   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGKA   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGKA   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+EGKA   A   265 800  000      SOVAT  DIDOR                                       
+EGKB   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+EGKB   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+EGKB   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+EGKB   A   265 800  000      SOVAT  DIDOR                                       
+EGKK   A   195 800  000      DEVRO  BOKNO  VANAD  BOKNO  VADOM  BOKNO           
+EGKK   A   195 800  000      PIGOP  BOKNO  BAMES  BOKNO  PODEM  BOKNO           
+EGKK   A   195 800  000      ABUDA  BOKNO  GUBAR  BOKNO  GURLU  BOKNO           
+EGKK   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGKK   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGKK   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGKK   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGKK   D   195 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGLC   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+EGLC   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+EGLC   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+EGLC   A   265 800  000      SOVAT  DIDOR                                       
+EGLC   D   195 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGLF   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGLF   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGLF   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGLF   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGLK   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGLK   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGLK   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGLK   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGLL   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR/ CLM             
+EGLL   A   265 800  000      ABUDA  CLM    DIMAL  CLM    ALESO  CLM             
+EGLL   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABNUR  DIDOR           
+EGLL   A   265 800  000      DIMAL  DIDOR  ALESO  DIDOR                         
+EGLL   D   195 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGMC   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+EGMC   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+EGMC   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+EGMC   A   265 800  000      SOVAT  DIDOR                                       
+EGMC   D   195 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGMD   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+EGMD   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+EGMD   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+EGMD   A   265 800  000      SOVAT  DIDOR                                       
+EGMH   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+EGMH   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+EGMH   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+EGMH   A   265 800  000      SOVAT  DIDOR                                       
+EGMH   D   195 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGNT   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGNX   A   265 800  000      UTELA  CLM    KOPOR  CLM    ABUDA  CLM             
+EGNX   A   265 800  000      DIMAL  CLM    ALESO  CLM                           
+EGNX   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABNUR  DIDOR           
+EGNX   A   265 800  000      DIMAL  DIDOR  ALESO  DIDOR                         
+EGNX   D   195 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGPF   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGPH   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGSC   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGSC   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGSC   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGSC   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGSH   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+EGSH   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+EGSH   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+EGSH   A   265 800  000      SOVAT  DIDOR                                       
+EGSS   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGSS   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGSS   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGSS   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGSS   D   195 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGTC   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR/ CLM             
+EGTC   A   265 800  000      ABUDA  CLM    DIMAL  CLM    ALESO  CLM             
+EGTC   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGTC   A   265 800  000      DIMAL  DIDOR  ALESO  DIDOR                         
+EGTD   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGTD   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGTD   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGTD   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGTE   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGTE   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGTE   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGTE   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGTE   A   000 800  000      SKESO  JSY    BHD    JSY                           
+EGTF   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGTF   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGTF   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGTF   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGTG   A   265 800  000      UTELA  CLM    KOPOR  CLM    ABUDA  CLM             
+EGTG   A   265 800  000      DIMAL  CLM    ALESO  CLM                           
+EGTG   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABNUR  DIDOR           
+EGTG   A   265 800  000      DIMAL  DIDOR  ALESO  DIDOR                         
+EGTK   A   265 800  000      UTELA  CLM    KOPOR  CLM    ABUDA  CLM             
+EGTK   A   265 800  000      DIMAL  CLM    ALESO  CLM                           
+EGTK   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABNUR  DIDOR           
+EGTK   A   265 800  000      DIMAL  DIDOR  ALESO  DIDOR                         
+EGTO   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+EGTO   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+EGTO   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+EGTO   A   265 800  000      SOVAT  DIDOR                                       
+EGUL   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+EGUL   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+EGUL   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+EGUL   A   265 800  000      SOVAT  DIDOR                                       
+EGUL   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGUN   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+EGUN   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+EGUN   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+EGUN   A   265 800  000      SOVAT  DIDOR                                       
+EGUN   D   195 800  000      SUTAL  LNO    SUTAL  DIK                           
+EGVA   A   265 800  000      UTELA  CLM    KOPOR  CLM    ABUDA  CLM             
+EGVA   A   265 800  000      DIMAL  CLM    ALESO  CLM                           
+EGVA   A   265 800  000      NITAR  DIDOR  ABNUR  DIDOR  DIMAL  DIDOR           
+EGVA   A   265 800  000      ALESO  DIDOR                                       
+EGVN   A   265 800  000      UTELA  CLM    KOPOR  CLM    ABUDA  CLM             
+EGVN   A   265 800  000      DIMAL  CLM    ALESO  CLM                           
+EGVN   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABNUR  DIDOR           
+EGVN   A   265 800  000      DIMAL  DIDOR  ALESO  DIDOR                         
+EGVO   A   265 800  000      UTELA  CLM    KOPOR  CLM    KOMEL  CLM             
+EGVO   A   265 800  000      ABSUD  CLM    GUBAR  CLM    GURLU  CLM             
+EGVO   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABUDA  DIDOR           
+EGVO   A   265 800  000      GUBAR  DIDOR  GURLU  DIDOR                         
+EGWU   A   265 800  000      UTELA  CLM    KOPOR  CLM    ABUDA  CLM             
+EGWU   A   265 800  000      DIMAL  CLM    ALESO  CLM                           
+EGWU   A   265 800  000      NURMO/ DIDOR  NITAR  DIDOR  ABNUR  DIDOR           
+EGWU   A   265 800  000      DIMAL  DIDOR  ALESO  DIDOR                         
+EH99   A   030 085  000      ROBAL  CMB    CIV    CMB                           
+EH99   A   090 800  000      CMB2   CMB    VEKIN  CMB    ADUTO  CMB             
+EH99   A   090 800  000      FERDI  CMB    SPY    CMB                           
+EH99   A   195 800  000      CMB    NURMO  CMB2   NURMO  VEKIN  NURMO           
+EH99   A   195 800  000      ADUTO  NURMO  FERDI  NURMO                         
+EHAM   A   195 800  000      CMB2   CMB    VEKIN  CMB    ADUTO  CMB             
+EHAM   A   195 800  000      FERDI  CMB                                         
+EHAM   A   195 800  000      CMB    NURMO  CMB2   NURMO  VEKIN  NURMO           
+EHAM   A   195 800  000      ADUTO  NURMO  FERDI  NURMO                         
+EHAM   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EHBD   A   195 800  000      PODEM  BAMES  SOMIL  BAMES  PERON  BAMES           
+EHBD   A   195 800  000      CMB    BAMES  CMB2   BAMES  ROBAL  BAMES           
+EHBD   A   195 800  000      CIV    BAMES                                       
+EHBD   A   195 800  000      CMB2   CMB    ROBAL  CMB    CIV    CMB             
+EHBD   A   195 800  000      PODEM  EVX    SOMIL  EVX    PERON  EVX             
+EHBD   A   195 800  000      CMB    EVX    CMB2   EVX    ROBAL  EVX             
+EHBD   A   195 800  000      CIV    EVX                                         
+EHBD   A   195 800  000      MTD    KOPOR  NURMO  KOPOR  CMB    KOPOR           
+EHBD   A   195 800  000      CMB2   KOPOR  ROBAL  KOPOR  CIV    KOPOR           
+EHBK   A   195 800  000      PODEM  BAMES  SOMIL  BAMES  UNTB1  BAMES           
+EHBK   A   195 800  000      PERON  BAMES  CMB    BAMES  CMB2   BAMES           
+EHBK   A   195 800  000      ROBAL  BAMES  CIV    BAMES                         
+EHBK   A   195 800  000      PODEM  EVX    SOMIL  EVX    UNTB1  EVX             
+EHBK   A   195 800  000      PERON  EVX    CMB    EVX    CMB2   EVX             
+EHBK   A   195 800  000      ROBAL  EVX    CIV    EVX                           
+EHBK   A   195 800  000      MTD    KOPOR  NURMO  KOPOR  CMB    KOPOR           
+EHBK   A   195 800  000      CMB2   KOPOR  ROBAL  KOPOR  CIV    KOPOR           
+EHBK   A   195 800  000      NURMO  MTD    CMB    MTD    CMB2   MTD             
+EHBK   A   195 800  000      ROBAL  MTD    CIV    MTD                           
+EHBK   A   005 800  000      NIPS   NIPOR  SUIPE  NIPOR  MMD    NIPOR           
+EHBK   A   005 800  000      LIMGO  NIPOR                                       
+EHBK   A   195 800  000      SOMIL  PODEM  VEKIN  PODEM  ADUTO  PODEM           
+EHBK   A   195 800  000      FERDI  PODEM                                       
+EHEH   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EHRD   A   195 800  000      CMB2   CMB    VEKIN  CMB    ADUTO  CMB             
+EHRD   A   195 800  000      FERDI  CMB                                         
+EHRD   A   195 800  000      PODEM  EVX    SOMIL  EVX    VEKIN  EVX             
+EHRD   A   195 800  000      ADUTO  EVX    FERDI  EVX                           
+EHRD   A   195 800  000      MTD    KOPOR  NURMO  KOPOR  CMB    KOPOR           
+EHRD   A   195 800  000      CMB2   KOPOR  VEKIN  KOPOR  ADUTO  KOPOR           
+EHRD   A   195 800  000      FERDI  KOPOR                                       
+EHRD   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EHWO   A   195 800  000      CMB2   CMB    VEKIN  CMB    ADUTO  CMB             
+EHWO   A   195 800  000      FERDI  CMB                                         
+EHWO   A   195 800  000      PODEM  EVX    SOMIL  EVX    VEKIN  EVX             
+EHWO   A   195 800  000      ADUTO  EVX    FERDI  EVX                           
+EHWO   A   195 800  000      SOMIL  PODEM  VEKIN  PODEM  ADUTO  PODEM           
+EHWO   A   195 800  000      FERDI  PODEM                                       
+EI99   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+EI99   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+EI99   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+EI99   A   265 800  000      SOVAT  DIDOR                                       
+EICK   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EIDW   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+EINN   D   200 800  000      SUTAL  LNO    SUTAL  DIK                           
+ELLX   A   200 800  000      GIVOR  EPL    SORAL  EPL    AKELU  EPL             
+ELLX   A   200 800  000      MOSET  EPL                                         
+ELLX   A   000 800  000      AKELU  GTQ    MOSET  GTQ                           
+ELLX   A   000 800  000      GIVOR  LUL    SORAL  LUL    AKELU  LUL             
+ELLX   A   000 800  000      MOSET  LUL                                         
+ELLX   A   005 195  000      PETAN  NIPOR  ELLX   NIPOR                         
+ELLX   A   005 800  000      PETAN  MMD    ELLX   MMD                           
+ELLX   A   200 800  000      DANAR  IXILU  EPL    IXILU  GIVOR  IXILU           
+ELLX   A   200 800  000      SORAL  IXILU  AKELU  IXILU  MOSET  IXILU           
+ELLX   D   000 800  000      GTQ    ELLX   GTQ    MOSET  GTQ    AKELU           
+ELLX   D   200 800  000      POGOL  ELLX   POGOL  MOSET  POGOL  AKELU           
+ELLX   D   200 800  000      POGOL  GTQ                                         
+ETAD   A   200 800  000      RESPO  DJL    PILON/ DJL    EPL    DJL             
+ETAD   A   200 800  000      DIK    DJL                                         
+ETAD   A   005 800  000      NIPS   NIPOR  SUIPE  NIPOR  MMD    NIPOR           
+ETAD   A   005 800  000      LIMGO  NIPOR                                       
+ETAR   A   000      000      NIPS   NIPOR  SUIPE  NIPOR  MMD    NIPOR           
+ETAR   A   000      000      LIMGO  NIPOR                                       
+ETAR   D   000      000      GTQ    SBN    GTQ    MAKOT  GTQ    10GTQ           
+F999   A   000 800  000      2CSO   CIRTA  CSO    CIRTA                         
+F999   A   000 800  000      1ANB   SALMA  ANB    SALMA                         
+F999   A   000 800  000      2ZEM   REQIN  ZEM    REQIN                         
+F999   A   000 800  000      1CSO   KAMER  CSO    KAMER                         
+F999   A   000      000      2ANB   MOUET  ANB    MOUET                         
+F999   A   000 800  000      1ZEM   OTARO  ZEM    OTARO                         
+F999   D   000 800  000      CIRTA  CSO    CIRTA  2CSO                          
+F999   D   000 800  000      KAMER  CSO    KAMER  1CSO                          
+F999   D   000 800  000      SALMA  ANB    SALMA  1ANB                          
+F999   D   000 800  000      REQIN  ZEM    REQIN  2ZEM                          
+F999   D   000 800  000      OTARO  ZEM    OTARO  1ZEM                          
+F999   D   000 800  000      MOUET  ANB    MOUET  2ANB                          
+G999   A   000 800  000      2CSO   CIRTA  CSO    CIRTA                         
+G999   A   000 800  000      2ANB   MOUET  ANB    MOUET                         
+G999   A   000 800  000      1ZEM   OTARO  ZEM    OTARO                         
+G999   A   000 800  000      ETIKI  REGHI  48N9W  REGHI                         
+G999   A   000 800  000      1ANB   SALMA  ANB    SALMA                         
+G999   A   000 800  000      SIVIR  RIVAK  46N9W  RIVAK                         
+G999   A   000 800  000      2ZEM   REQIN  ZEM    REQIN                         
+G999   A   000 800  000      1CSO   KAMER  CSO    KAMER                         
+G999   A   000 800  000      SEPAL  LAPEX  47N9W  LAPEX                         
+G999   D   000 800  000      CIRTA  CSO    CIRTA  2CSO                          
+G999   D   000 800  000      MOUET  ANB    MOUET  2ANB                          
+G999   D   000 800  000      SALMA  ANB    SALMA  1ANB                          
+G999   D   000 800  000      RIVAK  46N9W  RIVAK  SIVIR                         
+G999   D   000 800  000      REQIN  ZEM    REQIN  2ZEM                          
+G999   D   000 800  000      REGHI  48N9W  REGHI  ETIKI                         
+G999   D   000 800  000      OTARO  ZEM    OTARO  1ZEM                          
+G999   D   000 800  000      LAPEX  47N9W  LAPEX  SEPAL                         
+G999   D   000 800  000      KAMER  CSO    KAMER  1CSO                          
+GC99   D   000      000      LUMAS  SALON                                       
+GM99   A   195 800  000      PPN    BAN                                         
+GM99   D   000      000      LUMAS  SALON                                       
+K999   A   265 800  000      NATS   ATREX  NATS1  ATREX  VESAN  ATREX           
+K999   A   265 800  000      RATUK  ATREX  SOVAT  ATREX                         
+K999   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+K999   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+K999   A   195 800  000      CHELY  MUREN                                       
+K999   A   000 800  000      ETIKI  REGHI  48N9W  REGHI                         
+K999   A   000 800  000      SIVIR  RIVAK  46N9W  RIVAK                         
+K999   A   000 800  000      SEPAL  LAPEX  47N9W  LAPEX                         
+K999   D   000 800  000      LAPEX  47N9W  LAPEX  SEPAL                         
+K999   D   000 800  000      RIVAK  46N9W  RIVAK  SIVIR                         
+K999   D   000 800  000      REGHI  48N9W  REGHI  ETIKI                         
+K999   D   000      000      PHILI  RATKA                                       
+L999   D   000      000      SUPUX  USEPI                                       
+LE99   A   005 800  000      MLA    ANETO                                       
+LE99   A   005 800  000      BGR    BISBA                                       
+LE99   A   195 800  000      PPN    BLV                                         
+LE99   A   195 800  000      CHELY  MUREN                                       
+LE99   A   195 800  000      SUPUX  USEPI  KUPIM  USEPI  ODAKA  USEPI           
+LE99   A   195 800  000      SUXER  USEPI  RIPAL  USEPI  MORSS  USEPI           
+LE99   A   195 800  000      MHN    USEPI                                       
+LEAS   A   000      000      VES    LOTEE                                       
+LEAS   D   000      000      LOTEE  VES                                         
+LEBB   A   000 800  000      BLV    DELOG                                       
+LEBB   A   000 800  000      CEGAM  THUNE                                       
+LEBB   D   195 800  000      BTZ    LEBB   BTZ    SSN    BTZ    URUNA           
+LEBB   D   000 800  000      DELOG  LEBB                                        
+LEBB   D   195 800  000      LUSEM  LEBB                                        
+LEBL   A   195 800  000      ALBER  PPG    CLE    PPG                           
+LEBL   A   000 800  000      SLCL   PUMAL                                       
+LEBL   D   195 800  000      OKABI  VNV                                         
+LEBL   D   195 800  000      SOSUR  DIBE   SOSUR  DIBER                         
+LECO   A   000 800  000      KORAV  KORUL                                       
+LEGE   A   195 800  000      MAMES  DIVKO  BISBA  DIVKO  BGR    DIVKO           
+LEGE   A   005 800  000      GIR    KANIG                                       
+LEGE   D   005 800  000      DIBER  BGR    DIBER  DIBE                          
+LEIB   A   000 800  000      MHN    MORSS                                       
+LEMH   A   000      000      MAXOS  BALEN  RIXOT  BALEN  CDP    BALEN           
+LEPA   A   000      000      MAXOS  BALEN  RIXOT  BALEN  CDP    BALEN           
+LEPP   A   005 195  000      DONOS  BTZ    BEGUY  BTZ    PPN    BTZ             
+LERS   A   195 800  000      ALBER  PPG    GIR    PPG                           
+LERS   A   000 800  000      SLCL   PUMAL                                       
+LESJ   A   200 800  000      RIXOT  BALEN  CDP    BALEN                         
+LESO   A   005 800  000      AUCHE  AGN    LMB    AGN    ORTEZ  AGN             
+LESO   A   005 800  000      BIDAC  AGN    BTZ    AGN    LESO   AGN             
+LESO   A   000      000      LESO   BTZ                                         
+LESO   D   000      000      BTZ    LESO                                        
+LEST   A   000      000      STG    KORUL                                       
+LEXJ   A   000 800  000      CEGAM  THUNE                                       
+LEZG   A   195 800  000      ANETO  GONUP  GRAUS  GONUP                         
+LEZG   A   195 800  000      SURCO  SOVAR                                       
+LFAC   A   195 800  000      CLM    BRY    UTELA  BRY    CRL/   BRY             
+LFAC   A   195 800  000      KOPOR  BRY    MTD    BRY    NURMO  BRY             
+LFAC   A   195 800  000      CMB    BRY    BARLI  BRY    TRACA  BRY             
+LFAC   A   195 800  000      MK     BRY                                         
+LFAT   A   195 800  000      CLM    BRY    UTELA  BRY    CRL/   BRY             
+LFAT   A   195 800  000      KOPOR  BRY    MTD    BRY    NURMO  BRY             
+LFAT   A   195 800  000      CMB    BRY    BNE    BRY    LFAT   BRY             
+LFAV   A   195 800  000      CLM    BRY    UTELA  BRY    CRL/   BRY             
+LFAV   A   195 800  000      KOPOR  BRY    MTD    BRY    NURMO  BRY             
+LFAV   A   195 800  000      CMB    BRY    LFAV   BRY                           
+LFBA   A   000 800  000      XTLE/  GILUR  LACOU  GILUR  AG     GILUR           
+LFBA   A   195 800  000      PERIG  MAKOX  RUMEL  MAKOX  LACOU  MAKOX           
+LFBA   A   195 800  000      AG     MAKOX                                       
+LFBA   A   000 800  000      XTLE/  NARAK  LACOU  NARAK  AG     NARAK           
+LFBA   D   005 195  000      SAU    LFBA   SAU    TONI                          
+LFBD   A   195 800  000      AGN/   NARAK  MIRBA  NARAK  LIBRU  NARAK           
+LFBD   D   005 800  000      AGN    LFBD   AGN    AQUE   AGN    SAU             
+LFBD   D   005 800  000      AGN    AQU3                                        
+LFBD   D   005 195  000      SOMTI  LFBD   SOMTI  AQUE   SOMTI  SAU             
+LFBD   D   005 195  000      SOMTI  MIRBA  SOMTI  PERIG/ SOMTI  ESISI/          
+LFBD   D   005 195  000      SOMTI  AR/                                         
+LFBE   D   005 195  000      GAI    LFBE   GAI    RUMEL/ GAI    LACOU           
+LFBE   D   005 195  000      GAI    XTLE/                                       
+LFBE   D   195 800  000      GAI    LFBE   GAI    RUMEL/ GAI    LACOU           
+LFBE   D   195 800  000      GAI    AGN/                                        
+LFBE   D   005 800  000      LACOU  LFBE   LACOU  RUMEL/                        
+LFBH   A   000 800  000      NTS    TERPO  TIRAV  TERPO  LUSON  TERPO           
+LFBH   A   000 800  000      RL     TERPO                                       
+LFBI   A   000 800  000      ABSIE  LUGEN  PI     LUGEN                         
+LFBI   D   195 800  000      BAMES  LFBI   BAMES  POI    BAMES  ADABI           
+LFBI   D   195 800  000      BAMES  BOKNO  BAMES  DEVRO  BAMES  VANAD           
+LFBI   D   195 800  000      BAMES  VADOM  BAMES  PIGOP                         
+LFBI   D   195 800  000      RESMI  LFBI   RESMI  POI    RESMI  ADABI           
+LFBI   D   195 800  000      RESMI  BOKNO  RESMI  DEVRO  RESMI  VANAD           
+LFBI   D   195 800  000      RESMI  VADOM  RESMI  TABOV                         
+LFBI   D   195 800  000      TSU    LFBI   TSU    POI    TSU    ADABI           
+LFBI   D   195 800  000      TSU    BOKNO  TSU    DEVRO  TSU    VANAD           
+LFBI   D   195 800  000      TSU    VADOM  TSU    TABOV                         
+LFBL   A   195 800  000      ADEKA  LERGA  VALKU  LERGA  LARON  LERGA           
+LFBL   A   195 800  000      GUERE  LERGA  LOE    LERGA                         
+LFBL   A   195 800  000      ADEKA  TIS    VALKU  TIS    LARON  TIS             
+LFBL   A   195 800  000      GUERE  TIS    LOE    TIS                           
+LFBL   A   195 800  000      ABSIE  TIRAV  POI    TIRAV  BALAN  TIRAV           
+LFBL   A   195 800  000      LOE    TIRAV                                       
+LFBL   D   195 800  000      LERGA  LFBL   LERGA  LARON  LERGA  VALKU           
+LFBL   D   195 800  000      LERGA  ADEKA                                       
+LFBL   D   195 800  000      TIS    LFBL   TIS    LARON  TIS    VALKU           
+LFBL   D   195 800  000      TIS    ADEKA                                       
+LFBM   D   005 800  000      TOU    LFBM   TOU    AUCHE  TOU    AGN/            
+LFBO   D   195 800  000      AGREV  LFBO   AGREV  MEDAP  AGREV  BISBI           
+LFBO   D   195 800  000      AGREV  GONIM  AGREV  MEN    AGREV  MEZIN           
+LFBO   D   195 800  000      LATAM  LFBO   LATAM  MEDAP  LATAM  BISBI           
+LFBO   D   195 800  000      LATAM  GONIM  LATAM  MEN    LATAM  MEZIN           
+LFBO   D   195 800  000      MEN    LFBO   MEN    MEDAP  MEN    BISBI           
+LFBO   D   195 800  000      MEN    GONIM                                       
+LFBP   D   195 800  000      LURAN  LFBP   LURAN  ORTEZ  LURAN  BIDAC/          
+LFBR   A   000 195  000      KORAB  AFRIC  MASAM  AFRIC  ADIMO  AFRIC           
+LFBR   A   000 195  000      01AE   AFRIC                                       
+LFBR   A   000 195  000      NETRO  GAI    01AE   GAI                           
+LFBR   A   000 195  000      SU     AUCHE  01AW   AUCHE                         
+LFBR   A   000 195  000      SU     TBO    01AW   TBO                           
+LFBR   A   000 195  000      SALSI  ORBIL  ADIMO  ORBIL  01AE   ORBIL           
+LFBR   A   000 800  000      SU     AGN    01AW   AGN                           
+LFBR   D   000 195  000      AFRIC  LFBR   AFRIC  XTLE   AFRIC  KORAB           
+LFBR   D   000 195  000      GAI    LFBR   GAI    XTLE                          
+LFBR   D   000 195  000      MORIL  LFBR   MORIL  XTLE   MORIL  GALDO           
+LFBT   A   005 800  000      AUCHE  AGN    TBO    AGN                           
+LFBX   A   005 195  000      AULON  GAI    LAVRA  GAI    ESISI  GAI             
+LFBX   A   005 195  000      PERIG  GAI    PX     GAI                           
+LFBX   A   195 800  000      FISTO  GAI    ESISI/ GAI    PERIG  GAI             
+LFBX   A   195 800  000      PX     GAI                                         
+LFBX   A   195 800  000      GILUR  OLRAK  FISTO/ OLRAK  PX     OLRAK           
+LFBX   D   005 800  000      CNA    LFBX   CNA    NORON  CNA    VELIN/          
+LFBX   D   195 800  000      MEN    LFBX   MEN    FISTO/ MEN    NARAK           
+LFBX   D   195 800  000      MEN    ESPAL                                       
+LFCC   A   005 800  000      TOU/   AGN    CL     AGN                           
+LFCC   A   195 800  000      AMOLO  DEGOL  MEDAP  DEGOL  GAI    DEGOL           
+LFCC   A   195 800  000      CL     DEGOL                                       
+LFCC   A   195 800  000      NARAK  OLRAK  CL     OLRAK                         
+LFCC   D   000 800  000      AGN    LFCC   AGN    DPCL   AGN    TOU/            
+LFCC   D   195 800  000      MEN    LFCC   MEN    DPCL   MEN    GAI/            
+LFCC   D   195 800  000      MEN    ESPAL                                       
+LFCC   D   195 800  000      PERIG  LFCC   PERIG  DPCL   PERIG  AULON           
+LFCC   D   195 800  000      PERIG  LAVRA  PERIG  ESISI                         
+LFCH   A   000      000      VAGNA  CNA                                         
+LFCH   A   000      000      DIRAX  ENSAC                                       
+LFCH   A   000      000      ETPAR  ROYAN                                       
+LFCH   A   000      000      LIBRU  VELIN                                       
+LFCI   A   005 195  000      KORAB/ AFRIC  AB     AFRIC                         
+LFCI   A   195 800  000      OLRA1  OLRAK  ROMAK  OLRAK  NARAK  OLRAK           
+LFCI   A   195 800  000      GAI    OLRAK  AB     OLRAK                         
+LFCI   D   005 195  000      AFRIC  LFCI   AFRIC  KORAB/                        
+LFCI   D   000      000      SOMTI  LFCI   SOMTI  ALBI   SOMTI  BISBI           
+LFCI   D   000      000      SOMTI  GILUR  SOMTI  AR/                           
+LFCK   A   005 195  000      KORAB/ AFRIC  CVU    AFRIC                         
+LFCK   A   195 800  000      NARAK  OLRAK  GAI    OLRAK  FINOT  OLRAK           
+LFCK   A   195 800  000      CVU    OLRAK                                       
+LFCK   D   005 800  000      AFRIC  LFCK   AFRIC  KORAB/                        
+LFCK   D   005 800  000      SOMTI  LFCK   SOMTI  CAST   SOMTI  BISBI           
+LFCK   D   005 800  000      SOMTI  GILUR  SOMTI  AR/                           
+LFCM   A   000      000      MIL    MEN                                         
+LFCM   D   005 800  000      GAI    LFCM   GAI    MIL    GAI    AFRIC           
+LFCM   D   005 800  000      GAI    KORAB  GAI    KOR1                          
+LFCM   D   005 800  000      MEN    LFCM   MEN    MIL                           
+LFCR   A   195 800  000      LMG    BALAN  MAKOX  BALAN  ESISI  BALAN           
+LFCR   A   195 800  000      RATRA  BALAN  ROMRZ  BALAN                         
+LFCR   A   005 800  000      RATRA  ESISI  ROMRZ  ESISI                         
+LFCR   A   000 800  000      AULON/ GAI    ROMRZ  GAI                           
+LFCR   A   000 800  000      TAKAT  MINPA  ROMRZ  MINPA                         
+LFCR   D   005 800  000      ESISI  LFCR   ESISI  RATRA                         
+LFCW   A   005 195  000      BUGUS  PERIG  RUMEL  PERIG  LACOU  PERIG           
+LFCW   A   005 195  000      LFBA   PERIG                                       
+LFCW   D   005 195  000      LMG    LFBA   LMG    LACOU  LMG    RUMEL           
+LFCW   D   005 195  000      LMG    PERIG                                       
+LFEY   A   000 800  000      LGLS   LGL    ROLEN  LGL    DIDAK  LGL             
+LFEY   A   000 800  000      ARDOD  LGL    VALAX  LGL    NEDAN  LGL             
+LFEY   A   000 800  000      NTS    LGL    NORMI  LGL    YE     LGL             
+LFGA   A   000 800  000      EPIKO  EPL    EPIK   EPL    HO     EPL             
+LFGA   A   000 800  000      LFGA   EPL                                         
+LFGA   A   000 145  000      BABM   RLP    LUL    RLP    HO     RLP             
+LFGA   A   000 145  000      LFGA   RLP                                         
+LFGA   D   000 145  000      RLP    LFGA   RLP    HO     RLP    LUL             
+LFGA   D   000 145  000      RLP    BABM                                        
+LFGA   D   145 195  000      RLP    LFGA   RLP    HO     RLP    LUL             
+LFGA   D   000 800  000      SUL    LFGA   SUL    HO     SUL    STR             
+LFGA   D   000 800  000      SUL    LUPEN  SUL    DENEL                         
+LFGA   D   200 800  000      TUROM  LFGA   TUROM  HO     TUROM  HR              
+LFGA   D   200 800  000      TUROM  MOROK                                       
+LFGB   A   000 145  000      BABM   RLP    LUL    RLP    LFGB   RLP             
+LFGB   D   000 145  000      RLP    LFGB   RLP    LUL    RLP    BABM            
+LFGG   A   000 145  000      BABM   RLP    LUL    RLP    LFGG   RLP             
+LFGG   D   000 145  000      RLP    LFGG   RLP    LUL    RLP    BABM            
+LFGJ   A   000      000      BOBSI  BULOL  ALURA  BULOL  DO     BULOL           
+LFGJ   D   000 800  000      MILPA  LGJ    MILPA  DJL                           
+LFHS   A   005 195  000      OMANI  MOU    LESPI  MOU    ROA    MOU             
+LFHS   A   005 195  000      DIRBA  MOU    TALAR  MOU                           
+LFHS   D   000 800  000      AMORO  LFHS   AMORO  BUSIL                         
+LFHS   D   005 195  000      PIBAT  LFHS   PIBAT  BUSIL  PIBAT  AMORO           
+LFHV   A   000      000      OMANI  MOU    LESPI  MOU    ROA    MOU             
+LFHV   A   000      000      DIRBA  MOU    TALAR  MOU                           
+LFHY   A   005 800  000      LESPI  BELEP  OMANI  BELEP  MOU    BELEP           
+LFHY   A   005 800  000      MBY    BELEP                                       
+LFHY   A   005 195  000      PESAN  CFA    BAKNO  CFA    MBY    CFA             
+LFHY   D   005 800  000      CFA    MBY    CFA    BAKNO  CFA    PESAN           
+LFHY   D   195 800  000      LERGA  MBY    LERGA  BAKNO  LERGA  PESAN           
+LFHY   D   195 800  000      LERGA  TIS                                         
+LFHY   D   005 195  000      TIS    MBY    TIS    BAKNO  TIS    PESAN           
+LFJL   A   195 800  000      BOBSI  BULOL  ALURA  BULOL  DJL    BULOL           
+LFJL   A   195 800  000      KASON  BULOL  RLP    BULOL  EPL    BULOL           
+LFJL   A   195 800  000      MONCE  BULOL  MTZ    BULOL                         
+LFJL   A   005 800  000      10GTQ  SBN    GTQ    SBN    MTZ    SBN             
+LFJL   A   000 800  000      MTZ    MMD    LOU    MMD                           
+LFJL   D   005 195  000      AKELU  LJL    AKELU  LJL1   AKELU  GTQ             
+LFJL   D   000 800  000      EPL    LJL    EPL    GTQ    EPL    MONCE           
+LFJL   D   000 800  000      MMD    LJL                                         
+LFJL   D   005 800  000      SBN    LJL    SBN    LJL1   SBN    GTQ             
+LFJL   D   005 800  000      SBN    10GTQ                                       
+LFJL   D   195 800  000      POGOL  LJL    POGOL  GTQ                           
+LFJR   A   195 800  000      BOLGU/ CNA    DIDRU  CNA    POI    CNA             
+LFJR   A   195 800  000      GINON  CNA    GILU   CNA    LUTIL  CNA             
+LFJR   A   195 800  000      AS     CNA                                         
+LFJR   A   055 195  000      CAD/   DOMOD  KOVAK  DOMOD  LUMAN  DOMOD           
+LFJR   A   055 195  000      TUNAX  DOMOD  LUTIL  DOMOD  AS     DOMOD           
+LFJR   A   195 800  000      AMODO  OKRIX  RESMI  OKRIX  TABOV  OKRIX           
+LFJR   A   195 800  000      PIGOP  OKRIX  DITAL  OKRIX  LGL    OKRIX           
+LFJR   A   195 800  000      RONAX  OKRIX  TUNAX  OKRIX  LUTIL  OKRIX           
+LFJR   A   195 800  000      AS     OKRIX                                       
+LFJR   A   000 800  000      GINON  POI    GILU   POI    LUTIL  POI             
+LFJR   A   000 800  000      AS     POI                                         
+LFJR   A   195 800  000      BRY    TRO    AMODO  TRO    RESMI  TRO             
+LFJR   A   195 800  000      TABOV  TRO    PIGOP  TRO    DITAL  TRO             
+LFJR   A   195 800  000      LGL    TRO    RONAX  TRO    TUNAX  TRO             
+LFJR   A   195 800  000      LUTIL  TRO    AS     TRO                           
+LFJR   A   055 195  000      RONAX  LGL    TUNAX  LGL    LUTIL  LGL             
+LFJR   A   055 195  000      AS     LGL                                         
+LFJR   A   195 800  000      BUSUK  EVX    LGL    EVX    RONAX  EVX             
+LFJR   A   195 800  000      TUNAX  EVX    LUTIL  EVX    AS     EVX             
+LFJR   D   195 800  000      EVX    LFJR   EVX    LUTIL  EVX    TUNAX           
+LFJR   D   195 800  000      EVX    RONAX  EVX    SORAP  EVX    DITAL           
+LFJR   D   195 800  000      RESMI  LFJR   RESMI  LUTIL  RESMI  TUNAX           
+LFJR   D   195 800  000      RESMI  RONAX  RESMI  CHW    RESMI  VADOM           
+LFJR   D   195 800  000      RESMI  TABOV                                       
+LFJR   D   195 800  000      TSU    LFJR   TSU    LUTIL  TSU    TUNAX           
+LFJR   D   195 800  000      TSU    RONAX  TSU    CHW    TSU    VADOM           
+LFJR   D   195 800  000      TSU    TABOV                                       
+LFJR   D   005 195  000      TUNAX  LFJR   TUNAX  LUTIL                         
+LFKB   A   005 800  000      MOULE  ELB    BTA    ELB    LFKB   ELB             
+LFKB   A   005 800  000      BTA    LIGUR                                       
+LFKB   A   195 800  000      DIVU   NARTI  NIRDO  NARTI  BTA    NARTI           
+LFKB   D   005 800  000      ELB    LFKB   ELB    MOULE                         
+LFKB   D   005 800  000      MEGER  LFKB                                        
+LFKC   A   000 800  000      TORTU  LIGUR  AKUTI  LIGUR  NORKA  LIGUR           
+LFKC   A   000 800  000      SOUKA  LIGUR  ILROU  LIGUR                         
+LFKC   A   005 195  000      MERL   MERLU  SODRI  MERLU  NORKA  MERLU           
+LFKC   A   005 195  000      ILROU  MERLU                                       
+LFKC   A   195 800  000      DIVU   NARTI  NIRDO  NARTI  NORKA  NARTI           
+LFKC   A   195 800  000      ILROU  NARTI                                       
+LFKC   D   005 800  000      TORTU  LFKC   TORTU  GORIT  TORTU  SODRI           
+LFKF   A   000 800  000      NEGA   NEGAT  FGI    NEGAT                         
+LFKF   A   000 800  000      VAXEL  RUBAS  AJO    RUBAS  FIGA   RUBAS           
+LFKF   D   000 800  000      NEGAT  LFKF   NEGAT  NEGA                          
+LFKJ   A   000 800  000      IS     LONSU  LKJ    LONSU                         
+LFKJ   A   000 800  000      VAXEL  RUBAS  IS     RUBAS  LKJ    RUBAS           
+LFKJ   A   000 800  000      LKJ    NEGAT                                       
+LFKJ   D   005 800  000      NEGAT  LFKJ   NEGAT  NEGA                          
+LFKJ   D   005 800  000      TORTU  LFKJ                                        
+LFKS   A   000      000      MOULE  ELB    BTA    ELB    BREMO  ELB             
+LFKS   A   000      000      SZA    ELB                                         
+LFKS   A   005 195  000      ZARA   IDORI  SZA    IDORI                         
+LFKS   D   000      000      AJO    LFKS   AJO    ZARA                          
+LFKS   D   005 195  000      IDORI  LFKS   IDORI  ZARA                          
+LFKS   D   000      000      ELB    LFKS   ELB    BREMO  ELB    BTA             
+LFLA   A   000 195  000      KUTAN  DJL    GORET  DJL    DIVDA  DJL             
+LFLA   A   000 195  000      AX     DJL                                         
+LFLA   A   000 195  000      RLP1   RLP    GORET  RLP    DIVDA  RLP             
+LFLA   A   000 195  000      AX     RLP                                         
+LFLB   A   005 195  000      LIRKO  DJL    SALEV  DJL    COLLO  DJL             
+LFLB   A   005 195  000      CBY    DJL                                         
+LFLB   A   005 800  000      MURRO  MEZIN  LSE1   MEZIN  GONIX  MEZIN           
+LFLB   A   005 800  000      VIRIE  MEZIN                                       
+LFLB   A   005 800  000      LSE1   MURRO  GONIX  MURRO  VIRIE  MURRO           
+LFLB   A   200 800  000      AKITO  MOROK  LIRKO  MOROK  SALEV  MOROK           
+LFLB   A   200 800  000      COLLO  MOROK  CBY    MOROK                         
+LFLB   A   195 800  000      PIBAT  PIXIS  LUSAR  PIXIS  SAUNI  PIXIS           
+LFLB   A   195 800  000      SALEV  PIXIS  COLLO  PIXIS  CBY    PIXIS           
+LFLB   A   005 800  000      COLLO  SALEV  CBY    SALEV                         
+LFLB   A   125 800  000      OSMAS  PINED  GOMET  PINED  LTP    PINED           
+LFLB   A   125 800  000      GONIX  PINED  VIRIE  PINED                         
+LFLB   D   005 800  000      AMORO  LFLB   AMORO  BANEK  AMORO  GIRED           
+LFLB   D   005 800  000      AMORO  DANB0  AMORO  DANBO  AMORO  BUSIL           
+LFLB   D   145 800  000      MEBAK  LFLB   MEBAK  BANEK  MEBAK  BELUS           
+LFLB   D   145 800  000      MEBAK  LSE                                         
+LFLB   D   000 800  000      MURRO  LFLB   MURRO  BANEK  MURRO  BELUS           
+LFLB   D   000 800  000      MURRO  LSE    MURRO  01YW                          
+LFLB   D   005 800  000      PAS    LFLB   PAS    BANEK  PAS    PAS14           
+LFLB   D   195 800  000      MOKIP  LFLB   MOKIP  BANEK  MOKIP  GIRED           
+LFLB   D   195 800  000      MOKIP  DANB0  MOKIP  DANBO  MOKIP  BOBSI           
+LFLB   D   005 800  000      BULOL  LFLB   BULOL  BANEK  BULOL  GIRED           
+LFLB   D   005 800  000      BULOL  DANB0  BULOL  DANBO                         
+LFLC   A   005 800  000      BEBIX  DIDRU  ARSOM  DIDRU  RIMOR  DIDRU           
+LFLC   A   195 800  000      PIMAK  ETREK  SULOT  ETREK  AMDAS  ETREK           
+LFLC   A   005 195  000      ARSOM  GUSON  RIMOR  GUSON                         
+LFLC   A   195 800  000      BEBIX  LMG    ARSOM  LMG    RIMOR  LMG             
+LFLC   A   005 195  000      SULOT  MIRBA  AMDAS  MIRBA                         
+LFLC   A   000 195  000      ATRID  NEV    OLIRI  NEV    NEKEM  NEV             
+LFLC   A   000 195  000      ARSOM  NEV    RIMOR  NEV                           
+LFLC   A   005 195  000      SULOT  PIMAK  AMDAS  PIMAK                         
+LFLC   A   000 800  000      SULOT  NASEP  AMDAS  NASEP                         
+LFLC   A   005 800  000      SOPAD  MEBAK  SULOT  MEBAK  AMDAS  MEBAK           
+LFLC   A   005 195  000      ARSOM  LMG    RIMOR  LMG                           
+LFLC   A   005 195  000      ARSOM  LARON  RIMOR  LARON                         
+LFLC   D   005 195  000      LEMIN  LFLC   LEMIN  RIVEK                         
+LFLH   A   000      000      CC     ALURA                                       
+LFLH   A   000      000      CC     PIBAT                                       
+LFLH   A   000      000      CC     AMORO                                       
+LFLH   A   000      000      ALURA/ BUSIL  CC     BUSIL                         
+LFLH   A   000      000      CC     DJL                                         
+LFLH   D   000      000      ALURA  CC                                          
+LFLH   D   000      000      AMORO  CC                                          
+LFLH   D   000      000      PIBAT  CC                                          
+LFLI   A   000 800  000      BELUS  LTP    CBY    LTP    PAS1   LTP             
+LFLI   A   200 800  000      AKITO  MOROK  LIRKO  MOROK                         
+LFLI   A   195 800  000      PIBAT  PIXIS  LUSAR  PIXIS  SAUNI  PIXIS           
+LFLI   A   195 800  000      RUBLO  RUSIT  BELUS  RUSIT  CBY    RUSIT           
+LFLI   A   195 800  000      PAS1   RUSIT                                       
+LFLJ   A   005 195  000      LIRKO  DJL    SALEV  DJL    COLLO  DJL             
+LFLJ   A   005 195  000      CBY    DJL                                         
+LFLJ   A   195 800  000      AKITO  MOROK  LIRKO  MOROK  SALEV  MOROK           
+LFLJ   A   195 800  000      COLLO  MOROK  CBY    MOROK                         
+LFLJ   D   005 800  000      BANEK  LFLJ                                        
+LFLJ   D   195 800  000      PIXIS  PIBAT  PIXIS  LUSAR  PIXIS  SAUNI           
+LFLJ   D   195 800  000      PIXIS  BALSI                                       
+LFLL   A   195 800  000      MOROK  ARPUS  AKITO  ARPUS  DOMIL  ARPUS           
+LFLL   A   195 800  000      MILPA  ARPUS  OTKOL  ARPUS  RUNOM  ARPUS           
+LFLL   A   195 800  000      LLL    ARPUS                                       
+LFLL   A   005 800  000      BODR   BODRU  KOTIT  BODRU  LASUR  BODRU           
+LFLL   A   005 800  000      PINED  BODRU  OSMAS  BODRU  GOMET  BODRU           
+LFLL   A   005 800  000      LLL    BODRU                                       
+LFLL   A   195 800  000      GIGUS  KINES  AMVAR  KINES  OSMAS  KINES           
+LFLL   A   195 800  000      GOMET  KINES  LLL    KINES                         
+LFLL   A   000      000      ARBON  LFLU   LLL    LFLU                          
+LFLL   A   005 115  000      AMIKO  MEZIN  ARBON  MEZIN  LLL    MEZIN           
+LFLL   A   000      000      OTKOL  MILPA  RUNOM  MILPA  LLL    MILPA           
+LFLL   A   005 800  000      OMANI  MOU    LESPI  MOU    ROA    MOU             
+LFLL   A   005 800  000      DIRBA  MOU    TALAR  MOU    LLL    MOU             
+LFLL   A   000 800  000      LABAL  VALKU  ROA    VALKU  DIRBA  VALKU           
+LFLL   A   000 800  000      TALAR  VALKU  LLL    VALKU                         
+LFLL   A   005 800  000      01CL   MTL    KURIR/ MTL    AMONI  MTL             
+LFLL   A   005 800  000      ROLIR  MTL    ARBON  MTL    LLL    MTL             
+LFLL   A   195 800  000      AKITO  MOROK  DOMIL  MOROK  MILPA  MOROK           
+LFLL   A   195 800  000      OTKOL  MOROK  RUNOM  MOROK  LLL    MOROK           
+LFLL   A   115 800  000      NELEN  MEZIN  ROLIR  MEZIN  ARBON  MEZIN           
+LFLL   A   115 800  000      LLL    MEZIN                                       
+LFLL   A   005 800  000      PINED  LASUR  OSMAS  LASUR  GOMET  LASUR           
+LFLL   A   005 800  000      LLL    LASUR                                       
+LFLL   D   005 800  000      AMORO  LFLL   AMORO  DANB0  AMORO  BUSIL           
+LFLL   D   005 800  000      RONLA  LFLL   RONLA  DANB0  RONLA  BOBSI           
+LFLL   D   005 800  000      RONLA  MABES                                       
+LFLL   D   195 800  000      PIBAT  LFLL   PIBAT  DANB0  PIBAT  BUSIL           
+LFLL   D   195 800  000      PIBAT  AMORO                                       
+LFLL   D   195 800  000      BEPER  LFLL   BEPER  ROMAM  BEPER  LUKUM           
+LFLL   D   005 195  000      MEN    LFLL   MEN    MURRO  MEN    VEROT           
+LFLL   D   005 195  000      MEN    MINDI                                       
+LFLL   D   005 195  000      PIBAT  LFLL   PIBAT  DANB0  PIBAT  BUSIL           
+LFLL   D   005 195  000      PIBAT  AMORO                                       
+LFLL   D   005 195  000      DJL    LFLL   DJL    DANB0  DJL    BOBSI           
+LFLL   D   005 195  000      DJL    ALURA                                       
+LFLN   A   195 800  000      ADAK1  BEBIX  LASEV  BEBIX  VALKU  BEBIX           
+LFLN   A   195 800  000      LABAL  BEBIX  ROA/   BEBIX  SN     BEBIX           
+LFLN   A   005 800  000      BELEP  EB     BELVU  EB     ROA    EB              
+LFLN   A   005 800  000      SN     EB                                          
+LFLN   A   005 800  000      LFLN   XAPEL                                       
+LFLN   D   000 800  000      BUSIL  LFLN                                        
+LFLO   A   000 195  000      TIS    CFA    LFLO   CFA                           
+LFLP   A   005 195  000      LIRKO  DJL    SALEV  DJL    COLLO  DJL             
+LFLP   A   005 195  000      CBY    DJL                                         
+LFLP   A   005 800  000      MURRO  MEZIN  LSE1   MEZIN  GONIX  MEZIN           
+LFLP   A   005 800  000      VIRIE  MEZIN                                       
+LFLP   A   200 800  000      AKITO  MOROK  LIRKO  MOROK  SALEV  MOROK           
+LFLP   A   200 800  000      COLLO  MOROK  CBY    MOROK                         
+LFLP   A   005 800  000      KURIR  MTL    GONIX  MTL    VIRIE  MTL             
+LFLP   A   125 800  000      OSMAS  PINED  GOMET  PINED  LTP    PINED           
+LFLP   A   125 800  000      GONIX  PINED  VIRIE  PINED                         
+LFLP   A   005 800  000      COLLO  SALEV  CBY    SALEV                         
+LFLP   A   195 800  000      PIBAT  PIXIS  LUSAR  PIXIS  SAUNI  PIXIS           
+LFLP   A   195 800  000      SALEV  PIXIS  COLLO  PIXIS  CBY    PIXIS           
+LFLP   D   005 800  000      AMORO  LFLP   AMORO  AT     AMORO  TOLNA           
+LFLP   D   005 800  000      AMORO  BELUS  AMORO  GIRED  AMORO  DANB0           
+LFLP   D   005 800  000      AMORO  DANBO  AMORO  BUSIL                         
+LFLP   D   005 800  000      KOVAR  LFLP   KOVAR  AT     KOVAR  COLLO           
+LFLP   D   005 800  000      KOVAR  02GD                                        
+LFLP   D   005 800  000      MURRO  LFLP   MURRO  AT     MURRO  BELUS           
+LFLP   D   005 800  000      MURRO  LSE    MURRO  01YW                          
+LFLP   D   005 800  000      PAS    LFLP   PAS    AT     PAS    PAS14           
+LFLP   D   145 800  000      MEBAK  LFLP   MEBAK  AT     MEBAK  BELUS           
+LFLP   D   145 800  000      MEBAK  LSE                                         
+LFLS   A   005 800  000      BODR   BODRU  KOTIT  BODRU  LASUR  BODRU           
+LFLS   A   005 800  000      PINED  BODRU  OSMAS  BODRU  GOMET  BODRU           
+LFLS   A   005 800  000      OMANI  MOU    LESPI  MOU    ROA    MOU             
+LFLS   A   005 800  000      DIRBA  MOU    TALAR  MOU                           
+LFLS   A   005 800  000      01CL   MTL    KURIR/ MTL    AMONI  MTL             
+LFLS   A   005 800  000      ROLIR  MTL    ARBON  MTL                           
+LFLS   A   000 800  000      OTKOL  MILPA  RUNOM  MILPA  LTP    MILPA           
+LFLS   A   000 800  000      WS     MILPA                                       
+LFLS   A   195 800  000      GIGUS  KINES  AMVAR  KINES  OSMAS  KINES           
+LFLS   A   195 800  000      GOMET  KINES                                       
+LFLS   A   005 800  000      PINED  LASUR  OSMAS  LASUR  GOMET  LASUR           
+LFLS   A   115 800  000      NELEN  MEZIN  ROLIR  MEZIN  ARBON  MEZIN           
+LFLS   A   005 115  000      AMIKO  MEZIN  ARBON  MEZIN                         
+LFLS   D   005 195  000      BELEP  LFLS   BELEP  VNE    BELEP  MADOT           
+LFLS   D   005 800  000      DANBO  LFLS   DANBO  LTP    DANBO  RUBLO           
+LFLS   D   195 800  000      REPSI  LFLS   REPSI  VNE                           
+LFLS   D   005 195  000      MEN    LFLS   MEN    VNE    MEN    MURRO           
+LFLS   D   005 195  000      MEN    VEROT  MEN    MINDI                         
+LFLS   D   005 800  000      KURIR  LFLS   KURIR  01YS/  KURIR  ROMAM           
+LFLU   A   005 800  000      VE     AGREV                                       
+LFLU   A   000 800  000      VE     MTL                                         
+LFLU   A   195 800  000      LABAL  VALKU  TIS    VALKU  BELEP  VALKU           
+LFLU   A   195 800  000      AMIKO  VALKU  VE     VALKU                         
+LFLU   A   195 800  000      03CL   MEN    MEZIN  MEN    AGREV  MEN             
+LFLU   A   195 800  000      VE     MEN                                         
+LFLU   A   005 195  000      VE     ALURA                                       
+LFLU   A   005 195  000      LIRKO  DIPIR  PAS    DIPIR  ARGIS  DIPIR           
+LFLU   A   005 195  000      VE     DIPIR                                       
+LFLU   D   195 800  000      LERGA  LFLU   LERGA  AMIKO                         
+LFLU   D   000 800  000      MTL    LFLU                                        
+LFLV   A   195 800  000      GUERE  BEBIX  LARON  BEBIX  RISUN  BEBIX           
+LFLV   A   195 800  000      RIVEK  BEBIX  SINPO  BEBIX  VZ     BEBIX           
+LFLV   A   000 800  000      MENOX  NEV    SINPO/ NEV    VZ     NEV             
+LFLV   A   000 800  000      SINPO/ MOU    VZ     MOU                           
+LFLV   D   000 800  000      AVLON  LFLV   AVLON  SINPO/ AVLON  MOU             
+LFLV   D   000 800  000      NEV    SINPO/                                      
+LFLV   D   000 800  000      CFA    LFLV                                        
+LFLW   A   000      000      AR     SOMTI                                       
+LFLW   D   000      000      SOMTI  LFLW                                        
+LFLX   A   000 195  000      RIVEK  CFA    RISUN  CFA    GUSON  CFA             
+LFLX   A   000 195  000      CTX    CFA                                         
+LFLX   A   195 800  000      LEMIN  MOU    RISUN  MOU    GUSON  MOU             
+LFLX   A   195 800  000      CTX    MOU                                         
+LFLX   A   005 195  000      LEMIN  MOU    KUKO1  MOU    RISUN  MOU             
+LFLX   A   005 195  000      GUSON  MOU    CTX    MOU                           
+LFLX   D   195 800  000      ADEKA  LFLX   ADEKA  GUSON  ADEKA  RISUN           
+LFLX   D   195 800  000      ADEKA  LEMIN  ADEKA  KUKOR                         
+LFLX   D   005 195  000      MOU    LFLX   MOU    GUSON  MOU    RISUN           
+LFLX   D   005 195  000      MOU    KUKO1  MOU    LEMIN                         
+LFLX   D   195 800  000      RESMI  LFLX   RESMI  SOPIL  RESMI  AMB             
+LFLX   D   195 800  000      RESMI  VANAD  RESMI  VADOM  RESMI  TABOV           
+LFLX   D   195 800  000      TSU    LFLX   TSU    SOPIL  TSU    AMB             
+LFLX   D   195 800  000      TSU    VANAD  TSU    VADOM  TSU    TABOV           
+LFLX   D   195 800  000      MOU    LFLX   MOU    GUSON  MOU    RISUN           
+LFLX   D   195 800  000      MOU    LEMIN                                       
+LFLX   D   195 800  000      BAMES  LFLX   BAMES  SOPIL  BAMES  AMB             
+LFLX   D   195 800  000      BAMES  VANAD  BAMES  VADOM  BAMES  PIGOP           
+LFLY   A   005 800  000      BODR   BODRU  KOTIT  BODRU  LASUR  BODRU           
+LFLY   A   005 800  000      PINED  BODRU  OSMAS  BODRU  GOMET  BODRU           
+LFLY   A   005 800  000      ROLIR  LFLU   ARBON  LFLU                          
+LFLY   A   115 800  000      NELEN  MEZIN  ROLIR  MEZIN  ARBON  MEZIN           
+LFLY   A   195 800  000      AKITO  MOROK  DOMIL  MOROK  MILPA  MOROK           
+LFLY   A   195 800  000      OTKOL  MOROK  RUNOM  MOROK  LLL    MOROK           
+LFLY   A   005 800  000      LABAL  VALKU  ROA    VALKU  DIRBA  VALKU           
+LFLY   A   005 800  000      TALAR  VALKU  LLL    VALKU                         
+LFLY   A   005 800  000      01CL   MTL    KURIR/ MTL    AMONI  MTL             
+LFLY   A   005 800  000      ROLIR  MTL    ARBON  MTL                           
+LFLY   A   005 800  000      OMANI  MOU    LESPI  MOU    ROA    MOU             
+LFLY   A   005 800  000      DIRBA  MOU    TALAR  MOU    LLL    MOU             
+LFLY   A   000      000      OTKOL  MILPA  RUNOM  MILPA  LLL    MILPA           
+LFLY   A   005 115  000      AMIKO  MEZIN  ARBON  MEZIN                         
+LFLY   A   195 800  000      GIGUS  KINES  AMVAR  KINES  OSMAS  KINES           
+LFLY   A   195 800  000      GOMET  KINES                                       
+LFLY   A   005 800  000      PINED  LASUR  OSMAS  LASUR  GOMET  LASUR           
+LFLY   D   005 800  000      AMORO  LFLY   AMORO  BUSIL                         
+LFLY   D   195 800  000      BEPER  LFLY   BEPER  01YS/  BEPER  ROMAM           
+LFLY   D   195 800  000      BEPER  LUKUM                                       
+LFLY   D   195 800  000      PIBAT  LFLY   PIBAT  BUSIL  PIBAT  AMORO           
+LFLY   D   005 800  000      RONLA  LFLY   RONLA  BOBSI  RONLA  MABES           
+LFLY   D   005 195  000      PIBAT  LFLY   PIBAT  BUSIL  PIBAT  AMORO           
+LFLY   D   005 195  000      MEN    LFLY   MEN    MURRO  MEN    VEROT           
+LFLY   D   005 195  000      MEN    MINDI                                       
+LFMA   A   000 800  000      STP    LERMA  RUBIT  LERMA  OB     LERMA           
+LFMA   A   000 800  000      MJ     LERMA  ALM    LERMA                         
+LFMC   A   000 800  000      OGREN  TRETS  ODEGA  TRETS  BIRGO  TRETS           
+LFMC   A   000 800  000      LUC    TRETS  LU     TRETS                         
+LFMD   A   000 800  000      GILON  AMFOU  LUC    AMFOU  NEKIP  AMFOU           
+LFMD   A   000 145  000      KOKIN  SODRI  INLOV  SODRI                         
+LFMD   A   005 195  000      INLOV  MERLU                                       
+LFMD   A   000 800  000      KOKIN  LONSU  INLOV  LONSU                         
+LFMD   A   005 195  000      OBOTA  LFTZ                                        
+LFMD   A   005 195  000      OBOTA  LFMN                                        
+LFMD   A   005 800  000      KOKIN  KERIT  INLOV  KERIT                         
+LFMD   A   005 800  000      LUC    GILON  NEKIP  GILON                         
+LFMD   A   005 800  000      AMGEL  BORDI  MIKRU  BORDI  PIRAM  BORDI           
+LFMD   A   005 800  000      KOKIN  BORDI  INLOV  BORDI                         
+LFMD   A   005 195  000      LUC    BIRGO  NEKIP  BIRGO                         
+LFMD   A   195 800  000      GAPDO  VEVAR  AMGEL  VEVAR  MIKRU  VEVAR           
+LFMD   A   195 800  000      PIRAM  VEVAR  KOKIN  VEVAR  INLOV  VEVAR           
+LFMD   D   000 800  000      BASIP  LFMD   BASIP  DIMAD  BASIP  USANO           
+LFMD   D   195 800  000      BODRU  LFMD   BODRU  DIMAD  BODRU  AMIRO           
+LFMD   D   000 135  000      MTL    LFMD   MTL    DIMAD  MTL    STP             
+LFMD   D   000 135  000      MTL    RUBIT  MTL    CUERS  MTL    LANKO           
+LFMD   D   000 135  000      MTL    OB     MTL    POMEG  MTL    MTG             
+LFMD   D   000 135  000      MTL    CM     MTL    0RG                           
+LFMD   D   135 195  000      PERUS  LFMD   PERUS  DIMAD  PERUS  AMIRO           
+LFMD   D   195 800  000      TURIL  LFMD   TURIL  DIMAD  TURIL  STP             
+LFMD   D   195 800  000      TURIL  RUBIT                                       
+LFMD   D   000 800  000      VAREK  LFMD   VAREK  DIMAD  VAREK  OMARD           
+LFMD   D   000 800  000      SODRI  LFMD   SODRI  DIMAD  SODRI  OMARD           
+LFMD   D   000 800  000      SODRI  MERLU  SODRI  MERL                          
+LFMD   D   195 800  000      OKTET  LFMD   OKTET  DIMAD  OKTET  AMIRO           
+LFMD   D   000 195  000      LANKO  LFMD   LANKO  DIMAD  LANKO  STP             
+LFMD   D   000 195  000      LANKO  RUBIT  LANKO  CUERS                         
+LFMD   D   195 800  000      IRMAR  LFMD   IRMAR  DIMAD  IRMAR  BARSO           
+LFMD   D   195 800  000      IRMAR  IRMA                                        
+LFMH   A   195 800  000      OMANI  MOU    LESPI  MOU    BELVU  MOU             
+LFMH   A   195 800  000      ONZON  MOU    EB     MOU                           
+LFMH   D   195 800  000      LERGA  LFMH   LERGA  MURRO                         
+LFMH   D   000 800  000      MOU    LFMH   MOU    EB     MOU    BELEP           
+LFMH   D   000 800  000      MOU    BELVU  MOU    LESPI  MOU    OMANI           
+LFMH   D   005 195  000      MURRO  LFMH                                        
+LFMI   A   195 800  000      MOKDI  MALEB  MEN    MALEB  ESERA  MALEB           
+LFMI   A   195 800  000      LFMI   MALEB                                       
+LFMI   A   195 800  000      ESERA  MEN    LFMI   MEN                           
+LFMI   A   000      000      MOLEN  MTL    LFMI   MTL                           
+LFMK   A   000 800  000      RAPES  GAI    CS     GAI                           
+LFML   A   000 800  000      MJ     FJR                                         
+LFML   A   000 800  000      RUBIT  STP    CUERS  STP    LANKO  STP             
+LFML   A   000 800  000      OB     STP    MJ     STP                           
+LFML   D   000 800  000      FJR    LFML   FJR    VARES                         
+LFML   D   145 800  000      NASIK  LFML   NASIK  TRETS                         
+LFMN   A   000 800  000      TIPIK  AMFOU  MUS    AMFOU  AZR    AMFOU           
+LFMN   A   195 800  000      GAPDO  VEVAR  AMGEL  VEVAR  MIKRU  VEVAR           
+LFMN   A   195 800  000      PIRAM  VEVAR  NERAS  VEVAR  AZR    VEVAR           
+LFMN   A   005 145  000      KESAK  SODRI  NERAS  SODRI  AZR    SODRI           
+LFMN   A   005 195  000      NERAS  MERLU  AZR    MERLU                         
+LFMN   A   005 115  000      LUC    BIRGO  MUS    BIRGO  AZR    BIRGO           
+LFMN   A   005 800  000      AMGEL  BORDI  MIKRU  BORDI  PIRAM  BORDI           
+LFMN   A   005 800  000      NERAS  BORDI  AZR    BORDI                         
+LFMN   A   005 800  000      KESAK  KERIT  NERAS  KERIT  AZR    KERIT           
+LFMN   A   005 195  000      AZR    LFMD                                        
+LFMN   A   005 195  000      01NR   LFTZ   AZR    LFTZ                          
+LFMN   A   000 800  000      KESAK  LONSU  NERAS  LONSU  AZR    LONSU           
+LFMN   D   000 800  000      LONSU  LFMN   LONSU  NZ01   LONSU  OMARD           
+LFMN   D   000 800  000      LONSU  MERLU                                       
+LFMN   D   000 800 -355      MAMES  LFMN   MAMES  ND01   MAMES  RESBO           
+LFMN   D   000 800  000      SODRI  LFMN   SODRI  NZ01   SODRI  OMARD           
+LFMN   D   000 800  000      SODRI  MERLU  SODRI  MERL                          
+LFMN   D   195 800  000      RUBAS  LFMN   RUBAS  ND01   RUBAS  RESBO           
+LFMN   D   000 800 +355      PIVUS  LFMN   PIVUS  ND01   PIVUS  LERM            
+LFMN   D   000 800 -355      PIVUS  LFMN   PIVUS  ND01   PIVUS  RESBO           
+LFMN   D   195 800 +355      NILDU  LFMN   NILDU  ND01   NILDU  LERM            
+LFMN   D   195 800 -355      NILDU  LFMN   NILDU  ND01   NILDU  RESBO           
+LFMN   D   000 800 +355      MAMES  LFMN   MAMES  ND01   MAMES  LERM            
+LFMO   D   000      000      MTG    LFMO   MTG    AVN                           
+LFMP   A   005 195  000      SUBIL  BORGO  LANET  BORGO                         
+LFMP   A   000      000      ZR/    FJR    LANET  FJR                           
+LFMP   A   285 800  000      BADAM  OLRAK  NEKTA  OLRAK  SIJAN  OLRAK           
+LFMP   A   285 800  000      KELA/  OLRAK  PPG    OLRAK  LANET  OLRAK           
+LFMP   A   005 195  000      02FA/  BRUSC  SIJAN  BRUSC  PPG    BRUSC           
+LFMP   A   005 195  000      LANET  BRUSC                                       
+LFMP   D   005 195  000      AFRIC  LFMP   AFRIC  KELAM  AFRIC  02FA            
+LFMP   D   195 800  000      LOMRA  LFMP   LOMRA  01ML   LOMRA  ORBIL           
+LFMP   D   195 800 +355      LOMRA  LFMP   LOMRA  01ML   LOMRA  0RBIL           
+LFMP   D   000 800 +355      GAI    LFMP   GAI    01ML   GAI    0RBIL           
+LFMP   D   000 800 +355      GAI    MASAM  GAI    FINOT                         
+LFMP   D   195 800 -355      AGN    LFMP   AGN    01ML   AGN    ORBIL           
+LFMP   D   195 800 -355      AGN    LOMRA  AGN    TOU                           
+LFMP   D   000 800 -355      GAI    LFMP   GAI    01ML   GAI    ORBIL           
+LFMP   D   000 800 -355      GAI    MASAM  GAI    FINOT                         
+LFMP   D   195 800 +355      AGN    LFMP   AGN    01ML   AGN    0RBIL           
+LFMP   D   195 800 +355      AGN    LOMRA  AGN    TOU                           
+LFMQ   A   000 800  000      RHONE  FJR    ADC    FJR    01MC   FJR             
+LFMQ   A   000 800  000      ADC    SOSUR  01MC   SOSUR                         
+LFMQ   A   000 800  000      ADC    TINOT  01MC   TINOT                         
+LFMQ   A   000 800  000      STP    LERMA  ADC    LERMA  01MC   LERMA           
+LFMQ   D   000 800  000      MTG    ADC    MTG    OB     MTG    POMEG           
+LFMQ   D   005 145  000      STP    ADC    STP    01MC   STP    OGREN           
+LFMQ   D   005 145  000      STP    ODEGA  STP    BIRGO  STP    LUC             
+LFMQ   D   005 145  000      STP    RUBIT                                       
+LFMQ   D   145 800  000      NASIK  ADC    NASIK  01MC   NASIK  OGREN           
+LFMQ   D   145 800  000      NASIK  ODEGA                                       
+LFMT   A   000 800  000      BRUSC  AFRIC  VALAG  AFRIC  GIGNA  AFRIC           
+LFMT   A   000 800  000      FJR    AFRIC  ASTEG  AFRIC  ESPIG  AFRIC           
+LFMT   A   195 800  000      KORAB  GAI    AFRIC  GAI    BRUSC  GAI             
+LFMT   A   195 800  000      VALAG  GAI    GIGNA  GAI    FJR    GAI             
+LFMT   A   195 800  000      ASTEG  GAI    ESPIG  GAI                           
+LFMT   A   000 800  000      RHONE  MTG    BADET  MTG    VARES  MTG             
+LFMT   A   000 800  000      ESPIG  MTG                                         
+LFMT   A   000 195  000      MOLEN  MTL    FJR    MTL    ASTEG  MTL             
+LFMT   A   000 195  000      ESPIG  MTL                                         
+LFMT   A   000 800  000      LEKLA  MEN    VALAG  MEN    GIGNA  MEN             
+LFMT   A   000 800  000      FJR    MEN    ASTEG  MEN    ESPIG  MEN             
+LFMT   A   195 800  000      02UY   BALSI  ETIDO  BALSI  KURIR  BALSI           
+LFMT   A   195 800  000      MTL    BALSI  MOLEN  BALSI  FJR    BALSI           
+LFMT   A   195 800  000      ASTEG  BALSI  ESPIG  BALSI                         
+LFMT   D   000 195  000      BGR    LFMT   BGR    KANIG  BGR    01VS            
+LFMT   D   000 800  000      MASAM  LFMT   MASAM  FJR    MASAM  01FA            
+LFMT   D   000 800  000      MTL    LFMT                                        
+LFMU   A   005 800  000      MALOU  AFRIC  ZR     AFRIC                         
+LFMU   A   000 800  000      BASLI  MEN    AFRIC  MEN    MALOU  MEN             
+LFMU   A   000 800  000      ZR     MEN                                         
+LFMU   A   000 800  000      MOLEN  MTL    FJR    MTL    MEIZE  MTL             
+LFMU   A   000 800  000      ZR     MTL                                         
+LFMU   A   000 800  000      MEIZE  FJR    ZR     FJR                           
+LFMU   D   000 800 -355      GAI    LFMU   GAI    MALOU  GAI    AFRIC           
+LFMU   D   000 800 -355      GAI    KORAB  GAI    MEDAP                         
+LFMU   D   000 195  000      MTL    LFMU   MTL    FJR    MTL    MOLEN           
+LFMU   D   000 195  000      MEN    LFMU   MEN    MALOU  MEN    AFRIC           
+LFMU   D   000 195  000      MEN    BASLI                                       
+LFMU   D   000 800 +355      GAI    LFMU   GAI    MALOU  GAI    AFRIC           
+LFMU   D   000 800 +355      GAI    K0RAB  GAI    MEDAP                         
+LFNB   D   000 800  000      BASLI  LFNB   BASLI  MEN                           
+LFNB   D   000 800  000      BRUSC  LFNB   BRUSC  MEN                           
+LFNB   D   000 800  000      ESERA  LFNB   ESERA  MEN    ESERA  ERGUL           
+LFNB   D   000 800  000      ESPAL  LFNB   ESPAL  MEN                           
+LFNB   D   000 800  000      MEZIN  LFNB   MEZIN  MEN    MEZIN  03CL            
+LFNB   D   000 800  000      MINDI  LFNB   MINDI  MEN                           
+LFNB   D   000 800  000      MOKDI  LFNB   MOKDI  MEN                           
+LFNB   D   000 800  000      TAKAT  LFNB   TAKAT  MEN                           
+LFOB   A   055 195  000      BVS    CEN                                         
+LFOB   A   005 800  000      SONOS  DPE    MATID  DPE    BVS    DPE             
+LFOB   A   195 800  000      BVS    DVL                                         
+LFOB   A   055 800  000      BVS    LGL                                         
+LFOB   A   135 800  000      MMD1   MTZ    RENSA  MTZ    GITAN  MTZ             
+LFOB   A   135 800  000      SOLBA  MTZ    VELER  MTZ    ADG    MTZ             
+LFOD   A   005 195  000      GINON  POI    SR     POI                           
+LFOE   A   195 800  000      AMODO  OKRIX  RESMI  OKRIX  TABOV  OKRIX           
+LFOE   A   195 800  000      PIGOP  OKRIX  DITAL  OKRIX  LGL    OKRIX           
+LFOE   A   195 800  000      EVX    OKRIX                                       
+LFOE   A   195 800  000      BRY    TRO    AMODO  TRO    RESMI  TRO             
+LFOE   A   195 800  000      TABOV  TRO    PIGOP  TRO    DITAL  TRO             
+LFOE   A   195 800  000      LGL    TRO    EVX    TRO                           
+LFOE   D   195 800  000      OEUZ   EVX    OEUZ   LGL    OEUZ   DITAL           
+LFOE   D   195 800  000      OEUZ   PIGOP  OEUZ   TABOV  OEUZ   RESMI           
+LFOE   D   195 800  000      TSU    EVX    TSU    LGL    TSU    DITAL           
+LFOE   D   195 800  000      TSU    PIGOP  TSU    TABOV                         
+LFOH   A   195 800  000      CRL/   GIMER  PON    GIMER  EVX    GIMER           
+LFOH   A   195 800  000      BERNO  GIMER  DVL    GIMER  LFOH   GIMER           
+LFOH   A   195 800  000      BRY    TRO    AMODO  TRO    RESMI  TRO             
+LFOH   A   195 800  000      TABOV  TRO    PIGOP  TRO    DITAL  TRO             
+LFOH   A   195 800  000      LGL    TRO    LISEU  TRO    DVL    TRO             
+LFOH   A   195 800  000      LFOH   TRO                                         
+LFOH   A   195 800  000      AMODO  OKRIX  RESMI  OKRIX  TABOV  OKRIX           
+LFOH   A   195 800  000      PIGOP  OKRIX  DITAL  OKRIX  LGL    OKRIX           
+LFOH   A   195 800  000      LISEU  OKRIX  DVL    OKRIX  LFOH   OKRIX           
+LFOH   D   195 800  000      RESMI  LFOH   RESMI  DVL    RESMI  LGL             
+LFOH   D   195 800  000      RESMI  DITAL  RESMI  PIGOP  RESMI  TABOV           
+LFOH   D   195 800  000      TSU    LFOH   TSU    DVL    TSU    LGL             
+LFOH   D   195 800  000      TSU    DITAL  TSU    PIGOP  TSU    TABOV           
+LFOJ   A   055 800  000      DOMOD  AMB    OAN    AMB                           
+LFOJ   A   005 800  000      KOVAK  BENAR  DOMOD  BENAR  OAN    BENAR           
+LFOJ   A   005 800  000      DOMOD  KOVAK  OAN    KOVAK                         
+LFOJ   A   055 195  000      BOBSA  LGL    BENAR  LGL    KOVAK  LGL             
+LFOJ   A   055 195  000      DOMOD  LGL    OAN    LGL                           
+LFOJ   A   195 800  000      SORAP  LGL    BENAR  LGL    KOVAK  LGL             
+LFOJ   A   195 800  000      DOMOD  LGL    OAN    LGL                           
+LFOJ   A   005 265  000      BILGO  MEDIL  ARSIL  MEDIL  TRO    MEDIL           
+LFOJ   A   005 265  000      LUREN  MEDIL  DIVDA  MEDIL  OSKIN  MEDIL           
+LFOJ   A   005 265  000      MOTAL  MEDIL                                       
+LFOJ   A   135 195  000      RENSA  RAPOR  SONUR  RAPOR  SOTUS  RAPOR           
+LFOJ   A   135 195  000      GITAN  RAPOR  REM    RAPOR  DIKOL  RAPOR           
+LFOJ   A   135 195  000      VATRI  RAPOR  ARSIL  RAPOR  TRO    RAPOR           
+LFOJ   A   135 195  000      LUREN  RAPOR  DIVDA  RAPOR  OSKIN  RAPOR           
+LFOJ   A   135 195  000      MOTAL  RAPOR                                       
+LFOJ   A   195 800  000      NITEP  RAPOR  RENSA  RAPOR  SONUR  RAPOR           
+LFOJ   A   195 800  000      SOTUS  RAPOR  GITAN  RAPOR  REM    RAPOR           
+LFOJ   A   195 800  000      DIKOL  RAPOR  VATRI  RAPOR  ARSIL  RAPOR           
+LFOJ   A   195 800  000      TRO    RAPOR  LUREN  RAPOR  DIVDA  RAPOR           
+LFOJ   A   195 800  000      OSKIN  RAPOR  MOTAL  RAPOR                         
+LFOK   A   000 800  000      KELON  DIKOL  CAV    DIKOL                         
+LFOP   A   000      000      EVRUK  EVX    ELBOX  EVX    ROU    EVX             
+LFOP   A   000      000      LOP    EVX                                         
+LFOP   A   200 800  000      CRL/   GIMER  PON    GIMER  EVX    GIMER           
+LFOP   A   200 800  000      EVRUK  GIMER  ELBOX  GIMER  ROU    GIMER           
+LFOP   A   200 800  000      LOP    GIMER                                       
+LFOP   A   195 800  000      AMODO  OKRIX  RESMI  OKRIX  TABOV  OKRIX           
+LFOP   A   195 800  000      PIGOP  OKRIX  DITAL  OKRIX  LGL    OKRIX           
+LFOP   A   195 800  000      ELBOX  OKRIX  ROU    OKRIX  LOP    OKRIX           
+LFOP   A   195 800  000      BRY    TRO    AMODO  TRO    RESMI  TRO             
+LFOP   A   195 800  000      TABOV  TRO    PIGOP  TRO    DITAL  TRO             
+LFOP   A   195 800  000      LGL    TRO    ELBOX  TRO    ROU    TRO             
+LFOP   A   195 800  000      LOP    TRO                                         
+LFOP   D   195 800  000      TSU    LOP    TSU    ELBOX  TSU    EVRUK           
+LFOP   D   195 800  000      TSU    LGL    TSU    DITAL  TSU    PIGOP           
+LFOP   D   195 800  000      TSU    TABOV                                       
+LFOT   A   195 800  000      DIBAG  PERIG  TUDRA  PERIG  BALAN  PERIG           
+LFOT   A   195 800  000      AMB    PERIG  TUR    PERIG                         
+LFOT   D   195 800  000      BAMES  TUR    BAMES  AMB    BAMES  VANAD           
+LFOT   D   195 800  000      BAMES  VADOM  BAMES  PIGOP                         
+LFOT   D   195 800  000      RESMI  TUR    RESMI  AMB    RESMI  VANAD           
+LFOT   D   195 800  000      RESMI  VADOM  RESMI  TABOV                         
+LFOT   D   195 800  000      TSU    TUR    TSU    AMB    TSU    VANAD           
+LFOT   D   195 800  000      TSU    VADOM  TSU    TABOV                         
+LFOU   A   000 800  000      LGLS   LGL    ROLEN  LGL    DIDAK  LGL             
+LFOU   A   000 800  000      ARDOD  LGL    VALAX  LGL    LP     LGL             
+LFOV   A   000 800  000      DIDAK  GODIX  LA     GODIX                         
+LFOV   D   005 800  000      RONAX  LFOV   RONAX  OBATO                         
+LFOZ   A   055 800  000      DOMOD  AMB    GILUX  AMB    MOTAL  AMB             
+LFOZ   A   055 800  000      LFOZ   AMB                                         
+LFOZ   A   055 195  000      BOBSA  LGL    BENAR  LGL    KOVAK  LGL             
+LFOZ   A   055 195  000      DOMOD  LGL    GILUX  LGL    MOTAL  LGL             
+LFOZ   A   055 195  000      LFOZ   LGL                                         
+LFOZ   A   005 195  000      KOVAK  BENAR  DOMOD  BENAR  GILUX  BENAR           
+LFOZ   A   005 195  000      MOTAL  BENAR  LFOZ   BENAR                         
+LFOZ   A   055 195  000      GILUX  DOMOD  MOTAL  DOMOD  LFOZ   DOMOD           
+LFOZ   A   005 195  000      DOMOD  KOVAK  GILUX  KOVAK  MOTAL  KOVAK           
+LFOZ   A   005 195  000      LFOZ   KOVAK                                       
+LFOZ   D   055 800  000      DOMOD  LFOZ   DOMOD  MOTAL  DOMOD  GILUX           
+LFOZ   D   005 195  000      KOVAK  LFOZ   KOVAK  MOTAL  KOVAK  GILUX           
+LFOZ   D   005 195  000      KOVAK  DOMOD                                       
+LFOZ   D   005 195  000      LGL    LFOZ   LGL    MOTAL  LGL    GILUX           
+LFOZ   D   005 195  000      LGL    DOMOD  LGL    KOVAK  LGL    BENAR           
+LFOZ   D   005 195  000      LGL    BOBSA                                       
+LFPB   A   055 195  000      KOVAK  AMB    BENAR  AMB    ROMLO  AMB             
+LFPB   A   055 195  000      BALOD  AMB    PBSW   AMB                           
+LFPB   A   055 195  000      SABLE  ANG    TUNAX  ANG    LUMAN  ANG             
+LFPB   A   055 195  000      ROMLO  ANG    BALOD  ANG    PBSW   ANG             
+LFPB   A   195 800  000      KEPER  ANG    LUMAN  ANG    ROMLO  ANG             
+LFPB   A   195 800  000      BALOD  ANG    PBSW   ANG                           
+LFPB   A   135 800  000      MMD1   MTZ    RENSA  MTZ    SOLBA  MTZ             
+LFPB   A   135 800  000      VELER  MTZ    PBNR   MTZ                           
+LFPB   A   195 800  000      ETREK  MTL    RUSIT  MTL    BULOL  MTL             
+LFPB   A   195 800  000      LOGNI  MTL    MOKIP  MTL    DJL    MTL             
+LFPB   A   195 800  000      PBOMA  MTL                                         
+LFPB   A   135 800  000      SOTUS  MOPIL  SOLBA  MOPIL  VELER  MOPIL           
+LFPB   A   135 800  000      PBNR   MOPIL                                       
+LFPB   A   195 800  000      GALBI  MOLUS  PBOMA  MOLUS                         
+LFPB   A   000 135  000      SUIPE  MMD    REM    MMD    SOLBA  MMD             
+LFPB   A   000 135  000      VELER  MMD    PBNR   MMD                           
+LFPB   A   000 195  000      GITAN  MATIX  SOLBA  MATIX  VELER  MATIX           
+LFPB   A   000 195  000      PBNR   MATIX                                       
+LFPB   A   055 195 +355      PBNWH  LGL                                         
+LFPB   A   055 195 -355      PBNWR  LGL                                         
+LFPB   A   055 195 -355      PBNWR  CEN                                         
+LFPB   A   005 195  000      TRO    RLP    INKAK  RLP    GAKLO  RLP             
+LFPB   A   005 195  000      OMAKO  RLP    PBOMA  RLP                           
+LFPB   A   195 800  000      NITEP  RAPOR  RENSA  RAPOR  SOLBA  RAPOR           
+LFPB   A   195 800  000      VELER  RAPOR  PBNR   RAPOR                         
+LFPB   A   135 195  000      RENSA  RAPOR  SOLBA  RAPOR  VELER  RAPOR           
+LFPB   A   135 195  000      PBNR   RAPOR                                       
+LFPB   A   030 195  000      AVLON  PIBAT  TRO    PIBAT  INKAK  PIBAT           
+LFPB   A   030 195  000      GAKLO  PIBAT  OMAKO  PIBAT  PBOMA  PIBAT           
+LFPB   A   195 800  000      KEPER  PEPAX  LUMAN  PEPAX  ROMLO  PEPAX           
+LFPB   A   195 800  000      BALOD  PEPAX  PBSW   PEPAX                         
+LFPB   A   195 800  000      DERAK  PENDU  TINIL  PENDU  NANOP  PENDU           
+LFPB   A   195 800  000      IPLAN  PENDU  INKAK  PENDU  GAKLO  PENDU           
+LFPB   A   195 800  000      OMAKO  PENDU  PBOMA  PENDU                         
+LFPB   A   055 195 +355      PBNWH  CEN                                         
+LFPB   A   000     -355      PBNWR  DPE                                         
+LFPB   A   000     +355      PBNWH  DPE                                         
+LFPB   A   195 800 -355      PBNWR  DVL                                         
+LFPB   A   195 800 +355      PBNWH  DVL                                         
+LFPB   A   195 800  000      LUVAL  EPL    NANOP  EPL    TRO    EPL             
+LFPB   A   195 800  000      INKAK  EPL    GAKLO  EPL    OMAKO  EPL             
+LFPB   A   195 800  000      PBOMA  EPL                                         
+LFPB   D   000      000      KOKOS  LPB    KOKOS  LGL    KOKOS  LGLN            
+LFPB   D   000      000      KOKOS  GALBO  KOKOS  JSJU                          
+LFPC   A   055 195  000      PC     CEN                                         
+LFPC   A   000     -355      PTNWR  DPE    PC     DPE                           
+LFPC   A   005 800 +355      PTNWH  DPE    PC     DPE                           
+LFPC   A   005 800  000      KOROM  SOKMU  MERUE  SOKMU  PC     SOKMU           
+LFPC   A   135 800  000      MMD1   MTZ    RENSA  MTZ    SOLBA  MTZ             
+LFPC   A   135 800  000      VELER  MTZ    PC     MTZ                           
+LFPC   A   055 800  000      PC     LGL                                         
+LFPC   A   195 800  000      PC     DVL                                         
+LFPC   D   005 800  000      KOKOS  LPC    KOKOS  LGL    KOKOS  LGLN            
+LFPC   D   005 800  000      KOKOS  GALBO  KOKOS  JSJU                          
+LFPG   A   055 195  000      KOVAK  AMB    BENAR  AMB    ROMLO  AMB             
+LFPG   A   055 195  000      BALOD  AMB    PGSW   AMB                           
+LFPG   A   055 195  000      SABLE  ANG    TUNAX  ANG    LUMAN  ANG             
+LFPG   A   055 195  000      ROMLO  ANG    BALOD  ANG    PGSW   ANG             
+LFPG   A   195 800  000      KEPER  ANG    LUMAN  ANG    ROMLO  ANG             
+LFPG   A   195 800  000      BALOD  ANG    PGSW   ANG                           
+LFPG   A   195 800  000      KEPER  PEPAX  LUMAN  PEPAX  ROMLO  PEPAX           
+LFPG   A   195 800  000      BALOD  PEPAX  PGSW   PEPAX                         
+LFPG   A   135 800 +355      SOTUS  MOPIL  SOLBA  MOPIL  VELER  MOPIL           
+LFPG   A   135 800 +355      PGNEH  MOPIL                                       
+LFPG   A   135 800 -355      XERAM  MOPIL  ANARU  MOPIL  DIVEM  MOPIL           
+LFPG   A   135 800 -355      LORTA  MOPIL  PGNER  MOPIL                         
+LFPG   A   135 195 +355      RENSA  MMD    SOLBA  MMD    VELER  MMD             
+LFPG   A   135 195 +355      PGNEH  MMD                                         
+LFPG   A   000 135 +355      SUIPE  MMD    REM    MMD    SOLBA  MMD             
+LFPG   A   000 135 +355      VELER  MMD    PGNEH  MMD                           
+LFPG   A   135 195 -355      RENSA  MMD    SONUR  MMD    XERAM  MMD             
+LFPG   A   135 195 -355      ANARU  MMD    DIVEM  MMD    LORTA  MMD             
+LFPG   A   135 195 -355      PGNER  MMD                                         
+LFPG   A   000 135 -355      SUIPE  MMD    REM    MMD    ANARU/ MMD             
+LFPG   A   000 135 -355      LORTA  MMD    PGNER  MMD                           
+LFPG   A   000 195 +355      GITAN  MATIX  SOLBA  MATIX  VELER  MATIX           
+LFPG   A   000 195 +355      PGNEH  MATIX                                       
+LFPG   A   000 195 -355      VAKER  MATIX  ANARU  MATIX  DIVEM  MATIX           
+LFPG   A   000 195 -355      LORTA  MATIX  PGNER  MATIX                         
+LFPG   A   055 195 +355      PGNWH  LGL                                         
+LFPG   A   055 195 -355      PGNWR  LGL                                         
+LFPG   A   055 195 -355      PGNWR  CEN                                         
+LFPG   A   055 195 +355      PGNWH  CEN                                         
+LFPG   A   000     -355      PGNWR  DPE                                         
+LFPG   A   000     +355      PGNWH  DPE                                         
+LFPG   A   195 800 -355      PGNWR  DVL                                         
+LFPG   A   195 800 +355      PGNWH  DVL                                         
+LFPG   D   000      000      KOKOS  LPG    KOKOS  LGL    KOKOS  LGLN            
+LFPG   D   000      000      KOKOS  GALBO  KOKOS  JSJU                          
+LFPM   A   005 195  000      BOBSA  LGL    BENAR  LGL    KOVAK  LGL             
+LFPM   A   005 195  000      DOMOD  LGL    PTV    LGL    MV     LGL             
+LFPM   A   005 800  000      BILGO  MEDIL  ARSIL  MEDIL  BRY    MEDIL           
+LFPM   A   005 800  000      MV     MEDIL                                       
+LFPM   A   135 195  000      RENSA  RAPOR  SONUR  RAPOR  SOTUS  RAPOR           
+LFPM   A   135 195  000      GITAN  RAPOR  REM    RAPOR  DIKOL  RAPOR           
+LFPM   A   135 195  000      VATRI  RAPOR  ARSIL  RAPOR  BRY    RAPOR           
+LFPM   A   135 195  000      MV     RAPOR                                       
+LFPM   A   195 800  000      NITEP  RAPOR  RENSA  RAPOR  SONUR  RAPOR           
+LFPM   A   195 800  000      SOTUS  RAPOR  GITAN  RAPOR  REM    RAPOR           
+LFPM   A   195 800  000      DIKOL  RAPOR  VATRI  RAPOR  ARSIL  RAPOR           
+LFPM   A   195 800  000      BRY    RAPOR  MV     RAPOR                         
+LFPM   D   000 065  000      MLN    LPM                                         
+LFPM   D   005 800  000      MMD    LPM    MMD    DIKOL  MMD    SUIPE           
+LFPM   D   005 195  000      REM    LPM    REM    DIKOL                         
+LFPN   A   000      000      OKRIX  AVLON  MOLEK  AVLON  PV     AVLON           
+LFPN   A   055 195  000      SOPIL  BALAN  AMB    BALAN  DOMOD  BALAN           
+LFPN   A   055 195  000      CAD    BALAN  ODRSK  BALAN  ODRAN  BALAN           
+LFPN   A   055 195  000      PV     BALAN                                       
+LFPN   A   055 195  000      ROLEN  FERTE  BOBSA  FERTE  BENAR  FERTE           
+LFPN   A   055 195  000      CAD    FERTE  ODRSK  FERTE  ODRAN  FERTE           
+LFPN   A   055 195  000      PV     FERTE                                       
+LFPN   A   055 195  000      BOBSA  LGL    BENAR  LGL    CAD    LGL             
+LFPN   A   055 195  000      ODRSK  LGL    ODRAN  LGL    PV     LGL             
+LFPN   A   000      000      MOLEK  OKRIX  PV     OKRIX                         
+LFPN   A   055 195  000      OMARI  POI    AMB    POI    DOMOD  POI             
+LFPN   A   055 195  000      CAD    POI    ODRSK  POI    ODRAN  POI             
+LFPN   A   055 195  000      PV     POI                                         
+LFPN   A   055 195  000      VAKSI  REN    TABIL  REN    NAMAR  REN             
+LFPN   A   055 195  000      SABLE  REN    TUNAX  REN    LUMAN  REN             
+LFPN   A   055 195  000      KOVAK  REN    CAD    REN    ODRSK  REN             
+LFPN   A   055 195  000      ODRAN  REN    PV     REN                           
+LFPO   A   000 195  000      GITAN  MATIX  SOLBA  MATIX  PO     MATIX           
+LFPO   A   195 800  000      NITEP  RAPOR  RENSA  RAPOR  SOLBA  RAPOR           
+LFPO   A   195 800  000      PO     RAPOR                                       
+LFPO   A   135 195  000      RENSA  RAPOR  SOLBA  RAPOR  PO     RAPOR           
+LFPO   A   000 135  000      SUIPE  MMD    REM    MMD    SOLBA  MMD             
+LFPO   A   000 135  000      PO     MMD                                         
+LFPO   A   135 800  000      SOTUS  MOPIL  SOLBA  MOPIL  PO     MOPIL           
+LFPO   A   000      000      AVLON  PIBAT  OKRIX  PIBAT  MOLEK  PIBAT           
+LFPO   A   000      000      PO     PIBAT                                       
+LFPO   A   000      000      MOLEK  OKRIX  PO     OKRIX                         
+LFPO   D   000      000      KOKOS  LPO    KOKOS  LGL    KOKOS  LGLN            
+LFPO   D   000      000      KOKOS  GALBO  KOKOS  JSJU                          
+LFPT   A   055 195  000      PT     CEN                                         
+LFPT   A   000     -355      PTNWR  DPE    PT     DPE                           
+LFPT   A   000     +355      PTNWH  DPE    PT     DPE                           
+LFPT   A   000      000      KOROM  SOKMU  MERUE  SOKMU  PT     SOKMU           
+LFPT   A   135 800  000      MMD1   MTZ    RENSA  MTZ    SOLBA  MTZ             
+LFPT   A   135 800  000      VELER  MTZ    PT     MTZ                           
+LFPT   A   055 800  000      PT     LGL                                         
+LFPT   A   195 800  000      PT     DVL                                         
+LFPT   D   000      000      KOKOS  LPT    KOKOS  LGL    KOKOS  LGLN            
+LFPT   D   000      000      KOKOS  GALBO  KOKOS  JSJU                          
+LFPV   A   000      000      OKRIX  AVLON  MOLEK  AVLON  PV     AVLON           
+LFPV   A   000 135  000      SUIPE  MMD    REM    MMD    SOLBA  MMD             
+LFPV   A   000 135  000      PV     MMD                                         
+LFPV   A   000      000      MOLEK  OKRIX  PV     OKRIX                         
+LFPV   A   055 195  000      VAKSI  REN    TABIL  REN    NAMAR  REN             
+LFPV   A   055 195  000      SABLE  REN    TUNAX  REN    LUMAN  REN             
+LFPV   A   055 195  000      KOVAK  REN    CAD    REN    ODRSK  REN             
+LFPV   A   055 195  000      ODRAN  REN    PV     REN                           
+LFPV   A   195 800  000      NITEP  RAPOR  RENSA  RAPOR  SOLBA  RAPOR           
+LFPV   A   195 800  000      PV     RAPOR                                       
+LFPV   A   135 195  000      RENSA  RAPOR  SOLBA  RAPOR  PV     RAPOR           
+LFPV   A   055 195  000      OMARI  POI    AMB    POI    CAD    POI             
+LFPV   A   055 195  000      ODRSK  POI    ODRAN  POI    PV     POI             
+LFPV   A   135 800  000      SOTUS  MOPIL  SOLBA  MOPIL  PV     MOPIL           
+LFPV   A   000 195  000      GITAN  MATIX  SOLBA  MATIX  PV     MATIX           
+LFPV   A   055 195  000      SOPIL  BALAN  AMB    BALAN  CAD    BALAN           
+LFPV   A   055 195  000      ODRSK  BALAN  ODRAN  BALAN  PV     BALAN           
+LFPV   A   195 800  000      AMB    BEVOL  CAD    BEVOL  ODRSK  BEVOL           
+LFPV   A   195 800  000      ODRAN  BEVOL  PV     BEVOL                         
+LFPV   A   055 800  000      BOBSA  LGL    BENAR  LGL    CAD    LGL             
+LFPV   A   055 800  000      ODRSK  LGL    ODRAN  LGL    PV     LGL             
+LFPV   A   055 195  000      ROLEN  FERTE  BOBSA  FERTE  BENAR  FERTE           
+LFPV   A   055 195  000      CAD    FERTE  ODRSK  FERTE  ODRAN  FERTE           
+LFPV   A   055 195  000      PV     FERTE                                       
+LFPV   D   000      000      KOKOS  LPV    KOKOS  LGL    KOKOS  LGLN            
+LFPV   D   000      000      KOKOS  GALBO  KOKOS  JSJU                          
+LFQB   A   000 195  000      ERTIP/ KASON  TRO    KASON                         
+LFQB   A   000 195  000      RLP1   RLP    ERTIP  RLP    TRO    RLP             
+LFQG   A   005 195  000      LARON  GUERE  RISUN  GUERE  KUKO1  GUERE           
+LFQG   A   005 195  000      LEMIN  GUERE  AV     GUERE                         
+LFQG   A   195 800  000      LARON  GUERE  RISUN  GUERE  LEMIN  GUERE           
+LFQG   A   195 800  000      AV     GUERE                                       
+LFQI   A   195 800  000      CLM    BRY    UTELA  BRY    CRL/   BRY             
+LFQI   A   195 800  000      KOPOR  BRY    MTD    BRY    NURMO  BRY             
+LFQI   A   195 800  000      CMB    BRY    LFQI   BRY                           
+LFQI   D   000      000      CMB    LFQI                                        
+LFQM   A   000 800  000      BSV    LUL                                         
+LFQQ   A   195 800  000      CLM    BRY    UTELA  BRY    CRL/   BRY             
+LFQQ   A   195 800  000      KOPOR  BRY    NURMO  BRY    CMB    BRY             
+LFQQ   A   195 800  000      LEQ    BRY                                         
+LFQW   A   000 145  000      BABM   RLP    LUL    RLP                           
+LFQW   D   000 145  000      RLP    LUL    RLP    BABM                          
+LFRB   A   000 800  000      SOPEX  ANLEV  BODIL  ANLEV  GU     ANLEV           
+LFRB   A   000 800  000      RIMON  NTS    KORER  NTS    LENSU  NTS             
+LFRB   A   000 800  000      ARE    NTS    BODIL  NTS    GU     NTS             
+LFRC   D   195 800  000      GARMI  LFRC   GARMI  AKIKI                         
+LFRC   D   195 800  000      KOTEM  LFRC   KOTEM  DIKRO/                        
+LFRD   A   000 800  000      JSY    DOMOK  MINQI  DOMOK  DIN    DOMOK           
+LFRD   A   000 800  000      DR     DOMOK                                       
+LFRD   A   000 800  000      LABUL  REN    DR     REN                           
+LFRD   D   195 800  000      GARMI  LFRD   GARMI  KOKOS  GARMI  AKIKI           
+LFRD   D   195 800  000      KOTEM  LFRD   KOTEM  KOKOS  KOTEM  DIKRO           
+LFRE   D   005 800  000      ANG    LFRE   ANG    MT     ANG    DAMLO           
+LFRG   A   000      000      LFRG   CEN                                         
+LFRG   A   195 800  000      CRL/   GIMER  PON    GIMER  EVX    GIMER           
+LFRG   A   195 800  000      BERNO  GIMER  DVL    GIMER  LFRG   GIMER           
+LFRG   A   195 800  000      KOVAK  VANAD  BENAR  VANAD  SORAP  VANAD           
+LFRG   A   195 800  000      LGL    VANAD  LISEU  VANAD  DVL    VANAD           
+LFRG   A   195 800  000      LFRG   VANAD                                       
+LFRG   A   055 195  000      KOVAK  VANAD  BENAR  VANAD  BOBSA  VANAD           
+LFRG   A   055 195  000      LGL    VANAD  LISEU  VANAD  DVL    VANAD           
+LFRG   A   055 195  000      LFRG   VANAD                                       
+LFRG   A   195 800  000      BRY    TRO    AMODO  TRO    RESMI  TRO             
+LFRG   A   195 800  000      TABOV  TRO    PIGOP  TRO    DITAL  TRO             
+LFRG   A   195 800  000      LGL    TRO    LISEU  TRO    DVL    TRO             
+LFRG   A   195 800  000      LFRG   TRO                                         
+LFRG   A   195 800  000      AMODO  OKRIX  RESMI  OKRIX  TABOV  OKRIX           
+LFRG   A   195 800  000      PIGOP  OKRIX  DITAL  OKRIX  LGL    OKRIX           
+LFRG   A   195 800  000      LISEU  OKRIX  DVL    OKRIX  LFRG   OKRIX           
+LFRG   D   195 800  000      RESMI  LFRG   RESMI  DVL    RESMI  LGL             
+LFRG   D   195 800  000      RESMI  DITAL  RESMI  PIGOP  RESMI  TABOV           
+LFRG   D   195 800  000      TSU    LFRG   TSU    DVL    TSU    LGL             
+LFRG   D   195 800  000      TSU    DITAL  TSU    PIGOP  TSU    TABOV           
+LFRH   A   000      000      ERBIN  TERPO  BAGAD  TERPO  LOR1   TERPO           
+LFRH   A   000      000      LOR    TERPO                                       
+LFRI   A   000 800  000      LGLS   LGL    ROLEN  LGL    DIDAK  LGL             
+LFRI   A   000 800  000      ARDOD  LGL    VALAX  LGL    NTS    LGL             
+LFRI   A   000 800  000      YN     LGL                                         
+LFRJ   A   000 800  000      MLX    ANLEV  LDV    ANLEV                         
+LFRK   A   195 800  000      CRL/   GIMER  PON    GIMER  EVX    GIMER           
+LFRK   A   195 800  000      BERNO  GIMER  LISEU  GIMER  CNE    GIMER           
+LFRK   A   005 800  000      CNE    LGL                                         
+LFRK   A   195 800  000      BRY    TRO    AMODO  TRO    RESMI  TRO             
+LFRK   A   195 800  000      TABOV  TRO    PIGOP  TRO    DITAL  TRO             
+LFRK   A   195 800  000      LGL    TRO    CNE    TRO                           
+LFRK   A   195 800  000      AMODO  OKRIX  RESMI  OKRIX  TABOV  OKRIX           
+LFRK   A   195 800  000      PIGOP  OKRIX  DITAL  OKRIX  LGL    OKRIX           
+LFRK   A   195 800  000      CNE    OKRIX                                       
+LFRK   D   195 800  000      RESMI  LFRK   RESMI  LGL    RESMI  DITAL           
+LFRK   D   195 800  000      RESMI  PIGOP  RESMI  TABOV                         
+LFRK   D   195 800  000      TSU    LFRK   TSU    LGL    TSU    DITAL           
+LFRK   D   195 800  000      TSU    PIGOP  TSU    TABOV                         
+LFRM   A   005 800  000      KOVAK  AMB    LUMAN  AMB    LM     AMB             
+LFRM   A   005 800  000      RONAX  LGL    LM     LGL                           
+LFRM   A   005 800  000      LUMAN  KOVAK  LM     KOVAK                         
+LFRM   D   005 800  000      AMB    LFRM   AMB    LUMAN  AMB    KOVAK           
+LFRM   D   005 800  000      EVX    LFRM   EVX    RONAX  EVX    SORAP           
+LFRM   D   005 800  000      EVX    DITAL                                       
+LFRM   D   005 800  000      LGL    LFRM   LGL    RONAX                         
+LFRM   D   005 800  000      RESMI  LFRM   RESMI  RONAX  RESMI  CHW             
+LFRM   D   005 800  000      RESMI  VADOM  RESMI  TABOV                         
+LFRM   D   005 800  000      TSU    LFRM   TSU    RONAX  TSU    CHW             
+LFRN   A   000      000      RISUD  BALNI  RS     BALNI                         
+LFRN   A   000      000      GILRA  CEN    SAMPO  CEN    RS     CEN             
+LFRN   A   000      000      SAMPO  PEPAL  RS     PEPAL                         
+LFRN   A   000      000      BALNI  NTS    RISUD  NTS    RS     NTS             
+LFRN   D   000      000      CEN    LFRN   CEN    DR29   CEN    BETOG           
+LFRN   D   000      000      CEN    VIREX                                       
+LFRN   D   000 800  000      GODAN  LFRN   GODAN  LAGAB                         
+LFRN   D   005 195  000      SABLE  LFRN   SABLE  DR29   SABLE  VAKSI           
+LFRN   D   005 195  000      SABLE  TABIL  SABLE  NAMAR                         
+LFRN   D   000 800  000      OBATO  LFRN   OBATO  DR29   OBATO  VAKSI           
+LFRN   D   000 800  000      OBATO  TABIL  OBATO  NAMAR                         
+LFRS   A   000 800  000      AKETI  DIN    LAGAB  DIN    GODAN  DIN             
+LFRS   A   000 800  000      NITEM  DIN    OSOL   DIN                           
+LFRS   A   005 800  000      IDYEU  TEPRA  NORMI  TEPRA  OSOL   TEPRA           
+LFRS   A   000 800  000      OSOL   NEDAN                                       
+LFRS   A   000 800  000      OSOL   NITEM                                       
+LFRS   A   000 800  000      OSOL   NORMI                                       
+LFRS   A   005 195  000      ARDOD  SABLE  VALAX  SABLE  NEDAN  SABLE           
+LFRS   A   005 195  000      OSOL   SABLE                                       
+LFRS   A   000 800  000      ERIGA  NOVAN  NORMI  NOVAN  OSOL   NOVAN           
+LFRS   A   000 800  000      OSOL   LAROK                                       
+LFRS   A   000 800  000      BOLGU  FOUCO  ADILU/ FOUCO  MANAK  FOUCO           
+LFRS   A   000 800  000      TIRAV  FOUCO  RRNT   FOUCO  LAROK  FOUCO           
+LFRS   A   000 800  000      OSOL   FOUCO                                       
+LFRS   D   000 800  000      ANG    LFRS                                        
+LFRS   D   000 800  000      TUPAR  LFRS   TUPAR  BOBRI  TUPAR  LUGEN           
+LFRS   D   000 800  000      REN    LFRS   REN    BALNI                         
+LFRS   D   195 800  000      BEBIX  LFRS   BEBIX  BOBRI  BEBIX  LUGEN           
+LFRS   D   195 800  000      BEBIX  TUPAR  BEBIX  DIDRU                         
+LFRU   A   000 800  000      MLX    ANLEV                                       
+LFRZ   A   000 800  000      RRNT   TIRAV  LAROK  TIRAV  MT     TIRAV           
+LFRZ   D   000 800  000      ANG    LFRZ   ANG    DAMLO                         
+LFRZ   D   000 800  000      NTS    LFRZ                                        
+LFRZ   D   000 800  000      REN    LFRZ   REN    BALNI                         
+LFSB   A   200 800  000      MELKO  GELTA  MANAG  GELTA  MOTUK  GELTA           
+LFSB   A   200 800  000      LUL    GELTA  ARPUS  GELTA  ALTIK  GELTA           
+LFSB   A   200 800  000      LFSB   GELTA                                       
+LFSB   A   115 195  000      POGOL  GTQ    MIRGU  GTQ    TIRSO  GTQ             
+LFSB   A   115 195  000      ARPUS  GTQ    ALTIK  GTQ    LFSB   GTQ             
+LFSB   A   000 115  000      STR    GTQ    INTEM  GTQ    LFSB   GTQ             
+LFSB   A   000 800  000      BAL1R  KONOL  LUMEL  KONOL  REFEL  KONOL           
+LFSB   A   000 800  000      LFSB   KONOL                                       
+LFSB   A   000 800  000      ARPUS  LUL    ALTIK  LUL    LFSB   LUL             
+LFSB   A   200 800  000      LASAT  POGOL  MIRGU  POGOL  TIRSO  POGOL           
+LFSB   A   200 800  000      ARPUS  POGOL  ALTIK  POGOL  LFSB   POGOL           
+LFSB   A   000 145  000      BABM   RLP    LUL    RLP    ARPUS  RLP             
+LFSB   A   000 145  000      ALTIK  RLP    LFSB   RLP                           
+LFSB   A   000 115  000      INTEM  STR    LFSB   STR                           
+LFSB   A   000 800  000      SEDOR  SUL    HOMBO  SUL    ALTIK  SUL             
+LFSB   A   000 800  000      LFSB   SUL                                         
+LFSB   D   000 800  000      AKITO  LSB                                         
+LFSB   D   200 800  000      DJL    LSB    DJL    LUMEL  DJL    MOROK           
+LFSB   D   200 800  000      DJL    MEDIM  DJL    PENDU  DJL    DERAK           
+LFSB   D   200 800  000      MOROK  LSB    MOROK  LUMEL                         
+LFSB   D   000 145  000      RLP    LSB    RLP    LUMEL  RLP    TORPA           
+LFSB   D   000 145  000      RLP    LUL    RLP    BABM                          
+LFSB   D   200 800  000      RLP    LSB    RLP    LUMEL  RLP    TORPA           
+LFSB   D   200 800  000      RLP    SOBLI  RLP    ROBIR  RLP    REKLA           
+LFSB   D   000 800  000      OLBEN  LSB    OLBEN  BASUD                         
+LFSB   D   000 800  000      GILIR  LSB                                         
+LFSD   A   195 800  000      RUSIT  ETREK  BULOL  ETREK  BOBSI  ETREK           
+LFSD   A   195 800  000      ALURA  ETREK  DJL    ETREK                         
+LFSF   D   000 195  000      DIK    LSF    DIK    MTZ    DIK    LIMGO           
+LFSM   A   000 145  000      BABM   RLP    LUL    RLP    HR     RLP             
+LFSM   A   000 145  000      LFSM   RLP                                         
+LFSM   D   000 145  000      RLP    LFSM   RLP    HR     RLP    LUL             
+LFSM   D   000 145  000      RLP    BABM                                        
+LFSR   A   000      000      SUIPE  MMD    REM    MMD                           
+LFST   A   005 195  000      DJL    ALURA  KASON  ALURA  RLP    ALURA           
+LFST   A   005 195  000      EPL    ALURA  OBOR   ALURA  STR    ALURA           
+LFST   A   000 800  000      LUPEN  DENEL  STR    DENEL                         
+LFST   A   005 800  000      AKELU  DIK    GTQ    DIK    XGTQ   DIK             
+LFST   A   005 800  000      PHAL   DIK    STR    DIK                           
+LFST   A   005 800  000      OBOR   EPL    STR    EPL                           
+LFST   A   200 800  000      PENDU  GILIR  LUL    GILIR  LULX   GILIR           
+LFST   A   200 800  000      LUL1   GILIR  OBOR   GILIR  STR    GILIR           
+LFST   A   000 800  000      XGTQ   GTQ    PHAL   GTQ    STR    GTQ             
+LFST   A   005 800  000      LULX   LUL    LUL1   LUL    EPIK   LUL             
+LFST   A   005 800  000      OBOR   LUL    STR    LUL                           
+LFST   A   195 800  000      LANVI  LUVAL  EPL    LUVAL  OBOR   LUVAL           
+LFST   A   195 800  000      STR    LUVAL                                       
+LFSX   A   000 145  000      BABM   RLP    LUL    RLP                           
+LFSX   D   000 145  000      RLP    LUL    RLP    BABM                          
+LFTH   A   005 800  000      CUERS  BIRGO  MEDUS  BIRGO  TLN    BIRGO           
+LFTH   A   005 800  000      MEDUS  CUERS  TLN    CUERS                         
+LFTH   A   000 800  000      JULEE  MTG    PALME  MTG                           
+LFTH   A   005 800  000      TLN    RUBIT                                       
+LFTH   A   000 800  000      VARES  FJR    BADET  FJR    RHONE  FJR             
+LFTH   A   000 800  000      MTG    FJR    JULEE  FJR    PALME  FJR             
+LFTH   D   005 195  000      FJR    LFTH   FJR    JULEE  FJR    MTG             
+LFTH   D   005 195  000      FJR    RHONE  FJR    BADET  FJR    VARES           
+LFTH   D   005 800  000      STP    LFTH                                        
+LFTW   A   195 800  000      CFA    ADEKA  MALEB  ADEKA  MOKDI  ADEKA           
+LFTW   A   195 800  000      MEN    ADEKA  LFTW   ADEKA                         
+LFTW   A   005 800  000      LFTW   MEN                                         
+LFTW   A   000      000      RHONE  MTG    LFTW   MTG                           
+LFTZ   A   000 800  000      GILON  AMFOU  LUC    AMFOU  NEKIP  AMFOU           
+LFTZ   A   000 800  000      STP    AMFOU                                       
+LFTZ   A   005 800  000      AMGEL  BORDI  MIKRU  BORDI  PIRAM  BORDI           
+LFTZ   A   005 800  000      KOKIN  BORDI  INLOV  BORDI  GONIV  BORDI           
+LFTZ   A   005 800  000      STP    BORDI                                       
+LFTZ   A   005 195  000      LUC    GILON  NEKIP  GILON  STP    GILON           
+LFTZ   A   005 800  000      KOKIN  KERIT  INLOV  KERIT  GONIV  KERIT           
+LFTZ   A   005 800  000      STP    KERIT                                       
+LFTZ   A   005 195  000      STP    LFMN                                        
+LFTZ   A   005 800  000      KOKIN  LONSU  INLOV  LONSU  GONIV  LONSU           
+LFTZ   A   005 800  000      STP    LONSU                                       
+LFTZ   A   005 800  000      INLOV  MERLU  GONIV  MERLU  STP    MERLU           
+LFTZ   A   195 800  000      GAPDO  VEVAR  AMGEL  VEVAR  MIKRU  VEVAR           
+LFTZ   A   195 800  000      PIRAM  VEVAR  KOKIN  VEVAR  INLOV  VEVAR           
+LFTZ   A   195 800  000      GONIV  VEVAR  STP    VEVAR                         
+LFTZ   A   005 195  000      STP    LFMD                                        
+LFTZ   A   005 115  000      LUC    BIRGO  NEKIP  BIRGO  STP    BIRGO           
+LFTZ   D   195 800  000      BODRU  LFTZ   BODRU  STP    BODRU  LERMA           
+LFTZ   D   195 800  000      BODRU  AMIRO                                       
+LFTZ   D   195 800  000      OKTET  LFTZ   OKTET  STP    OKTET  LERMA           
+LFTZ   D   195 800  000      OKTET  AMIRO                                       
+LFTZ   D   000 800  000      SODRI  LFTZ   SODRI  STP    SODRI  LERMA           
+LFTZ   D   000 800  000      SODRI  OMARD  SODRI  MERLU  SODRI  MERL            
+LFTZ   D   000 800  000      USANO  LFTZ   USANO  STP    USANO  LERMA           
+LFTZ   D   000 800  000      USANO  PIGOS                                       
+LFTZ   D   005 800  000      VAREK  LFTZ   VAREK  STP    VAREK  LERMA           
+LFTZ   D   005 800  000      VAREK  OMARD                                       
+LFTZ   D   195 800  000      TURIL  LFTZ   TURIL  STP    TURIL  LERMA           
+LFTZ   D   195 800  000      TURIL  RUBIT                                       
+LFTZ   D   135 195  000      PERUS  LFTZ   PERUS  STP    PERUS  LERMA           
+LFTZ   D   135 195  000      PERUS  AMIRO                                       
+LFTZ   D   000 800  000      LONSU  LFTZ   LONSU  LERMA  LONSU  OMARD           
+LFTZ   D   000 800  000      LONSU  MERLU  LONSU  MERL                          
+LFTZ   D   000 195  000      LANKO  LFTZ   LANKO  STP    LANKO  LERMA           
+LFTZ   D   000 195  000      LANKO  RUBIT                                       
+LFTZ   D   195 800  000      IRMAR  LFTZ   IRMAR  STP    IRMAR  LERMA           
+LFTZ   D   195 800  000      IRMAR  BARSO  IRMAR  IRMA                          
+LIEA   A   005 800  000      ALG    PELOS                                       
+LIED   A   000 800  000      CORSI  AJO    MINKA  AJO    RAMEN  AJO             
+LIEE   A   000 800  000      CORSI  AJO    MINKA  AJO    RAMEN  AJO             
+LIEE   D   005 195  000      AJO    ALG    AJO    POULP                         
+LIEE   D   195 800  000      AJO    RAMEN  AJO    BOLOT  AJO    MINKA           
+LIEE   D   195 800  000      AJO    CORSI                                       
+LIEO   A   005 800  000      MINKA  CORSI                                       
+LIM9   A   195 800  000      SRN    TRA                                         
+LIM9   D   000 145  000      LIGUR  GEN                                         
+LIM9   D   195 800  000      TRA    SRN                                         
+LIMC   A   000      000      GEN    ABN                                         
+LIMC   A   195 800  000      GEN    UNITA                                       
+LIMC   D   195 800  000      GEN    VOG                                         
+LIME   A   195 800  000      GEN    UNITA                                       
+LIMF   A   000      000      GEN    ABN                                         
+LIMF   D   000      000      ABN    VOG                                         
+LIMF   D   195 800  000      GIPNO  TOP    GIPNO  KINES  GIPNO  BALSI           
+LIMG   A   000      000      GEN    ABN                                         
+LIMG   D   000      000      ABN    GEN                                         
+LIMJ   A   000 800  000      USANO  PIGOS  BASIP  PIGOS  ABN    PIGOS           
+LIMJ   A   000 800  000      GEN    PIGOS                                       
+LIMJ   D   000 800  000      ABN    GEN                                         
+LIMJ   D   000 800  000      AJO    GEN    AJO    UNITA  AJO    TORTU           
+LIMJ   D   000 800  000      AJO    AKUTI  AJO    SUDAS                         
+LIML   A   000      000      GEN    ABN                                         
+LIML   A   195 800  000      GEN    UNITA                                       
+LIP9   D   000 145  000      LIGUR  GEN                                         
+LIRA   A   000      000      TRA    NATOR                                       
+LP99   A   000 800  000      SEPAL  LAPEX  47N9W  LAPEX                         
+LP99   A   195 800  000      CHELY  MUREN                                       
+LP99   A   000 800  000      ETIKI  REGHI  48N9W  REGHI                         
+LP99   A   000 800  000      SIVIR  RIVAK  46N9W  RIVAK                         
+LP99   D   000 800  000      LAPEX  47N9W  LAPEX  SEPAL                         
+LP99   D   000 800  000      REGHI  48N9W  REGHI  ETIKI                         
+LP99   D   000 800  000      RIVAK  46N9W  RIVAK  SIVIR                         
+LS99   A   000 195  000      WIL    SBZG2                                       
+LS99   A   000 195  000      FRI    SBZG3                                       
+LSGC   A   005 195  000      LASUN  HOC                                         
+LSGC   A   005 800  000      HR     LUL    HOC    LUL    WIL    LUL             
+LSGG   A   195 800  000      MOROK  ARPUS  AKITO  ARPUS  LIRKO  ARPUS           
+LSGG   A   030 195  000      LIRKO  DJL                                         
+LSGG   A   000 195  000      LTP    LSE    BELUS  LSE    CBY    LSE             
+LSGG   A   000 195  000      PAS1   LSE                                         
+LSGG   A   195 800  000      KINES  IRMAR  ROCCA  IRMAR                         
+LSGG   A   000      000      BELUS  LTP    CBY    LTP    PAS1   LTP             
+LSGG   A   200 800  000      AKITO  MOROK  LIRKO  MOROK                         
+LSGG   A   195 800  000      PIBAT  PIXIS  LUSAR  PIXIS  SAUNI  PIXIS           
+LSGG   A   195 800  000      RUBLO  RUSIT  BELUS  RUSIT  CBY    RUSIT           
+LSGG   A   195 800  000      PAS1   RUSIT                                       
+LSGG   A   195 800  000      PEKIM  RESMI  PILUL  RESMI  PIXIS  RESMI           
+LSGG   A   195 800  000      PIBAT  RESMI  LUSAR  RESMI  SAUNI  RESMI           
+LSGG   A   200 800  000      LUSAR  PIBAT  SAUNI  PIBAT                         
+LSGG   D   030 190  000      DJL    SPR    DJL    LISMO                         
+LSGG   D   000      000      HOC    SPR    HOC    WIL/                          
+LSGG   D   195 800  000      PENDU  PAS    PENDU  SIROD  PENDU  ARBOS           
+LSGG   D   195 800  000      KOTIT  LSGG   KOTIT  BALSI  KOTIT  01UY            
+LSGG   D   195 800  000      KURIR  LSGG   KURIR  BALSI  KURIR  02UY            
+LSGG   D   195 800  000      KURIR  ETIDO                                       
+LSGL   A   000 800  000      BELUS  LTP    CBY    LTP    PAS1   LTP             
+LSGL   A   000 800  000      RUBLO  RUSIT  BELUS  RUSIT  CBY    RUSIT           
+LSGL   A   000 800  000      PAS1   RUSIT                                       
+LSGS   A   195 800  000      MOROK  ARPUS  AKITO  ARPUS  LIRKO  ARPUS           
+LSGS   A   000 195  000      GIPNO  LTP    NAVLA  LTP    SOPLO  LTP             
+LSGS   A   000 195  000      OMASI  LTP    MOLUS  LTP                           
+LSGS   A   200 800  000      LUSAR  PIBAT  SAUNI  PIBAT                         
+LSGS   A   200 800  000      AKITO  MOROK  LIRKO  MOROK                         
+LSGS   A   195 800  000      GIPNO  LTP    SOPLO  LTP    OMASI  LTP             
+LSGS   A   195 800  000      MOLUS  LTP                                         
+LSGS   D   000 800  000      MEBAK  SPR    MEBAK  MILPA  MEBAK  NINTU           
+LSGS   D   000 800  000      MEBAK  LSE/                                        
+LSMA   A   000 800  000      HR     ARPUS  LUMEL  ARPUS  WIL    ARPUS           
+LSMA   A   000 800  000      HR     LUL    LUMEL  LUL    WIL    LUL             
+LSMA   D   195 800  000      LUL    WIL    LUL    LUMEL  LUL    HR/             
+LSME   A   000 800  000      HR     ARPUS  LUMEL  ARPUS  WIL    ARPUS           
+LSME   A   000 800  000      HR     LUL    LUMEL  LUL    WIL    LUL             
+LSMP   A   195 800  000      MOROK  ARPUS  AKITO  ARPUS  LIRKO  ARPUS           
+LSMP   A   200 800  000      LUXAN  ETREK  LTP    ETREK  GIPNO  ETREK           
+LSMP   A   200 800  000      SOPLO  ETREK  OMASI  ETREK  MOLUS  ETREK           
+LSMP   A   195 800  000      AKITO  MOROK  LIRKO  MOROK                         
+LSMP   A   195 800  000      PIBAT  PIXIS  LUSAR  PIXIS  SAUNI  PIXIS           
+LSMU   A   000 800  000      HR     ARPUS  LUMEL  ARPUS  WIL    ARPUS           
+LSMU   A   000 800  000      HR     LUL    LUMEL  LUL    WIL    LUL             
+LSMU   D   195 800  000      LUL    WIL    LUL    LUMEL  LUL    HR/             
+LSZA   A   195 800  000      HOC    LUL    ALBIX  LUL                           
+LSZB   A   000 800  000      HR     ARPUS  LUMEL  ARPUS  WIL    ARPUS           
+LSZB   A   000 800  000      HR     LUL    LUMEL  LUL    WIL    LUL             
+LSZB   A   195 800  000      PIBAT  PIXIS  LUSAR  PIXIS  SAUNI  PIXIS           
+LSZB   D   195 800  000      IXILU  WIL    IXILU  LUMEL  IXILU  HR/             
+LSZB   D   195 800  000      IXILU  LUL                                         
+LSZB   D   195 800  000      SPR    FRI                                         
+LSZB   D   195 800  000      LUL    WIL    LUL    LUMEL  LUL    HR/             
+LSZC   A   000 800  000      HR     LUL    LUMEL  LUL    WIL    LUL             
+LSZG   A   000 800  000      HR     ARPUS  LUMEL  ARPUS  WIL    ARPUS           
+LSZG   A   000 800  000      WIL    HOC    SBZG2  HOC    SBZG1  HOC             
+LSZG   A   000 800  000      SBZG3  KONOL  SBZG1  KONOL                         
+LSZG   A   000 800  000      HR     LUL    LUMEL  LUL    WIL    LUL             
+LSZG   A   000 800  000      SBZG2  ROTOS  SBZG1  ROTOS                         
+LSZG   A   000 800  000      SBZG2  WIL    SBZG1  WIL                           
+LSZG   A   000 800  000      SBZH   LSB    HOC    LSB    BASUD  LSB             
+LSZG   A   000 800  000      SBZG3  FRI    SBZG1  FRI                           
+LSZG   D   000 800  000      BIRKI  SBZG1  BIRKI  SBZG3                         
+LSZG   D   000 800  000      KONOL  SBZG1  KONOL  SBZG3                         
+LSZG   D   000 800  000      WIL    SBZG1  WIL    SBZG2                         
+LSZG   D   000 800  000      ROTOS  SBZG1  ROTOS  SBZG2                         
+LSZG   D   000 800  000      LUMEL  WIL                                         
+LSZG   D   000 800  000      HOC    WIL                                         
+LSZG   D   000 800  000      FRI    SBZG1  FRI    SBZG3                         
+LSZH   A   200 800  000      GIPOL  BLM                                         
+LSZH   A   000 800  000      HOC    LSB    GIPOL  LSB                           
+LSZH   A   030 190  000      HR     LUL    HOC    LUL    GIPOL  LUL             
+LSZH   A   200 800  000      TIRSO  PILON  BLM    PILON  GIPOL  PILON           
+LSZH   A   200 800  000      LASAT  POGOL  MIRGU  POGOL  BLM    POGOL           
+LSZH   A   200 800  000      GIPOL  POGOL                                       
+LSZH   A   195 800  000      PIBAT  PIXIS  LUSAR  PIXIS  SAUNI  PIXIS           
+LSZH   A   000 195  000      GIPOL  HOC                                         
+LSZH   A   200 800  000      MELKO  GELTA  MANAG  GELTA  PILON  GELTA           
+LSZH   A   200 800  000      TIRSO  GELTA  BLM    GELTA  GIPOL  GELTA           
+LSZH   D   200 800  000      DERAK  LASUN  DERAK  MOROK  DERAK  PENDU           
+LSZH   D   200 800  000      REKLA  LASUN  REKLA  LUMEL  REKLA  TORPA           
+LSZH   D   030 195  000      LUL    LASUN  LUL    HR                            
+LSZH   D   195 800  000      LUL    LASUN  LUL    LUMEL  LUL    TORPA           
+M999   A   265 800  000      NATS   ATREX  NATS1  ATREX  VESAN  ATREX           
+M999   A   265 800  000      RATUK  ATREX  SOVAT  ATREX                         
+M999   A   000 800  000      SEPAL  LAPEX  47N9W  LAPEX                         
+M999   A   000 800  000      SIVIR  RIVAK  46N9W  RIVAK                         
+M999   A   000 800  000      ETIKI  REGHI  48N9W  REGHI                         
+M999   A   195 800  000      CHELY  MUREN                                       
+M999   D   000 800  000      LAPEX  47N9W  LAPEX  SEPAL                         
+M999   D   000      000      PHILI  RATKA                                       
+M999   D   000 800  000      RIVAK  46N9W  RIVAK  SIVIR                         
+M999   D   000 800  000      REGHI  48N9W  REGHI  ETIKI                         
+O999   A   195 800  000      LUVAL  BUBLI  LANVI  BUBLI  EPL    BUBLI           
+O999   A   195 800  000      LASAT  BUBLI  BEGAR  BUBLI  TRA    BUBLI           
+O999   A   195 800  000      ASIE3  BUBLI                                       
+O999   A   195 800  000      LANVI  RD01R  EPL    RD01R  LASAT  RD01R           
+O999   A   195 800  000      BEGAR  RD01R  TRA    RD01R  ASIE3  RD01R           
+P999   A   265 800  000      NATS   ATREX  NATS1  ATREX  VESAN  ATREX           
+P999   A   265 800  000      RATUK  ATREX  SOVAT  ATREX                         
+P999   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+P999   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+P999   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+P999   A   265 800  000      SOVAT  DIDOR                                       
+P999   A   000 800  000      ETIKI  REGHI  48N9W  REGHI                         
+P999   A   000 800  000      SIVIR  RIVAK  46N9W  RIVAK                         
+P999   A   195 800  000      ASIE5  LIMGO                                       
+P999   A   195 800  000      ASIE4  DIK                                         
+P999   A   000 800  000      SEPAL  LAPEX  47N9W  LAPEX                         
+P999   D   000 800  000      LAPEX  47N9W  LAPEX  SEPAL                         
+P999   D   000 800  000      REGHI  48N9W  REGHI  ETIKI                         
+P999   D   000 800  000      RIVAK  46N9W  RIVAK  SIVIR                         
+R999   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+R999   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+R999   A   265 800  000      NURMO  DIDOR  VESAN  DIDOR  RATUK  DIDOR           
+R999   A   265 800  000      SOVAT  DIDOR                                       
+R999   A   195 800  000      ASIE4  DIK                                         
+R999   A   000 800  000      SEPAL  LAPEX  47N9W  LAPEX                         
+R999   A   000 800  000      SIVIR  RIVAK  46N9W  RIVAK                         
+R999   A   000 800  000      ETIKI  REGHI  48N9W  REGHI                         
+R999   A   000 800  000      ASIE1  NURMO  ASIE2  NURMO  CMB    NURMO           
+R999   A   000 800  000      CMB2   NURMO  VEKIN  NURMO  ADUTO  NURMO           
+R999   A   000 800  000      FERDI  NURMO  SPY    NURMO                         
+R999   A   195 800  000      ASIE5  LIMGO                                       
+R999   D   000 800  000      LAPEX  47N9W  LAPEX  SEPAL                         
+R999   D   000 800  000      RIVAK  46N9W  RIVAK  SIVIR                         
+R999   D   000 800  000      REGHI  48N9W  REGHI  ETIKI                         
+S999   A   000 800  000      SEPAL  LAPEX  47N9W  LAPEX                         
+S999   A   000 800  000      ETIKI  REGHI  48N9W  REGHI                         
+S999   A   195 800  000      CHELY  MUREN                                       
+S999   A   000 800  000      SIVIR  RIVAK  46N9W  RIVAK                         
+S999   D   000 800  000      LAPEX  47N9W  LAPEX  SEPAL                         
+S999   D   000 800  000      REGHI  48N9W  REGHI  ETIKI                         
+S999   D   000 800  000      RIVAK  46N9W  RIVAK  SIVIR                         
+T999   A   265 800  000      UTELA  CLM    KOPOR  CLM    NITAR  CLM             
+T999   A   265 800  000      VESAN  CLM    RATUK  CLM    SOVAT  CLM             
+T999   A   000 800  000      SEPAL  LAPEX  47N9W  LAPEX                         
+T999   A   000 800  000      SIVIR  RIVAK  46N9W  RIVAK                         
+T999   A   000 800  000      ETIKI  REGHI  48N9W  REGHI                         
+T999   A   195 800  000      CHELY  MUREN                                       
+T999   D   000 800  000      LAPEX  47N9W  LAPEX  SEPAL                         
+T999   D   000      000      PHILI  RATKA                                       
+T999   D   000 800  000      RIVAK  46N9W  RIVAK  SIVIR                         
+T999   D   000 800  000      REGHI  48N9W  REGHI  ETIKI                         
+U999   D   195 800  000      MILPA  NEMOS                                       
+V999   A   195 800  000      LUVAL  BUBLI  LANVI  BUBLI  EPL    BUBLI           
+V999   A   195 800  000      LASAT  BUBLI  BEGAR  BUBLI  TRA    BUBLI           
+V999   A   195 800  000      ASIE3  BUBLI                                       
+V999   A   195 800  000      ASIE4  DIK                                         
+V999   A   195 800  000      ASIE5  LIMGO                                       
+V999   A   000 800  000      ASIE1  NURMO  ASIE2  NURMO  CMB    NURMO           
+V999   A   000 800  000      CMB2   NURMO  VEKIN  NURMO  ADUTO  NURMO           
+V999   A   000 800  000      FERDI  NURMO  SPY    NURMO                         
+V999   A   195 800  000      LANVI  RD01R  EPL    RD01R  LASAT  RD01R           
+V999   A   195 800  000      BEGAR  RD01R  TRA    RD01R  ASIE3  RD01R           
+W999   A   195 800  000      LUVAL  BUBLI  LANVI  BUBLI  EPL    BUBLI           
+W999   A   195 800  000      LASAT  BUBLI  BEGAR  BUBLI  TRA    BUBLI           
+W999   A   195 800  000      ASIE3  BUBLI                                       
+W999   A   195 800  000      ASIE4  DIK                                         
+W999   A   195 800  000      ASIE5  LIMGO                                       
+W999   A   195 800  000      LANVI  RD01R  EPL    RD01R  LASAT  RD01R           
+W999   A   195 800  000      BEGAR  RD01R  TRA    RD01R  ASIE3  RD01R           
+Z999   A   195 800  000      LUVAL  BUBLI  LANVI  BUBLI  EPL    BUBLI           
+Z999   A   195 800  000      LASAT  BUBLI  BEGAR  BUBLI  TRA    BUBLI           
+Z999   A   195 800  000      ASIE3  BUBLI                                       
+Z999   A   195 800  000      ASIE4  DIK                                         
+Z999   A   195 800  000      ASIE5  LIMGO                                       
+Z999   A   000 800  000      ASIE1  NURMO  ASIE2  NURMO  CMB    NURMO           
+Z999   A   000 800  000      CMB2   NURMO  VEKIN  NURMO  ADUTO  NURMO           
+Z999   A   000 800  000      FERDI  NURMO  SPY    NURMO                         
+Z999   A   195 800  000      LANVI  RD01R  EPL    RD01R  LASAT  RD01R           
+Z999   A   195 800  000      BEGAR  RD01R  TRA    RD01R  ASIE3  RD01R           
+ZB99   A   195 800  000      EPL    LANVI  LASAT  LANVI  BEGAR  LANVI           
+ZB99   A   195 800  000      TRA    LANVI  ASIE3  LANVI                         
+ZB99   A   000 800  000      ASIE1  NURMO  ASIE2  NURMO  CMB    NURMO           
+ZB99   A   000 800  000      CMB2   NURMO  VEKIN  NURMO  ADUTO  NURMO           
+ZB99   A   000 800  000      FERDI  NURMO  SPY    NURMO                         
+

@@ -1,0 +1,234 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "FOND PUITS 2")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 5)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris")
+)
+(map
+  (name "DJL")
+  (number 5)
+  (comment "")
+  (date 10 05 2004)
+  (heure 11 35 59)
+  (ref_point
+    (name "DIJ")
+    (comment "")
+    (value
+      (nautical_mile 64 13326 64 1473)
+    )
+  )
+  (ref_point
+    (name "DIJ2")
+    (comment "")
+    (value
+      (nautical_mile 64 13353 64 1674)
+    )
+  )
+  (ref_point
+    (name "DIJ3")
+    (comment "")
+    (value
+      (nautical_mile 64 13451 64 1840)
+    )
+  )
+  (ref_point
+    (name "DIJ4")
+    (comment "")
+    (value
+      (nautical_mile 64 13628 64 1969)
+    )
+  )
+  (ref_point
+    (name "DIJ5")
+    (comment "")
+    (value
+      (nautical_mile 64 13836 64 2011)
+    )
+  )
+  (ref_point
+    (name "DIJ6")
+    (comment "")
+    (value
+      (nautical_mile 64 14050 64 1960)
+    )
+  )
+  (ref_point
+    (name "DIJ7")
+    (comment "")
+    (value
+      (nautical_mile 64 14199 64 1854)
+    )
+  )
+  (ref_point
+    (name "DIJ8")
+    (comment "")
+    (value
+      (nautical_mile 64 14297 64 1708)
+    )
+  )
+  (ref_point
+    (name "DIJ9")
+    (comment "")
+    (value
+      (nautical_mile 64 14338 64 1537)
+    )
+  )
+  (ref_point
+    (name "DIJ10")
+    (comment "")
+    (value
+      (nautical_mile 64 14389 64 715)
+    )
+  )
+  (ref_point
+    (name "DIJ11")
+    (comment "")
+    (value
+      (nautical_mile 64 14360 64 533)
+    )
+  )
+  (ref_point
+    (name "DIJ12")
+    (comment "")
+    (value
+      (nautical_mile 64 14262 64 366)
+    )
+  )
+  (ref_point
+    (name "DIJ13")
+    (comment "")
+    (value
+      (nautical_mile 64 14132 64 260)
+    )
+  )
+  (ref_point
+    (name "DIJ14")
+    (comment "")
+    (value
+      (nautical_mile 64 13947 64 199)
+    )
+  )
+  (ref_point
+    (name "DIJ15")
+    (comment "")
+    (value
+      (nautical_mile 64 13728 64 218)
+    )
+  )
+  (ref_point
+    (name "DIJ16")
+    (comment "")
+    (value
+      (nautical_mile 64 13558 64 307)
+    )
+  )
+  (ref_point
+    (name "DIJ17")
+    (comment "")
+    (value
+      (nautical_mile 64 13431 64 467)
+    )
+  )
+  (ref_point
+    (name "DIJ18")
+    (comment "")
+    (value
+      (nautical_mile 64 13374 64 670)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 3)
+    (keyboard 2)
+    (entity
+      (name "1")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DIJ")
+        (point "DIJ2")
+        (point "DIJ3")
+        (point "DIJ4")
+        (point "DIJ5")
+        (point "DIJ6")
+        (point "DIJ7")
+        (point "DIJ8")
+        (point "DIJ9")
+        (point "DIJ10")
+        (point "DIJ11")
+        (point "DIJ12")
+        (point "DIJ13")
+        (point "DIJ14")
+        (point "DIJ15")
+        (point "DIJ16")
+        (point "DIJ17")
+        (point "DIJ18")
+      )
+      (polygone 1)
+    )
+  )
+)

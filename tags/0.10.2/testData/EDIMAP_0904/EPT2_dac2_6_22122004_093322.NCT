@@ -1,0 +1,260 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "BORD ZONE MILITAIRE SPECIALE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 37)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "DEFAUT")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 63)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "TEXTE ZONE MILITAIRE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "EPT2")
+  (number 6)
+  (comment "")
+  (date 22 12 2004)
+  (heure 09 33 22)
+  (ref_point
+    (name "FR2P1")
+    (comment "")
+    (value
+      (nautical_mile 64 10778 64 -3247)
+    )
+  )
+  (ref_point
+    (name "FR2P2")
+    (comment "")
+    (value
+      (nautical_mile 64 11091 64 -2397)
+    )
+  )
+  (ref_point
+    (name "FR2P3")
+    (comment "")
+    (value
+      (nautical_mile 64 11867 64 -1969)
+    )
+  )
+  (ref_point
+    (name "FR2P4")
+    (comment "")
+    (value
+      (nautical_mile 64 12775 64 -2301)
+    )
+  )
+  (ref_point
+    (name "FR2P5")
+    (comment "")
+    (value
+      (nautical_mile 64 13962 64 -4794)
+    )
+  )
+  (ref_point
+    (name "FR2P6")
+    (comment "")
+    (value
+      (nautical_mile 64 13701 64 -5646)
+    )
+  )
+  (ref_point
+    (name "FR2P7")
+    (comment "")
+    (value
+      (nautical_mile 64 12823 64 -6085)
+    )
+  )
+  (ref_point
+    (name "FR2P8")
+    (comment "")
+    (value
+      (nautical_mile 64 11990 64 -5748)
+    )
+  )
+  (ref_point
+    (name "FR2CT1")
+    (comment "")
+    (value
+      (nautical_mile 64 11980 64 -3182)
+    )
+  )
+  (ref_point
+    (name "FR2CT2")
+    (comment "")
+    (value
+      (nautical_mile 64 12796 64 -4867)
+    )
+  )
+  (ref_point
+    (name "FR2L1")
+    (comment "")
+    (value
+      (nautical_mile 64 11291 64 -3525)
+    )
+  )
+  (ref_point
+    (name "FR2L2")
+    (comment "")
+    (value
+      (nautical_mile 64 12655 64 -2822)
+    )
+  )
+  (ref_point
+    (name "FR2L3")
+    (comment "")
+    (value
+      (nautical_mile 64 13469 64 -4502)
+    )
+  )
+  (ref_point
+    (name "FR2L4")
+    (comment "")
+    (value
+      (nautical_mile 64 12103 64 -5196)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 2)
+    (keyboard 2)
+    (entity
+      (name "1")
+      (id_atc "BORD ZONE MILITAIRE SPECIALE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "FR2P1")
+        (point "FR2P2")
+        (point "FR2P3")
+        (point "FR2P4")
+        (point "FR2P5")
+        (point "FR2P6")
+        (point "FR2P7")
+        (point "FR2P8")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "4")
+      (id_atc "DEFAUT")
+      (shape "EllipseEntity")
+      (geometry
+        (point "FR2CT1")
+        (azimuth 100 0)
+        (distance 64 770)
+        (distance 64 770)
+        (angle 100 29807)
+        (angle 100 11646)
+      )
+      (construction
+        (type 1)
+        (point "FR2L1")
+        (point "FR2L2")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "5")
+      (id_atc "DEFAUT")
+      (shape "EllipseEntity")
+      (geometry
+        (point "FR2CT2")
+        (azimuth 100 0)
+        (distance 64 766)
+        (distance 64 766)
+        (angle 100 11539)
+        (angle 100 29847)
+      )
+      (construction
+        (type 1)
+        (point "FR2L3")
+        (point "FR2L4")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "6")
+      (id_atc "DEFAUT")
+      (shape "LineEntity")
+      (geometry
+        (point "FR2L1")
+        (point "FR2L4")
+      )
+    )
+    (entity
+      (name "7")
+      (id_atc "DEFAUT")
+      (shape "LineEntity")
+      (geometry
+        (point "FR2L2")
+        (point "FR2L3")
+      )
+    )
+    (entity
+      (name "8")
+      (id_atc "TEXTE ZONE MILITAIRE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11593 64 -3135)
+      )
+      (text_content "310/310")
+      (modif 1)
+    )
+  )
+)

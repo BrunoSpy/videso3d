@@ -1,0 +1,3596 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "SYMBOLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "LIMITE FIR")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "ROUTE CONDITIONNELLE A")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(map
+  (name "STAC")
+  (number 108)
+  (comment "")
+  (date 15 06 2004)
+  (heure 08 13 52)
+  (ref_point
+    (name "CDN1")
+    (comment "")
+    (value
+      (nautical_mile 64 3573 64 4100)
+    )
+  )
+  (ref_point
+    (name "CDN2")
+    (comment "")
+    (value
+      (nautical_mile 64 3622 64 4189)
+    )
+  )
+  (ref_point
+    (name "CDN3")
+    (comment "")
+    (value
+      (nautical_mile 64 3701 64 4252)
+    )
+  )
+  (ref_point
+    (name "CDN4")
+    (comment "")
+    (value
+      (nautical_mile 64 3816 64 4282)
+    )
+  )
+  (ref_point
+    (name "CDN5")
+    (comment "")
+    (value
+      (nautical_mile 64 3898 64 4272)
+    )
+  )
+  (ref_point
+    (name "CDN6")
+    (comment "")
+    (value
+      (nautical_mile 64 3992 64 4224)
+    )
+  )
+  (ref_point
+    (name "CDN7")
+    (comment "")
+    (value
+      (nautical_mile 64 4057 64 4146)
+    )
+  )
+  (ref_point
+    (name "CDN8")
+    (comment "")
+    (value
+      (nautical_mile 64 4088 64 4046)
+    )
+  )
+  (ref_point
+    (name "CDN9")
+    (comment "")
+    (value
+      (nautical_mile 64 4077 64 3937)
+    )
+  )
+  (ref_point
+    (name "CDN10")
+    (comment "")
+    (value
+      (nautical_mile 64 3895 64 3384)
+    )
+  )
+  (ref_point
+    (name "CDN11")
+    (comment "")
+    (value
+      (nautical_mile 64 3846 64 3296)
+    )
+  )
+  (ref_point
+    (name "CDN12")
+    (comment "")
+    (value
+      (nautical_mile 64 3747 64 3223)
+    )
+  )
+  (ref_point
+    (name "CDN13")
+    (comment "")
+    (value
+      (nautical_mile 64 3639 64 3203)
+    )
+  )
+  (ref_point
+    (name "CDN14")
+    (comment "")
+    (value
+      (nautical_mile 64 3544 64 3221)
+    )
+  )
+  (ref_point
+    (name "CDN15")
+    (comment "")
+    (value
+      (nautical_mile 64 3477 64 3261)
+    )
+  )
+  (ref_point
+    (name "CDN16")
+    (comment "")
+    (value
+      (nautical_mile 64 3419 64 3327)
+    )
+  )
+  (ref_point
+    (name "CDN17")
+    (comment "")
+    (value
+      (nautical_mile 64 3382 64 3426)
+    )
+  )
+  (ref_point
+    (name "CDN18")
+    (comment "")
+    (value
+      (nautical_mile 64 3392 64 3547)
+    )
+  )
+  (ref_point
+    (name "VELER")
+    (comment "")
+    (value
+      (nautical_mile 64 8478 64 8831)
+    )
+  )
+  (ref_point
+    (name "VELER2")
+    (comment "")
+    (value
+      (nautical_mile 64 8420 64 8822)
+    )
+  )
+  (ref_point
+    (name "VELER3")
+    (comment "")
+    (value
+      (nautical_mile 64 8362 64 8838)
+    )
+  )
+  (ref_point
+    (name "VELER4")
+    (comment "")
+    (value
+      (nautical_mile 64 8322 64 8865)
+    )
+  )
+  (ref_point
+    (name "VELER5")
+    (comment "")
+    (value
+      (nautical_mile 64 8289 64 8910)
+    )
+  )
+  (ref_point
+    (name "VELER6")
+    (comment "")
+    (value
+      (nautical_mile 64 8275 64 8969)
+    )
+  )
+  (ref_point
+    (name "VELER7")
+    (comment "")
+    (value
+      (nautical_mile 64 8284 64 9025)
+    )
+  )
+  (ref_point
+    (name "VELER8")
+    (comment "")
+    (value
+      (nautical_mile 64 8319 64 9083)
+    )
+  )
+  (ref_point
+    (name "VELER9")
+    (comment "")
+    (value
+      (nautical_mile 64 8378 64 9119)
+    )
+  )
+  (ref_point
+    (name "VELER10")
+    (comment "")
+    (value
+      (nautical_mile 64 8682 64 9224)
+    )
+  )
+  (ref_point
+    (name "VELER11")
+    (comment "")
+    (value
+      (nautical_mile 64 8755 64 9231)
+    )
+  )
+  (ref_point
+    (name "VELER12")
+    (comment "")
+    (value
+      (nautical_mile 64 8806 64 9214)
+    )
+  )
+  (ref_point
+    (name "VELER13")
+    (comment "")
+    (value
+      (nautical_mile 64 8855 64 9170)
+    )
+  )
+  (ref_point
+    (name "VELER14")
+    (comment "")
+    (value
+      (nautical_mile 64 8876 64 9131)
+    )
+  )
+  (ref_point
+    (name "VELER15")
+    (comment "")
+    (value
+      (nautical_mile 64 8884 64 9072)
+    )
+  )
+  (ref_point
+    (name "VELER16")
+    (comment "")
+    (value
+      (nautical_mile 64 8870 64 9014)
+    )
+  )
+  (ref_point
+    (name "VELER17")
+    (comment "")
+    (value
+      (nautical_mile 64 8842 64 8974)
+    )
+  )
+  (ref_point
+    (name "VELER18")
+    (comment "")
+    (value
+      (nautical_mile 64 8781 64 8936)
+    )
+  )
+  (ref_point
+    (name "ANARU")
+    (comment "")
+    (value
+      (nautical_mile 64 9400 64 9954)
+    )
+  )
+  (ref_point
+    (name "ANARU2")
+    (comment "")
+    (value
+      (nautical_mile 64 9323 64 9937)
+    )
+  )
+  (ref_point
+    (name "ANARU3")
+    (comment "")
+    (value
+      (nautical_mile 64 9227 64 9948)
+    )
+  )
+  (ref_point
+    (name "ANARU4")
+    (comment "")
+    (value
+      (nautical_mile 64 9138 64 9995)
+    )
+  )
+  (ref_point
+    (name "ANARU5")
+    (comment "")
+    (value
+      (nautical_mile 64 9068 64 10080)
+    )
+  )
+  (ref_point
+    (name "ANARU6")
+    (comment "")
+    (value
+      (nautical_mile 64 9040 64 10177)
+    )
+  )
+  (ref_point
+    (name "ANARU7")
+    (comment "")
+    (value
+      (nautical_mile 64 9054 64 10287)
+    )
+  )
+  (ref_point
+    (name "ANARU8")
+    (comment "")
+    (value
+      (nautical_mile 64 9123 64 10394)
+    )
+  )
+  (ref_point
+    (name "ANARU9")
+    (comment "")
+    (value
+      (nautical_mile 64 9209 64 10447)
+    )
+  )
+  (ref_point
+    (name "ANARU10")
+    (comment "")
+    (value
+      (nautical_mile 64 9748 64 10655)
+    )
+  )
+  (ref_point
+    (name "ANARU11")
+    (comment "")
+    (value
+      (nautical_mile 64 9857 64 10672)
+    )
+  )
+  (ref_point
+    (name "ANARU12")
+    (comment "")
+    (value
+      (nautical_mile 64 9959 64 10646)
+    )
+  )
+  (ref_point
+    (name "ANARU13")
+    (comment "")
+    (value
+      (nautical_mile 64 10031 64 10595)
+    )
+  )
+  (ref_point
+    (name "ANARU14")
+    (comment "")
+    (value
+      (nautical_mile 64 10083 64 10521)
+    )
+  )
+  (ref_point
+    (name "ANARU15")
+    (comment "")
+    (value
+      (nautical_mile 64 10108 64 10423)
+    )
+  )
+  (ref_point
+    (name "ANARU16")
+    (comment "")
+    (value
+      (nautical_mile 64 10091 64 10315)
+    )
+  )
+  (ref_point
+    (name "ANARU17")
+    (comment "")
+    (value
+      (nautical_mile 64 10031 64 10222)
+    )
+  )
+  (ref_point
+    (name "ANARU18")
+    (comment "")
+    (value
+      (nautical_mile 64 9939 64 10163)
+    )
+  )
+  (ref_point
+    (name "MERUE")
+    (comment "")
+    (value
+      (nautical_mile 64 4674 64 8923)
+    )
+  )
+  (ref_point
+    (name "MERUE2")
+    (comment "")
+    (value
+      (nautical_mile 64 4352 64 8953)
+    )
+  )
+  (ref_point
+    (name "MERUE3")
+    (comment "")
+    (value
+      (nautical_mile 64 4294 64 8969)
+    )
+  )
+  (ref_point
+    (name "MERUE4")
+    (comment "")
+    (value
+      (nautical_mile 64 4243 64 9011)
+    )
+  )
+  (ref_point
+    (name "MERUE5")
+    (comment "")
+    (value
+      (nautical_mile 64 4214 64 9065)
+    )
+  )
+  (ref_point
+    (name "MERUE6")
+    (comment "")
+    (value
+      (nautical_mile 64 4210 64 9135)
+    )
+  )
+  (ref_point
+    (name "MERUE7")
+    (comment "")
+    (value
+      (nautical_mile 64 4237 64 9201)
+    )
+  )
+  (ref_point
+    (name "MERUE8")
+    (comment "")
+    (value
+      (nautical_mile 64 4276 64 9239)
+    )
+  )
+  (ref_point
+    (name "MERUE9")
+    (comment "")
+    (value
+      (nautical_mile 64 4340 64 9265)
+    )
+  )
+  (ref_point
+    (name "MERUE10")
+    (comment "")
+    (value
+      (nautical_mile 64 4381 64 9267)
+    )
+  )
+  (ref_point
+    (name "MERUE11")
+    (comment "")
+    (value
+      (nautical_mile 64 4700 64 9237)
+    )
+  )
+  (ref_point
+    (name "MERUE12")
+    (comment "")
+    (value
+      (nautical_mile 64 4766 64 9217)
+    )
+  )
+  (ref_point
+    (name "MERUE13")
+    (comment "")
+    (value
+      (nautical_mile 64 4811 64 9177)
+    )
+  )
+  (ref_point
+    (name "MERUE14")
+    (comment "")
+    (value
+      (nautical_mile 64 4838 64 9126)
+    )
+  )
+  (ref_point
+    (name "MERUE15")
+    (comment "")
+    (value
+      (nautical_mile 64 4843 64 9069)
+    )
+  )
+  (ref_point
+    (name "MERUE16")
+    (comment "")
+    (value
+      (nautical_mile 64 4828 64 9011)
+    )
+  )
+  (ref_point
+    (name "MERUE17")
+    (comment "")
+    (value
+      (nautical_mile 64 4789 64 8961)
+    )
+  )
+  (ref_point
+    (name "MERUE18")
+    (comment "")
+    (value
+      (nautical_mile 64 4739 64 8932)
+    )
+  )
+  (ref_point
+    (name "DPE")
+    (comment "")
+    (value
+      (nautical_mile 64 2910 64 11269)
+    )
+  )
+  (ref_point
+    (name "DPE2")
+    (comment "")
+    (value
+      (nautical_mile 64 2897 64 11171)
+    )
+  )
+  (ref_point
+    (name "DPE3")
+    (comment "")
+    (value
+      (nautical_mile 64 2837 64 11064)
+    )
+  )
+  (ref_point
+    (name "DPE4")
+    (comment "")
+    (value
+      (nautical_mile 64 2767 64 11011)
+    )
+  )
+  (ref_point
+    (name "DPE5")
+    (comment "")
+    (value
+      (nautical_mile 64 2670 64 10982)
+    )
+  )
+  (ref_point
+    (name "DPE6")
+    (comment "")
+    (value
+      (nautical_mile 64 2574 64 10989)
+    )
+  )
+  (ref_point
+    (name "DPE7")
+    (comment "")
+    (value
+      (nautical_mile 64 2484 64 11034)
+    )
+  )
+  (ref_point
+    (name "DPE8")
+    (comment "")
+    (value
+      (nautical_mile 64 2409 64 11121)
+    )
+  )
+  (ref_point
+    (name "DPE9")
+    (comment "")
+    (value
+      (nautical_mile 64 2379 64 11222)
+    )
+  )
+  (ref_point
+    (name "DPE10")
+    (comment "")
+    (value
+      (nautical_mile 64 2330 64 11802)
+    )
+  )
+  (ref_point
+    (name "DPE11")
+    (comment "")
+    (value
+      (nautical_mile 64 2350 64 11928)
+    )
+  )
+  (ref_point
+    (name "DPE12")
+    (comment "")
+    (value
+      (nautical_mile 64 2400 64 12006)
+    )
+  )
+  (ref_point
+    (name "DPE13")
+    (comment "")
+    (value
+      (nautical_mile 64 2482 64 12064)
+    )
+  )
+  (ref_point
+    (name "DPE14")
+    (comment "")
+    (value
+      (nautical_mile 64 2567 64 12087)
+    )
+  )
+  (ref_point
+    (name "DPE15")
+    (comment "")
+    (value
+      (nautical_mile 64 2693 64 12069)
+    )
+  )
+  (ref_point
+    (name "DPE16")
+    (comment "")
+    (value
+      (nautical_mile 64 2778 64 12014)
+    )
+  )
+  (ref_point
+    (name "DPE17")
+    (comment "")
+    (value
+      (nautical_mile 64 2836 64 11931)
+    )
+  )
+  (ref_point
+    (name "DPE18")
+    (comment "")
+    (value
+      (nautical_mile 64 2858 64 11847)
+    )
+  )
+  (ref_point
+    (name "ROU")
+    (comment "")
+    (value
+      (nautical_mile 64 3211 64 9502)
+    )
+  )
+  (ref_point
+    (name "ROU2")
+    (comment "")
+    (value
+      (nautical_mile 64 3171 64 9951)
+    )
+  )
+  (ref_point
+    (name "ROU3")
+    (comment "")
+    (value
+      (nautical_mile 64 3176 64 10009)
+    )
+  )
+  (ref_point
+    (name "ROU4")
+    (comment "")
+    (value
+      (nautical_mile 64 3204 64 10063)
+    )
+  )
+  (ref_point
+    (name "ROU5")
+    (comment "")
+    (value
+      (nautical_mile 64 3254 64 10104)
+    )
+  )
+  (ref_point
+    (name "ROU6")
+    (comment "")
+    (value
+      (nautical_mile 64 3317 64 10122)
+    )
+  )
+  (ref_point
+    (name "ROU7")
+    (comment "")
+    (value
+      (nautical_mile 64 3390 64 10110)
+    )
+  )
+  (ref_point
+    (name "ROU8")
+    (comment "")
+    (value
+      (nautical_mile 64 3440 64 10076)
+    )
+  )
+  (ref_point
+    (name "ROU9")
+    (comment "")
+    (value
+      (nautical_mile 64 3475 64 10024)
+    )
+  )
+  (ref_point
+    (name "ROU10")
+    (comment "")
+    (value
+      (nautical_mile 64 3486 64 9979)
+    )
+  )
+  (ref_point
+    (name "ROU11")
+    (comment "")
+    (value
+      (nautical_mile 64 3525 64 9531)
+    )
+  )
+  (ref_point
+    (name "ROU12")
+    (comment "")
+    (value
+      (nautical_mile 64 3519 64 9471)
+    )
+  )
+  (ref_point
+    (name "ROU13")
+    (comment "")
+    (value
+      (nautical_mile 64 3490 64 9418)
+    )
+  )
+  (ref_point
+    (name "ROU14")
+    (comment "")
+    (value
+      (nautical_mile 64 3451 64 9383)
+    )
+  )
+  (ref_point
+    (name "ROU15")
+    (comment "")
+    (value
+      (nautical_mile 64 3381 64 9359)
+    )
+  )
+  (ref_point
+    (name "ROU16")
+    (comment "")
+    (value
+      (nautical_mile 64 3326 64 9365)
+    )
+  )
+  (ref_point
+    (name "ROU17")
+    (comment "")
+    (value
+      (nautical_mile 64 3274 64 9390)
+    )
+  )
+  (ref_point
+    (name "ROU18")
+    (comment "")
+    (value
+      (nautical_mile 64 3234 64 9432)
+    )
+  )
+  (ref_point
+    (name "TRO")
+    (comment "")
+    (value
+      (nautical_mile 64 10171 64 5067)
+    )
+  )
+  (ref_point
+    (name "TRO2")
+    (comment "")
+    (value
+      (nautical_mile 64 10113 64 5134)
+    )
+  )
+  (ref_point
+    (name "TRO3")
+    (comment "")
+    (value
+      (nautical_mile 64 10075 64 5236)
+    )
+  )
+  (ref_point
+    (name "TRO4")
+    (comment "")
+    (value
+      (nautical_mile 64 10081 64 5354)
+    )
+  )
+  (ref_point
+    (name "TRO5")
+    (comment "")
+    (value
+      (nautical_mile 64 10141 64 5467)
+    )
+  )
+  (ref_point
+    (name "TRO6")
+    (comment "")
+    (value
+      (nautical_mile 64 10222 64 5531)
+    )
+  )
+  (ref_point
+    (name "TRO7")
+    (comment "")
+    (value
+      (nautical_mile 64 10325 64 5563)
+    )
+  )
+  (ref_point
+    (name "TRO8")
+    (comment "")
+    (value
+      (nautical_mile 64 10452 64 5549)
+    )
+  )
+  (ref_point
+    (name "TRO9")
+    (comment "")
+    (value
+      (nautical_mile 64 10542 64 5497)
+    )
+  )
+  (ref_point
+    (name "TRO10")
+    (comment "")
+    (value
+      (nautical_mile 64 10999 64 5103)
+    )
+  )
+  (ref_point
+    (name "TRO11")
+    (comment "")
+    (value
+      (nautical_mile 64 11064 64 5022)
+    )
+  )
+  (ref_point
+    (name "TRO12")
+    (comment "")
+    (value
+      (nautical_mile 64 11095 64 4929)
+    )
+  )
+  (ref_point
+    (name "TRO13")
+    (comment "")
+    (value
+      (nautical_mile 64 11091 64 4826)
+    )
+  )
+  (ref_point
+    (name "TRO14")
+    (comment "")
+    (value
+      (nautical_mile 64 11047 64 4726)
+    )
+  )
+  (ref_point
+    (name "TRO15")
+    (comment "")
+    (value
+      (nautical_mile 64 10973 64 4653)
+    )
+  )
+  (ref_point
+    (name "TRO16")
+    (comment "")
+    (value
+      (nautical_mile 64 10868 64 4610)
+    )
+  )
+  (ref_point
+    (name "TRO17")
+    (comment "")
+    (value
+      (nautical_mile 64 10745 64 4613)
+    )
+  )
+  (ref_point
+    (name "TRO18")
+    (comment "")
+    (value
+      (nautical_mile 64 10627 64 4673)
+    )
+  )
+  (ref_point
+    (name "OKRIX")
+    (comment "")
+    (value
+      (nautical_mile 64 9205 64 3922)
+    )
+  )
+  (ref_point
+    (name "OKRIX2")
+    (comment "")
+    (value
+      (nautical_mile 64 9451 64 3395)
+    )
+  )
+  (ref_point
+    (name "OKRIX3")
+    (comment "")
+    (value
+      (nautical_mile 64 9476 64 3288)
+    )
+  )
+  (ref_point
+    (name "OKRIX4")
+    (comment "")
+    (value
+      (nautical_mile 64 9463 64 3202)
+    )
+  )
+  (ref_point
+    (name "OKRIX5")
+    (comment "")
+    (value
+      (nautical_mile 64 9422 64 3125)
+    )
+  )
+  (ref_point
+    (name "OKRIX6")
+    (comment "")
+    (value
+      (nautical_mile 64 9347 64 3057)
+    )
+  )
+  (ref_point
+    (name "OKRIX7")
+    (comment "")
+    (value
+      (nautical_mile 64 9239 64 3021)
+    )
+  )
+  (ref_point
+    (name "OKRIX8")
+    (comment "")
+    (value
+      (nautical_mile 64 9129 64 3033)
+    )
+  )
+  (ref_point
+    (name "OKRIX9")
+    (comment "")
+    (value
+      (nautical_mile 64 9041 64 3081)
+    )
+  )
+  (ref_point
+    (name "OKRIX10")
+    (comment "")
+    (value
+      (nautical_mile 64 8971 64 3172)
+    )
+  )
+  (ref_point
+    (name "OKRIX11")
+    (comment "")
+    (value
+      (nautical_mile 64 8725 64 3700)
+    )
+  )
+  (ref_point
+    (name "OKRIX12")
+    (comment "")
+    (value
+      (nautical_mile 64 8701 64 3807)
+    )
+  )
+  (ref_point
+    (name "OKRIX13")
+    (comment "")
+    (value
+      (nautical_mile 64 8720 64 3911)
+    )
+  )
+  (ref_point
+    (name "OKRIX14")
+    (comment "")
+    (value
+      (nautical_mile 64 8779 64 3999)
+    )
+  )
+  (ref_point
+    (name "OKRIX15")
+    (comment "")
+    (value
+      (nautical_mile 64 8867 64 4056)
+    )
+  )
+  (ref_point
+    (name "OKRIX16")
+    (comment "")
+    (value
+      (nautical_mile 64 8980 64 4075)
+    )
+  )
+  (ref_point
+    (name "OKRIX17")
+    (comment "")
+    (value
+      (nautical_mile 64 9074 64 4053)
+    )
+  )
+  (ref_point
+    (name "OKRIX18")
+    (comment "")
+    (value
+      (nautical_mile 64 9150 64 4000)
+    )
+  )
+  (ref_point
+    (name "BNE")
+    (comment "")
+    (value
+      (nautical_mile 64 4670 64 13994)
+    )
+  )
+  (ref_point
+    (name "BNE2")
+    (comment "")
+    (value
+      (nautical_mile 64 4596 64 14075)
+    )
+  )
+  (ref_point
+    (name "BNE3")
+    (comment "")
+    (value
+      (nautical_mile 64 4544 64 14203)
+    )
+  )
+  (ref_point
+    (name "BNE4")
+    (comment "")
+    (value
+      (nautical_mile 64 4545 64 14334)
+    )
+  )
+  (ref_point
+    (name "BNE5")
+    (comment "")
+    (value
+      (nautical_mile 64 4589 64 14447)
+    )
+  )
+  (ref_point
+    (name "BNE6")
+    (comment "")
+    (value
+      (nautical_mile 64 4684 64 14548)
+    )
+  )
+  (ref_point
+    (name "BNE7")
+    (comment "")
+    (value
+      (nautical_mile 64 4822 64 14606)
+    )
+  )
+  (ref_point
+    (name "BNE8")
+    (comment "")
+    (value
+      (nautical_mile 64 4978 64 14599)
+    )
+  )
+  (ref_point
+    (name "BNE9")
+    (comment "")
+    (value
+      (nautical_mile 64 5101 64 14536)
+    )
+  )
+  (ref_point
+    (name "BNE10")
+    (comment "")
+    (value
+      (nautical_mile 64 5624 64 14121)
+    )
+  )
+  (ref_point
+    (name "BNE11")
+    (comment "")
+    (value
+      (nautical_mile 64 5710 64 14021)
+    )
+  )
+  (ref_point
+    (name "BNE12")
+    (comment "")
+    (value
+      (nautical_mile 64 5752 64 13890)
+    )
+  )
+  (ref_point
+    (name "BNE13")
+    (comment "")
+    (value
+      (nautical_mile 64 5743 64 13764)
+    )
+  )
+  (ref_point
+    (name "BNE14")
+    (comment "")
+    (value
+      (nautical_mile 64 5686 64 13645)
+    )
+  )
+  (ref_point
+    (name "BNE15")
+    (comment "")
+    (value
+      (nautical_mile 64 5599 64 13562)
+    )
+  )
+  (ref_point
+    (name "BNE16")
+    (comment "")
+    (value
+      (nautical_mile 64 5482 64 13512)
+    )
+  )
+  (ref_point
+    (name "BNE17")
+    (comment "")
+    (value
+      (nautical_mile 64 5344 64 13511)
+    )
+  )
+  (ref_point
+    (name "BNE18")
+    (comment "")
+    (value
+      (nautical_mile 64 5191 64 13580)
+    )
+  )
+  (ref_point
+    (name "ABB")
+    (comment "")
+    (value
+      (nautical_mile 64 4586 64 12106)
+    )
+  )
+  (ref_point
+    (name "ABB2")
+    (comment "")
+    (value
+      (nautical_mile 64 4986 64 11573)
+    )
+  )
+  (ref_point
+    (name "ABB3")
+    (comment "")
+    (value
+      (nautical_mile 64 5045 64 11448)
+    )
+  )
+  (ref_point
+    (name "ABB4")
+    (comment "")
+    (value
+      (nautical_mile 64 5054 64 11334)
+    )
+  )
+  (ref_point
+    (name "ABB5")
+    (comment "")
+    (value
+      (nautical_mile 64 5024 64 11223)
+    )
+  )
+  (ref_point
+    (name "ABB6")
+    (comment "")
+    (value
+      (nautical_mile 64 4956 64 11124)
+    )
+  )
+  (ref_point
+    (name "ABB7")
+    (comment "")
+    (value
+      (nautical_mile 64 4853 64 11052)
+    )
+  )
+  (ref_point
+    (name "ABB8")
+    (comment "")
+    (value
+      (nautical_mile 64 4712 64 11019)
+    )
+  )
+  (ref_point
+    (name "ABB9")
+    (comment "")
+    (value
+      (nautical_mile 64 4566 64 11050)
+    )
+  )
+  (ref_point
+    (name "ABB10")
+    (comment "")
+    (value
+      (nautical_mile 64 4430 64 11159)
+    )
+  )
+  (ref_point
+    (name "ABB11")
+    (comment "")
+    (value
+      (nautical_mile 64 4030 64 11693)
+    )
+  )
+  (ref_point
+    (name "ABB12")
+    (comment "")
+    (value
+      (nautical_mile 64 3979 64 11790)
+    )
+  )
+  (ref_point
+    (name "ABB13")
+    (comment "")
+    (value
+      (nautical_mile 64 3963 64 11938)
+    )
+  )
+  (ref_point
+    (name "ABB14")
+    (comment "")
+    (value
+      (nautical_mile 64 4006 64 12069)
+    )
+  )
+  (ref_point
+    (name "ABB15")
+    (comment "")
+    (value
+      (nautical_mile 64 4101 64 12178)
+    )
+  )
+  (ref_point
+    (name "ABB16")
+    (comment "")
+    (value
+      (nautical_mile 64 4256 64 12242)
+    )
+  )
+  (ref_point
+    (name "ABB17")
+    (comment "")
+    (value
+      (nautical_mile 64 4352 64 12244)
+    )
+  )
+  (ref_point
+    (name "ABB18")
+    (comment "")
+    (value
+      (nautical_mile 64 4488 64 12196)
+    )
+  )
+  (ref_point
+    (name "DVL")
+    (comment "")
+    (value
+      (nautical_mile 64 786 64 8883)
+    )
+  )
+  (ref_point
+    (name "DVL2")
+    (comment "")
+    (value
+      (nautical_mile 64 209 64 8967)
+    )
+  )
+  (ref_point
+    (name "DVL3")
+    (comment "")
+    (value
+      (nautical_mile 64 122 64 8996)
+    )
+  )
+  (ref_point
+    (name "DVL4")
+    (comment "")
+    (value
+      (nautical_mile 64 41 64 9063)
+    )
+  )
+  (ref_point
+    (name "DVL5")
+    (comment "")
+    (value
+      (nautical_mile 64 -8 64 9161)
+    )
+  )
+  (ref_point
+    (name "DVL6")
+    (comment "")
+    (value
+      (nautical_mile 64 -13 64 9275)
+    )
+  )
+  (ref_point
+    (name "DVL7")
+    (comment "")
+    (value
+      (nautical_mile 64 22 64 9365)
+    )
+  )
+  (ref_point
+    (name "DVL8")
+    (comment "")
+    (value
+      (nautical_mile 64 86 64 9437)
+    )
+  )
+  (ref_point
+    (name "DVL9")
+    (comment "")
+    (value
+      (nautical_mile 64 190 64 9485)
+    )
+  )
+  (ref_point
+    (name "DVL10")
+    (comment "")
+    (value
+      (nautical_mile 64 287 64 9489)
+    )
+  )
+  (ref_point
+    (name "DVL11")
+    (comment "")
+    (value
+      (nautical_mile 64 863 64 9404)
+    )
+  )
+  (ref_point
+    (name "DVL12")
+    (comment "")
+    (value
+      (nautical_mile 64 954 64 9374)
+    )
+  )
+  (ref_point
+    (name "DVL13")
+    (comment "")
+    (value
+      (nautical_mile 64 1025 64 9316)
+    )
+  )
+  (ref_point
+    (name "DVL14")
+    (comment "")
+    (value
+      (nautical_mile 64 1077 64 9224)
+    )
+  )
+  (ref_point
+    (name "DVL15")
+    (comment "")
+    (value
+      (nautical_mile 64 1087 64 9115)
+    )
+  )
+  (ref_point
+    (name "DVL16")
+    (comment "")
+    (value
+      (nautical_mile 64 1062 64 9026)
+    )
+  )
+  (ref_point
+    (name "DVL17")
+    (comment "")
+    (value
+      (nautical_mile 64 994 64 8940)
+    )
+  )
+  (ref_point
+    (name "DVL18")
+    (comment "")
+    (value
+      (nautical_mile 64 913 64 8895)
+    )
+  )
+  (ref_point
+    (name "CMB")
+    (comment "")
+    (value
+      (nautical_mile 64 7778 64 12570)
+    )
+  )
+  (ref_point
+    (name "CMB2")
+    (comment "")
+    (value
+      (nautical_mile 64 7879 64 12680)
+    )
+  )
+  (ref_point
+    (name "CMB3")
+    (comment "")
+    (value
+      (nautical_mile 64 8006 64 12734)
+    )
+  )
+  (ref_point
+    (name "CMB4")
+    (comment "")
+    (value
+      (nautical_mile 64 8139 64 12737)
+    )
+  )
+  (ref_point
+    (name "CMB5")
+    (comment "")
+    (value
+      (nautical_mile 64 8241 64 12702)
+    )
+  )
+  (ref_point
+    (name "CMB6")
+    (comment "")
+    (value
+      (nautical_mile 64 8352 64 12608)
+    )
+  )
+  (ref_point
+    (name "CMB7")
+    (comment "")
+    (value
+      (nautical_mile 64 8414 64 12479)
+    )
+  )
+  (ref_point
+    (name "CMB8")
+    (comment "")
+    (value
+      (nautical_mile 64 8423 64 12365)
+    )
+  )
+  (ref_point
+    (name "CMB9")
+    (comment "")
+    (value
+      (nautical_mile 64 8378 64 12222)
+    )
+  )
+  (ref_point
+    (name "CMB10")
+    (comment "")
+    (value
+      (nautical_mile 64 8042 64 11645)
+    )
+  )
+  (ref_point
+    (name "CMB11")
+    (comment "")
+    (value
+      (nautical_mile 64 7949 64 11542)
+    )
+  )
+  (ref_point
+    (name "CMB12")
+    (comment "")
+    (value
+      (nautical_mile 64 7819 64 11482)
+    )
+  )
+  (ref_point
+    (name "CMB13")
+    (comment "")
+    (value
+      (nautical_mile 64 7686 64 11478)
+    )
+  )
+  (ref_point
+    (name "CMB14")
+    (comment "")
+    (value
+      (nautical_mile 64 7561 64 11523)
+    )
+  )
+  (ref_point
+    (name "CMB15")
+    (comment "")
+    (value
+      (nautical_mile 64 7471 64 11602)
+    )
+  )
+  (ref_point
+    (name "CMB16")
+    (comment "")
+    (value
+      (nautical_mile 64 7409 64 11719)
+    )
+  )
+  (ref_point
+    (name "CMB17")
+    (comment "")
+    (value
+      (nautical_mile 64 7395 64 11850)
+    )
+  )
+  (ref_point
+    (name "CMB18")
+    (comment "")
+    (value
+      (nautical_mile 64 7442 64 11993)
+    )
+  )
+  (ref_point
+    (name "LORTA")
+    (comment "")
+    (value
+      (nautical_mile 64 8104 64 9454)
+    )
+  )
+  (ref_point
+    (name "LORTA2")
+    (comment "")
+    (value
+      (nautical_mile 64 8056 64 9444)
+    )
+  )
+  (ref_point
+    (name "LORTA3")
+    (comment "")
+    (value
+      (nautical_mile 64 7981 64 9454)
+    )
+  )
+  (ref_point
+    (name "LORTA4")
+    (comment "")
+    (value
+      (nautical_mile 64 7917 64 9494)
+    )
+  )
+  (ref_point
+    (name "LORTA5")
+    (comment "")
+    (value
+      (nautical_mile 64 7877 64 9555)
+    )
+  )
+  (ref_point
+    (name "LORTA6")
+    (comment "")
+    (value
+      (nautical_mile 64 7866 64 9626)
+    )
+  )
+  (ref_point
+    (name "LORTA7")
+    (comment "")
+    (value
+      (nautical_mile 64 7883 64 9694)
+    )
+  )
+  (ref_point
+    (name "LORTA8")
+    (comment "")
+    (value
+      (nautical_mile 64 7928 64 9750)
+    )
+  )
+  (ref_point
+    (name "LORTA9")
+    (comment "")
+    (value
+      (nautical_mile 64 7977 64 9780)
+    )
+  )
+  (ref_point
+    (name "LORTA10")
+    (comment "")
+    (value
+      (nautical_mile 64 8337 64 9918)
+    )
+  )
+  (ref_point
+    (name "LORTA11")
+    (comment "")
+    (value
+      (nautical_mile 64 8427 64 9929)
+    )
+  )
+  (ref_point
+    (name "LORTA12")
+    (comment "")
+    (value
+      (nautical_mile 64 8477 64 9913)
+    )
+  )
+  (ref_point
+    (name "LORTA13")
+    (comment "")
+    (value
+      (nautical_mile 64 8532 64 9870)
+    )
+  )
+  (ref_point
+    (name "LORTA14")
+    (comment "")
+    (value
+      (nautical_mile 64 8562 64 9821)
+    )
+  )
+  (ref_point
+    (name "LORTA15")
+    (comment "")
+    (value
+      (nautical_mile 64 8575 64 9757)
+    )
+  )
+  (ref_point
+    (name "LORTA16")
+    (comment "")
+    (value
+      (nautical_mile 64 8561 64 9689)
+    )
+  )
+  (ref_point
+    (name "LORTA17")
+    (comment "")
+    (value
+      (nautical_mile 64 8533 64 9642)
+    )
+  )
+  (ref_point
+    (name "LORTA18")
+    (comment "")
+    (value
+      (nautical_mile 64 8464 64 9593)
+    )
+  )
+  (ref_point
+    (name "DIJ")
+    (comment "")
+    (value
+      (nautical_mile 64 13326 64 1473)
+    )
+  )
+  (ref_point
+    (name "DIJ2")
+    (comment "")
+    (value
+      (nautical_mile 64 13353 64 1674)
+    )
+  )
+  (ref_point
+    (name "DIJ3")
+    (comment "")
+    (value
+      (nautical_mile 64 13451 64 1840)
+    )
+  )
+  (ref_point
+    (name "DIJ4")
+    (comment "")
+    (value
+      (nautical_mile 64 13628 64 1969)
+    )
+  )
+  (ref_point
+    (name "DIJ5")
+    (comment "")
+    (value
+      (nautical_mile 64 13836 64 2011)
+    )
+  )
+  (ref_point
+    (name "DIJ6")
+    (comment "")
+    (value
+      (nautical_mile 64 14050 64 1960)
+    )
+  )
+  (ref_point
+    (name "DIJ7")
+    (comment "")
+    (value
+      (nautical_mile 64 14199 64 1854)
+    )
+  )
+  (ref_point
+    (name "DIJ8")
+    (comment "")
+    (value
+      (nautical_mile 64 14297 64 1708)
+    )
+  )
+  (ref_point
+    (name "DIJ9")
+    (comment "")
+    (value
+      (nautical_mile 64 14338 64 1537)
+    )
+  )
+  (ref_point
+    (name "DIJ10")
+    (comment "")
+    (value
+      (nautical_mile 64 14389 64 715)
+    )
+  )
+  (ref_point
+    (name "DIJ11")
+    (comment "")
+    (value
+      (nautical_mile 64 14360 64 533)
+    )
+  )
+  (ref_point
+    (name "DIJ12")
+    (comment "")
+    (value
+      (nautical_mile 64 14262 64 366)
+    )
+  )
+  (ref_point
+    (name "DIJ13")
+    (comment "")
+    (value
+      (nautical_mile 64 14132 64 260)
+    )
+  )
+  (ref_point
+    (name "DIJ14")
+    (comment "")
+    (value
+      (nautical_mile 64 13947 64 199)
+    )
+  )
+  (ref_point
+    (name "DIJ15")
+    (comment "")
+    (value
+      (nautical_mile 64 13728 64 218)
+    )
+  )
+  (ref_point
+    (name "DIJ16")
+    (comment "")
+    (value
+      (nautical_mile 64 13558 64 307)
+    )
+  )
+  (ref_point
+    (name "DIJ17")
+    (comment "")
+    (value
+      (nautical_mile 64 13431 64 467)
+    )
+  )
+  (ref_point
+    (name "DIJ18")
+    (comment "")
+    (value
+      (nautical_mile 64 13374 64 670)
+    )
+  )
+  (ref_point
+    (name "ATN")
+    (comment "")
+    (value
+      (nautical_mile 64 11232 64 -441)
+    )
+  )
+  (ref_point
+    (name "ATN2")
+    (comment "")
+    (value
+      (nautical_mile 64 11319 64 -623)
+    )
+  )
+  (ref_point
+    (name "ATN3")
+    (comment "")
+    (value
+      (nautical_mile 64 11332 64 -789)
+    )
+  )
+  (ref_point
+    (name "ATN4")
+    (comment "")
+    (value
+      (nautical_mile 64 11283 64 -967)
+    )
+  )
+  (ref_point
+    (name "ATN5")
+    (comment "")
+    (value
+      (nautical_mile 64 11160 64 -1128)
+    )
+  )
+  (ref_point
+    (name "ATN6")
+    (comment "")
+    (value
+      (nautical_mile 64 11009 64 -1218)
+    )
+  )
+  (ref_point
+    (name "ATN7")
+    (comment "")
+    (value
+      (nautical_mile 64 10801 64 -1252)
+    )
+  )
+  (ref_point
+    (name "ATN8")
+    (comment "")
+    (value
+      (nautical_mile 64 10613 64 -1206)
+    )
+  )
+  (ref_point
+    (name "ATN9")
+    (comment "")
+    (value
+      (nautical_mile 64 10423 64 -1073)
+    )
+  )
+  (ref_point
+    (name "ATN10")
+    (comment "")
+    (value
+      (nautical_mile 64 9934 64 -409)
+    )
+  )
+  (ref_point
+    (name "ATN11")
+    (comment "")
+    (value
+      (nautical_mile 64 9854 64 -252)
+    )
+  )
+  (ref_point
+    (name "ATN12")
+    (comment "")
+    (value
+      (nautical_mile 64 9834 64 -51)
+    )
+  )
+  (ref_point
+    (name "ATN13")
+    (comment "")
+    (value
+      (nautical_mile 64 9894 64 141)
+    )
+  )
+  (ref_point
+    (name "ATN14")
+    (comment "")
+    (value
+      (nautical_mile 64 10019 64 289)
+    )
+  )
+  (ref_point
+    (name "ATN15")
+    (comment "")
+    (value
+      (nautical_mile 64 10215 64 387)
+    )
+  )
+  (ref_point
+    (name "ATN16")
+    (comment "")
+    (value
+      (nautical_mile 64 10391 64 399)
+    )
+  )
+  (ref_point
+    (name "ATN17")
+    (comment "")
+    (value
+      (nautical_mile 64 10607 64 326)
+    )
+  )
+  (ref_point
+    (name "ATN18")
+    (comment "")
+    (value
+      (nautical_mile 64 10744 64 202)
+    )
+  )
+  (ref_point
+    (name "OKRMEL1")
+    (comment "")
+    (value
+      (nautical_mile 64 8025 64 4693)
+    )
+  )
+  (ref_point
+    (name "OKRMEL2")
+    (comment "")
+    (value
+      (nautical_mile 64 8320 64 5024)
+    )
+  )
+  (ref_point
+    (name "LTROSUS1")
+    (comment "")
+    (value
+      (nautical_mile 64 9026 64 5453)
+    )
+  )
+  (ref_point
+    (name "LTROSUS2")
+    (comment "")
+    (value
+      (nautical_mile 64 9570 64 6152)
+    )
+  )
+  (ref_point
+    (name "ROMLO")
+    (comment "")
+    (value
+      (nautical_mile 64 2156 64 5178)
+    )
+  )
+  (ref_point
+    (name "ROMLO2")
+    (comment "")
+    (value
+      (nautical_mile 64 2237 64 5253)
+    )
+  )
+  (ref_point
+    (name "ROMLO3")
+    (comment "")
+    (value
+      (nautical_mile 64 2340 64 5289)
+    )
+  )
+  (ref_point
+    (name "ROMLO4")
+    (comment "")
+    (value
+      (nautical_mile 64 2399 64 5285)
+    )
+  )
+  (ref_point
+    (name "ROMLO5")
+    (comment "")
+    (value
+      (nautical_mile 64 2517 64 5249)
+    )
+  )
+  (ref_point
+    (name "ROMLO6")
+    (comment "")
+    (value
+      (nautical_mile 64 2590 64 5180)
+    )
+  )
+  (ref_point
+    (name "ROMLO7")
+    (comment "")
+    (value
+      (nautical_mile 64 2633 64 5083)
+    )
+  )
+  (ref_point
+    (name "ROMLO8")
+    (comment "")
+    (value
+      (nautical_mile 64 2632 64 4969)
+    )
+  )
+  (ref_point
+    (name "ROMLO9")
+    (comment "")
+    (value
+      (nautical_mile 64 2591 64 4876)
+    )
+  )
+  (ref_point
+    (name "ROMLO10")
+    (comment "")
+    (value
+      (nautical_mile 64 2261 64 4403)
+    )
+  )
+  (ref_point
+    (name "ROMLO11")
+    (comment "")
+    (value
+      (nautical_mile 64 2196 64 4338)
+    )
+  )
+  (ref_point
+    (name "ROMLO12")
+    (comment "")
+    (value
+      (nautical_mile 64 2087 64 4293)
+    )
+  )
+  (ref_point
+    (name "ROMLO13")
+    (comment "")
+    (value
+      (nautical_mile 64 1999 64 4293)
+    )
+  )
+  (ref_point
+    (name "ROMLO14")
+    (comment "")
+    (value
+      (nautical_mile 64 1905 64 4329)
+    )
+  )
+  (ref_point
+    (name "ROMLO15")
+    (comment "")
+    (value
+      (nautical_mile 64 1845 64 4379)
+    )
+  )
+  (ref_point
+    (name "ROMLO16")
+    (comment "")
+    (value
+      (nautical_mile 64 1790 64 4479)
+    )
+  )
+  (ref_point
+    (name "ROMLO17")
+    (comment "")
+    (value
+      (nautical_mile 64 1782 64 4589)
+    )
+  )
+  (ref_point
+    (name "ROMLO18")
+    (comment "")
+    (value
+      (nautical_mile 64 1826 64 4704)
+    )
+  )
+  (ref_point
+    (name "ODRAN")
+    (comment "")
+    (value
+      (nautical_mile 64 4138 64 4971)
+    )
+  )
+  (ref_point
+    (name "ODRAN2")
+    (comment "")
+    (value
+      (nautical_mile 64 4180 64 5014)
+    )
+  )
+  (ref_point
+    (name "ODRAN3")
+    (comment "")
+    (value
+      (nautical_mile 64 4243 64 5040)
+    )
+  )
+  (ref_point
+    (name "ODRAN4")
+    (comment "")
+    (value
+      (nautical_mile 64 4303 64 5040)
+    )
+  )
+  (ref_point
+    (name "ODRAN5")
+    (comment "")
+    (value
+      (nautical_mile 64 4361 64 5014)
+    )
+  )
+  (ref_point
+    (name "ODRAN6")
+    (comment "")
+    (value
+      (nautical_mile 64 4407 64 4964)
+    )
+  )
+  (ref_point
+    (name "ODRAN7")
+    (comment "")
+    (value
+      (nautical_mile 64 4428 64 4905)
+    )
+  )
+  (ref_point
+    (name "ODRAN8")
+    (comment "")
+    (value
+      (nautical_mile 64 4424 64 4845)
+    )
+  )
+  (ref_point
+    (name "ODRAN9")
+    (comment "")
+    (value
+      (nautical_mile 64 4404 64 4799)
+    )
+  )
+  (ref_point
+    (name "ODRAN10")
+    (comment "")
+    (value
+      (nautical_mile 64 4229 64 4531)
+    )
+  )
+  (ref_point
+    (name "ODRAN11")
+    (comment "")
+    (value
+      (nautical_mile 64 4191 64 4490)
+    )
+  )
+  (ref_point
+    (name "ODRAN12")
+    (comment "")
+    (value
+      (nautical_mile 64 4129 64 4462)
+    )
+  )
+  (ref_point
+    (name "ODRAN13")
+    (comment "")
+    (value
+      (nautical_mile 64 4069 64 4461)
+    )
+  )
+  (ref_point
+    (name "ODRAN14")
+    (comment "")
+    (value
+      (nautical_mile 64 4017 64 4479)
+    )
+  )
+  (ref_point
+    (name "ODRAN15")
+    (comment "")
+    (value
+      (nautical_mile 64 3974 64 4517)
+    )
+  )
+  (ref_point
+    (name "ODRAN16")
+    (comment "")
+    (value
+      (nautical_mile 64 3945 64 4570)
+    )
+  )
+  (ref_point
+    (name "ODRAN17")
+    (comment "")
+    (value
+      (nautical_mile 64 3940 64 4643)
+    )
+  )
+  (ref_point
+    (name "ODRAN18")
+    (comment "")
+    (value
+      (nautical_mile 64 3963 64 4701)
+    )
+  )
+  (ref_point
+    (name "BALOD")
+    (comment "")
+    (value
+      (nautical_mile 64 3820 64 6073)
+    )
+  )
+  (ref_point
+    (name "BALOD2")
+    (comment "")
+    (value
+      (nautical_mile 64 3902 64 6098)
+    )
+  )
+  (ref_point
+    (name "BALOD3")
+    (comment "")
+    (value
+      (nautical_mile 64 3991 64 6088)
+    )
+  )
+  (ref_point
+    (name "BALOD4")
+    (comment "")
+    (value
+      (nautical_mile 64 4065 64 6045)
+    )
+  )
+  (ref_point
+    (name "BALOD5")
+    (comment "")
+    (value
+      (nautical_mile 64 4110 64 5990)
+    )
+  )
+  (ref_point
+    (name "BALOD6")
+    (comment "")
+    (value
+      (nautical_mile 64 4135 64 5916)
+    )
+  )
+  (ref_point
+    (name "BALOD7")
+    (comment "")
+    (value
+      (nautical_mile 64 4127 64 5820)
+    )
+  )
+  (ref_point
+    (name "BALOD8")
+    (comment "")
+    (value
+      (nautical_mile 64 4090 64 5751)
+    )
+  )
+  (ref_point
+    (name "BALOD9")
+    (comment "")
+    (value
+      (nautical_mile 64 4025 64 5696)
+    )
+  )
+  (ref_point
+    (name "BALOD10")
+    (comment "")
+    (value
+      (nautical_mile 64 3629 64 5483)
+    )
+  )
+  (ref_point
+    (name "BALOD11")
+    (comment "")
+    (value
+      (nautical_mile 64 3565 64 5461)
+    )
+  )
+  (ref_point
+    (name "BALOD12")
+    (comment "")
+    (value
+      (nautical_mile 64 3476 64 5463)
+    )
+  )
+  (ref_point
+    (name "BALOD13")
+    (comment "")
+    (value
+      (nautical_mile 64 3410 64 5491)
+    )
+  )
+  (ref_point
+    (name "BALOD14")
+    (comment "")
+    (value
+      (nautical_mile 64 3347 64 5554)
+    )
+  )
+  (ref_point
+    (name "BALOD15")
+    (comment "")
+    (value
+      (nautical_mile 64 3317 64 5622)
+    )
+  )
+  (ref_point
+    (name "BALOD16")
+    (comment "")
+    (value
+      (nautical_mile 64 3314 64 5707)
+    )
+  )
+  (ref_point
+    (name "BALOD17")
+    (comment "")
+    (value
+      (nautical_mile 64 3354 64 5800)
+    )
+  )
+  (ref_point
+    (name "BALOD18")
+    (comment "")
+    (value
+      (nautical_mile 64 3424 64 5860)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 1)
+    (entity
+      (name "2")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4150 64 4243)
+      )
+      (text_content "RAP 021° D")
+    )
+    (entity
+      (name "3")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4181 64 4049)
+      )
+      (text_content "70/140 220kt 1'")
+    )
+    (entity
+      (name "4")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4149 64 4145)
+      )
+      (text_content "150/240 240kt 1'30")
+    )
+    (entity
+      (name "5")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CDN1")
+        (point "CDN2")
+        (point "CDN3")
+        (point "CDN4")
+        (point "CDN5")
+        (point "CDN6")
+        (point "CDN7")
+        (point "CDN8")
+        (point "CDN9")
+        (point "CDN10")
+        (point "CDN11")
+        (point "CDN12")
+        (point "CDN13")
+        (point "CDN14")
+        (point "CDN15")
+        (point "CDN16")
+        (point "CDN17")
+        (point "CDN18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "8")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2627 64 4970)
+      )
+      (text_content " 60/140 220Kt")
+    )
+    (entity
+      (name "9")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2700 64 5227)
+      )
+      (text_content "RAP 037 D")
+    )
+    (entity
+      (name "11")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4156 64 5949)
+      )
+      (text_content "RAP 064° D")
+    )
+    (entity
+      (name "12")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4183 64 5753)
+      )
+      (text_content "60/140 220kt 1'")
+    )
+    (entity
+      (name "14")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7792 64 10031)
+      )
+      (text_content "30/36 NM 60/170")
+    )
+    (entity
+      (name "15")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7799 64 9950)
+      )
+      (text_content "RAP 254 D 220kt")
+    )
+    (entity
+      (name "16")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7825 64 10103)
+      )
+      (text_content "RDL 074 CRL")
+    )
+    (entity
+      (name "17")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "VELER")
+        (point "VELER2")
+        (point "VELER3")
+        (point "VELER4")
+        (point "VELER5")
+        (point "VELER6")
+        (point "VELER7")
+        (point "VELER8")
+        (point "VELER9")
+        (point "VELER10")
+        (point "VELER11")
+        (point "VELER12")
+        (point "VELER13")
+        (point "VELER14")
+        (point "VELER15")
+        (point "VELER16")
+        (point "VELER17")
+        (point "VELER18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "18")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8474 64 8714)
+      )
+      (text_content "RDL 076 BSN")
+    )
+    (entity
+      (name "19")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8342 64 8626)
+      )
+      (text_content "13/18 NM 60/130")
+    )
+    (entity
+      (name "20")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8358 64 8539)
+      )
+      (text_content "RAP 256 D 220kt")
+    )
+    (entity
+      (name "21")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ANARU")
+        (point "ANARU2")
+        (point "ANARU3")
+        (point "ANARU4")
+        (point "ANARU5")
+        (point "ANARU6")
+        (point "ANARU7")
+        (point "ANARU8")
+        (point "ANARU9")
+        (point "ANARU10")
+        (point "ANARU11")
+        (point "ANARU12")
+        (point "ANARU13")
+        (point "ANARU14")
+        (point "ANARU15")
+        (point "ANARU16")
+        (point "ANARU17")
+        (point "ANARU18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "22")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9153 64 9817)
+      )
+      (text_content "RDL 074 CRL RAP 254 D")
+    )
+    (entity
+      (name "23")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9157 64 9733)
+      )
+      (text_content "51/59 NM 180/240 240kt")
+    )
+    (entity
+      (name "24")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9155 64 9649)
+      )
+      (text_content "51/56 NM 90/130 220kt")
+    )
+    (entity
+      (name "25")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "MERUE")
+        (point "MERUE2")
+        (point "MERUE3")
+        (point "MERUE4")
+        (point "MERUE5")
+        (point "MERUE6")
+        (point "MERUE7")
+        (point "MERUE8")
+        (point "MERUE9")
+        (point "MERUE10")
+        (point "MERUE11")
+        (point "MERUE12")
+        (point "MERUE13")
+        (point "MERUE14")
+        (point "MERUE15")
+        (point "MERUE16")
+        (point "MERUE17")
+        (point "MERUE18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "26")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4646 64 8790)
+      )
+      (text_content "RDL 279 CRL")
+    )
+    (entity
+      (name "27")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4638 64 8695)
+      )
+      (text_content "26/31 NM 50/140")
+    )
+    (entity
+      (name "28")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4650 64 8604)
+      )
+      (text_content "RAP 099 G 220kt")
+    )
+    (entity
+      (name "29")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DPE")
+        (point "DPE2")
+        (point "DPE3")
+        (point "DPE4")
+        (point "DPE5")
+        (point "DPE6")
+        (point "DPE7")
+        (point "DPE8")
+        (point "DPE9")
+        (point "DPE10")
+        (point "DPE11")
+        (point "DPE12")
+        (point "DPE13")
+        (point "DPE14")
+        (point "DPE15")
+        (point "DPE16")
+        (point "DPE17")
+        (point "DPE18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "30")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1709 64 11369)
+      )
+      (text_content "RAP 178 D 1'30")
+    )
+    (entity
+      (name "31")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1714 64 11278)
+      )
+      (text_content "150/240 240kt")
+    )
+    (entity
+      (name "32")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1743 64 11190)
+      )
+      (text_content "70/140 220kt")
+    )
+    (entity
+      (name "33")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ROU")
+        (point "ROU2")
+        (point "ROU3")
+        (point "ROU4")
+        (point "ROU5")
+        (point "ROU6")
+        (point "ROU7")
+        (point "ROU8")
+        (point "ROU9")
+        (point "ROU10")
+        (point "ROU11")
+        (point "ROU12")
+        (point "ROU13")
+        (point "ROU14")
+        (point "ROU15")
+        (point "ROU16")
+        (point "ROU17")
+        (point "ROU18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "34")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2540 64 9387)
+      )
+      (text_content "RAP 178 G 1'30")
+    )
+    (entity
+      (name "35")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2634 64 9290)
+      )
+      (text_content "70/140 220kt")
+    )
+    (entity
+      (name "36")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "TRO")
+        (point "TRO2")
+        (point "TRO3")
+        (point "TRO4")
+        (point "TRO5")
+        (point "TRO6")
+        (point "TRO7")
+        (point "TRO8")
+        (point "TRO9")
+        (point "TRO10")
+        (point "TRO11")
+        (point "TRO12")
+        (point "TRO13")
+        (point "TRO14")
+        (point "TRO15")
+        (point "TRO16")
+        (point "TRO17")
+        (point "TRO18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "42")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9586 64 5185)
+      )
+      (text_content "RAP 315 D")
+    )
+    (entity
+      (name "43")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9552 64 5109)
+      )
+      (text_content "150/260 1'30 240kt")
+    )
+    (entity
+      (name "44")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9562 64 5033)
+      )
+      (text_content "60/140 1' 220kt")
+    )
+    (entity
+      (name "47")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8993 64 4396)
+      )
+      (text_content "RDL 159 BRY")
+    )
+    (entity
+      (name "48")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8995 64 4307)
+      )
+      (text_content "RAP 339 G ")
+    )
+    (entity
+      (name "49")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8814 64 4218)
+      )
+      (text_content "150/240 29/38NM 240kt")
+    )
+    (entity
+      (name "50")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8776 64 4121)
+      )
+      (text_content "60/140 29/34NM 220kt")
+    )
+    (entity
+      (name "51")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "OKRIX")
+        (point "OKRIX2")
+        (point "OKRIX3")
+        (point "OKRIX4")
+        (point "OKRIX5")
+        (point "OKRIX6")
+        (point "OKRIX7")
+        (point "OKRIX8")
+        (point "OKRIX9")
+        (point "OKRIX10")
+        (point "OKRIX11")
+        (point "OKRIX12")
+        (point "OKRIX13")
+        (point "OKRIX14")
+        (point "OKRIX15")
+        (point "OKRIX16")
+        (point "OKRIX17")
+        (point "OKRIX18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "54")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2882 64 1361)
+      )
+      (text_content "RAP 014 D")
+    )
+    (entity
+      (name "55")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4627 64 12190)
+      )
+      (text_content "RAP 329 G")
+    )
+    (entity
+      (name "56")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4170 64 13865)
+      )
+      (text_content "RAP 314 D ")
+    )
+    (entity
+      (name "57")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4164 64 13781)
+      )
+      (text_content "265kt")
+    )
+    (entity
+      (name "58")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7308 64 12481)
+      )
+      (text_content "RAP 035 D")
+    )
+    (entity
+      (name "59")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11231 64 -337)
+      )
+      (text_content "RAP 149 D")
+    )
+    (entity
+      (name "60")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 12726 64 1386)
+      )
+      (text_content "RAP 002 D")
+    )
+    (entity
+      (name "61")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 12818 64 1285)
+      )
+      (text_content "200/390")
+    )
+    (entity
+      (name "62")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 445 64 8756)
+      )
+      (text_content "RAP 102 G 1'30")
+    )
+    (entity
+      (name "63")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 428 64 8675)
+      )
+      (text_content "200/240 240kt")
+    )
+    (entity
+      (name "64")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "BNE")
+        (point "BNE2")
+        (point "BNE3")
+        (point "BNE4")
+        (point "BNE5")
+        (point "BNE6")
+        (point "BNE7")
+        (point "BNE8")
+        (point "BNE9")
+        (point "BNE10")
+        (point "BNE11")
+        (point "BNE12")
+        (point "BNE13")
+        (point "BNE14")
+        (point "BNE15")
+        (point "BNE16")
+        (point "BNE17")
+        (point "BNE18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "65")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ABB")
+        (point "ABB2")
+        (point "ABB3")
+        (point "ABB4")
+        (point "ABB5")
+        (point "ABB6")
+        (point "ABB7")
+        (point "ABB8")
+        (point "ABB9")
+        (point "ABB10")
+        (point "ABB11")
+        (point "ABB12")
+        (point "ABB13")
+        (point "ABB14")
+        (point "ABB15")
+        (point "ABB16")
+        (point "ABB17")
+        (point "ABB18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "66")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DVL")
+        (point "DVL2")
+        (point "DVL3")
+        (point "DVL4")
+        (point "DVL5")
+        (point "DVL6")
+        (point "DVL7")
+        (point "DVL8")
+        (point "DVL9")
+        (point "DVL10")
+        (point "DVL11")
+        (point "DVL12")
+        (point "DVL13")
+        (point "DVL14")
+        (point "DVL15")
+        (point "DVL16")
+        (point "DVL17")
+        (point "DVL18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "67")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CMB")
+        (point "CMB2")
+        (point "CMB3")
+        (point "CMB4")
+        (point "CMB5")
+        (point "CMB6")
+        (point "CMB7")
+        (point "CMB8")
+        (point "CMB9")
+        (point "CMB10")
+        (point "CMB11")
+        (point "CMB12")
+        (point "CMB13")
+        (point "CMB14")
+        (point "CMB15")
+        (point "CMB16")
+        (point "CMB17")
+        (point "CMB18")
+        (point "CMB")
+      )
+    )
+    (entity
+      (name "68")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "LORTA")
+        (point "LORTA2")
+        (point "LORTA3")
+        (point "LORTA4")
+        (point "LORTA5")
+        (point "LORTA6")
+        (point "LORTA7")
+        (point "LORTA8")
+        (point "LORTA9")
+        (point "LORTA10")
+        (point "LORTA11")
+        (point "LORTA12")
+        (point "LORTA13")
+        (point "LORTA14")
+        (point "LORTA15")
+        (point "LORTA16")
+        (point "LORTA17")
+        (point "LORTA18")
+        (point "LORTA")
+      )
+    )
+    (entity
+      (name "69")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DIJ")
+        (point "DIJ2")
+        (point "DIJ3")
+        (point "DIJ4")
+        (point "DIJ5")
+        (point "DIJ6")
+        (point "DIJ7")
+        (point "DIJ8")
+        (point "DIJ9")
+        (point "DIJ10")
+        (point "DIJ11")
+        (point "DIJ12")
+        (point "DIJ13")
+        (point "DIJ14")
+        (point "DIJ15")
+        (point "DIJ16")
+        (point "DIJ17")
+        (point "DIJ18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "70")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ATN")
+        (point "ATN2")
+        (point "ATN3")
+        (point "ATN4")
+        (point "ATN5")
+        (point "ATN6")
+        (point "ATN7")
+        (point "ATN8")
+        (point "ATN9")
+        (point "ATN10")
+        (point "ATN11")
+        (point "ATN12")
+        (point "ATN13")
+        (point "ATN14")
+        (point "ATN15")
+        (point "ATN16")
+        (point "ATN17")
+        (point "ATN18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "71")
+      (id_atc "LIMITE FIR")
+      (shape "LineEntity")
+      (geometry
+        (point "OKRMEL1")
+        (point "OKRMEL2")
+      )
+    )
+    (entity
+      (name "72")
+      (id_atc "LIMITE FIR")
+      (shape "LineEntity")
+      (geometry
+        (point "LTROSUS1")
+        (point "LTROSUS2")
+      )
+    )
+    (entity
+      (name "73")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ROMLO")
+        (point "ROMLO2")
+        (point "ROMLO3")
+        (point "ROMLO4")
+        (point "ROMLO5")
+        (point "ROMLO6")
+        (point "ROMLO7")
+        (point "ROMLO8")
+        (point "ROMLO9")
+        (point "ROMLO10")
+        (point "ROMLO11")
+        (point "ROMLO12")
+        (point "ROMLO13")
+        (point "ROMLO14")
+        (point "ROMLO15")
+        (point "ROMLO16")
+        (point "ROMLO17")
+        (point "ROMLO18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "74")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2580 64 5101)
+      )
+      (text_content " 150/240 240Kt")
+    )
+    (entity
+      (name "75")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ODRAN")
+        (point "ODRAN2")
+        (point "ODRAN3")
+        (point "ODRAN4")
+        (point "ODRAN5")
+        (point "ODRAN6")
+        (point "ODRAN7")
+        (point "ODRAN8")
+        (point "ODRAN9")
+        (point "ODRAN10")
+        (point "ODRAN11")
+        (point "ODRAN12")
+        (point "ODRAN13")
+        (point "ODRAN14")
+        (point "ODRAN15")
+        (point "ODRAN16")
+        (point "ODRAN17")
+        (point "ODRAN18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "76")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4200 64 5189)
+      )
+      (text_content "RAP 035° D 1'")
+    )
+    (entity
+      (name "77")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4209 64 5078)
+      )
+      (text_content "60/140 220kt")
+    )
+    (entity
+      (name "78")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "BALOD")
+        (point "BALOD2")
+        (point "BALOD3")
+        (point "BALOD4")
+        (point "BALOD5")
+        (point "BALOD6")
+        (point "BALOD7")
+        (point "BALOD8")
+        (point "BALOD9")
+        (point "BALOD10")
+        (point "BALOD11")
+        (point "BALOD12")
+        (point "BALOD13")
+        (point "BALOD14")
+        (point "BALOD15")
+        (point "BALOD16")
+        (point "BALOD17")
+        (point "BALOD18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "79")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2894 64 1128)
+      )
+      (text_content "200/280")
+    )
+    (entity
+      (name "80")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 846 64 3932)
+      )
+      (text_content "RAP 037 D")
+    )
+    (entity
+      (name "81")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 896 64 3791)
+      )
+      (text_content "200/280")
+    )
+    (entity
+      (name "82")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1975 64 5789)
+      )
+      (text_content "RAP 096 D")
+    )
+    (entity
+      (name "83")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1984 64 5663)
+      )
+      (text_content "200/460")
+    )
+    (entity
+      (name "85")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7505 64 4991)
+      )
+      (text_content "RAP 316 D")
+    )
+    (entity
+      (name "86")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7389 64 4903)
+      )
+      (text_content "60/140 1' 220kt")
+    )
+    (entity
+      (name "88")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8749 64 6192)
+      )
+      (text_content "RAP 315 G")
+    )
+    (entity
+      (name "89")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8750 64 6019)
+      )
+      (text_content "60/140 1' 220kt")
+    )
+    (entity
+      (name "90")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8668 64 6102)
+      )
+      (text_content "150/180 1'30 240kt")
+    )
+    (entity
+      (name "91")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (nautical_mile 64 2815 64 1736)
+        (nautical_mile 64 2895 64 1920)
+        (nautical_mile 64 3012 64 2038)
+        (nautical_mile 64 3179 64 2120)
+        (nautical_mile 64 3379 64 2132)
+        (nautical_mile 64 3548 64 2077)
+        (nautical_mile 64 3709 64 1942)
+        (nautical_mile 64 3798 64 1770)
+        (nautical_mile 64 3823 64 1539)
+        (nautical_mile 64 3642 64 735)
+        (nautical_mile 64 3575 64 571)
+        (nautical_mile 64 3437 64 424)
+        (nautical_mile 64 3253 64 344)
+        (nautical_mile 64 3060 64 342)
+        (nautical_mile 64 2856 64 425)
+        (nautical_mile 64 2732 64 549)
+        (nautical_mile 64 2645 64 760)
+        (nautical_mile 64 2649 64 945)
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "92")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (nautical_mile 64 -175 64 -1207)
+        (nautical_mile 64 -64 64 -1040)
+        (nautical_mile 64 71 64 -944)
+        (nautical_mile 64 250 64 -892)
+        (nautical_mile 64 449 64 -915)
+        (nautical_mile 64 606 64 -998)
+        (nautical_mile 64 741 64 -1159)
+        (nautical_mile 64 799 64 -1344)
+        (nautical_mile 64 783 64 -1576)
+        (nautical_mile 64 466 64 -2336)
+        (nautical_mile 64 371 64 -2486)
+        (nautical_mile 64 210 64 -2607)
+        (nautical_mile 64 15 64 -2654)
+        (nautical_mile 64 -176 64 -2622)
+        (nautical_mile 64 -362 64 -2505)
+        (nautical_mile 64 -463 64 -2361)
+        (nautical_mile 64 -512 64 -2138)
+        (nautical_mile 64 -476 64 -1957)
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "93")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 690 64 -1963)
+      )
+      (text_content "RAP 026 G")
+    )
+    (entity
+      (name "94")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 676 64 -2187)
+      )
+      (text_content "200/300")
+    )
+    (entity
+      (name "95")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (nautical_mile 64 1007 64 3546)
+        (nautical_mile 64 1088 64 3621)
+        (nautical_mile 64 1191 64 3657)
+        (nautical_mile 64 1250 64 3653)
+        (nautical_mile 64 1368 64 3617)
+        (nautical_mile 64 1441 64 3548)
+        (nautical_mile 64 1484 64 3451)
+        (nautical_mile 64 1483 64 3337)
+        (nautical_mile 64 1442 64 3244)
+        (nautical_mile 64 1112 64 2771)
+        (nautical_mile 64 1047 64 2706)
+        (nautical_mile 64 938 64 2661)
+        (nautical_mile 64 850 64 2661)
+        (nautical_mile 64 756 64 2697)
+        (nautical_mile 64 696 64 2747)
+        (nautical_mile 64 641 64 2847)
+        (nautical_mile 64 633 64 2957)
+        (nautical_mile 64 677 64 3072)
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "96")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (nautical_mile 64 -2072 64 5998)
+        (nautical_mile 64 -1879 64 5945)
+        (nautical_mile 64 -1746 64 5845)
+        (nautical_mile 64 -1641 64 5691)
+        (nautical_mile 64 -1602 64 5495)
+        (nautical_mile 64 -1632 64 5320)
+        (nautical_mile 64 -1744 64 5142)
+        (nautical_mile 64 -1902 64 5030)
+        (nautical_mile 64 -2127 64 4973)
+        (nautical_mile 64 -2948 64 5040)
+        (nautical_mile 64 -3120 64 5084)
+        (nautical_mile 64 -3285 64 5200)
+        (nautical_mile 64 -3390 64 5371)
+        (nautical_mile 64 -3419 64 5562)
+        (nautical_mile 64 -3365 64 5775)
+        (nautical_mile 64 -3259 64 5915)
+        (nautical_mile 64 -3062 64 6031)
+        (nautical_mile 64 -2879 64 6053)
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "97")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (nautical_mile 64 -886 64 7585)
+        (nautical_mile 64 -1403 64 7866)
+        (nautical_mile 64 -1475 64 7924)
+        (nautical_mile 64 -1527 64 8020)
+        (nautical_mile 64 -1540 64 8129)
+        (nautical_mile 64 -1504 64 8240)
+        (nautical_mile 64 -1440 64 8314)
+        (nautical_mile 64 -1353 64 8364)
+        (nautical_mile 64 -1238 64 8374)
+        (nautical_mile 64 -1144 64 8344)
+        (nautical_mile 64 -628 64 8063)
+        (nautical_mile 64 -552 64 8004)
+        (nautical_mile 64 -506 64 7923)
+        (nautical_mile 64 -490 64 7814)
+        (nautical_mile 64 -518 64 7705)
+        (nautical_mile 64 -574 64 7626)
+        (nautical_mile 64 -668 64 7569)
+        (nautical_mile 64 -761 64 7551)
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "98")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1749 64 8200)
+      )
+      (text_content "RAP 292 G")
+    )
+    (entity
+      (name "99")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1953 64 8081)
+      )
+      (text_content "200/240 240kt")
+    )
+    (entity
+      (name "100")
+      (id_atc "ROUTE CONDITIONNELLE A")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4161 64 5854)
+      )
+      (text_content "150/180 240kt 1'30")
+    )
+    (entity
+      (name "87")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (nautical_mile 64 7859 64 5126)
+        (nautical_mile 64 7819 64 5173)
+        (nautical_mile 64 7792 64 5243)
+        (nautical_mile 64 7796 64 5327)
+        (nautical_mile 64 7838 64 5403)
+        (nautical_mile 64 7896 64 5449)
+        (nautical_mile 64 7968 64 5472)
+        (nautical_mile 64 8057 64 5463)
+        (nautical_mile 64 8120 64 5425)
+        (nautical_mile 64 8442 64 5150)
+        (nautical_mile 64 8488 64 5094)
+        (nautical_mile 64 8509 64 5030)
+        (nautical_mile 64 8507 64 4957)
+        (nautical_mile 64 8476 64 4889)
+        (nautical_mile 64 8423 64 4838)
+        (nautical_mile 64 8350 64 4806)
+        (nautical_mile 64 8263 64 4808)
+        (nautical_mile 64 8180 64 4851)
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "101")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (nautical_mile 64 8459 64 6009)
+        (nautical_mile 64 8415 64 6054)
+        (nautical_mile 64 8384 64 6123)
+        (nautical_mile 64 8385 64 6206)
+        (nautical_mile 64 8422 64 6287)
+        (nautical_mile 64 8476 64 6335)
+        (nautical_mile 64 8547 64 6361)
+        (nautical_mile 64 8637 64 6355)
+        (nautical_mile 64 8702 64 6324)
+        (nautical_mile 64 9035 64 6064)
+        (nautical_mile 64 9084 64 6010)
+        (nautical_mile 64 9109 64 5946)
+        (nautical_mile 64 9110 64 5874)
+        (nautical_mile 64 9083 64 5802)
+        (nautical_mile 64 9034 64 5748)
+        (nautical_mile 64 8963 64 5715)
+        (nautical_mile 64 8877 64 5712)
+        (nautical_mile 64 8791 64 5749)
+      )
+      (polygone 1)
+    )
+  )
+)

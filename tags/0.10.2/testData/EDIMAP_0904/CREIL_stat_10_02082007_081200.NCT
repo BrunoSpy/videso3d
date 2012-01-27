@@ -1,0 +1,224 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SIV_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLineMixed")
+  (priority 28)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+)
+(id_atc
+  (name "TEXTE ZONE MILITAIRE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "CREIL")
+  (number 10)
+  (comment "")
+  (date 02 08 2007)
+  (heure 08 12 00)
+  (ref_point
+    (name "CREIL1")
+    (comment "CTR Creil")
+    (value
+      (nautical_mile 64 6813 64 9472)
+    )
+  )
+  (ref_point
+    (name "CREIL2")
+    (comment "CTR Creil")
+    (value
+      (nautical_mile 64 7218 64 8715)
+    )
+  )
+  (ref_point
+    (name "CREIL3")
+    (comment "CTR Creil")
+    (value
+      (nautical_mile 64 6128 64 8402)
+    )
+  )
+  (ref_point
+    (name "CREIL4")
+    (comment "CTR Creil")
+    (value
+      (nautical_mile 64 5873 64 8494)
+    )
+  )
+  (ref_point
+    (name "CREIL5")
+    (comment "CTR Creil")
+    (value
+      (nautical_mile 64 5724 64 8796)
+    )
+  )
+  (ref_point
+    (name "CREIL6")
+    (comment "tma creil part 1")
+    (value
+      (nautical_mile 64 7356 64 9492)
+    )
+  )
+  (ref_point
+    (name "CREIL7")
+    (comment "tma creil part 1")
+    (value
+      (nautical_mile 64 7425 64 8789)
+    )
+  )
+  (ref_point
+    (name "CREIL8")
+    (comment "tma creil part 1")
+    (value
+      (nautical_mile 64 5541 64 8229)
+    )
+  )
+  (ref_point
+    (name "CREIL9")
+    (comment "tma creil part 1")
+    (value
+      (nautical_mile 64 5447 64 8964)
+    )
+  )
+  (ref_point
+    (name "CREIL10")
+    (comment "tma creil part 1")
+    (value
+      (nautical_mile 64 6270 64 9454)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 1)
+    (entity
+      (name "2")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CREIL1")
+        (point "CREIL2")
+        (point "CREIL3")
+        (point "CREIL4")
+        (point "CREIL5")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "5")
+      (id_atc "TEXTE ZONE MILITAIRE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6194 64 8757  0)
+      )
+      (text_content "CREIL")
+    )
+    (entity
+      (name "10")
+      (id_atc "TEXTE ZONE MILITAIRE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6127 64 8507  0)
+      )
+      (text_content "SFC/2500")
+    )
+    (entity
+      (name "4")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CREIL6")
+        (point "CREIL7")
+        (point "CREIL8")
+        (point "CREIL9")
+        (point "CREIL10")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "7")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7085 64 9170  0)
+      )
+      (text_content "1200/2500")
+    )
+  )
+)

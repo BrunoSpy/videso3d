@@ -1,0 +1,326 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "LIMITE SECTEUR")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris clair")
+)
+(id_atc
+  (name "FOND SECTEUR")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 4)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(id_atc
+  (name "BORD SECTEUR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(id_atc
+  (name "FL_TEXT_07")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 7)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 1)
+  (foreground_color "Gris")
+)
+(map
+  (name "UK")
+  (number 230)
+  (comment "")
+  (date 23 12 2008)
+  (heure 15 02 15)
+  (ref_point
+    (name "UK7")
+    (comment "")
+    (value
+      (nautical_mile 64 -629 64 8712)
+    )
+  )
+  (ref_point
+    (name "UK8")
+    (comment "")
+    (value
+      (nautical_mile 64 1415 64 10190)
+    )
+  )
+  (ref_point
+    (name "IUK1")
+    (comment "")
+    (value
+      (nautical_mile 64 -630 64 8328)
+    )
+  )
+  (ref_point
+    (name "IUK2")
+    (comment "")
+    (value
+      (nautical_mile 64 2735 64 8090)
+    )
+  )
+  (ref_point
+    (name "IUK3")
+    (comment "")
+    (value
+      (nautical_mile 64 3055 64 6428)
+    )
+  )
+  (ref_point
+    (name "IUK4")
+    (comment "")
+    (value
+      (nautical_mile 64 2817 64 6371)
+    )
+  )
+  (ref_point
+    (name "IUK5")
+    (comment "")
+    (value
+      (nautical_mile 64 -183 64 4027)
+    )
+  )
+  (ref_point
+    (name "IUK6")
+    (comment "")
+    (value
+      (nautical_mile 64 -646 64 3587)
+    )
+  )
+  (ref_point
+    (name "S24")
+    (comment "")
+    (value
+      (nautical_mile 64 238 64 12062)
+    )
+  )
+  (ref_point
+    (name "SUP5")
+    (comment "")
+    (value
+      (nautical_mile 64 2349 64 8699)
+    )
+  )
+  (ref_point
+    (name "SUP3")
+    (comment "")
+    (value
+      (nautical_mile 64 2138 64 8126)
+    )
+  )
+  (ref_point
+    (name "65B")
+    (comment "")
+    (value
+      (nautical_mile 64 -630 64 8325)
+    )
+  )
+  (ref_point
+    (name "S23")
+    (comment "")
+    (value
+      (nautical_mile 64 2739 64 8068)
+    )
+  )
+  (ref_point
+    (name "EGTT307")
+    (comment "Délégation EGTT")
+    (value
+      (nautical_mile 64 1085 64 10715)
+    )
+  )
+  (ref_point
+    (name "EGTT305")
+    (comment "Délégation EGTT")
+    (value
+      (nautical_mile 64 408 64 10314)
+    )
+  )
+  (ref_point
+    (name "EGTT306")
+    (comment "Délégation EGTT")
+    (value
+      (nautical_mile 64 78 64 10119)
+    )
+  )
+  (ref_point
+    (name "EGTT301")
+    (comment "Délégation EGTT")
+    (value
+      (nautical_mile 64 -620 64 11531)
+    )
+  )
+  (submap
+    (number 1)
+    (name "UK")
+    (submap_type 5)
+    (entity
+      (name "881")
+      (id_atc "LIMITE SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "UK8")
+        (point "UK7")
+      )
+    )
+    (entity
+      (name "2")
+      (id_atc "FOND SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "IUK1")
+        (point "IUK2")
+        (point "IUK3")
+        (point "IUK4")
+        (point "IUK5")
+        (point "IUK6")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "3")
+      (id_atc "BORD SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "IUK1")
+        (point "IUK2")
+        (point "IUK3")
+        (point "IUK4")
+        (point "IUK5")
+        (point "IUK6")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "5")
+      (id_atc "BORD SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (nautical_mile 64 -619 64 11533  0)
+        (point "S24")
+        (point "SUP5")
+        (point "SUP3")
+        (point "65B")
+      )
+    )
+    (entity
+      (name "7")
+      (id_atc "FOND SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "65B")
+        (point "S23")
+        (point "S24")
+        (nautical_mile 64 -619 64 11533  0)
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "8")
+      (id_atc "FL_TEXT_07")
+      (shape "PolylineEntity")
+      (geometry
+        (point "S24")
+        (point "EGTT307")
+        (point "EGTT305")
+        (point "EGTT306")
+        (point "EGTT301")
+      )
+      (polygone 1)
+      (line_width 1)
+      (line_style "SingleLine")
+      (priority 5)
+      (text_font "1")
+      (fill_visibility 1)
+      (designabilite 1)
+      (foreground_color "Gris")
+    )
+    (entity
+      (name "9")
+      (id_atc "FL_TEXT_07")
+      (shape "LineEntity")
+      (geometry
+        (point "S24")
+        (point "EGTT307")
+      )
+      (line_width 1)
+      (line_style "SingleLine")
+      (priority 5)
+      (text_font "1")
+      (fill_visibility 1)
+      (designabilite 1)
+      (foreground_color "Gris")
+    )
+    (entity
+      (name "10")
+      (id_atc "BORD SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "S23")
+        (point "S24")
+        (nautical_mile 64 -619 64 11533  0)
+        (point "65B")
+      )
+    )
+  )
+)

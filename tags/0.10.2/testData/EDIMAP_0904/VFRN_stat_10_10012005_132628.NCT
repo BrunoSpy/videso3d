@@ -1,0 +1,636 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(symbol
+  (name "1")
+  (value "72")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "ROUTE CONDITIONNELLE C")
+  (line_width 1)
+  (line_style "SingleLineDotted")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "TEXTE BALISE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(map
+  (name "VFRN")
+  (number 10)
+  (comment "")
+  (date 10 01 2005)
+  (heure 13 26 28)
+  (ref_point
+    (name "PON")
+    (comment "")
+    (value
+      (nautical_mile 64 5142 64 8123)
+    )
+  )
+  (ref_point
+    (name "BSN")
+    (comment "")
+    (value
+      (nautical_mile 64 7703 64 8562)
+    )
+  )
+  (ref_point
+    (name "CLM")
+    (comment "")
+    (value
+      (nautical_mile 64 7648 64 7238)
+    )
+  )
+  (ref_point
+    (name "BRY")
+    (comment "")
+    (value
+      (nautical_mile 64 8432 64 5585)
+    )
+  )
+  (ref_point
+    (name "RBT")
+    (comment "")
+    (value
+      (nautical_mile 64 5080 64 6420)
+    )
+  )
+  (ref_point
+    (name "TSU")
+    (comment "")
+    (value
+      (nautical_mile 64 5345 64 6811)
+    )
+  )
+  (ref_point
+    (name "MLN")
+    (comment "")
+    (value
+      (nautical_mile 64 7193 64 5724)
+    )
+  )
+  (ref_point
+    (name "MAGNY")
+    (comment "")
+    (value
+      (nautical_mile 64 4540 64 8316)
+    )
+  )
+  (ref_point
+    (name "EPERNON")
+    (comment "")
+    (value
+      (nautical_mile 64 4331 64 6324)
+    )
+  )
+  (ref_point
+    (name "NANTEUIL")
+    (comment "")
+    (value
+      (nautical_mile 64 6982 64 8260)
+    )
+  )
+  (ref_point
+    (name "VAIRES")
+    (comment "")
+    (value
+      (nautical_mile 64 6589 64 7412)
+    )
+  )
+  (ref_point
+    (name "BT")
+    (comment "")
+    (value
+      (nautical_mile 64 6201 64 7656)
+    )
+  )
+  (ref_point
+    (name "EM")
+    (comment "")
+    (value
+      (nautical_mile 64 5335 64 5323)
+    )
+  )
+  (ref_point
+    (name "FERTEMIL")
+    (comment "")
+    (value
+      (nautical_mile 64 8020 64 8620)
+    )
+  )
+  (ref_point
+    (name "REBAIS")
+    (comment "")
+    (value
+      (nautical_mile 64 8202 64 7281)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 1)
+    (entity
+      (name "PON")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5142 64 8123)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "BSN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7703 64 8562)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "CLM")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7648 64 7238)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "BRY")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8432 64 5585)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "RBT")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5080 64 6420)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "TSU")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5345 64 6811)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "MLN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7193 64 5724)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "MAGNY")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4540 64 8316)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "EPERNON")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4331 64 6324)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "NANTEUIL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6982 64 8260)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "VAIRES")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6589 64 7412)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "BT")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6201 64 7656)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "EM")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5335 64 5323)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "FERTEMIL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8020 64 8620)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "REBAIS")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8202 64 7281)
+      )
+      (entity_symbol 1)
+    )
+    (entity
+      (name "16")
+      (id_atc "ROUTE CONDITIONNELLE C")
+      (shape "LineEntity")
+      (geometry
+        (point "MAGNY")
+        (point "PON")
+      )
+    )
+    (entity
+      (name "17")
+      (id_atc "ROUTE CONDITIONNELLE C")
+      (shape "PolylineEntity")
+      (geometry
+        (point "PON")
+        (point "NANTEUIL")
+        (point "BSN")
+        (point "FERTEMIL")
+      )
+    )
+    (entity
+      (name "18")
+      (id_atc "ROUTE CONDITIONNELLE C")
+      (shape "PolylineEntity")
+      (geometry
+        (point "NANTEUIL")
+        (point "CLM")
+        (point "REBAIS")
+      )
+    )
+    (entity
+      (name "19")
+      (id_atc "ROUTE CONDITIONNELLE C")
+      (shape "LineEntity")
+      (geometry
+        (point "CLM")
+        (point "BRY")
+      )
+    )
+    (entity
+      (name "20")
+      (id_atc "ROUTE CONDITIONNELLE C")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CLM")
+        (point "MLN")
+        (point "EM")
+        (point "RBT")
+        (point "TSU")
+      )
+    )
+    (entity
+      (name "21")
+      (id_atc "ROUTE CONDITIONNELLE C")
+      (shape "LineEntity")
+      (geometry
+        (point "RBT")
+        (point "EPERNON")
+      )
+    )
+    (entity
+      (name "22")
+      (id_atc "ROUTE CONDITIONNELLE C")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CLM")
+        (point "VAIRES")
+        (point "BT")
+      )
+    )
+    (entity
+      (name "23")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (point "MAGNY")
+      )
+      (text_content "Magny")
+    )
+    (entity
+      (name "24")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (point "PON")
+      )
+      (text_content "PON")
+    )
+    (entity
+      (name "25")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6597 64 8318)
+      )
+      (text_content "Nanteuil")
+    )
+    (entity
+      (name "26")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (point "TSU")
+      )
+      (text_content "TSU")
+    )
+    (entity
+      (name "27")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7461 64 8551)
+      )
+      (text_content "BSN")
+    )
+    (entity
+      (name "28")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (point "FERTEMIL")
+      )
+      (text_content "Ferte Milon")
+    )
+    (entity
+      (name "29")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (point "CLM")
+      )
+      (text_content "CLM")
+    )
+    (entity
+      (name "30")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (point "REBAIS")
+      )
+      (text_content "Rebais")
+    )
+    (entity
+      (name "31")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (point "BT")
+      )
+      (text_content "BT")
+    )
+    (entity
+      (name "32")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (point "BRY")
+      )
+      (text_content "BRY")
+    )
+    (entity
+      (name "33")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (point "MLN")
+      )
+      (text_content "MLN")
+    )
+    (entity
+      (name "34")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4139 64 6208)
+      )
+      (text_content "Epernon")
+    )
+    (entity
+      (name "35")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (point "RBT")
+      )
+      (text_content "RBT")
+    )
+    (entity
+      (name "36")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5256 64 5165)
+      )
+      (text_content "EM")
+    )
+    (entity
+      (name "37")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5840 64 7271)
+      )
+      (text_content "Gare de Vaires")
+    )
+    (entity
+      (name "38")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4623 64 8069)
+      )
+      (text_content "2000")
+    )
+    (entity
+      (name "39")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6000 64 8057)
+      )
+      (text_content "1500")
+    )
+    (entity
+      (name "40")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7424 64 8337)
+      )
+      (text_content "1500")
+    )
+    (entity
+      (name "41")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7299 64 7813)
+      )
+      (text_content "1500")
+    )
+    (entity
+      (name "42")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8050 64 6490)
+      )
+      (text_content "2500")
+    )
+    (entity
+      (name "43")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7114 64 6531)
+      )
+      (text_content "2500")
+    )
+    (entity
+      (name "44")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6317 64 5401)
+      )
+      (text_content "2000")
+    )
+    (entity
+      (name "45")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6840 64 7420)
+      )
+      (text_content "1500")
+    )
+    (entity
+      (name "46")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7879 64 7107)
+      )
+      (text_content "2500")
+    )
+    (entity
+      (name "47")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5274 64 6600)
+      )
+      (text_content "1600")
+    )
+    (entity
+      (name "48")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4424 64 6411)
+      )
+      (text_content "2000")
+    )
+    (entity
+      (name "49")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5219 64 5959)
+      )
+      (text_content "2000")
+    )
+  )
+)

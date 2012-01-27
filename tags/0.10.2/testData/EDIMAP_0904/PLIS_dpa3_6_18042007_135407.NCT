@@ -1,0 +1,143 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+)
+(id_atc
+  (name "TEXTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+  (id_atc_preactif "TEXTE PREACTIVABLE")
+  (id_atc_predorm "TEXTE PREACTIVABLE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "TEXTE PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(map
+  (name "PLIS")
+  (number 6)
+  (comment "")
+  (date 18 04 2007)
+  (heure 13 54 07)
+  (ref_point
+    (name "PALI1")
+    (comment "")
+    (value
+      (nautical_mile 64 9592 64 -1701)
+    )
+  )
+  (ref_point
+    (name "PALI2")
+    (comment "")
+    (value
+      (nautical_mile 64 10003 64 -2920)
+    )
+  )
+  (ref_point
+    (name "PALI3")
+    (comment "")
+    (value
+      (nautical_mile 64 9192 64 -2802)
+    )
+  )
+  (ref_point
+    (name "PALI4")
+    (comment "")
+    (value
+      (nautical_mile 64 9409 64 -1709)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 3)
+    (keyboard 3)
+    (entity
+      (name "1")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "PALI1")
+        (point "PALI2")
+        (point "PALI3")
+        (point "PALI4")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "3")
+      (id_atc "TEXTE PREACTIVABLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9340 64 -2118)
+      )
+      (text_content "FL 145")
+    )
+  )
+)

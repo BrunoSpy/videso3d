@@ -1,0 +1,81 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "LIMITE SECTEUR MILITAIRE")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 47)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Jaune")
+)
+(map
+  (name "ARC")
+  (number 2)
+  (comment "")
+  (date 16 03 2009)
+  (heure 14 25 46)
+  (ref_point
+    (name "EPR")
+    (comment "Epernon")
+    (value
+      (nautical_mile 64 4221 64 6292)
+    )
+  )
+  (ref_point
+    (name "EPR1")
+    (comment "Contrainte Epernon")
+    (value
+      (nautical_mile 64 2452 64 5982)
+    )
+  )
+  (ref_point
+    (name "EPR2")
+    (comment "Contrainte Epernon")
+    (value
+      (nautical_mile 64 3218 64 4788)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 4)
+    (keyboard 3)
+  )
+)

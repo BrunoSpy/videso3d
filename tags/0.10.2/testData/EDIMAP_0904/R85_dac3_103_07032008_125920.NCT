@@ -1,0 +1,400 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "TEXTE PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_2")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+)
+(id_atc
+  (name "TEXTE ZONE MILITAIRE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "R85")
+  (number 103)
+  (comment "")
+  (date 07 03 2008)
+  (heure 12 59 20)
+  (ref_point
+    (name "85CP01")
+    (comment "R85 Tours")
+    (value
+      (nautical_mile 64 2587 64 2150)
+    )
+  )
+  (ref_point
+    (name "85CP02")
+    (comment "R85 Tours")
+    (value
+      (nautical_mile 64 3224 64 1953)
+    )
+  )
+  (ref_point
+    (name "85CP03")
+    (comment "R85 Tours")
+    (value
+      (nautical_mile 64 3099 64 1553)
+    )
+  )
+  (ref_point
+    (name "85CP04")
+    (comment "R85 Tours")
+    (value
+      (nautical_mile 64 3099 64 1029)
+    )
+  )
+  (ref_point
+    (name "85CP05")
+    (comment "R85 Tours")
+    (value
+      (nautical_mile 64 2198 64 1335)
+    )
+  )
+  (ref_point
+    (name "85CP06")
+    (comment "R85 Tours")
+    (value
+      (nautical_mile 64 2475 64 1808)
+    )
+  )
+  (ref_point
+    (name "LFOT601")
+    (comment "TMA Tours partie 6")
+    (value
+      (nautical_mile 64 790 64 3226)
+    )
+  )
+  (ref_point
+    (name "LFOT602")
+    (comment "TMA Tours partie 6")
+    (value
+      (nautical_mile 64 1009 64 3268)
+    )
+  )
+  (ref_point
+    (name "LFOT603")
+    (comment "TMA Tours partie 6")
+    (value
+      (nautical_mile 64 1293 64 3270)
+    )
+  )
+  (ref_point
+    (name "LFOT604")
+    (comment "TMA Tours partie 6")
+    (value
+      (nautical_mile 64 1303 64 1797)
+    )
+  )
+  (ref_point
+    (name "LFOT605")
+    (comment "TMA Tours partie 6")
+    (value
+      (nautical_mile 64 1059 64 1251)
+    )
+  )
+  (ref_point
+    (name "LFOT606")
+    (comment "TMA Tours partie 6")
+    (value
+      (nautical_mile 64 770 64 817)
+    )
+  )
+  (ref_point
+    (name "LFOT607")
+    (comment "TMA Tours partie 6")
+    (value
+      (nautical_mile 64 555 64 2245)
+    )
+  )
+  (ref_point
+    (name "LFOT401")
+    (comment "TMA Tours partie 4")
+    (value
+      (nautical_mile 64 1293 64 3270)
+    )
+  )
+  (ref_point
+    (name "LFOT402")
+    (comment "TMA Tours partie 4")
+    (value
+      (nautical_mile 64 1548 64 2595)
+    )
+  )
+  (ref_point
+    (name "LFOT403")
+    (comment "TMA Tours partie 4")
+    (value
+      (nautical_mile 64 2403 64 1807)
+    )
+  )
+  (ref_point
+    (name "LFOT404")
+    (comment "TMA Tours partie 4")
+    (value
+      (nautical_mile 64 2475 64 1808)
+    )
+  )
+  (ref_point
+    (name "LFOT405")
+    (comment "TMA Tours partie 4")
+    (value
+      (nautical_mile 64 1553 64 269)
+    )
+  )
+  (ref_point
+    (name "LFOT406")
+    (comment "TMA Tours partie 4")
+    (value
+      (nautical_mile 64 846 64 322)
+    )
+  )
+  (ref_point
+    (name "LFOT407")
+    (comment "TMA Tours partie 4")
+    (value
+      (nautical_mile 64 770 64 817)
+    )
+  )
+  (ref_point
+    (name "LFOT408")
+    (comment "TMA Tours partie 4")
+    (value
+      (nautical_mile 64 1059 64 1251)
+    )
+  )
+  (ref_point
+    (name "LFOT409")
+    (comment "TMA Tours partie 4")
+    (value
+      (nautical_mile 64 1303 64 1797)
+    )
+  )
+  (ref_point
+    (name "IR85P10")
+    (comment "TMA Tours partie 5")
+    (value
+      (nautical_mile 64 846 64 322)
+    )
+  )
+  (ref_point
+    (name "IR85P11")
+    (comment "TMA Tours partie 5")
+    (value
+      (nautical_mile 64 1553 64 269)
+    )
+  )
+  (ref_point
+    (name "IR85P12")
+    (comment "TMA Tours partie 5")
+    (value
+      (nautical_mile 64 1308 64 -143)
+    )
+  )
+  (ref_point
+    (name "IR85P13")
+    (comment "TMA Tours partie 5")
+    (value
+      (nautical_mile 64 882 64 31)
+    )
+  )
+  (submap
+    (number 1)
+    (name "R85")
+    (submap_type 2)
+    (keyboard 3)
+    (entity
+      (name "9")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2548 64 1577  0)
+      )
+      (text_content "FL55")
+    )
+    (entity
+      (name "10")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "85CP01")
+        (point "85CP02")
+        (point "85CP03")
+        (point "85CP04")
+        (point "85CP05")
+        (point "85CP06")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "3")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "LFOT601")
+        (point "LFOT602")
+        (point "LFOT603")
+        (point "LFOT604")
+        (point "LFOT605")
+        (point "LFOT606")
+        (point "LFOT607")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "4")
+      (id_atc "TEXTE ZONE MILITAIRE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 673 64 2217  0)
+      )
+      (text_content "095/195")
+    )
+    (entity
+      (name "5")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "LFOT401")
+        (point "LFOT402")
+        (point "LFOT403")
+        (point "LFOT404")
+        (point "LFOT405")
+        (point "LFOT406")
+        (point "LFOT407")
+        (point "LFOT408")
+        (point "LFOT409")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "6")
+      (id_atc "TEXTE ZONE MILITAIRE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1308 64 1437  0)
+      )
+      (text_content "FL195")
+    )
+    (entity
+      (name "7")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "IR85P10")
+        (point "IR85P11")
+        (point "IR85P12")
+        (point "IR85P13")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "8")
+      (id_atc "TEXTE ZONE MILITAIRE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 939 64 93  0)
+      )
+      (text_content "FL105")
+    )
+  )
+)
