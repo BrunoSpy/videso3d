@@ -15,8 +15,12 @@
 */
 package fr.crnan.videso3d.graphics;
 
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -30,7 +34,7 @@ import gov.nasa.worldwind.render.airspaces.ScreenSizeDetailLevel;
 /**
  * Adds the ability to find if a point is inside the Polygon
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class VPolygon extends Polygon implements Highlightable{
 
@@ -76,6 +80,100 @@ public class VPolygon extends Polygon implements Highlightable{
 		}
 	}
 
+	/**
+	 * 
+	 * @param line Intersecting line
+	 * @param segment True if only considering <code>line</code> as a segment 
+	 * @return All intersection points
+	 * @throws Exception 
+	 */
+	public Set<Point2D> getIntersections(Line2D.Double line, boolean segment){
+		Set<Point2D> intersections = new HashSet<Point2D>();
+		
+		LatLon last = null;
+		for(LatLon p : this.getLocations()){
+			if(last != null){
+				Line2D.Double poly = new Line2D.Double(last.latitude.degrees, last.longitude.degrees,
+														p.latitude.degrees, p.longitude.degrees);
+				Point2D inter = segment ? getIntersectionInside(line, poly) : getIntersection(line, poly);
+				if(inter !=null) intersections.add(inter);
+			}
+			last = p;
+		}
+	
+        return intersections;
+	}
+	
+	/**
+	 * 
+	 * @param line1
+	 * @param line2
+	 * @return Intersection point, null if lines are parallels
+	 */
+	public static Point2D getIntersection(final Line2D.Double line1, final Line2D.Double line2) {
+
+        final double x1,y1, x2,y2, x3,y3, x4,y4;
+        x1 = line1.x1; y1 = line1.y1; x2 = line1.x2; y2 = line1.y2;
+        x3 = line2.x1; y3 = line2.y1; x4 = line2.x2; y4 = line2.y2;
+
+        double xq = (x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4);
+        double yq = (x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4);
+        if(xq != 0 && yq != 0) {
+        	final double x = (
+        			(x2 - x1)*(x3*y4 - x4*y3) - (x4 - x3)*(x1*y2 - x2*y1)
+        			) /
+        			(xq);
+        	final double y = (
+        			(y3 - y4)*(x1*y2 - x2*y1) - (y1 - y2)*(x3*y4 - x4*y3)
+        			) /
+        			(yq);
+        	return new Point2D.Double(x, y);
+        } else {
+        	return null;
+        }
+    }
+	
+	/**
+	 * 
+	 * @param line1
+	 * @param line2
+	 * @return Intersection point between line1 and line2, only if this points is inside line1.
+	 */
+	public static Point2D getIntersectionInside(final Line2D.Double line1, final Line2D.Double line2) {
+		Point2D p = getIntersection(line1, line2);
+		if(p != null){
+			if(line1.x1 < line1.x2){
+				if(p.getX() >= line1.x1 && p.getX() <= line1.x2){
+					return p;
+				} else {
+					return null;
+				}
+			} else if(line1.x1 > line1.x2){
+				if(p.getX() <= line1.x1 && p.getX() >= line1.x2){
+					return p;
+				} else {
+					return null;
+				}
+			} else { //x1==x2
+				if(line1.y1 < line1.y2) {
+					if(p.getY() >= line1.y1 && p.getY() <= line1.y2){
+						return p;
+					} else {
+						return null;
+					}
+				} else {
+					if(p.getY() <= line1.y1 && p.getY() >= line1.y2){
+						return p;
+					} else {
+						return null;
+					}
+				}
+			}
+		} else {
+			return null;
+		}
+	}
+	
 	@Override
 	public void setLocations(Iterable<? extends LatLon> locations) {
 		super.setLocations(locations);
