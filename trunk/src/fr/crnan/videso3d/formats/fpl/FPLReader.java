@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -212,7 +213,7 @@ public class FPLReader extends TrackFilesReader {
 			track.setDepart(firstElement);
 			LinkedList<LPLNTrackPoint> pointsList = new LinkedList<LPLNTrackPoint>();
 			boolean arptDepart = false;
-			if(!firstElement.equals("?")&& firstElement.matches("\\p{Alpha}*"));
+			if(!firstElement.equals("?")&& firstElement.matches("\\p{Alpha}{4}"));
 					arptDepart = addAirportToTrack(pointsList, firstElement);
 			if(arptDepart)
 				fpl.set(0, firstLine.substring(firstLine.indexOf(firstElement)+firstElement.length()));
@@ -236,7 +237,7 @@ public class FPLReader extends TrackFilesReader {
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
 		if(track.getNumPoints()>0){
-			this.getModel().getAllTracks().add(track);
+			this.getModel().addTrack(track);
 		}else{
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
@@ -277,6 +278,11 @@ public class FPLReader extends TrackFilesReader {
 			if(line.startsWith("-")){
 				line = line.substring(1);
 			}
+			//Remplacement des caractères spéciaux que l'on peut trouver dans les coordonnées géographiques du SIA
+			line = line.replaceAll("--", " ");
+			line = line.replaceAll("\\u00ba", "d");
+			line = line.replaceAll("\\u2019", "'");
+			line = line.replaceAll("\\u201d", "\"");
 			line = line.trim();
 			String[] elements = line.split("\\s+");
 			//On construit un tableau où pour chaque élément on indique le nom, le type d'élément et l'altitude.
@@ -287,7 +293,6 @@ public class FPLReader extends TrackFilesReader {
 					array.add(typeElevation);
 			}
 		}
-
 		//On parcourt ensuite ce tableau pour extraire la route
 		for(int i = 0; i < array.size(); i++){
 			Triplet<String, Type, Double> t = array.get(i);
@@ -333,7 +338,6 @@ public class FPLReader extends TrackFilesReader {
 					track.add(p);
 			}
 		}
-
 	}
 
 
@@ -813,21 +817,25 @@ public class FPLReader extends TrackFilesReader {
 	private boolean addAirportToTrack(LinkedList<LPLNTrackPoint> track, String code){
 		LPLNTrackPoint airport = null;
 		try{
-			Statement st = DatabaseManager.getCurrentAIP();
-			ResultSet rs = st.executeQuery("select latRef, lonRef from aerodromes where code ='"+code+"'");
+			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select latRef, lonRef from aerodromes where code = ?");
+			st.setString(1, code);
+			ResultSet rs = st.executeQuery();
 			if(rs.next()){
 				airport = new LPLNTrackPoint();
 				airport.setName(code);
 				airport.setPosition(Position.fromDegrees(rs.getDouble(1), rs.getDouble(2), 0));
 			}else if(DatabaseManager.getCurrentSkyView()!=null){
-				ResultSet rs2 = DatabaseManager.getCurrentSkyView().executeQuery("select LATITUDE, LONGITUDE from AIRPORT where ident='"+code+"'");
+				PreparedStatement st2 = DatabaseManager.prepareStatement(DatabaseManager.Type.SkyView, "select LATITUDE, LONGITUDE from AIRPORT where ident = ?");
+				st2.setString(1, code);
+				ResultSet rs2 = st2.executeQuery();
 				if(rs2.next()){
 					airport = new LPLNTrackPoint();
 					airport.setName(code);
 					airport.setPosition(new Position(LatLonUtils.computeLatLonFromSkyviewString(rs2.getString(1), rs2.getString(2)), 0));
 				}
-				st.close();
+				st2.close();
 			}
+			st.close();
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
