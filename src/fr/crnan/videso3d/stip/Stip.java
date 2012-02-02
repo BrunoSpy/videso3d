@@ -1219,8 +1219,8 @@ public class Stip extends FileParser{
 			consigne += rs.getString(2)+" ";
 			String balise = rs.getString(3);
 			consigne += completerBalise(balise)+" ";
-			consigne+= Stip.completerNiveau(rs.getString(4));
-			consigne+= Stip.completerNiveau(rs.getString(5));
+			consigne+= Stip.completerNiveau(rs.getString(4))+" ";
+			consigne+= Stip.completerNiveau(rs.getString(5))+" ";
 			consigne += rs.getInt(6)==1?"EVE ":"    ";
 			consigne += rs.getInt(7)==1?"ACT ":"    ";
 			consigne += rs.getInt(8)==1?"MOD ":"    ";
