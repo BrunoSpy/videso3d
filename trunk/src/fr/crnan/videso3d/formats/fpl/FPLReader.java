@@ -191,11 +191,13 @@ public class FPLReader extends TrackFilesReader {
 			addAirportToTrack(pointsList, arrivee);	
 			addKnownPointsListToTrack(pointsList, track);
 		}catch(Exception e){
+			e.printStackTrace();
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
 		if(track.getNumPoints()>1){
 			this.getModel().addTrack(track);
 		}else{
+			System.out.println("0 points");
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
 	}
@@ -234,11 +236,13 @@ public class FPLReader extends TrackFilesReader {
 			}
 			addKnownPointsListToTrack(pointsList, track);
 		}catch(Exception e){
+			e.printStackTrace();
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
 		if(track.getNumPoints()>0){
 			this.getModel().addTrack(track);
 		}else{
+			System.out.println("0 points");
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
 	}
@@ -808,35 +812,47 @@ public class FPLReader extends TrackFilesReader {
 	}
 
 	/**
-	 * Va chercher l'aéroport dans les données STIP d'abord, puis si nécessaire dans les données SkyView et ajoute un LPLNTrackPoint correspondant à 
-	 * l'aéroport à la trajectoire <code>track</code>.
+	 * Va chercher l'aéroport dans les données AIP d'abord, puis si nécessaire dans les données SkyView et enfin dans les données STIP,
+	 * et ajoute un LPLNTrackPoint correspondant à l'aéroport <code>code</code> à la trajectoire <code>track</code>.
 	 * @param track
 	 * @param code
-	 * @return true si l'aéroport a été trouvé dans les données STIP ou SkyView, false sinon.
+	 * @return true si l'aéroport a été trouvé dans les données AIP, SkyView ou STIP, false sinon.
 	 */
 	private boolean addAirportToTrack(LinkedList<LPLNTrackPoint> track, String code){
 		LPLNTrackPoint airport = null;
 		try{
-			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select latRef, lonRef from aerodromes where code = ?");
-			st.setString(1, code);
-			ResultSet rs = st.executeQuery();
-			if(rs.next()){
-				airport = new LPLNTrackPoint();
-				airport.setName(code);
-				airport.setPosition(Position.fromDegrees(rs.getDouble(1), rs.getDouble(2), 0));
-			}else if(DatabaseManager.getCurrentSkyView()!=null){
-				PreparedStatement st2 = DatabaseManager.prepareStatement(DatabaseManager.Type.SkyView, "select LATITUDE, LONGITUDE from AIRPORT where ident = ?");
-				st2.setString(1, code);
-				ResultSet rs2 = st2.executeQuery();
-				if(rs2.next()){
+			if(DatabaseManager.getCurrentAIP()!=null){
+				PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select latRef, lonRef from aerodromes where code = ?");
+				st.setString(1, code);
+				ResultSet rs = st.executeQuery();
+				if(rs.next()){
 					airport = new LPLNTrackPoint();
 					airport.setName(code);
-					airport.setPosition(new Position(LatLonUtils.computeLatLonFromSkyviewString(rs2.getString(1), rs2.getString(2)), 0));
+					airport.setPosition(Position.fromDegrees(rs.getDouble(1), rs.getDouble(2), 0));
 				}
-				st2.close();
+				st.close();
+			}else if(DatabaseManager.getCurrentSkyView()!=null && airport == null){
+				PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.SkyView, "select LATITUDE, LONGITUDE from AIRPORT where ident = ?");
+				st.setString(1, code);
+				ResultSet rs = st.executeQuery();
+				if(rs.next()){
+					airport = new LPLNTrackPoint();
+					airport.setName(code);
+					airport.setPosition(new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(1), rs.getString(2)), 0));
+				}
+				st.close();
+			}else if(DatabaseManager.getCurrentStip()!=null && airport == null){
+				PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.STIP, "select LATITUDE, LONGITUDE from balises where name = ?");
+				st.setString(1, code);
+				ResultSet rs = st.executeQuery();
+				if(rs.next()){
+					airport = new LPLNTrackPoint();
+					airport.setName(code);
+					airport.setPosition(Position.fromDegrees(rs.getDouble(1), rs.getDouble(2), 0));
+				}
+				st.close();
 			}
-			st.close();
-		}catch(SQLException e){
+		}catch(Exception e){
 			e.printStackTrace();
 		}
 		if(airport !=null){
