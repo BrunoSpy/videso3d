@@ -142,7 +142,6 @@ public class StpvContext extends Context {
 								taskpane.add(new JLabel("<html>Sect. "+(i-6)+" : non</html>"));
 						}
 					}else{
-						System.out.println("!rs.next, nom : "+name);
 					}
 				}
 			} catch (SQLException e){
