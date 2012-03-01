@@ -595,12 +595,8 @@ protected Color dragColor = Color.RED;
                     		new Thread(new Runnable(){
                     			@Override
                     			public void run() {
-                    				System.out.println("RUN");
                     				if(upOrDown==UP){
-                    					System.out.println("UP");
                     					while(displayIndex<layersSize-maxLayersOnScreen-1 && mousePressed){
-                    						System.out.println("DI : "+displayIndex+" - MP : "+mousePressed);
-                    						System.out.println(displayIndex<layersSize-maxLayersOnScreen-1 && mousePressed);
                     						try {
                     							Thread.sleep(sleep);
                     						} catch (InterruptedException e) {
@@ -610,7 +606,6 @@ protected Color dragColor = Color.RED;
                     						displayIndex++;
                     						update();
                     					}
-                    					System.out.println("endwhile : "+(mousePressed));
                     				}else{
                     					while(displayIndex>1 && mousePressed){
                     						try {
@@ -625,7 +620,6 @@ protected Color dragColor = Color.RED;
                     				}
                     				upDownThreadRunning = false;
                     				mousePressed = false;
-                    				System.out.println("Mousepressed : "+mousePressed);
                     			}
                     		}).start();
                     	}
@@ -1035,7 +1029,6 @@ protected Color dragColor = Color.RED;
 
     @Override
     public void mouseReleased(MouseEvent arg0) {
-    	System.out.println("Mouse released !");
     	mousePressed = false;
     }
 }
