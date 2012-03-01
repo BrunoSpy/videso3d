@@ -602,6 +602,21 @@ public final class DatabaseManager {
 				"lieu90 int, " +
 				"conf varchar(5), " +
 				"name varchar(7))");
+		st.executeUpdate("create table bali (id integer primary key autoincrement, " +
+				"name varchar(5), " +
+				"CDG int, " +
+				"ORL int, " +
+				"LILE int, " +
+				"TMA int, " +
+				"sect1 int, " +
+				"sect2 int, " +
+				"sect3 int, " +
+				"sect4 int, " +
+				"sect5 int, " +
+				"sect6 int, " +
+				"sect7 int, " +
+				"sect8 int, " +
+				"sect9 int)");
 		st.close();
 		DatabaseManager.addDatabase(name, Type.STPV, new SimpleDateFormat().format(new Date()));
 	}

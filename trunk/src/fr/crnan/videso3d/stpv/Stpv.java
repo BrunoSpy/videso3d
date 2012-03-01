@@ -26,6 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
 
@@ -138,9 +139,74 @@ public class Stpv extends FileParser{
 		this.setFile("SECT");
 		this.setProgress(2);
 		this.setSect(FileManager.getFile(path + "/SECT"));
+		this.setFile("BALI");
 		this.setProgress(3);
+		this.setBali(FileManager.getFile(path + "/BALI"));
+		this.setProgress(4);
 	}
-
+	
+	/**
+	 * Parse le fichier BALI
+	 * @param path
+	 * @throws SQLException 
+	 * @throws IOException 
+	 */
+	private void setBali(String path) throws IOException, SQLException{
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+		String currentName = "";
+		ArrayList<String> currentLines = new ArrayList<String>();
+		while (in.ready()){
+			String line = in.readLine();
+			String name = (line.length()>12 ? line.substring(8, 13) : line.substring(8));
+			if(!name.equals(currentName)){
+				insertBali(currentLines, currentName.trim());
+				currentLines.clear();
+				currentName = name;
+			}
+			if(line.startsWith("BALI 4") || line.startsWith("BALI 5")){
+				currentLines.add(line);
+			}
+		}
+		insertBali(currentLines, currentName.trim());
+	}
+	
+	/**
+	 * Insertion en base de données d'une ligne BALI 4, ou BALI50 à BALI59
+	 * @param line
+	 * @throws SQLException 
+	 */
+	private void insertBali(ArrayList<String> lines, String name) throws SQLException{
+		PreparedStatement insert = this.conn.prepareStatement("insert into bali (name, CDG, ORL, LILE, TMA, " +
+				"sect1, sect2, sect3, sect4, sect5, sect6, sect7, sect8, sect9) " +
+				"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		for(int i = 1; i<=14; i++){
+			insert.setInt(i, -1);
+		}
+		insert.setString(1, name);
+		for(String line : lines){
+			if(line.startsWith("BALI 4")){
+				if(line.substring(20).startsWith("CDG")){
+					insert.setInt(2, 1);
+				}else if(line.substring(20).startsWith("ORL")){
+					insert.setInt(3, 1);
+				}else if(line.substring(20).startsWith("LILE")){
+					insert.setInt(4, 1);
+				}
+			}else if(line.startsWith("BALI 50")){
+				insert.setInt(5, 0);
+			}else if(line.startsWith("BALI 5")){
+				int index = Integer.parseInt(line.substring(6,7));
+				if(line.contains(" NP "))
+					insert.setInt(index+5, 0);
+				else
+					insert.setInt(index+5, 1);
+			}
+		}
+		insert.executeUpdate();
+		insert.close();
+	}
+	
+	
 	/**
 	 * Parse le fichier SECT
 	 * @param path
