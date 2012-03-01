@@ -65,7 +65,7 @@ public class FPLImportUI extends JFrame implements ActionListener{
 		indiPane.setLayout(new FlowLayout(FlowLayout.LEADING));
 		indiPane.add(indicatif);
 		indiPane.add(indiTextField);
-		JLabel enterFPL = new JLabel("<html>Rentrez vos plans de vol ci-dessous : <br/><i>Deux plans de vol doivent être séparés par un saut de ligne</i></html>");
+		JLabel enterFPL = new JLabel("<html>Entrez vos plans de vol ci-dessous : <br/><i>Deux plans de vol doivent être séparés par un saut de ligne</i></html>");
 		JPanel enterFPLPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		enterFPLPanel.add(enterFPL);
 		fplArea = new JTextArea(15,80);

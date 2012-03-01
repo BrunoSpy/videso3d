@@ -197,7 +197,6 @@ public class FPLReader extends TrackFilesReader {
 		if(track.getNumPoints()>1){
 			this.getModel().addTrack(track);
 		}else{
-			System.out.println("0 points");
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
 	}
@@ -242,7 +241,6 @@ public class FPLReader extends TrackFilesReader {
 		if(track.getNumPoints()>0){
 			this.getModel().addTrack(track);
 		}else{
-			System.out.println("0 points");
 			throw new UnrecognizedFPLException(fpl.getFirst());
 		}
 	}

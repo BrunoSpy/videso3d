@@ -411,7 +411,7 @@ public class AIP extends FileParser{
 	
 	private int getRunwayOrientation(String rwyName){
 		String firstQFU = rwyName.split("/")[0];
-		if(firstQFU.equals("NW")){
+		if(firstQFU.startsWith("NW")){
 			return 45;
 		}
 		if(firstQFU.endsWith("R") || firstQFU.endsWith("L") || firstQFU.endsWith("C")){

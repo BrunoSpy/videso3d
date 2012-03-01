@@ -360,9 +360,20 @@ public class MainToolbar extends JToolBar {
 				}
 			}
 		});
+		
+		JMenuItem addFromText = new JMenuItem("Texte");
+		addFromText.setToolTipText("Entrer/Copier des coordonnées");
+		addFromText.addActionListener(new ActionListener() {
 
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new PolygonImportUI().setVisible(true);
+			}
+		});
+		
 		addAirspace.getPopupMenu().add(addPolygon);
 		addAirspace.getPopupMenu().add(addFromFile);
+		addAirspace.getPopupMenu().add(addFromText);
 		addAirspace.addActionListener(new ActionListener() {
 
 			@Override
