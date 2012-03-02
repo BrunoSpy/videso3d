@@ -5,7 +5,8 @@ import java.awt.event.MouseEvent;
 import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwindx.examples.util.ScreenSelector;
 /**
- * Modified {@link ScreenSelector} that is always enabled but only active when control_key is down
+ * Modified {@link ScreenSelector} that is always enabled but only active when control_key is down<br />
+ * Doesn't allow multiple rectangle selection due to WWJ limitation : restarts the selection each time the mouse is dragged.
  * @author Bruno Spyckerelle
  * @version 0.1.0
  */

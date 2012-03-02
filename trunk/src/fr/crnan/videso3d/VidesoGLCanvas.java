@@ -84,6 +84,7 @@ import gov.nasa.worldwind.layers.LayerList;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
+import gov.nasa.worldwind.render.Path;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.Polygon;
 import gov.nasa.worldwind.tracks.TrackPoint;
@@ -765,6 +766,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 			this.deleteAirspace((Airspace) o);
 		} else if(o instanceof Balise){
 			this.deleteBalise((Balise) o);
+		} else if(o instanceof Path){
+			this.deletePath((Path)o);
 		}
 	}
 	
@@ -796,4 +799,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 		}
 	}
 
+	public void deletePath(Path p){
+		p.setVisible(false);
+	}
 }

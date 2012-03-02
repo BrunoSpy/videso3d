@@ -29,7 +29,7 @@ import gov.nasa.worldwind.render.Path;
  * Filters segments of the Path that are that fully inside maxAltitude and minAltitude<br/>
  * If the path is splitted in mulptiple visible segments, only the first one will be displayed
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  *
  */
 public class AltitudeFilterablePath extends Path {
@@ -161,6 +161,16 @@ public class AltitudeFilterablePath extends Path {
 		boolean old = isHighlighted();
 		super.setHighlighted(highlighted);
 		firePropertyChange("HIGHLIGHT", old, highlighted);
+	}
+
+	/* (non-Javadoc)
+	 * @see gov.nasa.worldwind.render.AbstractShape#setVisible(boolean)
+	 */
+	@Override
+	public void setVisible(boolean visible) {
+		boolean old = isVisible();
+		super.setVisible(visible);
+		firePropertyChange("VISIBLE", old, visible);
 	}
 
 	

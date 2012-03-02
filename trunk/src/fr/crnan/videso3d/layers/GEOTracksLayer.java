@@ -255,11 +255,15 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 				line.setPositions(positions);
 				lines.put(track, line);
 				//track highlight
-				line.addPropertyChangeListener("HIGHLIGHT", new PropertyChangeListener() {
+				line.addPropertyChangeListener(new PropertyChangeListener() {
 					
 					@Override
 					public void propertyChange(PropertyChangeEvent evt) {
-						getModel().setSelected((Boolean) evt.getNewValue(), track);
+						if(evt.getPropertyName().equals("HIGHLIGHT")){
+							getModel().setSelected((Boolean) evt.getNewValue(), track);
+						} else if(evt.getPropertyName().equals("VISIBLE")){
+							getModel().setVisible((Boolean) evt.getNewValue(), track);
+						}
 					}
 				});
 				this.layer.addRenderable(line);
