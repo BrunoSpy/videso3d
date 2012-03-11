@@ -25,9 +25,12 @@ import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -48,7 +51,10 @@ public class PLNSExtractor {
 	private File sec;
 	private File typ;
 	
+	private Connection database;
+	
 	public PLNSExtractor(File[] files, Connection database){
+		this.database = database;
 		for(File f : files){
 			//extract files
 			File tempRep = new File("temp_"+f.getName()); 
@@ -76,6 +82,8 @@ public class PLNSExtractor {
 			}  catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 
@@ -107,7 +115,7 @@ public class PLNSExtractor {
 		//connection par défaut
 		Statement st = null;
 		try {
-
+			database.setAutoCommit(false);
 			//Création de la structure si besoin
 			st = database.createStatement();
 			//Méthode comme une autre pour vérifier que la structure existe ... lance une exception si ce n'est pas le cas
@@ -121,20 +129,30 @@ public class PLNSExtractor {
 				"date varchar(20), " +
 				"heure_dep varchar(20), " +
 				"indicatif varchar(12), " +
-				"mode_a int, "+
+				"code int, "+
+				"code_prev int, "+
 				"adep varchar(4)," +
-				"adest varchar(4)," +
-				"sl varchar(64)," +
-				"secteurs varchar(64))";
+				"adest varchar(4))";
+				st.executeUpdate(create);
+				create = "create table secteurs (id integer primary key autoincrement, " +
+						"idpln int, " +
+						"secteur varchar(2))";
+				st.executeUpdate(create);
+				create = "create table sls (id integer primary key autoincrement, " +
+						"idpln int, " +
+						"sl varchar(4))";
 				st.executeUpdate(create);
 				st.close();
 			} catch (SQLException e2) {
 				e2.printStackTrace();
 			}
 		} 
+		
 	}
 	
-	private void readFiles() throws IOException{
+	private void readFiles() throws IOException, SQLException{
+		Statement st = this.database.createStatement();
+		System.out.println("test0");
 		boolean stop = false;
 		FileInputStream trmR = new FileInputStream(trm);
 		RandomAccessFile balR = new RandomAccessFile(bal, "r");
@@ -147,15 +165,12 @@ public class PLNSExtractor {
 		int enTete = 6;
 		
 		while(!stop){
-			System.out.println("test0");
 			if(trmR.read(pln, 0, longBuf) == longBuf){
-				System.out.println("test1");
-			//	String plnString = new String(pln, "ISO-8859-1");
+			    String plnString = new String(pln, "ISO-8859-1");
 				
 				int nbJour = ord(pln[1])*256 + ord(pln[2]);
-				System.out.println(nbJour);
 				int annee = ord(pln[0]);
-				System.out.println(annee);
+
 				Calendar calendar = new GregorianCalendar();
 				calendar.set(20*10+annee, 1, 1);
 				calendar.add(Calendar.DAY_OF_MONTH, nbJour-1);
@@ -173,16 +188,135 @@ public class PLNSExtractor {
 				int indexChampGestINT = ord(pln[20])*256 + ord(pln[21]);
 				
 				// Renseignements généraux
-                String indicatif = new String(pln, "ISO-8859-1").substring(9+enTete+indexRensGen, 9+enTete+indexRensGen+7);
+                String indicatif = plnString.substring(9+enTete+indexRensGen, 9+enTete+indexRensGen+7);
                 int numeroCAUTRA = ord(pln[7+enTete+indexRensGen])*256 + ord(pln[8+enTete+indexRensGen]);
                 int vitesse = ord(pln[17+enTete+indexRensGen])*256 + ord(pln[18+enTete+indexRensGen]);
 
+                // On récupère le rang du type de l'avion dans le fichier type
+                // Et ensuite, on extrait le type de l'avion du fichier type
+
+                int rangTypeAvion = ord(pln[19+enTete+indexRensGen])*256+ord(pln[20+enTete+indexRensGen]);
+                typR.seek(5+(rangTypeAvion-1)*10-1);
+                byte[] typeAvion = new byte[4];
+                typR.read(typeAvion, 0, 4);
+                String typeAvionString = new String(typeAvion, "ISO-8859-1");
                 
+                String adep = plnString.substring(21+enTete+indexRensGen, 21+enTete+indexRensGen+4);
+                String adest = plnString.substring(25+enTete+indexRensGen, 25+enTete+indexRensGen+4);
+                
+                int rfl = ord(pln[29+enTete+indexRensGen])*256+ord(pln[30+enTete+indexRensGen]);
+                
+                int heureDepMin = ord(pln[31+enTete+indexRensGen])*256 + ord(pln[32+enTete+indexRensGen]);
+                if(heureDepMin > 24*60)
+                	heureDepMin = heureDepMin -24*60;
+                String heureDep = (heureDepMin/60) +":"+(heureDepMin%60);
+                
+                int pfl = ord(pln[3+enTete+indexChampCOOR])*256 + ord(pln[4+enTete+indexChampCOOR]);
+                
+                int nbBalises = ord(pln[45+enTete+indexRensGen]);
+                
+                int nbSecteur = ord(pln[46+enTete+indexRensGen]);
+                
+                int nbCCR = ord(pln[48+enTete+indexRensGen]);
+                
+                // Récupération des index des champs gestion interne
+                int indexRensGenInt = ord(pln[enTete+indexChampGestINT-1])*256 + ord(pln[enTete+indexChampGestINT]);
+                int indexChampRouteInt = ord(pln[enTete+indexChampGestINT+9])*256 + ord(pln[enTete+indexChampGestINT+10]);
+                int indexChampCCRInt = ord(pln[enTete+indexChampGestINT+11])*256 + ord(pln[enTete+indexChampGestINT+12]);
+                int indexChampSectInt = ord(pln[enTete+indexChampGestINT+15])*256 + ord(pln[enTete+indexChampGestINT+16]);
+                int indexChampRadInt = ord(pln[enTete+indexChampGestINT+5])*256 + ord(pln[enTete+indexChampGestINT+6]);
+
+                int rangSL = ord(pln[enTete+indexRensGenInt-1]);
+                int rangPPT = ord(pln[enTete+indexRensGenInt]);//premier point RI
+                int rangDPT = ord(pln[enTete+indexRensGenInt+1]);//dernier point RI
+
+                //code mode A précédent
+                int codePrev1 = ord(pln[enTete+indexChampRadInt-1]);
+                int codePrev2 = ord(pln[enTete+indexChampRadInt]);
+                int codePrev3 = ord(pln[enTete+indexChampRadInt+1]);
+                int codePrev4 = ord(pln[enTete+indexChampRadInt+2]);
+                int codePrev = codePrev1*1000+codePrev2*100+codePrev3*10+codePrev4;
+                
+                //code mode A
+                int code1 = ord(pln[enTete+indexChampRadInt+3]);
+                int code2 = ord(pln[enTete+indexChampRadInt+4]);
+                int code3 = ord(pln[enTete+indexChampRadInt+5]);
+                int code4 = ord(pln[enTete+indexChampRadInt+6]);
+                int code = code1*1000+code2*100+code3*10+code4;
+                
+                //TODO extraction de la route
+                
+                //liste des SL
+                List<String> sl = new ArrayList<String>();
+                for(int i = 0;i<nbCCR;i++){
+                	int rangCCR = ord(pln[enTete+indexChampCCR+4*i-1]);
+                	cenR.seek(rangCCR*6);
+                	byte[] ccr = new byte[4];
+                	cenR.read(ccr, 0, 4);
+                	sl.add(new String(ccr, "ISO-8859-1"));
+                }
+                
+                List<String> secteurs = new ArrayList<String>();
+                for(int i = 0;i<nbSecteur;i++){
+                	int rangSecteur = ord(pln[enTete+indexChampSecteur+6*i-1])*256 + ord(pln[enTete+indexChampSecteur+6*i]);
+                	secR.seek(rangSecteur-1);
+                	byte[] secteur = new byte[2];
+                	secR.read(secteur, 0, 2);
+                	
+                	int rangPPTSecteur = ord(pln[enTete+indexChampSecteur+1+6*i]);
+                	int rangDPTSecteur = ord(pln[enTete+indexChampSecteur+2+6*i]);
+                	
+                	if((rangPPTSecteur >= rangPPT && rangPPTSecteur <= rangDPT) || (rangDPTSecteur >= rangPPT && rangDPTSecteur <= rangDPT)) {
+                		secteurs.add(new String(secteur, "ISO-8859-1"));
+                	}
+                }
+                
+                ResultSet rs = st.executeQuery("select count(*) from plns where " +
+                														"date='"+date+"' and " +
+                														"heure_dep='"+heureDep+"' and " +
+                														"adep='"+adep+"'");
+                System.out.println("test01");
+                if(rs.next() && rs.getInt(1) == 0){
+                	System.out.println("test1");
+                	PreparedStatement insert = this.database.prepareStatement("insert into plns (date, heure_dep, indicatif, code, code_prev, adep, adest) " +
+                			"values (?, ?, ?, ?, ?, ?, ?)");
+                	insert.setString(1, date);
+                	insert.setString(2, heureDep);
+                	insert.setString(3, indicatif);
+                	insert.setInt(4, code);
+                	insert.setInt(5, codePrev);
+                	insert.setString(6, adep);
+                	insert.setString(7, adest);
+                	insert.executeUpdate();
+                	
+                	int id = insert.getGeneratedKeys().getInt(1);
+                	insert.close();
+                	//secteurs
+                	insert = this.database.prepareStatement("insert into secteurs (idpln, secteur) values (?, ?)");
+                	insert.setInt(1, id);
+                	for(String s : secteurs){
+                		insert.setString(2, s);
+                		insert.addBatch();
+                	}
+                	insert.executeBatch();
+                	insert.close();
+                	
+                	insert = this.database.prepareStatement("insert into sls (idpln, sl) values (?, ?)");
+                	insert.setInt(1, id);
+                	for(String s : sl){
+                		insert.setString(2, s);
+                		insert.addBatch();
+                	}
+                	insert.executeBatch();
+                	insert.close();
+                }
                 
 			} else {
 				stop = true;
 			}
 		}
+		st.close();
+		this.database.commit();
 	}
 	
 	private void extractFiles(ProgressMonitorInputStream reader) throws IOException{
