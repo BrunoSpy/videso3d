@@ -188,6 +188,9 @@ public class EdimapController implements VidesoController {
 		return restorables;
 	}
 	
+	/**
+	 * Affiche les coordonnées de l'objet <code>name</code>
+	 */
 	public void setLocationsVisible(int type, String name, boolean visible){
 		Carte carte = null;
 		try {
@@ -204,6 +207,9 @@ public class EdimapController implements VidesoController {
 		carte.setLocationsVisible(visible);
 	}
 	
+	/**
+	 * Renvoie true si les coordonnées de l'objet sont affichées, false sinon.
+	 */
 	public boolean areLocationsVisible(int type, String name){
 		Carte carte = null;
 		try {

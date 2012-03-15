@@ -134,7 +134,9 @@ public class StpvContext extends Context {
 						if(rs.getInt("LILE")==1)
 							taskpane.add(new JLabel("<html>Imprimable à <b>Lille</b></html>"));
 						if(rs.getInt("TMA")==0)
-							taskpane.add(new JLabel("<html>Non imprimable en TMA</html>"));
+							taskpane.add(new JLabel("<html>Non imprimable sur strips tour</html>"));
+						else if(rs.getInt("TMA")==1)
+							taskpane.add(new JLabel("<html>Imprimable sur strips tour</html>"));							
 						for(int i = 7; i<16; i++){
 							if(rs.getInt(i)==1)
 								taskpane.add(new JLabel("<html>Sect. "+(i-6)+" : oui</html>"));

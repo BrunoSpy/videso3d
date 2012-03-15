@@ -104,8 +104,6 @@ public class Cartes extends FileParser {
 	private PriorityRenderableLayer surfaceLayer;
 	private FilterableAirspaceLayer airspaceLayer;
 	private TextLayer textLayer;
-	//TODO
-	private TextLayer locationLayer;
 	
 	/**
 	 * Récupère les données du fichier carac_jeu

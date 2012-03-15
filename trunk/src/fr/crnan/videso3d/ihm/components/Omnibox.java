@@ -44,7 +44,9 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.geom.LatLonUtils;
+import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.ihm.ContextPanel;
+import fr.crnan.videso3d.layers.Balise2DLayer;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 
@@ -111,7 +113,13 @@ public class Omnibox {
 						//try to convert into latlon first
 						LatLon coord = LatLonUtils.computeLatLonFromString((String)input);
 						if(coord != null) {
-							wwd.getView().goTo(new Position(coord, 0), 1e6);
+							Position position = new Position(coord, 0);
+							Balise2DLayer coordinatesLayer = (Balise2DLayer) wwd.getModel().getLayers().getLayerByName("coordLayer");
+							String inputString = (String) input;
+							Balise2D coordinatesMarker = new Balise2D(inputString, position, inputString);
+							coordinatesLayer.addBalise(coordinatesMarker);
+							coordinatesLayer.showBalise(inputString, 0);
+							wwd.getView().goTo(position, 1e6);
 						} 
 					} else if(input instanceof ItemCouple){
 						Couple<Integer, String> item = ((ItemCouple) input).getSecond();

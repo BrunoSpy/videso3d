@@ -115,6 +115,8 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	@Override
 	public void showBalise(String name, int type) {
 		Balise2D b = balises.get(name+type);
+		if(b==null)
+			b = balises.get(name);
 		if(b != null){
 			this.showBalise(b);
 		}

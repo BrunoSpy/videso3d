@@ -17,6 +17,7 @@ package fr.crnan.videso3d.edimap;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
+import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.PolygonAnnotation;
 import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
@@ -213,11 +214,8 @@ public class Carte implements DatabaseVidesoObject{
 		}else if(visible && !locationsVisible){
 			locationsVisible = true;
 			for(LatLonCautra l : pointsRef.values()){
-				String latString = l.getLatitude().toDMSString();
-				latString = (l.getLatitude().degrees>0? latString+"N" : latString.substring(1)+"S");
-				String lonString = l.getLongitude().toDMSString();
-				lonString = (l.getLongitude().degrees>0? lonString+"E" : lonString.substring(1)+"W");
-				UserFacingText location = new UserFacingText(latString+"   "+lonString, new Position(l,0));
+				String latLonString = LatLonUtils.toLatLonToString(l);
+				UserFacingText location = new UserFacingText(latLonString, new Position(l,0));
 				locationTexts.add(location);
 				this.textLayer.addGeographicText(location);
 			}

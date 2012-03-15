@@ -182,6 +182,7 @@ public class Stpv extends FileParser{
 		for(int i = 1; i<=14; i++){
 			insert.setInt(i, -1);
 		}
+		insert.setInt(5, 1);
 		insert.setString(1, name);
 		for(String line : lines){
 			if(line.startsWith("BALI 4")){
