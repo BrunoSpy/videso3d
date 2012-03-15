@@ -50,6 +50,7 @@ import fr.crnan.videso3d.layers.Balise3DLayer;
 import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
+import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
@@ -99,6 +100,11 @@ public class StipController extends ProgressSupport implements VidesoController 
 	private FilterableAirspaceLayer secteursLayer = new FilterableAirspaceLayer();
 	{secteursLayer.setName("Secteurs");
 	secteursLayer.setEnableAntialiasing(true);}		
+	
+	/**
+	 * Layer de texte pour afficher les coordonnées des secteurs.
+	 */
+	private TextLayer textLayer = new TextLayer("Coord. volumes STIP");
 	
 	private HashMap<String, Secteur3D> secteurs = new HashMap<String, Secteur3D>();
 	/**
@@ -154,6 +160,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 		this.wwd.removeLayer(balisesPub3D);
 		this.wwd.removeLayer(secteursLayer);
 		this.wwd.removeLayer(itisLayer);
+		this.wwd.removeLayer(textLayer);
 	}
 	
 	@Override
@@ -177,6 +184,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 		for(Renderable r : this.itisLayer.getRenderables()){
 			((Route2D) r).setVisible(false);
 		}
+		textLayer.removeAllGeographicTexts();
 	}
 
 	@Override
@@ -394,7 +402,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 				attrs.setOutlineOpacity(0.9);
 				attrs.setOutlineWidth(1.5);
 				while(rs.next()){
-					Secteur3D secteur3D = new Secteur3D(name, rs.getInt("flinf"), rs.getInt("flsup"),StipController.SECTEUR, DatabaseManager.Type.STIP);
+					Secteur3D secteur3D = new Secteur3D(name, rs.getInt("flinf"), rs.getInt("flsup"),StipController.SECTEUR, DatabaseManager.Type.STIP, textLayer);
 					Secteur secteur = new Secteur(name, rs.getInt("numero"), DatabaseManager.getCurrentStip());
 					secteur.setConnectionPays(DatabaseManager.getCurrent(DatabaseManager.Type.PAYS));
 					secteur3D.setLocations(secteur.getContour(rs.getInt("flsup")));
@@ -419,6 +427,8 @@ public class StipController extends ProgressSupport implements VidesoController 
 		Integer i = 0;
 		while(secteurs.containsKey(name+i.toString())){
 			secteurs.get(name+i.toString()).setVisible(false);
+			if(i==0)
+				secteurs.get(name+0).setLocationsVisible(false);
 			i++;
 		}
 		this.secteursLayer.firePropertyChange(AVKey.LAYER, null, this.secteursLayer);
@@ -621,6 +631,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 			secteursLayer.setName("Secteurs");
 			secteursLayer.setEnableAntialiasing(true);
 			this.toggleLayer(secteursLayer, true);
+			this.toggleLayer(textLayer, true);
 		}
 		if(itisLayer != null){
 			itisLayer.removeAllRenderables();
@@ -639,6 +650,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 				buildRoutes("F");
 				buildRoutes("U");
 				this.toggleLayer(secteursLayer, true);
+				this.toggleLayer(textLayer, true);
 				secteurs.clear();				
 			}
 		} catch (SQLException e) {
@@ -872,6 +884,16 @@ public class StipController extends ProgressSupport implements VidesoController 
 			}
 		}
 		return restorables;
+	}
+
+	@Override
+	public boolean areLocationsVisible(int type, String name) {
+		return secteurs.get(name+0).areLocationsVisible();
+	}
+
+	@Override
+	public void setLocationsVisible(int type, String name, boolean b) {
+		secteurs.get(name+0).setLocationsVisible(b);
 	}
 
 	

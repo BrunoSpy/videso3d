@@ -142,4 +142,18 @@ public interface VidesoController {
 	 * @return 
 	 */
 	public Iterable<Restorable> getSelectedObjects();
+	/**
+	 * 
+	 * @param type Le type de l'objet
+	 * @param name Le nom de l'objet
+	 * @return <code>true</code> si les coordonnées de l'objet sont affichées, <code>false</code> sinon.
+	 */
+	public boolean areLocationsVisible(int type, String name);
+	/**
+	 * 
+	 * @param type Le type de l'objet
+	 * @param name Le nom de l'objet
+	 * @param b <code>true</code> si on veut afficher les coordonnées de l'objet, <code>false</code> sinon.
+	 */
+	public void setLocationsVisible(int type, String name, boolean b);
 }

@@ -206,4 +206,19 @@ public class RadioCovController implements VidesoController {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	/**
+	 * Not implemented in this controller
+	 */
+	@Override
+	public boolean areLocationsVisible(int type, String name) {
+		return false;
+	}
+	
+	/**
+	 * Not implemented in this controller
+	 */
+	@Override
+	public void setLocationsVisible(int type, String name, boolean b) {
+	}
 }

@@ -65,6 +65,7 @@ import fr.crnan.videso3d.layers.Balise3DLayer;
 import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.Routes2DLayer;
 import fr.crnan.videso3d.layers.Routes3DLayer;
+import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.LatLon;
@@ -90,6 +91,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	private FilterableAirspaceLayer zonesLayer = new FilterableAirspaceLayer();
 	{zonesLayer.setName("Zones");
 	zonesLayer.setEnableAntialiasing(true);}	
+	private TextLayer textLayer = new TextLayer("Coord. volumes AIP");
 	
 	/**
 	 * Layer contenant les routes
@@ -131,11 +133,13 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		if(zonesLayer != null) {
 			zonesLayer.removeAllAirspaces();
 			this.toggleLayer(zonesLayer, true);
+			this.toggleLayer(textLayer, true);
 		} else {
 			zonesLayer = new FilterableAirspaceLayer();
 			zonesLayer.setName("Zones");
 			zonesLayer.setEnableAntialiasing(true);
 			this.toggleLayer(zonesLayer, true);
+			this.toggleLayer(textLayer, true);
 		}
 		try {
 			if(DatabaseManager.getCurrentAIP() != null) {
@@ -206,6 +210,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		this.wwd.removeLayer(navFixLayer3D);
 		this.wwd.removeLayer(zonesLayer);
 		this.wwd.removeLayer(arptLayer);
+		this.wwd.removeLayer(textLayer);
 	}
 	
 	
@@ -378,7 +383,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 
 			Element maZone = aip.findElementByName(type, name);
 			Couple<Altitude,Altitude> niveaux = aip.getLevels(maZone);
-			Secteur3D zone = new Secteur3D(name, niveaux.getFirst().getFL(), niveaux.getSecond().getFL(),type, DatabaseManager.Type.AIP);
+			Secteur3D zone = new Secteur3D(name, niveaux.getFirst().getFL(), niveaux.getSecond().getFL(),type, DatabaseManager.Type.AIP, textLayer);
 
 			BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
 			attrs.setDrawOutline(true);
@@ -422,6 +427,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		if(zone!=null){
 			zone.setVisible(false);
 			zone.getAnnotation(Position.ZERO).getAttributes().setVisible(false);
+			zone.setLocationsVisible(false);
 			this.zonesLayer.firePropertyChange(AVKey.LAYER, null, this.zonesLayer);
 		}
 	}
@@ -1236,5 +1242,17 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		}
 		restorables.addAll(this.arptLayer.getVisibleRestorables());
 		return restorables;
+	}
+
+
+	@Override
+	public boolean areLocationsVisible(int type, String name) {
+		return zones.get(type+" "+name).areLocationsVisible();
+	}
+
+
+	@Override
+	public void setLocationsVisible(int type, String name, boolean b) {
+		zones.get(type+" "+name).setLocationsVisible(b);
 	}
 }

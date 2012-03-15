@@ -16,7 +16,14 @@
 
 package fr.crnan.videso3d.graphics;
 
+import java.util.ArrayList;
+
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.geom.LatLonUtils;
+import fr.crnan.videso3d.layers.TextLayer;
+import gov.nasa.worldwind.geom.LatLon;
+import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.UserFacingText;
 
 /**
  * Représentation 3D d'un secteur de contrôle
@@ -24,6 +31,10 @@ import fr.crnan.videso3d.DatabaseManager;
  * @version 0.4.2
  */
 public class Secteur3D extends DatabasePolygonAnnotation {
+	
+	private boolean locationsVisible = false;
+	private TextLayer textLayer;
+	private ArrayList<UserFacingText> locationTexts = new ArrayList<UserFacingText>();
 	
 	public Secteur3D(){
 		super();
@@ -37,13 +48,13 @@ public class Secteur3D extends DatabasePolygonAnnotation {
 	 * @param t Type de secteur
 	 * @param base de données origine
 	 */
-	public Secteur3D(String name, Integer plancher, Integer plafond, int t, DatabaseManager.Type base){
+	public Secteur3D(String name, Integer plancher, Integer plafond, int t, DatabaseManager.Type base, TextLayer tl){
 		super();
 		this.setName(name);
 		this.setType(t);
 		this.setDatabaseType(base);
 		this.setNiveaux(plancher, plafond);
-		
+		this.textLayer = tl;
 		this.setAnnotation("<p><b>Secteur "+name+"</b></p>"
 											+"<p>Plafond : FL"+plafond
 											+"<br />Plancher : FL"+plancher+"</p>");
@@ -59,6 +70,27 @@ public class Secteur3D extends DatabasePolygonAnnotation {
 	public void setName(String name) {
 		super.setName(name);
 		this.setValue("description", "Secteur "+name);
+	}
+
+	public boolean areLocationsVisible() {
+		return locationsVisible;
+	}
+
+	public void setLocationsVisible(boolean visible) {
+		if(!visible && locationsVisible){
+			locationsVisible = false;
+			for(UserFacingText location : locationTexts){
+				this.textLayer.removeGeographicText(location);
+			}
+		}else if(visible && !locationsVisible){
+			locationsVisible = true;
+			for(LatLon l : this.getLocations()){
+				String latLonString = LatLonUtils.toLatLonToString(l);
+				UserFacingText location = new UserFacingText(latLonString, new Position(l,0));
+				locationTexts.add(location);
+				this.textLayer.addGeographicText(location);
+			}
+		}
 	}
 
 }

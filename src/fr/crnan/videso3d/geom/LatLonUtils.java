@@ -212,4 +212,33 @@ public class LatLonUtils {
     						+Math.pow(pos1.elevation-pos2.elevation, 2));
     	}
     }
+    
+    public static String toLatLonToString(LatLon l){
+    	String latString = l.getLatitude().toDMSString();
+    	String degresLat = latString.split("°")[0];
+    	if(degresLat.charAt(0)=='-')
+    		degresLat = degresLat.substring(1);
+    	degresLat = (degresLat.length()==1 ? "0"+degresLat : degresLat);
+    	String minutesLat = latString.split("°")[1].split("’")[0];
+    	minutesLat = (minutesLat.length()==2 ? "0"+minutesLat.trim() : minutesLat);
+    	String secondesLat = latString.split("’")[1].split("”")[0];
+    	secondesLat = (secondesLat.length()==2 ? "0"+secondesLat.trim() : secondesLat);
+    	latString = degresLat + "° " + minutesLat + "’ " + secondesLat + "”";
+		latString = (l.getLatitude().degrees>0? latString+" N" : latString.substring(1)+" S");
+		
+		String lonString = l.getLongitude().toDMSString();
+		String degresLon = lonString.split("°")[0];
+    	if(degresLon.charAt(0)=='-')
+    		degresLon = degresLon.substring(1);
+    	degresLon = (degresLon.length()==1 ? "0"+degresLon : degresLon);
+    	String minutesLon = lonString.split("°")[1].split("’")[0];
+    	minutesLon = (minutesLon.length()==2 ? "0"+minutesLon.trim() : minutesLon);
+    	String secondesLon = lonString.split("’")[1].split("”")[0];
+    	secondesLon = (secondesLon.length()==2 ? "0"+secondesLon.trim() : secondesLon);
+    	lonString = degresLon + "° " + minutesLon + "’ " + secondesLon + "”";
+		lonString += (l.getLongitude().degrees>0 ?  "E" : " W");
+		
+		String latLonString = latString+"   "+lonString;
+    	return latLonString;
+    }
 }

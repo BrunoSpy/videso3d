@@ -128,6 +128,7 @@ public class AirspaceListener implements SelectListener {
 						lock = arg0;
 					}						
 				};
+				
 				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 			} else if(o instanceof SurfaceImage){
 				ImageMenu imageMenu = new ImageMenu((SurfaceImage) o, wwd){
