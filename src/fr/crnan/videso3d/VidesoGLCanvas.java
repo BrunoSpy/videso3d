@@ -52,6 +52,7 @@ import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.components.VidesoGLCanvasKeyListener;
 import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
+import fr.crnan.videso3d.layers.Balise2DLayer;
 import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.layers.LayerManagerLayer;
@@ -150,6 +151,11 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 		Layer latlon = new LatLonGraticuleLayer();
 		latlon.setEnabled(false);
 		this.getModel().getLayers().add(latlon);
+		
+		//Calques pour les coordonnées géographiques
+		Balise2DLayer coordinatesLayer = new Balise2DLayer("coordLayer");
+		coordinatesLayer.setEnabled(true);
+		this.getModel().getLayers().add(coordinatesLayer);
 		
 		//on screen layer manager
 		LayerManagerLayer layerManager = new LayerManagerLayer(this);
