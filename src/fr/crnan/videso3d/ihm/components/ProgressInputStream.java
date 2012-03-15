@@ -24,16 +24,16 @@ import java.io.InputStream;
 /**
  * InputStream that fires events to monitor the progress of the stream (from 0 to 100)
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class ProgressInputStream extends FilterInputStream {
 
-	public final String UPDATE = "update";
+	public static final String UPDATE = "update";
 	
 	private PropertyChangeSupport support;
 	
 	private int size;
-	private int nread;
+	private double nread;
 	
 	public ProgressInputStream(InputStream in) {
 		super(in);
@@ -52,9 +52,9 @@ public class ProgressInputStream extends FilterInputStream {
 	public int read() throws IOException {
 		int c = in.read();
 		if( c>= 0) {
-			int old = (nread*100)/size;
+			int old = (int) ((nread*100.0)/size);
 			nread++;
-			firePropertyChange(UPDATE, old, (nread*100)/size);
+			firePropertyChange(UPDATE, old, (int) ((nread*100)/size));
 		}
 		return c;
 	}
@@ -68,9 +68,9 @@ public class ProgressInputStream extends FilterInputStream {
 	public int read(byte[] b, int o, int l) throws IOException {
 		int nr = in.read(b, o, l);
 		if(nr > 0){
-			int old = (nread*100)/size;
+			int old = (int) ((nread*100)/size);
 			nread += nr;
-			firePropertyChange(UPDATE, old, (nread*100)/size);
+			firePropertyChange(UPDATE, old, (int)((nread*100)/size));
 		}
 		return nr;
 	}
@@ -82,9 +82,9 @@ public class ProgressInputStream extends FilterInputStream {
 	public int read(byte[] b) throws IOException {
 		int nr = in.read(b);
 		if(nr > 0){
-			int old = (nread*100)/size;
+			int old = (int) ((nread*100)/size);
 			nread += nr;
-			firePropertyChange(UPDATE, old, (nread*100)/size);
+			firePropertyChange(UPDATE, old, (int)((nread*100)/size));
 		}
 		return nr;
 	}
@@ -97,9 +97,9 @@ public class ProgressInputStream extends FilterInputStream {
 	@Override
 	public synchronized void reset() throws IOException {
 		in.reset();
-		int old = (nread*100)/size;
+		int old = (int) ((nread*100)/size);
 		nread = size - in.available();
-		firePropertyChange(UPDATE, old, (nread*100)/size);
+		firePropertyChange(UPDATE, old, (int)((nread*100)/size));
 		
 	}
 
@@ -110,9 +110,9 @@ public class ProgressInputStream extends FilterInputStream {
 	public long skip(long n) throws IOException {
 		long nr = in.skip(n);
 		if(nr > 0){
-			int old = (nread*100)/size;
+			int old = (int) ((nread*100)/size);
 			nread += nr; 
-			firePropertyChange(UPDATE, old, (nread*100)/size);
+			firePropertyChange(UPDATE, old, (int)((nread*100)/size));
 		}
 		return nr;
 	}
