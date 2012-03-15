@@ -68,6 +68,7 @@ import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
+import fr.crnan.videso3d.formats.plns.PLNSReader;
 import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.ihm.components.AltitudeRangeSlider;
 import fr.crnan.videso3d.ihm.components.ClosableSingleDockable;
@@ -421,6 +422,7 @@ public class MainWindow extends JFrame {
 		Vector<File> geoFile = new Vector<File>();
 		Vector<File> lplnFile = new Vector<File>();
 		Vector<File> fplFile = new Vector<File>();
+		Vector<File> plnsFile = new Vector<File>();
 		for(File f : files){
 			if(OPASReader.isOpasFile(f)) {
 				opasFile.add(f);
@@ -430,6 +432,8 @@ public class MainWindow extends JFrame {
 				geoFile.add(f);
 			} else if (FPLReader.isFPLFile(f)){
 				fplFile.add(f);
+			} else if (PLNSReader.isPLNSFile(f)){
+				plnsFile.add(f);
 			}
 		}
 		
@@ -510,7 +514,15 @@ public class MainWindow extends JFrame {
 				e.printStackTrace();
 			}
 		}
-		if(opasFile.size() == 0 && geoFile.size() == 0 && lplnFile.size() == 0 && fplFile.size()==0){
+		if(plnsFile.size()>0){
+			try {
+				PLNSReader reader = new PLNSReader(plnsFile.toArray(new File[]{}), new TracksModel());
+			} catch (PointNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		if(opasFile.size() == 0 && geoFile.size() == 0 && lplnFile.size() == 0 
+				&& fplFile.size()==0 && plnsFile.size() == 0){
 			Logging.logger().warning("Aucun fichier trajectoire trouvé.");
 			JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucun fichier trajectoire trouvé.<br /><br />" +
 					"<b>Solution :</b><br />Vérifiez que les fichiers sélectionnés sont bien dans un format pris en compte.</html>", "Erreur", JOptionPane.ERROR_MESSAGE);

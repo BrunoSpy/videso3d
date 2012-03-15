@@ -15,6 +15,8 @@
 */
 package fr.crnan.videso3d.formats.plns;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,14 +37,15 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javax.swing.ProgressMonitorInputStream;
+import fr.crnan.videso3d.ProgressSupport;
+import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 
 /**
- * 
+ * Extrait les données d'un ou plusieurs fichiers PLNS et les insère dans une base de données SQLite
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
-public class PLNSExtractor {
+public class PLNSExtractor extends ProgressSupport{
 
 	private final int buf = 1024;
 	private File trm;
@@ -50,12 +53,33 @@ public class PLNSExtractor {
 	private File cen;
 	private File sec;
 	private File typ;
+	int nbFile;
+	private File[] files;
 	
 	private Connection database;
 	
 	public PLNSExtractor(File[] files, Connection database){
 		this.database = database;
+		this.files = files;
+	}
+	
+	private int ord(String s){
+		byte[] bytes;
+		try {
+			bytes = s.getBytes("ISO-8859-1");
+			return bytes[0] & 0xff;
+		}catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
+	
+	public void doExtract(){
+		this.fireTaskStarts((files.length*2)*100);
+		nbFile = 0;
+		ProgressInputStream in;
 		for(File f : files){
+			fireTaskInfo(f.getName()+" ("+(nbFile+1)+"/"+files.length+")");
 			//extract files
 			File tempRep = new File("temp_"+f.getName()); 
 			tempRep.mkdir();
@@ -67,17 +91,19 @@ public class PLNSExtractor {
 			
 			try {
 
-				ProgressMonitorInputStream in = new ProgressMonitorInputStream(null, 
-						"Extraction du fichier PLNS ...",
-						new FileInputStream(f));
-				System.out.println("début");
+				in = new ProgressInputStream(new FileInputStream(f));
+				in.addPropertyChangeListener(ProgressInputStream.UPDATE, new PropertyChangeListener() {
+					
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						fireTaskProgress(nbFile*2*100 + (Integer)evt.getNewValue());
+					}
+				});
 				extractFiles(in);
-				System.out.println("connect");
 				
 				connectDatabase(database);
-				System.out.println("read");
+				
 				readFiles();
-				System.out.println("fin");
 
 			}  catch (FileNotFoundException e1) {
 				e1.printStackTrace();
@@ -87,25 +113,15 @@ public class PLNSExtractor {
 				e.printStackTrace();
 			}
 
-//			for(File f : tempRep.listFiles()){
-//			f.delete();
-//		
-//			tempRep.delete();
+			for(File fTemp : tempRep.listFiles()){
+				fTemp.delete();
+			}
+			tempRep.delete();
+			nbFile++;
 		}
+		this.fireTaskProgress((files.length*2)*100);
 	}
 	
-	private int ord(String s){
-
-		byte[] bytes;
-		try {
-			bytes = s.getBytes("ISO-8859-1");
-			return bytes[0] & 0xff;
-		}catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			return -1;
-		}
-
-	}
 	
 	private int ord(byte b){
 		return b & 0xff;
@@ -152,9 +168,15 @@ public class PLNSExtractor {
 	
 	private void readFiles() throws IOException, SQLException{
 		Statement st = this.database.createStatement();
-		System.out.println("test0");
 		boolean stop = false;
-		FileInputStream trmR = new FileInputStream(trm);
+		ProgressInputStream trmR = new ProgressInputStream(new FileInputStream(trm));
+		trmR.addPropertyChangeListener(ProgressInputStream.UPDATE, new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				fireTaskProgress((nbFile*2+1)*100 + (Integer) evt.getNewValue());
+			}
+		});
 		RandomAccessFile balR = new RandomAccessFile(bal, "r");
 		RandomAccessFile cenR = new RandomAccessFile(cen, "r");
 		RandomAccessFile secR = new RandomAccessFile(sec, "r");
@@ -275,9 +297,7 @@ public class PLNSExtractor {
                 														"date='"+date+"' and " +
                 														"heure_dep='"+heureDep+"' and " +
                 														"adep='"+adep+"'");
-                System.out.println("test01");
                 if(rs.next() && rs.getInt(1) == 0){
-                	System.out.println("test1");
                 	PreparedStatement insert = this.database.prepareStatement("insert into plns (date, heure_dep, indicatif, code, code_prev, adep, adest) " +
                 			"values (?, ?, ?, ?, ?, ?, ?)");
                 	insert.setString(1, date);
@@ -319,9 +339,8 @@ public class PLNSExtractor {
 		this.database.commit();
 	}
 	
-	private void extractFiles(ProgressMonitorInputStream reader) throws IOException{
+	private void extractFiles(ProgressInputStream reader) throws IOException{
 		byte[] buffer = new byte[buf];
-		int j = 0;
 		boolean stop = false;
 		boolean debutFichier = false;
 		
@@ -349,8 +368,9 @@ public class PLNSExtractor {
 				c = finDeFic.charAt(i);
 				fin.append(Integer.toHexString(c));
 			}
-			
-			if(fin.toString().equals("3b11d02e")){
+		//	System.out.println(bufferString.substring(bufferString.length()-4, bufferString.length()));
+		//TODO vérifier si cohérent
+			if(!bufferString.substring(bufferString.length()-4, bufferString.length()).isEmpty()){
 				int pointeur = 0;
 				
 				while(pointeur < buf - 24){
