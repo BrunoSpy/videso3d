@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -74,12 +75,14 @@ import fr.crnan.videso3d.ihm.components.AltitudeRangeSlider;
 import fr.crnan.videso3d.ihm.components.ClosableSingleDockable;
 import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.VDefaultEclipseThemConnector;
+import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.layers.FPLTracksLayer;
 import fr.crnan.videso3d.layers.GEOTracksLayer;
 import fr.crnan.videso3d.layers.LPLNTracksLayer;
 import fr.crnan.videso3d.layers.OPASTracksLayer;
 import fr.crnan.videso3d.layers.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.PointNotFoundException;
+import fr.crnan.videso3d.trajectography.PLNSTracksModel;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
@@ -423,6 +426,7 @@ public class MainWindow extends JFrame {
 		Vector<File> lplnFile = new Vector<File>();
 		Vector<File> fplFile = new Vector<File>();
 		Vector<File> plnsFile = new Vector<File>();
+		Vector<File> sqlitePlnsFile = new Vector<File>();
 		for(File f : files){
 			if(OPASReader.isOpasFile(f)) {
 				opasFile.add(f);
@@ -434,6 +438,8 @@ public class MainWindow extends JFrame {
 				fplFile.add(f);
 			} else if (PLNSReader.isPLNSFile(f)){
 				plnsFile.add(f);
+			} else if (PLNSReader.isSQLitePLNSFile(f)){
+				sqlitePlnsFile.add(f);
 			}
 		}
 		
@@ -515,14 +521,31 @@ public class MainWindow extends JFrame {
 			}
 		}
 		if(plnsFile.size()>0){
-			try {
-				PLNSReader reader = new PLNSReader(plnsFile.toArray(new File[]{}), new TracksModel());
-			} catch (PointNotFoundException e) {
-				e.printStackTrace();
+			//choix de la base de données
+			VFileChooser fileChooser = new VFileChooser();
+			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+			fileChooser.setMultiSelectionEnabled(false);
+			File database;
+			if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
+				database = fileChooser.getSelectedFile();
+				try{
+					PLNSReader reader = new PLNSReader(plnsFile.toArray(new File[]{}), new PLNSTracksModel(database));
+				} catch(PointNotFoundException e){
+					e.printStackTrace();
+				}
+			} else {
+				//pas de base de données choisie, on met plnsFile à 0 pour déclencher un message d'erreur
+				plnsFile.clear();
+			}
+		}
+		
+		if(sqlitePlnsFile.size() > 0){
+			for(File f : sqlitePlnsFile){
+				PLNSReader reader = new PLNSReader(new PLNSTracksModel(f));
 			}
 		}
 		if(opasFile.size() == 0 && geoFile.size() == 0 && lplnFile.size() == 0 
-				&& fplFile.size()==0 && plnsFile.size() == 0){
+				&& fplFile.size()==0 && plnsFile.size() == 0 && sqlitePlnsFile.size() == 0){
 			Logging.logger().warning("Aucun fichier trajectoire trouvé.");
 			JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucun fichier trajectoire trouvé.<br /><br />" +
 					"<b>Solution :</b><br />Vérifiez que les fichiers sélectionnés sont bien dans un format pris en compte.</html>", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -621,17 +644,17 @@ public class MainWindow extends JFrame {
 		return this;
 	}
 
-//	public void setDrawToolbar(boolean selected) {
-//		if(drawToolbar == null){
-//			this.drawToolbar = new DrawToolbar(wwd);
-//			this.drawToolbar.setFloatable(true);
-//		}
-//		if(selected){
-//			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
-//			this.validate();
-//		} else {
-//			this.toolbars.remove(drawToolbar);
-//			this.validate();
-//		}
-//	}
+	public void setDrawToolbar(boolean selected) {
+		if(drawToolbar == null){
+			this.drawToolbar = new DrawToolbar(wwd);
+			this.drawToolbar.setFloatable(true);
+		}
+		if(selected){
+			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
+			this.validate();
+		} else {
+			this.toolbars.remove(drawToolbar);
+			this.validate();
+		}
+	}
 }

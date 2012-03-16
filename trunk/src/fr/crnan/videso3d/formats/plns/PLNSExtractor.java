@@ -37,12 +37,14 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 
 /**
  * Extrait les données d'un ou plusieurs fichiers PLNS et les insère dans une base de données SQLite
  * @author Bruno Spyckerelle
+ * @author Clovis Hamel
  * @version 0.1.1
  */
 public class PLNSExtractor extends ProgressSupport{
@@ -148,7 +150,9 @@ public class PLNSExtractor extends ProgressSupport{
 				"code int, "+
 				"code_prev int, "+
 				"adep varchar(4)," +
-				"adest varchar(4))";
+				"adest varchar(4), " +
+				"rfl int, " +
+				"type varchar(5))";
 				st.executeUpdate(create);
 				create = "create table secteurs (id integer primary key autoincrement, " +
 						"idpln int, " +
@@ -157,6 +161,11 @@ public class PLNSExtractor extends ProgressSupport{
 				create = "create table sls (id integer primary key autoincrement, " +
 						"idpln int, " +
 						"sl varchar(4))";
+				st.executeUpdate(create);
+				create = "create table balises (id integer primary key autoincrement, " +
+						"idpln int, " +
+						"balise varcar(5), " +
+						"fl int)";
 				st.executeUpdate(create);
 				st.close();
 			} catch (SQLException e2) {
@@ -229,7 +238,7 @@ public class PLNSExtractor extends ProgressSupport{
                 int rfl = ord(pln[29+enTete+indexRensGen])*256+ord(pln[30+enTete+indexRensGen]);
                 
                 int heureDepMin = ord(pln[31+enTete+indexRensGen])*256 + ord(pln[32+enTete+indexRensGen]);
-                if(heureDepMin > 24*60)
+                if(heureDepMin >= 24*60)
                 	heureDepMin = heureDepMin -24*60;
                 String heureDep = (heureDepMin/60) +":"+(heureDepMin%60);
                 
@@ -266,7 +275,28 @@ public class PLNSExtractor extends ProgressSupport{
                 int code4 = ord(pln[enTete+indexChampRadInt+6]);
                 int code = code1*1000+code2*100+code3*10+code4;
                 
-                //TODO extraction de la route
+                //route
+                List<Couple<String, Integer>> balises = new ArrayList<Couple<String, Integer>>();
+                for(int i = 0;i<nbBalises;i++){
+                	int rangBal = ord(pln[enTete+indexChampRoute+20*i-1])*256 + ord(pln[enTete+indexChampRoute+20*i]);
+                	int niveauBal = ord(pln[enTete+indexChampRoute+6+20*i-1])*256 + ord(pln[enTete+indexChampRoute+6+20*i]);
+                	int minutes = ord(pln[enTete+indexChampRoute+8+20*i-1])*256 + ord(pln[enTete+indexChampRoute+8+20*i]);
+                	
+                	if(minutes >= 24*60)
+                		minutes -= 24*60;
+                	
+                	StringBuffer heurebalise = new StringBuffer();
+                	heurebalise.append(minutes/60);
+                	heurebalise.append(":");
+                	heurebalise.append(minutes%60);
+                	
+                	balR.seek((rangBal-1)*16);
+                	byte[] bal = new byte[5];
+                	balR.read(bal, 0, 5);
+                	String balise = new String(bal, "ISO-8859-1");
+                	balises.add(new Couple<String, Integer>(balise.trim(), niveauBal));
+                }
+                
                 
                 //liste des SL
                 List<String> sl = new ArrayList<String>();
@@ -298,8 +328,8 @@ public class PLNSExtractor extends ProgressSupport{
                 														"heure_dep='"+heureDep+"' and " +
                 														"adep='"+adep+"'");
                 if(rs.next() && rs.getInt(1) == 0){
-                	PreparedStatement insert = this.database.prepareStatement("insert into plns (date, heure_dep, indicatif, code, code_prev, adep, adest) " +
-                			"values (?, ?, ?, ?, ?, ?, ?)");
+                	PreparedStatement insert = this.database.prepareStatement("insert into plns (date, heure_dep, indicatif, code, code_prev, adep, adest, rfl, type) " +
+                			"values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 	insert.setString(1, date);
                 	insert.setString(2, heureDep);
                 	insert.setString(3, indicatif);
@@ -307,6 +337,8 @@ public class PLNSExtractor extends ProgressSupport{
                 	insert.setInt(5, codePrev);
                 	insert.setString(6, adep);
                 	insert.setString(7, adest);
+                	insert.setInt(8, rfl);
+                	insert.setString(9, typeAvionString);
                 	insert.executeUpdate();
                 	
                 	int id = insert.getGeneratedKeys().getInt(1);
@@ -320,11 +352,21 @@ public class PLNSExtractor extends ProgressSupport{
                 	}
                 	insert.executeBatch();
                 	insert.close();
-                	
+                	//SL
                 	insert = this.database.prepareStatement("insert into sls (idpln, sl) values (?, ?)");
                 	insert.setInt(1, id);
                 	for(String s : sl){
                 		insert.setString(2, s);
+                		insert.addBatch();
+                	}
+                	insert.executeBatch();
+                	insert.close();
+                	//balises
+                	insert = this.database.prepareStatement("insert into balises (idpln, balise, fl) values (?, ?, ?)");
+                	insert.setInt(1, id);
+                	for(Couple<String, Integer> c : balises){
+                		insert.setString(2, c.getFirst());
+                		insert.setInt(3, c.getSecond());
                 		insert.addBatch();
                 	}
                 	insert.executeBatch();
@@ -368,8 +410,7 @@ public class PLNSExtractor extends ProgressSupport{
 				c = finDeFic.charAt(i);
 				fin.append(Integer.toHexString(c));
 			}
-		//	System.out.println(bufferString.substring(bufferString.length()-4, bufferString.length()));
-		//TODO vérifier si cohérent
+
 			if(!bufferString.substring(bufferString.length()-4, bufferString.length()).isEmpty()){
 				int pointeur = 0;
 				
