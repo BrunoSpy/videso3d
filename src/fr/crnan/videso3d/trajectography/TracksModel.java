@@ -25,7 +25,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Represents a set of tracks
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class TracksModel extends AbstractTableModel {
 
@@ -80,6 +80,10 @@ public class TracksModel extends AbstractTableModel {
 		this.visibleTracks = new HashSet<VidesoTrack>(allTracks);
 		this.selectedTracks = new HashSet<VidesoTrack>();
 		this.tracks = new LinkedList<Object>();
+	}
+	
+	protected void setTracks(List<Object> tracks){
+		this.tracks = tracks;
 	}
 	
 	/**

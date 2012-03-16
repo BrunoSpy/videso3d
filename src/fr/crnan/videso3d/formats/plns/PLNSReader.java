@@ -23,13 +23,13 @@ import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
+import java.sql.Statement;
 
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.ihm.ProgressMonitor;
 import fr.crnan.videso3d.stip.PointNotFoundException;
-import fr.crnan.videso3d.trajectography.TracksModel;
+import fr.crnan.videso3d.trajectography.PLNSTracksModel;
 /**
  * 
  * @author Bruno Spyckerelle
@@ -38,13 +38,13 @@ import fr.crnan.videso3d.trajectography.TracksModel;
 public class PLNSReader extends TrackFilesReader {
 
 
-	public PLNSReader(File[] plnsFiles, TracksModel model) throws PointNotFoundException {
+	public PLNSReader(File[] plnsFiles, PLNSTracksModel model) throws PointNotFoundException {
 		this.setModel(model);
 		try {
 			//Chargement du driver
 			Class.forName("org.sqlite.JDBC");
 			//Connexion
-			Connection database = DriverManager.getConnection("jdbc:sqlite:plns_test");
+			Connection database = DriverManager.getConnection("jdbc:sqlite:"+model.getDatabase().getAbsolutePath());
 			PLNSExtractor extractor = new PLNSExtractor(plnsFiles, database);
 			final ProgressMonitor progress = new ProgressMonitor(null, "Extraction des fichiers plns", "", 0, 100);
 			extractor.addPropertyChangeListener(new PropertyChangeListener() {
@@ -61,6 +61,7 @@ public class PLNSReader extends TrackFilesReader {
 				}
 			});
 			extractor.doExtract();
+			
 		} catch (ClassNotFoundException e){
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -68,10 +69,50 @@ public class PLNSReader extends TrackFilesReader {
 		}
 	}
 
+	/**
+	 * Si les fichiers sont déjà dans une basse de données, il suffit de référencer le modèle correspondant.
+	 * @param model
+	 */
+	public PLNSReader(PLNSTracksModel model){
+		this.setModel(model);
+	}
+	
+	/**
+	 * Return true if it is a PLNS file
+	 * @param f
+	 * @return
+	 */
 	public static boolean isPLNSFile(File f){
+		if(f.getName().matches(".*stpv.*") || f.getName().matches(".*STPV.*")){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Return true if it is a SQLite PLNS database
+	 * @param f
+	 * @return
+	 */
+	public static boolean isSQLitePLNSFile(File f){
+		//Chargement du driver
+		try {
+			Class.forName("org.sqlite.JDBC");
+			//Connexion
+			Connection database = DriverManager.getConnection("jdbc:sqlite:"+f.getAbsolutePath());
+			Statement st = database.createStatement();
+			st.executeQuery("select * from plns where 1");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 		return true;
 	}
 
+	
 	@Override
 	protected void doReadStream(FileInputStream fis)
 	throws PointNotFoundException {
