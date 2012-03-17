@@ -49,6 +49,7 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.fpl.FPLFileFilter;
 import fr.crnan.videso3d.formats.geo.GEOFileFilter;
 import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
+import fr.crnan.videso3d.formats.plns.PLNSFileFilter;
 import fr.crnan.videso3d.formats.opas.OPASFileFilter;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
@@ -68,7 +69,7 @@ import gov.nasa.worldwindx.examples.util.ShapeUtils;
 /**
  * Toolbar of the main window
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class MainToolbar extends JToolBar {
 
@@ -238,8 +239,9 @@ public class MainToolbar extends JToolBar {
 				fileChooser.setMultiSelectionEnabled(true);
 				fileChooser.addChoosableFileFilter(new OPASFileFilter());
 				fileChooser.addChoosableFileFilter(new LPLNFileFilter());
-				fileChooser.addChoosableFileFilter(new GEOFileFilter());
 				fileChooser.addChoosableFileFilter(new FPLFileFilter());
+				fileChooser.addChoosableFileFilter(new PLNSFileFilter());
+				fileChooser.addChoosableFileFilter(new GEOFileFilter());
 				if(fileChooser.showOpenDialog(trajectoires) == VFileChooser.APPROVE_OPTION){
 
 					new SwingWorker<String, Integer>(){

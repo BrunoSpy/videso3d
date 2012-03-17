@@ -18,6 +18,7 @@ import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.opas.OPASTrack;
+import fr.crnan.videso3d.formats.plns.PLNSTrack;
 import fr.crnan.videso3d.graphics.VPolygon;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.tracks.TrackPoint;
@@ -40,13 +41,13 @@ public class TracksModel extends AbstractTableModel {
 	
 	private String[] columnNames = {"Indicatif", "Départ", "Arrivée", "IAF", "Type", "Affiché"};
 
-	private List<Object> tracks = null;
+	protected List<Object> tracks = null;
 
-	private Collection<VidesoTrack> visibleTracks;
+	protected Collection<VidesoTrack> visibleTracks;
 	
-	private Collection<VidesoTrack> selectedTracks;
+	protected Collection<VidesoTrack> selectedTracks;
 		
-	private Collection<VidesoTrack> allTracks;
+	protected Collection<VidesoTrack> allTracks;
 	
 	private boolean isChanging = false;
 	
@@ -383,6 +384,23 @@ public class TracksModel extends AbstractTableModel {
 				return "";
 			case 4:
 				return ((LPLNTrack)t).getType();
+			case 5:
+				return isVisible((Track)t);
+			default:
+				return "";
+			}
+		} else if(t instanceof PLNSTrack) {
+			switch (col) {
+			case 0:
+				return ((PLNSTrack)t).getIndicatif();
+			case 1:
+				return ((PLNSTrack)t).getDepart();
+			case 2:
+				return ((PLNSTrack)t).getArrivee();
+			case 3:
+				return "";
+			case 4:
+				return ((PLNSTrack)t).getType();
 			case 5:
 				return isVisible((Track)t);
 			default:

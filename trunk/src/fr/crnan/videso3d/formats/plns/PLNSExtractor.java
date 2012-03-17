@@ -37,15 +37,15 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.ProgressSupport;
+import fr.crnan.videso3d.Triplet;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 
 /**
  * Extrait les données d'un ou plusieurs fichiers PLNS et les insère dans une base de données SQLite
  * @author Bruno Spyckerelle
  * @author Clovis Hamel
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class PLNSExtractor extends ProgressSupport{
 
@@ -164,9 +164,12 @@ public class PLNSExtractor extends ProgressSupport{
 				st.executeUpdate(create);
 				create = "create table balises (id integer primary key autoincrement, " +
 						"idpln int, " +
-						"balise varcar(5), " +
-						"fl int)";
+						"balise varchar(5), " +
+						"fl int, " +
+						"heure varchar(5), " +
+						"FOREIGN KEY(idpln) REFERENCES plns(id))";
 				st.executeUpdate(create);
+				st.executeUpdate("create index idx_balises on balises (idpln)");
 				st.close();
 			} catch (SQLException e2) {
 				e2.printStackTrace();
@@ -276,7 +279,7 @@ public class PLNSExtractor extends ProgressSupport{
                 int code = code1*1000+code2*100+code3*10+code4;
                 
                 //route
-                List<Couple<String, Integer>> balises = new ArrayList<Couple<String, Integer>>();
+                List<Triplet<String, Integer, String>> balises = new ArrayList<Triplet<String, Integer, String>>();
                 for(int i = 0;i<nbBalises;i++){
                 	int rangBal = ord(pln[enTete+indexChampRoute+20*i-1])*256 + ord(pln[enTete+indexChampRoute+20*i]);
                 	int niveauBal = ord(pln[enTete+indexChampRoute+6+20*i-1])*256 + ord(pln[enTete+indexChampRoute+6+20*i]);
@@ -294,7 +297,9 @@ public class PLNSExtractor extends ProgressSupport{
                 	byte[] bal = new byte[5];
                 	balR.read(bal, 0, 5);
                 	String balise = new String(bal, "ISO-8859-1");
-                	balises.add(new Couple<String, Integer>(balise.trim(), niveauBal));
+                	if(!balise.trim().isEmpty()){
+                		balises.add(new Triplet<String, Integer, String>(balise.trim(), niveauBal, heurebalise.toString()));
+                	}
                 }
                 
                 
@@ -362,11 +367,12 @@ public class PLNSExtractor extends ProgressSupport{
                 	insert.executeBatch();
                 	insert.close();
                 	//balises
-                	insert = this.database.prepareStatement("insert into balises (idpln, balise, fl) values (?, ?, ?)");
+                	insert = this.database.prepareStatement("insert into balises (idpln, balise, fl, heure) values (?, ?, ?, ?)");
                 	insert.setInt(1, id);
-                	for(Couple<String, Integer> c : balises){
+                	for(Triplet<String, Integer, String> c : balises){
                 		insert.setString(2, c.getFirst());
                 		insert.setInt(3, c.getSecond());
+                		insert.setString(4, c.getThird());
                 		insert.addBatch();
                 	}
                 	insert.executeBatch();
