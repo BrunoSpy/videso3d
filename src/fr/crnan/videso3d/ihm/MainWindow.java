@@ -35,7 +35,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.ToolTipManager;
 
@@ -76,11 +75,12 @@ import fr.crnan.videso3d.ihm.components.ClosableSingleDockable;
 import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.VDefaultEclipseThemConnector;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
-import fr.crnan.videso3d.layers.FPLTracksLayer;
-import fr.crnan.videso3d.layers.GEOTracksLayer;
-import fr.crnan.videso3d.layers.LPLNTracksLayer;
-import fr.crnan.videso3d.layers.OPASTracksLayer;
-import fr.crnan.videso3d.layers.TrajectoriesLayer;
+import fr.crnan.videso3d.layers.tracks.FPLTracksLayer;
+import fr.crnan.videso3d.layers.tracks.GEOTracksLayer;
+import fr.crnan.videso3d.layers.tracks.LPLNTracksLayer;
+import fr.crnan.videso3d.layers.tracks.OPASTracksLayer;
+import fr.crnan.videso3d.layers.tracks.PLNSTracksLayer;
+import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.PLNSTracksModel;
 import fr.crnan.videso3d.trajectography.TracksModel;
@@ -96,7 +96,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3.12
+ * @version 0.3.13
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -137,7 +137,7 @@ public class MainWindow extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	}
 
-	private JToolBar drawToolbar;
+//	private JToolBar drawToolbar;
 	private JPanel toolbars;
 	
 	public MainWindow(){
@@ -189,7 +189,7 @@ public class MainWindow extends JFrame {
 				step++;
 			}
 		});
-		
+				
 		//initialisation des objets 3D en background
 		new SwingWorker<String, Integer>(){
 			@Override
@@ -499,7 +499,7 @@ public class MainWindow extends JFrame {
 				}
 			} catch (PointNotFoundException e) {
 				Logging.logger().warning("Point non trouvé : "+e.getName());
-				JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Impossible de trouver certains points du fichier.<br /><br />" +
+				JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Impossible de trouver certains points du fichier ("+e.getName()+").<br /><br />" +
 						"<b>Solution :</b><br />Vérifiez qu'une base de données STIP existe et qu'elle est cohérente avec le fichier de trajectoires.</html>",
 						"Erreur", JOptionPane.ERROR_MESSAGE);
 			}
@@ -525,13 +525,21 @@ public class MainWindow extends JFrame {
 			VFileChooser fileChooser = new VFileChooser();
 			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 			fileChooser.setMultiSelectionEnabled(false);
+			fileChooser.setDialogTitle("Sélectionner le fichier de base de données");
+			fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 			File database;
 			if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
 				database = fileChooser.getSelectedFile();
 				try{
-					PLNSReader reader = new PLNSReader(plnsFile.toArray(new File[]{}), new PLNSTracksModel(database));
+					PLNSReader reader = new PLNSReader(plnsFile.toArray(new File[]{}), database, new PLNSTracksModel());
+					PLNSTracksLayer layer = new PLNSTracksLayer(reader.getModel());
+					this.wwd.toggleLayer(layer, true);
+					this.addTrajectoriesView(reader, layer);
 				} catch(PointNotFoundException e){
-					e.printStackTrace();
+					Logging.logger().warning("Point non trouvé : "+e.getName());
+					JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Impossible de trouver certains points du fichier ("+e.getName()+").<br /><br />" +
+							"<b>Solution :</b><br />Vérifiez qu'une base de données STIP existe et qu'elle est cohérente avec le fichier de trajectoires.</html>",
+							"Erreur", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
 				//pas de base de données choisie, on met plnsFile à 0 pour déclencher un message d'erreur
@@ -540,8 +548,34 @@ public class MainWindow extends JFrame {
 		}
 		
 		if(sqlitePlnsFile.size() > 0){
-			for(File f : sqlitePlnsFile){
-				PLNSReader reader = new PLNSReader(new PLNSTracksModel(f));
+			try {
+				for(File f : sqlitePlnsFile){
+					PLNSTracksModel model = new PLNSTracksModel();
+					final ProgressMonitor progress = new ProgressMonitor(this, "Import des trajectoires", "", 0, 100);
+					model.getProgressSupport().addPropertyChangeListener(new PropertyChangeListener() {
+						
+						@Override
+						public void propertyChange(PropertyChangeEvent evt) {
+							if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
+								progress.setMaximum(((Integer) evt.getNewValue()));
+							} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
+								progress.setProgress((Integer) evt.getNewValue());
+							} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
+								progress.setNote((String)evt.getNewValue());
+							}
+						}
+					});
+					model.setDatabase(f);
+					PLNSTracksLayer layer = new PLNSTracksLayer(new PLNSTracksModel(f));
+					this.wwd.toggleLayer(layer, true);
+					PLNSReader reader = new PLNSReader(f, (PLNSTracksModel) layer.getModel());
+					this.addTrajectoriesView(reader, layer);
+				}
+			} catch (PointNotFoundException e) {
+				Logging.logger().warning("Point non trouvé : "+e.getName());
+				JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Impossible de trouver certains points du fichier ("+e.getName()+").<br /><br />" +
+						"<b>Solution :</b><br />Vérifiez qu'une base de données STIP existe et qu'elle est cohérente avec le fichier de trajectoires.</html>",
+						"Erreur", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		if(opasFile.size() == 0 && geoFile.size() == 0 && lplnFile.size() == 0 
@@ -644,17 +678,17 @@ public class MainWindow extends JFrame {
 		return this;
 	}
 
-	public void setDrawToolbar(boolean selected) {
-		if(drawToolbar == null){
-			this.drawToolbar = new DrawToolbar(wwd);
-			this.drawToolbar.setFloatable(true);
-		}
-		if(selected){
-			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
-			this.validate();
-		} else {
-			this.toolbars.remove(drawToolbar);
-			this.validate();
-		}
-	}
+//	public void setDrawToolbar(boolean selected) {
+//		if(drawToolbar == null){
+//			this.drawToolbar = new DrawToolbar(wwd);
+//			this.drawToolbar.setFloatable(true);
+//		}
+//		if(selected){
+//			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
+//			this.validate();
+//		} else {
+//			this.toolbars.remove(drawToolbar);
+//			this.validate();
+//		}
+//	}
 }

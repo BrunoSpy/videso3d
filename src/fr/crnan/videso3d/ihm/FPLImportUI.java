@@ -39,7 +39,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
 import fr.crnan.videso3d.formats.fpl.FPLReader;
-import fr.crnan.videso3d.layers.FPLTracksLayer;
+import fr.crnan.videso3d.layers.tracks.FPLTracksLayer;
 /**
  * Fenêtre permettant à l'utilisateur de taper son plan de vol ou de le rentrer par copier/coller. Accepte les plans de vol au format IvanWeb et les 
  * plans de vol non formatés (suite de balises, de routes et de points géographiques). Voir {@link FPLReader}.

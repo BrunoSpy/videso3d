@@ -69,9 +69,10 @@ import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.geo.GEOWriter;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
 import fr.crnan.videso3d.formats.opas.OPASReader;
+import fr.crnan.videso3d.formats.plns.PLNSReader;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.ihm.components.VXTable;
-import fr.crnan.videso3d.layers.TrajectoriesLayer;
+import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
 import fr.crnan.videso3d.trajectography.PolygonsSetFilter;
 import fr.crnan.videso3d.trajectography.TrackContext;
 import fr.crnan.videso3d.trajectography.TracksModel;
@@ -82,7 +83,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * Panel de sélection des trajectoires affichées
  * @author Bruno Spyckerelle
- * @version 0.5.0
+ * @version 0.5.0.1
  */
 public class TrajectoriesView extends JPanel {
 
@@ -224,9 +225,7 @@ public class TrajectoriesView extends JPanel {
 			}
 		});		
 
-		if(reader instanceof LPLNReader){
-			pistes.getColumnExt("IAF").setVisible(false);
-		} else if (reader instanceof GEOReader) {
+		if(reader instanceof LPLNReader || reader instanceof GEOReader || reader instanceof PLNSReader){
 			pistes.getColumnExt("IAF").setVisible(false);
 		} else if (reader instanceof OPASReader) {
 			pistes.getColumnExt("Type").setVisible(false);

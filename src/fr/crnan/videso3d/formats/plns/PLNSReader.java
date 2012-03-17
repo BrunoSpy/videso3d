@@ -33,18 +33,19 @@ import fr.crnan.videso3d.trajectography.PLNSTracksModel;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class PLNSReader extends TrackFilesReader {
 
 
-	public PLNSReader(File[] plnsFiles, PLNSTracksModel model) throws PointNotFoundException {
+	public PLNSReader(File[] plnsFiles, File databaseFile, PLNSTracksModel model) throws PointNotFoundException {
 		this.setModel(model);
+		this.setName(plnsFiles[0].getName().substring(0, 6)+"...");
 		try {
 			//Chargement du driver
 			Class.forName("org.sqlite.JDBC");
 			//Connexion
-			Connection database = DriverManager.getConnection("jdbc:sqlite:"+model.getDatabase().getAbsolutePath());
+			Connection database = DriverManager.getConnection("jdbc:sqlite:"+databaseFile.getAbsolutePath());
 			PLNSExtractor extractor = new PLNSExtractor(plnsFiles, database);
 			final ProgressMonitor progress = new ProgressMonitor(null, "Extraction des fichiers plns", "", 0, 100);
 			extractor.addPropertyChangeListener(new PropertyChangeListener() {
@@ -52,7 +53,7 @@ public class PLNSReader extends TrackFilesReader {
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
 					if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
-						progress.setMaximum((Integer) evt.getNewValue());
+						progress.setMaximum(((Integer) evt.getNewValue())*2);
 					} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
 						progress.setProgress((Integer) evt.getNewValue());
 					} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
@@ -61,11 +62,33 @@ public class PLNSReader extends TrackFilesReader {
 				}
 			});
 			extractor.doExtract();
-			
+			//once the extraction is done, fullfill the model
+			model.getProgressSupport().addPropertyChangeListener(new PropertyChangeListener() {
+				
+				int max = 0;
+				int totalMax = 0;
+				
+				@Override
+				public void propertyChange(PropertyChangeEvent evt) {
+					if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
+						max = (Integer) evt.getNewValue();
+						totalMax = progress.getMaximum()/2;
+					} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
+						int p = (Integer) evt.getNewValue();
+						progress.setProgress(totalMax+(totalMax*p)/max);
+					} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
+						progress.setNote((String)evt.getNewValue());
+					}
+				}
+			});
+			model.setDatabase(databaseFile);
 		} catch (ClassNotFoundException e){
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+		for(File f : plnsFiles){
+				this.getFiles().add(f);
 		}
 	}
 
@@ -73,8 +96,10 @@ public class PLNSReader extends TrackFilesReader {
 	 * Si les fichiers sont déjà dans une basse de données, il suffit de référencer le modèle correspondant.
 	 * @param model
 	 */
-	public PLNSReader(PLNSTracksModel model){
+	public PLNSReader(File file, PLNSTracksModel model){
 		this.setModel(model);
+		this.getFiles().add(file);
+		this.setName("PLNS "+file.getName());
 	}
 	
 	/**
@@ -106,7 +131,6 @@ public class PLNSReader extends TrackFilesReader {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
-			e.printStackTrace();
 			return false;
 		}
 		return true;

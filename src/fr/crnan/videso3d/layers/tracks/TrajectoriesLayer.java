@@ -13,12 +13,13 @@
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.crnan.videso3d.layers;
+package fr.crnan.videso3d.layers.tracks;
 
 import java.awt.Color;
 import java.util.List;
 
 import fr.crnan.videso3d.Couple;
+import fr.crnan.videso3d.layers.LayerSet;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import gov.nasa.worldwind.tracks.Track;
 /**
