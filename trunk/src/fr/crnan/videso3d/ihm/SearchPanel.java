@@ -35,6 +35,8 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -42,6 +44,7 @@ import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
+import javax.swing.JFileChooser;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
@@ -52,13 +55,15 @@ import javax.swing.JButton;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.formats.plns.PLNSFileFilter;
 import fr.crnan.videso3d.ihm.components.JUpperCaseComboBox;
 import fr.crnan.videso3d.ihm.components.TypeComboBox;
+import fr.crnan.videso3d.ihm.components.VFileChooser;
 
 /**
  * Default search panel
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class SearchPanel extends JPanel {
 	private JUpperCaseComboBox searchField1;
@@ -68,8 +73,12 @@ public class SearchPanel extends JPanel {
 	private JComboBox typeBox;
 	private JButton btnRechercher;
 	private JPanel liaisonPrivilegieePanel;
-	private TypeComboBox typeBox2;
+	private TypeComboBox typeBoxLP;
 	private JButton btnRechercher2;	
+	private JPanel plnsSearchPanel;
+	private TypeComboBox typeBoxPLNS;
+	private JTextField choosePLNS;
+	private JButton analyserPLNS;
 	
 	public SearchPanel() {
 		
@@ -77,9 +86,15 @@ public class SearchPanel extends JPanel {
 		
 		this.setPreferredSize(new Dimension(0,40));
 		
+		//différents types de panneau de recherche
 		defaultSearchPanel = new JPanel();
 		add(defaultSearchPanel, "default");
-		
+		//recherche spécifique pour les LPs
+		liaisonPrivilegieePanel = new JPanel();
+		add(liaisonPrivilegieePanel, "liaison");
+		//recherche dans une base PLNS
+		plnsSearchPanel = new JPanel();
+		add(plnsSearchPanel, "plns");
 		
 		typeBox = new TypeComboBox();
 		typeBox.addActionListener(new ActionListener() {
@@ -89,11 +104,31 @@ public class SearchPanel extends JPanel {
 
 				if(((JComboBox)e.getSource()).getSelectedItem().equals("liaison privilégiée")){
 					((CardLayout) getLayout()).show(getThis(), "liaison");
+				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("base PLNS...")) {
+					((CardLayout) getLayout()).show(getThis(), "plns");
 				} else {
 					((CardLayout) getLayout()).show(getThis(), "default");
 				}
+				typeBoxLP.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
+				typeBoxPLNS.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
+			}
+		});
+		
+		typeBoxPLNS = new TypeComboBox();
+		typeBoxPLNS.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
 
-				typeBox2.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
+				if(((JComboBox)e.getSource()).getSelectedItem().equals("liaison privilégiée")){
+					((CardLayout) getLayout()).show(getThis(), "liaison");
+				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("base PLNS...")) {
+					((CardLayout) getLayout()).show(getThis(), "plns");
+				} else {
+					((CardLayout) getLayout()).show(getThis(), "default");
+				}
+				typeBoxLP.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
+				typeBox.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 			}
 		});
 		
@@ -113,21 +148,20 @@ public class SearchPanel extends JPanel {
 		
 		btnRechercher = new JButton("Rechercher");
 		
-		liaisonPrivilegieePanel = new JPanel();
-		add(liaisonPrivilegieePanel, "liaison");
-		
-		typeBox2 = new TypeComboBox();
-		typeBox2.addActionListener(new ActionListener() {
+		typeBoxLP = new TypeComboBox();
+		typeBoxLP.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
 				if(((JComboBox)e.getSource()).getSelectedItem().equals("liaison privilégiée")){
 					((CardLayout) getLayout()).show(getThis(), "liaison");
+				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("base PLNS...")) {
+					((CardLayout) getLayout()).show(getThis(), "plns");
 				} else {
 					((CardLayout) getLayout()).show(getThis(), "default");
 				}
-
+				typeBoxPLNS.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 				typeBox.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 			}
 		});
@@ -135,6 +169,34 @@ public class SearchPanel extends JPanel {
 		numLiaison = new JTextField();
 		numLiaison.setColumns(10);
 		btnRechercher2 = new JButton("Rechercher");
+		choosePLNS = new JTextField(20);
+		choosePLNS.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseReleased(MouseEvent arg0) {}
+			
+			@Override
+			public void mousePressed(MouseEvent arg0) {}
+			
+			@Override
+			public void mouseExited(MouseEvent arg0) {}
+			
+			@Override
+			public void mouseEntered(MouseEvent arg0) {	}
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				VFileChooser file = new VFileChooser();
+				file.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				file.setMultiSelectionEnabled(false);
+				file.addChoosableFileFilter(new PLNSFileFilter());
+				if(file.showOpenDialog(null) == VFileChooser.APPROVE_OPTION){
+					choosePLNS.setText(file.getSelectedFile().getAbsolutePath());
+				}
+			}
+		});
+		analyserPLNS = new JButton("Analyser");
 		
 		this.applyLayout();
 		
@@ -195,25 +257,31 @@ public class SearchPanel extends JPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!searchField1.getSelectedItem().toString().isEmpty() || !searchField2.getSelectedItem().toString().isEmpty() ||!numLiaison.getText().isEmpty()){
+				if(!searchField1.getSelectedItem().toString().isEmpty() || !searchField2.getSelectedItem().toString().isEmpty() ||!numLiaison.getText().isEmpty()
+						||!choosePLNS.getText().isEmpty()){
 					AnalyzeUI.showResults(false, typeBox.getSelectedItem().toString(),
 										  searchField1.getSelectedItem().toString(),
 										  searchField2.getSelectedItem().toString(),
-										  numLiaison.getText());
+										  numLiaison.getText(), 
+										  choosePLNS.getText());
 				}
 			}
 		};
 		
 		btnRechercher.addActionListener(rechercheListener);
 		btnRechercher2.addActionListener(rechercheListener);
+		analyserPLNS.addActionListener(rechercheListener);
+		
+		
 	}
 	
 	private void applyLayout(){
-		JLabel lblObjetsRecherchs = new JLabel("Objets recherchés : ");
+		JLabel lblObjetsRecherchs = new JLabel("Objets à analyser : ");
 		JLabel lblContenant = new JLabel("contenant");
 		JLabel lblEt = new JLabel("et");
 		JLabel lblNumro = new JLabel("numéro");
-		JLabel lblObjetsRecherchs2 = new JLabel("Objets recherchés : ");
+		JLabel lblObjetsRecherchs2 = new JLabel("Objets à analyser : ");
+		JLabel lblObjetsRecherchs3 = new JLabel("Objets à analyser : ");
 		
 		GroupLayout gl_defaultSearchPanel = new GroupLayout(defaultSearchPanel);
 		gl_defaultSearchPanel.setHorizontalGroup(
@@ -258,7 +326,7 @@ public class SearchPanel extends JPanel {
 					.addContainerGap()
 					.addComponent(lblObjetsRecherchs2)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(typeBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addComponent(typeBoxLP, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lblNumro)
 					.addPreferredGap(ComponentPlacement.RELATED)
@@ -273,13 +341,43 @@ public class SearchPanel extends JPanel {
 					.addContainerGap()
 					.addGroup(gl_liaisonPrivilegieePanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblObjetsRecherchs2)
-						.addComponent(typeBox2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(typeBoxLP, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblNumro)
 						.addComponent(numLiaison, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnRechercher2))
 					.addContainerGap(25, Short.MAX_VALUE))
 		);
 		liaisonPrivilegieePanel.setLayout(gl_liaisonPrivilegieePanel);
+		
+		GroupLayout gl_PLNSPanel = new GroupLayout(plnsSearchPanel);
+		gl_PLNSPanel.setHorizontalGroup(
+				gl_PLNSPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_PLNSPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblObjetsRecherchs3)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(typeBoxPLNS, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+		//			.addComponent(lblNumro)
+		//			.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(choosePLNS, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(analyserPLNS, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(180, Short.MAX_VALUE))
+		);
+		gl_PLNSPanel.setVerticalGroup(
+				gl_PLNSPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_PLNSPanel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_PLNSPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblObjetsRecherchs3)
+						.addComponent(typeBoxPLNS, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+		//				.addComponent(lblNumro)
+						.addComponent(choosePLNS, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(analyserPLNS))
+					.addContainerGap(25, Short.MAX_VALUE))
+		);
+		plnsSearchPanel.setLayout(gl_PLNSPanel);
 	}
 	
 	private JPanel getThis(){

@@ -263,7 +263,6 @@ public final class AnalyzeUI extends JFrame {
 	}
 	
 	private ResultPanel createResultPanel(boolean advanced, final String type, JTabbedPane tabPane, final String... criteria){
-
 		if(type.equals("iti")){
 			return new ItiPanel(advanced, criteria);
 		} else if(type.equals("route")){
@@ -276,8 +275,10 @@ public final class AnalyzeUI extends JFrame {
 			return new ConnexPanel(advanced, criteria);
 		} else if(type.equals("stars")){
 			return new StarPanel(advanced, criteria);
-		}else if(type.equals("liaison privilégiée")){
+		} else if(type.equals("liaison privilégiée")){
 			return new LiaisonPanel(criteria[2], tabPane);
+		} else if(type.equals("base PLNS...")){
+			return new PLNSPanel(criteria[3]);
 		}
 
 		return null;

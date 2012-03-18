@@ -40,7 +40,7 @@ import fr.crnan.videso3d.stip.StipController;
 /**
  * Lecteur de BDS Stpv
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class Stpv extends FileParser{
 
@@ -143,6 +143,85 @@ public class Stpv extends FileParser{
 		this.setProgress(3);
 		this.setBali(FileManager.getFile(path + "/BALI"));
 		this.setProgress(4);
+		this.setCode(FileManager.getFile(path+ "/CODE"));
+		this.setProgress(5);
+	}
+	
+	/**
+	 * Parse le fichier Code 
+	 * @param path
+	 * @throws IOException 
+	 * @throws SQLException 
+	 */
+	private void setCode(String path) throws IOException, SQLException{
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+		while (in.ready()){
+			String line = in.readLine();
+			if(line.startsWith("CODE 1")){
+				insertCode1(line);
+			} else if(line.startsWith("CODE 30")){
+				insertCode30(line);
+			}
+		}
+		
+	}
+	
+	private void insertCode30(String line) throws SQLException{
+		PreparedStatement st;
+		if(line.startsWith("CODE 30S")){
+			st = this.conn.prepareStatement("update lps set debut_suite =?, fin_suite=?, cat_code=?, debut_suppl=?, fin_suppl=?, code2=? " +
+					"where id=(select max(id) from lps)");
+			String s = line.substring(21, 25).trim();
+			if(!s.isEmpty()) st.setInt(1, new Integer(s));
+			s = line.substring(27, 31).trim();
+			if(!s.isEmpty()) st.setInt(2, new Integer(s));
+			if(line.length()>34) {
+				s = line.substring(32, 37).trim();
+				if(!s.isEmpty()) st.setString(3, s);
+			}
+			if(line.length()>48){
+				s = line.substring(39, 43).trim();
+				if(!s.isEmpty()) st.setInt(4, new Integer(s));
+				s = line.substring(45, 49).trim();
+				if(!s.isEmpty()) st.setInt(5, new Integer(s));
+			}
+			if(line.length()>54){
+				s = line.substring(53, 55).trim();
+				if(!s.isEmpty()) st.setInt(6, new Integer(s));
+			}
+			st.executeUpdate();
+		} else {
+			st = this.conn.prepareStatement("insert into lps (name, cat, depart, sl1, sl2, sl3, sl4, sl5, sl6, arr, modes) " +
+					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			st.setString(1, line.substring(14, 19).trim());
+			st.setString(2, line.substring(9, 12).trim());
+			st.setString(3, line.substring(21, 25).trim());
+			st.setString(4, line.substring(26, 31).trim());
+			st.setString(5, line.substring(32, 37).trim());
+			st.setString(6, line.substring(38, 43).trim());
+			st.setString(7, line.substring(44, 49).trim());
+			st.setString(8, line.substring(50, 55).trim());
+			st.setString(9, line.substring(56, 61).trim());
+			st.setString(10, line.substring(62, 67).trim());
+			if(line.length()>72) st.setBoolean(11, line.substring(68, 73).trim().equals("SOPT1"));
+			st.executeUpdate();
+		}
+	}
+	
+	private void insertCode1(String line) throws SQLException{
+		String[] words = line.split("\\s+");
+		PreparedStatement st = this.conn.prepareStatement("insert into cat_code (name, code) values (?, ?)");
+		st.setString(1, words[2]);
+		for(int i=3;i<words.length;i+=2){
+			int debut = new Integer(words[i]);
+			int fin = new Integer(words[i+1]);
+			for(int j=debut;j<= fin;j++){
+				st.setInt(2, j);
+				st.addBatch();
+			}
+		}
+		st.executeBatch();
+		st.close();
 	}
 	
 	/**
@@ -151,7 +230,7 @@ public class Stpv extends FileParser{
 	 * @throws SQLException 
 	 * @throws IOException 
 	 */
-	private void setBali(String path) throws IOException, SQLException{
+	private void setBali(String path) throws IOException, SQLException {
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 		String currentName = "";
 		ArrayList<String> currentLines = new ArrayList<String>();
@@ -494,7 +573,7 @@ public class Stpv extends FileParser{
 
 	@Override
 	public int numberFiles() {
-		return 3;
+		return 5;
 	}
 
 	/**

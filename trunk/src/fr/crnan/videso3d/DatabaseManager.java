@@ -617,6 +617,27 @@ public final class DatabaseManager {
 				"sect7 int, " +
 				"sect8 int, " +
 				"sect9 int)");
+		//catégories de code
+		st.executeUpdate("create table cat_code (id integer primary key autoincrement, name varchar(2), code int)");
+		//liaisons privilégiées
+		st.executeUpdate("create table lps (id integer primary key autoincrement, " +
+				"name varchar(5), " +
+				"cat varchar(3), " +
+				"depart varchar(4), " +
+				"sl1 varchar(5), " +
+				"sl2 varchar(5), " +
+				"sl3 varchar(5), " +
+				"sl4 varchar(5), " +
+				"sl5 varchar(5), " +
+				"sl6 varchar(5), " +
+				"arr varchar(5), " +
+				"modes boolean, " +
+				"debut_suite int, " +
+				"fin_suite int, " +
+				"cat_code varchar(3), " +
+				"debut_suppl int, " +
+				"fin_suppl int, " +
+				"code2 int)");
 		st.close();
 		DatabaseManager.addDatabase(name, Type.STPV, new SimpleDateFormat().format(new Date()));
 	}
