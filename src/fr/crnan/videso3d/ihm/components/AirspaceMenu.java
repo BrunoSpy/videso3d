@@ -36,7 +36,7 @@ import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.AirspaceAttributesDialog;
 import fr.crnan.videso3d.ihm.ContextPanel;
-import fr.crnan.videso3d.layers.TrajectoriesLayer;
+import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.StipController;
 import fr.crnan.videso3d.trajectography.PolygonsSetFilter;
 import gov.nasa.worldwind.layers.Layer;
