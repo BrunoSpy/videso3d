@@ -427,8 +427,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 		Integer i = 0;
 		while(secteurs.containsKey(name+i.toString())){
 			secteurs.get(name+i.toString()).setVisible(false);
-			if(i==0)
-				secteurs.get(name+0).setLocationsVisible(false);
+			secteurs.get(name+i.toString()).setLocationsVisible(false);
 			i++;
 		}
 		this.secteursLayer.firePropertyChange(AVKey.LAYER, null, this.secteursLayer);
@@ -893,7 +892,11 @@ public class StipController extends ProgressSupport implements VidesoController 
 
 	@Override
 	public void setLocationsVisible(int type, String name, boolean b) {
-		secteurs.get(name+0).setLocationsVisible(b);
+		Integer i = 0;
+		while(secteurs.containsKey(name+i.toString())){
+			secteurs.get(name+i.toString()).setLocationsVisible(b);
+			i++;
+		}
 	}
 
 	

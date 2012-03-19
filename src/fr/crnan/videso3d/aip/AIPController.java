@@ -1253,6 +1253,9 @@ public class AIPController extends ProgressSupport implements VidesoController {
 
 	@Override
 	public void setLocationsVisible(int type, String name, boolean b) {
-		zones.get(type+" "+name).setLocationsVisible(b);
+		List<VPolygon> polygons = getPolygons(type, name);
+		for(VPolygon p : polygons){
+			((Secteur3D)p).setLocationsVisible(b);
+		}
 	}
 }
