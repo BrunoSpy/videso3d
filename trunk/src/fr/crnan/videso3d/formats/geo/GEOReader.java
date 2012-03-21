@@ -16,9 +16,11 @@
 package fr.crnan.videso3d.formats.geo;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.TracksModel;
 
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,17 +30,13 @@ import java.io.InputStreamReader;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
-import javax.swing.ProgressMonitorInputStream;
-
 /**
  * Lecteur de fichiers Elvira GEO.<br />
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.2.4
  */
 public class GEOReader extends TrackFilesReader{
-	
-	
-	
+		
 	public GEOReader(Vector<File> files) throws PointNotFoundException {
 		super(files);
 		this.setModel(new TracksModel());
@@ -57,6 +55,10 @@ public class GEOReader extends TrackFilesReader{
 		super(geoFile, model);
 	}
 
+	public GEOReader(Vector<File> geoFile, TracksModel model, PropertyChangeListener listener) throws PointNotFoundException {
+		super(geoFile, model, listener);
+	}
+	
 	public static Boolean isGeoFile(File file){
 		Boolean geo = false;
 		try {
@@ -80,15 +82,12 @@ public class GEOReader extends TrackFilesReader{
 	}
 	
     @Override
-    protected void doReadStream(FileInputStream stream)
+    protected void doReadStream(ProgressInputStream stream)
     {
         String sentence;
 
         BufferedReader in = new BufferedReader(
-        						new InputStreamReader(
-        						new ProgressMonitorInputStream(null, 
-        								"Extraction du fichier GEO ...",
-        								stream)));
+        						new InputStreamReader(stream));
         
         try
         {

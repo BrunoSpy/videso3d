@@ -18,7 +18,6 @@ package fr.crnan.videso3d.formats.plns;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileInputStream;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -27,18 +26,18 @@ import java.sql.Statement;
 
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.formats.TrackFilesReader;
-import fr.crnan.videso3d.ihm.ProgressMonitor;
+import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.PLNSTracksModel;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.3
  */
 public class PLNSReader extends TrackFilesReader {
 
 
-	public PLNSReader(File[] plnsFiles, File databaseFile, PLNSTracksModel model) throws PointNotFoundException {
+	public PLNSReader(File[] plnsFiles, File databaseFile, PLNSTracksModel model, PropertyChangeListener listener) throws PointNotFoundException {
 		this.setModel(model);
 		this.setName(plnsFiles[0].getName().substring(0, 6)+"...");
 		try {
@@ -47,17 +46,18 @@ public class PLNSReader extends TrackFilesReader {
 			//Connexion
 			Connection database = DriverManager.getConnection("jdbc:sqlite:"+databaseFile.getAbsolutePath());
 			PLNSExtractor extractor = new PLNSExtractor(plnsFiles, database);
-			final ProgressMonitor progress = new ProgressMonitor(null, "Extraction des fichiers plns", "", 0, 100);
 			extractor.addPropertyChangeListener(new PropertyChangeListener() {
 				
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
+					int max = 0;
 					if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
-						progress.setMaximum(((Integer) evt.getNewValue())*2);
+						max = (Integer) evt.getNewValue();
+						fireTaskStarts(100);
 					} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
-						progress.setProgress((Integer) evt.getNewValue());
+						fireTaskProgress(((Integer)evt.getNewValue()*50)/max);
 					} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
-						progress.setNote((String)evt.getNewValue());
+						fireTaskInfo((String) evt.getNewValue());
 					}
 				}
 			});
@@ -66,18 +66,19 @@ public class PLNSReader extends TrackFilesReader {
 			model.getProgressSupport().addPropertyChangeListener(new PropertyChangeListener() {
 				
 				int max = 0;
-				int totalMax = 0;
 				
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
 					if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
 						max = (Integer) evt.getNewValue();
-						totalMax = progress.getMaximum()/2;
+					//	totalMax = progress.getMaximum()/2;
 					} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
-						int p = (Integer) evt.getNewValue();
-						progress.setProgress(totalMax+(totalMax*p)/max);
+						//int p = (Integer) evt.getNewValue();
+						//progress.setProgress(totalMax+(totalMax*p)/max);
+						fireTaskProgress(50+((Integer)evt.getNewValue()*50)/max);
 					} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
-						progress.setNote((String)evt.getNewValue());
+					//	progress.setNote((String)evt.getNewValue());
+						fireTaskInfo((String)evt.getNewValue());
 					}
 				}
 			});
@@ -96,7 +97,7 @@ public class PLNSReader extends TrackFilesReader {
 	 * Si les fichiers sont déjà dans une basse de données, il suffit de référencer le modèle correspondant.
 	 * @param model
 	 */
-	public PLNSReader(File file, PLNSTracksModel model){
+	public PLNSReader(File file, PLNSTracksModel model, PropertyChangeListener listener){
 		this.setModel(model);
 		this.getFiles().add(file);
 		this.setName("PLNS "+file.getName());
@@ -138,7 +139,7 @@ public class PLNSReader extends TrackFilesReader {
 
 	
 	@Override
-	protected void doReadStream(FileInputStream fis)
+	protected void doReadStream(ProgressInputStream fis)
 	throws PointNotFoundException {
 		
 

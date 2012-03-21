@@ -16,9 +16,11 @@
 package fr.crnan.videso3d.formats.lpln;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.TracksModel;
 
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,13 +30,11 @@ import java.io.InputStreamReader;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
-import javax.swing.ProgressMonitorInputStream;
-
 /**
  * Lecteur de fichier LPLN.<br />
  * Un LPLN ne contenant pas les coordonnées des balises, un liaison à une base de donnée Stip est nécessaire.
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 public class LPLNReader extends TrackFilesReader{
 		
@@ -44,6 +44,10 @@ public class LPLNReader extends TrackFilesReader{
 
 	public LPLNReader(Vector<File> files, TracksModel model) throws PointNotFoundException {
 		super(files, model);
+	}
+	
+	public LPLNReader(Vector<File> files, TracksModel model, PropertyChangeListener listener) throws PointNotFoundException {
+		super(files, model, listener);
 	}
 	
 	public LPLNReader(File selectedFile) throws PointNotFoundException {
@@ -78,15 +82,12 @@ public class LPLNReader extends TrackFilesReader{
 	}
 
 	@Override
-	protected void doReadStream(FileInputStream stream) throws PointNotFoundException {
+	protected void doReadStream(ProgressInputStream stream) throws PointNotFoundException {
 		
 		String sentence;
 
 		BufferedReader in = new BufferedReader(
-				new InputStreamReader(
-						new ProgressMonitorInputStream(null, 
-								"Extraction du fichier LPLN ...",
-								stream)));
+				new InputStreamReader(stream));
 
 	    try {
 			LPLNTrack track = null;

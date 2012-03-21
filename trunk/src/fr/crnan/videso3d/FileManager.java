@@ -37,6 +37,8 @@ import java.util.zip.ZipOutputStream;
 import com.ice.tar.TarEntry;
 import com.ice.tar.TarInputStream;
 
+import eu.medsea.mimeutil.MimeUtil;
+
 /**
  * Manages several kind of files.<br />
  * Manages compressed files.
@@ -281,6 +283,37 @@ public class FileManager {
 		} 
 		else {
 			return null;
+		}
+	}
+	
+	/**
+	 * Takes a list of files and extract them if needed<br />
+	 * Compression types allowed are : zip, gzip and tar.<br />
+	 * Original files are not modified.
+	 * @param files
+	 * @return
+	 */
+	public static List<File> extractFilesIfNeeded(List<File> files){
+		List<File> finalList = new ArrayList<File>();
+		extractFiles(files, finalList);
+		return finalList;
+	}
+	
+	private static void extractFiles(List<File> files, List<File> finalList){
+		MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
+		MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.ExtensionMimeDetector"); 
+		for(File f : files){
+			if(MimeUtil.getMimeTypes(f).contains("application/zip")){
+				extractFiles(FileManager.unzip(f), finalList);
+			} else if(MimeUtil.getMimeTypes(f).contains("application/x-gzip")){
+				List<File> temp = new ArrayList<File>();
+				temp.add(FileManager.gunzip(f));
+				extractFiles(temp, finalList);
+			} else if(MimeUtil.getMimeTypes(f).contains("application/x-tar")){
+				extractFiles(FileManager.untar(f), finalList);
+			} else {
+				finalList.add(f);
+			}
 		}
 	}
 	

@@ -16,10 +16,14 @@
 
 package fr.crnan.videso3d.formats;
 
+import fr.crnan.videso3d.ProgressSupport;
+import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import gov.nasa.worldwind.util.Logging;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,22 +33,36 @@ import java.util.List;
 import java.util.Vector;
 
 /**
- * Lecteur de fichiers trace radar
+ * Lecteur de fichiers trace radar<br/>
+ * Envoie la progression de la lecture des fichiers avec une valeur comprise entre 0 et 100.
  * @author Bruno Spyckerelle
- * @version 0.4.0
+ * @version 0.5.1
  */
-public abstract class TrackFilesReader {
+public abstract class TrackFilesReader extends ProgressSupport{
 
 	private String name;
 		
 	private List<File> files = new ArrayList<File>();
 	
+	protected int numberFiles = 0;
+	
 	private TracksModel model;
 	
 	public TrackFilesReader(){}
-	
-	public TrackFilesReader(Vector<File> files, TracksModel model) throws PointNotFoundException {
+
+
+	/**
+	 * 
+	 * @param files
+	 * @param model
+	 * @param listener
+	 * @throws PointNotFoundException
+	 */
+	public TrackFilesReader(Vector<File> files, TracksModel model, PropertyChangeListener listener) throws PointNotFoundException {
 		this.setModel(model);
+		this.numberFiles = files.size();
+		if(listener !=  null) this.addPropertyChangeListener(listener);
+		this.fireTaskStarts(100);
 		for(File f : files){
 			try {
 				this.files.add(f);
@@ -53,6 +71,11 @@ public abstract class TrackFilesReader {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public TrackFilesReader(Vector<File> files, TracksModel model) throws PointNotFoundException {
+		this(files, model, null);
+		
 	}
 	
 	public TrackFilesReader(File selectedFile, TracksModel model) throws PointNotFoundException {
@@ -88,7 +111,6 @@ public abstract class TrackFilesReader {
 			throw new IllegalArgumentException(msg);
 		}
 
-		
 
 		java.io.File file = new java.io.File(path);
 		if (!file.exists())
@@ -98,8 +120,17 @@ public abstract class TrackFilesReader {
 			throw new FileNotFoundException(path);
 		}
 		
+		this.fireTaskInfo(file.getName());
+		
 		this.setName(file.getName());
-		FileInputStream fis = new FileInputStream(file);
+		ProgressInputStream fis = new ProgressInputStream(new FileInputStream(file));
+		fis.addPropertyChangeListener(ProgressInputStream.UPDATE, new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				fireTaskProgress(((files.size()-1)*100)/numberFiles+((Integer)evt.getNewValue()/numberFiles));
+			}
+		});
 		this.doReadStream(fis);
 	}
 	
@@ -111,7 +142,7 @@ public abstract class TrackFilesReader {
 		return name;
 	}
 	
-	protected abstract void doReadStream(FileInputStream fis) throws PointNotFoundException;
+	protected abstract void doReadStream(ProgressInputStream fis) throws PointNotFoundException;
 	
 	public TracksModel getModel(){
 		return this.model;

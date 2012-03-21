@@ -27,6 +27,8 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -35,6 +37,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.ToolTipManager;
 
@@ -60,6 +63,7 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.ProjectManager;
 import fr.crnan.videso3d.SplashScreen;
 import fr.crnan.videso3d.Videso3D;
@@ -137,7 +141,7 @@ public class MainWindow extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	}
 
-//	private JToolBar drawToolbar;
+	private JToolBar drawToolbar;
 	private JPanel toolbars;
 	
 	public MainWindow(){
@@ -156,9 +160,11 @@ public class MainWindow extends JFrame {
 
 
 		//fermeture des connections aux bases de données avant de quitter afin de ne pas perdre les dernières transactions
+		//et suppression des dossiers temporaires
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
 				DatabaseManager.closeAll();
+				FileManager.removeTempFiles();
 			}
 		});
 
@@ -420,7 +426,18 @@ public class MainWindow extends JFrame {
 	 * @param file
 	 * @throws Exception 
 	 */
-	public void addTrajectoriesViews(File[] files){
+	//nombre de fichiers importés
+	int current = -1;
+	public void addTrajectoriesViews(File[] filesT){
+		final ProgressMonitor progressMonitorT = new ProgressMonitor(this, "Import des trajectoires", "", 0, 100, false, true, false);
+		progressMonitorT.setMillisToDecideToPopup(0);
+		progressMonitorT.setMillisToPopup(0);
+		progressMonitorT.setNote("Extraction des fichiers compressés...");
+		
+		List<File> files = FileManager.extractFilesIfNeeded(Arrays.asList(filesT));
+		
+		progressMonitorT.setNote("Détection des types de fichiers...");
+		
 		Vector<File> opasFile = new Vector<File>();
 		Vector<File> geoFile = new Vector<File>();
 		Vector<File> lplnFile = new Vector<File>();
@@ -443,13 +460,37 @@ public class MainWindow extends JFrame {
 			}
 		}
 		
+		progressMonitorT.setNote("Import des trajectoires...");
+		
+		progressMonitorT.setMaximum(100*((opasFile.size() > 0 ? 1 : 0 )
+										+(lplnFile.size() > 0 ? 1 : 0 )
+										+(geoFile.size() > 0 ? 1 : 0 )
+										+(fplFile.size() > 0 ? 1 : 0 )
+										+(plnsFile.size() > 0 ? 1 : 0 )
+										+(sqlitePlnsFile.size() > 0 ? 1 : 0 )));
+		
+		PropertyChangeListener readerListener = new PropertyChangeListener() {
+
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+
+				if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
+					current++;
+				} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
+					progressMonitorT.setProgress(current*100+(Integer) evt.getNewValue());
+				} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
+					progressMonitorT.setNote((String) evt.getNewValue());
+				}
+			}
+		};
+
 		if(opasFile.size()>0){
 			try{
 				OPASTracksLayer layer = new OPASTracksLayer(new TracksModel());
 				layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
 				this.wwd.toggleLayer(layer, true);
 				//lecture et création des tracks à la volée
-				OPASReader reader = new OPASReader(opasFile, layer.getModel());
+				OPASReader reader = new OPASReader(opasFile, layer.getModel(), readerListener);
 				if(reader.getModel().getAllTracks().size() > 0){
 					//changement du style en fonction de la conf
 					if(reader.getModel().getAllTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
@@ -471,7 +512,7 @@ public class MainWindow extends JFrame {
 				layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
 				this.wwd.toggleLayer(layer, true);
 				//lecture et création des tracks à la volée
-				GEOReader reader = new GEOReader(geoFile, layer.getModel());
+				GEOReader reader = new GEOReader(geoFile, layer.getModel(), readerListener);
 				if(reader.getModel().getAllTracks().size() > 0){
 					//changement du style en fonction de la conf
 					if(reader.getModel().getAllTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
@@ -490,7 +531,7 @@ public class MainWindow extends JFrame {
 		if(lplnFile.size()>0){
 			try {
 				LPLNTracksLayer layer = new LPLNTracksLayer(new TracksModel());
-				LPLNReader reader = new LPLNReader(lplnFile, layer.getModel());
+				LPLNReader reader = new LPLNReader(lplnFile, layer.getModel(), readerListener);
 				this.wwd.toggleLayer(layer, true);
 				if(reader.getModel().getAllTracks().size() > 0){
 					this.addTrajectoriesView(reader, layer);
@@ -507,7 +548,7 @@ public class MainWindow extends JFrame {
 		if(fplFile.size()>0){
 			try {
 				FPLTracksLayer layer = new FPLTracksLayer(new TracksModel());
-				FPLReader fplR = new FPLReader(fplFile, layer.getModel());
+				FPLReader fplR = new FPLReader(fplFile, layer.getModel(), readerListener);
 				this.wwd.toggleLayer(layer, true);
 				String msgErreur = fplR.getErrorMessage();
 				if(!msgErreur.isEmpty())
@@ -531,7 +572,7 @@ public class MainWindow extends JFrame {
 			if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
 				database = fileChooser.getSelectedFile();
 				try{
-					PLNSReader reader = new PLNSReader(plnsFile.toArray(new File[]{}), database, new PLNSTracksModel());
+					PLNSReader reader = new PLNSReader(plnsFile.toArray(new File[]{}), database, new PLNSTracksModel(), readerListener);
 					PLNSTracksLayer layer = new PLNSTracksLayer(reader.getModel());
 					this.wwd.toggleLayer(layer, true);
 					this.addTrajectoriesView(reader, layer);
@@ -568,7 +609,7 @@ public class MainWindow extends JFrame {
 					model.setDatabase(f);
 					PLNSTracksLayer layer = new PLNSTracksLayer(new PLNSTracksModel(f));
 					this.wwd.toggleLayer(layer, true);
-					PLNSReader reader = new PLNSReader(f, (PLNSTracksModel) layer.getModel());
+					PLNSReader reader = new PLNSReader(f, (PLNSTracksModel) layer.getModel(), readerListener);
 					this.addTrajectoriesView(reader, layer);
 				}
 			} catch (PointNotFoundException e) {
@@ -578,6 +619,7 @@ public class MainWindow extends JFrame {
 						"Erreur", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		progressMonitorT.close();
 		if(opasFile.size() == 0 && geoFile.size() == 0 && lplnFile.size() == 0 
 				&& fplFile.size()==0 && plnsFile.size() == 0 && sqlitePlnsFile.size() == 0){
 			Logging.logger().warning("Aucun fichier trajectoire trouvé.");
@@ -678,17 +720,17 @@ public class MainWindow extends JFrame {
 		return this;
 	}
 
-//	public void setDrawToolbar(boolean selected) {
-//		if(drawToolbar == null){
-//			this.drawToolbar = new DrawToolbar(wwd);
-//			this.drawToolbar.setFloatable(true);
-//		}
-//		if(selected){
-//			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
-//			this.validate();
-//		} else {
-//			this.toolbars.remove(drawToolbar);
-//			this.validate();
-//		}
-//	}
+	public void setDrawToolbar(boolean selected) {
+		if(drawToolbar == null){
+			this.drawToolbar = new DrawToolbar(wwd);
+			this.drawToolbar.setFloatable(true);
+		}
+		if(selected){
+			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
+			this.validate();
+		} else {
+			this.toolbars.remove(drawToolbar);
+			this.validate();
+		}
+	}
 }

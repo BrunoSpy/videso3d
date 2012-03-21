@@ -42,7 +42,8 @@ import fr.crnan.videso3d.Triplet;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 
 /**
- * Extrait les données d'un ou plusieurs fichiers PLNS et les insère dans une base de données SQLite
+ * Extrait les données d'un ou plusieurs fichiers PLNS et les insère dans une base de données SQLite<br />
+ * Peut prendre en entrée des fichiers PLNS zippés.
  * @author Bruno Spyckerelle
  * @author Clovis Hamel
  * @version 0.1.2
@@ -56,13 +57,13 @@ public class PLNSExtractor extends ProgressSupport{
 	private File sec;
 	private File typ;
 	int nbFile;
-	private File[] files;
+	private List<File> files;	
 	
 	private Connection database;
 	
 	public PLNSExtractor(File[] files, Connection database){
 		this.database = database;
-		this.files = files;
+		this.files = new ArrayList<File>();
 	}
 	
 	private int ord(String s){
@@ -77,11 +78,12 @@ public class PLNSExtractor extends ProgressSupport{
 	}
 	
 	public void doExtract(){
-		this.fireTaskStarts((files.length*2)*100);
+		this.fireTaskStarts((files.size()*2)*100);
+				
 		nbFile = 0;
 		ProgressInputStream in;
 		for(File f : files){
-			fireTaskInfo(f.getName()+" ("+(nbFile+1)+"/"+files.length+")");
+			fireTaskInfo(f.getName()+" ("+(nbFile+1)+"/"+files.size()+")");
 			//extract files
 			File tempRep = new File("temp_"+f.getName()); 
 			tempRep.mkdir();
@@ -121,7 +123,7 @@ public class PLNSExtractor extends ProgressSupport{
 			tempRep.delete();
 			nbFile++;
 		}
-		this.fireTaskProgress((files.length*2)*100);
+		this.fireTaskProgress((files.size()*2)*100);
 	}
 	
 	

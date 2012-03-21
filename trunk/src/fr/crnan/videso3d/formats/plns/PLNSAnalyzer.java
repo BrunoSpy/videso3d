@@ -20,7 +20,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.jfree.data.category.DefaultCategoryDataset;
@@ -57,6 +59,10 @@ public class PLNSAnalyzer {
 
 	}
 
+	/**
+	 * @deprecated
+	 * @return
+	 */
 	public DefaultCategoryDataset getCategoryCodesRepartition(){
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		HashMap<String, Integer> categories = new HashMap<String, Integer>();
@@ -88,16 +94,34 @@ public class PLNSAnalyzer {
 		return dataset;
 	}
 	
-	//TODO A finir
-	public int getLiaisonPrivilegiee(int code){
-		if(code < 0 || code > 9999)
-			return -1;
-		
+	/**
+	 * Retourne la liaison privilégiée utilisée à partir des infos du PLN
+	 * @param idpln ID du pln
+	 * @return
+	 */
+	public int getLiaisonPrivilegiee(int idpln){
 		int lp = 0;
 		
 		try {
 			Statement st = DatabaseManager.getCurrentStpv();
 			ResultSet rs = st.executeQuery("select * from lps where 1");
+			Statement st2 = this.base.createStatement();
+			ResultSet pln = st2.executeQuery("select * from plns where idpln='"+idpln+"'");
+			String adep;
+			String adest;
+			List<String> sls;
+			if(pln.next()){
+				sls = new ArrayList<String>();
+				adep = pln.getString(7);
+				adest = pln.getString(8);
+			} else {
+				return 0;
+			}
+			pln = st2.executeQuery("select sl from sls where idpln='"+idpln+"'");
+			while(pln.next()){
+				sls.add(pln.getString(1));
+			}
+			st2.close();
 			boolean found = false;
 			while(rs.next() && !found){
 				

@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.formats.fpl;
 
+import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,7 +37,7 @@ import fr.crnan.videso3d.Triplet;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.lpln.LPLNTrackPoint;
 import fr.crnan.videso3d.geom.LatLonUtils;
-import fr.crnan.videso3d.ihm.components.ProgressMonitorInputStream;
+import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import gov.nasa.worldwind.geom.LatLon;
@@ -70,6 +71,10 @@ public class FPLReader extends TrackFilesReader {
 		super(selectedFile, model);
 	}
 
+	public FPLReader(Vector<File> files, TracksModel model, PropertyChangeListener listener) throws PointNotFoundException{
+		super(files, model, listener);
+	}
+	
 	public FPLReader(Vector<File> files, TracksModel model) throws PointNotFoundException{
 		super(files, model);
 	}
@@ -127,11 +132,10 @@ public class FPLReader extends TrackFilesReader {
 	}
 
 	@Override
-	protected void doReadStream(FileInputStream stream){
+	protected void doReadStream(ProgressInputStream stream){
 		String line;
 		BufferedReader in = new BufferedReader(
-				new InputStreamReader(
-						new ProgressMonitorInputStream(null, "Extraction du fichier plan de vol ...", stream)), 32);
+				new InputStreamReader(stream), 32);
 		try{
 			while(in.ready()){
 				line = in.readLine();
