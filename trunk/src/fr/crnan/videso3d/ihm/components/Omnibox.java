@@ -116,7 +116,7 @@ public class Omnibox {
 							Position position = new Position(coord, 0);
 							Balise2DLayer coordinatesLayer = (Balise2DLayer) wwd.getModel().getLayers().getLayerByName("coordLayer");
 							String inputString = (String) input;
-							Balise2D coordinatesMarker = new Balise2D(inputString, position, inputString);
+							Balise2D coordinatesMarker = new Balise2D(inputString, position, inputString, coordinatesLayer.getTextLayer());
 							coordinatesLayer.addBalise(coordinatesMarker);
 							coordinatesLayer.showBalise(inputString, 0);
 							wwd.getView().goTo(position, 1e6);

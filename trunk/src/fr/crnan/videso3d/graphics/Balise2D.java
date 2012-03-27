@@ -22,6 +22,8 @@ import java.beans.PropertyChangeListener;
 
 import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.Pallet;
+import fr.crnan.videso3d.geom.LatLonUtils;
+import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -39,6 +41,10 @@ import gov.nasa.worldwind.render.markers.Marker;
 public class Balise2D extends MarkerAnnotation implements Balise{
 		
 	private UserFacingText text;
+	
+	private boolean locationsVisible = false;
+	private TextLayer textLayer;
+	private UserFacingText locationText;
 	
 	public Balise2D(){
 		super();
@@ -62,12 +68,13 @@ public class Balise2D extends MarkerAnnotation implements Balise{
 	 * @param position Position de la balise
 	 * @param annotation Annotation associée
 	 */
-	public Balise2D(CharSequence name, Position position, String annotation){
+	public Balise2D(CharSequence name, Position position, String annotation, TextLayer tl){
 		this();
 		this.setPosition(position);
 			
 		this.setName((String) name);
-		
+		this.locationText = new UserFacingText(LatLonUtils.toLatLonToString(position), position.add(Position.fromDegrees(-0.05, 0)));
+		this.textLayer = tl;
 		RestorableMarkerAttributes normalAttrs = new RestorableMarkerAttributes();
 		
 		normalAttrs.setMarkerPixels(3);
@@ -82,11 +89,21 @@ public class Balise2D extends MarkerAnnotation implements Balise{
 		}
 	}
 	
+	/**
+	 * Crée une balise 2D sans annotation
+	 * @param name Nom de la balise
+	 * @param position {@link LatLon} Position de la balise
+	 */
+	public Balise2D(CharSequence name, Position position, TextLayer tl){
+		this(name, position, null, tl);
+	}
+	
 	@Override
 	public void setPosition(Position pos){
 		super.setPosition(pos);
 		if(text != null)
 			this.text.setPosition(pos);
+		this.locationText = new UserFacingText(LatLonUtils.toLatLonToString(position), position.add(Position.fromDegrees(-0.05, 0)));
 	}
 	
 	@Override
@@ -102,14 +119,6 @@ public class Balise2D extends MarkerAnnotation implements Balise{
 		}
 	}
 	
-	/**
-	 * Crée une balise 2D
-	 * @param name Nom de la balise
-	 * @param position {@link LatLon} Position de la balise
-	 */
-	public Balise2D(CharSequence name, Position position){
-		this(name, position, null);
-	}
 	
 	public UserFacingText getUserFacingText(){
 		return this.text;
@@ -117,6 +126,21 @@ public class Balise2D extends MarkerAnnotation implements Balise{
 	
 	public Marker getMarker(){
 		return this;
-	}	
+	}
+
+	@Override
+	public boolean isLocationVisible() {
+		return locationsVisible;
+	}
 	
+	@Override
+	public void setLocationVisible(boolean visible) {
+		if(!visible && locationsVisible){
+			locationsVisible = false;
+			this.textLayer.removeGeographicText(locationText);
+		}else if(visible && !locationsVisible){
+			locationsVisible = true;
+			this.textLayer.addGeographicText(locationText);
+		}
+	}	
 }

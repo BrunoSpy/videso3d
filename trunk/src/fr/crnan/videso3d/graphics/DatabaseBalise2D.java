@@ -17,6 +17,7 @@ package fr.crnan.videso3d.graphics;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.geom.Position;
 /**
  * 
@@ -31,15 +32,15 @@ public class DatabaseBalise2D extends Balise2D implements DatabaseVidesoObject {
 	public DatabaseBalise2D(){
 	}
 	
-	public DatabaseBalise2D(CharSequence name, Position position, String annotation, DatabaseManager.Type base, int type){
-		super(name, position, annotation);
+	public DatabaseBalise2D(CharSequence name, Position position, String annotation, DatabaseManager.Type base, int type, TextLayer tl){
+		super(name, position, annotation, tl);
 		
 		this.setDatabaseType(base);
 		this.setType(type);
 	}
 
-	public DatabaseBalise2D(CharSequence name, Position position, DatabaseManager.Type base, int type){
-		super(name, position, null);
+	public DatabaseBalise2D(CharSequence name, Position position, DatabaseManager.Type base, int type, TextLayer tl){
+		super(name, position, tl);
 		this.setDatabaseType(base);
 		this.setType(type);
 	}

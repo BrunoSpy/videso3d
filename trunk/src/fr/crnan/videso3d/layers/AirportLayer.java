@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import fr.crnan.videso3d.graphics.Aerodrome;
+import fr.crnan.videso3d.graphics.DatabasePisteAerodrome;
 import fr.crnan.videso3d.graphics.MarqueurAerodrome;
 import fr.crnan.videso3d.graphics.PisteAerodrome;
 import gov.nasa.worldwind.Restorable;
@@ -85,8 +86,11 @@ public class AirportLayer extends LayerSet {
 			if(next.startsWith(arptCode)){
 				Aerodrome arpt = pistes.get(next);
 				arpt.setVisible(false);
-				if(arpt instanceof MarqueurAerodrome)
+				if(arpt instanceof MarqueurAerodrome){
 					markerLayer.removeMarker((MarqueurAerodrome)arpt);
+					((MarqueurAerodrome)arpt).setLocationVisible(false);
+				}else
+					((DatabasePisteAerodrome)arpt).setLocationsVisible(false);
 			}
 		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
@@ -151,5 +155,9 @@ public class AirportLayer extends LayerSet {
 		}
 			
 		return restorables;
+	}
+	
+	public TextLayer getTextLayer(){
+		return textLayer;
 	}
 }

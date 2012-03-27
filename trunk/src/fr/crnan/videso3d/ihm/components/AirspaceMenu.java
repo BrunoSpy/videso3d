@@ -29,6 +29,8 @@ import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.aip.AIPController;
+import fr.crnan.videso3d.edimap.EdimapController;
+import fr.crnan.videso3d.exsa.STRController;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
@@ -244,19 +246,20 @@ public class AirspaceMenu extends JPopupMenu {
 		this.add(save);
 		
 		VidesoController c = DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType());
-		final int type = ((DatabaseVidesoObject) airspace).getType();
-		final String name = ((DatabaseVidesoObject) airspace).getName();
-		final boolean locationsVisible = c.areLocationsVisible(type, name);
-		JMenuItem locationsItem = new JMenuItem((locationsVisible ? "Cacher" : "Afficher") +" les coordonnées");
-		this.add(locationsItem);
-		locationsItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				VidesoController c = DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType());
-				c.setLocationsVisible(type, name, !locationsVisible);
-			}
-		});
-		
+		if(!(c instanceof STRController || c instanceof EdimapController)){
+			final int type = ((DatabaseVidesoObject) airspace).getType();
+			final String name = ((DatabaseVidesoObject) airspace).getName();
+			final boolean locationsVisible = c.areLocationsVisible(type, name);
+			JMenuItem locationsItem = new JMenuItem((locationsVisible ? "Cacher" : "Afficher") +" les coordonnées");
+			this.add(locationsItem);
+			locationsItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					VidesoController c = DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType());
+					c.setLocationsVisible(type, name, !locationsVisible);
+				}
+			});
+		}
 		JMenuItem delete = new JMenuItem("Supprimer");
 		delete.addActionListener(new ActionListener() {
 			

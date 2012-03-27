@@ -136,6 +136,7 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 		Balise2D b = balises.get(name+type);
 		if(b != null){
 			this.hideBalise(b);
+			b.setLocationVisible(false);
 		}
 	}
 	/**
@@ -186,6 +187,7 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 			balisesActives.remove(b);
 			textLayer.removeGeographicText(((Balise2D) b).getUserFacingText());
 			markerLayer.removeMarker(((Balise2D) b).getMarker());
+			b.setLocationVisible(false);
 			this.firePropertyChange(AVKey.LAYER, null, this);
 		}
 	}
@@ -244,12 +246,18 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 		return balises.containsKey(balise+type);
 	}
 	
+	/**
+	 * Attention : si la balise a un type défini, elle ne sera pas trouvée par cette méthode.
+	 * @param balise
+	 * @return
+	 */
 	public Balise2D getBalise(String balise){
 		return balises.get(balise);
 	}
 	
 	public Balise2D getBalise(String balise, int type){
-		return balises.get(balise+type);
+		Balise2D b = balises.get(balise+type);
+		return (b!=null? b : balises.get(balise));
 	}
 
 	@Override
@@ -274,5 +282,9 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 		} else {
 			this.balises.remove(balise.getName());
 		}
+	}
+	
+	public TextLayer getTextLayer(){
+		return textLayer;
 	}
 }

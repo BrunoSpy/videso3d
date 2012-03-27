@@ -28,7 +28,7 @@ public class DatabaseRoute2D extends Route2D implements DatabaseVidesoObject {
 
 	private int type;
 	private Type base;
-
+	
 	public DatabaseRoute2D(){
 		super();
 	}
@@ -43,7 +43,6 @@ public class DatabaseRoute2D extends Route2D implements DatabaseVidesoObject {
 		super();
 		this.setDatabaseType(base);
 		this.setType(type);
-		
 	}
 	
 	public DatabaseRoute2D(String name, DatabaseManager.Type base, int type) {

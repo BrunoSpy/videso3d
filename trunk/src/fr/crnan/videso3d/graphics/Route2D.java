@@ -64,6 +64,8 @@ public class Route2D extends DirectedPath implements Route{
 
 	private List<Integer> directions;
 	
+	private boolean locationsVisible = false;
+	
 	public Route2D(){
 		super();
 		this.setAltitudeMode(WorldWind.CLAMP_TO_GROUND);
@@ -523,6 +525,18 @@ public class Route2D extends DirectedPath implements Route{
 		if(s != null)
 			this.setAnnotation(s);
 		
+	}
+
+	@Override
+	public boolean areLocationsVisible() {
+		return locationsVisible;
+	}
+	/**
+	 * L'affichage des coordonnées est géré au niveau du contrôleur.
+	 */
+	@Override
+	public void setLocationsVisible(boolean visible) {
+		locationsVisible = visible;
 	}
 	
 }

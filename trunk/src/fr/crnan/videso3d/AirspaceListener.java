@@ -24,9 +24,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.edimap.EdimapController;
+import fr.crnan.videso3d.exsa.STRController;
 import fr.crnan.videso3d.graphics.DatabaseRoute2D;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
+import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoAnnotation;
 import fr.crnan.videso3d.graphics.VidesoObject;
@@ -37,6 +38,8 @@ import fr.crnan.videso3d.ihm.components.AirspaceMenu;
 import fr.crnan.videso3d.ihm.components.ImageMenu;
 import fr.crnan.videso3d.ihm.components.MultipleSelectionMenu;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
+import fr.crnan.videso3d.skyview.SkyViewController;
+import fr.crnan.videso3d.stpv.StpvController;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
 import gov.nasa.worldwind.geom.Position;
@@ -106,14 +109,13 @@ public class AirspaceListener implements SelectListener {
 		if(event.getEventAction() == SelectEvent.HOVER){ //popup tooltip
 			this.doHover(event.getTopObject(),event.getPickPoint());
 		} else if(event.getEventAction() == SelectEvent.RIGHT_CLICK){
-			
+			final Object o = event.getTopObject();
 			if(this.wwd.getSelectedObjects().size() != 0){
 				MultipleSelectionMenu menu = new MultipleSelectionMenu(this.wwd.getSelectedObjects(), wwd);
 				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 				return;
 			}
 			
-			final Object o = event.getTopObject();
 			if(o instanceof Airspace){
 				AirspaceMenu menu = new AirspaceMenu((Airspace)o, 
 						(AirspaceAttributes) ((Airspace)o).getAttributes(), 
@@ -174,25 +176,7 @@ public class AirspaceListener implements SelectListener {
 							wwd.redraw();
 						}
 					});
-					//TODO
-					if(o instanceof DatabaseVidesoObject){
-						VidesoController c = DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType());
-						if(c instanceof EdimapController && o instanceof SurfaceShape){
-							final int type = ((DatabaseVidesoObject) o).getType();
-							final String name = ((DatabaseVidesoObject) o).getName();
-							final boolean locationsVisible = ((EdimapController)c).areLocationsVisible(type, name);
-							JMenuItem locationsItem = new JMenuItem((locationsVisible ? "Cacher" : "Afficher") +" les coordonnées");
-							menu.add(locationsItem);
-							locationsItem.addActionListener(new ActionListener() {
-								@Override
-								public void actionPerformed(ActionEvent arg0) {
-									VidesoController c = DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType());
-									((EdimapController)c).setLocationsVisible(type, name, !locationsVisible);
-
-								}
-							});
-						}
-					}
+					
 					if(o instanceof DatabaseRoute2D){
 						JMenuItem contextItem = new JMenuItem("Informations...");				
 						menu.add(contextItem);
@@ -204,18 +188,8 @@ public class AirspaceListener implements SelectListener {
 								context.showInfo(route.getDatabaseType(), route.getType(), route.getName());
 							}
 						});
+						
 					}
-					JMenuItem supprItem = new JMenuItem("Supprimer");				
-					menu.add(supprItem);
-					supprItem.addActionListener(new ActionListener() {
-
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							if(o instanceof DatabaseVidesoObject){
-								DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType()).hideObject(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
-							}						
-						}
-					});
 				} else if(o instanceof Marker || o instanceof PointPlacemark){
 					if(o instanceof DatabaseVidesoObject){
 						JMenuItem contextItem = new JMenuItem("Informations...");				
@@ -269,19 +243,36 @@ public class AirspaceListener implements SelectListener {
 							analyseItem.add(analyseRoute);
 							menu.add(analyseItem);
 						}
+						
 					}
-					JMenuItem supprItem = new JMenuItem("Supprimer");				
-					menu.add(supprItem);
-					supprItem.addActionListener(new ActionListener() {
-
+					
+				}
+				final VidesoController c = DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType());
+				if(o instanceof DatabaseVidesoObject && 
+						!(c instanceof STRController || c instanceof StpvController || (c instanceof SkyViewController && o instanceof Route))){
+					final int type = ((DatabaseVidesoObject) o).getType();
+					final String name = ((DatabaseVidesoObject) o).getName();
+					final boolean locationsVisible = c.areLocationsVisible(type, name);
+					JMenuItem locationsItem = new JMenuItem((locationsVisible ? "Cacher" : "Afficher") +" les coordonnées");
+					menu.add(locationsItem);
+					locationsItem.addActionListener(new ActionListener() {
 						@Override
-						public void actionPerformed(ActionEvent e) {
-							if(o instanceof DatabaseVidesoObject){
-								DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType()).hideObject(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
-							}
+						public void actionPerformed(ActionEvent arg0) {
+							c.setLocationsVisible(type, name, !locationsVisible);
 						}
 					});
 				}
+				JMenuItem supprItem = new JMenuItem("Supprimer");				
+				menu.add(supprItem);
+				supprItem.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						if(o instanceof DatabaseVidesoObject){
+							DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType()).hideObject(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
+						}
+					}
+				});
 				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 			}
 		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){ //ouverture du contexte

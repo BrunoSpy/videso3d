@@ -57,7 +57,8 @@ public class Route3D extends TrackAirspace implements Route {
 	private String name;
 	private Parity parity;
 	
-
+	private boolean locationsVisible;
+	
 	public Route3D(){
 		super();
 		this.setDefaultMaterial();
@@ -494,6 +495,21 @@ public class Route3D extends TrackAirspace implements Route {
         this.highlightAttrs = highlightAttrs;
         if(highlighted) this.setAttributes(this.highlightAttrs);
     }
+
+	@Override
+	public boolean areLocationsVisible() {
+		return locationsVisible;
+	}
+	
+	/**
+	 * L'affichage des coordonnées est géré au niveau du contrôleur.
+	 */
+	@Override
+	public void setLocationsVisible(boolean visible) {
+		locationsVisible = visible;
+	}
+
+	
 	
     
     

@@ -209,11 +209,11 @@ public class AIPContext extends Context {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(afficher){
-					getController().displayRouteNavFixs(pkRouteFinal, true);
+					getController().displayRouteNavFixs(pkRouteFinal, true, false);
 					putValue(Action.NAME, "Cacher les balises");
 					afficher = false;
 				}else{
-					getController().displayRouteNavFixs(pkRouteFinal, false);
+					getController().displayRouteNavFixs(pkRouteFinal, false, false);
 					putValue(Action.NAME, "Afficher les balises");
 					afficher = true;
 				}

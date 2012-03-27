@@ -224,7 +224,7 @@ public class StipContext extends Context {
 						if(show){
 							for(String route : routesList){
 								getController().showObject(StipController.ROUTES, route);
-								getController().showRoutesBalises(route);
+								getController().showRoutesBalises(route, false);
 							}
 							show = false;
 							putValue(Action.NAME, "Cacher les routes.");
@@ -345,7 +345,7 @@ public class StipContext extends Context {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
 						if(show) {
-							((StipController) getController()).showRoutesBalises(name);
+							((StipController) getController()).showRoutesBalises(name, false);
 							putValue(Action.NAME, "<html>Cacher les balises.</html>");
 							show = false;
 						} else {

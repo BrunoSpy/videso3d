@@ -1,5 +1,5 @@
 /*
- * This file is part of ViDESO.
+* This file is part of ViDESO.
  * ViDESO is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -63,5 +63,12 @@ public class DatabaseSurfacePolygonAnnotation extends SurfacePolygonAnnotation i
 	public String getRestorableClassName() {
 		return SurfacePolygonAnnotation.class.getName();
 	}
+
+	public boolean areLocationsVisible(){
+		return false;
+	}
 	
+	public void setLocationsVisible(boolean visible){
+		
+	}
 }

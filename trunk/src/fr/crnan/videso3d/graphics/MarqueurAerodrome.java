@@ -16,6 +16,7 @@
 package fr.crnan.videso3d.graphics;
 
 import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.geom.Position;
 /**
  * Représentation d'un aérodrome dont on ne connaît pas les pistes.
@@ -30,8 +31,8 @@ public class MarqueurAerodrome extends DatabaseBalise2D implements Aerodrome {
 		super();
 	}
 	
-	public MarqueurAerodrome(int type, String name, Position position,String nomPiste, Type base) {
-		super(name.split("--")[0].trim(), position, "<b>"+name+"</b><br/>Piste "+ nomPiste, base, type);
+	public MarqueurAerodrome(int type, String name, Position position,String nomPiste, Type base, TextLayer tl) {
+		super(name.split("--")[0].trim(), position, "<b>"+name+"</b><br/>Piste "+ nomPiste, base, type, tl);
 		this.nomPiste = nomPiste;
 		this.setDatabaseType(base);
 		this.setType(type);
