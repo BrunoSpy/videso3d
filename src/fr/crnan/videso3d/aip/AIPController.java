@@ -494,7 +494,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 							loc.add(LatLon.fromDegrees(48, 0));
 						}
 
-						DatabaseRoute2D segment2D = new DatabaseRoute2D(segmentName, routeType, Type.AIP, AIP.AWY);
+						DatabaseRoute2D segment2D = new DatabaseRoute2D(segmentName, routeType, Type.AIP, type);
 						List<Integer> directions = new ArrayList<Integer>();
 						Parity sens = null;
 						String sensString = segment.getChildText("Circulation");
@@ -527,7 +527,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 						routes2D.addRoute(segment2D, segmentName);
 
 						//TODO prendre en compte le sens de circulation pour les routes 3D... 
-						DatabaseRoute3D segment3D = new DatabaseRoute3D(segmentName, routeType, Type.AIP, AIP.AWY);
+						DatabaseRoute3D segment3D = new DatabaseRoute3D(segmentName, routeType, Type.AIP, type);
 						segment3D.setLocations(loc);
 						boolean lowerTerrainConformant = false, upperTerrainConformant = false;
 						if(altis.getFirst().isTerrainConforming()){
@@ -550,11 +550,6 @@ public class AIPController extends ProgressSupport implements VidesoController {
 					}
 				}
 			}
-		
-//			if(segmentsEmpty){
-//				new JOptionPane("<html><b>Le tracé de la route <font color=\"red\">"+routeName+"</font> est inconnu !</b></html>", 
-//						JOptionPane.INFORMATION_MESSAGE).createDialog("Route "+routeName).setVisible(true);
-//			}
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
@@ -581,13 +576,18 @@ public class AIPController extends ProgressSupport implements VidesoController {
 				}
 			}
 			if(route.areNavFixsVisible()){
-				displayRouteNavFixs(routeID, false);
+				displayRouteNavFixs(routeID, false, false);
 			}
 		}
 	}
 
-	
-	public void displayRouteNavFixs(String pkRoute, boolean display){
+	/**
+	 * 
+	 * @param pkRoute l'identifiant de la route
+	 * @param display true si on veut afficher les balises, false si on veut les cacher
+	 * @param withLocations true si on veut afficher les coordonnées des balises, false sinon
+	 */
+	public void displayRouteNavFixs(String pkRoute, boolean display, boolean withLocations){
 		List<Couple<String,String>> navFixExtremites = new ArrayList<Couple<String,String>>();
 		try {
 			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nom, type from NavFix, segments where segments.pkRoute = ? AND segments.navFixExtremite = NavFix.pk");
@@ -609,12 +609,16 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		if(display){
 			for(Couple<String,String> navFix : navFixExtremites){			
 				showObject(AIP.string2type(navFix.getSecond()), navFix.getFirst());
+				if(withLocations){
+					setLocationsVisible(AIP.string2type(navFix.getSecond()), navFix.getFirst(), true);
+				}
 			}
 			if(routeAIP != null)
 			routesSegments.getSegmentOfRoute(Integer.parseInt(pkRoute)).setNavFixsVisible(true);
 		}else{
 			for(Couple<String,String> navFix : navFixExtremites){			
 				hideObject(AIP.string2type(navFix.getSecond()), navFix.getFirst());
+				setLocationsVisible(AIP.string2type(navFix.getSecond()), navFix.getFirst(), false);
 			}
 			if(routeAIP != null)
 			routesSegments.getSegmentOfRoute(Integer.parseInt(pkRoute)).setNavFixsVisible(false);
@@ -643,7 +647,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			Balise2D navFix = new DatabaseBalise2D(name, Position.fromDegrees(latitude, longitude), Type.AIP, type);
+			Balise2D navFix = new DatabaseBalise2D(name, Position.fromDegrees(latitude, longitude), Type.AIP, type, navFixLayer.getTextLayer());
 			String annotation = "<html><b>"+name+"</b><br/><i>Type : </i>"+typeString;
 			if(freq != 0){
 				annotation += "<br/><i>Fréq. : </i>"+freq;
@@ -670,7 +674,6 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		if(balises.contains(type+" "+name)){
 			Balise2D navFix = navFixLayer.getBalise(name, type);
 			navFixLayer.hideBalise(navFix);
-			
 			navFixLayer3D.hideBalise(name, type);
 			
 			this.wwd.getAnnotationLayer().removeAnnotation(navFix.getAnnotation(null));
@@ -721,15 +724,16 @@ public class AIPController extends ProgressSupport implements VidesoController {
 						double lat2 = rs2.getDouble("lat2");
 						double lon2 = rs2.getDouble("lon2");
 						double largeur = rs2.getDouble("largeur");
-						DatabasePisteAerodrome piste = new DatabasePisteAerodrome(type, nom, nomPiste, lat1, lon1, lat2, lon2, largeur, Position.fromDegrees(latRef, lonRef), Type.AIP);
+						DatabasePisteAerodrome piste = new DatabasePisteAerodrome(type, nom, nomPiste, lat1, lon1, lat2, lon2, largeur, 
+								Position.fromDegrees(latRef, lonRef), Type.AIP, arptLayer.getTextLayer());
 						arptLayer.addAirport(piste);
 					}else{
-						MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), nomPiste, DatabaseManager.Type.AIP);
+						MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), nomPiste, DatabaseManager.Type.AIP, arptLayer.getTextLayer());
 						arptLayer.addAirport(airportBalise);
 					}
 				}
 				if(!runwayExists){
-					MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), "Pistes inconnues", DatabaseManager.Type.AIP);
+					MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), "Pistes inconnues", DatabaseManager.Type.AIP, arptLayer.getTextLayer());
 					arptLayer.addAirport(airportBalise);
 				}
 			}catch(SQLException e){
@@ -919,16 +923,19 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	
 	
 	public String getRouteIDFromSegmentName(String segmentName, String typeRoute) throws SQLException{
-		String route = segmentName.split("-")[0].trim();
-		
+		String[] splittedRouteName = segmentName.split("-");
+		String route = splittedRouteName[0].trim();
 		String pkRoute = null;
-		
-		PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from routes where nom = ? AND type = ?");
-		st.setString(1, route);
-		st.setString(2, typeRoute);
-		ResultSet rs = st.executeQuery();
-		if(rs.next()){
-			pkRoute=rs.getString(1);
+		PreparedStatement st;
+		ResultSet rs;
+		if(splittedRouteName.length<3){
+			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from routes where nom = ? AND type = ?");
+			st.setString(1, route);
+			st.setString(2, typeRoute);
+			rs = st.executeQuery();
+			if(rs.next()){
+				pkRoute=rs.getString(1);
+			}
 		}else{
 			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from routes where nom LIKE ? AND type = ?");
 			st.setString(1, route+" -%");
@@ -1244,18 +1251,59 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		return restorables;
 	}
 
-
 	@Override
 	public boolean areLocationsVisible(int type, String name) {
-		return zones.get(type+" "+name).areLocationsVisible();
+		if(type>=AIP.AWY && type<AIP.DMEATT){
+			return routes2D.getRoute(name).areLocationsVisible();
+		}else if(type>=AIP.DMEATT && type<AIP.AERODROME){
+			Balise2D b = navFixLayer.getBalise(name, type);
+			return (b!=null? b.isLocationVisible(): false);
+		}else if(type>=AIP.AERODROME){
+			List<Aerodrome> aerodromes = arptLayer.getAirport(name);
+			Aerodrome aerodrome = aerodromes.get(0);
+			if(aerodrome instanceof MarqueurAerodrome)
+				return ((MarqueurAerodrome)aerodrome).isLocationVisible();
+			else
+				return ((DatabasePisteAerodrome)aerodrome).areLocationsVisible();
+		}else{
+			return zones.get(type+" "+name).areLocationsVisible();
+		}		
 	}
 
 
 	@Override
-	public void setLocationsVisible(int type, String name, boolean b) {
-		List<VPolygon> polygons = getPolygons(type, name);
-		for(VPolygon p : polygons){
-			((Secteur3D)p).setLocationsVisible(b);
+	public void setLocationsVisible(int type, String name, boolean visible) {
+		if(type>=AIP.AWY && type<AIP.DMEATT){
+			String pkRoute = null;
+			try {
+				pkRoute = getRouteIDFromSegmentName(name, AIP.type2String(type));
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			displayRouteNavFixs(pkRoute, visible, visible);
+			RoutesSegments.Route route = routesSegments.getSegmentOfRoute(Integer.parseInt(pkRoute));
+			if(route!=null){
+				for(Segment s : route){
+					routes2D.getRoute(s.getName()).setLocationsVisible(visible);
+				}
+			}
+		}else if(type>=AIP.DMEATT && type<AIP.AERODROME){
+			navFixLayer.getBalise(name, type).setLocationVisible(visible);
+			navFixLayer3D.getBalise(name, type).setLocationVisible(visible);
+		}else if(type>=AIP.AERODROME){
+			List<Aerodrome> aerodromes = arptLayer.getAirport(name);
+			for(Aerodrome aero : aerodromes){
+				if(aero instanceof MarqueurAerodrome)
+					((MarqueurAerodrome)aero).setLocationVisible(visible);
+				else{
+					((DatabasePisteAerodrome)aero).setLocationsVisible(visible);
+				}
+			}
+		}else{
+			List<VPolygon> polygons = getPolygons(type, name);
+			for(VPolygon p : polygons){
+				((Secteur3D)p).setLocationsVisible(visible);
+			}
 		}
 	}
 }

@@ -41,7 +41,7 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 	private List<Balise3D> balisesActives = new ArrayList<Balise3D>();
 	
 	private Boolean lock = false;
-	
+		
 	public Balise3DLayer(String name) {
 		this.setName(name);
 	}
@@ -103,8 +103,9 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 	@Override
 	public void hideBalise(String name, int type) {
 		Balise3D b = balises.get(name+type);
-		if(name != null){
+		if(b != null){
 			this.hideBalise(b);
+			b.setLocationVisible(false);
 		}
 	}
 	
@@ -113,6 +114,7 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 		if(!this.isLocked() && balisesActives.contains(b)){
 			balisesActives.remove(b);
 			this.removeRenderable((Renderable) b);
+			b.setLocationVisible(false);
 			this.firePropertyChange(AVKey.LAYER, null, this);
 		}
 	}
@@ -170,7 +172,8 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 	}
 	
 	public Balise3D getBalise(String balise, int type){
-		return balises.get(balise+type);
+		Balise3D b = balises.get(balise+type);
+		return (b!=null?b:balises.get(balise));
 	}
 
 	@Override
@@ -196,4 +199,5 @@ public class Balise3DLayer extends RenderableLayer implements BaliseLayer {
 			this.balises.remove(balise.getName());
 		}
 	}
+
 }

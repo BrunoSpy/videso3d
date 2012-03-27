@@ -104,6 +104,7 @@ public class Routes3DLayer extends AirspaceLayer implements RoutesLayer {
 
 	private void hideRoute(Route3D r){
 		r.setVisible(false);
+		r.setLocationsVisible(false);
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	

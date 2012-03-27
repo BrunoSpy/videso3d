@@ -138,7 +138,8 @@ public class SkyViewController implements VidesoController {
 						Balise2D airport = new DatabaseBalise2D(name, 
 												new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(8), rs.getString(9)), 0), 
 												DatabaseManager.Type.SkyView,
-												SkyViewController.TYPE_AIRPORT);
+												SkyViewController.TYPE_AIRPORT,
+												airports.getTextLayer());
 						airport.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
 						airports.addBalise(airport);
 					}
@@ -157,7 +158,8 @@ public class SkyViewController implements VidesoController {
 					if(rs.next()){
 						DatabaseBalise2D waypoint = new DatabaseBalise2D(name, new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(7), rs.getString(8)), 0),
 								DatabaseManager.Type.SkyView,
-								SkyViewController.TYPE_WAYPOINT);
+								SkyViewController.TYPE_WAYPOINT,
+								waypoints.getTextLayer());
 						waypoint.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
 						waypoints.addBalise(waypoint);
 					}
@@ -302,7 +304,8 @@ public class SkyViewController implements VidesoController {
 			for(LinkedList<Couple<String, String>> route : routes){
 				DatabaseRoute2D r = new DatabaseRoute2D(ident, type.equals("H")? Route.Space.UIR : Route.Space.FIR,
 						Type.SkyView,
-						SkyViewController.TYPE_ROUTE);
+						SkyViewController.TYPE_ROUTE
+						);
 				LinkedList<LatLon> loc = new LinkedList<LatLon>();
 				LinkedList<String> balises = new LinkedList<String>();
 				for(Couple<String, String> p : route){
@@ -455,7 +458,8 @@ public class SkyViewController implements VidesoController {
 				String ident = rs.getString(1);
 				DatabaseBalise2D waypoint = new DatabaseBalise2D(ident, new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(3), rs.getString(4)), 0),
 						DatabaseManager.Type.SkyView,
-						SkyViewController.TYPE_WAYPOINT);
+						SkyViewController.TYPE_WAYPOINT,
+						waypoints.getTextLayer());
 				waypoint.setAnnotation("<b>"+ident+"</b><br /><br />"+rs.getString(2));
 				waypoints.addBaliseActive(waypoint);
 			}
@@ -482,18 +486,27 @@ public class SkyViewController implements VidesoController {
 		}
 	}
 
-	/**
-	 * Not implemented in this controller
-	 */
+	
 	@Override
 	public boolean areLocationsVisible(int type, String name) {
+		if(type==TYPE_WAYPOINT)
+			return waypoints.getBalise(name, type).isLocationVisible();
+		if(type==TYPE_AIRPORT)
+			return airports.getBalise(name, type).isLocationVisible();
+		if(type==TYPE_ROUTE){}
+			//TODO
 		return false;
 	}
-	/**
-	 * Not implemented in this controller
-	 */
+
+
 	@Override
 	public void setLocationsVisible(int type, String name, boolean b) {
+		if(type==TYPE_WAYPOINT)
+			waypoints.getBalise(name, type).setLocationVisible(b);
+		if(type==TYPE_AIRPORT)
+			airports.getBalise(name, type).setLocationVisible(b);
+		if(type==TYPE_ROUTE){}
+			//TODO
 	}
 	
 }

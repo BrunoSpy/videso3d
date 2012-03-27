@@ -226,7 +226,6 @@ public class StipController extends ProgressSupport implements VidesoController 
 	public void hideObject(int type, String name) {
 		switch (type) {
 		case ROUTES://Routes
-			
 			this.routes2D.hideRoute(name);
 			this.routes3D.hideRoute(name);
 			hideRoutesBalises(name);
@@ -342,12 +341,12 @@ public class StipController extends ProgressSupport implements VidesoController 
 					if(rs.getBoolean("publicated")) {
 						balise3d = new DatabaseBalise3D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), plafondMax*30.48), annotation, Type.STIP, StipController.BALISES);
 						balisesPub3D.addBalise(balise3d);
-						balise2d = new DatabaseBalise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), annotation, Type.STIP, StipController.BALISES);
+						balise2d = new DatabaseBalise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), annotation, Type.STIP, StipController.BALISES, balisesPub2D.getTextLayer());
 						balisesPub2D.addBalise(balise2d);	
 					} else {
 						balise3d = new DatabaseBalise3D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), plafondMax*30.48), annotation, Type.STIP, StipController.BALISES);
 						balisesNP3D.addBalise(balise3d);
-						balise2d = new DatabaseBalise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), annotation, Type.STIP, StipController.BALISES);
+						balise2d = new DatabaseBalise2D(rs.getString("name"), Position.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude"), 100.0), annotation, Type.STIP, StipController.BALISES, balisesNP2D.getTextLayer());
 						balisesNP2D.addBalise(balise2d);
 					}
 					//lien nominal
@@ -526,15 +525,21 @@ public class StipController extends ProgressSupport implements VidesoController 
 	}
 	/**
 	 * Affiche les balises associées à la route
-	 * @param name
+	 * @param name Le nom de la route
+	 * @param withLocations true si on veut afficher les coordonnées des balises, false sinon
 	 */
-	public void showRoutesBalises(String name){
+	public void showRoutesBalises(String name, boolean withLocations){
 		List<String> balises = routes3D.getRoute(name).getBalises();
 		this.createBalise(balises);
 		balisesNP3D.showBalises(balises, BALISES);
 		balisesPub3D.showBalises(balises, BALISES);
 		balisesNP2D.showBalises(balises, BALISES);
 		balisesPub2D.showBalises(balises, BALISES);
+		if(withLocations){
+			for(String b : balises){
+				setLocationsVisible(BALISES, b, true);
+			}
+		}
 	}
 	
 	public void hideRoutesBalises(String name){
@@ -676,7 +681,7 @@ public class StipController extends ProgressSupport implements VidesoController 
 			routes3D.highlight(text);
 
 			//création des balises si besoin
-			this.showRoutesBalises(text);			
+			this.showRoutesBalises(text, false);			
 
 			this.wwd.getView().goTo(airspace.getReferencePosition(), 1e6);
 
@@ -887,15 +892,39 @@ public class StipController extends ProgressSupport implements VidesoController 
 
 	@Override
 	public boolean areLocationsVisible(int type, String name) {
-		return secteurs.get(name+0).areLocationsVisible();
+		switch(type){
+		case BALISES :
+			return balises2D.get(name).isLocationVisible();
+		case SECTEUR :
+			return secteurs.get(name+0).areLocationsVisible();
+		case ROUTES :
+			return routes2D.getRoute(name).areLocationsVisible();
+		}
+		return false;
 	}
 
 	@Override
-	public void setLocationsVisible(int type, String name, boolean b) {
-		Integer i = 0;
-		while(secteurs.containsKey(name+i.toString())){
-			secteurs.get(name+i.toString()).setLocationsVisible(b);
-			i++;
+	public void setLocationsVisible(int type, String name, boolean visible) {
+		switch(type){
+		case BALISES :
+			balises2D.get(name).setLocationVisible(visible);
+			balises3D.get(name).setLocationVisible(visible);
+			break;
+		case SECTEUR : 
+			Integer i = 0;
+			while(secteurs.containsKey(name+i.toString())){
+				secteurs.get(name+i.toString()).setLocationsVisible(visible);
+				i++;
+			}
+			break;
+		case ROUTES :
+			if(visible)
+				showRoutesBalises(name, true);
+			else{
+				hideRoutesBalises(name);
+			}
+			routes2D.getRoute(name).setLocationsVisible(visible);
+			routes3D.getRoute(name).setLocationsVisible(visible);
 		}
 	}
 

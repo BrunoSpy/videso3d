@@ -20,5 +20,9 @@ package fr.crnan.videso3d.graphics;
  * @version 1.0
  */
 public interface Balise extends VidesoObject {
+	
+	public boolean isLocationVisible();
+	
+	public void setLocationVisible(boolean visible);
 
 }

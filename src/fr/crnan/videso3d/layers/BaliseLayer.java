@@ -110,6 +110,5 @@ public interface BaliseLayer extends Layer {
 	 * @param balise
 	 */
 	public void removeBalise(Balise balise);
-
 	
 }

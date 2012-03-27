@@ -27,6 +27,7 @@ public class DatabaseRoute3D extends Route3D implements DatabaseVidesoObject{
 	private Type base;
 	private int type;
 
+	
 	public DatabaseRoute3D(){
 		super();
 	}
@@ -67,5 +68,4 @@ public class DatabaseRoute3D extends Route3D implements DatabaseVidesoObject{
 	public int getType() {
 		return this.type;
 	}
-	
 }

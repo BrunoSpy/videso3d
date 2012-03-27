@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.graphics;
 
+import fr.crnan.videso3d.geom.LatLonUtils;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Position;
@@ -33,6 +34,8 @@ public class Balise3D extends PointPlacemark implements Balise {
 	private String name;
 	
 	private VidesoAnnotation annotation;
+
+	private boolean locationsVisible = false;
 	
 	public Balise3D(){
 		this(Position.ZERO);
@@ -53,7 +56,6 @@ public class Balise3D extends PointPlacemark implements Balise {
 		this(position);
 		this.setName((String)name);		
 		this.setValue(AVKey.DISPLAY_NAME, annotation);
-		
 		RestorablePointPlacemarkAttributes ppa = new RestorablePointPlacemarkAttributes();
 		ppa.setLineWidth(2d);
 		ppa.setLineMaterial(Material.WHITE);
@@ -193,5 +195,19 @@ public class Balise3D extends PointPlacemark implements Balise {
     		this.setAnnotation(annotation);
     }
 
-
+    @Override
+	public boolean isLocationVisible() {
+		return locationsVisible;
+	}
+	
+	@Override
+	public void setLocationVisible(boolean visible){
+		if(!visible && locationsVisible){
+			locationsVisible = false;
+			this.setLabelText(name);
+		}else if(visible && !locationsVisible){
+			locationsVisible = true;
+			this.setLabelText(name+", "+LatLonUtils.toLatLonToString(position));
+		}
+	}	
 }

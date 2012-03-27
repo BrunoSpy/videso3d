@@ -123,6 +123,7 @@ public class Routes2DLayer extends RenderableLayer implements RoutesLayer {
 		if(r != null){
 			this.hideRoute(r);
 			r.getAnnotation(null).getAttributes().setVisible(false);
+			r.setLocationsVisible(false);
 		}
 	}
 

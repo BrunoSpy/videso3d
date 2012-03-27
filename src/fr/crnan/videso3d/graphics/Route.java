@@ -50,5 +50,8 @@ public interface Route extends VidesoObject{
 	public List<String> getBalises();
 
 	Iterable<? extends LatLon> getLocations();
-
+	
+	public boolean areLocationsVisible();
+	
+	public void setLocationsVisible(boolean visible);
 }
