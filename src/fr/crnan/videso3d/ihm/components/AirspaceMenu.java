@@ -244,21 +244,22 @@ public class AirspaceMenu extends JPopupMenu {
 			}
 		});
 		this.add(save);
-		
-		VidesoController c = DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType());
-		if(!(c instanceof STRController || c instanceof EdimapController)){
-			final int type = ((DatabaseVidesoObject) airspace).getType();
-			final String name = ((DatabaseVidesoObject) airspace).getName();
-			final boolean locationsVisible = c.areLocationsVisible(type, name);
-			JMenuItem locationsItem = new JMenuItem((locationsVisible ? "Cacher" : "Afficher") +" les coordonnées");
-			this.add(locationsItem);
-			locationsItem.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					VidesoController c = DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType());
-					c.setLocationsVisible(type, name, !locationsVisible);
-				}
-			});
+		if(airspace instanceof DatabaseVidesoObject){
+			VidesoController c = DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType());
+			if(!(c instanceof STRController || c instanceof EdimapController)){
+				final int type = ((DatabaseVidesoObject) airspace).getType();
+				final String name = ((DatabaseVidesoObject) airspace).getName();
+				final boolean locationsVisible = c.areLocationsVisible(type, name);
+				JMenuItem locationsItem = new JMenuItem((locationsVisible ? "Cacher" : "Afficher") +" les coordonnées");
+				this.add(locationsItem);
+				locationsItem.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						VidesoController c = DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType());
+						c.setLocationsVisible(type, name, !locationsVisible);
+					}
+				});
+		}
 		}
 		JMenuItem delete = new JMenuItem("Supprimer");
 		delete.addActionListener(new ActionListener() {
