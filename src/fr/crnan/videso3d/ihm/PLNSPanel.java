@@ -15,12 +15,15 @@
  */
 package fr.crnan.videso3d.ihm;
 
+import java.awt.FlowLayout;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 
+import fr.crnan.videso3d.DatabaseNotFoundException;
 import fr.crnan.videso3d.formats.plns.PLNSAnalyzer;
 
 /**
@@ -37,12 +40,23 @@ public class PLNSPanel extends ResultPanel {
 	 * @param path Chemin vers la base de données
 	 */
 	public PLNSPanel(String path){
+		this.setLayout(new FlowLayout());
 		plnsAnalyzer = new PLNSAnalyzer(path);
-		CategoryDataset dataset = plnsAnalyzer.getCategoryCodesRepartition();
-		JFreeChart chart = ChartFactory.createBarChart("Répartition de l'utilisation des codes par catégorie", "Catégorie", "Total", dataset, PlotOrientation.VERTICAL, false, true, false);
-		
+		CategoryDataset dataset;
+		try {
+			dataset = plnsAnalyzer.getCategoryCodesRepartition();
+			JFreeChart chart = ChartFactory.createBarChart("Répartition de l'utilisation des codes par catégorie", "Catégorie", "Total", dataset, PlotOrientation.VERTICAL, false, true, false);
+
+			ChartPanel panel = new ChartPanel(chart);
+
+			this.add(panel);
+		} catch (DatabaseNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		dataset = plnsAnalyzer.getLPCodesRepartition();
+		JFreeChart chart = ChartFactory.createBarChart("Répartition de l'utilisation des codes par LP", "LP", "Total", dataset, PlotOrientation.VERTICAL, false, true, false);
 		ChartPanel panel = new ChartPanel(chart);
-		
 		this.add(panel);
 	}
 	
@@ -54,8 +68,7 @@ public class PLNSPanel extends ResultPanel {
 
 	@Override
 	public String getTitleTab() {
-		// TODO Auto-generated method stub
-		return null;
+		return "PLNS";
 	}
 
 }

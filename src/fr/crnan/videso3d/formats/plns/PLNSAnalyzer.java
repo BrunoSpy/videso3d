@@ -20,14 +20,13 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map.Entry;
 
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.DatabaseNotFoundException;
 
 /**
  * Analyse d'une base PLNS.<br />
@@ -60,27 +59,32 @@ public class PLNSAnalyzer {
 	}
 
 	/**
-	 * @deprecated
 	 * @return
+	 * @throws DatabaseNotFoundException 
 	 */
-	public DefaultCategoryDataset getCategoryCodesRepartition(){
+	public DefaultCategoryDataset getCategoryCodesRepartition() throws DatabaseNotFoundException{
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		HashMap<String, Integer> categories = new HashMap<String, Integer>();
 		try {
 			//initialisation des catégories
 			Statement st = DatabaseManager.getCurrentStpv();
+			if(st == null){
+				throw new DatabaseNotFoundException(DatabaseManager.Type.STPV);
+			}
 			ResultSet rs = st.executeQuery("select distinct name from cat_code where 1");
 			while(rs.next()){
 				categories.put(rs.getString(1), 0);
 			}
 			Statement st1 = base.createStatement();
-			ResultSet rs1 = st1.executeQuery("select code from plns where 1");
+			ResultSet rs1 = st1.executeQuery("select lp from plns where 1");
 			while (rs1.next()){
-				rs = st.executeQuery("select name from cat_code where code='"+rs1.getInt(1)+"'");
+				rs = st.executeQuery("select cat_code from lps where id='"+rs1.getInt(1)+"'");
 				if(rs.next()){
 					String cat = rs.getString(1);
-					int number = categories.get(cat)+1;
-					categories.put(cat, number);
+					if(cat != null){
+						int number = categories.get(cat)+1;
+						categories.put(cat, number);
+					}
 				}
 			}
 			st.close();
@@ -94,45 +98,44 @@ public class PLNSAnalyzer {
 		return dataset;
 	}
 	
-	/**
-	 * Retourne la liaison privilégiée utilisée à partir des infos du PLN
-	 * @param idpln ID du pln
-	 * @return
-	 */
-	public int getLiaisonPrivilegiee(int idpln){
-		int lp = 0;
+	public DefaultCategoryDataset getLPCodesRepartition(){
+		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
 		try {
-			Statement st = DatabaseManager.getCurrentStpv();
-			ResultSet rs = st.executeQuery("select * from lps where 1");
-			Statement st2 = this.base.createStatement();
-			ResultSet pln = st2.executeQuery("select * from plns where idpln='"+idpln+"'");
-			String adep;
-			String adest;
-			List<String> sls;
-			if(pln.next()){
-				sls = new ArrayList<String>();
-				adep = pln.getString(7);
-				adest = pln.getString(8);
-			} else {
-				return 0;
+			//initialisation des catégories
+//			Statement st = DatabaseManager.getCurrentStpv();
+//			if(st == null){
+//				throw new DatabaseNotFoundException(DatabaseManager.Type.STPV);
+//			}
+//			ResultSet rs = st.executeQuery("select distinct name from cat_code where 1");
+//			while(rs.next()){
+//				categories.put(rs.getString(1), 0);
+//			}
+			Statement st1 = base.createStatement();
+			ResultSet rs1 = st1.executeQuery("select max(lp) from plns");
+			int max = rs1.getInt(1);
+			int[] lps = new int[max];
+			rs1 = st1.executeQuery("select lp from plns where 1");
+			while (rs1.next()){
+			//	rs = st.executeQuery("select cat_code from lps where id='"+rs1.getInt(1)+"'");
+			//	if(rs.next()){
+				int lp = rs1.getInt(1);
+				if(lp > 0){
+					lps[lp-1] = lps[lp-1] +1;
+				}
+			//	}
 			}
-			pln = st2.executeQuery("select sl from sls where idpln='"+idpln+"'");
-			while(pln.next()){
-				sls.add(pln.getString(1));
-			}
-			st2.close();
-			boolean found = false;
-			while(rs.next() && !found){
-				
-			}
+		//	st.close();
+			st1.close();
 			
+			for(int i=0;i<lps.length;i++){
+				dataset.setValue(lps[i], "Total", new Integer(i));
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
-		
-		return lp;
+		return dataset;
 	}
 	
 }

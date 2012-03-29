@@ -56,6 +56,8 @@ public class PLNSExtractor extends ProgressSupport{
 	private File cen;
 	private File sec;
 	private File typ;
+	private File cdv;
+	
 	int nbFile;
 	private List<File> files;	
 	
@@ -64,6 +66,9 @@ public class PLNSExtractor extends ProgressSupport{
 	public PLNSExtractor(File[] files, Connection database){
 		this.database = database;
 		this.files = new ArrayList<File>();
+		for(File f : files){
+			this.files.add(f);
+		}
 	}
 	
 	private int ord(String s){
@@ -79,7 +84,6 @@ public class PLNSExtractor extends ProgressSupport{
 	
 	public void doExtract(){
 		this.fireTaskStarts((files.size()*2)*100);
-				
 		nbFile = 0;
 		ProgressInputStream in;
 		for(File f : files){
@@ -92,9 +96,8 @@ public class PLNSExtractor extends ProgressSupport{
 			cen = new File(tempRep+"/cen");
 			sec = new File(tempRep+"/sec");
 			typ = new File(tempRep+"/typ");
-			
+			cdv = new File(tempRep+"/cdv");
 			try {
-
 				in = new ProgressInputStream(new FileInputStream(f));
 				in.addPropertyChangeListener(ProgressInputStream.UPDATE, new PropertyChangeListener() {
 					
@@ -104,11 +107,8 @@ public class PLNSExtractor extends ProgressSupport{
 					}
 				});
 				extractFiles(in);
-				
 				connectDatabase(database);
-				
 				readFiles();
-
 			}  catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			} catch (IOException e) {
@@ -129,6 +129,27 @@ public class PLNSExtractor extends ProgressSupport{
 	
 	private int ord(byte b){
 		return b & 0xff;
+	}
+	
+	/**
+	 * Returns the binary representation of an int
+	 * @param n an int < 256
+	 * @return a with a[7-i]*2^i = n
+	 */
+	private int[] bin(int n){
+		if(n > 255)
+			return null;
+		
+		int[] bin = new int[8];
+		int boucle = 0;
+		int temp = n;
+		while(temp!=0){
+    		bin[7-boucle] = temp%2;
+    		temp = temp/2;
+    		boucle++;
+    	}
+		
+		return bin;
 	}
 	
 	private void connectDatabase(Connection database){
@@ -154,7 +175,9 @@ public class PLNSExtractor extends ProgressSupport{
 				"adep varchar(4)," +
 				"adest varchar(4), " +
 				"rfl int, " +
-				"type varchar(5))";
+				"type varchar(5), " +
+				"lp int, " +
+				"cat_vol varchar(4))";
 				st.executeUpdate(create);
 				create = "create table secteurs (id integer primary key autoincrement, " +
 						"idpln int, " +
@@ -195,6 +218,7 @@ public class PLNSExtractor extends ProgressSupport{
 		RandomAccessFile cenR = new RandomAccessFile(cen, "r");
 		RandomAccessFile secR = new RandomAccessFile(sec, "r");
 		RandomAccessFile typR = new RandomAccessFile(typ, "r");
+		RandomAccessFile cdvR = new RandomAccessFile(cdv, "r");
 		
 		int longBuf = 3072*2;
 		byte[] pln = new byte[longBuf];
@@ -315,6 +339,7 @@ public class PLNSExtractor extends ProgressSupport{
                 	sl.add(new String(ccr, "ISO-8859-1"));
                 }
                 
+                //secteurs
                 List<String> secteurs = new ArrayList<String>();
                 for(int i = 0;i<nbSecteur;i++){
                 	int rangSecteur = ord(pln[enTete+indexChampSecteur+6*i-1])*256 + ord(pln[enTete+indexChampSecteur+6*i]);
@@ -330,13 +355,60 @@ public class PLNSExtractor extends ProgressSupport{
                 	}
                 }
                 
+                //liaison privilégiée et catégorie de vol
+                int indexChampArchivInt = ord(pln[enTete+indexChampGestINT+17])*256 + ord(pln[enTete+indexChampGestINT+18]);
+                int nbActionsArchives = ord(pln[enTete+indexChampArchivInt+7])*256 + ord(pln[enTete+indexChampArchivInt+8]);
+                int pointeur = 15;
+                int lp = 0;
+                String cv = "";
+                boolean found = false;
+                int compteur = 0;
+               
+                while(compteur < nbActionsArchives && !found && (enTete+indexChampArchivInt+pointeur < 3072*2)){
+                	compteur++;
+                	
+                	int[] a = new int[8];
+                	a = bin(ord(pln[enTete+indexChampArchivInt+pointeur]));
+                	
+                	int xvaflag = a[0];
+                	
+                	int classeAction = a[1]*4+a[2]*2+a[3];
+                	                	
+                	int numeroAction = a[4]*8+a[5]*4+a[6]*2+a[7];
+                	
+                	if(xvaflag == 0 && classeAction == 4 && (numeroAction == 10 || numeroAction == 14) ){
+                		found = true;
+                		lp = ord(pln[enTete+indexChampArchivInt+pointeur+5]);
+                		
+                		if(lp == 255)
+                			lp = -1;
+                		
+                		//catégorie de vol
+                		int[] cat = bin(ord(pln[enTete+indexChampArchivInt+pointeur+5]));
+                		int rangCategorieVol = cat[2]*32 + cat[3]*16 + cat[4]*8 + cat[5]*4 + cat[6]*2 + cat[7];
+                		cdvR.seek((rangCategorieVol-1)*4);
+                		byte[] cdvByte = new byte[4];
+                		cdvR.read(cdvByte, 0, 4);
+                		cv = new String(cdvByte, "ISO-8859-1").trim();
+                	}
+                	
+                	if(xvaflag == 0){
+                		int gap = 2*(ord(pln[enTete+indexChampArchivInt+pointeur+1])-2);
+                		pointeur += gap+4;
+                	}
+                	if(xvaflag == 1){
+                		pointeur += 4;
+                	}
+                }
+
+
                 ResultSet rs = st.executeQuery("select count(*) from plns where " +
                 														"date='"+date+"' and " +
                 														"heure_dep='"+heureDep+"' and " +
                 														"adep='"+adep+"'");
                 if(rs.next() && rs.getInt(1) == 0){
-                	PreparedStatement insert = this.database.prepareStatement("insert into plns (date, heure_dep, indicatif, code, code_prev, adep, adest, rfl, type) " +
-                			"values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                	PreparedStatement insert = this.database.prepareStatement("insert into plns (date, heure_dep, indicatif, code, code_prev, adep, adest, rfl, type, lp, cat_vol) " +
+                			"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 	insert.setString(1, date);
                 	insert.setString(2, heureDep);
                 	insert.setString(3, indicatif);
@@ -346,6 +418,8 @@ public class PLNSExtractor extends ProgressSupport{
                 	insert.setString(7, adest);
                 	insert.setInt(8, rfl);
                 	insert.setString(9, typeAvionString);
+                	insert.setInt(10, lp);
+                	insert.setString(11, cv);
                 	insert.executeUpdate();
                 	
                 	int id = insert.getGeneratedKeys().getInt(1);
@@ -391,7 +465,7 @@ public class PLNSExtractor extends ProgressSupport{
 	
 	private void extractFiles(ProgressInputStream reader) throws IOException{
 		byte[] buffer = new byte[buf];
-		boolean stop = false;
+//		boolean stop = false;
 		boolean debutFichier = false;
 		
 		BufferedWriter trmW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(trm), "ISO-8859-1"));
@@ -399,13 +473,14 @@ public class PLNSExtractor extends ProgressSupport{
 		BufferedWriter cenW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cen), "ISO-8859-1"));
 		BufferedWriter secW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(sec), "ISO-8859-1"));
 		BufferedWriter typW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(typ), "ISO-8859-1"));
+		BufferedWriter cdvW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cdv), "ISO-8859-1"));
 		
 		while(reader.read(buffer, 0, buf) != -1){
 			
 			String bufferString = new String(buffer, "ISO-8859-1");
 			
-			if(bufferString.length() != buf)
-				stop = true;
+//			if(bufferString.length() != buf)
+//				stop = true;
 			
 			String finDeFic = bufferString.substring(0, 6);
 			String annee = bufferString.substring(1, 2);
@@ -429,7 +504,7 @@ public class PLNSExtractor extends ProgressSupport{
 						int longBloc = ord(bufferString.substring(23+pointeur, 23+pointeur+1))*2;
 						String bloc = bufferString.substring(26+pointeur, 26+pointeur+longBloc-2);
 						int numBloc = ord(bufferString.substring(25+pointeur, 25+pointeur+1));
-						int dernierBloc = Character.codePointAt(bufferString.subSequence(24+pointeur, 24+pointeur+1), 0);
+//						int dernierBloc = Character.codePointAt(bufferString.subSequence(24+pointeur, 24+pointeur+1), 0);
 						pointeur += longBloc + 4;
 						
 						if(typeBloc == 7){
@@ -450,14 +525,17 @@ public class PLNSExtractor extends ProgressSupport{
 							secW.write(bloc);
 						} else if(typeBloc == 9){
 							typW.write(bloc);
+						} else if(typeBloc == 12){
+							cdvW.write(bloc);
 						}
 					} else {
 						pointeur = 1024;
 					}
 				}
-			} else {
-				stop = true;
 			}
+			// else {
+			//	stop = true;
+			//	}
 		}
 		balW.close();
 		trmW.close();
