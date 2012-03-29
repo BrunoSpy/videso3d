@@ -255,35 +255,34 @@ public class Stpv extends FileParser{
 	 * @throws SQLException 
 	 */
 	private void insertBali(ArrayList<String> lines, String name) throws SQLException{
-		PreparedStatement insert = this.conn.prepareStatement("insert into bali (name, CDG, ORL, LILE, TMA, " +
+		PreparedStatement insert = this.conn.prepareStatement("insert into bali (name, TMA, " +
 				"sect1, sect2, sect3, sect4, sect5, sect6, sect7, sect8, sect9) " +
-				"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		for(int i = 1; i<=14; i++){
+				"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		PreparedStatement insertSLCT = this.conn.prepareStatement("insert into imprSLCT (nom_balise, nom_SLCT) values (?,?)");
+		
+		for(int i = 1; i<=11; i++){
 			insert.setInt(i, -1);
 		}
-		insert.setInt(5, 1);
+		insert.setInt(2, 1);
 		insert.setString(1, name);
 		for(String line : lines){
 			if(line.startsWith("BALI 4")){
-				if(line.substring(20).startsWith("CDG")){
-					insert.setInt(2, 1);
-				}else if(line.substring(20).startsWith("ORL")){
-					insert.setInt(3, 1);
-				}else if(line.substring(20).startsWith("LILE")){
-					insert.setInt(4, 1);
-				}
+				insertSLCT.setString(1, name);
+				insertSLCT.setString(2, line.substring(20, 23));
+				insertSLCT.executeUpdate();
 			}else if(line.startsWith("BALI 50")){
-				insert.setInt(5, 0);
+				insert.setInt(2, 0);
 			}else if(line.startsWith("BALI 5")){
 				int index = Integer.parseInt(line.substring(6,7));
 				if(line.contains(" NP "))
-					insert.setInt(index+5, 0);
+					insert.setInt(index+2, 0);
 				else
-					insert.setInt(index+5, 1);
+					insert.setInt(index+2, 1);
 			}
 		}
 		insert.executeUpdate();
 		insert.close();
+		insertSLCT.close();
 	}
 	
 	

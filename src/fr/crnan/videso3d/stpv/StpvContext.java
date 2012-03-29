@@ -125,25 +125,22 @@ public class StpvContext extends Context {
 						}
 					});
 					taskpane.add(new JLabel("<html><b>Imprimabilité</b> :</html>"));
-					ResultSet rs = st2.executeQuery("select * from bali where name='"+name+"'");
-					if(rs.next()){
-						if(rs.getInt("CDG")==1)
-							taskpane.add(new JLabel("<html>Imprimable à <b>CDG</b></html>"));
-						if(rs.getInt("ORL")==1)
-							taskpane.add(new JLabel("<html>Imprimable à <b>Orly</b></html>"));
-						if(rs.getInt("LILE")==1)
-							taskpane.add(new JLabel("<html>Imprimable à <b>Lille</b></html>"));
-						if(rs.getInt("TMA")==0)
+					ResultSet rs1 = st2.executeQuery("select nom_SLCT from imprSLCT where nom_balise ='"+name+"'");
+					while(rs1.next()){
+						taskpane.add(new JLabel("<html>Imprimable à <b>"+rs1.getString(1)+"</b></html>"));
+					}
+					ResultSet rs2 = st2.executeQuery("select * from bali where name='"+name+"'");
+					if(rs2.next()){
+						if(rs2.getInt("TMA")==0)
 							taskpane.add(new JLabel("<html>Non imprimable sur strips tour</html>"));
-						else if(rs.getInt("TMA")==1)
+						else if(rs2.getInt("TMA")==1)
 							taskpane.add(new JLabel("<html>Imprimable sur strips tour</html>"));							
-						for(int i = 7; i<16; i++){
-							if(rs.getInt(i)==1)
-								taskpane.add(new JLabel("<html>Sect. "+(i-6)+" : oui</html>"));
-							if(rs.getInt(i)==0)
-								taskpane.add(new JLabel("<html>Sect. "+(i-6)+" : non</html>"));
+						for(int i = 4; i<13; i++){
+							if(rs2.getInt(i)==1)
+								taskpane.add(new JLabel("<html>Sect. "+(i-3)+" : oui</html>"));
+							if(rs2.getInt(i)==0)
+								taskpane.add(new JLabel("<html>Sect. "+(i-3)+" : non</html>"));
 						}
-					}else{
 					}
 				}
 			} catch (SQLException e){
