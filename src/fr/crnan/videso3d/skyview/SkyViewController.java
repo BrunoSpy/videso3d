@@ -62,6 +62,9 @@ public class SkyViewController implements VidesoController {
 	
 	private HashSet<String> routesList = new HashSet<String>();
 	
+	private HashSet<String> balises = new HashSet<String>();
+	private HashSet<String> aeroports = new HashSet<String>();
+	
 	public final static int TYPE_ROUTE = 0;
 	public final static int TYPE_WAYPOINT = 1;
 	public final static int TYPE_AIRPORT = 2;
@@ -130,7 +133,8 @@ public class SkyViewController implements VidesoController {
 			}
 			break;
 		case TYPE_AIRPORT:
-			if(!airports.contains(name)){
+			if(!aeroports.contains(name)){
+				aeroports.add(name);
 				try {
 					Statement st = DatabaseManager.getCurrentSkyView();
 					ResultSet rs = st.executeQuery("select * from airport where ident='"+name+"'");
@@ -151,7 +155,8 @@ public class SkyViewController implements VidesoController {
 			airports.showBalise(name, TYPE_AIRPORT);
 			break;
 		case TYPE_WAYPOINT:
-			if(!waypoints.contains(name)){
+			if(!balises.contains(name)){
+				balises.add(name);
 				try{
 					Statement st = DatabaseManager.getCurrentSkyView();
 					ResultSet rs = st.executeQuery("select * from waypoint where ident='"+name+"'");
@@ -206,7 +211,9 @@ public class SkyViewController implements VidesoController {
 		this.routesList.clear();
 		this.routes.removeAllRenderables();
 		this.airports.removeAllBalises();
+		this.aeroports.clear();
 		this.waypoints.removeAllBalises();
+		this.balises.clear();
 	}
 
 
