@@ -604,9 +604,6 @@ public final class DatabaseManager {
 				"name varchar(7))");
 		st.executeUpdate("create table bali (id integer primary key autoincrement, " +
 				"name varchar(5), " +
-				"CDG int, " +
-				"ORL int, " +
-				"LILE int, " +
 				"TMA int, " +
 				"sect1 int, " +
 				"sect2 int, " +
@@ -617,6 +614,9 @@ public final class DatabaseManager {
 				"sect7 int, " +
 				"sect8 int, " +
 				"sect9 int)");
+		st.executeUpdate("create table imprSLCT (id integer primary key autoincrement, " +
+				"nom_balise varchar(5), " +
+				"nom_SLCT varchar(4))");
 		//catégories de code
 		st.executeUpdate("create table cat_code (id integer primary key autoincrement, name varchar(2), code int)");
 		//liaisons privilégiées
