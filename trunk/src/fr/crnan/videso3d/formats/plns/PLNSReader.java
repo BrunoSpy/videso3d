@@ -39,6 +39,7 @@ public class PLNSReader extends TrackFilesReader {
 
 	public PLNSReader(File[] plnsFiles, File databaseFile, PLNSTracksModel model, PropertyChangeListener listener) throws PointNotFoundException {
 		this.setModel(model);
+		this.addPropertyChangeListener(listener);
 		this.setName(plnsFiles[0].getName().substring(0, 6)+"...");
 		try {
 			//Chargement du driver
@@ -48,9 +49,10 @@ public class PLNSReader extends TrackFilesReader {
 			PLNSExtractor extractor = new PLNSExtractor(plnsFiles, database);
 			extractor.addPropertyChangeListener(new PropertyChangeListener() {
 				
+				int max = 0;
+				
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
-					int max = 0;
 					if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
 						max = (Integer) evt.getNewValue();
 						fireTaskStarts(100);
