@@ -46,7 +46,7 @@ import fr.crnan.videso3d.ihm.components.ProgressInputStream;
  * Peut prendre en entrée des fichiers PLNS zippés.
  * @author Bruno Spyckerelle
  * @author Clovis Hamel
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class PLNSExtractor extends ProgressSupport{
 
@@ -58,7 +58,7 @@ public class PLNSExtractor extends ProgressSupport{
 	private File typ;
 	private File cdv;
 	
-	int nbFile;
+	private int nbFile;
 	private List<File> files;	
 	
 	private Connection database;
@@ -80,6 +80,31 @@ public class PLNSExtractor extends ProgressSupport{
 			e.printStackTrace();
 			return -1;
 		}
+	}
+	
+	private int ord(byte b){
+		return b & 0xff;
+	}
+	
+	/**
+	 * Returns the binary representation of an int
+	 * @param n an int < 256
+	 * @return a with a[7-i]*2^i = n
+	 */
+	private int[] bin(int n){
+		if(n > 255)
+			return null;
+		
+		int[] bin = new int[8];
+		int boucle = 0;
+		int temp = n;
+		while(temp!=0){
+    		bin[7-boucle] = temp%2;
+    		temp = temp/2;
+    		boucle++;
+    	}
+		
+		return bin;
 	}
 	
 	public void doExtract(){
@@ -124,32 +149,6 @@ public class PLNSExtractor extends ProgressSupport{
 			nbFile++;
 		}
 		this.fireTaskProgress((files.size()*2)*100);
-	}
-	
-	
-	private int ord(byte b){
-		return b & 0xff;
-	}
-	
-	/**
-	 * Returns the binary representation of an int
-	 * @param n an int < 256
-	 * @return a with a[7-i]*2^i = n
-	 */
-	private int[] bin(int n){
-		if(n > 255)
-			return null;
-		
-		int[] bin = new int[8];
-		int boucle = 0;
-		int temp = n;
-		while(temp!=0){
-    		bin[7-boucle] = temp%2;
-    		temp = temp/2;
-    		boucle++;
-    	}
-		
-		return bin;
 	}
 	
 	private void connectDatabase(Connection database){
@@ -384,12 +383,12 @@ public class PLNSExtractor extends ProgressSupport{
                 			lp = -1;
                 		
                 		//catégorie de vol
-                		int[] cat = bin(ord(pln[enTete+indexChampArchivInt+pointeur+5]));
+                		int[] cat = bin(ord(pln[enTete+indexChampArchivInt+pointeur+3]));
                 		int rangCategorieVol = cat[2]*32 + cat[3]*16 + cat[4]*8 + cat[5]*4 + cat[6]*2 + cat[7];
                 		cdvR.seek((rangCategorieVol-1)*4);
                 		byte[] cdvByte = new byte[4];
                 		cdvR.read(cdvByte, 0, 4);
-                		cv = new String(cdvByte, "ISO-8859-1").trim();
+                		cv = new String(cdvByte, "ISO-8859-1");
                 	}
                 	
                 	if(xvaflag == 0){
@@ -419,7 +418,7 @@ public class PLNSExtractor extends ProgressSupport{
                 	insert.setInt(8, rfl);
                 	insert.setString(9, typeAvionString);
                 	insert.setInt(10, lp);
-                	insert.setString(11, cv);
+                	insert.setString(11, cv.trim());
                 	insert.executeUpdate();
                 	
                 	int id = insert.getGeneratedKeys().getInt(1);
@@ -465,7 +464,6 @@ public class PLNSExtractor extends ProgressSupport{
 	
 	private void extractFiles(ProgressInputStream reader) throws IOException{
 		byte[] buffer = new byte[buf];
-//		boolean stop = false;
 		boolean debutFichier = false;
 		
 		BufferedWriter trmW = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(trm), "ISO-8859-1"));
@@ -478,9 +476,6 @@ public class PLNSExtractor extends ProgressSupport{
 		while(reader.read(buffer, 0, buf) != -1){
 			
 			String bufferString = new String(buffer, "ISO-8859-1");
-			
-//			if(bufferString.length() != buf)
-//				stop = true;
 			
 			String finDeFic = bufferString.substring(0, 6);
 			String annee = bufferString.substring(1, 2);
@@ -533,15 +528,13 @@ public class PLNSExtractor extends ProgressSupport{
 					}
 				}
 			}
-			// else {
-			//	stop = true;
-			//	}
 		}
 		balW.close();
 		trmW.close();
 		cenW.close();
 		secW.close();
 		typW.close();
+		cdvW.close();
 	}
 	
 }
