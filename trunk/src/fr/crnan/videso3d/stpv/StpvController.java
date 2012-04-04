@@ -69,6 +69,10 @@ public class StpvController implements VidesoController {
 	public static final int NIV_TAB_ENTREE = 7;
 	
 	public static final int NIV_TAB_SORTIE = 8;
+
+	public static final int CATEGORIE_CODE = 9;
+	
+	public static final int LIAISON_PRIVILEGIEE = 10;
 	
 	/**
 	 * Liste des layers Mosaiques
