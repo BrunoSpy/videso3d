@@ -176,6 +176,75 @@ public class StpvContext extends Context {
 				e.printStackTrace();
 			}
 			break;
+		case StpvController.CATEGORIE_CODE:
+			try {
+				if(DatabaseManager.getCurrentStpv() == null){
+					taskpane.add(new JLabel("<html><i>Aucune base STPV configurée.</i></html>"));
+				} else {
+					
+					Statement st3 = DatabaseManager.getCurrentStpv();
+					ResultSet rs3 = st3.executeQuery("select * from cat_code where name = '"+name+"'");
+					taskpane.add(new JLabel("<html><b>Codes appartenant à la catégorie :</b></html>"));
+					int start = 0;
+					int last = 0;
+					while(rs3.next()){
+						if(start == 0) {
+							start = rs3.getInt(3);
+							last = start;
+						} else {
+							int next = rs3.getInt(3);
+							if(next == (last+1)){
+								last = next;
+							} else {
+								taskpane.add(new JLabel("<html> - "+start+" - "+String.format("%4d", last)+"</html>"));
+								start = next;
+								last = next;
+							}
+						}
+					}
+					//last line
+					taskpane.add(new JLabel("<html> - "+String.format("%04d", start)+" - "+String.format("%04d", last)+"</html>"));
+					st3.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
+		case StpvController.LIAISON_PRIVILEGIEE:
+			try {
+				if(DatabaseManager.getCurrentStpv() == null){
+					taskpane.add(new JLabel("<html><i>Aucune base STPV configurée.</i></html>"));
+				} else {
+					id = new Integer(name);
+					Statement st3 = DatabaseManager.getCurrentStpv();
+					ResultSet rs3 = st3.executeQuery("select * from lps where id = '"+id+"'");
+					if(rs3.next()){
+						taskpane.add(new JLabel("<html><b>Détails de la liaison privilégiée "+ id +" :</b></html>"));
+						taskpane.add(new JLabel("<html> - <b>Nom</b> : "+rs3.getString(2)+"</html>"));
+						taskpane.add(new JLabel("<html> - <b>Catégorie</b> : "+rs3.getString(3)+"</html>"));
+						taskpane.add(new JLabel("<html> - <b>Départ</b> : "+rs3.getString(4)+"</html>"));
+						taskpane.add(new JLabel("<html> - <b>Arrivée</b> : "+rs3.getString(11)+"</html>"));
+						taskpane.add(new JLabel("<html> - <b>SLs</b> : "+rs3.getString(5)+" "
+																+ rs3.getString(6)+" "
+																+rs3.getString(7)+" "
+																+rs3.getString(8)+" "
+																+rs3.getString(9)+" "
+																+rs3.getString(10)+" "+"</html>"));
+						taskpane.add(new JLabel("<html> - <b>Mode S</b> : "+(rs3.getBoolean(12)?"Oui":"Non")+"</html>"));
+						if(rs3.getInt(13) != 0){
+							taskpane.add(new JLabel("<html> - <b>Codes associés</b> : "+String.format("%04d", rs3.getInt(13))
+																				+ " - "+String.format("%04d", rs3.getInt(14))+"</html>"));
+						}
+						if(rs3.getString(15) != null && !rs3.getString(15).isEmpty()){
+							taskpane.add(new JLabel("<html> - <b>Catégorie de codes</b> : "+rs3.getString(15)+"</html>"));						}
+					}
+					
+					st3.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			break;
 		default:
 			break;
 		}
