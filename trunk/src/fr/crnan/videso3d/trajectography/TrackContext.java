@@ -417,16 +417,16 @@ public class TrackContext extends Context {
 			}
 			
 			//Coupe 2D de la trajectoire
-			trackPane.add(new AbstractAction() {
-				{
-					putValue(Action.NAME, "<html><b>Coupe 2D :</b> Afficher...</html>");
-				}
-				
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					new Track2DView(track).setVisible(true);
-				}
-			});
+//			trackPane.add(new AbstractAction() {
+//				{
+//					putValue(Action.NAME, "<html><b>Coupe 2D :</b> Afficher...</html>");
+//				}
+//				
+//				@Override
+//				public void actionPerformed(ActionEvent arg0) {
+//					new Track2DView(track).setVisible(true);
+//				}
+//			});
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

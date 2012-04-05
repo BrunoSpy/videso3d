@@ -51,6 +51,7 @@ import gov.nasa.worldwind.globes.Earth;
  * Coupe en 2D d'un track avec secteurs traversés
  * @author Bruno Spyckerelle
  * @version 0.0.1
+ * @deprecated En attendant de finir le travail...
  */
 public class Track2DView extends JFrame{
 
