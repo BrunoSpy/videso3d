@@ -175,6 +175,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 		//highlight controller
 		highlightController = new HighlightController(this, SelectEvent.ROLLOVER);
 		
+		//allow deep picking
+		//batch picking must disabled on a per layer basis
+		this.getSceneController().setDeepPickEnabled(true);
+		
 		//mise à jour des calques de WorldWindInstalled
 		firePropertyChange("step", "", "Ajout des layers installés");
 		this.updateWWI();

@@ -39,6 +39,11 @@ public class AltitudeFilterablePath extends Path {
 	
 	private ArrayList<Position> usefullPositions;
 	
+	public AltitudeFilterablePath(){
+		super();
+		this.setEnableBatchPicking(false);
+	}
+	
 	public void setMaximumViewableAltitude(double altitude) {
 		this.maxAltitude = altitude;
 	}
