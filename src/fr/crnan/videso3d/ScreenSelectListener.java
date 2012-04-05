@@ -1,14 +1,19 @@
 package fr.crnan.videso3d;
 
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import gov.nasa.worldwind.WorldWindow;
+import gov.nasa.worldwind.event.SelectEvent;
+import gov.nasa.worldwind.pick.PickedObject;
+import gov.nasa.worldwindx.applications.worldwindow.util.Util;
 import gov.nasa.worldwindx.examples.util.ScreenSelector;
 /**
  * Modified {@link ScreenSelector} that is always enabled but only active when control_key is down<br />
  * Doesn't allow multiple rectangle selection due to WWJ limitation : restarts the selection each time the mouse is dragged.
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class ScreenSelectListener extends ScreenSelector {
 
@@ -19,6 +24,28 @@ public class ScreenSelectListener extends ScreenSelector {
 		this.enable();//always enabled
 	}
 
+	@Override
+    public void selected(SelectEvent event)
+    {
+        try
+        {
+            // Respond to box rollover select events when armed.
+            if (event.getEventAction().equals(SelectEvent.BOX_ROLLOVER) && this.armed){
+            	List<Object> objects = new ArrayList<Object>();
+            	for(PickedObject o : event.getObjects()){
+            		objects.add(o.getObject());
+            	}
+            	this.selectObjects(objects);
+            }
+                
+        }
+        catch (Exception e)
+        {
+            // Wrap the handler in a try/catch to keep exceptions from bubbling up
+            Util.getLogger().warning(e.getMessage() != null ? e.getMessage() : e.toString());
+        }
+    }
+	
 	@Override
     public void mousePressed(MouseEvent mouseEvent)
     {
