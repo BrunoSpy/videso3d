@@ -15,9 +15,18 @@
  */
 package fr.crnan.videso3d.ihm;
 
-import java.awt.FlowLayout;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JInternalFrame;
+import javax.swing.JToolBar;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -28,6 +37,7 @@ import org.jfree.data.category.CategoryDataset;
 import fr.crnan.videso3d.DatabaseNotFoundException;
 import fr.crnan.videso3d.formats.plns.PLNSAnalyzer;
 import fr.crnan.videso3d.formats.plns.PLNSChartMouseListener;
+import fr.crnan.videso3d.ihm.components.TilingDesktopPane;
 
 /**
  * Fenêtre d'analyse d'une base PLNS
@@ -40,12 +50,20 @@ public class PLNSPanel extends ResultPanel {
 	
 	private List<ChartPanel> chartPanels;
 	
+	private TilingDesktopPane desktop;
+	
 	/**
 	 * 
 	 * @param path Chemin vers la base de données
 	 */
 	public PLNSPanel(String path){
-		this.setLayout(new FlowLayout());
+		this.setLayout(new BorderLayout());
+		
+		this.add(createToolbar(), BorderLayout.NORTH);
+		
+		desktop = new TilingDesktopPane();
+		desktop.setPreferredSize(new Dimension(800, 600));
+		this.add(desktop);
 		
 		chartPanels = new ArrayList<ChartPanel>();
 		
@@ -57,8 +75,11 @@ public class PLNSPanel extends ResultPanel {
 			
 			ChartPanel panel = new ChartPanel(chart);
 			chartPanels.add(panel);
-			
-			this.add(panel);
+			JInternalFrame frame = new JInternalFrame("Répartition de l'utilisation des codes par catégorie", true, false, true, true);
+			frame.add(panel);
+			frame.pack();
+			frame.setVisible(true);
+			desktop.add(frame);
 		} catch (DatabaseNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -68,7 +89,27 @@ public class PLNSPanel extends ResultPanel {
 		JFreeChart chart = ChartFactory.createBarChart("Répartition de l'utilisation des codes par LP", "LP", "Total", dataset, PlotOrientation.VERTICAL, false, true, false);
 		ChartPanel panel = new ChartPanel(chart);
 		chartPanels.add(panel);
-		this.add(panel);
+		JInternalFrame frame = new JInternalFrame("Répartition de l'utilisation des codes par LP", true, false, true, true);
+		frame.add(panel);
+		frame.pack();
+		frame.setVisible(true);
+		desktop.add(frame);
+		
+		//tile frames when the ancestor is made visible
+		this.addAncestorListener(new AncestorListener() {
+			
+			@Override
+			public void ancestorRemoved(AncestorEvent event) {	}
+			
+			@Override
+			public void ancestorMoved(AncestorEvent event) {}
+			
+			@Override
+			public void ancestorAdded(AncestorEvent event) {
+				desktop.tile(true);
+			}
+		});
+		
 	}
 	
 	@Override
@@ -84,4 +125,30 @@ public class PLNSPanel extends ResultPanel {
 		return "PLNS";
 	}
 
+	private JToolBar createToolbar(){
+		JToolBar toolbar = new JToolBar();
+		
+		JButton newGraph = new JButton("Nouveau");
+		newGraph.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO créer fenêtre de création de graph
+			}
+		});
+		
+		toolbar.add(newGraph);
+		
+		JButton retile = new JButton("Réarranger");
+		retile.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				desktop.tile(true);
+			}
+		});
+		toolbar.add(retile);
+		
+		return toolbar;
+	}
 }
