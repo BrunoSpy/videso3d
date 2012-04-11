@@ -24,7 +24,6 @@ import java.util.ArrayList;
 
 import fr.crnan.videso3d.graphics.SurfacePolygonAnnotation;
 import fr.crnan.videso3d.graphics.VPolygon;
-import fr.crnan.videso3d.layers.ScalebarLayerNM;
 import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.awt.WorldWindowGLCanvas;
 import gov.nasa.worldwind.event.SelectEvent;
@@ -35,6 +34,7 @@ import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.CompassLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.layers.ScalebarLayer;
 import gov.nasa.worldwind.layers.WorldMapLayer;
 import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
@@ -152,7 +152,7 @@ public class SimpleGLCanvasFactory {
 		for(Layer l : wwd.getModel().getLayers()){
 			if(l instanceof CompassLayer)
 				wwd.getModel().getLayers().remove(l);
-			if(l instanceof ScalebarLayerNM)
+			if(l instanceof ScalebarLayer)
 				wwd.getModel().getLayers().remove(l);
 			if(l instanceof WorldMapLayer)
 				wwd.getModel().getLayers().remove(l);
