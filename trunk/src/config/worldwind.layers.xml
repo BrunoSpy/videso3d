@@ -15,6 +15,6 @@
  <!-- <Layer href="config/Earth/USGSUrbanAreaOrthoLayer.xml" title="USGS Urban Area" actuate="onRequest"/>-->
     <Layer className="gov.nasa.worldwind.layers.Earth.NASAWFSPlaceNameLayer" title="Place Names" actuate="onRequest"/>
     <Layer className="gov.nasa.worldwind.layers.WorldMapLayer" title="World Map"/>
-    <Layer className="fr.crnan.videso3d.layers.ScalebarLayerNM" title="Scale Bar"/>
+ <!--   <Layer className="fr.crnan.videso3d.layers.ScalebarLayerNM" title="Scale Bar"/>-->
     <Layer className="gov.nasa.worldwind.layers.CompassLayer" title="Compass"/>
 </LayerList>

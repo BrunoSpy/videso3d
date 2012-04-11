@@ -82,6 +82,7 @@ import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.LatLonGraticuleLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
+import gov.nasa.worldwind.layers.ScalebarLayer;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
@@ -147,6 +148,12 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 		//Proxy
 		Configuration.initializeProxy();
 
+		//Scalebar
+		ScalebarLayer scalebarLayer = new ScalebarLayer();
+		scalebarLayer.setUnit(ScalebarLayer.UNIT_NAUTICAL);
+		
+		this.getModel().getLayers().add(scalebarLayer);
+		
 		//Latitudes et longitudes
 		Layer latlon = new LatLonGraticuleLayer();
 		latlon.setEnabled(false);

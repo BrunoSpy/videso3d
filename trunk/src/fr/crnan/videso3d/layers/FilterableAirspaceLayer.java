@@ -47,7 +47,7 @@ public class FilterableAirspaceLayer extends AbstractLayer implements AltitudeFi
     
     public FilterableAirspaceLayer(){
     	super();
-    	this.setEnableBatchPicking(false);
+    	this.setEnableBatchPicking(false); //required to enable deep picking
     }
     
 	public void addAirspace(Airspace airspace) {
