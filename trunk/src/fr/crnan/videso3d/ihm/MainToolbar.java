@@ -229,7 +229,7 @@ public class MainToolbar extends JToolBar {
 		final DropDownButton trajectoires = new DropDownButton(new ImageIcon(getClass().getResource("/resources/plus_traj_22.png")));
 
 		final JMenuItem file = new JMenuItem("Fichier");
-		file.setToolTipText("Importer des trajectoires dans un fichier");
+		file.setToolTipText("Importer des trajectoires depuis un fichier");
 		file.addActionListener(new ActionListener() {
 
 			@Override
@@ -262,6 +262,16 @@ public class MainToolbar extends JToolBar {
 		});
 
 
+    final JMenuItem fileWithFilter = new JMenuItem("Fichier avec filtrage");
+		fileWithFilter.setToolTipText("Filtrer puis importer des trajectoires depuis un fichier");
+		fileWithFilter.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new TrajectoriesImportUI(mainWindow).setVisible(true);
+			}
+		});
+
 		JMenuItem text = new JMenuItem("Texte");
 		text.setToolTipText("Importer des trajectoires par copier/coller");
 		text.addActionListener(new ActionListener() {
@@ -272,6 +282,7 @@ public class MainToolbar extends JToolBar {
 			}
 		});
 		trajectoires.getPopupMenu().add(file);
+    trajectoires.getPopupMenu().add(fileWithFilter);
 		trajectoires.getPopupMenu().add(text);
 
 		trajectoires.setToolTipText("Importer des trajectoires");
