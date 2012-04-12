@@ -51,7 +51,6 @@ import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
-import fr.crnan.videso3d.layers.tracks.GEOTracksLayer;
 import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
 import gov.nasa.worldwind.util.Logging;
 

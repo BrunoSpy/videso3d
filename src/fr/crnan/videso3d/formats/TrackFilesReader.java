@@ -20,6 +20,7 @@ import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.TracksModel;
+import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
 import gov.nasa.worldwind.util.Logging;
 
 import java.beans.PropertyChangeEvent;
@@ -36,7 +37,7 @@ import java.util.Vector;
  * Lecteur de fichiers trace radar<br/>
  * Envoie la progression de la lecture des fichiers avec une valeur comprise entre 0 et 100.
  * @author Bruno Spyckerelle
- * @version 0.5.1
+ * @version 0.6.0
  */
 public abstract class TrackFilesReader extends ProgressSupport{
 
@@ -50,7 +51,8 @@ public abstract class TrackFilesReader extends ProgressSupport{
 	
 	public TrackFilesReader(){}
 
-
+	protected List<TrajectoryFileFilter> filters;
+	protected boolean disjunctive;
 	/**
 	 * 
 	 * @param files
@@ -59,18 +61,7 @@ public abstract class TrackFilesReader extends ProgressSupport{
 	 * @throws PointNotFoundException
 	 */
 	public TrackFilesReader(Vector<File> files, TracksModel model, PropertyChangeListener listener) throws PointNotFoundException {
-		this.setModel(model);
-		this.numberFiles = files.size();
-		if(listener !=  null) this.addPropertyChangeListener(listener);
-		this.fireTaskStarts(100);
-		for(File f : files){
-			try {
-				this.files.add(f);
-				this.readFile(f.getAbsolutePath());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		this(files, model, listener, null, true);
 	}
 	
 	public TrackFilesReader(Vector<File> files, TracksModel model) throws PointNotFoundException {
@@ -96,6 +87,26 @@ public abstract class TrackFilesReader extends ProgressSupport{
 		this(selectedFile, new TracksModel());
 	}
 	
+	public TrackFilesReader(Vector<File> files, TracksModel model,
+			PropertyChangeListener listener,
+			List<TrajectoryFileFilter> filters, boolean disjunctive) throws PointNotFoundException {
+		this.setModel(model);
+		this.numberFiles = files.size();
+		if(listener !=  null) this.addPropertyChangeListener(listener);
+		this.filters = filters;
+		this.disjunctive = disjunctive;
+		this.fireTaskStarts(100);
+		for(File f : files){
+			try {
+				this.files.add(f);
+				this.readFile(f.getAbsolutePath());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+
 	/**
 	 * @param path
 	 * @throws IllegalArgumentException if <code>path</code> is null
@@ -143,6 +154,8 @@ public abstract class TrackFilesReader extends ProgressSupport{
 	}
 	
 	protected abstract void doReadStream(ProgressInputStream fis) throws PointNotFoundException;
+	
+	protected abstract boolean isTrackValid(VidesoTrack track);
 	
 	public TracksModel getModel(){
 		return this.model;

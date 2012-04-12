@@ -23,13 +23,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.TracksModel;
+import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
 
 /**
  * Lecteur de fichier OPAS
@@ -58,6 +61,12 @@ public class OPASReader extends TrackFilesReader{
 	public OPASReader(File selectedFile) throws PointNotFoundException {
 		super(selectedFile);
 		this.setModel(new TracksModel());
+	}
+
+	public OPASReader(Vector<File> files, TracksModel model,
+			PropertyChangeListener readerListener,
+			List<TrajectoryFileFilter> filters, boolean disjunctive) throws PointNotFoundException {
+		super(files, model, readerListener, filters, disjunctive);
 	}
 
 	/**
@@ -124,4 +133,10 @@ public class OPASReader extends TrackFilesReader{
 			e.printStackTrace();
 		}
     }
+
+	@Override
+	protected boolean isTrackValid(VidesoTrack track) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }
