@@ -16,9 +16,11 @@
 package fr.crnan.videso3d.formats.geo;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.TracksModel;
+import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
 
 import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
@@ -27,13 +29,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
 /**
  * Lecteur de fichiers Elvira GEO.<br />
  * @author Bruno Spyckerelle
- * @version 0.2.4
+ * @version 0.2.5
  */
 public class GEOReader extends TrackFilesReader{
 		
@@ -59,6 +62,12 @@ public class GEOReader extends TrackFilesReader{
 		super(geoFile, model, listener);
 	}
 	
+	public GEOReader(Vector<File> files, TracksModel model,
+			PropertyChangeListener listener,
+			List<TrajectoryFileFilter> filters, boolean disjunctive) throws PointNotFoundException {
+		super(files, model, listener, filters, disjunctive);
+	}
+
 	public static Boolean isGeoFile(File file){
 		Boolean geo = false;
 		try {
@@ -92,6 +101,7 @@ public class GEOReader extends TrackFilesReader{
         try
         {
         	GEOTrack track = null;
+        	boolean trackValid = true;
         	while(in.ready()){
         		sentence = in.readLine();
         		if (sentence != null)
@@ -99,11 +109,12 @@ public class GEOReader extends TrackFilesReader{
         			if(!sentence.startsWith("!")  && !sentence.startsWith("Voie")){
         				if(track == null || track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0){
         					if(track != null) {
-        						this.getModel().addTrack(track);
+        						if(trackValid) this.getModel().addTrack(track);
         					}
         					track = new GEOTrack(sentence);
+        					trackValid = this.isTrackValid(track);
         				} else {
-        					track.addTrackPoint(sentence);
+        					if(trackValid) track.addTrackPoint(sentence);
         				}
         			}
         		} 
@@ -111,7 +122,7 @@ public class GEOReader extends TrackFilesReader{
         	//last Track
         	if(track != null){
         		//if layer is set, create immediately the track instead of memorizing it
-            	this.getModel().addTrack(track);
+        		if(trackValid) this.getModel().addTrack(track);
         	}
         }
         catch (NoSuchElementException e)
@@ -124,5 +135,30 @@ public class GEOReader extends TrackFilesReader{
 			e.printStackTrace();
 		}
     }
+
+	@Override
+	protected boolean isTrackValid(VidesoTrack track) {
+		boolean result = true;
+		if(filters == null)
+			return result;
+		
+		for(TrajectoryFileFilter f : filters){
+			switch (f.getField()) {
+			case TracksModel.FIELD_ADEP:
+				result = this.disjunctive
+						 ? result || track.getDepart().matches(f.getRegexp())
+						 : result && track.getDepart().matches(f.getRegexp());
+				break;
+			case TracksModel.FIELD_ADEST:
+				result = this.disjunctive
+							? result || track.getArrivee().matches(f.getRegexp())
+							: result && track.getArrivee().matches(f.getRegexp());
+				break;
+			default:
+				break;
+			}
+		}
+		return result;
+	}
 	
 }

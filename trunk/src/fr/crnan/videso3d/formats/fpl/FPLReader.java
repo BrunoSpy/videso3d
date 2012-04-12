@@ -35,6 +35,7 @@ import java.util.Vector;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Triplet;
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrackPoint;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
@@ -882,6 +883,13 @@ public class FPLReader extends TrackFilesReader {
 		public String getMessage(){
 			return message;
 		}
+	}
+
+
+	@Override
+	protected boolean isTrackValid(VidesoTrack track) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 	
 }

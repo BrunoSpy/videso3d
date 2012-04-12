@@ -26,6 +26,7 @@ import java.sql.Statement;
 
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.PLNSTracksModel;
@@ -145,6 +146,12 @@ public class PLNSReader extends TrackFilesReader {
 	throws PointNotFoundException {
 		
 
+	}
+
+	@Override
+	protected boolean isTrackValid(VidesoTrack track) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 

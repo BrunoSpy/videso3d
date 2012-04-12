@@ -88,6 +88,7 @@ import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
 import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.PLNSTracksModel;
 import fr.crnan.videso3d.trajectography.TracksModel;
+import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
 import glass.eclipse.theme.CGlassEclipseTabPainter;
@@ -141,7 +142,7 @@ public class MainWindow extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	}
 
-	private JToolBar drawToolbar;
+//	private JToolBar drawToolbar;
 	private JPanel toolbars;
 	
 	public MainWindow(){
@@ -420,15 +421,20 @@ public class MainWindow extends JFrame {
 		return statusBar;
 	}
 
+	public void addTrajectoriesViews(File[] filesT){
+		this.addTrajectoriesViews(filesT, null, true);
+	}
+	
 	/**
 	 * Ajoute un tab de sélection des trajectoires.<br />
 	 * Un tab est créé pour chaque type de fichier si plusieurs fichiers sont sélectionnés.
 	 * @param file
+	 * @param filters Filters to be applied before importing
 	 * @throws Exception 
 	 */
 	//nombre de fichiers importés
 	int current = -1;
-	public void addTrajectoriesViews(File[] filesT){
+	public void addTrajectoriesViews(File[] filesT, List<TrajectoryFileFilter> filters, boolean disjunctive){
 		final ProgressMonitor progressMonitorT = new ProgressMonitor(this, "Import des trajectoires", "", 0, 100, false, true, false);
 		progressMonitorT.setMillisToDecideToPopup(0);
 		progressMonitorT.setMillisToPopup(0);
@@ -512,7 +518,7 @@ public class MainWindow extends JFrame {
 				layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
 				this.wwd.toggleLayer(layer, true);
 				//lecture et création des tracks à la volée
-				GEOReader reader = new GEOReader(geoFile, layer.getModel(), readerListener);
+				GEOReader reader = new GEOReader(geoFile, layer.getModel(), readerListener, filters, disjunctive);
 				if(reader.getModel().getAllTracks().size() > 0){
 					//changement du style en fonction de la conf
 					if(reader.getModel().getAllTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
@@ -573,6 +579,7 @@ public class MainWindow extends JFrame {
 				database = fileChooser.getSelectedFile();
 				try{
 					PLNSReader reader = new PLNSReader(plnsFile.toArray(new File[]{}), database, new PLNSTracksModel(), readerListener);
+					System.out.println("main");
 					PLNSTracksLayer layer = new PLNSTracksLayer(reader.getModel());
 					this.wwd.toggleLayer(layer, true);
 					this.addTrajectoriesView(reader, layer);
@@ -720,17 +727,17 @@ public class MainWindow extends JFrame {
 		return this;
 	}
 
-	public void setDrawToolbar(boolean selected) {
-		if(drawToolbar == null){
-			this.drawToolbar = new DrawToolbar(wwd);
-			this.drawToolbar.setFloatable(true);
-		}
-		if(selected){
-			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
-			this.validate();
-		} else {
-			this.toolbars.remove(drawToolbar);
-			this.validate();
-		}
-	}
+//	public void setDrawToolbar(boolean selected) {
+//		if(drawToolbar == null){
+//			this.drawToolbar = new DrawToolbar(wwd);
+//			this.drawToolbar.setFloatable(true);
+//		}
+//		if(selected){
+//			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
+//			this.validate();
+//		} else {
+//			this.toolbars.remove(drawToolbar);
+//			this.validate();
+//		}
+//	}
 }

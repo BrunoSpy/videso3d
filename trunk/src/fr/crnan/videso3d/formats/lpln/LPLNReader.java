@@ -16,6 +16,7 @@
 package fr.crnan.videso3d.formats.lpln;
 
 import fr.crnan.videso3d.formats.TrackFilesReader;
+import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.TracksModel;
@@ -145,6 +146,12 @@ public class LPLNReader extends TrackFilesReader{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	protected boolean isTrackValid(VidesoTrack track) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
 }
