@@ -1231,20 +1231,59 @@ public class Stip extends FileParser{
 		return consigne;
 	}
 	
+	private static String routeToString(int id) {
+		String route = new String();
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select name, espace from routes where id = '"+id+"'");
+			if(rs.next()){
+				route += completerRoute(rs.getString(1))+"RO  "+rs.getString(2)+"   ";
+			
+				rs = st.executeQuery("select balise, appartient, sens from routebalise where routeid = '"+id+"' order by id");
+				while(rs.next()){
+				route += rs.getString(1);
+				if(rs.getInt(2)==0)
+					route+= "/";
+				String sens = rs.getString(3);
+				if(sens!=null)
+					route += " "+sens+" ";
+				}
+			}
+			route = formaterRoute(route);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+		return route;
+	}
+	
+	/**
+	 * Le nombre de caractère par carte "RO" du STIP est limité à 80. Si une route dépasse les 80 caractères, il faut la décrire sur plusieurs 
+	 * lignes.
+	 * @param route
+	 * @return
+	 */
+	private static String formaterRoute(String route){
+		if(route.length()>80){
+			int positionCaractereSens = 0;
+			for(int i=68; i<77;i++){
+				if(route.charAt(i)=='='||route.charAt(i)=='>'||route.charAt(i)=='<'||route.charAt(i)=='+')
+					positionCaractereSens = i;
+			}
+			String finRoute = route.substring(positionCaractereSens+1);
+			route = route.substring(0, positionCaractereSens+1)+"\n"+formaterRoute(route.substring(0, 15)+finRoute.trim());
+		}
+		return route;
+	}
+	
 	/**
 	 * Complète par des espaces les noms des balises pour avoir 5 caractères.
 	 * @param balise
 	 * @return
 	 */
 	public static String completerBalise(String balise){
-		if(balise.length()==5)
-			return balise;
-		if(balise.length()==3)
-			return balise+"  ";
-		if(balise.length()==4)
-			return balise+" ";
-		if(balise.length()==2)
-			return balise+"   ";
+		for(int i=5; i>balise.length();i--){
+			balise+=" ";
+		}
 		return balise;
 	}
 	
@@ -1254,6 +1293,18 @@ public class Stip extends FileParser{
 		if(niveau.length()==1)
 			return "00"+niveau;
 		return niveau;
+	}
+	
+	/**
+	 * Complète par des espaces les noms des routes pour avoir 6 caractères.
+	 * @param balise
+	 * @return
+	 */
+	public static String completerRoute(String route){
+		for(int i=route.length(); i<7;i++){
+			route+=" ";
+		}
+		return route;
 	}
 	
 	/**
@@ -1276,10 +1327,14 @@ public class Stip extends FileParser{
 			return consigneToString(id);
 		case StipController.BALINT:
 			return balintToString(id);
+		case StipController.ROUTES:
+			return routeToString(id);
 		default:
 			return null;
 		}
 	}
+
+
 
 	/**
 	 * 

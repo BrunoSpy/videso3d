@@ -194,7 +194,8 @@ public class ItiPanel extends ResultGraphPanel {
 
 				try {
 					Statement st = DatabaseManager.getCurrentStip();
-					ResultSet rs = st.executeQuery("select balise, appartient, iditi, balid, entree, sortie from balitis, itis where itis.id = balitis.iditi and iditi in ("+findItis(advanced, criteria)+")");
+					String findItisSQL = findItis(advanced, criteria);				
+					ResultSet rs = st.executeQuery("select balise, appartient, iditi, balid, entree, sortie from balitis, itis where itis.id = balitis.iditi and iditi in ("+findItisSQL+")");
 
 					progressBar.setValue(1);
 
@@ -268,7 +269,7 @@ public class ItiPanel extends ResultGraphPanel {
 
 					progressBar.setValue(3);
 
-					rs = st.executeQuery("select iditi, trajetid, raccordement_id, cond1, balise, balid from couple_trajets, baltrajets where couple_trajets.trajetid = baltrajets.idtrajet and iditi in ("+findItis(advanced, criteria)+") ");
+					rs = st.executeQuery("select iditi, trajetid, raccordement_id, cond1, balise, balid from couple_trajets, baltrajets where couple_trajets.trajetid = baltrajets.idtrajet and iditi in ("+findItisSQL+") ");
 
 					progressBar.setValue(4);
 
