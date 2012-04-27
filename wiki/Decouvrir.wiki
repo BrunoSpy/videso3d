@@ -13,3 +13,6 @@ Pour obtenir une aide concernant la manière d'utiliser ces fonctionnalités, vo
    * [Trajectoires Ajouter et manipuler des trajectoires]
    * [Carto Ajouter un fond de carte]
    * [Analyser Utiliser la fenêtre d'analyse]
+
+Vous pouvez aussi visionner une présentation rapide du logiciel :
+[http://videso3d.googlecode.com/svn/trunk/doc/presentation.svg]
