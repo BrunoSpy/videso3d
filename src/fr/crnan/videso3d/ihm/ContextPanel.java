@@ -42,7 +42,7 @@ import fr.crnan.videso3d.stpv.StpvController;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
- * @version 0.4.5
+ * @version 0.4.6
  */
 public class ContextPanel extends JPanel{
 
@@ -53,6 +53,11 @@ public class ContextPanel extends JPanel{
 	private HashMap<DatabaseManager.Type, Context> taskpanes = new HashMap<DatabaseManager.Type, Context>();
 		
 	private DefaultSingleCDockable dockable;
+	
+	/**
+	 * True if <code>content</code> contains at least one taskpane
+	 */
+	private boolean hasTaskpanes = false;
 	
 	public ContextPanel(){
 		super();
@@ -76,7 +81,7 @@ public class ContextPanel extends JPanel{
 	 */
 	public void open(){
 		//open the context panel only if it contains taskpanes
-		if(taskpanes.size() > 0){
+		if(hasTaskpanes){
 			if(this.getParent() instanceof JSplitPane) {
 				if(((JSplitPane)this.getParent()).getLeftComponent().equals(this)){
 					((JSplitPane)this.getParent()).setDividerLocation(250);
@@ -93,7 +98,7 @@ public class ContextPanel extends JPanel{
 	 * @param base type de base données à laquelle se réfère ces données
 	 */
 	public void addTaskPane(Context pane, DatabaseManager.Type base){
-		this.taskpanes.put(base, pane);
+			this.taskpanes.put(base, pane);
 	}
 
 	public void removeTaskPane(DatabaseManager.Type base){
@@ -106,6 +111,7 @@ public class ContextPanel extends JPanel{
 	 */
 	public void showInfo(DatabaseManager.Type base, int type, String name){
 		content.removeAll();
+		hasTaskpanes = false;
 		if(base != null) {
 			if(dockable != null){
 				dockable.setTitleText("Informations sur "+name);
@@ -166,8 +172,12 @@ public class ContextPanel extends JPanel{
 	
 	public void setTaskPanes(Collection<JXTaskPane> taskpanes){
 		content.removeAll();
-		for(JXTaskPane t : taskpanes){
-			content.add(t, null);
+		hasTaskpanes = false;
+		if(taskpanes != null){
+			for(JXTaskPane t : taskpanes){
+				content.add(t, null);
+				hasTaskpanes = true;
+			}
 		}
 		content.validate();
 	}
@@ -184,6 +194,7 @@ public class ContextPanel extends JPanel{
 			List<JXTaskPane> panesList = taskpanes.get(base).getTaskPanes(type, name);
 			if(panesList != null){
 				for(JXTaskPane pane : panesList){
+					hasTaskpanes = true;
 					content.add(pane, null);
 				}
 			}
