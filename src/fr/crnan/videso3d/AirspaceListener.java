@@ -292,7 +292,9 @@ public class AirspaceListener implements SelectListener {
 			} else {
 				pos = this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5);//décalage de 5 pixels pour éviter le clignotement
 			}
-			this.wwd.getAnnotationLayer().addAnnotation(((VidesoObject)o).getAnnotation(pos));
+			if(((VidesoObject)o).getAnnotation(pos) != null){
+				this.wwd.getAnnotationLayer().addAnnotation(((VidesoObject)o).getAnnotation(pos));
+			}
 			this.wwd.redraw();
 		} else if (o instanceof GlobeAnnotation){ //suppression de l'annotation
 			this.wwd.getAnnotationLayer().removeAnnotation((GlobeAnnotation)o);
