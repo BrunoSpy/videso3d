@@ -75,12 +75,15 @@ public class ContextPanel extends JPanel{
 	 * Ouvre le panneau
 	 */
 	public void open(){
-		if(this.getParent() instanceof JSplitPane) {
-			if(((JSplitPane)this.getParent()).getLeftComponent().equals(this)){
-				((JSplitPane)this.getParent()).setDividerLocation(250);
-			} 
-		} else if(this.dockable != null && this.dockable.getExtendedMode() == ExtendedMode.MINIMIZED){
-			this.dockable.setExtendedMode(ExtendedMode.NORMALIZED);
+		//open the context panel only if it contains taskpanes
+		if(taskpanes.size() > 0){
+			if(this.getParent() instanceof JSplitPane) {
+				if(((JSplitPane)this.getParent()).getLeftComponent().equals(this)){
+					((JSplitPane)this.getParent()).setDividerLocation(250);
+				} 
+			} else if(this.dockable != null && this.dockable.getExtendedMode() == ExtendedMode.MINIMIZED){
+				this.dockable.setExtendedMode(ExtendedMode.NORMALIZED);
+			}
 		}
 	}
 	
