@@ -87,9 +87,7 @@ public class RadioCovController implements VidesoController {
 			}
 			
 		}.execute();
-
-		
-
+	
 	}
 
 	@Override
@@ -207,10 +205,16 @@ public class RadioCovController implements VidesoController {
 		return null;
 	}
 
+	
+	/*Utilisé par le RadioCovView pour forcer le rafraichissement d'une couverture radio */
+	public void redrawNow(){
+		this.wwd.redrawNow();
+	}
+
+
 	/**
 	 * Not implemented in this controller
 	 */
-	@Override
 	public boolean areLocationsVisible(int type, String name) {
 		return false;
 	}
@@ -218,7 +222,6 @@ public class RadioCovController implements VidesoController {
 	/**
 	 * Not implemented in this controller
 	 */
-	@Override
 	public void setLocationsVisible(int type, String name, boolean b) {
 	}
 }
