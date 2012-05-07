@@ -108,6 +108,11 @@ public class OPASTrack implements VidesoTrack{
 	}
 	
 	@Override
+	public Integer getModeA() {
+		return null;
+	}
+		
+	@Override
 	public boolean isFieldAvailable(int field) {
 		switch (field) {
 		case TracksModel.FIELD_ADEP:
@@ -124,6 +129,8 @@ public class OPASTrack implements VidesoTrack{
 			return false;
 		}
 	}
+
+
 
 
 }

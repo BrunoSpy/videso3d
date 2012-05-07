@@ -119,6 +119,11 @@ public class LPLNTrack implements VidesoTrack {
 	}
 	
 	@Override
+	public Integer getModeA() {
+		return null;
+	}
+		
+	@Override
 	public boolean isFieldAvailable(int field) {
 		switch (field) {
 		case TracksModel.FIELD_ADEP:
@@ -131,8 +136,12 @@ public class LPLNTrack implements VidesoTrack {
 			return true;
 		case TracksModel.FIELD_TYPE_AVION:
 			return true;
+		case TracksModel.FIELD_TYPE_MODE_A:
+			return false;
 		default:
 			return false;
 		}
 	}
+
+
 }

@@ -24,7 +24,7 @@ import gov.nasa.worldwind.tracks.TrackSegment;
 /**
  * Track provenant d'un fichier Elvira GEO.
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class GEOTrack implements VidesoTrack {
 
@@ -33,12 +33,14 @@ public class GEOTrack implements VidesoTrack {
 	private String arrivee = "";
 	private String type;
 	private Integer numTraj;
+	private Integer modeA;
 	
 	private List<GEOTrackPoint> trackPoints = new ArrayList<GEOTrackPoint>();
 	
 	public GEOTrack(String sentence){
 		String[] words = sentence.split("\t");
 		this.indicatif = words[12].trim();
+		this.modeA = new Integer(words[11].trim());
 		this.type = words[14].trim();
 		if(words.length > 16 ) this.depart = words[16].trim();
 		if(words.length > 17 ) this.arrivee = words[17].trim();
@@ -107,6 +109,14 @@ public class GEOTrack implements VidesoTrack {
 		return null;
 	}
 	
+	/* (non-Javadoc)
+	 * @see fr.crnan.videso3d.formats.VidesoTrack#getModeA()
+	 */
+	@Override
+	public Integer getModeA() {
+		return this.modeA;
+	}
+
 	@Override
 	public boolean isFieldAvailable(int field) {
 		switch (field) {
@@ -119,6 +129,8 @@ public class GEOTrack implements VidesoTrack {
 		case TracksModel.FIELD_INDICATIF:
 			return true;
 		case TracksModel.FIELD_TYPE_AVION:
+			return true;
+		case TracksModel.FIELD_TYPE_MODE_A:
 			return true;
 		default:
 			return false;
