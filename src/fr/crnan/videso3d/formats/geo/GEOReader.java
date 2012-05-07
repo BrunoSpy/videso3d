@@ -138,7 +138,7 @@ public class GEOReader extends TrackFilesReader{
 
 	@Override
 	protected boolean isTrackValid(VidesoTrack track) {
-		boolean result = true;
+		boolean result = !this.disjunctive;
 		if(filters == null)
 			return result;
 		
@@ -153,6 +153,11 @@ public class GEOReader extends TrackFilesReader{
 				result = this.disjunctive
 							? result || track.getArrivee().matches(f.getRegexp())
 							: result && track.getArrivee().matches(f.getRegexp());
+				break;
+			case TracksModel.FIELD_TYPE_MODE_A:
+				result = this.disjunctive
+				? result || track.getModeA().toString().matches(f.getRegexp())
+				: result && track.getModeA().toString().matches(f.getRegexp());
 				break;
 			default:
 				break;

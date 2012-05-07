@@ -57,6 +57,7 @@ public class TrajectoriesImportUI extends JDialog {
 	private JTextField adep;
 	private JTextField adest;
 	private JRadioButton rdbtnOu;
+	private JTextField modeA;
 	
 	public TrajectoriesImportUI(final MainWindow mainWindow) {
 			
@@ -88,42 +89,60 @@ public class TrajectoriesImportUI extends JDialog {
 		
 		adest = new JTextField();
 		adest.setColumns(10);
+		
+		JLabel lblModeA = new JLabel("Mode A :");
+		
+		modeA = new JTextField();
+		modeA.setColumns(10);
 		GroupLayout gl_panel = new GroupLayout(filterContent);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblFiltrerLesTrajectoires)
-						.addComponent(lblAroportDpart)
-						.addComponent(lblAroportArrive))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addComponent(adep, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblFiltrerLesTrajectoires)
+								.addComponent(lblAroportDpart)
+								.addComponent(lblAroportArrive))
+							.addPreferredGap(ComponentPlacement.RELATED))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addComponent(lblModeA, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, 19, Short.MAX_VALUE)))
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(modeA)
+						.addComponent(adep, GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
 						.addGroup(gl_panel.createSequentialGroup()
 							.addComponent(rdbtnEt)
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(rdbtnOu))
-						.addComponent(adest, 108, 108, 108))
-					.addContainerGap(239, Short.MAX_VALUE))
+						.addComponent(adest, 108, 108, Short.MAX_VALUE))
+					.addContainerGap())
 		);
 		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblFiltrerLesTrajectoires)
-						.addComponent(rdbtnEt)
-						.addComponent(rdbtnOu))
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel.createSequentialGroup()
+							.addContainerGap()
+							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblFiltrerLesTrajectoires)
+								.addComponent(rdbtnEt)
+								.addComponent(rdbtnOu))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(adep, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblAroportDpart)))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGap(58)
+							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblAroportArrive)
+								.addComponent(adest, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(adep, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblAroportDpart))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(adest, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblAroportArrive))
-					)
+						.addComponent(modeA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblModeA))
+					.addContainerGap(24, Short.MAX_VALUE))
 		);
 		filterContent.setLayout(gl_panel);
 		
@@ -181,6 +200,13 @@ public class TrajectoriesImportUI extends JDialog {
 		
 		buttons.add(validate);
 		JButton cancel = new JButton("Annuler");
+		cancel.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				getThis().dispose();
+			}
+		});
 		buttons.add(cancel);
 		
 		getContentPane().add(buttons, BorderLayout.SOUTH);
@@ -197,6 +223,7 @@ public class TrajectoriesImportUI extends JDialog {
 		List<TrajectoryFileFilter> filters = new ArrayList<TrajectoryFileFilter>();
 		if(!adep.getText().isEmpty()) filters.add(new TrajectoryFileFilter(TracksModel.FIELD_ADEP, adep.getText()));
 		if(!adest.getText().isEmpty()) filters.add(new TrajectoryFileFilter(TracksModel.FIELD_ADEST, adest.getText()));
+		if(!modeA.getText().isEmpty()) filters.add(new TrajectoryFileFilter(TracksModel.FIELD_TYPE_MODE_A, modeA.getText()));
 		return filters;
 	}
 	

@@ -38,8 +38,9 @@ public class TracksModel extends AbstractTableModel {
 	public static final int FIELD_IAF = 3;
 	public static final int FIELD_INDICATIF = 4;
 	public static final int FIELD_TYPE_AVION = 5;
+	public static final int FIELD_TYPE_MODE_A = 6;
 	
-	private String[] columnNames = {"Indicatif", "Départ", "Arrivée", "IAF", "Type", "Affiché"};
+	private String[] columnNames = {"Indicatif", "Départ", "Arrivée", "IAF", "Type", "Mode A", "Affiché"};
 
 	protected List<Object> tracks = null;
 
@@ -351,6 +352,8 @@ public class TracksModel extends AbstractTableModel {
 			case 4:
 				return ((GEOTrack)t).getType();
 			case 5:
+				return ((GEOTrack)t).getModeA();
+			case 6:
 				return isVisible((Track)t);
 			default:
 				return "";
@@ -368,6 +371,8 @@ public class TracksModel extends AbstractTableModel {
 			case 4:
 				return "";
 			case 5:
+				return "";
+			case 6:
 				return isVisible((Track)t);
 			default:
 				return "";
@@ -385,6 +390,8 @@ public class TracksModel extends AbstractTableModel {
 			case 4:
 				return ((LPLNTrack)t).getType();
 			case 5:
+				return "";
+			case 6:
 				return isVisible((Track)t);
 			default:
 				return "";
@@ -402,6 +409,8 @@ public class TracksModel extends AbstractTableModel {
 			case 4:
 				return ((PLNSTrack)t).getType();
 			case 5:
+				return "";
+			case 6:
 				return isVisible((Track)t);
 			default:
 				return "";
@@ -417,7 +426,7 @@ public class TracksModel extends AbstractTableModel {
 	 */
 	@Override
 	public Class<?> getColumnClass(int columnIndex) {
-		if(columnIndex == 5){
+		if(columnIndex == 6){
 			return Boolean.class;
 		} else {
 			return String.class;
@@ -429,7 +438,7 @@ public class TracksModel extends AbstractTableModel {
 	 */
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		if(columnIndex == 5){
+		if(columnIndex == 6){
 			return true;
 		} else {
 			return false;
@@ -589,6 +598,23 @@ public class TracksModel extends AbstractTableModel {
 				for(VidesoTrack track : this.getAllTracks()){	
 					if(track.isFieldAvailable(FIELD_TYPE_AVION)){
 						if(track.getType().matches(filter.getValue())){
+							//keep this track if disjunctive filter
+							if(this.isFilterDisjunctive()){
+								temp.add(track);
+							}
+						} else {
+							//remove the track from the pool if not disjunctive filter
+							if(!this.isFilterDisjunctive()){
+								temp.remove(track);
+							}
+						}
+					}
+				}
+				break;
+			case FIELD_TYPE_MODE_A:
+				for(VidesoTrack track : this.getAllTracks()){
+					if(track.isFieldAvailable(FIELD_TYPE_MODE_A)){
+						if(track.getModeA().toString().matches(filter.getValue())){
 							//keep this track if disjunctive filter
 							if(this.isFilterDisjunctive()){
 								temp.add(track);
@@ -839,6 +865,8 @@ public class TracksModel extends AbstractTableModel {
 			return FIELD_INDICATIF;
 		} else if("Type avion".equals(type)){
 			return FIELD_TYPE_AVION;
+		} else if("Mode A".equals(type)){
+			return FIELD_TYPE_MODE_A;
 		}
 		return 0;
 	}
@@ -854,6 +882,8 @@ public class TracksModel extends AbstractTableModel {
 			return "Indicatif";
 		} else if (type == FIELD_TYPE_AVION){
 			return "Type avion";
+		} else if(type == FIELD_TYPE_MODE_A){
+			return "Mode A";
 		}
 		return null;
 	}

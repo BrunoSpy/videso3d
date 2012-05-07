@@ -227,9 +227,15 @@ public class TrajectoriesView extends JPanel {
 
 		if(reader instanceof LPLNReader || reader instanceof GEOReader || reader instanceof PLNSReader){
 			pistes.getColumnExt("IAF").setVisible(false);
-		} else if (reader instanceof OPASReader) {
+		}
+		if (reader instanceof OPASReader) {
 			pistes.getColumnExt("Type").setVisible(false);
 		}
+		if(reader instanceof OPASReader || reader instanceof LPLNReader || reader instanceof PLNSReader) {
+			pistes.getColumnExt("Mode A").setVisible(false);
+		}
+		
+		
 		pistes.setColumnControlVisible(true);
 		pistes.packAll();
 		
@@ -783,6 +789,17 @@ public class TrajectoriesView extends JPanel {
 
 		filtres.add(type);
 		
+		JPanel modeA = new JPanel();
+		modeA.setLayout(new BoxLayout(modeA, BoxLayout.X_AXIS));
+		JLabel modeALbl = new JLabel("Mode A : ");
+		final JTextField modeAField = new JTextField(10);
+		modeAField.setMaximumSize(new Dimension(100, 30));
+		modeA.add(modeALbl);
+		modeA.add(Box.createHorizontalGlue());
+		modeA.add(modeAField);
+		
+		filtres.add(modeA);
+		
 		JPanel validate = new JPanel();
 		validate.setLayout(new BoxLayout(validate, BoxLayout.X_AXIS));
 		JButton val = new JButton("Filtrer");
@@ -807,6 +824,9 @@ public class TrajectoriesView extends JPanel {
 				if(!typeField.getText().isEmpty()){
 					layer.getModel().addFilter(TracksModel.FIELD_TYPE_AVION, typeField.getText());
 				}
+				if(!modeAField.getText().isEmpty()){
+					layer.getModel().addFilter(TracksModel.FIELD_TYPE_MODE_A, modeAField.getText());
+				}
 				layer.getModel().applyFilters();
 				trackContext.updateLayerPane();
 			}
@@ -821,6 +841,7 @@ public class TrajectoriesView extends JPanel {
 				aDestField.setText("");
 				iafField.setText("");
 				typeField.setText("");
+				modeAField.setText("");
 				layer.getModel().removeFilter();
 				layer.getModel().applyFilters();
 				trackContext.updateLayerPane();
