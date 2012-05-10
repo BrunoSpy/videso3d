@@ -228,40 +228,6 @@ public class MainToolbar extends JToolBar {
 		//Ajouter trajectoires
 		final DropDownButton trajectoires = new DropDownButton(new ImageIcon(getClass().getResource("/resources/plus_traj_22.png")));
 
-		final JMenuItem file = new JMenuItem("Fichier");
-		file.setToolTipText("Importer des trajectoires depuis un fichier");
-		file.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				final VFileChooser fileChooser = new VFileChooser();
-				fileChooser.setFileSelectionMode(VFileChooser.FILES_ONLY);
-				fileChooser.setMultiSelectionEnabled(true);
-				fileChooser.addChoosableFileFilter(new OPASFileFilter());
-				fileChooser.addChoosableFileFilter(new LPLNFileFilter());
-				fileChooser.addChoosableFileFilter(new FPLFileFilter());
-				fileChooser.addChoosableFileFilter(new PLNSFileFilter());
-				fileChooser.addChoosableFileFilter(new GEOFileFilter());
-				if(fileChooser.showOpenDialog(trajectoires) == VFileChooser.APPROVE_OPTION){
-
-					new SwingWorker<String, Integer>(){
-						@Override
-						protected String doInBackground() throws Exception {
-							try {
-								mainWindow.addTrajectoriesViews(fileChooser.getSelectedFiles());
-							} catch(Exception e1){
-								e1.printStackTrace();
-							}
-							return null;
-						}
-					}.execute();
-
-				}
-
-			}
-		});
-
-
     final JMenuItem fileWithFilter = new JMenuItem("Fichier avec filtrage");
 		fileWithFilter.setToolTipText("Filtrer puis importer des trajectoires depuis un fichier");
 		fileWithFilter.addActionListener(new ActionListener() {
@@ -281,7 +247,7 @@ public class MainToolbar extends JToolBar {
 				new FPLImportUI(mainWindow).setVisible(true);
 			}
 		});
-		trajectoires.getPopupMenu().add(file);
+
     trajectoires.getPopupMenu().add(fileWithFilter);
 		trajectoires.getPopupMenu().add(text);
 
@@ -290,7 +256,7 @@ public class MainToolbar extends JToolBar {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				file.doClick();
+				fileWithFilter.doClick();
 			}
 		});
 		trajectoires.addToToolBar(this);
