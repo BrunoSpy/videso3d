@@ -76,8 +76,10 @@ public class TilingDesktopPane extends JDesktopPane {
 	    width = dBounds.width/cols;
 	    for (int j = 0; j < rows; j++ ) {
 	        for (int i = 0; i < cols; i++ ) {
-	            frames[i+j*cols].setBounds( i*width, j*height,
-	                                        width, height );
+	        	if(frames.length > i){
+	        		frames[i+j*cols].setBounds( i*width, j*height,
+	        				width, height );
+	        	}
 	        }
 	    }
 	}

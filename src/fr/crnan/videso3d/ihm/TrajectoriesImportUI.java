@@ -18,6 +18,8 @@ package fr.crnan.videso3d.ihm;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ import fr.crnan.videso3d.formats.geo.GEOFileFilter;
 import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
 import fr.crnan.videso3d.formats.opas.OPASFileFilter;
 import fr.crnan.videso3d.formats.plns.PLNSFileFilter;
+import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
@@ -45,6 +48,8 @@ import javax.swing.SwingWorker;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ButtonGroup;
 import javax.swing.JTextField;
+import java.awt.Component;
+import javax.swing.SwingConstants;
 
 /**
  * IHM to filter and import trajectories
@@ -53,114 +58,148 @@ import javax.swing.JTextField;
  */
 public class TrajectoriesImportUI extends JDialog {
 	
-	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private final ButtonGroup typeBtnGrp = new ButtonGroup();
 	private JTextField adep;
 	private JTextField adest;
 	private JRadioButton rdbtnOu;
+	private JRadioButton rdbtnEt;
+	private JRadioButton filterYes; 
 	private JTextField modeA;
+	private final ButtonGroup filterbtnGrp = new ButtonGroup();
 	
 	public TrajectoriesImportUI(final MainWindow mainWindow) {
 			
 		this.setTitle("Importer et filtrer des trajectoires");
+		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		
-		getContentPane().setLayout(new BorderLayout());
+		JPanel filterPanel = new JPanel();
+		getContentPane().add(filterPanel);
+		filterPanel.setLayout(new BoxLayout(filterPanel, BoxLayout.X_AXIS));
 		
-//		JPanel filter = new JPanel();
-//		filter.setLayout(new BorderLayout());
-//		filter.add(new TitledPanel("1. Filtrer les trajectoires"), BorderLayout.NORTH);
-
+		filterPanel.add(new TitledPanel("1. Filtrer les trajectoires"));
+		
 		JPanel filterContent = new JPanel();
 
 		JLabel lblFiltrerLesTrajectoires = new JLabel("Type de filtre :");
 
-		JRadioButton rdbtnEt = new JRadioButton("Et");
-		buttonGroup.add(rdbtnEt);
+		rdbtnEt = new JRadioButton("Et");
+		rdbtnEt.setEnabled(false);
+		typeBtnGrp.add(rdbtnEt);
 
 		rdbtnOu = new JRadioButton("Ou");
 		rdbtnOu.setSelected(true);
-		buttonGroup.add(rdbtnOu);
+		rdbtnOu.setEnabled(false);
+		typeBtnGrp.add(rdbtnOu);
 		
 		JLabel lblAroportDpart = new JLabel("Aéroport départ :");
 		
 		adep = new JTextField();
+		adep.setEnabled(false);
 		adep.setColumns(10);
 		
 		JLabel lblAroportArrive = new JLabel("Aéroport arrivée :");
 		
 		adest = new JTextField();
 		adest.setColumns(10);
+		adest.setEnabled(false);
 		
 		JLabel lblModeA = new JLabel("Mode A :");
 		
 		modeA = new JTextField();
 		modeA.setColumns(10);
+		modeA.setEnabled(false);
+		
+		JLabel lblActiverLesFiltres = new JLabel("Activer les filtres :");
+		
+		filterYes = new JRadioButton("Oui");
+		filterbtnGrp.add(filterYes);
+		
+		JRadioButton filterNo = new JRadioButton("Non");
+		
+		filterbtnGrp.add(filterNo);
+		
+		filterYes.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent arg0) {
+					rdbtnEt.setEnabled(filterYes.isSelected());
+					rdbtnOu.setEnabled(filterYes.isSelected());
+					adep.setEnabled(filterYes.isSelected());
+					adest.setEnabled(filterYes.isSelected());
+					modeA.setEnabled(filterYes.isSelected());
+			}
+		});
+		
+		filterNo.setSelected(true);
+		
 		GroupLayout gl_panel = new GroupLayout(filterContent);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
-						.addGroup(gl_panel.createSequentialGroup()
-							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblFiltrerLesTrajectoires)
-								.addComponent(lblAroportDpart)
-								.addComponent(lblAroportArrive))
-							.addPreferredGap(ComponentPlacement.RELATED))
-						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(lblModeA, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED, 19, Short.MAX_VALUE)))
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(modeA)
-						.addComponent(adep, GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(rdbtnEt)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(rdbtnOu))
-						.addComponent(adest, 108, 108, Short.MAX_VALUE))
-					.addContainerGap())
+							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
+								.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+									.addComponent(lblFiltrerLesTrajectoires)
+									.addComponent(lblAroportDpart)
+									.addComponent(lblAroportArrive))
+								.addGroup(gl_panel.createSequentialGroup()
+									.addComponent(lblModeA, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.RELATED, 20, Short.MAX_VALUE)))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(adest, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
+								.addComponent(modeA, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
+								.addComponent(rdbtnEt)
+								.addComponent(filterYes)
+								.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+									.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+										.addComponent(filterNo)
+										.addComponent(rdbtnOu))
+									.addComponent(adep, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE))))
+						.addComponent(lblActiverLesFiltres)))
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
+					.addContainerGap()
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addContainerGap()
+							.addComponent(filterNo)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(rdbtnOu))
+						.addGroup(gl_panel.createSequentialGroup()
 							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblFiltrerLesTrajectoires)
-								.addComponent(rdbtnEt)
-								.addComponent(rdbtnOu))
+								.addComponent(lblActiverLesFiltres)
+								.addComponent(filterYes))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel.createSequentialGroup()
+									.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+										.addComponent(lblFiltrerLesTrajectoires)
+										.addComponent(rdbtnEt))
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+										.addComponent(adep, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblAroportDpart)))
+								.addGroup(gl_panel.createSequentialGroup()
+									.addGap(58)
+									.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+										.addComponent(lblAroportArrive)
+										.addComponent(adest, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(adep, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblAroportDpart)))
-						.addGroup(gl_panel.createSequentialGroup()
-							.addGap(58)
-							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblAroportArrive)
-								.addComponent(adest, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-						.addComponent(modeA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblModeA))
-					.addContainerGap(24, Short.MAX_VALUE))
+								.addComponent(modeA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblModeA))))
+					.addContainerGap(18, Short.MAX_VALUE))
 		);
+		gl_panel.linkSize(SwingConstants.HORIZONTAL, new Component[] {adep, adest, modeA});
 		filterContent.setLayout(gl_panel);
 		
-//		filter.add(filterContent, BorderLayout.CENTER);
-		
-		
-		getContentPane().add(filterContent, BorderLayout.CENTER);
-		
-//		JPanel files = new JPanel();
-//		files.setLayout(new BorderLayout());
-//		files.add(new TitledPanel("2. Choisir les fichiers à importer"), BorderLayout.NORTH);
-		
-//		JPanel filesContent = new JPanel();
-		
-//		files.add(filesContent, BorderLayout.CENTER);
-		
-//		getContentPane().add(files);
-		
+	
+		getContentPane().add(filterContent);
+			
 		JPanel buttons = new JPanel();
 		buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
 		buttons.add(Box.createHorizontalGlue());
@@ -207,9 +246,15 @@ public class TrajectoriesImportUI extends JDialog {
 				getThis().dispose();
 			}
 		});
+		
+		JPanel titleSecondStep = new JPanel();
+		getContentPane().add(titleSecondStep);
+		titleSecondStep.setLayout(new BorderLayout(0, 0));
+		
+		titleSecondStep.add(new TitledPanel("2. Sélectionner les fichiers à importer"), BorderLayout.NORTH);
 		buttons.add(cancel);
 		
-		getContentPane().add(buttons, BorderLayout.SOUTH);
+		getContentPane().add(buttons);
 				
 		this.pack();
 		
@@ -220,11 +265,17 @@ public class TrajectoriesImportUI extends JDialog {
 	}
 	
 	private List<TrajectoryFileFilter> getFilters(){
-		List<TrajectoryFileFilter> filters = new ArrayList<TrajectoryFileFilter>();
-		if(!adep.getText().isEmpty()) filters.add(new TrajectoryFileFilter(TracksModel.FIELD_ADEP, adep.getText()));
-		if(!adest.getText().isEmpty()) filters.add(new TrajectoryFileFilter(TracksModel.FIELD_ADEST, adest.getText()));
-		if(!modeA.getText().isEmpty()) filters.add(new TrajectoryFileFilter(TracksModel.FIELD_TYPE_MODE_A, modeA.getText()));
-		return filters;
+		if(filterYes.isSelected()){
+			List<TrajectoryFileFilter> filters = new ArrayList<TrajectoryFileFilter>();
+
+			if(!adep.getText().isEmpty()) filters.add(new TrajectoryFileFilter(TracksModel.FIELD_ADEP, adep.getText()));
+			if(!adest.getText().isEmpty()) filters.add(new TrajectoryFileFilter(TracksModel.FIELD_ADEST, adest.getText()));
+			if(!modeA.getText().isEmpty()) filters.add(new TrajectoryFileFilter(TracksModel.FIELD_TYPE_MODE_A, modeA.getText()));
+
+			return filters;
+		} else {
+			return null;
+		}
 	}
 	
 	private JDialog getThis(){

@@ -24,7 +24,7 @@ import gov.nasa.worldwind.tracks.TrackSegment;
 /**
  * Track provenant d'un fichier Elvira GEO.
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.1.3.1
  */
 public class GEOTrack implements VidesoTrack {
 
@@ -33,14 +33,14 @@ public class GEOTrack implements VidesoTrack {
 	private String arrivee = "";
 	private String type;
 	private Integer numTraj;
-	private Integer modeA;
+	private Integer modeA = 0;
 	
 	private List<GEOTrackPoint> trackPoints = new ArrayList<GEOTrackPoint>();
 	
 	public GEOTrack(String sentence){
 		String[] words = sentence.split("\t");
 		this.indicatif = words[12].trim();
-		this.modeA = new Integer(words[11].trim());
+		if(!words[11].trim().isEmpty()) this.modeA = new Integer(words[11].trim());
 		this.type = words[14].trim();
 		if(words.length > 16 ) this.depart = words[16].trim();
 		if(words.length > 17 ) this.arrivee = words[17].trim();
