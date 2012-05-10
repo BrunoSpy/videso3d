@@ -57,26 +57,24 @@ public class VidesoStatusBar extends StatusBar {
     }
 	
 	protected void handleCursorPositionChange(PositionEvent event)
-    {
-        Position newPos = event.getPosition();
-        if (newPos != null)
-        {
-            String las = makeAngleDescription("Lat", newPos.getLatitude());
-            String los = makeAngleDescription("Lon", newPos.getLongitude());
-            String els = makeCursorElevationDescription(
-                this.getEventSource().getModel().getGlobe().getElevation(newPos.getLatitude(), newPos.getLongitude()));
-            double[] cautra = LatLonCautra.fromRadians(newPos.getLatitude().radians, newPos.getLongitude().radians).getCautra();
-            String xCautra = makeCautraDescription("X Cautra", cautra[0]);
-            String yCautra = makeCautraDescription("Y Cautra", cautra[1]);
-            latDisplay.setText(las);
-            lonDisplay.setText(los);
-            eleDisplay.setText(els);
-            xCautraDisplay.setText(xCautra);
-            yCautraDisplay.setText(yCautra);
-        }
-        else
-        {
-            latDisplay.setText("");
+	{
+		Position newPos = event.getPosition();
+		if (newPos != null)
+		{
+			String els = makeCursorElevationDescription(
+					this.getEventSource().getModel().getGlobe().getElevation(newPos.getLatitude(), newPos.getLongitude()));
+			double[] cautra = LatLonCautra.fromRadians(newPos.getLatitude().radians, newPos.getLongitude().radians).getCautra();
+			String xCautra = makeCautraDescription("X Cautra", cautra[0]);
+			String yCautra = makeCautraDescription("Y Cautra", cautra[1]);
+			latDisplay.setText("Lat "+newPos.getLatitude().toDMSString());
+			lonDisplay.setText("Lon "+newPos.getLongitude().toDMSString());
+			eleDisplay.setText(els);
+			xCautraDisplay.setText(xCautra);
+			yCautraDisplay.setText(yCautra);
+		}
+		else
+		{
+			latDisplay.setText("");
             lonDisplay.setText(Logging.getMessage("term.OffGlobe"));
             eleDisplay.setText("");
             xCautraDisplay.setText("");
