@@ -138,10 +138,10 @@ public class GEOReader extends TrackFilesReader{
 
 	@Override
 	protected boolean isTrackValid(VidesoTrack track) {
-		boolean result = !this.disjunctive;
-		if(filters == null)
-			return result;
+		if(filters == null || filters.size() == 0)
+			return true;
 		
+		boolean result = !this.disjunctive;
 		for(TrajectoryFileFilter f : filters){
 			switch (f.getField()) {
 			case TracksModel.FIELD_ADEP:
