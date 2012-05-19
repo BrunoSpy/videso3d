@@ -33,12 +33,12 @@ import fr.crnan.videso3d.trajectography.PLNSTracksModel;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.1.4
  */
 public class PLNSReader extends TrackFilesReader {
 
 
-	public PLNSReader(File[] plnsFiles, File databaseFile, PLNSTracksModel model, PropertyChangeListener listener) throws PointNotFoundException {
+	public PLNSReader(File[] plnsFiles, File databaseFile, final PLNSTracksModel model, PropertyChangeListener listener) throws PointNotFoundException {
 		this.setModel(model);
 		this.addPropertyChangeListener(listener);
 		this.setName(plnsFiles[0].getName().substring(0, 6)+"...");
@@ -51,6 +51,7 @@ public class PLNSReader extends TrackFilesReader {
 			extractor.addPropertyChangeListener(new PropertyChangeListener() {
 				
 				int max = 0;
+				int withModel = (model == null ? 2 : 1);
 				
 				@Override
 				public void propertyChange(PropertyChangeEvent evt) {
@@ -58,34 +59,32 @@ public class PLNSReader extends TrackFilesReader {
 						max = (Integer) evt.getNewValue();
 						fireTaskStarts(100);
 					} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
-						fireTaskProgress(((Integer)evt.getNewValue()*50)/max);
+						fireTaskProgress(((Integer)evt.getNewValue()*50*withModel)/max);
 					} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
 						fireTaskInfo((String) evt.getNewValue());
 					}
 				}
 			});
 			extractor.doExtract();
-			//once the extraction is done, fullfill the model
-			model.getProgressSupport().addPropertyChangeListener(new PropertyChangeListener() {
-				
-				int max = 0;
-				
-				@Override
-				public void propertyChange(PropertyChangeEvent evt) {
-					if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
-						max = (Integer) evt.getNewValue();
-					//	totalMax = progress.getMaximum()/2;
-					} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
-						//int p = (Integer) evt.getNewValue();
-						//progress.setProgress(totalMax+(totalMax*p)/max);
-						fireTaskProgress(50+((Integer)evt.getNewValue()*50)/max);
-					} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
-					//	progress.setNote((String)evt.getNewValue());
-						fireTaskInfo((String)evt.getNewValue());
+			if(model != null){
+				//once the extraction is done, fullfill the model
+				model.getProgressSupport().addPropertyChangeListener(new PropertyChangeListener() {
+
+					int max = 0;
+
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
+							max = (Integer) evt.getNewValue();
+						} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
+							fireTaskProgress(50+((Integer)evt.getNewValue()*50)/max);
+						} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
+							fireTaskInfo((String)evt.getNewValue());
+						}
 					}
-				}
-			});
-			model.setDatabase(databaseFile);
+				});
+				model.setDatabase(databaseFile);
+			}
 		} catch (ClassNotFoundException e){
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -94,6 +93,7 @@ public class PLNSReader extends TrackFilesReader {
 		for(File f : plnsFiles){
 				this.getFiles().add(f);
 		}
+		fireTaskEnds();
 	}
 
 	/**

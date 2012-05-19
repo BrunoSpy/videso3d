@@ -268,7 +268,7 @@ public class PLNSExtractor extends ProgressSupport{
                 int heureDepMin = ord(pln[31+enTete+indexRensGen])*256 + ord(pln[32+enTete+indexRensGen]);
                 if(heureDepMin >= 24*60)
                 	heureDepMin = heureDepMin -24*60;
-                String heureDep = (heureDepMin/60) +":"+(heureDepMin%60);
+                String heureDep = String.format("%02d", heureDepMin/60) +":"+String.format("%02d", heureDepMin%60);
                 
                 int pfl = ord(pln[3+enTete+indexChampCOOR])*256 + ord(pln[4+enTete+indexChampCOOR]);
                 
@@ -314,10 +314,10 @@ public class PLNSExtractor extends ProgressSupport{
                 		minutes -= 24*60;
                 	
                 	StringBuffer heurebalise = new StringBuffer();
-                	heurebalise.append(minutes/60);
+                	heurebalise.append(String.format("%02d", minutes/60));
                 	heurebalise.append(":");
-                	heurebalise.append(minutes%60);
-                	
+                	heurebalise.append(String.format("%02d", minutes%60));
+                	                	
                 	balR.seek((rangBal-1)*16);
                 	byte[] bal = new byte[5];
                 	balR.read(bal, 0, 5);

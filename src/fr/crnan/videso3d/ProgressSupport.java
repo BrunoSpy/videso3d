@@ -24,9 +24,10 @@ import java.beans.PropertyChangeSupport;
  * Permet de suivre l'avancement d'une tache.<br />
  * Lance la propriété <code>TASK_STARTS</code> quand la tache commence. La valeur envoyée correspond au max de la progression.<br />
  * Lance la propriété <code>TASK_PROGRESS</code> à chaque incrément.<br />
+ * Lance la propriété <code>TASK_ENDS</code> lorsque la tâche est terminée (facultatif).<br />
  * Lance la propriété <code>TASK_INFO</code> à chaque incrément (facultatif).
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.2.0
  */
 public class ProgressSupport {
 
@@ -35,6 +36,8 @@ public class ProgressSupport {
 	public final static String TASK_PROGRESS = "progress.progress";
 	
 	public final static String TASK_INFO = "progress.info";
+	
+	public final static String TASK_ENDS = "progress.ends"; //optional
 	
 	private PropertyChangeSupport support;
 	
@@ -52,6 +55,10 @@ public class ProgressSupport {
 	
 	public void fireTaskInfo(String info){
 		this.support.firePropertyChange(TASK_INFO, null, info);
+	}
+	
+	public void fireTaskEnds(){
+		this.support.firePropertyChange(TASK_ENDS, 0, 1);
 	}
 	
 	public void firePropertyChange(PropertyChangeEvent event){

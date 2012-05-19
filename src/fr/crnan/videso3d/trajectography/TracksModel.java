@@ -450,7 +450,7 @@ public class TracksModel extends AbstractTableModel {
 	 */
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		if(columnIndex == 5){
+		if(columnIndex == 6){
 			setVisible((Boolean)aValue, (VidesoTrack)tracks.get(rowIndex));
 			fireTableDataChanged();
 		}

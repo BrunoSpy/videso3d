@@ -65,7 +65,7 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 		
 	private Boolean tracksHighlightable = true;
 	
-	private Boolean tracksHideable = false;
+	private Boolean tracksHideable = true;
 	
 	private Boolean tracksColorFiltrable = true;
 	

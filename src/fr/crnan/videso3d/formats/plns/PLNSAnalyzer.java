@@ -15,6 +15,9 @@
  */
 package fr.crnan.videso3d.formats.plns;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -24,41 +27,102 @@ import java.util.Map.Entry;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseNotFoundException;
+import fr.crnan.videso3d.ProgressSupport;
+import fr.crnan.videso3d.ihm.ProgressMonitor;
+import fr.crnan.videso3d.ihm.components.VFileChooser;
+import fr.crnan.videso3d.stip.PointNotFoundException;
+import fr.crnan.videso3d.trajectography.PLNSTracksModel;
+import gov.nasa.worldwind.util.Logging;
 
 /**
  * Analyse d'une base PLNS.<br />
  * Nécessite une connexion à une base STPV.
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.2.0
  */
-public class PLNSAnalyzer {
+public class PLNSAnalyzer extends ProgressSupport{
 
 	private Connection base;
 	
+
 	/**
 	 * 
-	 * @param path Chemin vers la base de données PLNS
-	 * @throws SQLException 
+	 * @param path Chemin vers la base de données
 	 */
-	public PLNSAnalyzer(String path){
-
+	public void setPath(String path){
 		try {
 			//Chargement du driver
 			Class.forName("org.sqlite.JDBC");
 			//Connexion
 			base = DriverManager.getConnection("jdbc:sqlite:"+path);
+			//Verify if it is a SQlite file
+			base.createStatement().executeQuery("select * from plns");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			if(JOptionPane.showOptionDialog(null, "<html>La base de données ne semble pas être correcte.<br />" +
+					"Si vous avez sélectionné un fichier PLNS brut, il faut d'abord extraire les données.<br />" +
+					"Souhaitez vous tenter d'extraire les données du fichier sélectionné ?", 
+					"Problème lors de l'import des données",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, "") == JOptionPane.OK_OPTION) {
+				
+				VFileChooser fileChooser = new VFileChooser();
+				fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fileChooser.setMultiSelectionEnabled(false);
+				fileChooser.setDialogTitle("Sélectionner le fichier de base de données");
+				fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+				final File database;
+				if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
+					database = fileChooser.getSelectedFile();
+					try{
+						
+						new PLNSReader(new File[]{new File(path)},
+								database, 
+								null,
+								new PropertyChangeListener() {
+
+
+							@Override
+							public void propertyChange(PropertyChangeEvent evt) {
+								if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
+									fireTaskStarts((Integer) evt.getNewValue());
+								} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
+									fireTaskProgress((Integer) evt.getNewValue());
+								} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
+									fireTaskInfo((String) evt.getNewValue());
+								} else if(evt.getPropertyName().equals(ProgressSupport.TASK_ENDS)){
+									try {
+										base = DriverManager.getConnection("jdbc:sqlite:"+database.getAbsolutePath());
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}
+									fireTaskEnds();
+								}
+
+							}
+						});
+						
+					} catch(PointNotFoundException e1){
+						Logging.logger().warning("Point non trouvé : "+e1.getName());
+						JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Impossible de trouver certains points du fichier ("+e1.getName()+").<br /><br />" +
+								"<b>Solution :</b><br />Vérifiez qu'une base de données STIP existe et qu'elle est cohérente avec le fichier de trajectoires.</html>",
+								"Erreur", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			} else {
+				base = null;
+			}
 		}
-
 	}
-
+	
 	/**
 	 * @return
 	 * @throws DatabaseNotFoundException 
@@ -127,4 +191,7 @@ public class PLNSAnalyzer {
 		return dataset;
 	}
 	
+	public Connection getConnection(){
+		return base;
+	}
 }
