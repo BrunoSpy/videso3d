@@ -37,7 +37,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.ToolTipManager;
 
@@ -578,10 +577,9 @@ public class MainWindow extends JFrame {
 			if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
 				database = fileChooser.getSelectedFile();
 				try{
-					PLNSReader reader = new PLNSReader(plnsFile.toArray(new File[]{}), database, new PLNSTracksModel(), readerListener);
-					System.out.println("main");
-					PLNSTracksLayer layer = new PLNSTracksLayer(reader.getModel());
+					PLNSTracksLayer layer = new PLNSTracksLayer(new PLNSTracksModel());
 					this.wwd.toggleLayer(layer, true);
+					PLNSReader reader = new PLNSReader(plnsFile.toArray(new File[]{}), database, (PLNSTracksModel)layer.getModel(), readerListener);
 					this.addTrajectoriesView(reader, layer);
 				} catch(PointNotFoundException e){
 					Logging.logger().warning("Point non trouvé : "+e.getName());
@@ -626,6 +624,7 @@ public class MainWindow extends JFrame {
 						"Erreur", JOptionPane.ERROR_MESSAGE);
 			}
 		}
+		current = -1;
 		progressMonitorT.close();
 		if(opasFile.size() == 0 && geoFile.size() == 0 && lplnFile.size() == 0 
 				&& fplFile.size()==0 && plnsFile.size() == 0 && sqlitePlnsFile.size() == 0){

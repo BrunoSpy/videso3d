@@ -46,6 +46,7 @@ import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.AbstractShape;
 import gov.nasa.worldwind.render.Annotation;
 import gov.nasa.worldwind.render.GlobeAnnotation;
+import gov.nasa.worldwind.render.Path;
 import gov.nasa.worldwind.render.PointPlacemark;
 import gov.nasa.worldwind.render.SurfaceImage;
 import gov.nasa.worldwind.render.SurfaceShape;
@@ -245,34 +246,39 @@ public class AirspaceListener implements SelectListener {
 						}
 						
 					}
-					
+
 				}
-				final VidesoController c = DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType());
-				if(o instanceof DatabaseVidesoObject && 
-						!(c instanceof STRController || c instanceof StpvController || (c instanceof SkyViewController && o instanceof Route))){
-					final int type = ((DatabaseVidesoObject) o).getType();
-					final String name = ((DatabaseVidesoObject) o).getName();
-					final boolean locationsVisible = c.areLocationsVisible(type, name);
-					JMenuItem locationsItem = new JMenuItem((locationsVisible ? "Cacher" : "Afficher") +" les coordonnées");
-					menu.add(locationsItem);
-					locationsItem.addActionListener(new ActionListener() {
+				if(o instanceof DatabaseVidesoObject){
+					final VidesoController c = DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType());
+					if(!(c instanceof STRController || c instanceof StpvController || (c instanceof SkyViewController && o instanceof Route))){
+						final int type = ((DatabaseVidesoObject) o).getType();
+						final String name = ((DatabaseVidesoObject) o).getName();
+						final boolean locationsVisible = c.areLocationsVisible(type, name);
+						JMenuItem locationsItem = new JMenuItem((locationsVisible ? "Cacher" : "Afficher") +" les coordonnées");
+						menu.add(locationsItem);
+						locationsItem.addActionListener(new ActionListener() {
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								c.setLocationsVisible(type, name, !locationsVisible);
+							}
+						});
+					}
+				}
+				if(o instanceof DatabaseVidesoObject || o instanceof Path){
+					JMenuItem supprItem = new JMenuItem("Supprimer");				
+					menu.add(supprItem);
+					supprItem.addActionListener(new ActionListener() {
+
 						@Override
-						public void actionPerformed(ActionEvent arg0) {
-							c.setLocationsVisible(type, name, !locationsVisible);
+						public void actionPerformed(ActionEvent e) {
+							if(o instanceof DatabaseVidesoObject){
+								DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType()).hideObject(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
+							} else if(o instanceof Path){
+								wwd.deletePath((Path) o);
+							}
 						}
 					});
 				}
-				JMenuItem supprItem = new JMenuItem("Supprimer");				
-				menu.add(supprItem);
-				supprItem.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						if(o instanceof DatabaseVidesoObject){
-							DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType()).hideObject(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
-						}
-					}
-				});
 				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 			}
 		} else if (event.getEventAction() == SelectEvent.LEFT_DOUBLE_CLICK){ //ouverture du contexte
