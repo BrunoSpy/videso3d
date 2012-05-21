@@ -1,3 +1,26 @@
+= Version 0.11 =
+
+== 0.11.0 ==
+   
+  * IHM
+    * Amélioration du LayerManager
+    * Affichage des coordonnées en ° min sec dans la barre de statut
+    * Possibilité de choisir la tranche d'altitude à afficher pout les couvertures radio
+    * Possibilité d'afficher les coordonnées des objets
+    * Possibilité de créer des polygones en copiant les coordonnées venant du SIA
+
+  * Trajectographie
+    * Import des fichiers PLNS
+    * Sélection directe sur la vue 3D
+    * Filtrer les trajectoires avant l'import du fichier
+
+  * STPV
+    * Analyse des fichiers PLNS
+    * Prise en compte de l'imprimabilité des balises
+
+  * Stip
+    * Prise en compte de l'espace des routes
+
 = Version 0.10 =
 
 == 0.10.0 ==
