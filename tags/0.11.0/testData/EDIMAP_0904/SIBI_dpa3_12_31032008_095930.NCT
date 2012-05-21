@@ -1,0 +1,184 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "TEXTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+  (id_atc_preactif "TEXTE PREACTIVABLE")
+  (id_atc_predorm "TEXTE PREACTIVABLE")
+)
+(id_atc
+  (name "TEXTE PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "LIMITE SECTEUR 1")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 32)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(map
+  (name "SIBI")
+  (number 12)
+  (comment "")
+  (date 31 03 2008)
+  (heure 09 59 30)
+  (ref_point
+    (name "SBI1")
+    (comment "SIV POITIERS")
+    (value
+      (nautical_mile 64 -627 64 688)
+    )
+  )
+  (ref_point
+    (name "SBI2")
+    (comment "SIV POITIERS")
+    (value
+      (nautical_mile 64 5240 64 707)
+    )
+  )
+  (ref_point
+    (name "SBI3")
+    (comment "SIV POITIERS")
+    (value
+      (nautical_mile 64 5714 64 428)
+    )
+  )
+  (ref_point
+    (name "SBI4")
+    (comment "SIV POITIERS")
+    (value
+      (nautical_mile 64 4396 64 -1736)
+    )
+  )
+  (ref_point
+    (name "SBI5")
+    (comment "SIV POITIERS")
+    (value
+      (nautical_mile 64 3074 64 -1579)
+    )
+  )
+  (ref_point
+    (name "SBI6")
+    (comment "SIV POITIERS")
+    (value
+      (nautical_mile 64 3077 64 -2218)
+    )
+  )
+  (ref_point
+    (name "SBI7")
+    (comment "SIV POITIERS")
+    (value
+      (nautical_mile 64 2436 64 -2149)
+    )
+  )
+  (ref_point
+    (name "SBI8")
+    (comment "SIV POITIERS")
+    (value
+      (nautical_mile 64 -405 64 -5121)
+    )
+  )
+  (ref_point
+    (name "SBI9")
+    (comment "SIV POITIERS")
+    (value
+      (nautical_mile 64 -1018 64 -4736)
+    )
+  )
+  (ref_point
+    (name "SBI10")
+    (comment "SIV POITIERS")
+    (value
+      (nautical_mile 64 -874 64 -4455)
+    )
+  )
+  (ref_point
+    (name "SBI11")
+    (comment "SIV POITIERS")
+    (value
+      (nautical_mile 64 -2363 64 -1860)
+    )
+  )
+  (ref_point
+    (name "SBI12")
+    (comment "SIV POITIERS")
+    (value
+      (nautical_mile 64 -635 64 -1873)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 3)
+    (keyboard 3)
+    (entity
+      (name "2")
+      (id_atc "TEXTE PREACTIVABLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3543 64 318  0)
+      )
+      (text_content "SIV LFBI")
+    )
+    (entity
+      (name "3")
+      (id_atc "TEXTE PREACTIVABLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3567 64 -8  0)
+      )
+      (text_content "FL 115")
+    )
+  )
+)

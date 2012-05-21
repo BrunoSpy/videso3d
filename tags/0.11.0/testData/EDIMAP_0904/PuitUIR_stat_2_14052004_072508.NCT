@@ -1,0 +1,99 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "FOND PUITS 2")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 5)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris")
+)
+(map
+  (name "PuitUIR")
+  (number 2)
+  (comment "")
+  (date 14 05 2004)
+  (heure 07 25 08)
+  (ref_point
+    (name "PUITUPT1")
+    (comment "")
+    (value
+      (nautical_mile 64 -620 64 11533)
+    )
+  )
+  (ref_point
+    (name "PUITUPT2")
+    (comment "")
+    (value
+      (nautical_mile 64 1094 64 12591)
+    )
+  )
+  (ref_point
+    (name "PUITUPT3")
+    (comment "")
+    (value
+      (nautical_mile 64 2364 64 10905)
+    )
+  )
+  (ref_point
+    (name "PUITUPT4")
+    (comment "")
+    (value
+      (nautical_mile 64 -629 64 8712)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 1)
+    (entity
+      (name "1")
+      (id_atc "FOND PUITS 2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "PUITUPT1")
+        (point "PUITUPT2")
+        (point "PUITUPT3")
+        (point "PUITUPT4")
+      )
+      (polygone 1)
+    )
+  )
+)

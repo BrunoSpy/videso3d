@@ -1,0 +1,200 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ESPACE DELEGUE")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 32)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "FOND PUITS 2")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 5)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris")
+)
+(map
+  (name "PUITS")
+  (number 133)
+  (comment "NECTAR")
+  (date 24 10 2001)
+  (heure 12 18 53)
+  (ref_point
+    (name "MARCE2")
+    (comment "")
+    (value
+      (nautical_mile 64 -655 64 641)
+    )
+  )
+  (ref_point
+    (name "MARCE01")
+    (comment "")
+    (value
+      (nautical_mile 64 -646 64 3587)
+    )
+  )
+  (ref_point
+    (name "MARCE3")
+    (comment "")
+    (value
+      (nautical_mile 64 -1806 64 2010)
+    )
+  )
+  (ref_point
+    (name "PLN1")
+    (comment "")
+    (value
+      (nautical_mile 64 5147 64 9476)
+    )
+  )
+  (ref_point
+    (name "PLN2")
+    (comment "")
+    (value
+      (nautical_mile 64 4007 64 10932)
+    )
+  )
+  (ref_point
+    (name "PLN3")
+    (comment "")
+    (value
+      (nautical_mile 64 3151 64 10916)
+    )
+  )
+  (ref_point
+    (name "PLN4")
+    (comment "")
+    (value
+      (nautical_mile 64 2134 64 8114)
+    )
+  )
+  (ref_point
+    (name "PLN5")
+    (comment "")
+    (value
+      (nautical_mile 64 3199 64 8032)
+    )
+  )
+  (ref_point
+    (name "PLN6")
+    (comment "")
+    (value
+      (nautical_mile 64 4103 64 8159)
+    )
+  )
+  (ref_point
+    (name "ZDA13")
+    (comment "")
+    (value
+      (nautical_mile 64 4157 64 8416)
+    )
+  )
+  (ref_point
+    (name "ZDA14")
+    (comment "")
+    (value
+      (nautical_mile 64 3977 64 8611)
+    )
+  )
+  (ref_point
+    (name "ZDA15")
+    (comment "")
+    (value
+      (nautical_mile 64 4113 64 9663)
+    )
+  )
+  (ref_point
+    (name "ZDA16")
+    (comment "")
+    (value
+      (nautical_mile 64 4426 64 9616)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 1)
+    (entity
+      (name "358")
+      (id_atc "ESPACE DELEGUE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "MARCE3")
+        (point "MARCE2")
+        (point "MARCE01")
+        (point "MARCE3")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "3")
+      (id_atc "FOND PUITS 2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "PLN1")
+        (point "PLN2")
+        (point "PLN3")
+        (point "PLN4")
+        (point "PLN5")
+        (point "PLN6")
+        (point "ZDA13")
+        (point "ZDA14")
+        (point "ZDA15")
+        (point "ZDA16")
+      )
+      (polygone 1)
+    )
+  )
+)

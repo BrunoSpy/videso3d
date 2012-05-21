@@ -1,0 +1,221 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "SIV")
+  (line_width 2)
+  (line_style "SingleLineMixed")
+  (priority 28)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "SIV_PREACTIVE")
+  (id_atc_predorm "SIV_PREACTIVE")
+)
+(id_atc
+  (name "SIV_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLineMixed")
+  (priority 28)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "C24I")
+  (number 53)
+  (comment "CTL importe de VIDEOMAP")
+  (date 05 01 2004)
+  (heure 08 17 39)
+  (ref_point
+    (name "ATN")
+    (comment "")
+    (value
+      (nautical_mile 64 11232 64 -441)
+    )
+  )
+  (ref_point
+    (name "DIJ")
+    (comment "")
+    (value
+      (nautical_mile 64 13326 64 1473)
+    )
+  )
+  (ref_point
+    (name "OKRIX")
+    (comment "")
+    (value
+      (nautical_mile 64 9205 64 3922)
+    )
+  )
+  (ref_point
+    (name "BULOL")
+    (comment "")
+    (value
+      (nautical_mile 64 13615 64 -3227)
+    )
+  )
+  (ref_point
+    (name "LAULY")
+    (comment "")
+    (value
+      (nautical_mile 64 9518 64 4672)
+    )
+  )
+  (ref_point
+    (name "BRY")
+    (comment "")
+    (value
+      (nautical_mile 64 8432 64 5585)
+    )
+  )
+  (ref_point
+    (name "AMORO")
+    (comment "")
+    (value
+      (nautical_mile 64 12034 64 -1573)
+    )
+  )
+  (ref_point
+    (name "MOMIL")
+    (comment "")
+    (value
+      (nautical_mile 64 12047 64 -1395)
+    )
+  )
+  (ref_point
+    (name "BAGBI")
+    (comment "")
+    (value
+      (nautical_mile 64 12119 64 -358)
+    )
+  )
+  (submap
+    (number 1)
+    (name "C24I")
+    (submap_type 2)
+    (keyboard 2)
+    (entity
+      (name "24")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ATN")
+        (point "DIJ")
+        (point "OKRIX")
+      )
+    )
+    (entity
+      (name "25")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "BULOL")
+        (point "LAULY")
+      )
+    )
+    (entity
+      (name "5")
+      (id_atc "SIV")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 12121 64 2018)
+        (nautical_mile 64 12246 64 2316)
+      )
+      (line_width 2)
+      (line_style "SingleLineMixed")
+      (priority 28)
+      (text_font "1")
+      (fill_visibility 0)
+      (designabilite 0)
+      (foreground_color "Vert salle de bain")
+    )
+    (entity
+      (name "4")
+      (id_atc "ROUTE")
+      (shape "LineEntity")
+      (geometry
+        (point "BRY")
+        (point "LAULY")
+      )
+    )
+    (entity
+      (name "6")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "AMORO")
+        (point "MOMIL")
+        (point "BAGBI")
+      )
+    )
+  )
+)

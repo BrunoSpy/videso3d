@@ -1,0 +1,268 @@
+FORMAT : STIP       VERSION CA : 10-02-11  LIVRAISON : 26-01-11  PART : CONSTA  
+FBIDE1      AWY     LUN 0200    LUN 0200    030 195 ESISI   NETRO   SU      ****
+FBIDE2      AWY     LUN 0200    LUN 0200    030 195 BEBIX   ARSOM   SU *    ****
+FBIDE2      BISBI   CFA     SU  DEPES   CF      SU  MIRBA   SULOT   SU *        
+FBIDE2      NASEP   SULOT   SU  LMG     ARSOM   SU  LARON   ARSOM   SU *        
+FBIDE2      GUSON   ARSOM   SU                                                  
+FBIDE3      AWY     LUN 0200    LUN 0200    030 115                         ****
+FBIDE4      AWY     LUN 0200    LUN 0200    115 195                         ****
+MNL1        AWY     DIM 2200    LUN 0230    005 800 LJL     MMD     SU *    ****
+MNL1        LJL     MMD1    SU  MTZ     LOU     SU                              
+MNL2        AWY     VEN 2200    SAM 0230    005 800 LJL     MMD     SU *    ****
+MNL2        MTZ     LOU     SU  LJL     MMD1    SU                              
+TBIDE1      AWY     LUN 0200    LUN 0200    000 800                         ****
+UBIDEA      AWY     LUN 0200    LUN 0200    200 285                         ****
+UBIDEB      AWY     LUN 0200    LUN 0200    290 800                         ****
+UBIDEC      AWY     LUN 0200    LUN 0200    200 285                         ****
+UBIDE1      AWY     LUN 0200    LUN 0200    200 800 ETAMO   ROMRZ   SU      ****
+UBIDE2      AWY     LUN 0200    LUN 0200    200 800 BAMES   RODRI   SU *    ****
+UBIDE2      KOPOR   RODRI   SU  OLRAK   TBO     SU                              
+UBIDE4      AWY     LUN 0200    LUN 0200    200 800 DJL     PBOMA   SU *    ****
+UBIDE4      GALBI   PBOMA   SU  NASEP   SULOT   SU                              
+UBIDE5      AWY     LUN 0200    LUN 0200    200 800 BEBIX   ARSOM   SU *    ****
+UBIDE5      BEBIX   RS      SU  LUMAS   ADITA   SU  LUMAS   STP     SU          
+UBIDE6      AWY     LUN 0200    LUN 0200    200 800                         ****
+UL851       AWY     LUN 0000    DIM 2359    195 800 BUBLI   ASIE3   SU *    ****
+UL851       LASAT   TRA     SU  LUVAL   TRA     SU  MELKO   TRA     SU *        
+UL851       RD01H   TRA     SU                                                  
+UY473       AWY     LUN 0200    LUN 0200    200 800 BAMES   RODRI   SU *    ****
+UY473       EVX     RODRI   SU  KOPOR   RODRI   SU                              
+R124        MIL     *** 0200    *** 0200    005 195 OSKIN   RLP     SU *    ****
+R124        RLP1    MOTAL   SU                                                  
+R26         MIL     *** 0200    *** 0200    005 195 MMD     CMB     SU *    ****
+R26         MMD     LEQ     SU                                                  
+LFAA        OPI                                     DINAN   RAPOR   SU *        
+LFAA        DINAN   REMGO   SU  DPE     PGNWH   SU  DPE     PGNWR   SU *        
+LFAA        DVL     PGNWH   SU  DVL     PGNWR   SU  MOPIL   SOTUS   SU *        
+LFAA        MOPIL   XERAM   SU  VEDUS   XERAM   SU                              
+LFAP        OPI                                     RD01R   LANVI   SU          
+LFAZ        OPI                                     CAD     PO      SU          
+LFBH        OPI                                     LFBH    ABSIE   SU *        
+LFBH        LFBH    BOBRI   SU  LFBH    ROYAN   SU  LFBH    TIRAV   SU *        
+LFBH        LFBH    TUPAR   SU  LFDN    LUSON   SU  LFDN    ROYAN   SU *        
+LFBH        LUS1    RL      SU  LUS1    ROYAN   SU  ROYAN   LUSON   SU *        
+LFBH        ROYAN   RL      SU                                                  
+LFBO        OPI                                     AFRIC   01AE    SU *        
+LFBO        AGN     01AW    SU  LFBO    ADABI   SU  LFBO    DEPES   SU *        
+LFBO        LFBO    FINOT   SU  LFBO    FISTO   SU  LFBO    GAI     SU *        
+LFBO        LFBO    GALDO   SU  LFBO    GAUDE   SU  LFBO    KORAB   SU *        
+LFBO        LFBO    LACOU   SU  LFBO    LMB     SU  LFBO    MEDAP   SU *        
+LFBO        LFBO    OVDIL   SU  LFBO    POI     SU  LFBO    TBO     SU *        
+LFBO        LFBO    TUDRA   SU  LMB     01AW    SU  NETRO   01AE    SU *        
+LFBO        ORBIL   01AE    SU                                                  
+LFBP        OPI                                     LFBP    RILON   SU          
+LFGA        OPI                                     LSB     AKITO   SU *        
+LFGA        LSB     GILIR   SU                                                  
+LFHA        OPI                                     LFLC    GILUR   SU *        
+LFHA        LFLC    GUSON   SU  LFLC    LARON   SU  LFLC    LMG     SU *        
+LFHA        LFLC    MIRBA   SU  LFLC    NASEP   SU  LFLC    SAU     SU          
+LFKB        OPI                                     LFKB    AKUTI   SU *        
+LFKB        LFKB    MEGER   SU  LFKB    SODRI   SU  LIGUR   BTA     SU *        
+LFKB        NIRDO   BTA     SU  NORKA   BTA     SU  NORKA   BTA1    SU          
+LFKF        OPI                                     AJO     FIGA    SU *        
+LFKF        LFKF    AJO     SU  LFKF    BTA1    SU  LFKF    CORSI   SU          
+LFKJ        OPI                                     IS      LKJ     SU *        
+LFKJ        LFKJ    BTA     SU  LFKJ    LONSU   SU  LFKJ    RUBAS   SU *        
+LFKJ        LFKJ    TORTU   SU  LFKJ    VAREK   SU  LFKJ    VICCO   SU *        
+LFKJ        NEGAT   LKJ     SU  POULP   LFKJ    SU                              
+LFKO        OPI                                     LFMD    AJO     SU *        
+LFKO        LFMD    ALG     SU  LFMD    IS      SU  LFMD    MALAV   SU *        
+LFKO        LFMN    AJO     SU  LFMN    ALG     SU  LFMN    IS      SU *        
+LFKO        LFMN    MALAV   SU                                                  
+LFKT        OPI                                     LFMD    AJO     SU *        
+LFKT        LFMD    ALG     SU  LFMD    BALEN   SU  LFMD    BUKID   SU *        
+LFKT        LFMD    MALAV   SU  LFMN    AJO     SU  LFMN    ALG     SU *        
+LFKT        LFMN    BALEN   SU  LFMN    BUKID   SU  LFMN    IS      SU *        
+LFKT        LFMN    MALAV   SU                                                  
+LFLL        OPI                                     ALURA   BEPER   SU *        
+LFLL        ALURA   KURIR   DS  ALURA   MURRO   DS  ALURA   VE      SU *        
+LFLL        ARBON   LLL     SU  ARGIS   KURIR   SU  ARGIS   VE      SU *        
+LFLL        GOMET   LLL     SU  KURIR   ALURA   DS  KURIR   GONIX   SU *        
+LFLL        KURIR   LTP     SU  LFLL    BELEP   SU  LFLL    BELUS   SU *        
+LFLL        LFLL    DANB0   SU  LFLL    EB      SU  LFLL    MURRO   SU *        
+LFLL        LFLL    REPSI   SU  LFLL    RISOR   SU  LFLL    ROMAM   SU *        
+LFLL        LFLL    VIRIE   SU  LFLL    WS      SU  LFLU    LTP     SU *        
+LFLL        LFLY    BELEP   SU  LFLY    BELUS   SU  LFLY    BOBSI   SU *        
+LFLL        LFLY    BUSIL   SU  LFLY    DANBO   SU  LFLY    EB      SU *        
+LFLL        LFLY    GONIX   SU  LFLY    KINES   SU  LFLY    MURRO   SU *        
+LFLL        LFLY    REPSI   SU  LFLY    RISOR   SU  LTP     LLL     SU *        
+LFLL        MURRO   ALURA   DS  RUNOM   LLL     SU  TALAR   LLL     SU          
+LFLN        OPI                                                                 
+LFMA        OPI                                                                 
+LFML        OPI                                     ADC     ETREK   SU *        
+LFML        ADC     LERGA   DS  ADC     MTL     DS  FJR     MJ      SU *        
+LFML        KURIR   ADC     SU  KURIR   ALM     SU  KURIR   MJ      SU *        
+LFML        LERGA   ADC     DS  LERGA   ALM     SU  LERGA   MJ      SU *        
+LFML        LFMA    ETREK   SU  LFMA    LERGA   SU  LFMA    MTL     SU *        
+LFML        LFMI    MTL     SU  LFML    AJO     SU  LFML    BALEN   SU *        
+LFML        LFML    CM      SU  LFML    ETREK   SU  LFML    IS      SU *        
+LFML        LFML    LERGA   SU  LFML    MAMES   SU  LFML    MTL     SU *        
+LFML        LFML    PELOS   SU  LFMV    MJ      SU  LFMV    MTG     SU *        
+LFML        MTL     ADC     DS  MTL     ALM     SU  MTL     MJ      SU *        
+LFML        OB      CM      SU  OB      MJ      SU  RHONE   ADC     SU *        
+LFML        SOSUR   ADC     SU  SOSUR   MJ      SU  STP     ADC     SU *        
+LFML        TINOT   ADC     SU  TINOT   MJ      SU                              
+LFMN        OPI                                     LFMN    BODRU   SU *        
+LFMN        LFMN    IRMAR   SU  LFMN    OKTET   SU  LFMN    PERUS   SU *        
+LFMN        MUS     AZR     SU  NERAS   AZR     SU                              
+LFMP        OPI                                     AFRIC   GIR     SU *        
+LFMP        AFRIC   KANIG   DS  BRUSC   GIR     SU  BRUSC   KANIG   DS *        
+LFMP        FJR     GIR     SU  FJR     KANIG   DS  FJR     KONON   SU *        
+LFMP        KANIG   AFRIC   DS  KANIG   BRUSC   DS  KANIG   FJR     DS *        
+LFMP        KANIG   MORIL   DS  KANIG   ORBIL   SU  KONON   ZR      DS *        
+LFMP        LFMT    GIR     SU  LFMT    KANIG   SU  LFMU    GIR     SU *        
+LFMP        LFMU    KANIG   SU  MEIZE   KONON   SU  MORIL   GIR     SU *        
+LFMP        MORIL   KANIG   DS  SUBIL   GIR     SU  ZR      KONON   DS          
+LFNG        OPI                                     LFMA    VARES   SU *        
+LFNG        LFML    ESPIG   SU  LFML    VARES   SU  LFMY    ESPIG   SU *        
+LFNG        LFMY    VARES   SU                                                  
+LFNR        OPI                                     LFML    PELOS   SU          
+LFNW        OPI                                     LFML    AJO     SU *        
+LFNW        LFML    IS      SU                                                  
+LFPG        OPI                                     BALOD   PBSW    SU *        
+LFPG        BVP     ADADA   SU  BVP     DORDI   SU  BVP     EDOXA   SU *        
+LFPG        BVP     ERIXU   SU  BVP     EVX     SU  BVP     EVX1    SU *        
+LFPG        BVP     LALUX   SU  BVP     LATRA   SU  BVP     LGL     SU *        
+LFPG        BVP     LGL1    SU  BVP     MONOT   SU  BVP     MV      SU *        
+LFPG        BVP     NAPIX   SU  BVP     ODEBU   SU  BVP     OKASI   SU *        
+LFPG        BVP     PBNR    SU  BVP     PC      SU  BVP     PEKIM   SU *        
+LFPG        BVP     PGNR    SU  BVP     PILUL   SU  BVP     PT      SU *        
+LFPG        BVP     PTV     SU  BVP     RD01H   SU  BVP     RD01R   SU *        
+LFPG        BVP     TD06R   SU  BVP     TD07R   SU  BVP     ZOA     SU *        
+LFPG        CEN     PBNWH   SU  CEN     PBNWR   SU  CEN     PC      SU *        
+LFPG        CEN     PGNWH   SU  CEN     PGNWR   SU  CEN     PT      SU *        
+LFPG        DINAN   RAPOR   SU  DINAN   REMGO   SU  DJL     PBOMA   SU *        
+LFPG        DPE     PBNWH   SU  DPE     PBNWR   SU  DPE     PGNWH   SU *        
+LFPG        DPE     PGNWR   SU  DVL     PBNWH   SU  DVL     PBNWR   SU *        
+LFPG        DVL     PC      SU  DVL     PGNWH   SU  DVL     PGNWR   SU *        
+LFPG        DVL     PT      SU  FRWW    PBNWH   SU  FRWW    PBNWR   SU *        
+LFPG        FRWW    PGNWH   SU  GALBI   PBOMA   SU  INKAK   PGSE    SU *        
+LFPG        LGL     PBNWH   SU  LGL     PBNWR   SU  LGL     PC      SU *        
+LFPG        LGL     PGNWH   SU  LGL     PGNWR   SU  LGL     PT      SU *        
+LFPG        LPB     ADADA   SU  LPB     ADG     SU  LPB     ATREX   SU *        
+LFPG        LPB     BVS     SU  LPB     DORDI   SU  LPB     EDOXA   SU *        
+LFPG        LPB     ERIXU   SU  LPB     EVX     SU  LPB     EVX1    SU *        
+LFPG        LPB     LALUX   SU  LPB     LATRA   SU  LPB     LGL     SU *        
+LFPG        LPB     LGL1    SU  LPB     MONOT   SU  LPB     MTD     SU *        
+LFPG        LPB     NAPIX   SU  LPB     NURMO   SU  LPB     ODEBU   SU *        
+LFPG        LPB     OKASI   SU  LPB     OPALE   SU  LPB     PC      SU *        
+LFPG        LPB     PEKIM   SU  LPB     PILUL   SU  LPB     PO      SU *        
+LFPG        LPB     PT      SU  LPB     PTV     SU  LPB     PTV1    SU *        
+LFPG        LPB     PV      SU  LPB     RD01H   SU  LPB     RD01R   SU *        
+LFPG        LPB     TD06R   SU  LPB     TD07R   SU  LPC     ADADA   SU *        
+LFPG        LPC     ATREX   SU  LPC     DORDI   SU  LPC     EDOXA   SU *        
+LFPG        LPC     ERIXU   SU  LPC     EVX     SU  LPC     EVX1    SU *        
+LFPG        LPC     LALUX   SU  LPC     LATRA   SU  LPC     LGL     SU *        
+LFPG        LPC     LGL1    SU  LPC     MONOT   SU  LPC     MTD     SU *        
+LFPG        LPC     NAPIX   SU  LPC     NURMO   SU  LPC     ODEBU   SU *        
+LFPG        LPC     OKASI   SU  LPC     OPALE   SU  LPC     PEKIM   SU *        
+LFPG        LPC     PILUL   SU  LPC     PT      SU  LPC     PTV     SU *        
+LFPG        LPC     PTV1    SU  LPC     RD01H   SU  LPC     RD01R   SU *        
+LFPG        LPC     TD06R   SU  LPC     TD07R   SU  LPC     ZRA     SU *        
+LFPG        LPC     ZRD     SU  LPG     ADADA   SU  LPG     ADG     SU *        
+LFPG        LPG     ATREX   SU  LPG     BVS     SU  LPG     DORDI   SU *        
+LFPG        LPG     EDOXA   SU  LPG     ERIXU   SU  LPG     EVX     SU *        
+LFPG        LPG     EVX1    SU  LPG     LALUX   SU  LPG     LATRA   SU *        
+LFPG        LPG     LGL     SU  LPG     LGL1    SU  LPG     MONOT   SU *        
+LFPG        LPG     MTD     SU  LPG     NAPIX   SU  LPG     NURMO   SU *        
+LFPG        LPG     ODEBU   SU  LPG     OKASI   SU  LPG     OPALE   SU *        
+LFPG        LPG     PC      SU  LPG     PEKIM   SU  LPG     PILUL   SU *        
+LFPG        LPG     PO      SU  LPG     PT      SU  LPG     PTV     SU *        
+LFPG        LPG     PV      SU  LPG     RD01H   SU  LPG     RD01R   SU *        
+LFPG        LPG     TD06R   SU  LPG     TD07R   SU  LPM     ADG     SU *        
+LFPG        LPM     PC      SU  LPM     PT      SU  LPO     ADG     SU *        
+LFPG        LPO     ATREX   SU  LPO     NURMO   SU  LPO     OPALE   SU *        
+LFPG        LPO     PC      SU  LPO     PT      SU  LPT     ADADA   SU *        
+LFPG        LPT     ADG     SU  LPT     ATREX   SU  LPT     BVS     SU *        
+LFPG        LPT     DORDI   SU  LPT     EDOXA   SU  LPT     ERIXU   SU *        
+LFPG        LPT     EVX     SU  LPT     EVX1    SU  LPT     LALUX   SU *        
+LFPG        LPT     LATRA   SU  LPT     LGL     SU  LPT     LGL1    SU *        
+LFPG        LPT     MONOT   SU  LPT     MTD     SU  LPT     NAPIX   SU *        
+LFPG        LPT     ODEBU   SU  LPT     OKASI   SU  LPT     OPALE   SU *        
+LFPG        LPT     PEKIM   SU  LPT     PILUL   SU  LPT     PTV     SU *        
+LFPG        LPT     PTV1    SU  LPT     RD01H   SU  LPT     RD01R   SU *        
+LFPG        LPT     TD06R   SU  LPT     TD07R   SU  LPV     ADG     SU *        
+LFPG        LPV     ATREX   SU  LPV     EVX1    SU  LPV     LGL     SU *        
+LFPG        LPV     NURMO   SU  LPV     OPALE   SU  LPV     PBNR    SU *        
+LFPG        LPV     PC      SU  LPV     PGNR    SU  LPV     PT      SU *        
+LFPG        MERUE   PT      SU  MOPIL   SOTUS   SU  MOPIL   XERAM   SU *        
+LFPG        OMAKO   PBOMA   SU  PTNWH   PC      SU  PTNWH   PT      SU *        
+LFPG        PTNWR   PC      SU  PTNWR   PT      SU  SOLBA   PO      SU *        
+LFPG        SOLBA   PV      SU  VEDUS   XERAM   SU  VELER   ADG     SU *        
+LFPG        VELER   PC      SU  VELER   PT      SU                              
+LFPO        OPI                                     BALOD   PBSW    SU *        
+LFPO        BVP     DORDI   SU  BVP     ERIXU   SU  BVP     LATRA   SU *        
+LFPO        BVP     MONOT   SU  BVP     MV      SU  BVP     OKASI   SU *        
+LFPO        BVP     PILUL   SU  BVP     PTV     SU  BVP     TD06R   SU *        
+LFPO        BVP     TD07R   SU  BVP     ZOA     SU  CAD     PO      SU *        
+LFPO        DJL     PBOMA   SU  GALBI   PBOMA   SU  LPB     DORDI   SU *        
+LFPO        LPB     ERIXU   SU  LPB     LATRA   SU  LPB     LGL1    SU *        
+LFPO        LPB     MONOT   SU  LPB     OKASI   SU  LPB     PILUL   SU *        
+LFPO        LPB     PTV     SU  LPB     PTV1    SU  LPB     TD06R   SU *        
+LFPO        LPB     TD07R   SU  LPC     DORDI   SU  LPC     ERIXU   SU *        
+LFPO        LPC     LATRA   SU  LPC     MONOT   SU  LPC     OKASI   SU *        
+LFPO        LPC     PILUL   SU  LPC     PTV     SU  LPC     PTV1    SU *        
+LFPO        LPC     TD06R   SU  LPC     TD07R   SU  LPG     DORDI   SU *        
+LFPO        LPG     ERIXU   SU  LPG     LATRA   SU  LPG     LGL1    SU *        
+LFPO        LPG     MONOT   SU  LPG     OKASI   SU  LPG     PILUL   SU *        
+LFPO        LPG     PTV     SU  LPG     TD06R   SU  LPG     TD07R   SU *        
+LFPO        LPO     ADADA   SU  LPO     ADG     SU  LPO     AGOPA   SU *        
+LFPO        LPO     ATREX   SU  LPO     AVR1    SU  LPO     BATAG   SU *        
+LFPO        LPO     BVS     SU  LPO     DORDI   SU  LPO     EDOXA   SU *        
+LFPO        LPO     ERIXU   SU  LPO     EVX1    SU  LPO     LALUX   SU *        
+LFPO        LPO     LATRA   SU  LPO     LGL     SU  LPO     MONOT   SU *        
+LFPO        LPO     MTD     SU  LPO     NAPIX   SU  LPO     NURMO   SU *        
+LFPO        LPO     ODEBU   SU  LPO     OKASI   SU  LPO     OPALE   SU *        
+LFPO        LPO     PBNR    SU  LPO     PC      SU  LPO     PEKIM   SU *        
+LFPO        LPO     PGNR    SU  LPO     PILUL   SU  LPO     PTV     SU *        
+LFPO        LPO     PTV1    SU  LPO     TD06R   SU  LPO     TD07R   SU *        
+LFPO        LPT     DORDI   SU  LPT     ERIXU   SU  LPT     LATRA   SU *        
+LFPO        LPT     LGL1    SU  LPT     MONOT   SU  LPT     OKASI   SU *        
+LFPO        LPT     PILUL   SU  LPT     PTV     SU  LPT     PTV1    SU *        
+LFPO        LPT     TD06R   SU  LPT     TD07R   SU  LPV     ADADA   SU *        
+LFPO        LPV     ADG     SU  LPV     AGOPA   SU  LPV     ATREX   SU *        
+LFPO        LPV     BATAG   SU  LPV     BVS     SU  LPV     DORDI   SU *        
+LFPO        LPV     EDOXA   SU  LPV     ERIXU   SU  LPV     EVX1    SU *        
+LFPO        LPV     LALUX   SU  LPV     LATRA   SU  LPV     LGL     SU *        
+LFPO        LPV     MONOT   SU  LPV     MTD     SU  LPV     NAPIX   SU *        
+LFPO        LPV     NURMO   SU  LPV     ODEBU   SU  LPV     OKASI   SU *        
+LFPO        LPV     OPALE   SU  LPV     PBNR    SU  LPV     PC      SU *        
+LFPO        LPV     PEKIM   SU  LPV     PGNR    SU  LPV     PILUL   SU *        
+LFPO        LPV     PT      SU  LPV     PTV     SU  LPV     PTV1    SU *        
+LFPO        LPV     TD06R   SU  LPV     TD07R   SU  OMAKO   PBOMA   SU *        
+LFPO        SOLBA   PO      SU  SOLBA   PV      SU                              
+LFRG        OPI                                     BUSUK   CNE     SU *        
+LFRG        CEN     LFOH    DS  CEN     LFRG    DS  ELBOX   CNE     SU *        
+LFRG        INGOR   LFRG    SU  LFOH    CEN     DS  LFOH    NEVIL   SU *        
+LFRG        LFRG    CEN     DS  LFRG    NEVIL   SU  LFRK    DPE     SU *        
+LFRG        LFRK    DVL     SU  LFRK    LGL     SU  LFRK    LISEU   SU *        
+LFRG        LGL     CNE     SU  LISEU   CNE     SU  NEVIL   CNE     SU *        
+LFRG        TANCA   CNE     SU                                                  
+LFRS        OPI                                     LAROK   OSOL    SU *        
+LFRS        LFRS    ANG     SU  LFRS    BALNI   SU  LFRS    BOBRI   SU *        
+LFRS        LFRS    ERBIN   SU  LFRS    NORMI   SU  LFRS    RIMON   SU *        
+LFRS        NEDAN   OSOL    SU  NITEM   OSOL    SU  NORMI   OSOL    SU          
+LFSB        OPI                                     LSB     BASUD   SU *        
+LFSB        LSB     ELBEG   SU  LSB     GILIR   SU  LSB     HOC     SU          
+LFSH        OPI                                                                 
+LFSR        OPI                                     REM     LFSR    SU          
+LFST        OPI                                     EDSB    STR     SU *        
+LFST        EDTL    OBORN   SU  EDTL    STR     SU  LST     EPL     SU *        
+LFST        LST     GTQ     SU  LST     LUPEN   SU  LST     MIRGU   SU *        
+LFST        LST     RESPO   SU                                                  
+LFTF        OPI                                     LERM    MAMES   SU *        
+LFTF        LERM    NILDU   SU  LERM    PIVUS   SU  RESBO   MAMES   SU *        
+LFTF        RESBO   NILDU   SU  RESBO   PIVUS   SU                              
+LFTR        OPI                                                                 
+LFTW        OPI                                     DA      LFTW    DS *        
+LFTW        ESERA   LFMI    SU  FJR     CM      SU  FJR     LFMI    DS *        
+LFTW        FJR     MOLEN   DS  LFMI    FJR     DS  LFMI    LUMID   DS *        
+LFTW        LFMI    MTL     SU  LFMT    CM      SU  LFMT    MTL     SU *        
+LFTW        LFMV    FJR     SU  LFTW    CM      SU  LFTW    DA      DS *        
+LFTW        LFTW    MEN     DS  LFTW    MOLEN   DS  LUMID   LFMI    DS *        
+LFTW        MEN     LFTW    DS  MOLEN   FJR     DS  MOLEN   LFMI    SU *        
+LFTW        MOLEN   LFTW    DS  RHONE   LFTW    SU                              
+LNMC        OPI                                     LFMN    BALEN   SU          
+LSGG        OPI                                     BELUS   CBY     SU *        
+LSGG        LGG     DJL     SU  LGG     IBABA   SU  LSGG    BALSI   SU          
+

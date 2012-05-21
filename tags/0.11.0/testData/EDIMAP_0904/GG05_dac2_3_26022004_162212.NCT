@@ -1,0 +1,111 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(map
+  (name "GG05")
+  (number 3)
+  (comment "")
+  (date 26 02 2004)
+  (heure 16 22 12)
+  (ref_point
+    (name "IBABA")
+    (comment "")
+    (value
+      (nautical_mile 64 14274 64 20)
+    )
+  )
+  (ref_point
+    (name "SIROD")
+    (comment "")
+    (value
+      (nautical_mile 64 15892 64 -441)
+    )
+  )
+  (ref_point
+    (name "DIJ")
+    (comment "")
+    (value
+      (nautical_mile 64 13326 64 1473)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 2)
+    (keyboard 2)
+    (entity
+      (name "1")
+      (id_atc "ROUTE")
+      (shape "LineEntity")
+      (geometry
+        (point "IBABA")
+        (point "SIROD")
+      )
+    )
+    (entity
+      (name "2")
+      (id_atc "ROUTE")
+      (shape "LineEntity")
+      (geometry
+        (point "SIROD")
+        (point "DIJ")
+      )
+    )
+  )
+)

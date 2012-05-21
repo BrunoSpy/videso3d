@@ -1,0 +1,183 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+)
+(id_atc
+  (name "TEXTE_ZONE_MILITAIRE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "TEXTE_ZONE_MILITAIRE_PREACTIVABLE")
+  (id_atc_predorm "TEXTE_ZONE_MILITAIRE_PREACTIVABLE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "TEXTE_ZONE_MILITAIRE_PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "SCAM")
+  (number 4)
+  (comment "")
+  (date 18 02 2002)
+  (heure 12 35 51)
+  (ref_point
+    (name "SCAM1")
+    (comment "")
+    (value
+      (nautical_mile 64 6551 64 13516)
+    )
+  )
+  (ref_point
+    (name "SCAM2")
+    (comment "")
+    (value
+      (nautical_mile 64 6944 64 13212)
+    )
+  )
+  (ref_point
+    (name "SCAM3")
+    (comment "")
+    (value
+      (nautical_mile 64 7064 64 13224)
+    )
+  )
+  (ref_point
+    (name "SCAM4")
+    (comment "")
+    (value
+      (nautical_mile 64 7320 64 12986)
+    )
+  )
+  (ref_point
+    (name "SCAM5")
+    (comment "")
+    (value
+      (nautical_mile 64 7102 64 12992)
+    )
+  )
+  (ref_point
+    (name "SCAM6")
+    (comment "")
+    (value
+      (nautical_mile 64 7026 64 12920)
+    )
+  )
+  (ref_point
+    (name "SCAM7")
+    (comment "")
+    (value
+      (nautical_mile 64 6950 64 12819)
+    )
+  )
+  (ref_point
+    (name "SCAM8")
+    (comment "")
+    (value
+      (nautical_mile 64 6890 64 12868)
+    )
+  )
+  (ref_point
+    (name "SCAM9")
+    (comment "")
+    (value
+      (nautical_mile 64 6304 64 12985)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 2)
+    (keyboard 3)
+    (entity
+      (name "1")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SCAM1")
+        (point "SCAM2")
+        (point "SCAM3")
+        (point "SCAM4")
+        (point "SCAM5")
+        (point "SCAM6")
+        (point "SCAM7")
+        (point "SCAM8")
+        (point "SCAM9")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "2")
+      (id_atc "TEXTE_ZONE_MILITAIRE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6604 64 13144)
+      )
+      (text_content "085/115")
+    )
+  )
+)

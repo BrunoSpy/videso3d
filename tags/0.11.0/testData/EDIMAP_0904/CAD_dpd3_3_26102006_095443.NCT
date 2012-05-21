@@ -1,0 +1,234 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "FOND PUITS 2")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 5)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris")
+)
+(map
+  (name "CAD")
+  (number 3)
+  (comment "")
+  (date 26 10 2006)
+  (heure 09 54 43)
+  (ref_point
+    (name "CDN1")
+    (comment "")
+    (value
+      (nautical_mile 64 3573 64 4100)
+    )
+  )
+  (ref_point
+    (name "CDN2")
+    (comment "")
+    (value
+      (nautical_mile 64 3622 64 4189)
+    )
+  )
+  (ref_point
+    (name "CDN3")
+    (comment "")
+    (value
+      (nautical_mile 64 3701 64 4252)
+    )
+  )
+  (ref_point
+    (name "CDN4")
+    (comment "")
+    (value
+      (nautical_mile 64 3816 64 4282)
+    )
+  )
+  (ref_point
+    (name "CDN5")
+    (comment "")
+    (value
+      (nautical_mile 64 3898 64 4272)
+    )
+  )
+  (ref_point
+    (name "CDN6")
+    (comment "")
+    (value
+      (nautical_mile 64 3992 64 4224)
+    )
+  )
+  (ref_point
+    (name "CDN7")
+    (comment "")
+    (value
+      (nautical_mile 64 4057 64 4146)
+    )
+  )
+  (ref_point
+    (name "CDN8")
+    (comment "")
+    (value
+      (nautical_mile 64 4088 64 4046)
+    )
+  )
+  (ref_point
+    (name "CDN9")
+    (comment "")
+    (value
+      (nautical_mile 64 4077 64 3937)
+    )
+  )
+  (ref_point
+    (name "CDN10")
+    (comment "")
+    (value
+      (nautical_mile 64 3895 64 3384)
+    )
+  )
+  (ref_point
+    (name "CDN11")
+    (comment "")
+    (value
+      (nautical_mile 64 3846 64 3296)
+    )
+  )
+  (ref_point
+    (name "CDN12")
+    (comment "")
+    (value
+      (nautical_mile 64 3747 64 3223)
+    )
+  )
+  (ref_point
+    (name "CDN13")
+    (comment "")
+    (value
+      (nautical_mile 64 3639 64 3203)
+    )
+  )
+  (ref_point
+    (name "CDN14")
+    (comment "")
+    (value
+      (nautical_mile 64 3544 64 3221)
+    )
+  )
+  (ref_point
+    (name "CDN15")
+    (comment "")
+    (value
+      (nautical_mile 64 3477 64 3261)
+    )
+  )
+  (ref_point
+    (name "CDN16")
+    (comment "")
+    (value
+      (nautical_mile 64 3419 64 3327)
+    )
+  )
+  (ref_point
+    (name "CDN17")
+    (comment "")
+    (value
+      (nautical_mile 64 3382 64 3426)
+    )
+  )
+  (ref_point
+    (name "CDN18")
+    (comment "")
+    (value
+      (nautical_mile 64 3392 64 3547)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 4)
+    (keyboard 3)
+    (entity
+      (name "1")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CDN1")
+        (point "CDN2")
+        (point "CDN3")
+        (point "CDN4")
+        (point "CDN5")
+        (point "CDN6")
+        (point "CDN7")
+        (point "CDN8")
+        (point "CDN9")
+        (point "CDN10")
+        (point "CDN11")
+        (point "CDN12")
+        (point "CDN13")
+        (point "CDN14")
+        (point "CDN15")
+        (point "CDN16")
+        (point "CDN17")
+        (point "CDN18")
+      )
+      (polygone 1)
+    )
+  )
+)

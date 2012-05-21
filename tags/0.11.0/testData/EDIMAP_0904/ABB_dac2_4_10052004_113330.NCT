@@ -1,0 +1,260 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "FOND PUITS 2")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 5)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris")
+)
+(map
+  (name "ABB")
+  (number 4)
+  (comment "")
+  (date 10 05 2004)
+  (heure 11 33 30)
+  (ref_point
+    (name "ABB")
+    (comment "")
+    (value
+      (nautical_mile 64 4586 64 12106)
+    )
+  )
+  (ref_point
+    (name "ABB2")
+    (comment "")
+    (value
+      (nautical_mile 64 4986 64 11573)
+    )
+  )
+  (ref_point
+    (name "ABB3")
+    (comment "")
+    (value
+      (nautical_mile 64 5045 64 11448)
+    )
+  )
+  (ref_point
+    (name "ABB4")
+    (comment "")
+    (value
+      (nautical_mile 64 5054 64 11334)
+    )
+  )
+  (ref_point
+    (name "ABB5")
+    (comment "")
+    (value
+      (nautical_mile 64 5024 64 11223)
+    )
+  )
+  (ref_point
+    (name "ABB6")
+    (comment "")
+    (value
+      (nautical_mile 64 4956 64 11124)
+    )
+  )
+  (ref_point
+    (name "ABB7")
+    (comment "")
+    (value
+      (nautical_mile 64 4853 64 11052)
+    )
+  )
+  (ref_point
+    (name "ABB8")
+    (comment "")
+    (value
+      (nautical_mile 64 4712 64 11019)
+    )
+  )
+  (ref_point
+    (name "ABB9")
+    (comment "")
+    (value
+      (nautical_mile 64 4566 64 11050)
+    )
+  )
+  (ref_point
+    (name "ABB10")
+    (comment "")
+    (value
+      (nautical_mile 64 4430 64 11159)
+    )
+  )
+  (ref_point
+    (name "ABB11")
+    (comment "")
+    (value
+      (nautical_mile 64 4030 64 11693)
+    )
+  )
+  (ref_point
+    (name "ABB12")
+    (comment "")
+    (value
+      (nautical_mile 64 3979 64 11790)
+    )
+  )
+  (ref_point
+    (name "ABB13")
+    (comment "")
+    (value
+      (nautical_mile 64 3963 64 11938)
+    )
+  )
+  (ref_point
+    (name "ABB14")
+    (comment "")
+    (value
+      (nautical_mile 64 4006 64 12069)
+    )
+  )
+  (ref_point
+    (name "ABB15")
+    (comment "")
+    (value
+      (nautical_mile 64 4101 64 12178)
+    )
+  )
+  (ref_point
+    (name "ABB16")
+    (comment "")
+    (value
+      (nautical_mile 64 4256 64 12242)
+    )
+  )
+  (ref_point
+    (name "ABB17")
+    (comment "")
+    (value
+      (nautical_mile 64 4352 64 12244)
+    )
+  )
+  (ref_point
+    (name "ABB18")
+    (comment "")
+    (value
+      (nautical_mile 64 4488 64 12196)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 2)
+    (keyboard 2)
+    (entity
+      (name "1")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ABB")
+        (point "ABB2")
+        (point "ABB3")
+        (point "ABB4")
+        (point "ABB5")
+        (point "ABB6")
+        (point "ABB7")
+        (point "ABB8")
+        (point "ABB9")
+        (point "ABB10")
+        (point "ABB11")
+        (point "ABB12")
+        (point "ABB13")
+        (point "ABB14")
+        (point "ABB15")
+        (point "ABB16")
+        (point "ABB17")
+        (point "ABB18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "2")
+      (id_atc "FOND PUITS 2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ABB")
+        (point "ABB2")
+        (point "ABB3")
+        (point "ABB4")
+        (point "ABB5")
+        (point "ABB6")
+        (point "ABB7")
+        (point "ABB8")
+        (point "ABB9")
+        (point "ABB10")
+        (point "ABB11")
+        (point "ABB12")
+        (point "ABB13")
+        (point "ABB14")
+        (point "ABB15")
+        (point "ABB16")
+        (point "ABB17")
+        (point "ABB18")
+      )
+      (polygone 1)
+    )
+  )
+)

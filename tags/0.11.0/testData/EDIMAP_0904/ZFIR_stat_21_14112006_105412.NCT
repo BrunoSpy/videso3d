@@ -1,0 +1,679 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "TEXTE_TSA")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+  (id_atc_preactif "TEXTE_TSA_PREACTIVABLE")
+  (id_atc_predorm "TEXTE_TSA_PREACTIVABLE")
+)
+(id_atc
+  (name "TEXTE_TSA_PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_2")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "TEXTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+  (id_atc_preactif "TEXTE PREACTIVABLE")
+  (id_atc_predorm "TEXTE PREACTIVABLE")
+)
+(id_atc
+  (name "TEXTE PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "BORD ZONE MILITAIRE FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "ZFIR")
+  (number 21)
+  (comment "")
+  (date 14 11 2006)
+  (heure 10 54 12)
+  (ref_point
+    (name "CB1C2")
+    (comment "")
+    (value
+      (nautical_mile 64 6247 64 15546)
+    )
+  )
+  (ref_point
+    (name "CB1C3")
+    (comment "")
+    (value
+      (nautical_mile 64 6373 64 14885)
+    )
+  )
+  (ref_point
+    (name "CB1C4")
+    (comment "")
+    (value
+      (nautical_mile 64 7659 64 14486)
+    )
+  )
+  (ref_point
+    (name "CB1C5")
+    (comment "")
+    (value
+      (nautical_mile 64 8152 64 14336)
+    )
+  )
+  (ref_point
+    (name "CB1C9")
+    (comment "")
+    (value
+      (nautical_mile 64 8399 64 14979)
+    )
+  )
+  (ref_point
+    (name "CB1C8")
+    (comment "")
+    (value
+      (nautical_mile 64 8357 64 15047)
+    )
+  )
+  (ref_point
+    (name "CB1C7")
+    (comment "")
+    (value
+      (nautical_mile 64 6381 64 15539)
+    )
+  )
+  (ref_point
+    (name "18B1")
+    (comment "")
+    (value
+      (nautical_mile 64 10222 64 12642)
+    )
+  )
+  (ref_point
+    (name "18B2")
+    (comment "")
+    (value
+      (nautical_mile 64 9873 64 12621)
+    )
+  )
+  (ref_point
+    (name "18B3")
+    (comment "")
+    (value
+      (nautical_mile 64 9951 64 12320)
+    )
+  )
+  (ref_point
+    (name "18B4")
+    (comment "")
+    (value
+      (nautical_mile 64 10117 64 11939)
+    )
+  )
+  (ref_point
+    (name "18B5")
+    (comment "")
+    (value
+      (nautical_mile 64 10226 64 11807)
+    )
+  )
+  (ref_point
+    (name "LIL2B")
+    (comment "")
+    (value
+      (nautical_mile 64 10317 64 11809)
+    )
+  )
+  (ref_point
+    (name "18B6")
+    (comment "")
+    (value
+      (nautical_mile 64 10466 64 12205)
+    )
+  )
+  (ref_point
+    (name "18B7")
+    (comment "")
+    (value
+      (nautical_mile 64 10214 64 12416)
+    )
+  )
+  (ref_point
+    (name "LUX1")
+    (comment "")
+    (value
+      (nautical_mile 64 14517 64 9984)
+    )
+  )
+  (ref_point
+    (name "LUX2")
+    (comment "")
+    (value
+      (nautical_mile 64 16234 64 10121)
+    )
+  )
+  (ref_point
+    (name "LUX3")
+    (comment "")
+    (value
+      (nautical_mile 64 16322 64 11399)
+    )
+  )
+  (ref_point
+    (name "LUX4")
+    (comment "")
+    (value
+      (nautical_mile 64 15163 64 12328)
+    )
+  )
+  (ref_point
+    (name "LUX5")
+    (comment "")
+    (value
+      (nautical_mile 64 14511 64 12277)
+    )
+  )
+  (ref_point
+    (name "LUX6")
+    (comment "")
+    (value
+      (nautical_mile 64 14425 64 11161)
+    )
+  )
+  (ref_point
+    (name "LUX7")
+    (comment "")
+    (value
+      (nautical_mile 64 14552 64 10839)
+    )
+  )
+  (ref_point
+    (name "LUX8")
+    (comment "")
+    (value
+      (nautical_mile 64 14326 64 10506)
+    )
+  )
+  (ref_point
+    (name "R91")
+    (comment "")
+    (value
+      (nautical_mile 64 6378 64 408)
+    )
+  )
+  (ref_point
+    (name "R92")
+    (comment "")
+    (value
+      (nautical_mile 64 6784 64 268)
+    )
+  )
+  (ref_point
+    (name "R93")
+    (comment "")
+    (value
+      (nautical_mile 64 6966 64 240)
+    )
+  )
+  (ref_point
+    (name "R94")
+    (comment "")
+    (value
+      (nautical_mile 64 7183 64 172)
+    )
+  )
+  (ref_point
+    (name "R95")
+    (comment "")
+    (value
+      (nautical_mile 64 7174 64 107)
+    )
+  )
+  (ref_point
+    (name "R96")
+    (comment "")
+    (value
+      (nautical_mile 64 7364 64 -3)
+    )
+  )
+  (ref_point
+    (name "R97")
+    (comment "")
+    (value
+      (nautical_mile 64 7333 64 -98)
+    )
+  )
+  (ref_point
+    (name "R98")
+    (comment "")
+    (value
+      (nautical_mile 64 6734 64 169)
+    )
+  )
+  (ref_point
+    (name "R99")
+    (comment "")
+    (value
+      (nautical_mile 64 6709 64 129)
+    )
+  )
+  (ref_point
+    (name "R910")
+    (comment "")
+    (value
+      (nautical_mile 64 6547 64 205)
+    )
+  )
+  (ref_point
+    (name "R911")
+    (comment "")
+    (value
+      (nautical_mile 64 6377 64 334)
+    )
+  )
+  (ref_point
+    (name "R1161")
+    (comment "")
+    (value
+      (nautical_mile 64 3075 64 -722)
+    )
+  )
+  (ref_point
+    (name "R1162")
+    (comment "")
+    (value
+      (nautical_mile 64 3407 64 -751)
+    )
+  )
+  (ref_point
+    (name "R1163")
+    (comment "")
+    (value
+      (nautical_mile 64 3523 64 -1298)
+    )
+  )
+  (ref_point
+    (name "R1164")
+    (comment "")
+    (value
+      (nautical_mile 64 3418 64 -1412)
+    )
+  )
+  (ref_point
+    (name "R1165")
+    (comment "")
+    (value
+      (nautical_mile 64 3074 64 -1439)
+    )
+  )
+  (ref_point
+    (name "D504A")
+    (comment "")
+    (value
+      (nautical_mile 64 -82 64 821)
+    )
+  )
+  (ref_point
+    (name "D504B")
+    (comment "")
+    (value
+      (nautical_mile 64 138 64 616)
+    )
+  )
+  (ref_point
+    (name "D504C")
+    (comment "")
+    (value
+      (nautical_mile 64 98 64 549)
+    )
+  )
+  (ref_point
+    (name "D504D")
+    (comment "")
+    (value
+      (nautical_mile 64 -178 64 677)
+    )
+  )
+  (ref_point
+    (name "D504E")
+    (comment "")
+    (value
+      (nautical_mile 64 -115 64 630)
+    )
+  )
+  (ref_point
+    (name "D574A")
+    (comment "")
+    (value
+      (nautical_mile 64 816 64 3908)
+    )
+  )
+  (ref_point
+    (name "D574B")
+    (comment "")
+    (value
+      (nautical_mile 64 1117 64 3909)
+    )
+  )
+  (ref_point
+    (name "D574C")
+    (comment "")
+    (value
+      (nautical_mile 64 1117 64 3845)
+    )
+  )
+  (ref_point
+    (name "D574D")
+    (comment "")
+    (value
+      (nautical_mile 64 816 64 3843)
+    )
+  )
+  (ref_point
+    (name "R912")
+    (comment "")
+    (value
+      (nautical_mile 64 6377 64 334)
+    )
+  )
+  (ref_point
+    (name "SIS1")
+    (comment "")
+    (value
+      (nautical_mile 64 9757 64 10318)
+    )
+  )
+  (ref_point
+    (name "SIS2")
+    (comment "")
+    (value
+      (nautical_mile 64 10039 64 10234)
+    )
+  )
+  (ref_point
+    (name "SIS3")
+    (comment "")
+    (value
+      (nautical_mile 64 10056 64 9903)
+    )
+  )
+  (ref_point
+    (name "SIS4")
+    (comment "")
+    (value
+      (nautical_mile 64 9657 64 9947)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 1)
+    (entity
+      (name "1")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CB1C2")
+        (point "CB1C3")
+        (point "CB1C4")
+        (point "CB1C5")
+        (point "CB1C9")
+        (point "CB1C8")
+        (point "CB1C7")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "2")
+      (id_atc "TEXTE_TSA")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6862 64 15150)
+      )
+      (text_content "TRA WEST")
+    )
+    (entity
+      (name "3")
+      (id_atc "TEXTE_TSA")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6872 64 15052)
+      )
+      (text_content "045/660")
+    )
+    (entity
+      (name "4")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "18B1")
+        (point "18B2")
+        (point "18B3")
+        (point "18B4")
+        (point "18B5")
+        (point "LIL2B")
+        (point "18B6")
+        (point "18B7")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "7")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "LUX1")
+        (point "LUX2")
+        (point "LUX3")
+        (point "LUX4")
+        (point "LUX5")
+        (point "LUX6")
+        (point "LUX7")
+        (point "LUX8")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "9")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "R91")
+        (point "R92")
+        (point "R93")
+        (point "R94")
+        (point "R95")
+        (point "R96")
+        (point "R97")
+        (point "R98")
+        (point "R99")
+        (point "R910")
+        (point "R911")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "10")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "R1161")
+        (point "R1162")
+        (point "R1163")
+        (point "R1164")
+        (point "R1165")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "11")
+      (id_atc "TEXTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3126 64 -1127)
+      )
+      (text_content "FL125")
+    )
+    (entity
+      (name "12")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "D504A")
+        (point "D504B")
+        (point "D504C")
+        (point "D504D")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "13")
+      (id_atc "TEXTE")
+      (shape "TextEntity")
+      (geometry
+        (point "D504E")
+      )
+      (text_content "FL90")
+    )
+    (entity
+      (name "14")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "D574A")
+        (point "D574B")
+        (point "D574C")
+        (point "D574D")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "16")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "R911")
+        (point "R912")
+        (point "R91")
+      )
+    )
+    (entity
+      (name "17")
+      (id_atc "BORD ZONE MILITAIRE FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SIS1")
+        (point "SIS2")
+        (point "SIS3")
+        (point "SIS4")
+      )
+      (polygone 1)
+    )
+  )
+)
