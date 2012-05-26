@@ -45,6 +45,7 @@ import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.graphics.Aerodrome;
 import fr.crnan.videso3d.graphics.Balise;
 import fr.crnan.videso3d.graphics.Balise2D;
+import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Secteur3D;
@@ -53,6 +54,7 @@ import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.components.VidesoGLCanvasKeyListener;
 import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
 import fr.crnan.videso3d.layers.Balise2DLayer;
+import fr.crnan.videso3d.layers.Balise3DLayer;
 import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.layers.LayerManagerLayer;
@@ -82,11 +84,13 @@ import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.LatLonGraticuleLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.LayerList;
+import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.layers.ScalebarLayer;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
 import gov.nasa.worldwind.render.Path;
+import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.Polygon;
 import gov.nasa.worldwind.tracks.TrackPoint;
@@ -100,7 +104,7 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.9.5
+ * @version 0.9.6
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwner{
@@ -779,7 +783,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 	}
 	
 	public void delete(Object o){
-		if(o instanceof Airspace){
+		if(o instanceof DatabaseVidesoObject){
+			DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType()).hideObject(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
+		} else if(o instanceof Airspace){
 			this.deleteAirspace((Airspace) o);
 		} else if(o instanceof Balise){
 			this.deleteBalise((Balise) o);
@@ -818,5 +824,34 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 
 	public void deletePath(Path p){
 		p.setVisible(false);
+	}
+	
+	/*--------------------------------------------------------------*/
+	/*----------------- Création d'objets      ---------------------*/
+	/*--------------------------------------------------------------*/
+	
+	private RenderableLayer renderableLayer;
+	private Balise3DLayer balise3DLayer;
+	
+	/**
+	 * Add an object to the adequate layer
+	 * @param o 3D object
+	 */
+	public void addObject(Object o){
+		if(o instanceof Renderable){
+			if(renderableLayer == null){
+				renderableLayer = new RenderableLayer();
+				renderableLayer.setName("Objets personnalisés");
+				this.toggleLayer(renderableLayer, true);
+			}
+			renderableLayer.addRenderable((Renderable) o);
+		} else if(o instanceof Balise3D){
+			if(balise3DLayer == null){
+				balise3DLayer = new Balise3DLayer("Points personnalisés");
+				balise3DLayer.setPickEnabled(true);
+				this.toggleLayer(balise3DLayer, true);
+			}
+			balise3DLayer.addBalise((Balise) o);
+		}
 	}
 }
