@@ -20,7 +20,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JOptionPane;
 
-import fr.crnan.videso3d.ihm.components.MoveAirspaceControlPointDialog;
+import fr.crnan.videso3d.ihm.components.MovePositionDialog;
 import gov.nasa.worldwind.WorldWindow;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.airspaces.editor.AirspaceControlPoint;
@@ -28,7 +28,7 @@ import gov.nasa.worldwind.render.airspaces.editor.AirspaceControlPoint;
 /**
  * Allows fine editing of control points
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class AirspaceEditorController extends gov.nasa.worldwind.render.airspaces.editor.AirspaceEditorController {
 
@@ -47,7 +47,7 @@ public class AirspaceEditorController extends gov.nasa.worldwind.render.airspace
 			AirspaceControlPoint controlPoint = this.getTopOwnedControlPointAtCurrentPosition();
 			if(controlPoint != null){
 				Position oldPos = this.getWorldWindow().getModel().getGlobe().computePositionFromPoint(controlPoint.getPoint());
-				MoveAirspaceControlPointDialog dialog = new MoveAirspaceControlPointDialog(this.getWorldWindow(), controlPoint);
+				MovePositionDialog dialog = new MovePositionDialog(this.getWorldWindow().getModel().getGlobe().computePositionFromPoint(controlPoint.getPoint()));
 				if(dialog.showDialog(e) == JOptionPane.OK_OPTION){
 					Position newPosition = dialog.getPosition();
 					if(newPosition.getAltitude() != oldPos.getAltitude()){

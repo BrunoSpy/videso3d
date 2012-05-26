@@ -40,17 +40,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoGLCanvas;
-import fr.crnan.videso3d.formats.fpl.FPLFileFilter;
-import fr.crnan.videso3d.formats.geo.GEOFileFilter;
-import fr.crnan.videso3d.formats.lpln.LPLNFileFilter;
-import fr.crnan.videso3d.formats.plns.PLNSFileFilter;
-import fr.crnan.videso3d.formats.opas.OPASFileFilter;
+import fr.crnan.videso3d.graphics.MovableBalise3D;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.components.DataView;
@@ -69,7 +64,7 @@ import gov.nasa.worldwindx.examples.util.ShapeUtils;
 /**
  * Toolbar of the main window
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.1.4
  */
 public class MainToolbar extends JToolBar {
 
@@ -363,6 +358,38 @@ public class MainToolbar extends JToolBar {
 		//toolbar.add(addPolygon);
 		addAirspace.addToToolBar(this);
 
+		//Ajouter points
+	//	final DropDownButton points = new DropDownButton(new ImageIcon(getClass().getResource("/resources/add_point_22.png")));
+		
+//		final JMenuItem addPoint = new JMenuItem("Ajouter un point");
+		JButton addPoint = new JButton(new ImageIcon(getClass().getResource("/resources/add_point_22.png")));
+		addPoint.setToolTipText("Ajouter un point sur le globe");
+		addPoint.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				MovableBalise3D point = new MovableBalise3D("Nouveau point", ShapeUtils.getNewShapePosition(wwd));
+				wwd.addObject(point);
+				wwd.getDraggerListener().addDraggableObject(point);
+			}
+		});
+		
+		this.add(addPoint);
+		
+//		JMenuItem addPoints = new JMenuItem("Ajouter plusieurs points");
+//		TODO
+//		points.getPopupMenu().add(addPoint);
+//		points.getPopupMenu().add(addPoints);
+//		points.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				addPoint.doClick();
+//			}
+//		});
+		
+//		points.addToToolBar(this);
+		
 		//Reset de l'affichage
 		final JButton reset = new JButton(new ImageIcon(getClass().getResource("/resources/reset_22.png")));
 		reset.setToolTipText("Remettre à zéro la carte.");
