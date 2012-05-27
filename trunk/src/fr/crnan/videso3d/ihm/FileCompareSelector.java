@@ -205,7 +205,7 @@ public class FileCompareSelector extends JFrame {
 		basesPanel.removeAll();
 		comparePanel.clear();
 		try {
-			Statement st = DatabaseManager.getCurrent(Type.Databases);
+			Statement st = DatabaseManager.getCurrent(DatabaseManager.Type.Databases);
 			ResultSet rs = st.executeQuery("select * from databases where type = '"+type.toString()+"'");
 			TypeItemListener itemListener = new TypeItemListener();
 			while(rs.next()){

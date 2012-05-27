@@ -44,7 +44,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.ProjectManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -120,7 +120,7 @@ public class ProjectManagerUI extends JDialog {
 			JPanel list = new JPanel();
 			list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
 			list.setBorder(BorderFactory.createTitledBorder(i+". Choisir les données à exporter :"));
-			for(Type type : this.projectManager.getTypes()){
+			for(DatabaseManager.Type type : this.projectManager.getTypes()){
 				Box element = Box.createHorizontalBox();
 				JCheckBox checkbox = new JCheckBox(type.toString());
 				checkbox.addItemListener(new ItemListener() {

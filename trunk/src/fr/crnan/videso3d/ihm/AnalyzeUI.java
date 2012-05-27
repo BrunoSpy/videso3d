@@ -39,7 +39,6 @@ import javax.swing.JTabbedPane;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Videso3D;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.graphs.ConnexPanel;
 import fr.crnan.videso3d.graphs.ItiPanel;
 import fr.crnan.videso3d.graphs.RoutePanel;
@@ -51,7 +50,7 @@ import fr.crnan.videso3d.stip.StipController;
  * Fenêtre d'analyse des données Stip et Stpv.<br />
  * Cette classe est un singleton afin de n'être ouverte qu'une fois maximum.
  * @author Bruno Spyckerelle
- * @version 0.3.0
+ * @version 0.3.1
  */
 public final class AnalyzeUI extends JFrame {
 
@@ -118,7 +117,7 @@ public final class AnalyzeUI extends JFrame {
 		if(type.equals("balise")){
 			try {
 				if(DatabaseManager.getCurrentStip().executeQuery("select * from balises where name = '"+criteria[0]+"'").next()) {
-					getInstance().context.showInfo(Type.STIP, StipController.BALISES, criteria[0]);
+					getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.BALISES, criteria[0]);
 				} 
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -288,7 +287,7 @@ public final class AnalyzeUI extends JFrame {
 		String versionStip = "";
 		String versionStpv = "";
 		try {
-			Statement st = DatabaseManager.getCurrent(Type.Databases);
+			Statement st = DatabaseManager.getCurrent(DatabaseManager.Type.Databases);
 			ResultSet rs = st.executeQuery("select * from databases where selected = '1' and type = 'STIP'");
 			if(rs.next()) versionStip = rs.getString(2);
 			rs = st.executeQuery("select * from databases where selected = '1' and type = 'STPV'");
