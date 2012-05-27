@@ -59,7 +59,6 @@ import fr.crnan.videso3d.AirspaceListener;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.CompatibilityVersionException;
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.FileManager;
@@ -181,7 +180,7 @@ public class MainWindow extends JFrame {
 		//compter le nombre d'étapes d'init
 		Integer temp = 0;
 		temp += wwd.getNumberInitSteps();
-		for(Type t : DatabaseManager.getSelectedDatabases()) {
+		for(DatabaseManager.Type t : DatabaseManager.getSelectedDatabases()) {
 			temp += DatasManager.getNumberInitSteps(t);
 		}
 		temp++;
@@ -202,11 +201,11 @@ public class MainWindow extends JFrame {
 			protected String doInBackground() {
 				try {
 					wwd.initialize();
-					for(Type t : DatabaseManager.getSelectedDatabases()) {
+					for(DatabaseManager.Type t : DatabaseManager.getSelectedDatabases()) {
 						DatasManager.createDatas(t, wwd);
 					}
 					omniBox = new Omnibox(wwd, context);
-					for(Type t : DatabaseManager.getSelectedDatabases()){
+					for(DatabaseManager.Type t : DatabaseManager.getSelectedDatabases()){
 						omniBox.addDatabase(t, DatabaseManager.getAllVisibleObjects(t, omniBox), false);
 					}
 					wwd.firePropertyChange("step", "", "Création de l'interface");
@@ -291,7 +290,7 @@ public class MainWindow extends JFrame {
 		//save location of future panel
 		locationDatas = /*CLocation.base().normalWest(0.2);*/dockableDatas.getBaseLocation().aside();
 
-		for(Type type : DatabaseManager.getSelectedDatabases()){
+		for(DatabaseManager.Type type : DatabaseManager.getSelectedDatabases()){
 			this.updateDockables(type, false);
 		}
 
@@ -301,7 +300,7 @@ public class MainWindow extends JFrame {
 		wwd.addSelectListener(airspaceListener);
 
 		//initialisation contextpanel
-		for(Type t : DatabaseManager.getSelectedDatabases()){	
+		for(DatabaseManager.Type t : DatabaseManager.getSelectedDatabases()){	
 			context.addTaskPane(DatasManager.getContext(t), t);
 			AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(t), t);	
 		}
@@ -320,7 +319,7 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				Type type = (Type) evt.getNewValue();
+				DatabaseManager.Type type = (DatabaseManager.Type) evt.getNewValue();
 				control.removeSingleDockable(type.toString());
 				DatasManager.deleteDatas(type);
 				omniBox.removeDatabase(type);
@@ -350,7 +349,7 @@ public class MainWindow extends JFrame {
 						} catch (Exception e){
 							e.printStackTrace();
 						}
-						DatabaseManager.Type type = (Type) evt.getNewValue();
+						DatabaseManager.Type type = (DatabaseManager.Type) evt.getNewValue();
 						empty = DatasManager.numberViews() == 0;
 						DatasManager.createDatas(type, wwd);
 						omniBox.addDatabase(type, DatabaseManager.getAllVisibleObjects(type, omniBox), true);
@@ -359,7 +358,7 @@ public class MainWindow extends JFrame {
 
 					@Override
 					protected void done() {
-						Type type = (Type) evt.getNewValue();
+						DatabaseManager.Type type = (DatabaseManager.Type) evt.getNewValue();
 							if(DatasManager.getView(type) != null){
 								updateDockables(type, empty);
 								context.addTaskPane(DatasManager.getContext(type), type);
@@ -393,7 +392,7 @@ public class MainWindow extends JFrame {
 	 * @param type Type de la base de données
 	 * @param empty Vrai si il n'y a plus de tabs
 	 */
-	private void updateDockables(Type type, boolean empty){
+	private void updateDockables(DatabaseManager.Type type, boolean empty){
 		this.control.removeSingleDockable(type.toString());
 		ClosableSingleDockable dockable = new ClosableSingleDockable(type.toString());
 		dockable.addCloseAction(control);

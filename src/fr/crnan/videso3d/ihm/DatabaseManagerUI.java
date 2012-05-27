@@ -56,7 +56,6 @@ import eu.medsea.mimeutil.MimeUtil;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.FileParser;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.edimap.Cartes;
 import fr.crnan.videso3d.exsa.Exsa;
@@ -71,7 +70,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Interface de gestion des base de données.<br />
  * @author Bruno Spyckerelle
- * @version 0.4.0
+ * @version 0.4.1
  */
 @SuppressWarnings("serial")
 public class DatabaseManagerUI extends JDialog {
@@ -223,16 +222,16 @@ public class DatabaseManagerUI extends JDialog {
 				} else { //file not zipped
 					if(AIP.isAIPFile(file)){
 						baseImported = true;
-						addDatabase(Type.AIP, file);
+						addDatabase(DatabaseManager.Type.AIP, file);
 					} else if(Exsa.isExsaFile(file)){
 						baseImported = true;
-						addDatabase(Type.EXSA, file);
+						addDatabase(DatabaseManager.Type.EXSA, file);
 					} else if(KML.isKMLFile(file)){
 						baseImported = true;
-						addDatabase(Type.KML, file);
+						addDatabase(DatabaseManager.Type.KML, file);
 					} else if(SkyView.isSkyViewFile(file)){
 						baseImported = true;
-						addDatabase(Type.SkyView, file);
+						addDatabase(DatabaseManager.Type.SkyView, file);
 					} else if(Stpv.containsSTPVFiles(files)){
 						baseImported = true;
 						//remove RESULTAT file in order to avoid a new detection of STPV files
@@ -243,7 +242,7 @@ public class DatabaseManagerUI extends JDialog {
 								iterator.remove();
 							}
 						}
-						addDatabase(Type.STPV, file.getParentFile());
+						addDatabase(DatabaseManager.Type.STPV, file.getParentFile());
 					} else if(Cartes.containsCartes(files)){
 						baseImported = true;
 						//assuming there's only one set of maps in a directory
@@ -257,7 +256,7 @@ public class DatabaseManagerUI extends JDialog {
 								iterator.remove();
 							}
 						}
-						addDatabase(Type.Edimap, file.getParentFile());
+						addDatabase(DatabaseManager.Type.Edimap, file.getParentFile());
 					} else if(RadioDataManager.containsRadioDatas(files)){
 						baseImported = true;
 						//remove radioCoverageXSL.xsl file in order to avoid a new detection of radio files
@@ -268,7 +267,7 @@ public class DatabaseManagerUI extends JDialog {
 								iterator.remove();
 							}
 						}
-						addDatabase(Type.RadioCov, file.getParentFile());
+						addDatabase(DatabaseManager.Type.RadioCov, file.getParentFile());
 					} else if(Stip.containsStipFiles(files)){
 						baseImported = true;
 						//remove LIEUX file in order to avoid a new detection of stip files
@@ -279,7 +278,7 @@ public class DatabaseManagerUI extends JDialog {
 								iterator.remove();
 							}
 						}
-						addDatabase(Type.STIP, file.getParentFile());
+						addDatabase(DatabaseManager.Type.STIP, file.getParentFile());
 					} else if(Pays.containsPaysFiles(files)){
 						baseImported = true;
 						//remove PAYS file in order to avoid a new detection of pays files
@@ -290,7 +289,7 @@ public class DatabaseManagerUI extends JDialog {
 								iterator.remove();
 							}
 						}
-						addDatabase(Type.PAYS, file.getParentFile());
+						addDatabase(DatabaseManager.Type.PAYS, file.getParentFile());
 					}
 				}
 			}
@@ -299,7 +298,7 @@ public class DatabaseManagerUI extends JDialog {
 		return baseImported;
 	}
 	
-	private void addDatabase(Type type, File file){
+	private void addDatabase(DatabaseManager.Type type, File file){
 		switch (type) {
 		case AIP:
 			AIP aip = new AIP(file.getAbsolutePath());
@@ -324,7 +323,7 @@ public class DatabaseManagerUI extends JDialog {
 			break;
 		case SkyView:
 			DatabaseManager.createSkyView(file.getName(), file.getAbsolutePath());
-			DatabaseManager.importFinished(Type.SkyView);
+			DatabaseManager.importFinished(DatabaseManager.Type.SkyView);
 			((DBTableModel)table.getModel()).update();
 			break;
 		case STPV:
@@ -349,7 +348,7 @@ public class DatabaseManagerUI extends JDialog {
 
 	private Entry<FileParser, File[]> current = null;
 	private Iterator<Entry<FileParser, File[]>> iterator = null;
-	private HashSet<Type> types = null;
+	private HashSet<DatabaseManager.Type> types = null;
 	private int done = 0;
 	
 	private void importDatabases(){
@@ -412,7 +411,7 @@ public class DatabaseManagerUI extends JDialog {
 							//on met à jour la fenetre
 							((DBTableModel)table.getModel()).update();
 							//on met à jour les tabs
-							for(Type t : types){
+							for(DatabaseManager.Type t : types){
 								DatabaseManager.importFinished(t);
 							}
 						}
@@ -463,7 +462,7 @@ public class DatabaseManagerUI extends JDialog {
 		
 		public DBTableModel(){
 			try {
-				Statement st = DatabaseManager.getCurrent(Type.Databases);
+				Statement st = DatabaseManager.getCurrent(DatabaseManager.Type.Databases);
 				ResultSet rs = st.executeQuery("select * from databases");
 				while(rs.next()){
 					Vector<Object> line = new Vector<Object>();
@@ -536,7 +535,7 @@ public class DatabaseManagerUI extends JDialog {
 		public void update(){
 			data.removeAllElements();
 			try {
-				Statement st = DatabaseManager.getCurrent(Type.Databases);
+				Statement st = DatabaseManager.getCurrent(DatabaseManager.Type.Databases);
 				ResultSet rs = st.executeQuery("select * from databases");
 				while(rs.next()){
 					Vector<Object> line = new Vector<Object>();
