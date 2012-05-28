@@ -234,7 +234,8 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 								return maxAltitudeColor;
 							return new Color (  (float)(((altitude-minAltitude)*(maxAltitudeColor.getRed()/255.0)+(maxAltitude-altitude)*(minAltitudeColor.getRed()/255.0))/(maxAltitude-minAltitude)),
 									(float)(((altitude-minAltitude)*(maxAltitudeColor.getGreen()/255.0)+(maxAltitude-altitude)*(minAltitudeColor.getGreen()/255.0))/(maxAltitude-minAltitude)),
-									(float)(((altitude-minAltitude)*(maxAltitudeColor.getBlue()/255.0)+(maxAltitude-altitude)*(minAltitudeColor.getBlue()/255.0))/(maxAltitude-minAltitude)));
+									(float)(((altitude-minAltitude)*(maxAltitudeColor.getBlue()/255.0)+(maxAltitude-altitude)*(minAltitudeColor.getBlue()/255.0))/(maxAltitude-minAltitude)),
+									(float) getDefaultOpacity());
 						}
 					});
 				}
@@ -510,6 +511,7 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 			attrs.setInteriorOpacity(opacity);
 			attrs.setOutlineOpacity(opacity);
 		}
+		
 		this.normal.setInteriorOpacity(opacity);
 		this.normal.setOutlineOpacity(opacity);
 		this.firePropertyChange(AVKey.LAYER, null, this);
@@ -573,8 +575,14 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 			Color minAltitudeColor, Color maxAltitudeColor) {
 		this.maxAltitude = maxAltitude;
 		this.minAltitude = minAltitude;
-		this.minAltitudeColor = minAltitudeColor;
-		this.maxAltitudeColor = maxAltitudeColor;
+		this.minAltitudeColor = new Color((float)(minAltitudeColor.getRed()/255.0),
+				(float)(minAltitudeColor.getGreen()/255.0), 
+				(float)(minAltitudeColor.getBlue()/255.0),
+				(float)getDefaultOpacity());
+		this.maxAltitudeColor = new Color((float)(maxAltitudeColor.getRed()/255.0),
+				(float)(maxAltitudeColor.getGreen()/255.0), 
+				(float)(maxAltitudeColor.getBlue()/255.0),
+				(float)getDefaultOpacity());
 	}
 
 	@Override

@@ -54,7 +54,7 @@ public class TracksAnalyticSurface extends AnalyticSurface {
 		int max = 0;
 		for(int i = height-1;i>=0;i--){
 			for(int j = 0;j<width;j++){
-				grid[i][j] = grid[i][j]*scale;
+				grid[i][j] = grid[i][j];
 				if(grid[i][j] > max) max = grid[i][j];
 			}
 		}
@@ -65,6 +65,7 @@ public class TracksAnalyticSurface extends AnalyticSurface {
 				attributes.add(AnalyticSurface.createColorGradientAttributes(grid[i][j], 0, max, 240d/360d /*blue*/, 0d/360d /*red*/));
 			}
 		}
+		this.setVerticalScale(scale);
 		this.setValues(attributes);
 		
 	}
