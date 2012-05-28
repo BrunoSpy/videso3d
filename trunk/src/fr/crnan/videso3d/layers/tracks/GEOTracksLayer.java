@@ -35,7 +35,9 @@ import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TracksModelListener;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
+import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.geom.Sector;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
@@ -45,6 +47,8 @@ import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.util.Logging;
+import gov.nasa.worldwindx.examples.analytics.AnalyticSurface;
+import gov.nasa.worldwindx.examples.analytics.AnalyticSurface.GridPointAttributes;
 /**
  * Layer contenant des tracks Elvira GEO et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
@@ -62,7 +66,8 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	protected List<ShapeAttributes> colors = new ArrayList<ShapeAttributes>();
 	
 	protected RenderableLayer layer = new RenderableLayer();
-		
+	private RenderableLayer analyticLayer = new RenderableLayer();	
+	
 	private Boolean tracksHighlightable = true;
 	
 	private Boolean tracksHideable = true;
@@ -77,6 +82,9 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	
 	private ShapeAttributes highlight = new BasicShapeAttributes();
 
+	private int analyticWidth = 30;
+	private int analyticHeight = 20;
+	private int scale = 1;
 	
 	/**
 	 * Drops point if the previous is less <code>precision</code> far from the previous point
@@ -107,6 +115,7 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 		this(new TracksModel());
 		this.setTracksHighlightable(tracksHighlightable);
 		this.setTracksHideable(tracksHideable);
+		this.analyticLayer.setPickEnabled(false);
 	}
 	
 	@Override
@@ -341,8 +350,17 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 
 	@Override
 	public void update() {
-		for(VidesoTrack track : this.getModel().getVisibleTracks()){
-			this.showTrack(track);
+		if(this.getStyle() == TrajectoriesLayer.STYLE_ANALYTICS){
+			this.remove(layer);
+			this.analyticLayer.removeAllRenderables();
+			this.addIfAbsent(analyticLayer);
+			this.createAnalyticLayer();
+		} else {
+			this.remove(analyticLayer);
+			this.addIfAbsent(layer);
+			for(VidesoTrack track : this.getModel().getVisibleTracks()){
+				this.showTrack(track);
+			}
 		}
 		//mettre à jour les filtres volumiques
 		this.firePropertyChange(AVKey.LAYER, null, this);
@@ -405,6 +423,7 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 			if(style == TrajectoriesLayer.STYLE_SIMPLE || 
 					style == TrajectoriesLayer.STYLE_SHADED || 
 					style == TrajectoriesLayer.STYLE_MULTI_COLOR ||
+					style == TrajectoriesLayer.STYLE_ANALYTICS ||
 					this.getModel().getVisibleTracks().size() < Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL_PRECISION, "100"))) {
 				this.style = style;
 				{
@@ -527,6 +546,7 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 		styles.add(TrajectoriesLayer.STYLE_SIMPLE);
 		styles.add(TrajectoriesLayer.STYLE_SHADED);
 		styles.add(TrajectoriesLayer.STYLE_MULTI_COLOR);
+		styles.add(TrajectoriesLayer.STYLE_ANALYTICS);
 		return styles;
 	}
 
@@ -587,5 +607,42 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	public Couple<Double[], Color[]> getMultiColors() {
 		return new Couple<Double[], Color[]>(this.altitudes, this.multicolors);
 	}
+
+	/* ****************** Analytic Surface ****************** */
+
+	private void createAnalyticLayer(){	
+		analyticLayer.addRenderable(new TracksAnalyticSurface(this.getAnalyticWidth(), this.getAnalyticHeight(), this.getAnalyticScale(), this.getModel()));
+	}
+	
+	@Override
+	public void setAnalyticWidth(int width) {
+		this.analyticWidth = width;
+	}
+
+	@Override
+	public int getAnalyticWidth() {
+		return this.analyticWidth;
+	}
+
+	@Override
+	public void setAnalyticHeight(int height) {
+		this.analyticHeight = height;
+	}
+
+	@Override
+	public int getAnalyticHeight() {
+		return this.analyticHeight;
+	}
+
+	@Override
+	public void setAnalyticScale(int scale) {
+		this.scale = scale;
+	}
+
+	@Override
+	public int getAnalyticScale() {
+		return this.scale;
+	}
+	
 	
 }

@@ -368,4 +368,40 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		return new Couple<Double[], Color[]>(this.altitudes, this.multicolors);
 	}
 
+	@Override
+	public void setAnalyticWidth(int width) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getAnalyticWidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setAnalyticHeight(int height) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getAnalyticHeight() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setAnalyticScale(int scale) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getAnalyticScale() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

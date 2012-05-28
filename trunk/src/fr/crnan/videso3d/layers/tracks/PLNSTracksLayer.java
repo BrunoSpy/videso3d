@@ -16,6 +16,7 @@
 package fr.crnan.videso3d.layers.tracks;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -35,9 +36,16 @@ import fr.crnan.videso3d.layers.ProfilLayer;
 import fr.crnan.videso3d.stip.StipController;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TracksModelListener;
+import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
+import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.geom.Sector;
+import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.tracks.Track;
+import gov.nasa.worldwind.tracks.TrackPoint;
+import gov.nasa.worldwindx.examples.analytics.AnalyticSurface;
+import gov.nasa.worldwindx.examples.analytics.AnalyticSurface.GridPointAttributes;
 /**
  * 
  * @author Bruno SPyckerelle
@@ -46,6 +54,8 @@ import gov.nasa.worldwind.tracks.Track;
 public class PLNSTracksLayer extends TrajectoriesLayer {
 
 	private ProfilLayer layer = new ProfilLayer("PLNS");
+	
+	private RenderableLayer analyticLayer = new RenderableLayer();
 
 	private HashMap<PLNSTrack, Profil3D> profils = new HashMap<PLNSTrack, Profil3D>();
 
@@ -66,11 +76,17 @@ public class PLNSTracksLayer extends TrajectoriesLayer {
 	private Double[] altitudes = {0.0, 50.0*30.47, 195*30.47, 300*30.47, 600*30.47};
 	private Color[] multicolors = {Color.WHITE, Color.GREEN, Color.ORANGE, Color.RED};	
 	
+	private int analyticWidth = 30;
+	private int analyticHeight = 20;
+	private int scale = 1;
+	
 	public PLNSTracksLayer(TracksModel model){
 		super(model);
 		this.add(layer);
 		this.setDefaultInsideColor(defaultInsideColor);
 		this.setDefaultOutsideColor(this.defaultOutsideColor);
+		
+		analyticLayer.setPickEnabled(false);
 	}
 
 	@Override
@@ -182,14 +198,33 @@ public class PLNSTracksLayer extends TrajectoriesLayer {
 	
 	@Override
 	public void update() {
-		this.layer.removeAllRenderables();
-		for(VidesoTrack track : this.getModel().getVisibleTracks()){
-			this.showTrack((PLNSTrack) track);
+		switch (this.style) {
+		case STYLE_ANALYTICS:
+			this.remove(layer);
+			this.analyticLayer.removeAllRenderables();
+			this.addIfAbsent(analyticLayer);
+			this.createAnalyticsSurface();
+			break;
+		case STYLE_PROFIL:
+			this.remove(analyticLayer);
+			this.addIfAbsent(layer);
+			this.layer.removeAllRenderables();
+			for(VidesoTrack track : this.getModel().getVisibleTracks()){
+				this.showTrack((PLNSTrack) track);
+			}
+			break;
+		default:
+			break;
 		}
+		
 		this.firePropertyChange(AVKey.LAYER, null, this);
 
 	}
 
+	private void createAnalyticsSurface(){
+		analyticLayer.addRenderable(new TracksAnalyticSurface(this.getAnalyticWidth(), this.getAnalyticHeight(), this.getAnalyticScale(), getModel()));
+	}
+	
 	@Override
 	public void highlightTrack(Track track, Boolean b) {
 		Profil3D profil = this.profils.get(track);
@@ -221,8 +256,7 @@ public class PLNSTracksLayer extends TrajectoriesLayer {
 	 * Not implemented by this layer
 	 */
 	public void setStyle(int style) {
-		// TODO Auto-generated method stub
-
+		this.style = style;
 	}
 
 	@Override
@@ -326,6 +360,7 @@ public class PLNSTracksLayer extends TrajectoriesLayer {
 	public List<Integer> getStylesAvailable() {
 		List<Integer> styles = new LinkedList<Integer>();
 		styles.add(TrajectoriesLayer.STYLE_PROFIL);
+		styles.add(TrajectoriesLayer.STYLE_ANALYTICS);
 		return styles;
 	}
 
@@ -371,4 +406,35 @@ public class PLNSTracksLayer extends TrajectoriesLayer {
 		return new Couple<Double[], Color[]>(this.altitudes, this.multicolors);
 	}
 
+	@Override
+	public void setAnalyticWidth(int width) {
+		this.analyticWidth = width;
+	}
+
+	@Override
+	public int getAnalyticWidth() {
+		return this.analyticWidth;
+	}
+
+	@Override
+	public void setAnalyticHeight(int height) {
+		this.analyticHeight = height;
+	}
+
+	@Override
+	public int getAnalyticHeight() {
+		return this.analyticHeight;
+	}
+
+	@Override
+	public void setAnalyticScale(int scale) {
+		this.scale = scale;		
+	}
+
+	@Override
+	public int getAnalyticScale() {
+		return this.scale;
+	}
+
+	
 }

@@ -25,7 +25,7 @@ import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer contenant des trajectoires et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.6.0
+ * @version 0.7.0
  */
 public abstract class TrajectoriesLayer extends LayerSet {
 
@@ -51,6 +51,10 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 * Une polyligne avec plusieurs couleurs en fonction de l'altitude
 	 */
 	public final static int STYLE_MULTI_COLOR = 5;
+	/**
+	 * Zone d'analyse
+	 */
+	public final static int STYLE_ANALYTICS = 6;
 		
 	public TrajectoriesLayer(TracksModel model){
 		super();
@@ -173,4 +177,16 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	
 	public abstract void setDefaultWidth(double width);
 
+	/* *********** Analytic Surface *********** */
+	public abstract void setAnalyticWidth(int width);
+	
+	public abstract int getAnalyticWidth();
+	
+	public abstract void setAnalyticHeight(int height);
+	
+	public abstract int getAnalyticHeight();
+	
+	public abstract void setAnalyticScale(int scale);
+	
+	public abstract int getAnalyticScale();
 }
