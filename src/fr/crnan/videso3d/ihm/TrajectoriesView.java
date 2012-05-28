@@ -387,7 +387,7 @@ public class TrajectoriesView extends JPanel {
 		
 		stylePane.setLayout(new GridBagLayout());
 		
-		final JComboBox styles = new JComboBox();
+		final JComboBox<String> styles = new JComboBox<String>();
 		for(Integer style : layer.getStylesAvailable()){
 			switch(style) {
 			case TrajectoriesLayer.STYLE_CURTAIN:
@@ -404,6 +404,9 @@ public class TrajectoriesView extends JPanel {
 				break;
 			case TrajectoriesLayer.STYLE_MULTI_COLOR:
 				styles.addItem("Fil de fer multicolor");
+				break;
+			case TrajectoriesLayer.STYLE_ANALYTICS:
+				styles.addItem("Zone d'analyse");
 				break;
 			}
 		}
@@ -424,6 +427,9 @@ public class TrajectoriesView extends JPanel {
 		case TrajectoriesLayer.STYLE_MULTI_COLOR:
 			styles.setSelectedItem("Fil de fer multicolor");
 			break;
+		case TrajectoriesLayer.STYLE_ANALYTICS:
+			styles.setSelectedItem("Zone d'analyse");
+			break;
 		}
 		
 		styles.addActionListener(new ActionListener() {
@@ -441,7 +447,7 @@ public class TrajectoriesView extends JPanel {
 	
 	private List<JButton> colorButtons;
 	private List<JTextField> altitudeFields;
-	private void updateStylePane(final JComboBox styles, final JXTaskPane stylePane, List<JButton> colorButton, List<JTextField> altitudeField){
+	private void updateStylePane(final JComboBox<String> styles, final JXTaskPane stylePane, List<JButton> colorButton, List<JTextField> altitudeField){
 		this.colorButtons = colorButton;
 		this.altitudeFields = altitudeField;
 		stylePane.removeAll();
@@ -626,37 +632,78 @@ public class TrajectoriesView extends JPanel {
 			}
 		}
 		/******** Opacité *******/
-		
-		c.gridx = 0;
-		c.gridy = 1+i;
-
-		stylePane.add(new JLabel("Opacité"), c);
-		
-		c.gridx = 1;
-		
 		final JTextField opacity = new JTextField(15);
-		opacity.setToolTipText("Valeur comprise entre 0 (transparent) et 100.");
-		opacity.setText(String.valueOf(layer.getDefaultOpacity()*100));
-		
-		stylePane.add(opacity, c);
+		if(!styles.getSelectedItem().equals("Zone d'analyse")){
+			c.gridx = 0;
+			c.gridy = 1+i;
+
+			stylePane.add(new JLabel("Opacité"), c);
+
+			c.gridx = 1;
+
+			opacity.setToolTipText("Valeur comprise entre 0 (transparent) et 100.");
+			opacity.setText(String.valueOf(layer.getDefaultOpacity()*100));
+			stylePane.add(opacity, c);
+			i++;
+		}
 		
 		/******** Largeur *******/
-		
-		c.gridx = 0;
-		c.gridy = 2+i;
-		
-		stylePane.add(new JLabel("Largeur du tracé"), c);
-		
-		c.gridx = 1;
-		
 		final JTextField width = new JTextField(15);
-		width.setToolTipText("Valeur comprise entre 0 (transparent) et 100.");
-		width.setText(String.valueOf(layer.getDefaultWidth()));
-		
-		stylePane.add(width, c);
+		if(!styles.getSelectedItem().equals("Zone d'analyse")){
+			c.gridx = 0;
+			c.gridy = 1+i;
+
+			stylePane.add(new JLabel("Largeur du tracé"), c);
+
+			c.gridx = 1;
+
+			width.setToolTipText("Valeur comprise entre 0 (transparent) et 100.");
+			width.setText(String.valueOf(layer.getDefaultWidth()));
+
+			stylePane.add(width, c);
+			i++;
+		}
+
+		/******** Zone d'analyse *******/
+		final JTextField widthAnalytic = new JTextField(15);
+		final JTextField heightAnalytic = new JTextField(15);
+		final JTextField scaleAnalytic = new JTextField(15);
+		if(styles.getSelectedItem().equals("Zone d'analyse")){
+			c.gridx = 0;
+			c.gridy = 1+i;
+			
+			stylePane.add(new JLabel("Largeur"), c);
+			
+			c.gridx = 1;
+			widthAnalytic.setText(String.valueOf(layer.getAnalyticWidth()));
+			stylePane.add(widthAnalytic, c);
+			i++;
+			
+			c.gridx = 0;
+			c.gridy = 1+i;
+			
+			stylePane.add(new JLabel("Hauteur"), c);
+			c.gridx = 1;
+			heightAnalytic.setText(String.valueOf(layer.getAnalyticHeight()));
+			
+			stylePane.add(heightAnalytic, c);
+			i++;
+			
+			c.gridx = 0;
+			c.gridy = 1+i;
+			
+			stylePane.add(new JLabel("Échelle"), c);
+			c.gridx = 1;
+			
+			scaleAnalytic.setText(String.valueOf(layer.getAnalyticScale()));
+			stylePane.add(scaleAnalytic, c);
+			
+			i++;
+			
+		}
 		
 		c.gridx = 1;
-		c.gridy = 3+i;
+		c.gridy = 1+i;
 		
 		JButton validate = new JButton("Valider");
 		
@@ -671,28 +718,35 @@ public class TrajectoriesView extends JPanel {
 					layer.setStyle(TrajectoriesLayer.STYLE_SIMPLE);
 				} else if(itemSelected.equals("Fil de fer dégradé")){
 					layer.setStyle(TrajectoriesLayer.STYLE_SHADED);
-				} else if(itemSelected.equals("Profil")){
+				} else if(itemSelected.equals("Profil avec balises")){
 					layer.setStyle(TrajectoriesLayer.STYLE_PROFIL);
 				} else if(itemSelected.equals("Fil de fer multicolor")){
 					layer.setStyle(TrajectoriesLayer.STYLE_MULTI_COLOR);
+				} else if(itemSelected.equals("Zone d'analyse")){
+					layer.setStyle(TrajectoriesLayer.STYLE_ANALYTICS);
 				}
 				layer.setDefaultOutsideColor(changeColor2.getBackground());
 				layer.setDefaultInsideColor(changeColor1.getBackground());
-				layer.setDefaultWidth(Double.parseDouble(width.getText()));
-				layer.setDefaultOpacity(Double.parseDouble(opacity.getText())/100.0);
+				if(!width.getText().isEmpty()) layer.setDefaultWidth(Double.parseDouble(width.getText()));
+				if(!opacity.getText().isEmpty())layer.setDefaultOpacity(Double.parseDouble(opacity.getText())/100.0);
 				if(layer.getStylesAvailable().contains(TrajectoriesLayer.STYLE_SHADED)){
 					layer.setShadedColors(Double.parseDouble(minAltitude.getText())*30.47, Double.parseDouble(maxAltitude.getText())*30.47,
 							minColor.getBackground(), maxColor.getBackground());
 				}
-				ArrayList<Double> altitudes = new ArrayList<Double>();
-				for(JTextField field : altitudeFields){
-					altitudes.add(Double.parseDouble(field.getText())*30.47);
+				if(altitudeFields != null){
+					ArrayList<Double> altitudes = new ArrayList<Double>();
+					for(JTextField field : altitudeFields){
+						altitudes.add(Double.parseDouble(field.getText())*30.47);
+					}
+					ArrayList<Color> colors = new ArrayList<Color>();
+					for(JButton color : colorButtons){
+						colors.add(color.getBackground());
+					}
+					layer.setMultiColors(altitudes.toArray(new Double[]{}), colors.toArray(new Color[]{}));
 				}
-				ArrayList<Color> colors = new ArrayList<Color>();
-				for(JButton color : colorButtons){
-					colors.add(color.getBackground());
-				}
-				layer.setMultiColors(altitudes.toArray(new Double[]{}), colors.toArray(new Color[]{}));
+				if(!widthAnalytic.getText().isEmpty()) layer.setAnalyticWidth(Integer.parseInt(widthAnalytic.getText()));
+				if(!heightAnalytic.getText().isEmpty()) layer.setAnalyticHeight(Integer.parseInt(heightAnalytic.getText()));
+				if(!scaleAnalytic.getText().isEmpty()) layer.setAnalyticScale(Integer.parseInt(scaleAnalytic.getText()));
 				layer.update();
 			}
 		});

@@ -595,7 +595,11 @@ public class MainWindow extends JFrame {
 		if(sqlitePlnsFile.size() > 0){
 			try {
 				for(File f : sqlitePlnsFile){
+					
 					PLNSTracksModel model = new PLNSTracksModel();
+					PLNSTracksLayer layer = new PLNSTracksLayer(model);
+					this.wwd.toggleLayer(layer, true);
+					
 					final ProgressMonitor progress = new ProgressMonitor(this, "Import des trajectoires", "", 0, 100);
 					model.getProgressSupport().addPropertyChangeListener(new PropertyChangeListener() {
 						
@@ -611,10 +615,7 @@ public class MainWindow extends JFrame {
 						}
 					});
 					model.setDatabase(f);
-					PLNSTracksLayer layer = new PLNSTracksLayer(new PLNSTracksModel(f));
-					this.wwd.toggleLayer(layer, true);
-					PLNSReader reader = new PLNSReader(f, (PLNSTracksModel) layer.getModel(), readerListener);
-					this.addTrajectoriesView(reader, layer);
+					this.addTrajectoriesView(new PLNSReader(f, (PLNSTracksModel) layer.getModel(), readerListener), layer);
 				}
 			} catch (PointNotFoundException e) {
 				Logging.logger().warning("Point non trouvé : "+e.getName());
