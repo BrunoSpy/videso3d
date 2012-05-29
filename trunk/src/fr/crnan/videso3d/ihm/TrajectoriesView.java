@@ -387,7 +387,7 @@ public class TrajectoriesView extends JPanel {
 		
 		stylePane.setLayout(new GridBagLayout());
 		
-		final JComboBox<String> styles = new JComboBox<String>();
+		final JComboBox styles = new JComboBox();
 		for(Integer style : layer.getStylesAvailable()){
 			switch(style) {
 			case TrajectoriesLayer.STYLE_CURTAIN:
@@ -447,7 +447,7 @@ public class TrajectoriesView extends JPanel {
 	
 	private List<JButton> colorButtons;
 	private List<JTextField> altitudeFields;
-	private void updateStylePane(final JComboBox<String> styles, final JXTaskPane stylePane, List<JButton> colorButton, List<JTextField> altitudeField){
+	private void updateStylePane(final JComboBox styles, final JXTaskPane stylePane, List<JButton> colorButton, List<JTextField> altitudeField){
 		this.colorButtons = colorButton;
 		this.altitudeFields = altitudeField;
 		stylePane.removeAll();

@@ -61,8 +61,8 @@ public class MovePositionDialog extends JDialog {
 	private JTextField lonSecField;
 	private JTextField lonMinField;
 	private JTextField flField;
-	private JComboBox<String> latNSField;
-	private JComboBox<String> lonEWField;
+	private JComboBox latNSField;
+	private JComboBox lonEWField;
 	
 	public MovePositionDialog(Position position){
 		this.setModal(true);
@@ -122,12 +122,12 @@ public class MovePositionDialog extends JDialog {
 		flField.setColumns(3);
 		flField.setText((int)(this.pos.getAltitude()/30.48)+"");
 		
-		latNSField = new JComboBox<String>();
-		latNSField.setModel(new DefaultComboBoxModel<String>(new String[] {"N", "S"}));
+		latNSField = new JComboBox();
+		latNSField.setModel(new DefaultComboBoxModel(new String[] {"N", "S"}));
 		latNSField.setSelectedItem((lat > 0 ? "N" : "S"));
 		
-		lonEWField = new JComboBox<String>();
-		lonEWField.setModel(new DefaultComboBoxModel<String>(new String[] {"E", "W"}));
+		lonEWField = new JComboBox();
+		lonEWField.setModel(new DefaultComboBoxModel(new String[] {"E", "W"}));
 		lonEWField.setSelectedItem((lon > 0 ? "E" : "W"));
 		
 		GroupLayout gl_content = new GroupLayout(content);
