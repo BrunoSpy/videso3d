@@ -29,11 +29,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.filter.Filter;
-import org.jdom.input.SAXBuilder;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.filter.AbstractFilter;
+import org.jdom2.filter.Filter;
+import org.jdom2.input.SAXBuilder;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
@@ -44,7 +45,7 @@ import fr.crnan.videso3d.graphics.Route;
 /**
  * Lecteur des exports en xml du SIA
  * @author Adrien Vidal
- * @version 0.3.4
+ * @version 0.3.5
  */
 public class AIP extends FileParser{
 
@@ -258,16 +259,16 @@ public class AIP extends FileParser{
 		this.Vols = new ArrayList<Couple<Integer,String>>();
 		this.Bals = new ArrayList<Couple<Integer,String>>();
 		this.TrPlas = new ArrayList<Couple<Integer,String>>();
-		this.setFile("Aerodromes");
+		this.setFile("Aerodromes"); 
 		this.setProgress(progress);
 		this.getAerodromes();
-		this.setFile("TSA");
+		this.setFile("TSA"); 
 		this.setProgress(progress++);
 		this.getTSAs(racineVolumes);
-		this.setFile("SIV");
+		this.setFile("SIV"); 
 		this.setProgress(progress++);
 		this.getZones(racineVolumes,"SIV");
-		this.setFile("CTR");
+		this.setFile("CTR"); 
 		this.setProgress(progress++);
 		this.getZones(racineVolumes,"CTR");
 		this.setFile("TMA");
@@ -328,11 +329,9 @@ public class AIP extends FileParser{
 		this.setProgress(progress++);
 		this.getBalises();
 		this.setProgress(progress++);
-
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	private void getAerodromes() throws SQLException{
 		try{
 		Element racineAds = getDocumentRoot().getChild("AdS");
@@ -424,7 +423,6 @@ public class AIP extends FileParser{
 	}
 	
 
-	@SuppressWarnings("unchecked")
 	private void getBalises() throws SQLException{
 		Element racineNavFix = document.getRootElement().getChild("Situation").getChild("NavFixS");
 		List<Element> navFix = racineNavFix.getChildren();
@@ -447,6 +445,7 @@ public class AIP extends FileParser{
 		double freq = 0;
 		if(!type.equals("VFR") && !type.equals("WPT") && ! type.equals("PNP")){
 			List<Element> elts = findElementsByChildId(document.getRootElement().getChild("Situation").getChild("RadioNavS"), "NavFix", pk);
+			System.out.println(elts.size());
 			if(elts.size()>0){
 				freq = Double.parseDouble(elts.get(0).getChildText("Frequence"));
 			}
@@ -463,8 +462,6 @@ public class AIP extends FileParser{
 	}
 
 
-
-	@SuppressWarnings("unchecked")
 	private void getRoutes() throws SQLException{
 		Element racineRoutes = document.getRootElement().getChild("Situation").getChild("RouteS");
 		List<Element> routes = racineRoutes.getChildren();
@@ -501,7 +498,6 @@ public class AIP extends FileParser{
 			ps.setInt(3, sequence);
 			ps.setInt(4, navFixExtremite);
 			ps.executeUpdate();	
-
 			//Insertion des centres traversés par la route : pour chaque segment, on ajoute le centre à la liste des centres traversés
 			String nomACC = segment.getChildText("Acc");
 			if(nomACC != null){
@@ -987,20 +983,21 @@ public class AIP extends FileParser{
 	 * @param value La valeur du champ fieldParam
 	 * @return la liste des éléments répondant au critère.
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Element> findVolumes(Element root,String fieldParam,String value){
 		final String field = fieldParam;
 		final String identity = value;
-		Filter f = new Filter(){
+		Filter<Element> f = new AbstractFilter<Element>(){
+			
 			@Override
-			public boolean matches(Object o) {
-				if(!(o instanceof Element)){return false;}
-				Element element = (Element)o;
-				String name = getVolumeName(element.getAttributeValue(field));
-				if (name.startsWith(identity)){
-					return true;
+			public Element filter(Object o) {
+				if(o instanceof Element){
+					Element element = (Element)o;
+					String name = getVolumeName(element.getAttributeValue(field));
+					if (name.startsWith(identity)){
+						return element;
+					}
 				}
-				return false;
+				return null;
 			}
 
 		};
@@ -1026,20 +1023,23 @@ public class AIP extends FileParser{
 	 * @param idNumber
 	 * @return L'élément demandé ou <code>null</code> si celui-ci n'a pas été trouvé.
 	 */
-	@SuppressWarnings("unchecked")
 	public Element findElement(Element racine, String idNumber){
 		final String id = idNumber;
-		Filter f = new Filter(){
+		Filter<Element> f = new AbstractFilter<Element>(){
+		
 			@Override
-			public boolean matches(Object o) {
-				if(!(o instanceof Element)){return false;}
-				Element element = (Element)o;
-				if (element.getAttributeValue("pk").equals(id)){
-					return true;
+			public Element filter(Object o) {
+				if(o instanceof Element){
+					Element element = (Element)o;
+					if (element.getAttributeValue("pk").equals(id)){
+						return element;
+					}
 				}
-				return false;
+				return null;
 			}
+			
 		};
+		
 		List<Element> elements = racine.getContent(f);
 		if(elements!=null){
 			if(elements.size()>0)
@@ -1049,24 +1049,25 @@ public class AIP extends FileParser{
 	}
 
 
-
-	@SuppressWarnings("unchecked")
 	public List<Element> findElementsByChildId(Element root,String childParam,String value){
 		final String child = childParam;
 		final String childID = value;
-		Filter f = new Filter(){
-			@Override
-			public boolean matches(Object o) {
-				if(!(o instanceof Element)){return false;}
-				Element element = (Element)o;
-				String pkChild = element.getChild(child).getAttributeValue("pk");
-				if (pkChild.equals(childID)){
-					return true;
-				}
-				return false;
-			}
 
+		Filter<Element> f = new AbstractFilter<Element>() {
+
+			@Override
+			public Element filter(Object o) {
+				if(o instanceof Element){
+					Element element = (Element)o;
+					String pkChild = element.getChild(child).getAttributeValue("pk");
+					if (pkChild.equals(childID)){
+						return (Element) o;
+					}
+				}
+				return null;
+			}
 		};
+
 		return root.getContent(f);	
 	}
 

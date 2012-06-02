@@ -28,7 +28,7 @@ import javax.swing.Action;
 import javax.swing.JLabel;
 
 import org.jdesktop.swingx.JXTaskPane;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.Couple;
@@ -394,7 +394,6 @@ public class AIPContext extends Context {
 	}
 
 	
-	@SuppressWarnings("unchecked")
 	private List<JXTaskPane> showAirportInfos(int type, String name){
 		LinkedList<JXTaskPane> taskPanesList = new LinkedList<JXTaskPane>();
 		final JXTaskPane infosGen = new JXTaskPane("Infos générales");

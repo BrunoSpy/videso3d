@@ -22,7 +22,7 @@ import gov.nasa.worldwind.globes.Earth;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * Classe qui prend la description textuelle des points du contour d'une zone et fournit une liste de LatLon.
