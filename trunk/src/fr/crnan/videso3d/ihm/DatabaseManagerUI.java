@@ -60,7 +60,6 @@ import fr.crnan.videso3d.aip.AIP;
 import fr.crnan.videso3d.edimap.Cartes;
 import fr.crnan.videso3d.exsa.Exsa;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
-import fr.crnan.videso3d.kml.KML;
 import fr.crnan.videso3d.pays.Pays;
 import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.stpv.Stpv;
@@ -226,9 +225,6 @@ public class DatabaseManagerUI extends JDialog {
 					} else if(Exsa.isExsaFile(file)){
 						baseImported = true;
 						addDatabase(DatabaseManager.Type.EXSA, file);
-					} else if(KML.isKMLFile(file)){
-						baseImported = true;
-						addDatabase(DatabaseManager.Type.KML, file);
 					} else if(SkyView.isSkyViewFile(file)){
 						baseImported = true;
 						addDatabase(DatabaseManager.Type.SkyView, file);
@@ -316,10 +312,6 @@ public class DatabaseManagerUI extends JDialog {
 			if(files.contains(new File(file.getAbsolutePath()+"/carac_jeu.NCT"))) caracJeuPath = "carac_jeu.NCT";
 			Cartes cartes = new Cartes(file.getAbsolutePath(),caracJeuPath);
 			databases.put(cartes, file.listFiles());
-			break;
-		case KML:
-			KML kml = new KML(file.getAbsolutePath());		
-			databases.put(kml, new File[]{file});
 			break;
 		case SkyView:
 			DatabaseManager.createSkyView(file.getName(), file.getAbsolutePath());

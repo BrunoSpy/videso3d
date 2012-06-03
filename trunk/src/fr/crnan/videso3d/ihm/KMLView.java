@@ -1,6 +1,3 @@
-package fr.crnan.videso3d.ihm;
-
-
 /*
  * This file is part of ViDESO.
  * ViDESO is free software: you can redistribute it and/or modify
@@ -16,73 +13,110 @@ package fr.crnan.videso3d.ihm;
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
  */
+package fr.crnan.videso3d.ihm;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashSet;
-import java.util.LinkedList;
+
+/*
+ * ViDESO is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ViDESO is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
+ */
+import java.awt.BorderLayout;
+import java.io.File;
+import java.net.URL;
+
+import it.cnr.imaa.essi.lablib.gui.checkboxtree.CheckboxTree;
+import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingEvent;
+import it.cnr.imaa.essi.lablib.gui.checkboxtree.TreeCheckingListener;
 
 import javax.swing.JPanel;
-import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
-import fr.crnan.videso3d.Couple;
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.kml.KMLController;
-import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
-import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
-import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
-import gov.nasa.worldwind.util.layertree.LayerTree;
-
+import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.kml.KMLMutableTreeNode;
+import gov.nasa.worldwind.avlist.AVKey;
+import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.ogc.kml.KMLAbstractFeature;
+import gov.nasa.worldwind.ogc.kml.KMLRoot;
+import gov.nasa.worldwind.ogc.kml.impl.KMLController;
+import gov.nasa.worldwind.util.WWIO;
+import gov.nasa.worldwind.util.WWUtil;
 
 /**
  * @author Mickael Papail
- * @version 0.1
+ * @author Bruno Spyckerelle
+ * @version 0.2.0
  */
-public class KMLView extends FilteredMultiTreeTableView {
+public class KMLView extends JPanel{
 
-	protected LayerTree layertree;	
-	
-	public KMLView() {
-
-		try {
-			if(DatabaseManager.getCurrentKML() != null) { //si pas de bdd, ne pas creer la vue
-			/*	
-				 gov.nasa.worldwind.examples.util.layertree.KMLLayerTreeNode layerNode = new KMLLayerTreeNode(layer, kmlRoot);
-		            this.layerTree.getModel().addLayer(layerNode);
-		            this.layerTree.makeVisible(layerNode.getPath());
-		            layerNode.expandOpenContainers(this.layerTree);*/		
-				DefaultMutableTreeNode kmlTree = new DefaultMutableTreeNode("root");				
-				this.fillKmlTree(kmlTree);			
+	private KMLRoot kmlRoot;
+	private KMLController controller;
+	private RenderableLayer layer;
+		
+	public KMLView(KMLRoot root, final VidesoGLCanvas wwd){
+		this.kmlRoot = root;
+			
+		controller = new KMLController(kmlRoot);
+		layer = new RenderableLayer();
+		layer.setName("KML Layer");
+		
+		layer.addRenderable(controller);
+		
+		wwd.toggleLayer(layer, true);
+		
+		KMLMutableTreeNode rootNode = KMLMutableTreeNode.fromKMLFeature(this.kmlRoot.getFeature());
+		
+		CheckboxTree tree = new CheckboxTree(rootNode);
+		tree.setRootVisible(false);
+		tree.getCheckingModel().addCheckingPath(new TreePath(rootNode));
+		tree.addTreeCheckingListener(new TreeCheckingListener() {
+			
+			@Override
+			public void valueChanged(TreeCheckingEvent e) {
+				KMLMutableTreeNode kmlNode = (KMLMutableTreeNode) e.getPath().getLastPathComponent();
+				kmlNode.getFeature().setVisibility(e.isCheckedPath());
+				wwd.redrawNow();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}		
-	}
+		});
 		
-	private void fillKmlTree(DefaultMutableTreeNode root){		
-	
-	}	
-	
-	@Override
-	public KMLController getController() {
-		return (KMLController) DatasManager.getController(Type.KML);
+		this.add(tree, BorderLayout.CENTER);
+        
 	}
 	
-	@Override
-	public void showObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
+	public Layer getLayer(){
+		return this.layer;
 	}
+	
+	public String getTitle(){
+		return (String) kmlRoot.getField(AVKey.DISPLAY_NAME);
+	}
+	
+	protected static String formName(Object kmlSource, KMLRoot kmlRoot)
+    {
+        KMLAbstractFeature rootFeature = kmlRoot.getFeature();
 
-	@Override
-	public void hideObject(int type, String name) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+        if (rootFeature != null && !WWUtil.isEmpty(rootFeature.getName()))
+            return rootFeature.getName();
+
+        if (kmlSource instanceof File)
+            return ((File) kmlSource).getName();
+
+        if (kmlSource instanceof URL)
+            return ((URL) kmlSource).getPath();
+
+        if (kmlSource instanceof String && WWIO.makeURL((String) kmlSource) != null)
+            return WWIO.makeURL((String) kmlSource).getPath();
+
+        return "KML Layer";
+    }
 }

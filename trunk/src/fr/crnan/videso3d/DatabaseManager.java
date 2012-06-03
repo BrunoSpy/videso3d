@@ -64,7 +64,7 @@ public final class DatabaseManager {
 	/**
 	 * Types de base de données possibles
 	 */
-	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, RadioCov, SkyView, AIP, KML, Databases};
+	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, RadioCov, SkyView, AIP, Databases};
 	/**
 	 * Base des frontières Pays
 	 */
@@ -101,10 +101,6 @@ public final class DatabaseManager {
 	 * Base AIP
 	 */
 	private Connection currentAIP;
-	/**
-	 * Connection par défaut
-	 */
-	private Connection currentKML;
 	/**
 	 * Base KML
 	 */
@@ -291,16 +287,6 @@ public final class DatabaseManager {
 				}
 			}
 			return instance.currentAIP;
-		case KML:
-			if(instance.currentKML == null) {
-				instance.currentKML = DriverManager.getConnection("jdbc:sqlite:"+name);
-			} else {
-				if(!instance.currentKML.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
-					instance.currentKML.close();
-					instance.currentKML = DriverManager.getConnection("jdbc:sqlite:"+name);
-				}
-			}
-			return instance.currentKML;
 		default:
 			return null;
 		}
@@ -1023,17 +1009,6 @@ public final class DatabaseManager {
 		DatabaseManager.addDatabase(name, Type.AIP, new SimpleDateFormat().format(new Date()));
 	}
 	
-	/* crée un lien des données KML dans la BD */
-	public static void createKML(String name, String path) throws SQLException{
-		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
-		insertClef.setString(1, "path");
-		insertClef.setString(2, name);
-		insertClef.setString(3, path);
-		insertClef.executeUpdate();
-		insertClef.close();
-		DatabaseManager.addDatabase(name, Type.KML, new SimpleDateFormat().format(new Date()));
-	}
-	
 	/**
 	 * Supprimer une base de donnees
 	 * @param name Nom de la base
@@ -1100,13 +1075,7 @@ public final class DatabaseManager {
 				instance.currentAIP.close();
 				instance.currentAIP = null;
 			}
-			break;	
-		case KML:
-			if (instance.currentAIP != null && instance.currentAIP.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
-				instance.currentAIP.close();
-				instance.currentAIP = null;
-			}
-			break;	
+			break;
 		default:
 			break;
 		}
@@ -1423,15 +1392,6 @@ public final class DatabaseManager {
 		return DatabaseManager.getCurrent(Type.AIP);
 	}
 	
-	/**
-	 * Renvoit une connection vers la base KML sélectionnée
-	 * @return {@link Statement}
-	 * @throws SQLException
-	 */	
-	public static Statement getCurrentKML() throws SQLException {
-		return DatabaseManager.getCurrent(Type.KML);
-	}
-	
 	public static void closeAll(){
 			try {
 				if(instance.currentPays != null) { instance.currentPays.close(); instance.currentPays = null;}
@@ -1443,7 +1403,6 @@ public final class DatabaseManager {
 				if(instance.currentRadioCov != null) { instance.currentRadioCov.close();instance.currentRadioCov = null;}
 				if(instance.currentSkyView != null) {instance.currentSkyView.close(); instance.currentSkyView = null;}
 				if(instance.currentAIP!=null) {instance.currentAIP.close(); instance.currentAIP = null;}
-				if(instance.currentKML!=null) {instance.currentKML.close(); instance.currentKML = null;}
 				if(instance.databases != null) { instance.databases.close(); instance.databases = null;}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -1491,9 +1450,9 @@ public final class DatabaseManager {
 			return Type.SkyView;
 		} else if(type.equalsIgnoreCase("AIP")){
 			return Type.AIP;
-		} else if(type.equalsIgnoreCase("KML")){
-				return Type.KML;
-		}		
+		} //else if(type.equalsIgnoreCase("KML")){
+//				return Type.KML;
+//		}		
 		return null;
 	}
 	

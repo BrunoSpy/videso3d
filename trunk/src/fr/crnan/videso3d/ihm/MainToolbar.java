@@ -41,6 +41,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.stream.XMLStreamException;
 
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
@@ -53,10 +54,12 @@ import fr.crnan.videso3d.ihm.components.DropDownButton;
 import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
 import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
+import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Globe;
+import gov.nasa.worldwind.ogc.kml.KMLRoot;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwindx.examples.util.ScreenShotAction;
@@ -165,6 +168,30 @@ public class MainToolbar extends JToolBar {
 		this.add(snapshot);
 		
 		this.addSeparator();
+		//ajout d'un kml
+		final JButton kml = new JButton(new ImageIcon(getClass().getResource("/resources/add_kml_22.png")));
+		kml.setToolTipText("Importer un fichier KML");
+		kml.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				VFileChooser fileChooser = new VFileChooser();
+				fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("KML/KMZ File", "kml", "kmz"));
+				if(fileChooser.showOpenDialog(mainWindow)== JFileChooser.APPROVE_OPTION){
+					try {
+						KMLRoot kmlRoot = KMLRoot.createAndParse(fileChooser.getSelectedFile());
+						kmlRoot.setField(AVKey.DISPLAY_NAME, KMLView.formName(fileChooser.getSelectedFile(), kmlRoot));
+						mainWindow.addKMLView(new KMLView(kmlRoot, wwd));
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (XMLStreamException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		this.add(kml);
+		
 		//ajout d'images
 		final DropDownButton images = new DropDownButton(new ImageIcon(getClass().getResource("/resources/add_geotiff_22.png")));
 		images.setToolTipText("Ajouter une image");
