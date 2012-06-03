@@ -28,15 +28,12 @@ import fr.crnan.videso3d.exsa.STRContext;
 import fr.crnan.videso3d.exsa.STRController;
 import fr.crnan.videso3d.ihm.AIPView;
 import fr.crnan.videso3d.ihm.EdimapView;
-import fr.crnan.videso3d.ihm.KMLView;
 import fr.crnan.videso3d.ihm.RadioCovView;
 import fr.crnan.videso3d.ihm.SkyView;
 import fr.crnan.videso3d.ihm.StipView;
 import fr.crnan.videso3d.ihm.StpvView;
 import fr.crnan.videso3d.ihm.StrView;
 import fr.crnan.videso3d.ihm.components.DataView;
-import fr.crnan.videso3d.kml.KMLContext;
-import fr.crnan.videso3d.kml.KMLController;
 import fr.crnan.videso3d.radio.RadioCovContext;
 import fr.crnan.videso3d.radio.RadioCovController;
 import fr.crnan.videso3d.skyview.SkyViewContext;
@@ -123,9 +120,6 @@ public final class DatasManager {
 			case SkyView:
 				DatasManager.addDatas(type, new SkyViewController(wwd), new SkyViewContext(), new SkyView());
 				break;
-			case KML:
-				DatasManager.addDatas(type, new KMLController(wwd), new KMLContext(), new KMLView());
-				break;
 			default:
 				Logging.logger().severe("Type "+type+" inconnu");
 				throw new Exception("Type "+type+" inconnu");
@@ -159,8 +153,6 @@ public final class DatasManager {
 			return StpvController.getNumberInitSteps();
 		case RadioCov:
 			return RadioCovController.getNumberInitSteps();
-		case KML :
-			return KMLController.getNumberInitSteps();
 		default:
 			return 0;
 		}

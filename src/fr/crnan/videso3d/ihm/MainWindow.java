@@ -419,6 +419,45 @@ public class MainWindow extends JFrame {
 		return statusBar;
 	}
 
+	/**
+	 * Adds a KMLView to the data explorer
+	 * @param view
+	 */
+	public void addKMLView(final KMLView view){
+		if(!(view instanceof Component))
+			return;
+		
+		int i = 0;
+		if(control.getSingleDockable(view.getTitle()) != null){
+			do{
+				i++;
+			} while (control.getSingleDockable(view.getTitle()+"-"+i) != null);
+		}
+		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?view.getTitle():view.getTitle()+"-"+i);
+		dockable.setTitleText(view.getTitle());
+
+		dockable.setLocation(locationDatas);
+		dockable.setCloseable(true);
+		dockable.add((Component) view);
+		control.addDockable(dockable);
+		dockable.setVisible(true);
+		
+		dockable.addCDockableStateListener(new CDockableStateListener() {
+			
+			@Override
+			public void visibilityChanged(CDockable dockable) {
+					wwd.removeLayer(view.getLayer());
+			}
+				
+			@Override
+			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
+		});
+	}
+	
+	/* ******************************************************* */
+	/* ***************** Gestion des trajectoires ************ */
+	/* ******************************************************* */
+	
 	public void addTrajectoriesViews(File[] filesT){
 		this.addTrajectoriesViews(filesT, null, true);
 	}
