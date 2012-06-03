@@ -35,6 +35,7 @@ import fr.crnan.videso3d.formats.opas.OPASFileFilter;
 import fr.crnan.videso3d.formats.plns.PLNSFileFilter;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
+import fr.crnan.videso3d.ihm.components.VSpinner;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
 
@@ -44,17 +45,23 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingWorker;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.ButtonGroup;
 import javax.swing.JTextField;
 import java.awt.Component;
 import javax.swing.SwingConstants;
+import javax.swing.JCheckBox;
+
 
 /**
  * IHM to filter and import trajectories
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class TrajectoriesImportUI extends JDialog {
 	
@@ -65,6 +72,17 @@ public class TrajectoriesImportUI extends JDialog {
 	private JRadioButton rdbtnEt;
 	private JRadioButton filterYes; 
 	private JTextField modeA;
+	
+	private VSpinner heureDebut;
+	private VSpinner minuteDebut;
+	private VSpinner secondesDebut;
+	private VSpinner heureFin;
+	private VSpinner minutesFin;
+	private VSpinner secondesFin;
+	
+	private JCheckBox enableHeureDebut;
+	private JCheckBox enableHeureFin;
+	
 	private final ButtonGroup filterbtnGrp = new ButtonGroup();
 	
 	public TrajectoriesImportUI(final MainWindow mainWindow) {
@@ -127,28 +145,276 @@ public class TrajectoriesImportUI extends JDialog {
 					adep.setEnabled(filterYes.isSelected());
 					adest.setEnabled(filterYes.isSelected());
 					modeA.setEnabled(filterYes.isSelected());
+					enableHeureDebut.setEnabled(filterYes.isSelected());
+					heureDebut.setEnabled(filterYes.isSelected() && enableHeureDebut.isSelected());
+					minuteDebut.setEnabled(filterYes.isSelected() && enableHeureDebut.isSelected());
+					secondesDebut.setEnabled(filterYes.isSelected() && enableHeureDebut.isSelected());
+					enableHeureFin.setEnabled(filterYes.isSelected());
+					heureFin.setEnabled(filterYes.isSelected() && enableHeureFin.isSelected());
+					minutesFin.setEnabled(filterYes.isSelected() && enableHeureFin.isSelected());
+					secondesFin.setEnabled(filterYes.isSelected() && enableHeureFin.isSelected());
+
 			}
 		});
 		
 		filterNo.setSelected(true);
+		
+		JLabel lblHeureDeFin = new JLabel("Heure de fin :");
+		
+		JLabel lblHeureDebut = new JLabel("Heure de début :");
+		
+		heureDebut = new VSpinner(0, 23);
+		heureDebut.setEnabled(false);
+		heureDebut.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(enableHeureFin.isSelected()){
+					if(((SpinnerNumberModel)((JSpinner)e.getSource()).getModel()).getNumber().intValue() >
+					((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()){
+						heureFin.setValue(heureDebut.getValue());
+					} 
+					if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+							((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+							(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() >
+							((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue())){
+						minutesFin.setValue(minuteDebut.getValue());
+					}
+					if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+							((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+							(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() ==
+							((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue()) &&
+							(((SpinnerNumberModel)(secondesDebut).getModel()).getNumber().intValue() >
+							((SpinnerNumberModel)(secondesFin).getModel()).getNumber().intValue())){
+						secondesFin.setValue(secondesDebut.getValue());
+					}
+				}
+			}
+		});
+
+		JLabel lblSep1 = new JLabel(":");
+
+		minuteDebut = new VSpinner(0,59);
+		minuteDebut.setEnabled(false);
+		minuteDebut.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(enableHeureFin.isSelected()){
+					if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+							((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+							(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() >
+							((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue())){
+						minutesFin.setValue(minuteDebut.getValue());
+					}
+					if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+							((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+							(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() ==
+							((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue()) &&
+							(((SpinnerNumberModel)(secondesDebut).getModel()).getNumber().intValue() >
+							((SpinnerNumberModel)(secondesFin).getModel()).getNumber().intValue())){
+						secondesFin.setValue(secondesDebut.getValue());
+					}
+				}
+			}
+		});
+
+		JLabel lblSep2 = new JLabel(":");
+
+		secondesDebut = new VSpinner(0,59);
+		secondesDebut.setEnabled(false);
+		secondesDebut.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(enableHeureFin.isSelected()){
+					if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+							((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+							(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() ==
+							((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue()) &&
+							(((SpinnerNumberModel)(secondesDebut).getModel()).getNumber().intValue() >
+							((SpinnerNumberModel)(secondesFin).getModel()).getNumber().intValue())){
+						secondesFin.setValue(secondesDebut.getValue());
+					}
+				}
+			}
+		});
+
+		heureFin = new VSpinner(0,23);
+		heureFin.setEnabled(false);
+		heureFin.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(enableHeureDebut.isSelected()){
+					if(((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() >
+					((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()){
+						heureDebut.setValue(heureFin.getValue());
+					}
+					if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+							((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+							(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() >
+							((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue())){
+						minuteDebut.setValue(minutesFin.getValue());
+					}
+					if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+							((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+							(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() ==
+							((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue()) &&
+							(((SpinnerNumberModel)(secondesDebut).getModel()).getNumber().intValue() >
+							((SpinnerNumberModel)(secondesFin).getModel()).getNumber().intValue())){
+						secondesDebut.setValue(secondesFin.getValue());
+					}
+				}
+			}
+		});
+
+		JLabel lblSep3 = new JLabel(":");
+		
+		minutesFin = new VSpinner(0,59);
+		minutesFin.setEnabled(false);
+		minutesFin.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(enableHeureDebut.isSelected()){
+					if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+					((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+					(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() >
+					((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue())){
+						minuteDebut.setValue(minutesFin.getValue());
+					}
+					if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+							((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+							(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() ==
+							((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue()) &&
+							(((SpinnerNumberModel)(secondesDebut).getModel()).getNumber().intValue() >
+							((SpinnerNumberModel)(secondesFin).getModel()).getNumber().intValue())){
+								secondesDebut.setValue(secondesFin.getValue());
+							}
+				}
+			}
+		});
+		
+		JLabel lblSep4 = new JLabel(":");
+		
+		secondesFin = new VSpinner(0,59);
+		secondesFin.setEnabled(false);
+		secondesFin.addChangeListener(new ChangeListener() {
+			
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(enableHeureDebut.isSelected()){
+					if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+					((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+					(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() ==
+					((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue()) &&
+					(((SpinnerNumberModel)(secondesDebut).getModel()).getNumber().intValue() >
+					((SpinnerNumberModel)(secondesFin).getModel()).getNumber().intValue())){
+						secondesDebut.setValue(secondesFin.getValue());
+					}
+				}
+			}
+		});
+		
+		enableHeureDebut = new JCheckBox("");
+		enableHeureDebut.setEnabled(false);	
+		enableHeureDebut.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				heureDebut.setEnabled(enableHeureDebut.isSelected());
+				minuteDebut.setEnabled(enableHeureDebut.isSelected());
+				secondesDebut.setEnabled(enableHeureDebut.isSelected());
+				
+				if(((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() >
+				((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()){
+					heureDebut.setValue(heureFin.getValue());
+				}
+				if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+						((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+						(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() >
+						((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue())){
+					minuteDebut.setValue(minutesFin.getValue());
+				}
+				if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+						((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+						(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() ==
+						((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue()) &&
+						(((SpinnerNumberModel)(secondesDebut).getModel()).getNumber().intValue() >
+						((SpinnerNumberModel)(secondesFin).getModel()).getNumber().intValue())){
+					secondesDebut.setValue(secondesFin.getValue());
+				}
+			}
+		});
+		
+		enableHeureFin = new JCheckBox("");
+		enableHeureFin.setEnabled(false);
+		enableHeureFin.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				heureFin.setEnabled(enableHeureFin.isSelected());
+				minutesFin.setEnabled(enableHeureFin.isSelected());
+				secondesFin.setEnabled(enableHeureFin.isSelected());	
+				
+				if(((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() >
+				((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()){
+					heureFin.setValue(heureDebut.getValue());
+				} 
+				if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+						((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+						(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() >
+						((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue())){
+					minutesFin.setValue(minuteDebut.getValue());
+				}
+				if((((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() ==
+						((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()) &&
+						(((SpinnerNumberModel)(minuteDebut).getModel()).getNumber().intValue() ==
+						((SpinnerNumberModel)(minutesFin).getModel()).getNumber().intValue()) &&
+						(((SpinnerNumberModel)(secondesDebut).getModel()).getNumber().intValue() >
+						((SpinnerNumberModel)(secondesFin).getModel()).getNumber().intValue())){
+					secondesFin.setValue(secondesDebut.getValue());
+				}
+			}
+		});
 		
 		GroupLayout gl_panel = new GroupLayout(filterContent);
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addComponent(lblActiverLesFiltres)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING, false)
-								.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-									.addComponent(lblFiltrerLesTrajectoires)
-									.addComponent(lblAroportDpart)
-									.addComponent(lblAroportArrive))
+							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
+								.addComponent(lblAroportArrive, Alignment.LEADING)
+								.addComponent(lblAroportDpart, Alignment.LEADING)
+								.addComponent(lblFiltrerLesTrajectoires, Alignment.LEADING)
+								.addComponent(lblModeA, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+								.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
+									.addComponent(lblHeureDebut)
+									.addPreferredGap(ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+									.addComponent(enableHeureDebut))
+								.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
+									.addComponent(lblHeureDeFin)
+									.addPreferredGap(ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+									.addComponent(enableHeureFin)
+									.addPreferredGap(ComponentPlacement.RELATED)))
+							.addGap(6)
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_panel.createSequentialGroup()
-									.addComponent(lblModeA, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED, 20, Short.MAX_VALUE)))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING, false)
+									.addComponent(heureFin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(lblSep3)
+									.addComponent(minutesFin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(lblSep4)
+									.addComponent(secondesFin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_panel.createSequentialGroup()
+									.addComponent(heureDebut, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(lblSep1)
+									.addComponent(minuteDebut, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(lblSep2)
+									.addComponent(secondesDebut, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 								.addComponent(adest, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
 								.addComponent(modeA, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
 								.addComponent(rdbtnEt)
@@ -157,42 +423,73 @@ public class TrajectoriesImportUI extends JDialog {
 									.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 										.addComponent(filterNo)
 										.addComponent(rdbtnOu))
-									.addComponent(adep, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE))))
-						.addComponent(lblActiverLesFiltres)))
+									.addComponent(adep, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE))))))
 		);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addContainerGap()
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel.createSequentialGroup()
-							.addComponent(filterNo)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(rdbtnOu))
-						.addGroup(gl_panel.createSequentialGroup()
-							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblActiverLesFiltres)
-								.addComponent(filterYes))
-							.addPreferredGap(ComponentPlacement.RELATED)
+							.addContainerGap()
 							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_panel.createSequentialGroup()
+									.addComponent(filterNo)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(rdbtnOu))
+								.addGroup(gl_panel.createSequentialGroup()
 									.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblFiltrerLesTrajectoires)
-										.addComponent(rdbtnEt))
+										.addComponent(lblActiverLesFiltres)
+										.addComponent(filterYes))
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_panel.createSequentialGroup()
+											.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+												.addComponent(lblFiltrerLesTrajectoires)
+												.addComponent(rdbtnEt))
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+												.addComponent(adep, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+												.addComponent(lblAroportDpart)))
+										.addGroup(gl_panel.createSequentialGroup()
+											.addGap(58)
+											.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+												.addComponent(lblAroportArrive)
+												.addComponent(adest, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-										.addComponent(adep, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblAroportDpart)))
+										.addComponent(modeA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblModeA))))
+							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_panel.createSequentialGroup()
-									.addGap(58)
+									.addPreferredGap(ComponentPlacement.RELATED)
 									.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblAroportArrive)
-										.addComponent(adest, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
-								.addComponent(modeA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblModeA))))
-					.addContainerGap(18, Short.MAX_VALUE))
+										.addComponent(heureDebut, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblSep1)
+										.addComponent(minuteDebut, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblSep2)
+										.addComponent(secondesDebut, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+								.addGroup(gl_panel.createSequentialGroup()
+									.addGap(12)
+									.addComponent(lblHeureDebut)))
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(enableHeureDebut)
+							.addGap(10)))
+					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+							.addComponent(heureFin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblSep3)
+							.addComponent(minutesFin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblSep4)
+							.addComponent(secondesFin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGap(6)
+							.addComponent(lblHeureDeFin))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGap(4)
+							.addComponent(enableHeureFin)))
+					.addContainerGap())
 		);
 		gl_panel.linkSize(SwingConstants.HORIZONTAL, new Component[] {adep, adest, modeA});
 		filterContent.setLayout(gl_panel);
@@ -271,7 +568,14 @@ public class TrajectoriesImportUI extends JDialog {
 			if(!adep.getText().isEmpty()) filters.add(new TrajectoryFileFilter(TracksModel.FIELD_ADEP, adep.getText()));
 			if(!adest.getText().isEmpty()) filters.add(new TrajectoryFileFilter(TracksModel.FIELD_ADEST, adest.getText()));
 			if(!modeA.getText().isEmpty()) filters.add(new TrajectoryFileFilter(TracksModel.FIELD_TYPE_MODE_A, modeA.getText()));
-
+			if(enableHeureDebut.isSelected()){
+				filters.add(new TrajectoryFileFilter(TracksModel.FIELD_TYPE_TIME_BEGIN,
+													heureDebut.getValue()+":"+minuteDebut.getValue()+":"+secondesDebut.getValue()));
+			}
+			if(enableHeureFin.isSelected()){
+				filters.add(new TrajectoryFileFilter(TracksModel.FIELD_TYPE_TIME_END,
+												heureFin.getValue()+":"+minutesFin.getValue()+":"+secondesFin.getValue()));
+			}
 			return filters;
 		} else {
 			return null;

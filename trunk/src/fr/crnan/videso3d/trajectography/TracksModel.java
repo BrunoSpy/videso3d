@@ -26,7 +26,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Represents a set of tracks
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class TracksModel extends AbstractTableModel {
 
@@ -39,6 +39,8 @@ public class TracksModel extends AbstractTableModel {
 	public static final int FIELD_INDICATIF = 4;
 	public static final int FIELD_TYPE_AVION = 5;
 	public static final int FIELD_TYPE_MODE_A = 6;
+	public static final int FIELD_TYPE_TIME_BEGIN = 7;
+	public static final int FIELD_TYPE_TIME_END= 8;
 	
 	private String[] columnNames = {"Indicatif", "Départ", "Arrivée", "IAF", "Type", "Mode A", "Affiché"};
 
