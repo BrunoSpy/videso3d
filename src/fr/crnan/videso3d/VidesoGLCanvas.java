@@ -785,6 +785,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 	public void delete(Object o){
 		if(o instanceof DatabaseVidesoObject){
 			DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType()).hideObject(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
+			this.getSelectedObjects().remove(o);
 		} else if(o instanceof Airspace){
 			this.deleteAirspace((Airspace) o);
 		} else if(o instanceof Balise){
@@ -804,6 +805,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 				}
 			}
 		}
+		this.getSelectedObjects().remove(balise);
 	}
 	
 	public void deleteAirspace(Airspace airspace){
@@ -820,10 +822,12 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 				PolygonEditorsManager.stopEditAirspace((Polygon) airspace);
 			}
 		}
+		this.getSelectedObjects().remove(airspace);
 	}
 
 	public void deletePath(Path p){
 		p.setVisible(false);
+		this.getSelectedObjects().remove(p);
 	}
 	
 	/*--------------------------------------------------------------*/
