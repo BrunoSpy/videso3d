@@ -244,6 +244,8 @@ public class AirspaceMenu extends JPopupMenu {
 			}
 		});
 		this.add(save);
+		
+		//Coordonnées
 		if(airspace instanceof DatabaseVidesoObject){
 			VidesoController c = DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType());
 			if(!(c instanceof STRController || c instanceof EdimapController)){
@@ -259,8 +261,9 @@ public class AirspaceMenu extends JPopupMenu {
 						c.setLocationsVisible(type, name, !locationsVisible);
 					}
 				});
+			}
 		}
-		}
+		
 		JMenuItem delete = new JMenuItem("Supprimer");
 		delete.addActionListener(new ActionListener() {
 			

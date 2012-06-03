@@ -36,7 +36,7 @@ import java.util.Vector;
 /**
  * Lecteur de fichiers Elvira GEO.<br />
  * @author Bruno Spyckerelle
- * @version 0.2.5
+ * @version 0.2.6
  */
 public class GEOReader extends TrackFilesReader{
 		
@@ -98,6 +98,21 @@ public class GEOReader extends TrackFilesReader{
         BufferedReader in = new BufferedReader(
         						new InputStreamReader(stream));
         
+        Double timeFileFilterBegin = null;
+        Double timeFileFilterEnd = null;
+        //Find if a Time filter is set
+        if(filters != null && filters.size() != 0){
+        	for(TrajectoryFileFilter f : filters){
+        		if(f.getField() == TracksModel.FIELD_TYPE_TIME_BEGIN){
+        			String[] time = f.getRegexp().split(":");
+        			timeFileFilterBegin = (double) ((new Integer(time[0])*3600)+(new Integer(time[1])*60)+(new Integer(time[2])));
+        		} else if(f.getField() == TracksModel.FIELD_TYPE_TIME_END){
+        			String[] time = f.getRegexp().split(":");
+        			timeFileFilterEnd = (double) ((new Integer(time[0])*3600)+(new Integer(time[1])*60)+(new Integer(time[2])));
+        		}
+        	}
+        }
+
         try
         {
         	GEOTrack track = null;
@@ -113,8 +128,13 @@ public class GEOReader extends TrackFilesReader{
         					}
         					track = new GEOTrack(sentence);
         					trackValid = this.isTrackValid(track);
-        				} else {
-        					if(trackValid) track.addTrackPoint(sentence);
+        				} 
+        				if(trackValid){
+        					GEOTrackPoint point = new GEOTrackPoint(sentence);
+        					if((timeFileFilterBegin == null || (timeFileFilterBegin != null && point.getDecimalTime() > timeFileFilterBegin))
+        							&& (timeFileFilterEnd == null || (timeFileFilterEnd != null && point.getDecimalTime() < timeFileFilterEnd))){
+        						track.addTrackPoint(sentence);
+        					}
         				}
         			}
         		} 
@@ -136,9 +156,21 @@ public class GEOReader extends TrackFilesReader{
 		}
     }
 
+    
 	@Override
 	protected boolean isTrackValid(VidesoTrack track) {
-		if(filters == null || filters.size() == 0)
+		if(filters == null)
+			return true;
+		
+		int count = 0;
+		for(TrajectoryFileFilter f : filters){
+			if(f.getField() == TracksModel.FIELD_ADEP ||
+					f.getField() == TracksModel.FIELD_ADEST ||
+					f.getField() == TracksModel.FIELD_TYPE_MODE_A){
+				count++;
+			}
+		}
+		if(count == 0) //no usable filter
 			return true;
 		
 		boolean result = !this.disjunctive;

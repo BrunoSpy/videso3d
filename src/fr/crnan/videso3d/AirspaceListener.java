@@ -272,7 +272,7 @@ public class AirspaceListener implements SelectListener {
 					}
 				}
 				
-				if(o instanceof Movable){
+				if(o instanceof Movable && !(o instanceof Path)){
 					JMenuItem changePos = new JMenuItem("Modifier les coordonnées");
 					changePos.addActionListener(new ActionListener() {
 						

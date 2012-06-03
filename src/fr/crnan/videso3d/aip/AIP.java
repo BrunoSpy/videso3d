@@ -445,7 +445,6 @@ public class AIP extends FileParser{
 		double freq = 0;
 		if(!type.equals("VFR") && !type.equals("WPT") && ! type.equals("PNP")){
 			List<Element> elts = findElementsByChildId(document.getRootElement().getChild("Situation").getChild("RadioNavS"), "NavFix", pk);
-			System.out.println(elts.size());
 			if(elts.size()>0){
 				freq = Double.parseDouble(elts.get(0).getChildText("Frequence"));
 			}
