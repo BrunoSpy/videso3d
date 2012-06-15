@@ -54,19 +54,6 @@ Une fois le projet récupéré, il faut le configurer afin qu'il compile correct
   * Aller dans Project->Properties
   * Puis aller dans Java Build Path->Libraries
   * Cliquer sur Add Jars
-  * Ajouter depuis lib les jars suivants : 
-    * gluegen-rt.jar
-    * jgraphx.jar
-    * jogl.jar
-    * lablib-checkboxtree-3.1.jar
-    * log4j.jar
-    * mime-uti.jar
-    * slf4j-api.jar
-    * slf4j-log4j12.jar
-    * sqlite-jdbc.jar
-    * worldwind.jar
-    * swingx.jar
-    * tar.jar
-    * xstream-1.3.1.jar
-  * Dans jogl.jar, configurer _Native library location_ à _Videso3D/lib_ (Workspace, puis choisir lib)
+  * Ajouter depuis lib tous les jars présents, ainsi que le jar présent dans le dossier XStream
+  * Dans jogl.jar, configurer _Native library location_ à _Videso3D/lib_ (Workspace, puis choisir lib32 ou lib64 suivant votre système)
   * Enfin, dans Resource, mettre _Text file encoding_ sur _Other->UTF-8_.
