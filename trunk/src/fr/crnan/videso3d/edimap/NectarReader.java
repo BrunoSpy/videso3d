@@ -15,6 +15,8 @@
  */
 package fr.crnan.videso3d.edimap;
 
+import gov.nasa.worldwind.util.Logging;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,7 +32,7 @@ import javax.swing.SwingWorker;
 /**
  * Lit un fichier Nectar
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public class NectarReader extends SwingWorker<Integer, String>{
 	
@@ -66,13 +68,23 @@ public class NectarReader extends SwingWorker<Integer, String>{
  	}
 
  	public Integer doInBackground(){
- 		BufferedReader in;
+ 		BufferedReader in = null;
  		try {
  			in = new BufferedReader(new InputStreamReader(new ProgressMonitorInputStream(null, "Extraction du fichier " + this.path+" ...", new FileInputStream(this.path))));
  			this.setProgress(0);
  			datas = new Entity("root", this.getEntity(in));
- 		} catch (Exception e) {
+ 		} catch (FileNotFoundException e) {
  			e.printStackTrace();
+ 		} catch (IOException e) {
+			Logging.logger().warning(e.getMessage());
+		} finally {
+ 			if(in != null){
+ 				try{
+ 					in.close();
+ 				} catch (IOException e){
+ 					e.printStackTrace();
+ 				}
+ 			}
  		}
  		this.setProgress(100);
  		return 0;
@@ -85,18 +97,14 @@ public class NectarReader extends SwingWorker<Integer, String>{
 	 * @param close nombre de parenthèses fermantes parcourues
 	 * @return List<Entity> ensemble d'entités
 	 */
-	private List<Entity> getEntity(BufferedReader stream){
-		List<Entity> result = new LinkedList<Entity>();
-		try {
-			while(stream.ready()){
-				Entity entity = this.getNextEntity(stream);
-				if(entity.getSecond() != null) { //gestion de la fin d'un fichier : si il ya des caractères après la dernière parenthèse, cela crée une entité vide
-					result.add(entity);
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+ 	private List<Entity> getEntity(BufferedReader stream) throws IOException{
+ 		List<Entity> result = new LinkedList<Entity>();
+ 		while(stream.ready()){
+ 			Entity entity = this.getNextEntity(stream);
+ 			if(entity.getSecond() != null) { //gestion de la fin d'un fichier : si il ya des caractères après la dernière parenthèse, cela crée une entité vide
+ 				result.add(entity);
+ 			}
+ 		}
 
 		return result;
 	}

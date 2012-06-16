@@ -35,7 +35,6 @@ public class LatLonUtils {
      * Tries to extract a latitude and a longitude from the given text string.
      * @author Patrick Murris
      * @param coordString the input string.
-     * @param globe the current <code>Globe</code>.
      * @return the corresponding <code>LatLon</code> or <code>null</code>.
      */
     public static LatLon computeLatLonFromString(String coordString)

@@ -107,9 +107,8 @@ public class PLNSReader extends TrackFilesReader {
 	}
 	
 	/**
-	 * Return true if it is a PLNS file
 	 * @param f
-	 * @return
+	 * @return true if it is a PLNS file
 	 */
 	public static boolean isPLNSFile(File f){
 		if(f.getName().matches(".*stpv.*") || f.getName().matches(".*STPV.*")){
@@ -120,9 +119,8 @@ public class PLNSReader extends TrackFilesReader {
 	}
 
 	/**
-	 * Return true if it is a SQLite PLNS database
 	 * @param f
-	 * @return
+	 * @return true if it is a SQLite PLNS database
 	 */
 	public static boolean isSQLitePLNSFile(File f){
 		//Chargement du driver

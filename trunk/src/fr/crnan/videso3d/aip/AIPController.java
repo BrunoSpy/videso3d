@@ -980,7 +980,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	 * @param routeName Le nom de la route (et pas le nom du segment)
 	 * @param segmentSequenceString le numéro de séquence  du segment
 	 * @param type le type de route (AWY, PDR ou TAC)
-	 * @return
+	 * @return The next segment if it exists, null if not
 	 */
 	public Route getNext(String routeName, String segmentSequenceString, String type, boolean route3D){
 		Route nextSegment = null;

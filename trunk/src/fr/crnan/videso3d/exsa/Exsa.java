@@ -36,7 +36,7 @@ import gov.nasa.worldwind.util.Logging;
  * Lecteur de fichiers EXSA<br />
  * Détecte automatiquement le type de fichier (formaté ou non).
  * @author Bruno Spyckerelle
- * @version 0.4.4
+ * @version 0.4.5
  */
 public class Exsa extends FileParser {
 	/**
@@ -81,14 +81,23 @@ public class Exsa extends FileParser {
 		} else if(suffix.equalsIgnoreCase(".txt")){
 			//search in th 20 first lines if a line begin with "CARA_GENER" or "CARA.GENER"
 			int count = 0;
+			BufferedReader in = null;
 			try{
-				BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+				in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 				while (in.ready() && count < 20){
 					String line = in.readLine();
 					return line.startsWith("CARA_GENER") || line.startsWith("CARA.GENER");
 				}
 			} catch(IOException e){
 				e.printStackTrace();
+			} finally {
+				if (in != null){
+					try {
+						in.close();
+					} catch (IOException e) {
+						Logging.logger().warning(e.getMessage());
+					}
+				}
 			}
 		}
 		return false;
@@ -140,26 +149,38 @@ public class Exsa extends FileParser {
 	
 	/**
 	 * Récupère le nom de la base de données EXSA
-	 * @throws IOException 
+	 * @throws FileNotFoundException 
 	 */
-	protected void createName() throws IOException {
+	protected void createName() throws FileNotFoundException{
 		Boolean nameFound = false;
 
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path)));
-		while (in.ready() && !nameFound){
-			String line = in.readLine();
-			if (line.startsWith("CARA_GENER")){
-				//on prend le premier mot de la ligne
-				this.name = line.split("\\s+")[1];
-				nameFound = true;
-				formated = true;
-			} else if (line.startsWith("CARA.GENER")){
-				this.name = line.split(",")[2];
-				nameFound = true;
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path)));
+			while (in.ready() && !nameFound){
+				String line = in.readLine();
+				if (line.startsWith("CARA_GENER")){
+					//on prend le premier mot de la ligne
+					this.name = line.split("\\s+")[1];
+					nameFound = true;
+					formated = true;
+				} else if (line.startsWith("CARA.GENER")){
+					this.name = line.split(",")[2];
+					nameFound = true;
+				}
+			}
+		} catch (IOException e){
+			e.printStackTrace();
+		} finally {
+			if(in != null){
+				try {
+					in.close();
+				} catch (IOException e) {
+					Logging.logger().warning(e.getMessage());
+				}
 			}
 		}
-		in.close();
-
+		
 		if(!nameFound){
 			Logging.logger().warning("Fichier EXSA invalide");
 			throw new FileNotFoundException("Fichier EXSA non lisible ou incorrect");
@@ -170,20 +191,22 @@ public class Exsa extends FileParser {
 	 * Récupère les données d'un fichier EXSA
 	 * @throws SQLException 
 	 * @throws ParseException 
-	 * @throws IOException 
 	 */
-	protected void getFromFiles() throws SQLException, IOException, ParseException{
+	protected void getFromFiles() throws SQLException, ParseException{
 		String line = "";
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path)));
-		while (in.ready()){
-			line = in.readLine();
-			if (line.startsWith(formated ? "CARA_GENER" : "CARA.GENER")){
-				this.setFile("CARA_GENER");
-				this.setProgress(0);
-				insert = this.conn.prepareStatement("INSERT INTO caraGener (name, date, jeu, type, oasis, boa, videomap, edimap, satin, calcu, contexte) " +
-				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-				this.setCaraGener(line, formated);
-			} /*else if (line.startsWith("CARA_STRMV")) {
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path)));
+
+			while (in.ready()){
+				line = in.readLine();
+				if (line.startsWith(formated ? "CARA_GENER" : "CARA.GENER")){
+					this.setFile("CARA_GENER");
+					this.setProgress(0);
+					insert = this.conn.prepareStatement("INSERT INTO caraGener (name, date, jeu, type, oasis, boa, videomap, edimap, satin, calcu, contexte) " +
+							"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+					this.setCaraGener(line, formated);
+				} /*else if (line.startsWith("CARA_STRMV")) {
 
 				} else if (line.startsWith("CARA_CALCU")) {
 
@@ -193,13 +216,13 @@ public class Exsa extends FileParser {
 					this.setFile("CENT_CENTR.");
 					this.setProgress(1);
 					insert = this.conn.prepareStatement("insert into centcentr (name, sl, type, str, plafondmsaw, rvsm, plancherrvsm, plafondrvsm, typedonnees, versiondonnees)" +
-					" values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+							" values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					this.setCentCentr(line, formated);
 				} else if (line.startsWith(formated ? "CENT_MOSAI" : "CENT.MOSAI")) {
 					this.setFile("CENT_CENTR.");
 					this.setProgress(2);
 					insert = this.conn.prepareStatement("insert into centmosai (latitude, longitude, xcautra, ycautra, lignes, colonnes, type) " +
-					"values (?, ?, ?, ?, ?, ?, ?)");
+							"values (?, ?, ?, ?, ?, ?, ?)");
 					this.setCentMosai(line, formated);
 				} /*else if (line.startsWith("CENT_V_V_F")) {
 
@@ -213,25 +236,25 @@ public class Exsa extends FileParser {
 					this.setFile("CENT_FLVVF.");
 					this.setProgress(3);
 					insert = this.conn.prepareStatement("insert into centflvvf (name) " +
-					"values (?)");
+							"values (?)");
 					this.setCentFlvvf(line, formated);
 				} else if (line.startsWith(formated ? "CENT_STACK" : "CENT.STACK")) {
 					this.setFile("CENT_STACK");
 					this.setProgress(4);
 					insert = this.conn.prepareStatement("insert into centstack (name, latitude, longitude, xcautra, ycautra, rayonint, rayonext, flinf, flsup, type) " +
-					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 					this.setCentStack(line, formated);
 				} else if (line.startsWith(formated ? "CENT_TMA_F" : "CENT.TMA_F")) {
 					this.setFile("CENT_TMA_F");
 					this.setProgress(5);
 					insert = this.conn.prepareStatement("insert into centtmaf (name, latitude, longitude, xcautra, ycautra, rayon, fl, nomsecteur) " +
-					"values (?, ?, ?, ?, ?, ?, ?, ?)");
+							"values (?, ?, ?, ?, ?, ?, ?, ?)");
 					this.setCentTmaF(line, formated);
 				} else if (line.startsWith(formated ? "CENT_Z_OCC" : "CENT.Z_OCC")) {
 					this.setFile("CENT_Z_OCC.");
 					this.setProgress(6);
 					insert = this.conn.prepareStatement("insert into centzocc (name, espace, terrains) " +
-					"values (?, ?, ?)");
+							"values (?, ?, ?)");
 					this.setCentZOcc(line, formated);
 				} /*else if (line.startsWith("CENT_ZONES")) {
 
@@ -239,25 +262,25 @@ public class Exsa extends FileParser {
 					this.setFile("CENT_SCVVF.");
 					this.setProgress(7);
 					insert = this.conn.prepareStatement("insert into centscvvf (carre, souscarre, vvfs, plafonds, planchers) " +
-					"values (?, ?, ?, ?, ?)");
+							"values (?, ?, ?, ?, ?)");
 					this.setCentScvvf(line, formated);
 				}else if (line.startsWith(formated ? "CENT_SCODF" : "CENT.SCODF")){
 					this.setFile("CENT_SCODF");
 					this.setProgress(8);
 					insert = this.conn.prepareStatement("insert into centscodf (vvf, debut, fin, espaces) " +
-					"values (?, ?, ?, ?)");
+							"values (?, ?, ?, ?)");
 					this.setCentSCodf(line, formated);
 				} else if (line.startsWith(formated ? "CENT_SCTMA" : "CENT.SCTMA")) {
 					this.setFile("CENT_SCTMA");
 					this.setProgress(9);
 					insert = this.conn.prepareStatement("insert into centsctma (carre, souscarre, v1, v2, v3, name) " +
-					"values (?, ?, ?, ?, ?, ?)");
+							"values (?, ?, ?, ?, ?, ?)");
 					this.setCentScTma(line, formated);
 				} else if (line.startsWith(formated ? "CENT_SCZOC" : "CENT.SCZOC")) {
 					this.setFile("CENT_SCZOC.");
 					this.setProgress(10);
 					insert = this.conn.prepareStatement("insert into centsczoc (carre, souscarre, zone, plafond) " +
-					"values (?, ?, ?, ?)");
+							"values (?, ?, ?, ?)");
 					this.setCentSczoc(line, formated);
 					insert.executeBatch();
 				} /*else if (line.startsWith("CENT_ARVSM")) {
@@ -311,13 +334,13 @@ public class Exsa extends FileParser {
 					this.setProgress(11);
 					insert = this.conn.prepareStatement("insert into radrgener (name, numero, type, nommosaique, latitude, longitude, xcautra, ycautra, " +
 							"ecart, radarrelation, typerelation, typeplots, typeradar, codepays, coderadar, militaire) " +
-					"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
+							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
 					this.setRadrGener(line, formated);
 				} else if (line.startsWith(formated ? "RADR_TECHN" : "RADR.TECHN")) {
 					this.setFile("RADR_TECHN");
 					this.setProgress(12);
 					insert = this.conn.prepareStatement("insert into radrtechn (name, vitesse, hauteur, portee, deport) " +
-					"values (?, ?, ?, ?, ?)");
+							"values (?, ?, ?, ?, ?)");
 					this.setRadrTechn(line, formated);
 				} /*else if (line.startsWith("RADR_CALAG")) {
 
@@ -471,13 +494,13 @@ public class Exsa extends FileParser {
 					this.setFile("FICA_AFNIV.");
 					this.setProgress(14);
 					insert = this.conn.prepareStatement("insert into ficaafniv (abonne, carre, plancher, plafond, elimine, firstcode, lastcode) " +
-					"values (?, ?, ?, ?, ?, ?, ?)");
+							"values (?, ?, ?, ?, ?, ?, ?)");
 					this.setFicaAfniv(line, formated);
 				} else if (line.startsWith(formated ? "FICA_AFNIC" : "FICA.AFNIC")) {
 					this.setFile("FICA_AFNIC.");
 					this.setProgress(15);
 					insert = this.conn.prepareStatement("insert into ficaafnic (abonne, carre, plancher, plafond, firstcode, lastcode) " +
-					"values (?, ?, ?, ?, ?, ?)");
+							"values (?, ?, ?, ?, ?, ?)");
 					this.setFicaAfnic(line, formated);
 				}/* else if (line.startsWith("FICA_CORLI")) {
 
@@ -494,10 +517,19 @@ public class Exsa extends FileParser {
 				} else if (line.startsWith("MTEO_METEO")) {
 
 				}*/
+			}
+			//	insert.executeBatch();
+			insert.close();
+			this.setProgress(this.numberFiles());
+		} catch(IOException e){
+			e.printStackTrace();
+		} finally{
+			try {
+				in.close();
+			} catch (IOException e) {
+				Logging.logger().warning(e.getMessage());
+			}
 		}
-		//	insert.executeBatch();
-		insert.close();
-		this.setProgress(this.numberFiles());
 	}
 
 	private void setCentScTma(String line, Boolean formated) throws SQLException, ParseException {

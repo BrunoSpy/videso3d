@@ -87,7 +87,7 @@ public interface VidesoController {
 	/**
 	 * Transforme un string en int conformément aux types gérés par le controlleur
 	 * @param type 
-	 * @return
+	 * @return The corresponding <code>int</code>
 	 */
 	public int string2type(String type);
 	
@@ -110,7 +110,6 @@ public interface VidesoController {
 	public void reset();
 
 	/**
-	 * 
 	 * @param type
 	 * @return tous les objets correspondant au type demandé
 	 */
@@ -125,9 +124,8 @@ public interface VidesoController {
 	public void setColor(Color color, int type, String name);
 
 	/**
-	 * Tell if the controller can change the color of an object of a certain type
 	 * @param type
-	 * @return
+	 * @return True if the controller can change the color of an object of a certain type
 	 */
 	public boolean isColorEditable(int type);
 	
@@ -138,8 +136,7 @@ public interface VidesoController {
 	public HashMap<Integer, List<String>> getSelectedObjectsReference();
 	
 	/**
-	 * Get all selected objects in their xml format
-	 * @return 
+	 * @return all selected objects in their xml format
 	 */
 	public Iterable<Restorable> getSelectedObjects();
 	/**
