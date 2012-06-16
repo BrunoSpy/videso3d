@@ -87,7 +87,7 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	/**
 	 * Ajoute plusieurs balises.<br />
 	 * Utiliser <code>showAll</code> ou <b>showBalise</b> pour rendre visible la balise.
-	 * @param balise Balise à ajouter
+	 * @param balises Balises à ajouter
 	 */
 	@Override
 	public void addBalises(Iterable<? extends Balise> balises) {
@@ -179,7 +179,7 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	/**
 	 * Enlève une balise de la vue.<br />
 	 * Cette balise est toujours accessible pour être à nouveau affichée plus tard.
-	 * @param name
+	 * @param b
 	 */
 	@Override
 	public void hideBalise(Balise b) {
@@ -249,7 +249,7 @@ public class Balise2DLayer extends LayerSet implements BaliseLayer{
 	/**
 	 * Attention : si la balise a un type défini, elle ne sera pas trouvée par cette méthode.
 	 * @param balise
-	 * @return
+	 * @return {@link Balise2D} dont le nom est <code>balise</code>
 	 */
 	public Balise2D getBalise(String balise){
 		return balises.get(balise);

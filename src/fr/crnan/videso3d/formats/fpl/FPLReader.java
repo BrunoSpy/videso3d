@@ -43,6 +43,7 @@ import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.util.Logging;
 
 /**
  * Lecteur de plans de vol importés d'IvanWeb ou de plans de vol fictifs définis simplement par une suite de balises, de coordonnées géographiques 
@@ -89,8 +90,7 @@ public class FPLReader extends TrackFilesReader {
 	}
 
 	/**
-	 * Renvoie le message d'erreur actuel et l'efface.
-	 * @return
+	 * @return le message d'erreur actuel et l'efface.
 	 */
 	public String getErrorMessage(){
 		String erreur = msgErreur;
@@ -98,10 +98,16 @@ public class FPLReader extends TrackFilesReader {
 		return erreur;
 	}
 
+	/**
+	 * 
+	 * @param file
+	 * @return True if the file is a FPLFile
+	 */
 	public static Boolean isFPLFile(File file){
 		Boolean fpl = false;
+		BufferedReader in = null;
 		try {
-			BufferedReader in = new BufferedReader(
+			in = new BufferedReader(
 					new InputStreamReader(
 							new FileInputStream(file)));
 			int count = 0; //nombre de lignes lues
@@ -116,6 +122,12 @@ public class FPLReader extends TrackFilesReader {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				Logging.logger().warning(e.getMessage());
+			}
 		}
 		return fpl;
 	}
@@ -135,9 +147,10 @@ public class FPLReader extends TrackFilesReader {
 	@Override
 	protected void doReadStream(ProgressInputStream stream){
 		String line;
-		BufferedReader in = new BufferedReader(
-				new InputStreamReader(stream), 32);
+		BufferedReader in = null;
 		try{
+			in = new BufferedReader(
+					new InputStreamReader(stream), 32);
 			while(in.ready()){
 				line = in.readLine();
 				if(line.startsWith("(FPL")){
@@ -161,6 +174,12 @@ public class FPLReader extends TrackFilesReader {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally{
+			try {
+				in.close();
+			} catch (IOException e) {
+				Logging.logger().warning(e.getMessage());
+			}
 		}
 	}
 
@@ -873,7 +892,6 @@ public class FPLReader extends TrackFilesReader {
 		/**
 		 * 
 		 * @param firstLine la première ligne du plan de vol
-		 * @param type
 		 */
 		public UnrecognizedFPLException(String firstLine){
 			message += "<i><b><font color=\"#771111\">"+firstLine.replace("(FPL", "")+"</font></b></i> : <br/> " +
@@ -888,7 +906,6 @@ public class FPLReader extends TrackFilesReader {
 
 	@Override
 	protected boolean isTrackValid(VidesoTrack track) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 	

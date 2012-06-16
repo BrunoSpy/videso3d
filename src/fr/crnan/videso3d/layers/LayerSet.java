@@ -371,7 +371,7 @@ public class LayerSet extends LayerList implements Layer {
      * given object.
      * 
      * @param o
-     * @return
+     * @return True if the layer contains the given object
      */
     @Override
     public boolean contains(Object o) {
@@ -396,8 +396,8 @@ public class LayerSet extends LayerList implements Layer {
      * Checks of this LayerSet or some of its contained Layers contains and 
      * object of the given class.
      * 
-     * @param o
-     * @return
+     * @param clazz
+     * @return True if the layer contains an object of the given class
      */
     public boolean containsClass(Class<?> clazz) {
 

@@ -35,17 +35,15 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseNotFoundException;
 import fr.crnan.videso3d.ProgressSupport;
-import fr.crnan.videso3d.ihm.ProgressMonitor;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.stip.PointNotFoundException;
-import fr.crnan.videso3d.trajectography.PLNSTracksModel;
 import gov.nasa.worldwind.util.Logging;
 
 /**
  * Analyse d'une base PLNS.<br />
  * Nécessite une connexion à une base STPV.
  * @author Bruno Spyckerelle
- * @version 0.2.0
+ * @version 0.2.1
  */
 public class PLNSAnalyzer extends ProgressSupport{
 
@@ -124,7 +122,7 @@ public class PLNSAnalyzer extends ProgressSupport{
 	}
 	
 	/**
-	 * @return
+	 * @return {@link DefaultCategoryDataset} contenant la répartition des catégories de code
 	 * @throws DatabaseNotFoundException 
 	 */
 	public DefaultCategoryDataset getCategoryCodesRepartition() throws DatabaseNotFoundException {
@@ -164,6 +162,10 @@ public class PLNSAnalyzer extends ProgressSupport{
 		return dataset;
 	}
 	
+	/**
+	 * 
+	 * @return {@link DefaultCategoryDataset} contenant la répartition des LP
+	 */
 	public DefaultCategoryDataset getLPCodesRepartition(){
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
