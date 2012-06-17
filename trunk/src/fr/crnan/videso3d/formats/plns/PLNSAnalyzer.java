@@ -62,6 +62,8 @@ public class PLNSAnalyzer extends ProgressSupport{
 			base = DriverManager.getConnection("jdbc:sqlite:"+path);
 			//Verify if it is a SQlite file
 			base.createStatement().executeQuery("select * from plns");
+			//une base SQL a bien été donnée
+			fireTaskEnds();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
