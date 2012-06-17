@@ -30,8 +30,6 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -52,7 +50,7 @@ import fr.crnan.videso3d.ihm.components.TilingDesktopPane;
  * Fenêtre d'analyse d'une base PLNS
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class PLNSPanel extends ResultPanel {
 
@@ -62,6 +60,8 @@ public class PLNSPanel extends ResultPanel {
 
 	private TilingDesktopPane desktop;
 
+	private PLNSChartMouseListener chartMouseListener;
+	
 	/**
 	 * 
 	 * @param path
@@ -132,30 +132,13 @@ public class PLNSPanel extends ResultPanel {
 				"Répartition de l'utilisation des codes par LP", "LP", "Total",
 				dataset, PlotOrientation.VERTICAL, false, true, false));
 
-
-		// tile frames when the ancestor is made visible
-		this.addAncestorListener(new AncestorListener() {
-
-			@Override
-			public void ancestorRemoved(AncestorEvent event) {
-			}
-
-			@Override
-			public void ancestorMoved(AncestorEvent event) {
-			}
-
-			@Override
-			public void ancestorAdded(AncestorEvent event) {
-				desktop.tile(true);
-			}
-		});
 	}
 	
 	@Override
 	public void setContext(ContextPanel context) {
-		PLNSChartMouseListener listener = new PLNSChartMouseListener(context);
+		chartMouseListener = new PLNSChartMouseListener(context);
 		for (ChartPanel p : chartPanels) {
-			p.addChartMouseListener(listener);
+			p.addChartMouseListener(chartMouseListener);
 		}
 	}
 
@@ -234,6 +217,9 @@ public class PLNSPanel extends ResultPanel {
 		frame.setVisible(true);
 		desktop.add(frame);
 		desktop.tile(true);
+		if(chartMouseListener != null){
+			panel.addChartMouseListener(chartMouseListener);
+		}
 	}
 
 	private PLNSPanel getThis() {
