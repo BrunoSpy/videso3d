@@ -26,7 +26,7 @@ import java.awt.event.ActionEvent;
 public class ScreenShotAction extends AbstractAction implements RenderingListener
 {
     WorldWindow wwd;
-    private File snapFile;
+    protected File snapFile;
     JFileChooser fileChooser;
 
     public ScreenShotAction(WorldWindow wwd)
@@ -112,7 +112,7 @@ public class ScreenShotAction extends AbstractAction implements RenderingListene
             }
             finally
             {
-                this.snapFile = null;
+               // this.snapFile = null;
                 this.wwd.removeRenderingListener(this);
             }
         }
