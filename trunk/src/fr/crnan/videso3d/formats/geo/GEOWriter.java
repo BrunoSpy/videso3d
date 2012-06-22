@@ -29,7 +29,7 @@ import gov.nasa.worldwind.util.Logging;
  * Export de trajectoires au format GEO<br />
  * Si <code>lite</code> est vrai, n'enregistre que les points pertinents selon {@link Configuration}
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class GEOWriter {
 
@@ -109,7 +109,7 @@ public class GEOWriter {
     				point.getVitesse()+"\t"+
     				"\t"+
     				"\t"+
-    				"\t"+
+    				track.getModeA()+"\t"+
     				track.getIndicatif()+"\t"+
     				"\t"+
     				track.getType()+"\t"+
