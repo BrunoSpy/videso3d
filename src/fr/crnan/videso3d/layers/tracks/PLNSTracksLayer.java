@@ -16,7 +16,6 @@
 package fr.crnan.videso3d.layers.tracks;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -36,20 +35,14 @@ import fr.crnan.videso3d.layers.ProfilLayer;
 import fr.crnan.videso3d.stip.StipController;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TracksModelListener;
-import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
-import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.geom.Sector;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.tracks.Track;
-import gov.nasa.worldwind.tracks.TrackPoint;
-import gov.nasa.worldwindx.examples.analytics.AnalyticSurface;
-import gov.nasa.worldwindx.examples.analytics.AnalyticSurface.GridPointAttributes;
 /**
  * 
  * @author Bruno SPyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class PLNSTracksLayer extends TrajectoriesLayer {
 
@@ -365,38 +358,38 @@ public class PLNSTracksLayer extends TrajectoriesLayer {
 	}
 
 	@Override
-	public void setShadedColors(double minAltitude, double maxAltitude,
+	public void setShadedColors(int param, double minAltitude, double maxAltitude,
 			Color firstColor, Color secondColor) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public double getMinAltitude() {
+	public double getMinValue() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public double getMaxAltitude() {
+	public double getMaxValue() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public Color getMinAltitudeColor() {
+	public Color getMinColor() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Color getMaxAltitudeColor() {
+	public Color getMaxColor() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setMultiColors(Double[] altitudes, Color[] colors) {
+	public void setMultiColors(int param, Double[] altitudes, Color[] colors) {
 		this.altitudes = altitudes;
 		this.multicolors = colors;
 	}
@@ -434,6 +427,12 @@ public class PLNSTracksLayer extends TrajectoriesLayer {
 	@Override
 	public int getAnalyticScale() {
 		return this.scale;
+	}
+
+	@Override
+	public int getParamColor() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	

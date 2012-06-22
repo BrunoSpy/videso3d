@@ -25,7 +25,7 @@ import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer contenant des trajectoires et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.7.0
+ * @version 0.8.0
  */
 public abstract class TrajectoriesLayer extends LayerSet {
 
@@ -56,6 +56,9 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 */
 	public final static int STYLE_ANALYTICS = 6;
 		
+	public final static int PARAM_SPEED = 10;
+	public final static int PARAM_ALTITUDE = 11;
+	
 	public TrajectoriesLayer(TracksModel model){
 		super();
 		this.setModel(model);
@@ -155,17 +158,42 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	
 	public abstract void setDefaultInsideColor(Color color);
 	
-	public abstract void setShadedColors(double minAltitude, double maxAltitude, Color firstColor, Color secondColor);
+	/**
+	 * 
+	 * @param param Speed or altitude
+	 * @param min 
+	 * @param max
+	 * @param firstColor Corresponding to min value
+	 * @param secondColor Corresponding to max value
+	 */
+	public abstract void setShadedColors(int param, double min, double max, Color firstColor, Color secondColor);
 	
-	public abstract double getMinAltitude();
+	/**
+	 * @return Value corresponding to {@link #getMinColor()}
+	 */
+	public abstract double getMinValue();
 	
-	public abstract double getMaxAltitude();
+	/**
+	 * @return Value corresponding to {@link #getMaxColor()}
+	 */
+	public abstract double getMaxValue();
 	
-	public abstract Color getMinAltitudeColor();
+	public abstract Color getMinColor();
 	
-	public abstract Color getMaxAltitudeColor();
+	public abstract Color getMaxColor();
 	
-	public abstract void setMultiColors(Double[] altitudes, Color[] colors);
+	/**
+	 * @return Param used to colorized trajectories, speed or altitude
+	 */
+	public abstract int getParamColor();
+	
+	/**
+	 * 
+	 * @param param Speed or Altitude
+	 * @param values Array of values
+	 * @param colors Array of colors
+	 */
+	public abstract void setMultiColors(int param, Double[] values, Color[] colors);
 	
 	public abstract Couple<Double[], Color[]> getMultiColors();
 	

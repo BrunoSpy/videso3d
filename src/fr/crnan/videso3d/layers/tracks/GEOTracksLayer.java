@@ -29,15 +29,14 @@ import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
+import fr.crnan.videso3d.geom.VPosition;
 import fr.crnan.videso3d.graphics.AltitudeFilterablePath;
 import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TracksModelListener;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
-import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.geom.Sector;
 import gov.nasa.worldwind.layers.RenderableLayer;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
@@ -47,8 +46,6 @@ import gov.nasa.worldwind.render.ShapeAttributes;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.util.Logging;
-import gov.nasa.worldwindx.examples.analytics.AnalyticSurface;
-import gov.nasa.worldwindx.examples.analytics.AnalyticSurface.GridPointAttributes;
 /**
  * Layer contenant des tracks Elvira GEO et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
@@ -85,6 +82,7 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	private int analyticWidth = 30;
 	private int analyticHeight = 20;
 	private int scale = 1;
+	private int param = TrajectoriesLayer.PARAM_ALTITUDE;
 	
 	/**
 	 * Drops point if the previous is less <code>precision</code> far from the previous point
@@ -212,11 +210,11 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 						
 						@Override
 						public Color getColor(Position position, int ordinal) {
-							double altitude = position.getElevation();
-							if(altitude < altitudes[0])
+							double value = getParamColor() == TrajectoriesLayer.PARAM_SPEED ? ((VPosition) position).getSpeed() : position.getElevation();
+							if(value < altitudes[0])
 								return multicolors[0];
 							for(int i = 0; i< multicolors.length;i++){
-								if(altitude > altitudes[i] && altitude <= altitudes[i+1])
+								if(value > altitudes[i] && value <= altitudes[i+1])
 									return multicolors[i];
 							}
 							return multicolors[multicolors.length-1];
@@ -227,14 +225,14 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 
 						@Override
 						public Color getColor(Position position, int ordinal) {
-							double altitude = position.getElevation();
-							if(altitude<=minAltitude)
+							double value = getParamColor() == TrajectoriesLayer.PARAM_SPEED ? ((VPosition) position).getSpeed() : position.getElevation();
+							if(value<=minAltitude)
 								return minAltitudeColor;
-							if(altitude>=maxAltitude)
+							if(value>=maxAltitude)
 								return maxAltitudeColor;
-							return new Color (  (float)(((altitude-minAltitude)*(maxAltitudeColor.getRed()/255.0)+(maxAltitude-altitude)*(minAltitudeColor.getRed()/255.0))/(maxAltitude-minAltitude)),
-									(float)(((altitude-minAltitude)*(maxAltitudeColor.getGreen()/255.0)+(maxAltitude-altitude)*(minAltitudeColor.getGreen()/255.0))/(maxAltitude-minAltitude)),
-									(float)(((altitude-minAltitude)*(maxAltitudeColor.getBlue()/255.0)+(maxAltitude-altitude)*(minAltitudeColor.getBlue()/255.0))/(maxAltitude-minAltitude)),
+							return new Color (  (float)(((value-minAltitude)*(maxAltitudeColor.getRed()/255.0)+(maxAltitude-value)*(minAltitudeColor.getRed()/255.0))/(maxAltitude-minAltitude)),
+									(float)(((value-minAltitude)*(maxAltitudeColor.getGreen()/255.0)+(maxAltitude-value)*(minAltitudeColor.getGreen()/255.0))/(maxAltitude-minAltitude)),
+									(float)(((value-minAltitude)*(maxAltitudeColor.getBlue()/255.0)+(maxAltitude-value)*(minAltitudeColor.getBlue()/255.0))/(maxAltitude-minAltitude)),
 									(float) getDefaultOpacity());
 						}
 					});
@@ -242,15 +240,15 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 				//	line.setDrawVerticals(!(this.getStyle() == TrajectoriesLayer.STYLE_CURTAIN));
 			}
 		} else {
-			List<Position> positions = new ArrayList<Position>();
-			Position position = Position.ZERO;
+			List<VPosition> positions = new ArrayList<VPosition>();
+			VPosition position = VPosition.ZERO;
 			for(TrackPoint point : track.getTrackPoints()){
 				if(!(point.getLatitude() == position.latitude.degrees  //only add a position if different from the previous position
 						&& point.getLongitude() == position.longitude.degrees
 						&& point.getElevation() == position.elevation)) {
 					if(this.precision == 0.0 || Position.greatCircleDistance(position, point.getPosition()).degrees > this.getPrecision()) {
-						positions.add(point.getPosition());
-						position = point.getPosition();
+						positions.add((VPosition) point.getPosition());
+						position = (VPosition) point.getPosition();
 					}
 				}
 			}
@@ -571,8 +569,9 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	}
 
 	@Override
-	public void setShadedColors(double minAltitude, double maxAltitude,
+	public void setShadedColors(int param, double minAltitude, double maxAltitude,
 			Color minAltitudeColor, Color maxAltitudeColor) {
+		this.param = param;
 		this.maxAltitude = maxAltitude;
 		this.minAltitude = minAltitude;
 		this.minAltitudeColor = new Color((float)(minAltitudeColor.getRed()/255.0),
@@ -586,27 +585,28 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	}
 
 	@Override
-	public double getMinAltitude() {
+	public double getMinValue() {
 		return this.minAltitude;
 	}
 
 	@Override
-	public double getMaxAltitude() {
+	public double getMaxValue() {
 		return this.maxAltitude;
 	}
 
 	@Override
-	public Color getMinAltitudeColor() {
+	public Color getMinColor() {
 		return this.minAltitudeColor;
 	}
 
 	@Override
-	public Color getMaxAltitudeColor() {
+	public Color getMaxColor() {
 		return this.maxAltitudeColor;
 	}
 
 	@Override
-	public void setMultiColors(Double[] altitudes, Color[] colors) {
+	public void setMultiColors(int param, Double[] altitudes, Color[] colors) {
+		this.param = param;
 		this.altitudes = altitudes;
 		this.multicolors = colors;
 	}
@@ -614,6 +614,11 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	@Override
 	public Couple<Double[], Color[]> getMultiColors() {
 		return new Couple<Double[], Color[]>(this.altitudes, this.multicolors);
+	}
+	
+	@Override
+	public int getParamColor() {
+		return this.param;
 	}
 
 	/* ****************** Analytic Surface ****************** */
@@ -650,7 +655,6 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	@Override
 	public int getAnalyticScale() {
 		return this.scale;
-	}
-	
+	}	
 	
 }

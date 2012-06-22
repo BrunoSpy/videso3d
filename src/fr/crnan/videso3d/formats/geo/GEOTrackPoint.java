@@ -15,6 +15,7 @@
 */
 package fr.crnan.videso3d.formats.geo;
 
+import fr.crnan.videso3d.geom.VPosition;
 import gov.nasa.worldwind.geom.Angle;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.tracks.TrackPoint;
@@ -26,10 +27,10 @@ import gov.nasa.worldwind.tracks.TrackPoint;
  */
 public class GEOTrackPoint implements TrackPoint {
 
-	private Position position;
+	private VPosition position;
 	private String time;
-	private Integer vitesse;
 	private Double timeD;
+	private int vitesse;
 	
 	public GEOTrackPoint(String sentence){
 		String[] words = sentence.split("\t");
@@ -41,9 +42,11 @@ public class GEOTrackPoint implements TrackPoint {
 		} else {
 			elev = new Double(alt)*0.3048;
 		}
-		this.position = new Position(Angle.fromDegrees(new Double(words[4])),
+		
+		this.vitesse = new Integer(words[8]);
+		this.position = new VPosition(Angle.fromDegrees(new Double(words[4])),
 									Angle.fromDegrees(new Double(words[5])),
-									elev);
+									elev, this.vitesse);
 		this.timeD = new Double(words[3]);
 		Integer time = timeD.intValue();
 		int heure = time / 3600;
@@ -51,7 +54,7 @@ public class GEOTrackPoint implements TrackPoint {
 		int minutes = time / 60;
 		int secondes = time - minutes * 60;
 		this.time = heure+"h"+minutes+"min"+secondes;
-		this.vitesse = new Integer(words[8]);
+		
 	}
 	
 	@Override
@@ -85,22 +88,22 @@ public class GEOTrackPoint implements TrackPoint {
 	
 	@Override
 	public void setElevation(double elevation) {
-		this.position = new Position(Angle.fromDegrees(this.getLatitude()), Angle.fromDegrees(this.getLongitude()), elevation);
+		this.position = new VPosition(Angle.fromDegrees(this.getLatitude()), Angle.fromDegrees(this.getLongitude()), elevation, vitesse);
 	}
 
 	@Override
 	public void setLatitude(double latitude) {
-		this.position = new Position(Angle.fromDegrees(latitude), Angle.fromDegrees(this.getLongitude()), this.getElevation());
+		this.position = new VPosition(Angle.fromDegrees(latitude), Angle.fromDegrees(this.getLongitude()), this.getElevation(), vitesse);
 	}
 
 	@Override
 	public void setLongitude(double longitude) {
-		this.position = new Position(Angle.fromDegrees(this.getLatitude()), Angle.fromDegrees(longitude), this.getElevation());
+		this.position = new VPosition(Angle.fromDegrees(this.getLatitude()), Angle.fromDegrees(longitude), this.getElevation(), vitesse);
 	}
 
 	@Override
 	public void setPosition(Position position) {
-		this.position = position;
+		this.position = new VPosition(position, 0);
 	}
 
 	@Override
