@@ -60,6 +60,7 @@ import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.JXTaskPaneContainer;
 
+import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.Triplet;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.TrackFilesReader;
@@ -770,7 +771,9 @@ public class TrajectoriesView extends JPanel {
 				layer.setDefaultOutsideColor(changeColor2.getBackground());
 				layer.setDefaultInsideColor(changeColor1.getBackground());
 				if(!width.getText().isEmpty()) layer.setDefaultWidth(Double.parseDouble(width.getText()));
-				if(!opacity.getText().isEmpty())layer.setDefaultOpacity(Double.parseDouble(opacity.getText())/100.0);
+				if(!opacity.getText().isEmpty()) {
+					layer.setDefaultOpacity(Double.parseDouble(opacity.getText())/100.0);
+				}
 				if(layer.getStylesAvailable().contains(TrajectoriesLayer.STYLE_SHADED)){
 					layer.setShadedColors(
 							speed.isSelected() ? TrajectoriesLayer.PARAM_SPEED : TrajectoriesLayer.PARAM_ALTITUDE,
@@ -791,6 +794,20 @@ public class TrajectoriesView extends JPanel {
 					for(JButton color : colorButtons){
 						colors.add(color.getBackground());
 					}
+					
+					//enregistrement des paramètres dans le fichier de conf
+					Configuration.setProperty(Configuration.TRAJECTOGRAPHIE_MULTICOLOR_PARAM, speed.isSelected() ? TrajectoriesLayer.PARAM_SPEED+"" : TrajectoriesLayer.PARAM_ALTITUDE+"");
+					StringBuffer colorsString = new StringBuffer();
+					for(Color c : colors){
+						colorsString.append(c.getRGB()+"/");
+					}
+					Configuration.setProperty(Configuration.TRAJECTOGRAPHIE_MULTICOLOR_COLORS, colorsString.toString());
+					StringBuffer valuesString = new StringBuffer();
+					for(Double v : values){
+						valuesString.append(v+"/");
+					}
+					Configuration.setProperty(Configuration.TRAJECTOGRAPHIE_MULTICOLOR_VALUES, valuesString.toString());
+					
 					layer.setMultiColors(speed.isSelected() ? TrajectoriesLayer.PARAM_SPEED : TrajectoriesLayer.PARAM_ALTITUDE,
 									values.toArray(new Double[]{}),
 									colors.toArray(new Color[]{}));
