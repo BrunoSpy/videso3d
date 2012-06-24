@@ -108,6 +108,30 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 		this.add(layer);
 		this.setPickEnabled(true);
 		this.setDefaultMaterial();
+		
+		//initialize parameters
+		String param = Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_MULTICOLOR_PARAM, null);
+		if(param != null){
+			this.param = new Integer(param);
+			String colors = Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_MULTICOLOR_COLORS, null);
+			if(colors != null){
+				String[] color = colors.split("/");
+				ArrayList<Color> list = new ArrayList<Color>();
+				for(String c : color){
+					list.add(new Color(new Integer(c)));
+				}
+				this.multicolors = list.toArray(new Color[]{});
+			}
+			String values = Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_MULTICOLOR_VALUES, null);
+			if(values != null){
+				String[] value = values.split("/");
+				ArrayList<Double> list = new ArrayList<Double>();
+				for(String v : value){
+					list.add(new Double(v));
+				}
+				this.altitudes = list.toArray(new Double[]{});
+			}
+		}
 	}
 
 	public GEOTracksLayer(Boolean tracksHideable, Boolean tracksHighlightable){
@@ -269,7 +293,7 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 				line.setAltitudeMode(WorldWind.ABSOLUTE);
 				line.setPositions(positions);
 				lines.put(track, line);
-				//track highlight
+				//update model following direct modifications
 				line.addPropertyChangeListener(new PropertyChangeListener() {
 					
 					@Override
