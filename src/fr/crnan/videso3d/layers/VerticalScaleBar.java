@@ -161,8 +161,7 @@ public class VerticalScaleBar extends DraggerListener implements Layer {
 
 	@Override
 	protected void doMove(Position pos, Movable o){
-		if(isDraggable(o))
-			this.movePointPlacemarks(pos);
+		this.movePointPlacemarks(pos);
 	}
 	
 	@Override

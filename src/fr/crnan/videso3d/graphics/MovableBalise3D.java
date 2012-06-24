@@ -24,6 +24,10 @@ import gov.nasa.worldwind.geom.Position;
  */
 public class MovableBalise3D extends Balise3D implements Movable{
 
+	public MovableBalise3D(){
+		super();
+	}
+	
 	public MovableBalise3D(String name, Position position) {
 		super(name, position);
 	}

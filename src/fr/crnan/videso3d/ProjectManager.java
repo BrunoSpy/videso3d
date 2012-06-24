@@ -94,7 +94,7 @@ import gov.nasa.worldwind.render.airspaces.Airspace;
  * <li>
  * </ul>
  * @author Bruno Spyckerelle
- * @version 0.0.3
+ * @version 0.0.4
  */
 public class ProjectManager extends ProgressSupport {
 
@@ -167,6 +167,7 @@ public class ProjectManager extends ProgressSupport {
 		//other objects
 		if(PolygonEditorsManager.getLayer().getAirspaces().iterator().hasNext())
 			this.otherObjects = true;
+		//objects from other projets
 		for(Layer l : wwd.getModel().getLayers()){
 			if(l.getName().equals(RENDERABLE_LAYER_NAME) || 
 					l.getName().equals(BALISES2D_LAYER_NAME) || 
@@ -176,6 +177,9 @@ public class ProjectManager extends ProgressSupport {
 				break;
 			}
 		}
+		//user added objects
+		if(wwd.hasUserObjects())
+			this.otherObjects = true;
 	}
 
 	/**
@@ -354,11 +358,17 @@ public class ProjectManager extends ProgressSupport {
 					}
 				}
 			}
+			for(Airspace a : PolygonEditorsManager.getLayer().getAirspaces()){
+				if(a.isVisible())
+					this.saveObjectInXml(a, new File(xmlDir, a.getClass().getName()+"-"+format.format(count++)+".xml"));
+			}
+			//user added objects
+			for(Restorable r : wwd.getUserObjects()){
+				this.saveObjectInXml(r, new File(xmlDir, r.getClass().getName()+"-"+format.format(count++)+".xml"));
+			}
 		}
-		for(Airspace a : PolygonEditorsManager.getLayer().getAirspaces()){
-			if(a.isVisible())
-				this.saveObjectInXml(a, new File(xmlDir, a.getClass().getName()+"-"+format.format(count++)+".xml"));
-		}
+		
+		
 		
 		//globe parameters
 		this.saveObjectInXml(this.wwd.getView(), new File(main, "globe.xml"));

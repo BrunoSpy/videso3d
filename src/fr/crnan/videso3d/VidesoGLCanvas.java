@@ -65,6 +65,7 @@ import fr.crnan.videso3d.stip.Stip;
 import fr.crnan.videso3d.util.VMeasureTool;
 
 import gov.nasa.worldwind.Factory;
+import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.avlist.AVList;
@@ -570,6 +571,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 
 		if(this.annotationLayer != null) this.annotationLayer.removeAllAnnotations();
 
+		this.deleteAllUserObjects();
+		
 		this.getView().stopMovement();
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));
 		this.getView().setPitch(Angle.ZERO);
@@ -831,17 +834,18 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 	}
 	
 	/*--------------------------------------------------------------*/
-	/*----------------- Création d'objets      ---------------------*/
+	/*------------------  Création d'objets   ----------------------*/
 	/*--------------------------------------------------------------*/
 	
 	private RenderableLayer renderableLayer;
 	private Balise3DLayer balise3DLayer;
 	
 	/**
-	 * Add an object to the adequate layer
+	 * Add an object to the adequate layer<br />
+	 * In order to be saved in a project, objects have to be {@link Restorable}
 	 * @param o 3D object
 	 */
-	public void addObject(Object o){
+	public void addObject(Restorable o){
 		if(o instanceof Renderable){
 			if(renderableLayer == null){
 				renderableLayer = new RenderableLayer();
@@ -857,5 +861,40 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 			}
 			balise3DLayer.addBalise((Balise) o);
 		}
+	}
+	
+	public boolean hasUserObjects(){
+		return (renderableLayer != null && renderableLayer.getRenderables().iterator().hasNext()) ||
+				(balise3DLayer != null && balise3DLayer.getVisibleBalises().size() > 0);
+	}
+	
+	/**
+	 * @return All visible and restorable objects added by user  
+	 */
+	public List<Restorable> getUserObjects(){
+		List<Restorable> objects = new ArrayList<Restorable>();
+		if(renderableLayer != null){
+			for(Renderable r : renderableLayer.getRenderables()){
+				if(r instanceof Restorable){
+					objects.add((Restorable) r);
+				}
+			}
+		}
+		if(balise3DLayer != null){
+			for(Balise3D b : balise3DLayer.getVisibleBalises()){
+				objects.add(b);
+			}
+		}
+		return objects;
+	}
+	
+	/**
+	 * Supprime tous les objets ajoutés par l'utilisateur
+	 */
+	public void deleteAllUserObjects(){
+		if(renderableLayer != null)
+			renderableLayer.removeAllRenderables();
+		if(balise3DLayer != null)
+			balise3DLayer.eraseAllBalises();
 	}
 }
