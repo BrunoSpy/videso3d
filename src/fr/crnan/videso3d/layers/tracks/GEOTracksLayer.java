@@ -31,6 +31,7 @@ import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.geom.VPosition;
 import fr.crnan.videso3d.graphics.AltitudeFilterablePath;
+import fr.crnan.videso3d.graphics.VidesoAltitudeFilterablePath;
 import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TracksModelListener;
@@ -253,7 +254,12 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 				}
 			}
 			if(positions.size()>1){ //only add a line if there's enough points
-				AltitudeFilterablePath line = new AltitudeFilterablePath();
+				VidesoAltitudeFilterablePath line = new VidesoAltitudeFilterablePath();
+				line.setName(track.getIndicatif());
+				line.setAnnotation("<b>"+track.getIndicatif()+"</b><br /><b>Type avion : </b>"+track.getType()+"<br/>" +
+						"<b>Adep : </b>"+track.getDepart()+"<br />" +
+						"<b>Adest : </b>"+track.getArrivee()+"<br />" +
+						"<b>Mode A : </b>"+track.getModeA());
 				line.setOutlinePickWidth(20);
 				line.setAttributes(normal);
 				line.setHighlightAttributes(highlight);

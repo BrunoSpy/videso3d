@@ -82,7 +82,7 @@ public class AirspaceListener implements SelectListener {
 	final private ContextPanel context;
 
 	private boolean lock = false;
-
+	
 	public AirspaceListener(VidesoGLCanvas wwd, ContextPanel context){
 		this.wwd = wwd;
 		this.context = context;
@@ -342,13 +342,18 @@ public class AirspaceListener implements SelectListener {
 		} 
 	}
 
+	
 	private void doLeftClick(Object o, Point point){
-		if(o instanceof VidesoObject){ //affichage du tooltip
+		if(o instanceof VidesoObject){
+			
+			//affichage du tooltip
 			Position pos = null;
 			if(o instanceof VPolygon) {
 				pos = this.wwd.computePositionFromScreenPoint(new Point(point.x, point.y-5), (VPolygon) o);
 			} else if( o instanceof Airspace) {
 				pos = this.wwd.computePositionFromScreenPoint(new Point(point.x, point.y-5), (Airspace)o);
+			} else if (o instanceof Path) {
+				pos = this.wwd.computePositionFromScreenPoint(new Point(point.x, point.y-5), (Path)o);
 			} else {
 				pos = this.wwd.getView().computePositionFromScreenPoint(point.x, point.y-5);//décalage de 5 pixels pour éviter le clignotement
 			}
@@ -359,7 +364,7 @@ public class AirspaceListener implements SelectListener {
 		} else if (o instanceof GlobeAnnotation){ //suppression de l'annotation
 			this.wwd.getAnnotationLayer().removeAnnotation((GlobeAnnotation)o);
 			this.wwd.redraw();
-		}
+		} 
 	}
 
 	private void doDoubleClick(Object o){
