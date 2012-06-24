@@ -79,6 +79,7 @@ import gov.nasa.worldwind.geom.Intersection;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Line;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.geom.Vec4;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.layers.AirspaceLayer;
@@ -617,6 +618,21 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 		Line ray = this.getView().computeRayFromScreenPoint(point.x, point.y);
 		Intersection inters[] = this.getModel().getGlobe().intersect(ray,  refObject.getAltitudes()[1]);
 		Position pos = this.getModel().getGlobe().computePositionFromPoint(inters[0].getIntersectionPoint());
+		return pos;
+	}
+	
+	public Position computePositionFromScreenPoint(Point point, Path path){
+		Position pos = Position.ZERO;
+		Double distance = null;
+		Vec4 refPoint = new Vec4(point.getX(), point.getY()); 
+		for(Position p : path.getPositions()){
+			Vec4 tempPoint = this.getView().project(this.getView().getGlobe().computePointFromPosition(p));
+			Double d = refPoint.distanceTo2(tempPoint);
+			if(distance == null || d < distance){
+				pos = p;
+				distance = d;
+			}
+		}
 		return pos;
 	}
 	
