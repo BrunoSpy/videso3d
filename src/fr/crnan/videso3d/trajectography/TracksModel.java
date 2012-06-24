@@ -273,8 +273,11 @@ public class TracksModel extends AbstractTableModel {
 	public void setVisible(Boolean b, VidesoTrack track){
 		if(b){
 			if(!isChanging){
-				this.visibleTracks.add(track);
-				fireTrackVisibilityChanged(track, b);
+				if(this.visibleTracks.add(track)){//only fire an event if the visibility has really changed
+					//if visibility was changed by a direct manipulation, update polygon counts
+					doUpdatePolygonFilters();
+					fireTrackVisibilityChanged(track, b);
+				}
 			} else {
 				if(tempTracksVisible == null) tempTracksVisible = new HashSet<VidesoTrack>();
 				tempTracksVisible.add(track);
@@ -282,8 +285,11 @@ public class TracksModel extends AbstractTableModel {
 			}
 		} else {
 			if(!isChanging){
-				this.visibleTracks.remove(track);
-				fireTrackVisibilityChanged(track, b);
+				if(this.visibleTracks.remove(track)){//only fire an event if the visibility has really changed
+					//if visibility was changed by a direct manipulation, update polygon counts
+					doUpdatePolygonFilters();
+					fireTrackVisibilityChanged(track, b);
+				}
 			} else {
 				if(tempTracksNonVisible == null) tempTracksNonVisible = new HashSet<VidesoTrack>();
 				tempTracksNonVisible.add(track);
