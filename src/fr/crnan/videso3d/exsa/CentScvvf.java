@@ -119,9 +119,14 @@ public class CentScvvf {
 		String plafond = "";
 		int numVvf = this.getVvfs().split("\\\\").length;
 		int i = 0;
-		while(plafond.split("\\\\").length < numVvf){
-			plafond += plafonds[4+formated+i];
+		if(numVvf == 1){ //un seul vvf, l'entrée ne comporte pas de "/"
+			plafond = plafonds[4+formated];
 			i++;
+		} else {
+			while(plafond.split("\\\\").length < numVvf){
+				plafond += plafonds[4+formated+i];
+				i++;
+			}
 		}
 		this.numPlancher = 4+i;
 		this.plafonds = plafond;
@@ -139,9 +144,13 @@ public class CentScvvf {
 		String plancher = "";
 		int numVvf = this.getVvfs().split("\\\\").length;
 		int i=0;
-		while(plancher.split("\\\\").length < numVvf){
-			plancher += planchers[this.numPlancher+formated+i];
-			i++;
+		if(numVvf == 1){
+			plancher = planchers[this.numPlancher+formated+i];
+		} else {
+			while(plancher.split("\\\\").length < numVvf){
+				plancher += planchers[this.numPlancher+formated+i];
+				i++;
+			}
 		}
 		this.planchers = plancher;
 	}

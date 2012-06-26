@@ -313,14 +313,14 @@ public class STRController implements VidesoController {
 					vSens = MosaiqueLayer.LEFT_RIGHT;
 					numSens = MosaiqueLayer.VERTICAL_FIRST;
 					rs = st.executeQuery("select * from ficaafniv where abonne = '"+name+"'");
-					rs.next();
+					boolean next = rs.next();
 					for(int i=1; i<= height*width; i++){
-						if(rs.getInt("carre") == i){
+						if(next && rs.getInt("carre") == i){
 							if(!rs.getBoolean("elimine")){
 								squares.add(new Couple<Integer, Integer>(i, 0));
 								altitudes.add(new Couple<Double, Double>(rs.getInt("plancher")*30.48, rs.getInt("plafond")*30.48));
 							}
-							rs.next();
+							next = rs.next();
 						} else {
 							squares.add(new Couple<Integer, Integer>(i, 0));
 							altitudes.add(new Couple<Double, Double>(-10.0, 660*30.48));
