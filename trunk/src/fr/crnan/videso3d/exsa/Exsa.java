@@ -86,7 +86,8 @@ public class Exsa extends FileParser {
 				in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 				while (in.ready() && count < 20){
 					String line = in.readLine();
-					return line.startsWith("CARA_GENER") || line.startsWith("CARA.GENER");
+					if(line.startsWith("CARA_GENER") || line.startsWith("CARA.GENER"))
+						return true;
 				}
 			} catch(IOException e){
 				e.printStackTrace();
@@ -525,7 +526,8 @@ public class Exsa extends FileParser {
 			e.printStackTrace();
 		} finally{
 			try {
-				in.close();
+				if(in != null)
+					in.close();
 			} catch (IOException e) {
 				Logging.logger().warning(e.getMessage());
 			}
@@ -535,7 +537,7 @@ public class Exsa extends FileParser {
 	private void setCentScTma(String line, Boolean formated) throws SQLException, ParseException {
 		CentScTma centSctma = new CentScTma(line, formated);
 		//on n'insère sque les lignes utiles
-		if(!centSctma.getName().equals("##")){
+		if(!centSctma.getName().isEmpty()){
 			insert.setInt(1, centSctma.getCarre());
 			insert.setInt(2, centSctma.getSouscarre());
 			insert.setInt(3, centSctma.getV1());

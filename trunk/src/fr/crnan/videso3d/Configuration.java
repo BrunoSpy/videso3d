@@ -46,6 +46,9 @@ public final class Configuration {
 	public static final String TRAJECTOGRAPHIE_SEUIL = "fr.crnan.videso3d.trajectographie.seuil";
 	public static final String TRAJECTOGRAPHIE_SEUIL_PRECISION = "fr.crnan.videso3d.trajectographie.seuilprecision";
 	public static final String TRAJECTOGRAPHIE_PRECISION = "fr.crnan.videso3d.trajectographie.precision";
+	public static final String TRAJECTOGRAPHIE_MULTICOLOR_COLORS = "fr.crnan.videso3d.trajectographie.multicolor.colors";
+	public static final String TRAJECTOGRAPHIE_MULTICOLOR_PARAM = "fr.crnan.videso3d.trajectographie.multicolor.param";
+	public static final String TRAJECTOGRAPHIE_MULTICOLOR_VALUES = "fr.crnan.videso3d.trajectographie.multicolor.values";
 	
 	private static Configuration instance = new Configuration();
 

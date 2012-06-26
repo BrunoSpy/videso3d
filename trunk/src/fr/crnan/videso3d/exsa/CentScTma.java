@@ -34,8 +34,14 @@ public class CentScTma {
 	
 	private int v3;
 	
-	private String name;
+	private String name = "";
 	
+	/**
+	 * 
+	 * @param line
+	 * @param formated
+	 * @throws ParseException
+	 */
 	public CentScTma(String line, Boolean formated) throws ParseException{
 		if(!formated){
 			//suppression du ; en fin de ligne
@@ -45,11 +51,11 @@ public class CentScTma {
 		int i = formated ? 0 : 1;
 		if (word[0].equals(formated ? "CENT_SCTMA" : "CENT.SCTMA")){
 			this.setCarre(new Integer(word[1+i]));
-			this.setSouscarre(word[2+i]);
-			this.setV1(word[3+i]);
-			this.setV2(word[4+i]);
-			this.setV3(word[5+i]);
-			this.setName(word[6+i]);
+		    if(word.length > 2+i)	this.setSouscarre(word[2+i]);
+		    if(word.length > 3+i) this.setV1(word[3+i]);
+		    if(word.length > 4+i) this.setV2(word[4+i]);
+		    if(word.length > 5+i) this.setV3(word[5+i]);
+		    if(word.length > 6+i) this.setName(word[6+i]);
 		} else {
 			throw new ParseException("CENT_SCTMA Parse Error at " + line, 0);
 		}
@@ -142,7 +148,7 @@ public class CentScTma {
 	}
 
 	/**
-	 * @return the name
+	 * @return The name or empty if the square has no infomation
 	 */
 	public String getName() {
 		return name;
@@ -152,7 +158,10 @@ public class CentScTma {
 	 * @param name the name to set
 	 */
 	public void setName(String name) {
-		this.name = name;
+		if(name.equals("##"))
+			this.name = "";
+		else 
+			this.name = name;
 	}
 	
 	

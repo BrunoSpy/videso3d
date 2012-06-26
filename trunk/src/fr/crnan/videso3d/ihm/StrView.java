@@ -122,15 +122,42 @@ public class StrView extends JPanel implements DataView{
 		
 		try {
 			if(DatabaseManager.getCurrentExsa() != null) {
-				container.add(this.buildPanel(mosaiques, "select type from centmosai"));
-				container.add(this.buildPanel(capa, "select DISTINCT abonne from ficaafniv"));
-				container.add(this.buildPanel(dyn, "select DISTINCT abonne from ficaafnic"));
-				container.add(this.buildPanel(zocc, "select name from centzocc"));
-				container.add(this.buildPanel(vvf, "select name from centflvvf"));
-				container.add(this.buildPanel(stacks, "select name from centstack"));
-				container.add(this.buildPanel(tmaF, "select name from centtmaf"));
-				container.add(this.buildPanel(tmaFMosaique, "select DISTINCT name from centsctma"));
-				container.add(this.buildPanel(radars, "select name from radrtechn"));
+				JPanel panel = this.buildPanel(mosaiques, "select type from centmosai");
+				if(panel != null)
+					container.add(panel);
+				
+				panel = this.buildPanel(capa, "select DISTINCT abonne from ficaafniv");
+				if(panel != null)
+					container.add(panel);
+				
+				panel = this.buildPanel(dyn, "select DISTINCT abonne from ficaafnic");
+				if(panel != null)
+					container.add(panel);
+				
+				panel = this.buildPanel(zocc, "select name from centzocc");
+				if(panel != null)
+					container.add(panel);
+				
+				panel = this.buildPanel(vvf, "select name from centflvvf");
+				if(panel != null)
+					container.add(panel);
+				
+				panel = this.buildPanel(stacks, "select name from centstack");
+				if(panel != null)
+					container.add(panel);
+				
+				panel = this.buildPanel(tmaF, "select name from centtmaf");
+				if(panel != null)
+					container.add(panel);
+				
+				panel = this.buildPanel(tmaFMosaique, "select DISTINCT name from centsctma");
+				if(panel != null)
+					container.add(panel);
+				
+				panel = this.buildPanel(radars, "select name from radrtechn");
+				if(panel != null)
+					container.add(panel);
+				
 				//container.add(Box.createVerticalGlue());
 			}
 		} catch (SQLException e){
@@ -149,8 +176,15 @@ public class StrView extends JPanel implements DataView{
 		return (STRController) DatasManager.getController(Type.EXSA);
 	}
 	
+	/**
+	 * 
+	 * @param panel
+	 * @param query
+	 * @return Null if the query is not successful or if the panel has no element
+	 */
 	private JPanel buildPanel(JPanel panel, String query){
 		panel.setLayout(new GridLayout(0, 3));
+		boolean hasElement = false;
 		try {
 			Statement st = DatabaseManager.getCurrentExsa();
 			ResultSet rs = st.executeQuery(query);
@@ -161,18 +195,24 @@ public class StrView extends JPanel implements DataView{
 						chk.addItemListener(itemCheckListener);
 						checkBoxList.add(chk);
 						panel.add(chk);	
+						hasElement = true;
 					}
 				} else {
 					JCheckBox chk = new JCheckBox(rs.getString(1));
 					chk.addItemListener(itemCheckListener);
 					checkBoxList.add(chk);
-					panel.add(chk);	
+					panel.add(chk);
+					hasElement = true;
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return panel;
+		if(hasElement)
+			return panel;
+		else
+			return null;
 	}
 	
 	@Override

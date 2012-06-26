@@ -122,7 +122,7 @@ public class FicaAfniv {
 	}
 
 	public void setFirstCode(String string) {
-		if(string.equalsIgnoreCase("####") || string.isEmpty()){
+		if(string.startsWith("###") || string.isEmpty()){
 			this.firstCode = 0;
 		} else {
 			this.firstCode = new Integer(string);
@@ -134,7 +134,7 @@ public class FicaAfniv {
 	}
 
 	public void setLastCode(String string) {
-		if(string.equalsIgnoreCase("####") || string.isEmpty()){
+		if(string.startsWith("###") || string.isEmpty()){
 			this.lastCode = 0;
 		} else {
 			this.lastCode = new Integer(string);
