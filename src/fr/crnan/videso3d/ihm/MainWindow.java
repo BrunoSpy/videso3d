@@ -37,6 +37,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+//import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.ToolTipManager;
 
@@ -73,7 +74,7 @@ import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.formats.plns.PLNSReader;
 import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.ihm.components.AltitudeRangeSlider;
-import fr.crnan.videso3d.ihm.components.ClosableSingleDockable;
+import fr.crnan.videso3d.ihm.components.DatabaseSingleDockable;
 import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.VDefaultEclipseThemConnector;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
@@ -226,7 +227,6 @@ public class MainWindow extends JFrame {
 			}
 		}.execute();
 	}
-
 
 	private void launchVideso3D(){
 		
@@ -394,7 +394,7 @@ public class MainWindow extends JFrame {
 	 */
 	private void updateDockables(DatabaseManager.Type type, boolean empty){
 		this.control.removeSingleDockable(type.toString());
-		ClosableSingleDockable dockable = new ClosableSingleDockable(type.toString());
+		DatabaseSingleDockable dockable = new DatabaseSingleDockable(type.toString());
 		dockable.addCloseAction(control);
 				
 		dockable.setType(type);
@@ -697,6 +697,10 @@ public class MainWindow extends JFrame {
 			@Override
 			public void visibilityChanged(CDockable dockable) {
 					wwd.removeLayer(layer);
+					//force close instead of just changing the visibility
+					dockable = null;
+					layer.getModel().dispose();
+					layer.dispose();
 			}
 				
 			@Override
