@@ -83,7 +83,7 @@ public class TracksModel extends AbstractTableModel {
 		this.allTracks = new HashSet<VidesoTrack>();
 		this.visibleTracks = new HashSet<VidesoTrack>(allTracks);
 		this.selectedTracks = new HashSet<VidesoTrack>();
-		this.tracks = new LinkedList<Object>();
+		this.tracks = new ArrayList<Object>();
 	}
 	
 	protected void setTracks(List<Object> tracks){
@@ -894,5 +894,23 @@ public class TracksModel extends AbstractTableModel {
 			return "Mode A";
 		}
 		return null;
+	}
+
+	/**
+	 * Disposes of any internal resources allocated by the object. 
+	 */
+	public void dispose() {
+		tracks = null;
+		if(visibleTracks != null) visibleTracks.clear();
+		if(selectedTracks != null) selectedTracks.clear();
+		if(allTracks != null) allTracks.clear();
+		if(tempTracksAdded != null) tempTracksAdded.clear();
+		if(tempTracksRemoved != null) tempTracksRemoved.clear();
+		if(tempTracksVisible != null) tempTracksVisible.clear();
+		if(tempTracksNonVisible != null) tempTracksNonVisible.clear();
+		if(tempTracksSelected != null) tempTracksSelected.clear();
+		if(tempTracksUnselected != null) tempTracksUnselected.clear();
+		if(filters != null) filters.clear();
+		if(polygonFilters != null) polygonFilters.clear();
 	}
 }

@@ -40,7 +40,7 @@ import fr.crnan.videso3d.stip.StipController;
 /**
  * Lecteur de BDS Stpv
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class Stpv extends FileParser{
 
@@ -74,7 +74,7 @@ public class Stpv extends FileParser{
 		Iterator<File> iterator = files.iterator();
 		while (iterator.hasNext()) {
 			File file = (File) iterator.next();
-			if(file.getName().equalsIgnoreCase("lieu") || file.getName().equalsIgnoreCase("lieu.txt")){
+			if(file.getName().equalsIgnoreCase("resultat") || file.getName().equalsIgnoreCase("resultat.txt")){
 				return true;
 			}
 		}

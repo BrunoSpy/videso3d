@@ -685,6 +685,18 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	@Override
 	public int getAnalyticScale() {
 		return this.scale;
+	}
+
+	
+	@Override
+	public void dispose() {
+		this.lines.clear();
+		this.analyticLayer.dispose();
+		this.layer.dispose();
+		if(model != null) model.dispose();
 	}	
+	
+	
+	
 	
 }

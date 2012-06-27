@@ -29,7 +29,7 @@ import bibliothek.gui.dock.common.intern.CDockable;
  * @author Bruno Spyckerelle
  * @version 0.1.0
  */
-public class ClosableSingleDockable extends DefaultSingleCDockable {
+public class DatabaseSingleDockable extends DefaultSingleCDockable {
 
 	private Type type;
 	
@@ -46,14 +46,14 @@ public class ClosableSingleDockable extends DefaultSingleCDockable {
 		public void close(CDockable dockable) {
 			super.close(dockable);
 			try {
-				DatabaseManager.unselectDatabase(((ClosableSingleDockable) dockable).getType());
+				DatabaseManager.unselectDatabase(((DatabaseSingleDockable) dockable).getType());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}		
 	}
 	
-	public ClosableSingleDockable(String id) {
+	public DatabaseSingleDockable(String id) {
 		super(id);
 	}
 
