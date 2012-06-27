@@ -1,0 +1,433 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "BORD TSA PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 25)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Lilas")
+)
+(id_atc
+  (name "TEXTE_TSA_PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "BORD_TSA")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Lilas")
+  (id_atc_preactif "BORD_TSA_PREACTIVE")
+  (id_atc_predorm "BORD_TSA_PREACTIVE")
+)
+(id_atc
+  (name "FOND_TSA")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 25)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Lie de vin")
+  (id_atc_preactif "FOND_TSA_PREACTIF")
+  (id_atc_predorm "FOND_TSA_PREACTIF")
+)
+(id_atc
+  (name "BORD_TSA_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Lilas")
+)
+(id_atc
+  (name "FOND_TSA_PREACTIF")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 25)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Lie de vin")
+)
+(id_atc
+  (name "TEXTE_TSA")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+  (id_atc_preactif "TEXTE_TSA_PREACTIVABLE")
+  (id_atc_predorm "TEXTE_TSA_PREACTIVABLE")
+)
+(map
+  (name "CB1C")
+  (number 132)
+  (comment "CTL importe de VIDEOMAP")
+  (date 17 08 2006)
+  (heure 14 19 24)
+  (ref_point
+    (name "CB1C7")
+    (comment "")
+    (value
+      (nautical_mile 64 6381 64 15539)
+    )
+  )
+  (ref_point
+    (name "CB1C8")
+    (comment "")
+    (value
+      (nautical_mile 64 8357 64 15047)
+    )
+  )
+  (ref_point
+    (name "CB1C9")
+    (comment "")
+    (value
+      (nautical_mile 64 8399 64 14979)
+    )
+  )
+  (ref_point
+    (name "CB1C2")
+    (comment "")
+    (value
+      (nautical_mile 64 6247 64 15546)
+    )
+  )
+  (ref_point
+    (name "CB1C3")
+    (comment "")
+    (value
+      (nautical_mile 64 6373 64 14885)
+    )
+  )
+  (ref_point
+    (name "CB1C4")
+    (comment "")
+    (value
+      (nautical_mile 64 7659 64 14486)
+    )
+  )
+  (ref_point
+    (name "CB1C5")
+    (comment "")
+    (value
+      (nautical_mile 64 8152 64 14336)
+    )
+  )
+  (ref_point
+    (name "CB1A9")
+    (comment "")
+    (value
+      (nautical_mile 64 3563 64 15412)
+    )
+  )
+  (ref_point
+    (name "CB1A8")
+    (comment "")
+    (value
+      (nautical_mile 64 3570 64 15046)
+    )
+  )
+  (ref_point
+    (name "CB1A7")
+    (comment "")
+    (value
+      (nautical_mile 64 4454 64 14078)
+    )
+  )
+  (ref_point
+    (name "CB1A6")
+    (comment "")
+    (value
+      (nautical_mile 64 5896 64 12500)
+    )
+  )
+  (ref_point
+    (name "CB1A5")
+    (comment "")
+    (value
+      (nautical_mile 64 6211 64 12510)
+    )
+  )
+  (ref_point
+    (name "CB1A4")
+    (comment "")
+    (value
+      (nautical_mile 64 7659 64 14486)
+    )
+  )
+  (ref_point
+    (name "CB1A3")
+    (comment "")
+    (value
+      (nautical_mile 64 6373 64 14885)
+    )
+  )
+  (ref_point
+    (name "CB1A2")
+    (comment "")
+    (value
+      (nautical_mile 64 6247 64 15544)
+    )
+  )
+  (ref_point
+    (name "CB1A1")
+    (comment "")
+    (value
+      (nautical_mile 64 4084 64 15626)
+    )
+  )
+  (ref_point
+    (name "CB1B1")
+    (comment "")
+    (value
+      (nautical_mile 64 6211 64 12510)
+    )
+  )
+  (ref_point
+    (name "CB1B4")
+    (comment "")
+    (value
+      (nautical_mile 64 7659 64 14486)
+    )
+  )
+  (ref_point
+    (name "CB1B2")
+    (comment "")
+    (value
+      (nautical_mile 64 8152 64 14336)
+    )
+  )
+  (ref_point
+    (name "CB1B3")
+    (comment "")
+    (value
+      (nautical_mile 64 8073 64 14061)
+    )
+  )
+  (ref_point
+    (name "CB1B5")
+    (comment "")
+    (value
+      (nautical_mile 64 6964 64 12536)
+    )
+  )
+  (ref_point
+    (name "CB1A10")
+    (comment "")
+    (value
+      (nautical_mile 64 6115 64 14195)
+    )
+  )
+  (submap
+    (number 1)
+    (name "CB1C")
+    (submap_type 2)
+    (keyboard 2)
+    (entity
+      (name "35")
+      (id_atc "BORD_TSA")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CB1C2")
+        (point "CB1C3")
+        (point "CB1C4")
+        (point "CB1C5")
+        (point "CB1C9")
+        (point "CB1C8")
+        (point "CB1C7")
+        (point "CB1C2")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "36")
+      (id_atc "FOND_TSA")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CB1C2")
+        (point "CB1C3")
+        (point "CB1C4")
+        (point "CB1C5")
+        (point "CB1C9")
+        (point "CB1C8")
+        (point "CB1C7")
+        (point "CB1C2")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "4")
+      (id_atc "TEXTE_TSA")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7523 64 14830)
+      )
+      (text_content "CBA1C")
+    )
+    (entity
+      (name "5")
+      (id_atc "BORD_TSA")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CB1A9")
+        (point "CB1A8")
+        (point "CB1A7")
+        (point "CB1A6")
+        (point "CB1A5")
+        (point "CB1A4")
+        (point "CB1A3")
+        (point "CB1A2")
+        (point "CB1A1")
+        (point "CB1A9")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "6")
+      (id_atc "FOND_TSA")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CB1A9")
+        (point "CB1A8")
+        (point "CB1A7")
+        (point "CB1A6")
+        (point "CB1A5")
+        (point "CB1A4")
+        (point "CB1A3")
+        (point "CB1A2")
+        (point "CB1A1")
+        (point "CB1A9")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "7")
+      (id_atc "TEXTE_TSA")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6139 64 14421)
+      )
+      (text_content "CBA1A")
+    )
+    (entity
+      (name "8")
+      (id_atc "BORD_TSA")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CB1B1")
+        (point "CB1B4")
+        (point "CB1B2")
+        (point "CB1B3")
+        (point "CB1B5")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "9")
+      (id_atc "FOND_TSA")
+      (shape "PolylineEntity")
+      (geometry
+        (point "CB1B1")
+        (point "CB1B5")
+        (point "CB1B3")
+        (point "CB1B2")
+        (point "CB1B4")
+        (point "CB1B1")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "10")
+      (id_atc "TEXTE_TSA")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7098 64 13546)
+      )
+      (text_content "CBA1B")
+    )
+    (entity
+      (name "12")
+      (id_atc "TEXTE_TSA")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6989 64 13400)
+      )
+      (text_content "225/660")
+    )
+    (entity
+      (name "11")
+      (id_atc "TEXTE_TSA")
+      (shape "TextEntity")
+      (geometry
+        (point "CB1A10")
+      )
+      (text_content "115/660 DRACH")
+      (modif 1)
+    )
+  )
+)

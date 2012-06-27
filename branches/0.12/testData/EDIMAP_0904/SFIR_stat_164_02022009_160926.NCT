@@ -1,0 +1,1661 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ESPACE DELEGUE")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 32)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "LIMITE SECTEUR 2")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 32)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "SYMBOLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "LIMITE SECTEUR 1")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 32)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(map
+  (name "SFIR")
+  (number 164)
+  (comment "CTL importe de VIDEOMAP")
+  (date 02 02 2009)
+  (heure 16 09 26)
+  (ref_point
+    (name "7B")
+    (comment "")
+    (value
+      (nautical_mile 64 4428 64 3713)
+    )
+  )
+  (ref_point
+    (name "12B")
+    (comment "")
+    (value
+      (nautical_mile 64 2180 64 13260)
+    )
+  )
+  (ref_point
+    (name "14")
+    (comment "")
+    (value
+      (nautical_mile 64 3563 64 15414)
+    )
+  )
+  (ref_point
+    (name "26B")
+    (comment "")
+    (value
+      (nautical_mile 64 13606 64 10348)
+    )
+  )
+  (ref_point
+    (name "45")
+    (comment "")
+    (value
+      (nautical_mile 64 12150 64 7871)
+    )
+  )
+  (ref_point
+    (name "62B")
+    (comment "")
+    (value
+      (nautical_mile 64 4760 64 6138)
+    )
+  )
+  (ref_point
+    (name "64B")
+    (comment "")
+    (value
+      (nautical_mile 64 3199 64 8030)
+    )
+  )
+  (ref_point
+    (name "65B")
+    (comment "")
+    (value
+      (nautical_mile 64 -630 64 8325)
+    )
+  )
+  (ref_point
+    (name "68B")
+    (comment "")
+    (value
+      (nautical_mile 64 6237 64 8082)
+    )
+  )
+  (ref_point
+    (name "69B")
+    (comment "")
+    (value
+      (nautical_mile 64 7157 64 8241)
+    )
+  )
+  (ref_point
+    (name "70B")
+    (comment "")
+    (value
+      (nautical_mile 64 7601 64 8320)
+    )
+  )
+  (ref_point
+    (name "71B")
+    (comment "")
+    (value
+      (nautical_mile 64 8072 64 7931)
+    )
+  )
+  (ref_point
+    (name "72B")
+    (comment "")
+    (value
+      (nautical_mile 64 8318 64 8501)
+    )
+  )
+  (ref_point
+    (name "73B")
+    (comment "")
+    (value
+      (nautical_mile 64 8021 64 9607)
+    )
+  )
+  (ref_point
+    (name "74")
+    (comment "")
+    (value
+      (nautical_mile 64 10189 64 8978)
+    )
+  )
+  (ref_point
+    (name "77")
+    (comment "")
+    (value
+      (nautical_mile 64 7692 64 6233)
+    )
+  )
+  (ref_point
+    (name "78")
+    (comment "")
+    (value
+      (nautical_mile 64 5974 64 8423)
+    )
+  )
+  (ref_point
+    (name "82")
+    (comment "")
+    (value
+      (nautical_mile 64 4428 64 3713)
+    )
+  )
+  (ref_point
+    (name "83")
+    (comment "")
+    (value
+      (nautical_mile 64 4659 64 5529)
+    )
+  )
+  (ref_point
+    (name "84")
+    (comment "")
+    (value
+      (nautical_mile 64 4887 64 14353)
+    )
+  )
+  (ref_point
+    (name "SFIR6")
+    (comment "")
+    (value
+      (nautical_mile 64 11892 64 2817)
+    )
+  )
+  (ref_point
+    (name "SFIR5")
+    (comment "")
+    (value
+      (nautical_mile 64 7935 64 6564)
+    )
+  )
+  (ref_point
+    (name "80")
+    (comment "")
+    (value
+      (nautical_mile 64 7155 64 5092)
+    )
+  )
+  (ref_point
+    (name "94")
+    (comment "")
+    (value
+      (nautical_mile 64 9336 64 13117)
+    )
+  )
+  (ref_point
+    (name "50")
+    (comment "")
+    (value
+      (nautical_mile 64 4151 64 10743)
+    )
+  )
+  (ref_point
+    (name "49")
+    (comment "")
+    (value
+      (nautical_mile 64 3042 64 9953)
+    )
+  )
+  (ref_point
+    (name "95")
+    (comment "")
+    (value
+      (nautical_mile 64 2363 64 10905)
+    )
+  )
+  (ref_point
+    (name "96")
+    (comment "")
+    (value
+      (nautical_mile 64 -629 64 8712)
+    )
+  )
+  (ref_point
+    (name "51")
+    (comment "")
+    (value
+      (nautical_mile 64 1109 64 12561)
+    )
+  )
+  (ref_point
+    (name "99")
+    (comment "")
+    (value
+      (nautical_mile 64 12156 64 9729)
+    )
+  )
+  (ref_point
+    (name "63B")
+    (comment "")
+    (value
+      (nautical_mile 64 4318 64 6898)
+    )
+  )
+  (ref_point
+    (name "66")
+    (comment "")
+    (value
+      (nautical_mile 64 5059 64 7751)
+    )
+  )
+  (ref_point
+    (name "67B")
+    (comment "")
+    (value
+      (nautical_mile 64 6469 64 7791)
+    )
+  )
+  (ref_point
+    (name "AR4")
+    (comment "")
+    (value
+      (nautical_mile 64 8916 64 6864)
+    )
+  )
+  (ref_point
+    (name "AR3")
+    (comment "")
+    (value
+      (nautical_mile 64 9273 64 6758)
+    )
+  )
+  (ref_point
+    (name "AR2")
+    (comment "")
+    (value
+      (nautical_mile 64 9711 64 6388)
+    )
+  )
+  (ref_point
+    (name "AR1")
+    (comment "")
+    (value
+      (nautical_mile 64 10250 64 6044)
+    )
+  )
+  (ref_point
+    (name "AR0")
+    (comment "")
+    (value
+      (nautical_mile 64 10482 64 5898)
+    )
+  )
+  (ref_point
+    (name "SFIR8")
+    (comment "")
+    (value
+      (nautical_mile 64 11436 64 5209)
+    )
+  )
+  (ref_point
+    (name "SFIR9")
+    (comment "")
+    (value
+      (nautical_mile 64 12776 64 4149)
+    )
+  )
+  (ref_point
+    (name "OG2")
+    (comment "")
+    (value
+      (nautical_mile 64 582 64 4616)
+    )
+  )
+  (ref_point
+    (name "SUP1")
+    (comment "")
+    (value
+      (nautical_mile 64 4000 64 10933)
+    )
+  )
+  (ref_point
+    (name "SUP2")
+    (comment "")
+    (value
+      (nautical_mile 64 3151 64 10917)
+    )
+  )
+  (ref_point
+    (name "SUP3")
+    (comment "")
+    (value
+      (nautical_mile 64 2138 64 8126)
+    )
+  )
+  (ref_point
+    (name "ID1")
+    (comment "")
+    (value
+      (nautical_mile 64 -12730 64 9820)
+    )
+  )
+  (ref_point
+    (name "ID2")
+    (comment "")
+    (value
+      (nautical_mile 64 -8155 64 10869)
+    )
+  )
+  (ref_point
+    (name "ID3")
+    (comment "")
+    (value
+      (nautical_mile 64 -4959 64 11597)
+    )
+  )
+  (ref_point
+    (name "ID4")
+    (comment "")
+    (value
+      (nautical_mile 64 -620 64 11533)
+    )
+  )
+  (ref_point
+    (name "ID5")
+    (comment "")
+    (value
+      (nautical_mile 64 -630 64 8328)
+    )
+  )
+  (ref_point
+    (name "ID6")
+    (comment "")
+    (value
+      (nautical_mile 64 -639 64 5620)
+    )
+  )
+  (ref_point
+    (name "ID7")
+    (comment "")
+    (value
+      (nautical_mile 64 -1926 64 4545)
+    )
+  )
+  (ref_point
+    (name "ID8")
+    (comment "")
+    (value
+      (nautical_mile 64 -5687 64 4123)
+    )
+  )
+  (ref_point
+    (name "ID9")
+    (comment "")
+    (value
+      (nautical_mile 64 -6945 64 3994)
+    )
+  )
+  (ref_point
+    (name "ID10")
+    (comment "")
+    (value
+      (nautical_mile 64 -8438 64 2765)
+    )
+  )
+  (ref_point
+    (name "ID11")
+    (comment "")
+    (value
+      (nautical_mile 64 -8496 64 1407)
+    )
+  )
+  (ref_point
+    (name "ID12")
+    (comment "")
+    (value
+      (nautical_mile 64 -14314 64 2424)
+    )
+  )
+  (ref_point
+    (name "IN4")
+    (comment "")
+    (value
+      (nautical_mile 64 -663 64 -1920)
+    )
+  )
+  (ref_point
+    (name "IN7")
+    (comment "")
+    (value
+      (nautical_mile 64 -4463 64 -3866)
+    )
+  )
+  (ref_point
+    (name "IN5")
+    (comment "")
+    (value
+      (nautical_mile 64 -1857 64 -1913)
+    )
+  )
+  (ref_point
+    (name "IN6")
+    (comment "")
+    (value
+      (nautical_mile 64 -4333 64 -1876)
+    )
+  )
+  (ref_point
+    (name "AO1PT4")
+    (comment "")
+    (value
+      (nautical_mile 64 7444 64 5070)
+    )
+  )
+  (ref_point
+    (name "DS1PT7")
+    (comment "")
+    (value
+      (nautical_mile 64 4842 64 4990)
+    )
+  )
+  (ref_point
+    (name "S3C")
+    (comment "")
+    (value
+      (nautical_mile 64 7935 64 6564)
+    )
+  )
+  (ref_point
+    (name "AO1PT6")
+    (comment "")
+    (value
+      (nautical_mile 64 7943 64 4320)
+    )
+  )
+  (ref_point
+    (name "AO1PT10")
+    (comment "")
+    (value
+      (nautical_mile 64 11298 64 1914)
+    )
+  )
+  (ref_point
+    (name "DS1PT4")
+    (comment "")
+    (value
+      (nautical_mile 64 4525 64 4214)
+    )
+  )
+  (ref_point
+    (name "TS20")
+    (comment "")
+    (value
+      (nautical_mile 64 4428 64 3713)
+    )
+  )
+  (ref_point
+    (name "SFIR13")
+    (comment "")
+    (value
+      (nautical_mile 64 4249 64 2159)
+    )
+  )
+  (ref_point
+    (name "OT1PT14")
+    (comment "")
+    (value
+      (nautical_mile 64 3843 64 676)
+    )
+  )
+  (ref_point
+    (name "OT1PT1")
+    (comment "")
+    (value
+      (nautical_mile 64 683 64 641)
+    )
+  )
+  (ref_point
+    (name "DS1PT6")
+    (comment "")
+    (value
+      (nautical_mile 64 4585 64 4407)
+    )
+  )
+  (ref_point
+    (name "TS14")
+    (comment "")
+    (value
+      (nautical_mile 64 4546 64 4318)
+    )
+  )
+  (ref_point
+    (name "TS01")
+    (comment "")
+    (value
+      (nautical_mile 64 4374 64 3243)
+    )
+  )
+  (ref_point
+    (name "TS02")
+    (comment "")
+    (value
+      (nautical_mile 64 5937 64 2576)
+    )
+  )
+  (ref_point
+    (name "TS03")
+    (comment "")
+    (value
+      (nautical_mile 64 7371 64 2207)
+    )
+  )
+  (ref_point
+    (name "TS04")
+    (comment "")
+    (value
+      (nautical_mile 64 7371 64 2208)
+    )
+  )
+  (ref_point
+    (name "TSP10")
+    (comment "")
+    (value
+      (nautical_mile 64 8671 64 2261)
+    )
+  )
+  (ref_point
+    (name "TSP3")
+    (comment "")
+    (value
+      (nautical_mile 64 9068 64 2206)
+    )
+  )
+  (ref_point
+    (name "OT1PT7")
+    (comment "")
+    (value
+      (nautical_mile 64 4816 64 5556)
+    )
+  )
+  (ref_point
+    (name "OT1PT8")
+    (comment "")
+    (value
+      (nautical_mile 64 4865 64 5043)
+    )
+  )
+  (ref_point
+    (name "OT7")
+    (comment "")
+    (value
+      (nautical_mile 64 4249 64 2159)
+    )
+  )
+  (ref_point
+    (name "OT11")
+    (comment "")
+    (value
+      (nautical_mile 64 2636 64 2841)
+    )
+  )
+  (ref_point
+    (name "OT12")
+    (comment "")
+    (value
+      (nautical_mile 64 2788 64 4174)
+    )
+  )
+  (ref_point
+    (name "SPT9")
+    (comment "")
+    (value
+      (nautical_mile 64 12817 64 -1528)
+    )
+  )
+  (ref_point
+    (name "SPT8")
+    (comment "")
+    (value
+      (nautical_mile 64 11668 64 -1595)
+    )
+  )
+  (ref_point
+    (name "SPT7")
+    (comment "")
+    (value
+      (nautical_mile 64 8664 64 -1741)
+    )
+  )
+  (ref_point
+    (name "SPT6")
+    (comment "")
+    (value
+      (nautical_mile 64 7760 64 -2418)
+    )
+  )
+  (ref_point
+    (name "SPT5")
+    (comment "")
+    (value
+      (nautical_mile 64 7481 64 -826)
+    )
+  )
+  (ref_point
+    (name "SPT")
+    (comment "")
+    (value
+      (nautical_mile 64 5240 64 707)
+    )
+  )
+  (ref_point
+    (name "SPT3")
+    (comment "")
+    (value
+      (nautical_mile 64 3843 64 676)
+    )
+  )
+  (ref_point
+    (name "RT4")
+    (comment "")
+    (value
+      (nautical_mile 64 4639 64 6349)
+    )
+  )
+  (ref_point
+    (name "RT5")
+    (comment "")
+    (value
+      (nautical_mile 64 2788 64 4174)
+    )
+  )
+  (ref_point
+    (name "OY8")
+    (comment "")
+    (value
+      (nautical_mile 64 2071 64 3084)
+    )
+  )
+  (ref_point
+    (name "OY9")
+    (comment "")
+    (value
+      (nautical_mile 64 683 64 641)
+    )
+  )
+  (ref_point
+    (name "OT1PT2")
+    (comment "")
+    (value
+      (nautical_mile 64 -655 64 641)
+    )
+  )
+  (ref_point
+    (name "BRUL1")
+    (comment "")
+    (value
+      (nautical_mile 64 7528 64 16388)
+    )
+  )
+  (ref_point
+    (name "BRUL2")
+    (comment "")
+    (value
+      (nautical_mile 64 10910 64 15317)
+    )
+  )
+  (ref_point
+    (name "BRUL3")
+    (comment "")
+    (value
+      (nautical_mile 64 11125 64 11665)
+    )
+  )
+  (ref_point
+    (name "BRUL4")
+    (comment "")
+    (value
+      (nautical_mile 64 12129 64 15962)
+    )
+  )
+  (ref_point
+    (name "BRUL5")
+    (comment "")
+    (value
+      (nautical_mile 64 13913 64 15771)
+    )
+  )
+  (ref_point
+    (name "BRUL6")
+    (comment "")
+    (value
+      (nautical_mile 64 12279 64 11328)
+    )
+  )
+  (ref_point
+    (name "BRUL7")
+    (comment "")
+    (value
+      (nautical_mile 64 14173 64 11996)
+    )
+  )
+  (ref_point
+    (name "BRUL8")
+    (comment "")
+    (value
+      (nautical_mile 64 14282 64 12868)
+    )
+  )
+  (ref_point
+    (name "BRUH4")
+    (comment "")
+    (value
+      (nautical_mile 64 10967 64 14235)
+    )
+  )
+  (ref_point
+    (name "BRUH5")
+    (comment "")
+    (value
+      (nautical_mile 64 11117 64 11675)
+    )
+  )
+  (ref_point
+    (name "DG23")
+    (comment "")
+    (value
+      (nautical_mile 64 7148 64 5490)
+    )
+  )
+  (ref_point
+    (name "DG14")
+    (comment "")
+    (value
+      (nautical_mile 64 7458 64 5914)
+    )
+  )
+  (ref_point
+    (name "AO1PT11")
+    (comment "")
+    (value
+      (nautical_mile 64 11892 64 2818)
+    )
+  )
+  (ref_point
+    (name "TEMP")
+    (comment "")
+    (value
+      (nautical_mile 64 9208 64 2176)
+    )
+  )
+  (ref_point
+    (name "DG78")
+    (comment "")
+    (value
+      (nautical_mile 64 8343 64 4011)
+    )
+  )
+  (ref_point
+    (name "DG64")
+    (comment "")
+    (value
+      (nautical_mile 64 7994 64 4322)
+    )
+  )
+  (ref_point
+    (name "DO43")
+    (comment "")
+    (value
+      (nautical_mile 64 7895 64 4409)
+    )
+  )
+  (ref_point
+    (name "LOLE1")
+    (comment "délimitation secteurs Aix LO/LE")
+    (value
+      (nautical_mile 64 11668 64 -1595)
+    )
+  )
+  (ref_point
+    (name "LOLE2")
+    (comment "délimitation secteurs Aix LO/LE")
+    (value
+      (nautical_mile 64 13088 64 -3637)
+    )
+  )
+  (submap
+    (number 1)
+    (name "SFIR")
+    (submap_type 1)
+    (entity
+      (name "495")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "68B")
+        (point "69B")
+        (point "70B")
+        (point "72B")
+        (point "74")
+        (point "99")
+        (point "26B")
+      )
+    )
+    (entity
+      (name "498")
+      (id_atc "ESPACE DELEGUE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "65B")
+        (point "64B")
+      )
+    )
+    (entity
+      (name "499")
+      (id_atc "ESPACE DELEGUE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "64B")
+        (point "78")
+      )
+    )
+    (entity
+      (name "500")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "12B")
+        (point "77")
+      )
+    )
+    (entity
+      (name "504")
+      (id_atc "LIMITE SECTEUR 2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "82")
+        (point "7B")
+      )
+    )
+    (entity
+      (name "506")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (nautical_mile 64 4887 64 14353  0)
+        (nautical_mile 64 7157 64 8244  0)
+      )
+    )
+    (entity
+      (name "507")
+      (id_atc "ESPACE DELEGUE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "14")
+        (point "84")
+      )
+    )
+    (entity
+      (name "510")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SFIR5")
+        (point "SFIR6")
+      )
+    )
+    (entity
+      (name "511")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "72B")
+        (point "73B")
+        (point "94")
+      )
+    )
+    (entity
+      (name "513")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "45")
+        (point "71B")
+        (point "70B")
+      )
+    )
+    (entity
+      (name "514")
+      (id_atc "LIMITE SECTEUR 2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "95")
+        (point "96")
+      )
+    )
+    (entity
+      (name "515")
+      (id_atc "LIMITE SECTEUR 2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "50")
+        (point "49")
+        (point "95")
+        (point "51")
+      )
+    )
+    (entity
+      (name "31")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "62B")
+        (point "63B")
+        (point "66")
+        (point "67B")
+      )
+    )
+    (entity
+      (name "29")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SFIR5")
+        (point "AR4")
+        (point "AR3")
+        (point "AR2")
+        (point "AR1")
+        (point "AR0")
+        (point "SFIR8")
+        (point "SFIR9")
+      )
+    )
+    (entity
+      (name "37")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (nautical_mile 64 4431 64 6704  0)
+        (nautical_mile 64 2817 64 6371  0)
+        (point "OG2")
+        (nautical_mile 64 -646 64 3587  0)
+      )
+    )
+    (entity
+      (name "33")
+      (id_atc "LIMITE SECTEUR 2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SUP1")
+        (point "SUP2")
+        (point "SUP3")
+      )
+    )
+    (entity
+      (name "32")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 12079 64 12500  0)
+        (nautical_mile 64 11933 64 12513  0)
+      )
+    )
+    (entity
+      (name "34")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 11933 64 12513  0)
+        (nautical_mile 64 11652 64 12238  0)
+      )
+    )
+    (entity
+      (name "38")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 11652 64 12238  0)
+        (nautical_mile 64 11567 64 11965  0)
+      )
+    )
+    (entity
+      (name "39")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 11567 64 11965  0)
+        (nautical_mile 64 11033 64 11665  0)
+      )
+    )
+    (entity
+      (name "40")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 11033 64 11665  0)
+        (nautical_mile 64 10321 64 11818  0)
+      )
+    )
+    (entity
+      (name "41")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 10321 64 11818  0)
+        (nautical_mile 64 10477 64 12212  0)
+      )
+    )
+    (entity
+      (name "42")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 10477 64 12212  0)
+        (nautical_mile 64 10225 64 12423  0)
+      )
+    )
+    (entity
+      (name "44")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 10225 64 12423  0)
+        (nautical_mile 64 10234 64 12730  0)
+      )
+    )
+    (entity
+      (name "45")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 10234 64 12730  0)
+        (nautical_mile 64 9939 64 13147  0)
+      )
+    )
+    (entity
+      (name "46")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 9939 64 13147  0)
+        (nautical_mile 64 9859 64 13105  0)
+      )
+    )
+    (entity
+      (name "47")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 9859 64 13105  0)
+        (nautical_mile 64 9347 64 13124  0)
+      )
+    )
+    (entity
+      (name "48")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 9347 64 13124  0)
+        (nautical_mile 64 9140 64 12950  0)
+      )
+    )
+    (entity
+      (name "49")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 9140 64 12950  0)
+        (nautical_mile 64 8928 64 13578  0)
+      )
+    )
+    (entity
+      (name "50")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 8928 64 13578  0)
+        (nautical_mile 64 8258 64 13702  0)
+      )
+    )
+    (entity
+      (name "51")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 8258 64 13702  0)
+        (nautical_mile 64 8062 64 13989  0)
+      )
+    )
+    (entity
+      (name "52")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 8062 64 13989  0)
+        (nautical_mile 64 7704 64 14701  0)
+      )
+    )
+    (entity
+      (name "53")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 7704 64 14701  0)
+        (nautical_mile 64 7373 64 14663  0)
+      )
+    )
+    (entity
+      (name "54")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 7373 64 14663  0)
+        (nautical_mile 64 7166 64 14468  0)
+      )
+    )
+    (entity
+      (name "55")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 7166 64 14468  0)
+        (nautical_mile 64 6463 64 14785  0)
+      )
+    )
+    (entity
+      (name "56")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 6463 64 14785  0)
+        (nautical_mile 64 6194 64 15812  0)
+      )
+    )
+    (entity
+      (name "57")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 6194 64 15812  0)
+        (nautical_mile 64 4857 64 15900  0)
+      )
+    )
+    (entity
+      (name "58")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 4857 64 15900  0)
+        (nautical_mile 64 3574 64 15421  0)
+      )
+    )
+    (entity
+      (name "59")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 3574 64 15421  0)
+        (nautical_mile 64 3598 64 14138  0)
+      )
+    )
+    (entity
+      (name "60")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 3598 64 14138  0)
+        (nautical_mile 64 -608 64 11539  0)
+      )
+    )
+    (entity
+      (name "70")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 11298 64 1914  0)
+        (nautical_mile 64 11903 64 2825  0)
+      )
+    )
+    (entity
+      (name "71")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 11892 64 2818  0)
+        (nautical_mile 64 12782 64 4159  0)
+      )
+    )
+    (entity
+      (name "72")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 12782 64 4159  0)
+        (nautical_mile 64 13289 64 4930  0)
+      )
+    )
+    (entity
+      (name "73")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 13289 64 4930  0)
+        (nautical_mile 64 14720 64 5352  0)
+      )
+    )
+    (entity
+      (name "74")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 14720 64 5352  0)
+        (nautical_mile 64 12161 64 7878  0)
+      )
+    )
+    (entity
+      (name "75")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 12161 64 7878  0)
+        (nautical_mile 64 15045 64 10008  0)
+      )
+    )
+    (entity
+      (name "76")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 15045 64 10008  0)
+        (nautical_mile 64 14635 64 10267  0)
+      )
+    )
+    (entity
+      (name "77")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 14635 64 10267  0)
+        (nautical_mile 64 13697 64 10101  0)
+      )
+    )
+    (entity
+      (name "78")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 13697 64 10101  0)
+        (nautical_mile 64 13617 64 10357  0)
+      )
+    )
+    (entity
+      (name "79")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 13617 64 10357  0)
+        (nautical_mile 64 13426 64 10566  0)
+      )
+    )
+    (entity
+      (name "80")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 13426 64 10566  0)
+        (nautical_mile 64 13149 64 10771  0)
+      )
+    )
+    (entity
+      (name "81")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 13149 64 10771  0)
+        (nautical_mile 64 12882 64 10881  0)
+      )
+    )
+    (entity
+      (name "82")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 12882 64 10881  0)
+        (nautical_mile 64 12087 64 11389  0)
+      )
+    )
+    (entity
+      (name "83")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 12087 64 11389  0)
+        (nautical_mile 64 11985 64 12050  0)
+      )
+    )
+    (entity
+      (name "84")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (nautical_mile 64 11985 64 12050  0)
+        (nautical_mile 64 12079 64 12500  0)
+      )
+    )
+    (entity
+      (name "85")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ID1")
+        (point "ID2")
+        (point "ID3")
+        (point "ID4")
+        (point "ID5")
+        (point "ID6")
+        (point "ID7")
+        (point "ID8")
+        (point "ID9")
+        (point "ID10")
+        (point "ID11")
+        (point "ID12")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "86")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (point "ID6")
+        (point "ID6")
+      )
+    )
+    (entity
+      (name "92")
+      (id_atc "LIMITE SECTEUR 2")
+      (shape "LineEntity")
+      (geometry
+        (point "IN4")
+        (point "IN5")
+      )
+    )
+    (entity
+      (name "93")
+      (id_atc "LIMITE SECTEUR 2")
+      (shape "LineEntity")
+      (geometry
+        (point "IN5")
+        (point "IN6")
+      )
+    )
+    (entity
+      (name "94")
+      (id_atc "LIMITE SECTEUR 2")
+      (shape "LineEntity")
+      (geometry
+        (point "IN6")
+        (point "IN7")
+      )
+    )
+    (entity
+      (name "89")
+      (id_atc "LIMITE SECTEUR 2")
+      (shape "LineEntity")
+      (geometry
+        (point "DS1PT7")
+        (point "AO1PT4")
+      )
+    )
+    (entity
+      (name "91")
+      (id_atc "LIMITE SECTEUR 2")
+      (shape "LineEntity")
+      (geometry
+        (point "DS1PT4")
+        (point "AO1PT6")
+      )
+    )
+    (entity
+      (name "95")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "TS20")
+        (point "SFIR13")
+        (point "OT1PT14")
+        (point "OT1PT1")
+      )
+    )
+    (entity
+      (name "90")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DS1PT7")
+        (point "DS1PT6")
+        (point "TS14")
+        (point "DS1PT4")
+        (point "TS20")
+        (point "TS01")
+        (point "TS02")
+        (point "TS03")
+        (point "TS04")
+        (point "TSP10")
+        (point "TSP3")
+      )
+    )
+    (entity
+      (name "97")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "62B")
+        (point "OT1PT7")
+        (point "OT1PT8")
+        (point "DS1PT7")
+      )
+    )
+    (entity
+      (name "96")
+      (id_atc "LIMITE SECTEUR 2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "OT7")
+        (point "OT11")
+        (point "OT12")
+      )
+    )
+    (entity
+      (name "98")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (point "AO1PT10")
+        (point "SPT9")
+      )
+    )
+    (entity
+      (name "99")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SPT9")
+        (point "SPT8")
+        (point "SPT7")
+        (point "SPT6")
+        (point "SPT5")
+        (point "SPT")
+        (point "SPT3")
+      )
+    )
+    (entity
+      (name "100")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "RT4")
+        (point "RT5")
+        (point "OY8")
+        (nautical_mile 64 1451 64 1993  0)
+        (point "OY9")
+      )
+    )
+    (entity
+      (name "101")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (point "OT1PT1")
+        (point "OT1PT2")
+      )
+    )
+    (entity
+      (name "102")
+      (id_atc "LIMITE SECTEUR 2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "BRUL1")
+        (point "BRUL2")
+        (point "BRUL3")
+      )
+    )
+    (entity
+      (name "103")
+      (id_atc "LIMITE SECTEUR 2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "BRUL2")
+        (point "BRUL4")
+        (point "BRUL5")
+      )
+    )
+    (entity
+      (name "104")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "BRUL6")
+        (point "BRUL7")
+        (point "BRUL8")
+      )
+    )
+    (entity
+      (name "105")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (point "BRUH4")
+        (point "BRUH5")
+      )
+    )
+    (entity
+      (name "106")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DG23")
+        (point "DG14")
+        (point "S3C")
+        (point "AO1PT11")
+        (point "AO1PT10")
+        (point "TEMP")
+        (point "DG78")
+        (point "DG64")
+        (point "DO43")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "88")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "PolylineEntity")
+      (geometry
+        (nautical_mile 64 -627 64 5638  0)
+        (nautical_mile 64 -646 64 3587  0)
+        (nautical_mile 64 -658 64 633  0)
+        (nautical_mile 64 -648 64 -1901  0)
+        (nautical_mile 64 -796 64 -3053  0)
+        (nautical_mile 64 -4448 64 -3847  0)
+        (nautical_mile 64 -8093 64 -2525  0)
+        (nautical_mile 64 -8655 64 -2299  0)
+        (nautical_mile 64 -8510 64 1394  0)
+      )
+    )
+    (entity
+      (name "87")
+      (id_atc "LIMITE SECTEUR 1")
+      (shape "LineEntity")
+      (geometry
+        (point "LOLE1")
+        (point "LOLE2")
+      )
+    )
+  )
+)

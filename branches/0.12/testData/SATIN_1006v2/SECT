@@ -1,0 +1,358 @@
+FORMAT : STIP       VERSION CA : 10-02-11  LIVRAISON : 26-01-11  PART : SECT    
+TZ  BORD   F0001                        00000195 S                              
+BN  BORD   F0002                        00000195                                
+N1  BORD   U0003                        01950295                                
+CZ  BORD   F0004                        00000145 S                              
+TG  BORD   F0005                        00000195 S                              
+DB  CDG    F0006                        00000135                                
+LM  BORD   F0007                        00000195 S                              
+CW  BRST   U0008                        00000660                                
+BA  BALE   F0009                        00000145 S                              
+OM  PARI   U0010                        02650285                                
+L1  BORD   U0011                        01950295 S                              
+Z3  BORD   U0012                        03450365                                
+SL  PARI   F0013                        00000115                                
+FS  PARI   U0014                        00000660                                
+20  EGGG   U0015                        00000660                                
+SR  PARI   F0016                        00000115                                
+Z1  BORD   U0017                        01950295                                
+N2  BORD   U0018                        02950345                                
+SO  PARI   F0019                        00000115                                
+LN  PARI   F0020                        00000145                                
+Z2  BORD   U0021                        02950345                                
+ZW  ZURI   U0022                        00000245                                
+TR  SCAG    0023                                                            0039
+T1  BORD   U0024                        01950295 S                              
+GU  BRST   U0025                        03650660                                
+OO  ALGR   U0026                        00000660                                
+MA  MARS   F0027                        00000115                                
+AA  BRST   U0028                        01950660                                
+AW  TOUL   F0029                        00000145 S                              
+LO  AIX    F0030                        00000195                                
+LE  AIX    F0031                        00000245                                
+ST  AIX    F0032                        00000245                                
+MO  AIX    F0033                        00000195                                
+ML  AIX    F0034                        00000195                                
+LS  AIX    F0035                        00000195                                
+KF  REIM   U0036                        03450660 S                              
+AJ  AIX    F0037                        00000245                                
+MN  AIX    F0038                        00000245                                
+T2  BORD   U0039                        02950345 S                              
+Y1  AIX    U0040                        02450305                                
+IC  BRST   U0041                        00000660                                
+Y2  AIX    U0042                        03050355                                
+A2  AIX    U0043                        03050355                                
+M2  AIX    U0044                        03050355                                
+F1  AIX    U0045                        01950305                                
+F2  AIX    U0046                        03050355                                
+A1  AIX    U0047                        01950305                                
+M1  AIX    U0048                        01950305                                
+ZL  AIX    F0049                        00000335                                
+K1  AIX    U0050                        02450305                                
+GS  BRST   U0051                        00000345                                
+AS  BRST   U0052                        00000345                                
+19  EGGG   U0053                        01950660                                
+TU  PARI   U0054                        03150345                                
+DC  CDG    F0055                        00000135                                
+AC  CDG    F0056                        00000135                                
+18  EGGG   U0057                        00000660                                
+EG  EGGG   U0058                        00000660                                
+EY  EDDY   U0059                        02450660 S                              
+TN  PARI   F0060                        00000265                                
+TP  PARI   F0061                        00550265                                
+S6  EGGG   U0062                        00000305                                
+MI  MLAN   U0063                        00000660                                
+GV  GNEV   U0064                        00000660                                
+TT  EGGG   F0065                        00000195                                
+CE  BRST   F0066                        00000660                                
+TC  ETRG   U0067                        00000660                                
+G1  AIX    U0068                        01950305                                
+S9  EGGG   U0069                        00000660                                
+UK  PARI   U0070                        01950285                                
+NS  BRST   U0071                        02550345                                
+VS  BRST   U0072                        02550345                                
+NU  BRST   U0073                        03650660                                
+JS  BRST   U0074                        02550325                                
+TM  PARI   F0075                        00000265 S                              
+TE  PARI   F0076                        00000265 S                              
+E   REIM   F0077                        01450195 S                              
+BR  EBBR   F0078                        00000245                                
+S   PARI   F0079                        00000195 S                              
+SJ  PARI   F0080                        00000115                                
+IN  BRST   F0081                        00000255                                
+PR  BRST   U0082                        00000660                                
+TB  PARI   F0083                        00000265 S                              
+SE  REIM   F0084                        01450195 S                              
+ID  BRST   F0085                        00000255                                
+PL  MADR   U0086                        00000325                                
+AO  PARI   F0087                        00000285 S                              
+UF  REIM   U0088                        01950345 S                              
+XU  BRST   U0089                        03650660                                
+UN  REIM   U0090                        02650345                                
+UH  REIM   U0091                        01950315 S                              
+SV  BRST   U0092                        00000660                                
+WU  BRST   U0093                        03450660                                
+IG  GNEV   F0094                        00000245                                
+UZ  PARI   U0095                        01950285                                
+UT  PARI   U0096                        01950315                                
+UR  REIM   U0097                        02650315 S                              
+TH  PARI   F0098                        01450245                                
+UE  REIM   U0099                        01950315 S                              
+L3  BORD   U0100                        03450365 S                              
+JH  BRST   U0101                        03250345                                
+OD  ORL    F0102                        00000135 S                              
+OA  ORL    F0103                        00000135 S                              
+UI  BRST   F0104                        00000195                                
+NR  NICE   F0105                        00000145                                
+IR  EIRE   U0106                        00000345                                
+RA  CDG    F0107                        00000145 S                              
+RD  CDG    F0108                        00000145 S                              
+ET  ETRG   F0109                        00000660                                
+ZS  BRST   U0110                        02850345                                
+NA  NANT   F0111                        00000145                                
+IV  REIM   F0112                        00000195                                
+ZU  BRST   U0113                        03650660                                
+P3  BORD   U0114                        03450660 S                              
+SG  MADR   U0115                        00000660                                
+AR  PARI   F0116                        00000660 S                              
+AE  TOUL   F0117                        00000145 S                              
+ZA  MADR   U0118                        00000660                                
+B   BARC   F0119                        00000255                                
+BV  MADR   U0120                        03450660                                
+ND  NICE   F0121                        00000175                                
+PA  PALM   F0122                        00000245                                
+H2  BORD   U0123                        02950345                                
+2M  ZURI   U0124                        02450285                                
+RC  CDG    F0125                        00000145 S                              
+LJ  SCAG    0126                                                            0037
+TO  SCAG    0127                                                            0020
+FB  MONT   F0128                        00750145                                
+MD  SCAG    0129                                                            0022
+EM  MERI   F0130                        00000115                                
+SA  SCAG    0131                                                            0024
+FI  PARI   F0132                        00000195                                
+KE  REIM   U0133                        03450660 S                              
+RH  SCAG    0134                                                            0032
+YN  LYON   F0135                        00000145                                
+IS  SCAG    0136                                                            0025
+KR  REIM   U0137                        03450365 S                              
+SU  PARI   U0138                        03450660                                
+AX  BRST   U0139                        00000660                                
+DR  SCAG    0140                                                            0018
+RW  STBG   F0141                        00000145 S                              
+DU  KLSR   U0142                        03350660 S                              
+DF  FFOR   F0143                        01450245 S                              
+DT  FFOR   F0144                        00300145 S                              
+RB  CDG    F0145                        00000145 S                              
+ZN  ZURI   U0146                        00000245                                
+RO  ROME   U0147                        00000660                                
+K2  AIX    U0148                        03050355                                
+G2  AIX    U0149                        03050355                                
+BH  BORD   F0150                        00000145                                
+UP  PARI   U0151                        01950315                                
+FA  MONT   F0152                        00000115                                
+FE  MONT   F0153                        00000145                                
+QE  LILE   F0154                        00000115                                
+QW  LILE   F0155                        00000115                                
+GX  SWIK   U0156                        00000660                                
+PS  PALM   F0157                        00000245                                
+KJ  CORS   F0158                        00000145                                
+KB  CORS   F0159                        00000145                                
+XA  BARC   U0160                        02550305                                
+OR  SCAG    0161                                                            0027
+PY  PYRN   F0162                        00000145                                
+CF  LYON   F0163                        00000145                                
+PE  MARS   F0164                        00000115                                
+MC  MARS   F0165                        00000145                                
+UJ  PARI   U0166                        01950660 S                              
+RN  RENN   F0167                        00000115                                
+KS  BRST   U0168                        02550345                                
+JU  BRST   U0169                        03450660                                
+DK  SCAG    0170                                                            0036
+AK  TOUL   F0171                        00000075 S                              
+AU  BRST   U0172                        03650660                                
+XS  BRST   U0173                        02850345                                
+XH  REIM   U0174                        03150345 S                              
+GD  GNEV   F0175                        01150195                                
+IT  EIRE   U0176                        00000345                                
+BZ  PYRN   F0177                        00000145                                
+IE  BORD   F0178                        00000145                                
+L2  BORD   U0179                        02950345 S                              
+W1  AIX    U0180                        01950305                                
+W2  AIX    U0181                        03050355                                
+B1  AIX    U0182                        02450305                                
+B2  AIX    U0183                        03050355                                
+X1  BORD   U0184                        01950295 S                              
+X2  BORD   U0185                        02950345 S                              
+PP  MADR   U0186                        03250660                                
+LR  BARC   F0187                        00000305                                
+WA  BARC   U0188                        03050660                                
+CT  BARC   U0189                        03050660                                
+EN  BARC   U0190                        03050660                                
+3M  ZURI   U0191                        02850325                                
+4M  ZURI   U0192                        03250355                                
+E3  AIX    U0193                        03550660                                
+E1  AIX    U0194                        02450305                                
+FM  REIM   U0195                        00000660                                
+CS  REIM   U0196                        00000660                                
+CV  REIM   U0197                        00000660                                
+DM  REIM   U0198                        00000660                                
+SP  REIM   U0199                        00000660                                
+XR  REIM   U0200                        03150345 S                              
+TL  PARI   F0201                        00000265 S                              
+E2  AIX    U0202                        03050355                                
+LX  ELLX   U0203                        00000660                                
+ZI  BRST   U0204                        03450365                                
+GA  GNEV   F0205                        00000195                                
+AV  MADR   U0206                        03450660                                
+GE  SCAG    0207                                                            0033
+BW  MERI   F0208                        00000145                                
+BE  MERI   F0209                        00000145                                
+EV  TOUL   F0210                        00000195                                
+RE  STBG   F0211                        00000095 S                              
+KA  ALGR   U0212                        00000660                                
+AG  SCAG    0213                                                            0021
+PU  PARI   U0214                        03150345                                
+FD  PARI   U0215                        00000660                                
+FR  PARI   U0216                        00000660                                
+AY  BRST   U0217                        00000660                                
+BB  MADR   U0218                        00000345                                
+CN  BORD   F0219                        00000145 S                              
+CL  LYON   F0220                        00000145                                
+ZH  AIX    U0221                        03350660                                
+F3  AIX    U0222                        03550660                                
+M3  AIX    U0223                        03550660                                
+N3  BORD   U0224                        03450365                                
+T3  BORD   U0225                        03450365 S                              
+X3  BORD   U0226                        03450365 S                              
+XE  REIM   U0227                        03150345 S                              
+R1  BORD   U0228                        01950295 S                              
+R2  BORD   U0229                        02950345 S                              
+OG  PARI   U0230                        01950285 S                              
+OY  PARI   U0231                        01950265 S                              
+OT  PARI   F0232                        00000245 S                              
+RT  PARI   F0233                        00000245 S                              
+AM  BRST   U0234                        00000660                                
+NI  BRST   U0235                        03450365                                
+XI  BRST   U0236                        03450365                                
+IZ  AIX    F0237                        00000195                                
+UG  GNEV   F0238                        01950245                                
+1L  GNEV   U0239                        02450285                                
+2L  GNEV   U0240                        02850315                                
+3L  GNEV   U0241                        03150335                                
+CK  LYON   F0242                        00000085                                
+ES  BARC   U0243                        00000660                                
+Z4  BORD   U0244                        03650660                                
+PN  AIX    F0245                        00000195                                
+IM  AIX    F0246                        00000195                                
+A3  AIX    U0247                        03550660                                
+B3  AIX    U0248                        03550660                                
+G3  AIX    U0249                        03550660                                
+Y3  AIX    U0250                        03550660                                
+LI  SCAG    0251                                                            0017
+LB  LYON   F0252                        00000115                                
+CB  BORD   U0253                        00000660                                
+1V  BORD   U0254                        00000660                                
+BL  BORD   F0255                        00000145                                
+1D  BORD   U0256                        00000660                                
+BI  BORD   F0257                        00000145                                
+CR  BRST   U0258                        00000660                                
+X4  BORD   U0259                        03650660 S                              
+O   ROME   F0260                        00000225                                
+FC  PARI   U0261                        00000660                                
+YS  LYON   F0262                        00000145                                
+YE  LYON   F0263                        00000155                                
+YW  LYON   F0264                        00000145                                
+VW  LYON   F0265                        00000145                                
+VE  LYON   F0266                        00000155                                
+4L  GNEV   U0267                        03350355                                
+5L  GNEV   U0268                        03550375                                
+6L  GNEV   U0269                        03750660                                
+5M  ZURI   U0270                        03550375                                
+6M  ZURI   U0271                        03750800                                
+NO  NICE   F0272                        00000145                                
+NM  NICE   F0273                        00000145                                
+L4  BORD   U0274                        03650660 S                              
+R4  BORD   U0275                        03650660 S                              
+R3  BORD   U0276                        03450365 S                              
+BT  AIX    F0277                        00000245                                
+P2  BORD   U0278                        02950345 S                              
+DS  PARI   F0279                        00000175 S                              
+DG  PARI   F0280                        00000265 S                              
+DO  PARI   F0281                        00000265 S                              
+W3  AIX    U0282                        03550660                                
+36  EGGG   U0283                        03050660                                
+DD  RENN   F0284                        00000115                                
+AZ  BRST   U0285                        00000660                                
+P1  BORD   U0286                        01950295 S                              
+HR  REIM   U0287                        03650660 S                              
+N4  BORD   U0288                        03650660                                
+KH  REIM   U0289                        03450660 S                              
+US  PARI   U0290                        02850345                                
+DI  KLSR   U0291                        02450335 S                              
+WS  BRST   U0292                        00000345                                
+KN  REIM   U0293                        03450365                                
+HN  REIM   U0294                        03650660                                
+H1  BORD   U0295                        01950295                                
+H3  BORD   U0296                        03450365                                
+TI  EIRE   U0297                        03450660                                
+RI  EIRE   U0298                        03450660                                
+NE  NICE   F0299                        00000175                                
+KU  BRST   U0300                        03450660                                
+VU  BRST   U0301                        03450660                                
+21  EGGG   U0302                        00000225                                
+22  EGGG   U0303                        00000660                                
+HP  PARI   U0304                        03450660                                
+EL  BARC   U0305                        00000325                                
+EU  BARC   U0306                        03250660                                
+JJ  JERS   F0307                        00000195                                
+OL  BARC   U0308                        03050345                                
+OU  BARC   U0309                        03450660                                
+SB  PARI   F0310                        00000115                                
+KC  CORS   F0311                        00000105                                
+H4  BORD   U0312                        03650660                                
+UB  REIM   U0313                        02650345                                
+AI  BRST   U0314                        03450365                                
+GI  BRST   U0315                        03450365                                
+FG  CORS   F0316                        00000145                                
+AB  MADR   U0317                        00000345                                
+AP  PARI   U0318                        02650315 S                              
+1P  PARI   U0319                        02450315 S                              
+T4  BORD   U0320                        03650660 S                              
+BM  BALE   F0321                        00000195 S                              
+BD  REIM   F0322                        00000195 S                              
+QS  BRST   U0323                        02650365                                
+QU  BRST   U0324                        03650660                                
+MS  BRST   U0325                        02650365                                
+MU  BRST   U0326                        03650660                                
+NZ  NICE   F0327                        00000075                                
+SY  PARI   F0328                        00000115                                
+GP  BRST   F0329                        00000045                                
+LD  BRST   F0330                        00000045                                
+IQ  BRST   F0331                        00000195                                
+IX  BRST   F0332                        00000195                                
+QA  LILE   F0333                        00000115                                
+SC  STBG   F0334                        00000145 S                              
+            0335    * SECTEUR NON UTILISE *                                     
+K3  AIX    U0336                        03550660                                
+DL  AIX    F0337                        00000335                                
+DH  AIX    U0338                        03350660                                
+            0339    * SECTEUR NON UTILISE *                                     
+            0340    * SECTEUR NON UTILISE *                                     
+            0341    * SECTEUR NON UTILISE *                                     
+            0342    * SECTEUR NON UTILISE *                                     
+            0343    * SECTEUR NON UTILISE *                                     
+            0344    * SECTEUR NON UTILISE *                                     
+            0345    * SECTEUR NON UTILISE *                                     
+            0346    * SECTEUR NON UTILISE *                                     
+            0347    * SECTEUR NON UTILISE *                                     
+            0348    * SECTEUR NON UTILISE *                                     
+            0349    * SECTEUR NON UTILISE *                                     
+            0350    * SECTEUR NON UTILISE *                                     
+            0351    * SECTEUR NON UTILISE *                                     
+            0352    * SECTEUR NON UTILISE *                                     
+            0353    * SECTEUR NON UTILISE *                                     
+            0354    * SECTEUR NON UTILISE *                                     
+            0355    * SECTEUR NON UTILISE *                                     
+CH  SCAG    0356                                                            0023
+

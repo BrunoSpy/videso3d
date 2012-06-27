@@ -1,0 +1,242 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "TEXTE ZONE MILITAIRE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "213A")
+  (number 10)
+  (comment "")
+  (date 29 10 2008)
+  (heure 10 22 08)
+  (ref_point
+    (name "A01")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 12891 64 9296)
+    )
+  )
+  (ref_point
+    (name "A02")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 13889 64 9208)
+    )
+  )
+  (ref_point
+    (name "A03")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 14680 64 9137)
+    )
+  )
+  (ref_point
+    (name "A04")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 14748 64 8243)
+    )
+  )
+  (ref_point
+    (name "A05")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 14950 64 8097)
+    )
+  )
+  (ref_point
+    (name "A06")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 15900 64 7380)
+    )
+  )
+  (ref_point
+    (name "A07")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 15196 64 6540)
+    )
+  )
+  (ref_point
+    (name "A08")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 15283 64 5882)
+    )
+  )
+  (ref_point
+    (name "A09")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 15015 64 5658)
+    )
+  )
+  (ref_point
+    (name "A10")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 13895 64 4657)
+    )
+  )
+  (ref_point
+    (name "A11")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 13571 64 4375)
+    )
+  )
+  (ref_point
+    (name "A12")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 13235 64 4486)
+    )
+  )
+  (ref_point
+    (name "A13")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 11105 64 5675)
+    )
+  )
+  (ref_point
+    (name "A14")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 10676 64 6365)
+    )
+  )
+  (ref_point
+    (name "A15")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 10618 64 7304)
+    )
+  )
+  (ref_point
+    (name "A16")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 10548 64 8106)
+    )
+  )
+  (ref_point
+    (name "A17")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 10529 64 8444)
+    )
+  )
+  (ref_point
+    (name "A18")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 11127 64 8741)
+    )
+  )
+  (ref_point
+    (name "A19")
+    (comment "R213A")
+    (value
+      (nautical_mile 64 11944 64 9143)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 4)
+    (keyboard 3)
+    (entity
+      (name "3")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "A01")
+        (point "A02")
+        (point "A03")
+        (point "A04")
+        (point "A05")
+        (point "A06")
+        (point "A07")
+        (point "A08")
+        (point "A09")
+        (point "A10")
+        (point "A11")
+        (point "A12")
+        (point "A13")
+        (point "A14")
+        (point "A15")
+        (point "A16")
+        (point "A17")
+        (point "A18")
+        (point "A19")
+      )
+      (polygone 1)
+    )
+  )
+)

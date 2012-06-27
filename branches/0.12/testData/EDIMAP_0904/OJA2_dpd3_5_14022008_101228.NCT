@@ -1,0 +1,283 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "OJA2")
+  (number 5)
+  (comment "LFOJ TMA 2 + TMA 3 + TMA 4")
+  (date 14 02 2008)
+  (heure 10 12 28)
+  (ref_point
+    (name "OJSC2P01")
+    (comment "SCTA2 LFOJ")
+    (value
+      (nautical_mile 64 4865 64 5044)
+    )
+  )
+  (ref_point
+    (name "OJSC2P02")
+    (comment "")
+    (value
+      (nautical_mile 64 5486 64 4494)
+    )
+  )
+  (ref_point
+    (name "OJSC2P03")
+    (comment "")
+    (value
+      (nautical_mile 64 5484 64 3771)
+    )
+  )
+  (ref_point
+    (name "OJSC2P04")
+    (comment "")
+    (value
+      (nautical_mile 64 5479 64 3515)
+    )
+  )
+  (ref_point
+    (name "OJSC2P05")
+    (comment "")
+    (value
+      (nautical_mile 64 5460 64 2776)
+    )
+  )
+  (ref_point
+    (name "OJSC2P06")
+    (comment "")
+    (value
+      (nautical_mile 64 4889 64 3020)
+    )
+  )
+  (ref_point
+    (name "OJSC2P07")
+    (comment "")
+    (value
+      (nautical_mile 64 3719 64 3509)
+    )
+  )
+  (ref_point
+    (name "OJSC2P08")
+    (comment "")
+    (value
+      (nautical_mile 64 3960 64 4108)
+    )
+  )
+  (ref_point
+    (name "OJSC2P09")
+    (comment "")
+    (value
+      (nautical_mile 64 4324 64 4115)
+    )
+  )
+  (ref_point
+    (name "OJSC2P10")
+    (comment "")
+    (value
+      (nautical_mile 64 4551 64 4318)
+    )
+  )
+  (ref_point
+    (name "OJSC3P01")
+    (comment "SCTA3 LFOJ")
+    (value
+      (nautical_mile 64 4856 64 4128)
+    )
+  )
+  (ref_point
+    (name "OJSC3P02")
+    (comment "")
+    (value
+      (nautical_mile 64 5484 64 3771)
+    )
+  )
+  (ref_point
+    (name "OJSC3P03")
+    (comment "")
+    (value
+      (nautical_mile 64 5460 64 2776)
+    )
+  )
+  (ref_point
+    (name "OJSC3P04")
+    (comment "")
+    (value
+      (nautical_mile 64 4889 64 3020)
+    )
+  )
+  (ref_point
+    (name "OJSC3P05")
+    (comment "")
+    (value
+      (nautical_mile 64 3719 64 3509)
+    )
+  )
+  (ref_point
+    (name "OJSC3P06")
+    (comment "")
+    (value
+      (nautical_mile 64 3960 64 4108)
+    )
+  )
+  (ref_point
+    (name "OJSC4P01")
+    (comment "SCTA4 LFOJ")
+    (value
+      (nautical_mile 64 4856 64 4128)
+    )
+  )
+  (ref_point
+    (name "OJSC4P02")
+    (comment "")
+    (value
+      (nautical_mile 64 4889 64 3020)
+    )
+  )
+  (ref_point
+    (name "OJSC4P03")
+    (comment "")
+    (value
+      (nautical_mile 64 3719 64 3509)
+    )
+  )
+  (ref_point
+    (name "OJSC4P04")
+    (comment "")
+    (value
+      (nautical_mile 64 3960 64 4108)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 4)
+    (keyboard 3)
+    (entity
+      (name "1")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "OJSC2P01")
+        (point "OJSC2P02")
+        (point "OJSC2P03")
+        (point "OJSC2P04")
+        (point "OJSC2P05")
+        (point "OJSC2P06")
+        (point "OJSC2P07")
+        (point "OJSC2P08")
+        (point "OJSC2P09")
+        (point "OJSC2P10")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "2")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4844 64 4368  0)
+      )
+      (text_content "FL115")
+    )
+    (entity
+      (name "3")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "OJSC3P01")
+        (point "OJSC3P02")
+        (point "OJSC3P03")
+        (point "OJSC3P04")
+        (point "OJSC3P05")
+        (point "OJSC3P06")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "4")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4934 64 3510  0)
+      )
+      (text_content "FL145")
+    )
+    (entity
+      (name "5")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "OJSC4P01")
+        (point "OJSC4P02")
+        (point "OJSC4P03")
+        (point "OJSC4P04")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "6")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4501 64 3352  0)
+      )
+      (text_content "FL195")
+    )
+  )
+)
