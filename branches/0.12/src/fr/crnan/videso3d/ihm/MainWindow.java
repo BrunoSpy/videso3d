@@ -37,7 +37,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-//import javax.swing.JToolBar;
+import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.ToolTipManager;
 
@@ -100,7 +100,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3.13
+ * @version 0.3.14
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -141,7 +141,7 @@ public class MainWindow extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	}
 
-//	private JToolBar drawToolbar;
+	private JToolBar drawToolbar;
 	private JPanel toolbars;
 	
 	public MainWindow(){
@@ -769,17 +769,17 @@ public class MainWindow extends JFrame {
 		return this;
 	}
 
-//	public void setDrawToolbar(boolean selected) {
-//		if(drawToolbar == null){
-//			this.drawToolbar = new DrawToolbar(wwd);
-//			this.drawToolbar.setFloatable(true);
-//		}
-//		if(selected){
-//			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
-//			this.validate();
-//		} else {
-//			this.toolbars.remove(drawToolbar);
-//			this.validate();
-//		}
-//	}
+	public void setDrawToolbar(boolean selected) {
+		if(drawToolbar == null){
+			this.drawToolbar = new DrawToolbar(wwd);
+			this.drawToolbar.setFloatable(true);
+		}
+		if(selected){
+			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
+			this.validate();
+		} else {
+			this.toolbars.remove(drawToolbar);
+			this.validate();
+		}
+	}
 }

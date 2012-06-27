@@ -16,15 +16,10 @@
 package fr.crnan.videso3d.ihm;
 
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -44,30 +39,20 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.stream.XMLStreamException;
 
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoGLCanvas;
-import fr.crnan.videso3d.graphics.MovableBalise3D;
-import fr.crnan.videso3d.graphics.VPolygon;
-import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.ihm.components.DropDownButton;
 import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
 import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
 import gov.nasa.worldwind.avlist.AVKey;
-import gov.nasa.worldwind.geom.Angle;
-import gov.nasa.worldwind.geom.LatLon;
-import gov.nasa.worldwind.geom.Position;
-import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.ogc.kml.KMLRoot;
-import gov.nasa.worldwind.render.Material;
-import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 import gov.nasa.worldwindx.examples.util.ScreenShotAction;
-import gov.nasa.worldwindx.examples.util.ShapeUtils;
+
 /**
  * Toolbar of the main window
  * @author Bruno Spyckerelle
- * @version 0.1.4
+ * @version 0.1.5
  */
 public class MainToolbar extends JToolBar {
 
@@ -76,6 +61,8 @@ public class MainToolbar extends JToolBar {
 	private Omnibox omniBox;
 
 	public MainToolbar(final MainWindow parent, VidesoGLCanvas ww, Omnibox box) {
+		this.setFloatable(true);
+		
 		this.wwd = ww;
 		this.mainWindow = parent;
 		this.omniBox = box;
@@ -93,7 +80,22 @@ public class MainToolbar extends JToolBar {
 		this.add(config);
 
 		this.addSeparator();
-		
+
+		//Drawings
+		final JToggleButton draw = new JToggleButton(new ImageIcon(getClass().getResource("/resources/applications-graphics_22.png")));
+		draw.setToolTipText("Afficher la barre d'outils de dessin");
+		draw.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parent.setDrawToolbar(draw.isSelected());
+			}
+		});
+
+		this.add(draw);
+
+		this.addSeparator();	
+
 		//Analyse
 		final JButton analyze = new JButton(new ImageIcon(getClass().getResource("/resources/datas_analyze_22.png")));
 		analyze.setToolTipText("Analyser les données Stip/Stpv");
@@ -282,140 +284,6 @@ public class MainToolbar extends JToolBar {
 			}
 		});
 		trajectoires.addToToolBar(this);
-
-		final DropDownButton addAirspace = new DropDownButton(new ImageIcon(getClass().getResource("/resources/draw-polygon_22_1.png")));
-
-
-		final JMenuItem addPolygon = new JMenuItem("Nouveau");
-		addPolygon.setToolTipText("Nouveau polygone");
-		addPolygon.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent evt) {
-				VPolygon polygon = new VPolygon();
-				polygon.setAltitudes(0.0, 0.0);
-				polygon.setTerrainConforming(true, false);
-				BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
-				attrs.setDrawOutline(true);
-				attrs.setMaterial(new Material(Color.CYAN));
-				attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(Color.CYAN)));
-				attrs.setOpacity(0.2);
-				attrs.setOutlineOpacity(0.9);
-				attrs.setOutlineWidth(1.5);
-				polygon.setAttributes(attrs);
-
-				Position position = ShapeUtils.getNewShapePosition(wwd);
-				Angle heading = ShapeUtils.getNewShapeHeading(wwd, true);
-				double sizeInMeters = ShapeUtils.getViewportScaleFactor(wwd);
-
-				java.util.List<LatLon> locations = ShapeUtils.createSquareInViewport(wwd, position, heading, sizeInMeters);
-
-				double maxElevation = -Double.MAX_VALUE;
-				Globe globe = wwd.getModel().getGlobe();
-
-				for (LatLon ll : locations)
-				{
-					double e = globe.getElevation(ll.getLatitude(), ll.getLongitude());
-					if (e > maxElevation)
-						maxElevation = e;
-				}
-
-				polygon.setAltitudes(0.0, maxElevation + sizeInMeters);
-				polygon.setTerrainConforming(true, false);
-				polygon.setLocations(locations);
-
-				PolygonEditorsManager.editAirspace(polygon, true);
-			}
-		});
-
-		JMenuItem addFromFile = new JMenuItem("Charger un fichier");
-		addFromFile.setToolTipText("Nouveau polygone depuis un fichier");
-		addFromFile.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				VFileChooser fileChooser = new VFileChooser();
-				fileChooser.setMultiSelectionEnabled(false);
-				if(fileChooser.showOpenDialog(null) == VFileChooser.APPROVE_OPTION){
-					File file = fileChooser.getSelectedFile();
-					//TODO prendre en charge d'autres formes
-					BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
-					attrs.setDrawOutline(true);
-					attrs.setMaterial(new Material(Color.CYAN));
-					attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(Color.CYAN)));
-					attrs.setOpacity(0.2);
-					attrs.setOutlineOpacity(0.9);
-					attrs.setOutlineWidth(1.5);
-					VPolygon p = new VPolygon();
-					p.setAttributes(attrs);
-					try {
-						BufferedReader input = new BufferedReader(new FileReader(file));
-						String s = input.readLine();
-						p.restoreState(s);
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					PolygonEditorsManager.editAirspace(p, true);
-				}
-			}
-		});
-		
-		JMenuItem addFromText = new JMenuItem("Texte");
-		addFromText.setToolTipText("Entrer/Copier des coordonnées");
-		addFromText.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				new PolygonImportUI().setVisible(true);
-			}
-		});
-		
-		addAirspace.getPopupMenu().add(addPolygon);
-		addAirspace.getPopupMenu().add(addFromFile);
-		addAirspace.getPopupMenu().add(addFromText);
-		addAirspace.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				addPolygon.doClick();
-			}
-		});
-		//toolbar.add(addPolygon);
-		addAirspace.addToToolBar(this);
-
-		//Ajouter points
-	//	final DropDownButton points = new DropDownButton(new ImageIcon(getClass().getResource("/resources/add_point_22.png")));
-		
-//		final JMenuItem addPoint = new JMenuItem("Ajouter un point");
-		JButton addPoint = new JButton(new ImageIcon(getClass().getResource("/resources/add_point_22.png")));
-		addPoint.setToolTipText("Ajouter un point sur le globe");
-		addPoint.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				MovableBalise3D point = new MovableBalise3D("Nouveau point", ShapeUtils.getNewShapePosition(wwd));
-				wwd.addObject(point);
-				wwd.getDraggerListener().addDraggableObject(point);
-			}
-		});
-		
-		this.add(addPoint);
-		
-//		JMenuItem addPoints = new JMenuItem("Ajouter plusieurs points");
-//		TODO
-//		points.getPopupMenu().add(addPoint);
-//		points.getPopupMenu().add(addPoints);
-//		points.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				addPoint.doClick();
-//			}
-//		});
-		
-//		points.addToToolBar(this);
 		
 		//Reset de l'affichage
 		final JButton reset = new JButton(new ImageIcon(getClass().getResource("/resources/reset_22.png")));
