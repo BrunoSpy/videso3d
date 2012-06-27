@@ -80,7 +80,7 @@ public class RoutePanel extends ResultGraphPanel {
 
 				try {
 					Statement st = DatabaseManager.getCurrentStip();
-					ResultSet rs = st.executeQuery("select routebalise.routeid, routebalise.route, routebalise.id as balid, balise, appartient, sens, espace from routes, routebalise where routes.id = routebalise.routeid and routes.id in ("+findRoute(balise1, balise2)+")");
+					ResultSet rs = st.executeQuery("select routebalise.routeid, routebalise.route, routebalise.id as balid, balise, appartient, sens, espace from routes, routebalise where routes.id = routebalise.routeid and routes.id in ("+findRoute(balise1, balise2)+") order by balid");
 
 					progressBar.setValue(1);
 
