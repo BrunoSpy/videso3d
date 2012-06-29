@@ -26,7 +26,6 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
 
@@ -161,40 +160,46 @@ public class DrawToolbar extends JToolBar {
 			}
 		});
 		addAirspace.addToToolBar(this);
-		
+
 		//Ajouter points
-		//	final DropDownButton points = new DropDownButton(new ImageIcon(getClass().getResource("/resources/add_point_22.png")));
+		final DropDownButton points = new DropDownButton(new ImageIcon(getClass().getResource("/resources/add_point_22.png")));
+
+		final JMenuItem addPoint = new JMenuItem("Ajouter un point");
+		//			JButton addPoint = new JButton(new ImageIcon(getClass().getResource("/resources/add_point_22.png")));
+		addPoint.setToolTipText("Ajouter un point sur le globe");
+		addPoint.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				MovableBalise3D point = new MovableBalise3D("Nouveau point", ShapeUtils.getNewShapePosition(wwd));
+				wwd.addObject(point);
+				wwd.getDraggerListener().addDraggableObject(point);
+			}
+		});
+
+		this.add(addPoint);
+
+		JMenuItem addPoints = new JMenuItem("Ajouter plusieurs points");
+		addPoints.addActionListener(new ActionListener() {
 			
-//			final JMenuItem addPoint = new JMenuItem("Ajouter un point");
-			JButton addPoint = new JButton(new ImageIcon(getClass().getResource("/resources/add_point_22.png")));
-			addPoint.setToolTipText("Ajouter un point sur le globe");
-			addPoint.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					MovableBalise3D point = new MovableBalise3D("Nouveau point", ShapeUtils.getNewShapePosition(wwd));
-					wwd.addObject(point);
-					wwd.getDraggerListener().addDraggableObject(point);
-				}
-			});
-			
-			this.add(addPoint);
-			
-//			JMenuItem addPoints = new JMenuItem("Ajouter plusieurs points");
-//			TODO
-//			points.getPopupMenu().add(addPoint);
-//			points.getPopupMenu().add(addPoints);
-//			points.addActionListener(new ActionListener() {
-//				
-//				@Override
-//				public void actionPerformed(ActionEvent e) {
-//					addPoint.doClick();
-//				}
-//			});
-			
-//			points.addToToolBar(this);
-		
-		
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				new MultiplePointsAddGUI(DrawToolbar.this.getParent(), wwd).setVisible(true);
+			}
+		});
+		points.getPopupMenu().add(addPoint);
+		points.getPopupMenu().add(addPoints);
+		points.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				addPoint.doClick();
+			}
+		});
+
+		points.addToToolBar(this);
+
+
 	}
 	
 }

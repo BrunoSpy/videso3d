@@ -266,7 +266,7 @@ public class ProjectManagerUI extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				VFileChooser fileChooser = new VFileChooser();
-				if(fileChooser.showDialog(getThis(), "Sélectionner") == JFileChooser.APPROVE_OPTION){
+				if(fileChooser.showDialog(ProjectManagerUI.this, "Sélectionner") == JFileChooser.APPROVE_OPTION){
 					final File file = fileChooser.getSelectedFile();
 					if(!(file.exists()) || 
 							(file.exists() &&
@@ -329,7 +329,7 @@ public class ProjectManagerUI extends JDialog {
 						@Override
 						protected Boolean doInBackground() throws Exception {
 							try {
-								getThis().setVisible(false);
+								ProjectManagerUI.this.setVisible(false);
 								success = projectManager.saveProject(new File(filePath.getText()), 
 										types,
 										imageList,
@@ -372,16 +372,13 @@ public class ProjectManagerUI extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getThis().setVisible(false);
-				getThis().dispose();
+				ProjectManagerUI.this.setVisible(false);
+				ProjectManagerUI.this.dispose();
 			}
 		});
 		bottom.add(cancel);
 		
 		this.add(bottom, BorderLayout.SOUTH);
 	}
-	
-	private JDialog getThis(){
-		return this;
-	}
+
 }

@@ -155,10 +155,10 @@ public class PLNSPanel extends ResultPanel {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				PLNSChartCreateUI chartCreator = new PLNSChartCreateUI(getThis());
+				PLNSChartCreateUI chartCreator = new PLNSChartCreateUI(PLNSPanel.this);
 				JFreeChart chart = null;
 				try {
-					if(chartCreator.showDialog(getThis())){
+					if(chartCreator.showDialog(PLNSPanel.this)){
 						switch (chartCreator.getChartType()) {
 						case 0://XY
 							JDBCXYDataset dataset = new JDBCXYDataset(plnsAnalyzer.getConnection());
@@ -183,7 +183,7 @@ public class PLNSPanel extends ResultPanel {
 					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
-					JOptionPane.showMessageDialog(getThis(), "<html>L'exécution de la requête a échoué :<br />" +
+					JOptionPane.showMessageDialog(PLNSPanel.this, "<html>L'exécution de la requête a échoué :<br />" +
 							e1+
 							"</html>", "Impossible de créer le graphique", JOptionPane.ERROR_MESSAGE);
 				}
@@ -222,7 +222,4 @@ public class PLNSPanel extends ResultPanel {
 		}
 	}
 
-	private PLNSPanel getThis() {
-		return this;
-	}
 }

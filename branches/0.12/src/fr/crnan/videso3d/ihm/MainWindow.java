@@ -740,7 +740,7 @@ public class MainWindow extends JFrame {
 			@Override
 			protected Void doInBackground() throws Exception {
 				try {
-					project.loadProject(file, wwd, getThis(), false);
+					project.loadProject(file, wwd, MainWindow.this, false);
 				} catch (CompatibilityVersionException e) {
 					if(JOptionPane.showConfirmDialog(null, "<html>Le fichier que souhaitez importer n'est pas compatible avec la version de Videso que vous utilisez.<br/>" +
 							"Souhaitez vous tout de même l'importer ?<br/><br/>" +
@@ -748,7 +748,7 @@ public class MainWindow extends JFrame {
 							"<i>Information : </i> Version du fichier : "+e.getMessage()+"</html>",
 							"Version du fichier incompatible.", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE)
 							== JOptionPane.YES_OPTION) {
-						project.loadProject(file, wwd, getThis(), true);
+						project.loadProject(file, wwd, MainWindow.this, true);
 					}
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
@@ -763,10 +763,6 @@ public class MainWindow extends JFrame {
 			}
 
 		}.execute();
-	}
-	
-	private MainWindow getThis(){
-		return this;
 	}
 
 	public void setDrawToolbar(boolean selected) {
