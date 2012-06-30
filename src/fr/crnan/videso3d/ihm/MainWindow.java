@@ -48,6 +48,7 @@ import bibliothek.gui.dock.common.CControl;
 import bibliothek.gui.dock.common.CGrid;
 import bibliothek.gui.dock.common.CLocation;
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
+import bibliothek.gui.dock.common.SingleCDockable;
 import bibliothek.gui.dock.common.event.CDockableStateListener;
 import bibliothek.gui.dock.common.group.CGroupBehavior;
 import bibliothek.gui.dock.common.intern.CDockable;
@@ -100,7 +101,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Fenêtre principale
  * @author Bruno Spyckerelle
- * @version 0.3.13
+ * @version 0.3.14
  */
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
@@ -141,7 +142,6 @@ public class MainWindow extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	}
 
-//	private JToolBar drawToolbar;
 	private JPanel toolbars;
 	
 	public MainWindow(){
@@ -288,10 +288,10 @@ public class MainWindow extends JFrame {
 		dockableContext.setExtendedMode(ExtendedMode.MINIMIZED);
 
 		//save location of future panel
-		locationDatas = /*CLocation.base().normalWest(0.2);*/dockableDatas.getBaseLocation().aside();
+		locationDatas = dockableDatas.getBaseLocation().aside();
 
 		for(DatabaseManager.Type type : DatabaseManager.getSelectedDatabases()){
-			this.updateDockables(type, false);
+			this.updateDockables(type);
 		}
 
 		control.removeDockable(dockableDatas);
@@ -338,8 +338,6 @@ public class MainWindow extends JFrame {
 													
 				//précréation des éléments 3D dans un SwingWorker avec ProgressMonitor
 				new SwingWorker<Integer, Integer>(){
-
-					private boolean empty = false;
 					
 					@Override
 					protected Integer doInBackground() throws Exception {
@@ -350,7 +348,6 @@ public class MainWindow extends JFrame {
 							e.printStackTrace();
 						}
 						DatabaseManager.Type type = (DatabaseManager.Type) evt.getNewValue();
-						empty = DatasManager.numberViews() == 0;
 						DatasManager.createDatas(type, wwd);
 						omniBox.addDatabase(type, DatabaseManager.getAllVisibleObjects(type, omniBox), true);
 						return null;
@@ -360,7 +357,7 @@ public class MainWindow extends JFrame {
 					protected void done() {
 						DatabaseManager.Type type = (DatabaseManager.Type) evt.getNewValue();
 							if(DatasManager.getView(type) != null){
-								updateDockables(type, empty);
+								updateDockables(type);
 								context.addTaskPane(DatasManager.getContext(type), type);
 								AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(type), type);
 								AnalyzeUI.updateSearchBoxes();
@@ -392,21 +389,17 @@ public class MainWindow extends JFrame {
 	 * @param type Type de la base de données
 	 * @param empty Vrai si il n'y a plus de tabs
 	 */
-	private void updateDockables(DatabaseManager.Type type, boolean empty){
+	private void updateDockables(DatabaseManager.Type type){
 		this.control.removeSingleDockable(type.toString());
 		DatabaseSingleDockable dockable = new DatabaseSingleDockable(type.toString());
 		dockable.addCloseAction(control);
 				
 		dockable.setType(type);
 		dockable.setTitleText(type.toString());
-		if(empty){
-			locationDatas = CLocation.base().normalWest(0.2);
-		} 
-		dockable.setDefaultLocation(ExtendedMode.MINIMIZED, CLocation.base().minimalWest());
-		dockable.setLocation(locationDatas);
+		
 		dockable.add((Component) DatasManager.getView(type));
-		control.addDockable(dockable);
-		dockable.setVisible(true);
+		
+		this.addDockable(dockable);
 	}
 	
 	/**
@@ -435,23 +428,24 @@ public class MainWindow extends JFrame {
 		}
 		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?view.getTitle():view.getTitle()+"-"+i);
 		dockable.setTitleText(view.getTitle());
-
-		dockable.setLocation(locationDatas);
-		dockable.setCloseable(true);
-		dockable.add((Component) view);
-		control.addDockable(dockable);
-		dockable.setVisible(true);
 		
+		dockable.add((Component) view);
+	
 		dockable.addCDockableStateListener(new CDockableStateListener() {
 			
 			@Override
 			public void visibilityChanged(CDockable dockable) {
+				if(!dockable.isVisible()){
+					control.removeDockable((SingleCDockable) dockable);
 					wwd.removeLayer(view.getLayer());
+				}
 			}
 				
 			@Override
 			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
 		});
+		
+		this.addDockable(dockable);
 	}
 	
 	/* ******************************************************* */
@@ -675,6 +669,7 @@ public class MainWindow extends JFrame {
 	}
 	
 	public void addTrajectoriesView(final TrackFilesReader reader, final TrajectoriesLayer layer){
+		
 		final TrajectoriesView content = new TrajectoriesView(wwd, reader, layer, context);
 		this.wwd.toggleLayer(layer, true);
 		int i = 0;
@@ -685,29 +680,47 @@ public class MainWindow extends JFrame {
 		}
 		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?reader.getName():reader.getName()+"-"+i);
 		dockable.setTitleText(reader.getName());
-
-		dockable.setLocation(locationDatas);
-		dockable.setCloseable(true);
+		
 		dockable.add(content);
-		control.addDockable(dockable);
-		dockable.setVisible(true);
 		
 		dockable.addCDockableStateListener(new CDockableStateListener() {
 			
 			@Override
 			public void visibilityChanged(CDockable dockable) {
+				if(!dockable.isVisible()){//free resources when the dockable is not visible
 					wwd.removeLayer(layer);
+					control.removeDockable((SingleCDockable) dockable);
 					//force close instead of just changing the visibility
 					dockable = null;
 					layer.getModel().dispose();
 					layer.dispose();
+				}
 			}
 				
 			@Override
 			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
 		});
+		
+		this.addDockable(dockable);
 	}
 
+	/**
+	 * Add the {@link DefaultSingleCDockable} to the left position of the {@link MainWindow}
+	 * @param dockable
+	 */
+	private void addDockable(DefaultSingleCDockable dockable){
+		if(this.control.getCDockableCount() <= 2 ){
+			locationDatas = CLocation.base().normalWest(0.2);
+		} 
+		dockable.setDefaultLocation(ExtendedMode.MINIMIZED, CLocation.base().minimalWest());
+		
+		dockable.setLocation(locationDatas);
+		dockable.setCloseable(true);
+		
+		control.addDockable(dockable);
+		dockable.setVisible(true);
+	}
+	
 	/**
 	 * 
 	 * @param file Project to load
@@ -769,17 +782,4 @@ public class MainWindow extends JFrame {
 		return this;
 	}
 
-//	public void setDrawToolbar(boolean selected) {
-//		if(drawToolbar == null){
-//			this.drawToolbar = new DrawToolbar(wwd);
-//			this.drawToolbar.setFloatable(true);
-//		}
-//		if(selected){
-//			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
-//			this.validate();
-//		} else {
-//			this.toolbars.remove(drawToolbar);
-//			this.validate();
-//		}
-//	}
 }

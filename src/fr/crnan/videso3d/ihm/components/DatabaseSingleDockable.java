@@ -22,6 +22,7 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import bibliothek.gui.dock.common.CControl;
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
+import bibliothek.gui.dock.common.SingleCDockable;
 import bibliothek.gui.dock.common.action.predefined.CCloseAction;
 import bibliothek.gui.dock.common.intern.CDockable;
 /**
@@ -35,8 +36,11 @@ public class DatabaseSingleDockable extends DefaultSingleCDockable {
 	
 	private class VCloseAction extends CCloseAction {
 
+		private CControl control;
+		
 		public VCloseAction(CControl control) {
 			super(control);
+			this.control = control;
 		}
 
 		/* (non-Javadoc)
@@ -45,6 +49,7 @@ public class DatabaseSingleDockable extends DefaultSingleCDockable {
 		@Override
 		public void close(CDockable dockable) {
 			super.close(dockable);
+			this.control.removeDockable((SingleCDockable) dockable);
 			try {
 				DatabaseManager.unselectDatabase(((DatabaseSingleDockable) dockable).getType());
 			} catch (SQLException e) {
