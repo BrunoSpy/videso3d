@@ -1,5 +1,22 @@
 = Version 0.11 =
 
+== 0.11.1 et 0.11.2 ==
+
+  * IHM
+    * Corrections de bugs
+
+  * EXSA
+    * Correction impossibilité d'importer une base
+
+  * Trajectographie
+    * Colorier les trajectoires en fonction de la vitesse
+    * Ajout d'une annotation sur les trajectoires avec les informations du vol
+    * Les couleurs paramétrées sont gardées
+
+  * Création de paquets 32 bits et 64 bits
+
+  * Multiple corrections de bugs
+
 == 0.11.0 ==
    
   * IHM
