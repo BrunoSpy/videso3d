@@ -36,6 +36,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Videso3D;
@@ -73,6 +75,7 @@ public final class AnalyzeUI extends JFrame {
 
 	private SearchPanel searchPanel;
 	
+	
 	public final static AnalyzeUI getInstance(){
 		if(instance == null){
 			instance = new AnalyzeUI();
@@ -91,8 +94,7 @@ public final class AnalyzeUI extends JFrame {
 	 * @param balise2 Deuxième balise cherchée (optionnel)
 	 * @param numero Numéro de la liaison privilégiée recherchée (optionnel)
 	 */
-	public final static void showResults(boolean advanced, String type, String... criteria){
-		
+	public final static void showResults(boolean advanced, String type, String... criteria){		
 		final ResultPanel content = getInstance().createResultPanel(advanced, type, getInstance().tabPane, criteria);
 		content.setContext(getInstance().context);
 		content.addPropertyChangeListener(ResultPanel.PROPERTY_RESULT, new PropertyChangeListener() {
@@ -160,7 +162,6 @@ public final class AnalyzeUI extends JFrame {
 					advancedSearch.setEnabled(isAdvancedSearchAvailable((String) ((JComboBox)e.getSource()).getSelectedItem()));
 			}
 		});
-		
 		this.searchPanelContainer.add(searchPanel, "default");
 		
 		Box searchButtonBox = Box.createVerticalBox();
@@ -180,19 +181,30 @@ public final class AnalyzeUI extends JFrame {
 		searchButtonBox.add(Box.createVerticalStrut(5));
 		searchButtonBox.add(advancedSearch);
 		searchButtonBox.add(Box.createVerticalGlue());
-		
-		topPanel.add(searchButtonBox);
-				
-		getContentPane().add(this.createStatusBar(), BorderLayout.PAGE_END);
 
+		topPanel.add(searchButtonBox);
+
+		getContentPane().add(this.createStatusBar(), BorderLayout.PAGE_END);
 		splitpane.setOneTouchExpandable(true);
 		splitpane.setContinuousLayout(true);
+
+
+		tabPane.addChangeListener(new ChangeListener(){
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(tabPane.getTabCount()>0 && tabPane.getSelectedIndex()>0){
+					String tabTitle = tabPane.getTitleAt(tabPane.getSelectedIndex());
+					if(tabTitle.startsWith("Balise ")){
+						getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.BALISES, tabTitle.substring(7));
+					}
+				}
+			}
+		});
 
 		this.getContentPane().add(splitpane);
 		this.pack();
 		//FullScreen
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
 	}	
 
 	private void setDefaultSearch(){
