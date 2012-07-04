@@ -18,6 +18,7 @@ package fr.crnan.videso3d.ihm.components;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JMenu;
@@ -59,10 +60,15 @@ public class MultipleSelectionMenu extends JPopupMenu{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				for(Object o : new ArrayList<Object>(objects)){
+				Iterator<?> it = objects.iterator();
+				while(it.hasNext()){
+					Object o = it.next();
+					it.remove();
 					wwd.delete(o);
 				}
 			}
+			
+			
 		});
 		
 		deleteMenu.add(delete);
