@@ -68,7 +68,7 @@ public class LiaisonPanel extends ResultPanel implements ActionListener{
 		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		t.setEditable(false);
-		t.setFocusable(false);
+		t.setFocusable(true);
 		t.setEnabled(false);
 		t.setAlignmentX(Component.CENTER_ALIGNMENT);
 		this.add(t);

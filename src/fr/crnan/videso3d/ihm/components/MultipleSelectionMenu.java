@@ -59,7 +59,7 @@ public class MultipleSelectionMenu extends JPopupMenu{
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				for(Object o : objects){
+				for(Object o : new ArrayList<Object>(objects)){
 					wwd.delete(o);
 				}
 			}
