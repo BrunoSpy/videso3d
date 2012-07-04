@@ -75,7 +75,6 @@ public final class AnalyzeUI extends JFrame {
 
 	private SearchPanel searchPanel;
 	
-	
 	public final static AnalyzeUI getInstance(){
 		if(instance == null){
 			instance = new AnalyzeUI();
@@ -188,11 +187,10 @@ public final class AnalyzeUI extends JFrame {
 		splitpane.setOneTouchExpandable(true);
 		splitpane.setContinuousLayout(true);
 
-
 		tabPane.addChangeListener(new ChangeListener(){
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				if(tabPane.getTabCount()>0 && tabPane.getSelectedIndex()>0){
+				if(tabPane.getTabCount()>0 && tabPane.getSelectedIndex()>=0){
 					String tabTitle = tabPane.getTitleAt(tabPane.getSelectedIndex());
 					if(tabTitle.startsWith("Balise ")){
 						getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.BALISES, tabTitle.substring(7));
