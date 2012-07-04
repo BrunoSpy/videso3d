@@ -181,6 +181,7 @@ public class Omnibox {
 			bases.remove(type);
 			engines.remove(buttons.get(type));
 			chooseButton.getPopupMenu().remove(buttons.get(type));
+			update();
 		}
 	}
 		
