@@ -27,6 +27,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -37,7 +38,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-//import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.ToolTipManager;
 
@@ -75,7 +75,6 @@ import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.formats.plns.PLNSReader;
 import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.ihm.components.AltitudeRangeSlider;
-import fr.crnan.videso3d.ihm.components.DatabaseSingleDockable;
 import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.VDefaultEclipseThemConnector;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
@@ -389,16 +388,35 @@ public class MainWindow extends JFrame {
 	 * @param type Type de la base de données
 	 * @param empty Vrai si il n'y a plus de tabs
 	 */
-	private void updateDockables(DatabaseManager.Type type){
+	private void updateDockables(final DatabaseManager.Type type){
 		this.control.removeSingleDockable(type.toString());
-		DatabaseSingleDockable dockable = new DatabaseSingleDockable(type.toString());
-		dockable.addCloseAction(control);
+		DefaultSingleCDockable dockable = new DefaultSingleCDockable(type.toString());
+	//	dockable.addCloseAction(control);
 				
-		dockable.setType(type);
+	//	dockable.setType(type);
 		dockable.setTitleText(type.toString());
 		
 		dockable.add((Component) DatasManager.getView(type));
 		
+		dockable.addCDockableStateListener(new CDockableStateListener() {
+			
+			@Override
+			public void visibilityChanged(CDockable dockable) {
+				if(!dockable.isVisible()){
+					control.removeDockable((SingleCDockable) dockable);
+					try {
+						DatabaseManager.unselectDatabase(type);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+				
+			@Override
+			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
+		});
+		
+		dockable.setCloseable(true);
 		this.addDockable(dockable);
 	}
 	
@@ -444,7 +462,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
 		});
-		
+		dockable.setCloseable(true);
 		this.addDockable(dockable);
 	}
 	
@@ -700,7 +718,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
 		});
-		
+		dockable.setCloseable(true);
 		this.addDockable(dockable);
 	}
 
@@ -715,7 +733,6 @@ public class MainWindow extends JFrame {
 		dockable.setDefaultLocation(ExtendedMode.MINIMIZED, CLocation.base().minimalWest());
 		
 		dockable.setLocation(locationDatas);
-		dockable.setCloseable(true);
 		
 		control.addDockable(dockable);
 		dockable.setVisible(true);
