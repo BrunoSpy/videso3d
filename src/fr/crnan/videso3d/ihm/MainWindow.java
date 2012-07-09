@@ -49,7 +49,7 @@ import bibliothek.gui.dock.common.CGrid;
 import bibliothek.gui.dock.common.CLocation;
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
 import bibliothek.gui.dock.common.SingleCDockable;
-import bibliothek.gui.dock.common.event.CDockableStateListener;
+import bibliothek.gui.dock.common.action.predefined.CCloseAction;
 import bibliothek.gui.dock.common.group.CGroupBehavior;
 import bibliothek.gui.dock.common.intern.CDockable;
 import bibliothek.gui.dock.common.mode.ExtendedMode;
@@ -313,6 +313,7 @@ public class MainWindow extends JFrame {
 				progressMonitor.setNote(evt.getNewValue().toString());
 			}
 		});
+		
 		//Mise à jour quand une base est déselectionnée ou supprimée
 		DatabaseManager.addPropertyChangeListener(DatabaseManager.BASE_UNSELECTED, new PropertyChangeListener() {
 
@@ -390,33 +391,22 @@ public class MainWindow extends JFrame {
 	 */
 	private void updateDockables(final DatabaseManager.Type type){
 		this.control.removeSingleDockable(type.toString());
-		DefaultSingleCDockable dockable = new DefaultSingleCDockable(type.toString());
-	//	dockable.addCloseAction(control);
-				
-	//	dockable.setType(type);
-		dockable.setTitleText(type.toString());
-		
-		dockable.add((Component) DatasManager.getView(type));
-		
-		dockable.addCDockableStateListener(new CDockableStateListener() {
-			
+
+		DefaultSingleCDockable dockable = new DefaultSingleCDockable(type.toString(), type.toString(), (Component) DatasManager.getView(type),
+				new CCloseAction(control){
+
 			@Override
-			public void visibilityChanged(CDockable dockable) {
-				if(!dockable.isVisible()){
-					control.removeDockable((SingleCDockable) dockable);
-					try {
-						DatabaseManager.unselectDatabase(type);
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
+			public void close(CDockable dockable) {
+				super.close(dockable);
+				try {
+					DatabaseManager.unselectDatabase(type);
+				} catch (SQLException e) {
+					e.printStackTrace();
 				}
 			}
-				
-			@Override
-			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
+
 		});
 		
-		dockable.setCloseable(true);
 		this.addDockable(dockable);
 	}
 	
@@ -444,25 +434,21 @@ public class MainWindow extends JFrame {
 				i++;
 			} while (control.getSingleDockable(view.getTitle()+"-"+i) != null);
 		}
-		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?view.getTitle():view.getTitle()+"-"+i);
-		dockable.setTitleText(view.getTitle());
 		
-		dockable.add((Component) view);
-	
-		dockable.addCDockableStateListener(new CDockableStateListener() {
-			
-			@Override
-			public void visibilityChanged(CDockable dockable) {
-				if(!dockable.isVisible()){
-					control.removeDockable((SingleCDockable) dockable);
-					wwd.removeLayer(view.getLayer());
-				}
-			}
-				
-			@Override
-			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
+		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?view.getTitle():view.getTitle()+"-"+i,
+				view.getTitle(),
+				(Component) view,
+				new CCloseAction(control){
+
+					@Override
+					public void close(CDockable dockable) {
+						super.close(dockable);
+						control.removeDockable((SingleCDockable) dockable);
+						wwd.removeLayer(view.getLayer());
+					}
+		
 		});
-		dockable.setCloseable(true);
+		
 		this.addDockable(dockable);
 	}
 	
@@ -696,29 +682,25 @@ public class MainWindow extends JFrame {
 				i++;
 			} while (control.getSingleDockable(reader.getName()+"-"+i) != null);
 		}
-		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?reader.getName():reader.getName()+"-"+i);
-		dockable.setTitleText(reader.getName());
 		
-		dockable.add(content);
-		
-		dockable.addCDockableStateListener(new CDockableStateListener() {
-			
-			@Override
-			public void visibilityChanged(CDockable dockable) {
-				if(!dockable.isVisible()){//free resources when the dockable is not visible
+		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?reader.getName():reader.getName()+"-"+i,
+				reader.getName(),
+				content,
+				new CCloseAction(control){
+
+				@Override
+				public void close(CDockable dockable) {
+					super.close(dockable);
 					wwd.removeLayer(layer);
 					control.removeDockable((SingleCDockable) dockable);
 					//force close instead of just changing the visibility
 					dockable = null;
 					layer.getModel().dispose();
 					layer.dispose();
-				}
 			}
-				
-			@Override
-			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
+
 		});
-		dockable.setCloseable(true);
+		
 		this.addDockable(dockable);
 	}
 
