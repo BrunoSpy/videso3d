@@ -128,7 +128,7 @@ public class BaliseResultPanel extends ResultPanel {
 				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
 					int[] rows = this.getSelectedRows();
 					for(int i=0; i< rows.length; i++){
-						int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+						int id = (Integer)this.getModel().getValueAt(this.convertRowIndexToModel(this.getSelectedRows()[i]), this.getModel().getColumnCount()-1);
 						tfl += Stpv.getString(StpvController.TFL, id)+"\n";
 					}
 					tfl+="\n";
@@ -188,7 +188,7 @@ public class BaliseResultPanel extends ResultPanel {
 				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
 					int[] rows = this.getSelectedRows();
 					for(int i=0; i< rows.length; i++){
-						int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+						int id = (Integer)this.getModel().getValueAt(this.convertRowIndexToModel(this.getSelectedRows()[i]), this.getModel().getColumnCount()-1);
 						lieu8 += Stpv.getString(StpvController.CITYPAIR, id)+"\n";
 					}
 					lieu8+="\n";
@@ -248,9 +248,9 @@ public class BaliseResultPanel extends ResultPanel {
 				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
 					int[] rows = this.getSelectedRows();
 					for(int i=0; i< rows.length; i++){
-						String terrain = (String)this.getModel().getValueAt(this.getSelectedRows()[i], 0);
+						String terrain = (String)this.getModel().getValueAt(this.convertRowIndexToModel(this.getSelectedRows()[i]), 0);
 						if(listeTerrains.add(terrain)){
-							int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+							int id = (Integer)this.getModel().getValueAt(this.convertRowIndexToModel(this.getSelectedRows()[i]), this.getModel().getColumnCount()-1);
 							lieu6 += Stpv.getString(StpvController.XFL, id)+"\n";
 						}
 					}
@@ -309,7 +309,7 @@ public class BaliseResultPanel extends ResultPanel {
 				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
 					int[] rows = this.getSelectedRows();
 					for(int i=0; i< rows.length; i++){
-						int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+						int id = (Integer)this.getModel().getValueAt(this.convertRowIndexToModel(this.getSelectedRows()[i]), this.getModel().getColumnCount()-1);
 						lieu27 += Stpv.getString(StpvController.NIV_TAB_SORTIE, id)+"\n";
 					}
 					lieu27+="\n";
@@ -366,7 +366,7 @@ public class BaliseResultPanel extends ResultPanel {
 				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
 					int[] rows = this.getSelectedRows();
 					for(int i=0; i< rows.length; i++){
-						int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+						int id = (Integer)this.getModel().getValueAt(this.convertRowIndexToModel(this.getSelectedRows()[i]), this.getModel().getColumnCount()-1);
 						lieu26 += Stpv.getString(StpvController.NIV_TAB_ENTREE, id)+"\n";
 					}
 					lieu26+="\n";
@@ -422,7 +422,7 @@ public class BaliseResultPanel extends ResultPanel {
 				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
 					int[] rows = this.getSelectedRows();
 					for(int i=0; i< rows.length; i++){
-						int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+						int id = (Integer)this.getModel().getValueAt(this.convertRowIndexToModel(this.getSelectedRows()[i]), this.getModel().getColumnCount()-1);
 						consignes += Stip.getString(StipController.CONSIGNE, id)+"\n";
 					}
 					consignes+="\n";
@@ -485,7 +485,7 @@ public class BaliseResultPanel extends ResultPanel {
 				if(e.isControlDown() && e.getKeyCode() == KeyEvent.VK_C){
 					int[] rows = this.getSelectedRows();
 					for(int i=0; i< rows.length; i++){
-						int id = (Integer)this.getModel().getValueAt(this.getSelectedRows()[i], this.getModel().getColumnCount()-1);
+						int id = (Integer)this.getModel().getValueAt(this.convertRowIndexToModel(this.getSelectedRows()[i]), this.getModel().getColumnCount()-1);
 						balint += Stip.getString(StipController.BALINT, id)+"\n";
 					}
 					balint+="\n";
