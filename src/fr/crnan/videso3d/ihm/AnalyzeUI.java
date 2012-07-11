@@ -43,6 +43,7 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.graphs.ConnexPanel;
 import fr.crnan.videso3d.graphs.ItiPanel;
+import fr.crnan.videso3d.graphs.ResultGraphPanel;
 import fr.crnan.videso3d.graphs.RoutePanel;
 import fr.crnan.videso3d.graphs.StarPanel;
 import fr.crnan.videso3d.graphs.TrajetPanel;
@@ -194,6 +195,8 @@ public final class AnalyzeUI extends JFrame {
 					String tabTitle = tabPane.getTitleAt(tabPane.getSelectedIndex());
 					if(tabTitle.startsWith("Balise ")){
 						getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.BALISES, tabTitle.substring(7));
+					}else if(tabPane.getSelectedComponent() instanceof ResultGraphPanel){
+						((ResultGraphPanel)tabPane.getSelectedComponent()).tabSelected();
 					}
 				}
 			}
