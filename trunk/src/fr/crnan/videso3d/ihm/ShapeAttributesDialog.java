@@ -82,7 +82,12 @@ public class ShapeAttributesDialog extends JDialog {
 		this.setModalityType(DEFAULT_MODALITY_TYPE);
 		
 		final ShapeAttributes attrsNormal = new BasicShapeAttributes(attrsN);
-		final ShapeAttributes attrsHighlight = new BasicShapeAttributes(attrsH);
+		final ShapeAttributes attrsHighlight;
+		if(attrsH != null){
+			attrsHighlight = new BasicShapeAttributes(attrsH);
+		} else {
+			attrsHighlight = new BasicShapeAttributes();
+		}
 		
 		wwd = SimpleGLCanvasFactory.SimpleGLCanvasPolygonShape(attrsNormal, attrsHighlight);
 		
@@ -198,12 +203,14 @@ public class ShapeAttributesDialog extends JDialog {
 				attrsN.setOutlineOpacity(attrsNormal.getOutlineOpacity());				
 				attrsN.setOutlineWidth(attrsNormal.getOutlineWidth());
 				attrsN.setDrawOutline(attrsN.isDrawOutline());
-				attrsH.setInteriorMaterial(attrsHighlight.getInteriorMaterial());
-				attrsH.setOutlineMaterial(attrsHighlight.getOutlineMaterial());				
-				attrsH.setInteriorOpacity(attrsHighlight.getInteriorOpacity());				
-				attrsH.setOutlineOpacity(attrsHighlight.getOutlineOpacity());				
-				attrsH.setOutlineWidth(attrsHighlight.getOutlineWidth());
-				attrsH.setDrawOutline(attrsHighlight.isDrawOutline());
+				if(attrsH != null) {
+					attrsH.setInteriorMaterial(attrsHighlight.getInteriorMaterial());
+					attrsH.setOutlineMaterial(attrsHighlight.getOutlineMaterial());				
+					attrsH.setInteriorOpacity(attrsHighlight.getInteriorOpacity());				
+					attrsH.setOutlineOpacity(attrsHighlight.getOutlineOpacity());				
+					attrsH.setOutlineWidth(attrsHighlight.getOutlineWidth());
+					attrsH.setDrawOutline(attrsHighlight.isDrawOutline());
+				}
 				wwd.shutdown();
 				dispose();
 			}
