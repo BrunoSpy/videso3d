@@ -158,6 +158,8 @@ public class ContextPanel extends JPanel{
 			}
 			content.validate();
 			open();
+		}else{
+			this.setTitle("Informations");
 		}
 	}
 	

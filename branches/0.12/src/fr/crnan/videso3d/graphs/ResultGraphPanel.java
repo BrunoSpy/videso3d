@@ -23,6 +23,7 @@ import javax.swing.SwingConstants;
 import com.mxgraph.layout.mxStackLayout;
 import com.mxgraph.layout.hierarchical.mxHierarchicalLayout;
 import com.mxgraph.util.mxEvent;
+import com.mxgraph.util.mxEventSource.mxIEventListener;
 
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.ihm.ResultPanel;
@@ -40,7 +41,9 @@ public abstract class ResultGraphPanel extends ResultPanel  {
 	protected final mxHierarchicalLayout layout = new mxHierarchicalLayout(graph, SwingConstants.WEST);
 
 	protected JProgressBar progressBar = new JProgressBar();
-
+	
+	protected mxIEventListener selectionListener;
+	
 	/**
 	 * 
 	 * @param advanced True if using advanced search
@@ -72,8 +75,12 @@ public abstract class ResultGraphPanel extends ResultPanel  {
 	
 	@Override
 	public void setContext(ContextPanel context) {
+		selectionListener = new CellSelectionListener(graph, context);
 		// mise à jour du panel contextuel
-		graph.getSelectionModel().addListener(mxEvent.CHANGE, new CellSelectionListener(graph, context));
+		graph.getSelectionModel().addListener(mxEvent.CHANGE, selectionListener);
 	}
 
+	public void tabSelected(){
+		selectionListener.invoke(null, null);
+	}
 }

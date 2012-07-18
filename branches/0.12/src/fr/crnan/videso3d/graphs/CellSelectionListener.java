@@ -48,7 +48,7 @@ public class CellSelectionListener implements mxIEventListener {
 
 
 	@Override
-	public void invoke(Object sender, mxEventObject evt) {		
+	public void invoke(Object sender, mxEventObject evt) {
 		mxCell cell = (mxCell) graph.getSelectionCell();
 		if(cell != null && cell.getValue() instanceof CellContent){
 			CellContent content = (CellContent) cell.getValue();
@@ -92,6 +92,8 @@ public class CellSelectionListener implements mxIEventListener {
 				break;
 			}
 
+		}else{
+			context.showInfo(null, 0, null);
 		}
 	}
 

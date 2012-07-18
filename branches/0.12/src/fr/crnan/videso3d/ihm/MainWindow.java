@@ -27,6 +27,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -49,7 +50,7 @@ import bibliothek.gui.dock.common.CGrid;
 import bibliothek.gui.dock.common.CLocation;
 import bibliothek.gui.dock.common.DefaultSingleCDockable;
 import bibliothek.gui.dock.common.SingleCDockable;
-import bibliothek.gui.dock.common.event.CDockableStateListener;
+import bibliothek.gui.dock.common.action.predefined.CCloseAction;
 import bibliothek.gui.dock.common.group.CGroupBehavior;
 import bibliothek.gui.dock.common.intern.CDockable;
 import bibliothek.gui.dock.common.mode.ExtendedMode;
@@ -75,7 +76,6 @@ import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.formats.plns.PLNSReader;
 import fr.crnan.videso3d.formats.fpl.FPLReader;
 import fr.crnan.videso3d.ihm.components.AltitudeRangeSlider;
-import fr.crnan.videso3d.ihm.components.DatabaseSingleDockable;
 import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.VDefaultEclipseThemConnector;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
@@ -317,6 +317,7 @@ public class MainWindow extends JFrame {
 				progressMonitor.setNote(evt.getNewValue().toString());
 			}
 		});
+		
 		//Mise à jour quand une base est déselectionnée ou supprimée
 		DatabaseManager.addPropertyChangeListener(DatabaseManager.BASE_UNSELECTED, new PropertyChangeListener() {
 
@@ -392,15 +393,22 @@ public class MainWindow extends JFrame {
 	 * @param type Type de la base de données
 	 * @param empty Vrai si il n'y a plus de tabs
 	 */
-	private void updateDockables(DatabaseManager.Type type){
+	private void updateDockables(final DatabaseManager.Type type){
 		this.control.removeSingleDockable(type.toString());
-		DatabaseSingleDockable dockable = new DatabaseSingleDockable(type.toString());
-		dockable.addCloseAction(control);
-				
-		dockable.setType(type);
-		dockable.setTitleText(type.toString());
+		DefaultSingleCDockable dockable = new DefaultSingleCDockable(type.toString(), type.toString(), (Component) DatasManager.getView(type),
+				new CCloseAction(control){
 
-		dockable.add((Component) DatasManager.getView(type));
+			@Override
+			public void close(CDockable dockable) {
+				super.close(dockable);
+				try {
+					DatabaseManager.unselectDatabase(type);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+		});
 		
 		this.addDockable(dockable);
 	}
@@ -429,23 +437,19 @@ public class MainWindow extends JFrame {
 				i++;
 			} while (control.getSingleDockable(view.getTitle()+"-"+i) != null);
 		}
-		final DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?view.getTitle():view.getTitle()+"-"+i);
-		dockable.setTitleText(view.getTitle());
+
+		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?view.getTitle():view.getTitle()+"-"+i,
+				view.getTitle(),
+				(Component) view,
+				new CCloseAction(control){
+
+					@Override
+					public void close(CDockable dockable) {
+						super.close(dockable);
+						control.removeDockable((SingleCDockable) dockable);
+						wwd.removeLayer(view.getLayer());
+					}
 		
-		dockable.add((Component) view);
-	
-		dockable.addCDockableStateListener(new CDockableStateListener() {
-			
-			@Override
-			public void visibilityChanged(CDockable dock) {
-				  if(!dockable.isVisible()){
-					control.removeDockable((SingleCDockable) dockable);
-					wwd.removeLayer(view.getLayer());
-				}
-			}
-				
-			@Override
-			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
 		});
 		
 		this.addDockable(dockable);
@@ -681,26 +685,22 @@ public class MainWindow extends JFrame {
 				i++;
 			} while (control.getSingleDockable(reader.getName()+"-"+i) != null);
 		}
-		final DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?reader.getName():reader.getName()+"-"+i);
-		dockable.setTitleText(reader.getName());
 		
-		dockable.add(content);
-		
-		dockable.addCDockableStateListener(new CDockableStateListener() {
-			
-			@Override
-			public void visibilityChanged(CDockable dockable) {
-				if(!dockable.isVisible()){//free resources when the dockable is not visible
+		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?reader.getName():reader.getName()+"-"+i,
+				reader.getName(),
+				content,
+				new CCloseAction(control){
+
+				@Override
+				public void close(CDockable dockable) {
+					super.close(dockable);
 					wwd.removeLayer(layer);
 					control.removeDockable((SingleCDockable) dockable);
 					//force close instead of just changing the visibility
 					layer.getModel().dispose();
 					layer.dispose();
-				}
 			}
-				
-			@Override
-			public void extendedModeChanged(CDockable dockable, ExtendedMode mode) {}
+
 		});
 		
 		this.addDockable(dockable);
@@ -717,7 +717,6 @@ public class MainWindow extends JFrame {
 		dockable.setDefaultLocation(ExtendedMode.MINIMIZED, CLocation.base().minimalWest());
 		
 		dockable.setLocation(locationDatas);
-		dockable.setCloseable(true);
 		
 		control.addDockable(dockable);
 		dockable.setVisible(true);
