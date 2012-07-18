@@ -29,7 +29,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
@@ -52,7 +51,7 @@ import gov.nasa.worldwindx.examples.util.ScreenShotAction;
 /**
  * Toolbar of the main window
  * @author Bruno Spyckerelle
- * @version 0.1.5
+ * @version 0.1.6
  */
 public class MainToolbar extends JToolBar {
 
@@ -107,20 +106,6 @@ public class MainToolbar extends JToolBar {
 			}
 		});
 		this.add(analyze);
-
-		//Comparaison de fichiers
-		final JButton compare = new JButton(new ImageIcon(getClass().getResource("/resources/compare_22.png")));
-		compare.setToolTipText("Comparer le contenu des fichiers de deux bases de données");
-		compare.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				FileCompareSelector compare = new FileCompareSelector();
-				compare.setExtendedState(JFrame.MAXIMIZED_BOTH);
-				compare.setVisible(true);
-			}
-		});
-		this.add(compare);
 
 		//Ajouter données
 		JButton datas = new JButton(new ImageIcon(getClass().getResource("/resources/database_22.png")));
