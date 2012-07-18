@@ -82,6 +82,16 @@ public class StipController extends ProgressSupport implements VidesoController 
 	 */
 	private RenderableLayer itisLayer;
 	private HashMap<String, Route2D> itis = new HashMap<String, Route2D>();
+	/**
+	 * Layer pour les trajets
+	 */
+	private RenderableLayer trajLayer;
+	private HashMap<String, Route2D> trajs = new HashMap<String, Route2D>();
+	/**
+	 * Layer pour les connexions
+	 */
+	private RenderableLayer connexLayer;
+	private HashMap<String, Route2D> connexions = new HashMap<String, Route2D>();
 	
 	/**
 	 * 
@@ -160,6 +170,8 @@ public class StipController extends ProgressSupport implements VidesoController 
 		this.wwd.removeLayer(balisesPub3D);
 		this.wwd.removeLayer(secteursLayer);
 		this.wwd.removeLayer(itisLayer);
+		this.wwd.removeLayer(trajLayer);
+		this.wwd.removeLayer(connexLayer);
 		this.wwd.removeLayer(textLayer);
 	}
 	
@@ -182,6 +194,12 @@ public class StipController extends ProgressSupport implements VidesoController 
 		this.routes2D.hideAllRoutes();
 		this.routes3D.hideAllRoutes();
 		for(Renderable r : this.itisLayer.getRenderables()){
+			((Route2D) r).setVisible(false);
+		}
+		for(Renderable r : this.trajLayer.getRenderables()){
+			((Route2D) r).setVisible(false);
+		}
+		for(Renderable r : this.connexLayer.getRenderables()){
 			((Route2D) r).setVisible(false);
 		}
 		textLayer.removeAllGeographicTexts();
@@ -215,6 +233,26 @@ public class StipController extends ProgressSupport implements VidesoController 
 				this.showObject(BALISES, balise);
 			}
 			break;
+		case TRAJET:
+			if(this.trajs.containsKey(name)){
+				this.trajs.get(name).setVisible(true);
+			} else {
+				this.createTrajet(name);
+			}
+			for(String balise : this.trajs.get(name).getBalises()){
+				this.showObject(BALISES, balise);
+			}
+			break;
+		case CONNEXION:
+			if(this.connexions.containsKey(name)){
+				this.connexions.get(name).setVisible(true);
+			} else {
+				this.createConnex(name);
+			}
+			for(String balise : this.connexions.get(name).getBalises()){
+				this.showObject(BALISES, balise);
+			}
+			break;
 		default:
 			break;
 		}
@@ -242,6 +280,12 @@ public class StipController extends ProgressSupport implements VidesoController 
 		case ITI:
 			if(this.itis.containsKey(name))
 				((Route2D) this.itis.get(name)).setVisible(false);
+		case TRAJET:
+			if(this.trajs.containsKey(name))
+				((Route2D) this.trajs.get(name)).setVisible(false);
+		case CONNEXION:
+			if(this.connexions.containsKey(name))
+				((Route2D) this.connexions.get(name)).setVisible(false);
 		default:
 			break;
 		}		
@@ -592,6 +636,93 @@ public class StipController extends ProgressSupport implements VidesoController 
 	}
 	
 	/**
+	 * Crée et affiche le trajet correspondant
+	 * @param name Id du trajet
+	 */
+	public void createTrajet(String name) {
+		Integer id = new Integer(name);
+		DatabaseRoute2D trajet = new DatabaseRoute2D(name, Type.STIP, TRAJET);
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select * from trajets, baltrajets where trajets.id ='"+id+"' and trajets.id = baltrajets.idtrajet");
+			ArrayList<String> balises = new ArrayList<String>();
+			ArrayList<Integer> sens = new ArrayList<Integer>();
+			ArrayList<LatLon> pos = new ArrayList<LatLon>();
+			while(rs.next()){
+				balises.add(rs.getString("balise"));
+				sens.add(Route3D.LEG_AUTHORIZED);
+			}
+			for(String balise : balises){
+				rs = st.executeQuery("select * from balises where name ='"+balise+"'");
+				pos.add(LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
+			}
+			trajet.setLocations(pos, sens);
+			trajet.setBalises(balises);
+			rs = st.executeQuery("select * from trajets where trajets.id ='"+id+"'");
+			String cond1 = rs.getString("cond1");
+			String cond2 = rs.getString("cond2");
+			String conditions = !cond1.matches(" *")? (cond2!=null?"Conditions : "+cond1+" "+rs.getString("etat1")+", "+cond2+" "+rs.getString("etat2") :"Condition : "+cond1+" "+rs.getString("etat1") ):"";
+			trajet.setAnnotation("<html><b>Trajet</b><br /><br />De "+rs.getString("eclatement")+" vers "+rs.getString("raccordement")+".<br />" +
+					"Plafond FL"+rs.getString("fl")+"<br/>"+conditions);
+			st.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.trajs.put(name, trajet);
+		this.trajLayer.addRenderable(trajet);
+		this.trajLayer.firePropertyChange(AVKey.LAYER, null, this.trajLayer);
+	}
+	/**
+	 * Crée et affiche la connexion correspondante
+	 * @param name Id de la connexion
+	 */
+	public void createConnex(String name) {
+		Integer id = new Integer(name);
+		DatabaseRoute2D connex = new DatabaseRoute2D(name, Type.STIP, CONNEXION);
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			ResultSet rs = st.executeQuery("select * from connexions, balconnexions where connexions.id ='"+id+"' and connexions.id = balconnexions.idconn");
+			ArrayList<String> balises = new ArrayList<String>();
+			ArrayList<Integer> sens = new ArrayList<Integer>();
+			ArrayList<LatLon> pos = new ArrayList<LatLon>();
+			while(rs.next()){
+				balises.add(rs.getString("balise"));
+				sens.add(Route3D.LEG_AUTHORIZED);
+			}
+			rs = st.executeQuery("select * from connexions where connexions.id ='"+id+"'");
+			if(rs.next()){
+				String DepartOuArrivee = "";
+				String baliConnex = rs.getString("connexion");
+				if(rs.getString("type").equals("A")){
+					balises.add(0, baliConnex);
+					DepartOuArrivee = "arrivée";
+				}else{
+					balises.add(baliConnex);
+					DepartOuArrivee = "départ";
+				}
+				connex.setAnnotation("<html><b>Connexion "+DepartOuArrivee+"</b><br /><br />Terrain : "+rs.getString("terrain")+"<br />Balise de connexion : "+baliConnex+"<br/>" +
+						"Du niveau "+rs.getString("flinf")+" au niveau "+rs.getString("flsup"));
+				ResultSet rs2 = null;
+				for(String balise : balises){
+					rs2 = st.executeQuery("select * from balises where name ='"+balise+"'");
+					pos.add(LatLon.fromDegrees(rs2.getDouble("latitude"), rs2.getDouble("longitude")));
+				}
+				rs2.close();
+				connex.setLocations(pos, sens);
+				connex.setBalises(balises);
+			}
+			st.close();
+			rs.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.connexions.put(name, connex);
+		this.connexLayer.addRenderable(connex);
+		this.connexLayer.firePropertyChange(AVKey.LAYER, null, this.connexLayer);
+	}
+	
+	/**
 	 * Construit ou met à jour les objets Stip
 	 * Appelé lors de l'initialisation de la vue ou lors du changement de base de données Stip
 	 */
@@ -645,6 +776,24 @@ public class StipController extends ProgressSupport implements VidesoController 
 			itisLayer = new RenderableLayer();
 			itisLayer.setName("Stip Itis");
 			this.toggleLayer(itisLayer, true);
+		}
+		if(trajLayer != null){
+			trajLayer.removeAllRenderables();
+			this.toggleLayer(trajLayer, true);
+			trajs.clear();
+		} else {
+			trajLayer = new RenderableLayer();
+			trajLayer.setName("Stip Trajets");
+			this.toggleLayer(trajLayer, true);
+		}
+		if(connexLayer != null){
+			connexLayer.removeAllRenderables();
+			this.toggleLayer(connexLayer, true);
+			connexions.clear();
+		} else {
+			connexLayer = new RenderableLayer();
+			connexLayer.setName("Stip connex");
+			this.toggleLayer(connexLayer, true);
 		}
 		try {
 			if(DatabaseManager.getCurrentStip() != null) {
@@ -712,6 +861,20 @@ public class StipController extends ProgressSupport implements VidesoController 
 			if(iti != null){
 				this.showObject(ITI, text);
 		//		this.wwd.centerView(iti);
+			}
+			break;
+		case TRAJET:
+			Route2D trajet = this.trajs.get(text);
+			if(trajet != null){
+				this.showObject(TRAJET, text);
+		//		this.wwd.centerView(trajet);
+			}
+			break;
+		case CONNEXION:
+			Route2D connex = this.connexions.get(text);
+			if(connex != null){
+				this.showObject(CONNEXION, text);
+		//		this.wwd.centerView(trajet);
 			}
 			break;
 		default:

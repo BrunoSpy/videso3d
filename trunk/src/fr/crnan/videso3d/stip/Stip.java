@@ -1346,10 +1346,21 @@ public class Stip extends FileParser{
 		switch (type) {
 		case StipController.ITI:
 			return itiToString(new Integer(name));
+		case StipController.ROUTES:
+			try {
+				Statement st = DatabaseManager.getCurrentStip();
+				ResultSet rs = st.executeQuery("select id from routes where name = '"+name+"'");
+				if(rs.next())
+					return routeToString(rs.getInt(1));
+				else 
+					return "";
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		case StipController.TRAJET:
-			//TODO
+			return trajetToString(new Integer(name));
 		case StipController.CONNEXION:
-			//TODO
+			return connexToString(new Integer(name));
 		case StipController.BALISES:
 			try {
 				Statement st = DatabaseManager.getCurrentStip();
