@@ -62,6 +62,7 @@ import fr.crnan.videso3d.layers.LayerSet;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.layers.VerticalScaleBar;
 import fr.crnan.videso3d.stip.Stip;
+import fr.crnan.videso3d.stpv.Stpv;
 import fr.crnan.videso3d.util.VMeasureTool;
 
 import gov.nasa.worldwind.Factory;
@@ -299,6 +300,9 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 			if(o instanceof DatabaseVidesoObject){
 				if(((DatabaseVidesoObject) o).getDatabaseType().compareTo(Type.STIP) == 0){
 					selection += Stip.getString(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
+					selection += "\n";
+				}else if(((DatabaseVidesoObject) o).getDatabaseType().compareTo(Type.STPV) == 0){
+					selection += Stpv.getString(new Integer(((DatabaseVidesoObject) o).getType()),new Integer(((DatabaseVidesoObject) o).getName()));
 					selection += "\n";
 				}
 			}
