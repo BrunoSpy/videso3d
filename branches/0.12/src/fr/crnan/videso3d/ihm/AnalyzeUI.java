@@ -18,11 +18,15 @@ package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,20 +39,31 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+
+import bibliothek.extension.gui.dock.theme.EclipseTheme;
+import bibliothek.gui.dock.common.CControl;
+import bibliothek.gui.dock.common.CLocation;
+import bibliothek.gui.dock.common.DefaultMultipleCDockable;
+import bibliothek.gui.dock.common.MultipleCDockableFactory;
+import bibliothek.gui.dock.common.MultipleCDockableLayout;
+import bibliothek.gui.dock.common.group.CGroupBehavior;
+import bibliothek.gui.dock.common.theme.CEclipseTheme;
+import bibliothek.gui.dock.common.theme.ThemeMap;
+import bibliothek.gui.dock.util.Priority;
+import bibliothek.util.xml.XElement;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.graphs.ConnexPanel;
 import fr.crnan.videso3d.graphs.ItiPanel;
-import fr.crnan.videso3d.graphs.ResultGraphPanel;
 import fr.crnan.videso3d.graphs.RoutePanel;
 import fr.crnan.videso3d.graphs.StarPanel;
 import fr.crnan.videso3d.graphs.TrajetPanel;
-import fr.crnan.videso3d.ihm.components.ButtonTabComponent;
 import fr.crnan.videso3d.stip.StipController;
+import glass.eclipse.theme.CGlassEclipseTabPainter;
+import glass.eclipse.theme.CGlassStationPaint;
+import glass.eclipse.theme.CMiniPreviewMovingImageFactory;
+import glass.eclipse.theme.EclipseThemeExtension;
 /**
  * Fenêtre d'analyse des données Stip et Stpv.<br />
  * Cette classe est un singleton afin de n'être ouverte qu'une fois maximum.
@@ -59,11 +74,14 @@ public final class AnalyzeUI extends JFrame {
 
 	private static AnalyzeUI instance = null;
 
-	private JTabbedPane tabPane = new JTabbedPane();
+	//private JTabbedPane tabPane = new JTabbedPane();
 
 	private ContextPanel context = new ContextPanel();
-
-	private JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, context, tabPane);
+	
+	private CControl control;
+	private ResultFactory factory = new ResultFactory();
+	
+	private JSplitPane splitpane;
 
 	private JLabel nombreResultats = new JLabel();
 	
@@ -76,6 +94,8 @@ public final class AnalyzeUI extends JFrame {
 
 	private SearchPanel searchPanel;
 	
+
+	
 	public final static AnalyzeUI getInstance(){
 		if(instance == null){
 			instance = new AnalyzeUI();
@@ -87,6 +107,7 @@ public final class AnalyzeUI extends JFrame {
 		getInstance().setVisible(true);
 	}
 
+
 	/**
 	 * Ajoute un tab de résultats et ouvre la fenêtre si besoin
 	 * @param type Type de recherche
@@ -95,23 +116,37 @@ public final class AnalyzeUI extends JFrame {
 	 * @param numero Numéro de la liaison privilégiée recherchée (optionnel)
 	 */
 	public final static void showResults(boolean advanced, String type, String... criteria){		
-		final ResultPanel content = getInstance().createResultPanel(advanced, type, getInstance().tabPane, criteria);
+		final ResultPanel content = getInstance().createResultPanel(advanced, type, /*getInstance().tabPane,*/ criteria);
 		content.setContext(getInstance().context);
+		
+		final ResultDockable dockable = getInstance().new ResultDockable(getInstance().factory, content);
+		dockable.setCloseable(true);
+		dockable.setRemoveOnClose(true);
+		dockable.setLocation(CLocation.base().normal());
+		dockable.setTitleText(content.getTitleTab());
+		
+		getInstance().control.addDockable(dockable);
+		dockable.setVisible(true);
+		
 		content.addPropertyChangeListener(ResultPanel.PROPERTY_RESULT, new PropertyChangeListener() {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				int index = getInstance().tabPane.indexOfComponent(content);
-				getInstance().tabPane.setTitleAt(index,	getInstance().tabPane.getTitleAt(index) + " ("+evt.getNewValue()+")");
+			//	int index = getInstance().tabPane.indexOfComponent(content);
+			//	getInstance().tabPane.setTitleAt(index,	getInstance().tabPane.getTitleAt(index) + " ("+evt.getNewValue()+")");
+				dockable.setTitleText(content.getTitleTab()+" ("+evt.getNewValue()+")");
 				getInstance().nombreResultats.setText(evt.getNewValue().toString());
 			}
+			
 		});
 
-		getInstance().tabPane.addTab(content.getTitleTab(), content);
 		
-		ButtonTabComponent buttonTab = new ButtonTabComponent(getInstance().tabPane);
-		getInstance().tabPane.setTabComponentAt(getInstance().tabPane.indexOfComponent(content), buttonTab);
-		getInstance().tabPane.setSelectedIndex(getInstance().tabPane.indexOfComponent(content));
+		
+	//	getInstance().tabPane.addTab(content.getTitleTab(), content);
+		
+	//	ButtonTabComponent buttonTab = new ButtonTabComponent(getInstance().tabPane);
+	//	getInstance().tabPane.setTabComponentAt(getInstance().tabPane.indexOfComponent(content), buttonTab);
+	//	getInstance().tabPane.setSelectedIndex(getInstance().tabPane.indexOfComponent(content));
 
 		getInstance().setVisible(true);
 
@@ -140,7 +175,7 @@ public final class AnalyzeUI extends JFrame {
 	private AnalyzeUI(){
 		super();
 		getContentPane().setLayout(new BorderLayout());
-
+		
 		this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/videso3d.png")));
 
 		this.setTitle("Videso - Analyse ("+Videso3D.VERSION+")");
@@ -185,22 +220,37 @@ public final class AnalyzeUI extends JFrame {
 		topPanel.add(searchButtonBox);
 
 		getContentPane().add(this.createStatusBar(), BorderLayout.PAGE_END);
+
+
+		control = new CControl(this);
+		control.setTheme(ThemeMap.KEY_ECLIPSE_THEME);
+		control.putProperty(EclipseThemeExtension.GLASS_FACTORY, null);
+		control.putProperty(EclipseTheme.TAB_PAINTER, CGlassEclipseTabPainter.FACTORY);
+		((CEclipseTheme)control.intern().getController().getTheme()).intern().setMovingImageFactory(new CMiniPreviewMovingImageFactory(128), Priority.CLIENT);
+		((CEclipseTheme)control.intern().getController().getTheme()).intern().setPaint(new CGlassStationPaint(), Priority.CLIENT);
+		control.setGroupBehavior(CGroupBehavior.TOPMOST);
+		
+		control.addMultipleDockableFactory("results", factory);
+						
+		control.getContentArea().setBorder(null);
+		
+		splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, context, control.getContentArea());
 		splitpane.setOneTouchExpandable(true);
 		splitpane.setContinuousLayout(true);
-
-		tabPane.addChangeListener(new ChangeListener(){
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				if(tabPane.getTabCount()>0 && tabPane.getSelectedIndex()>=0){
-					String tabTitle = tabPane.getTitleAt(tabPane.getSelectedIndex());
-					if(tabTitle.startsWith("Balise ")){
-						getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.BALISES, tabTitle.substring(7));
-					}else if(tabPane.getSelectedComponent() instanceof ResultGraphPanel){
-						((ResultGraphPanel)tabPane.getSelectedComponent()).tabSelected();
-					}
-				}
-			}
-		});
+		
+//		tabPane.addChangeListener(new ChangeListener(){
+//			@Override
+//			public void stateChanged(ChangeEvent e) {
+//				if(tabPane.getTabCount()>0 && tabPane.getSelectedIndex()>=0){
+//					String tabTitle = tabPane.getTitleAt(tabPane.getSelectedIndex());
+//					if(tabTitle.startsWith("Balise ")){
+//						getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.BALISES, tabTitle.substring(7));
+//					}else if(tabPane.getSelectedComponent() instanceof ResultGraphPanel){
+//						((ResultGraphPanel)tabPane.getSelectedComponent()).tabSelected();
+//					}
+//				}
+//			}
+//		});
 
 		this.getContentPane().add(splitpane);
 		this.pack();
@@ -274,7 +324,7 @@ public final class AnalyzeUI extends JFrame {
 		return type.equals("iti");
 	}
 	
-	private ResultPanel createResultPanel(boolean advanced, final String type, JTabbedPane tabPane, final String... criteria){
+	private ResultPanel createResultPanel(boolean advanced, final String type, /*JTabbedPane tabPane,*/ final String... criteria){
 		if(type.equals("iti")){
 			return new ItiPanel(advanced, criteria);
 		} else if(type.equals("route")){
@@ -287,8 +337,8 @@ public final class AnalyzeUI extends JFrame {
 			return new ConnexPanel(advanced, criteria);
 		} else if(type.equals("stars")){
 			return new StarPanel(advanced, criteria);
-		} else if(type.equals("liaison privilégiée")){
-			return new LiaisonPanel(criteria[2], tabPane);
+		/*} else if(type.equals("liaison privilégiée")){
+			return new LiaisonPanel(criteria[2], tabPane);*/
 		} else if(type.equals("base PLNS...")){
 			return new PLNSPanel(criteria[3]);
 		}
@@ -332,4 +382,117 @@ public final class AnalyzeUI extends JFrame {
 		getInstance().searchPanel.updateSearchBoxes();
 	}
 	
+	
+	/* ****************************************************************** */
+	/* ********************* MultipleCDockables ************************* */
+	/* ****************************************************************** */
+	
+	private class ResultDockable extends DefaultMultipleCDockable{
+
+	
+		public ResultDockable(MultipleCDockableFactory<?, ?> factory,
+				Component content) {
+			super(factory, content);
+			add(content);
+		}
+		
+		public ResultLayout getLayout(){
+			return new ResultLayout(getTitleText(), getComponents()[0]);
+		}
+		
+	}
+	
+	private class ResultFactory implements MultipleCDockableFactory<ResultDockable, ResultLayout>{
+
+		@Override
+		public ResultLayout create() {
+			return new ResultLayout();
+		}
+
+		@Override
+		public boolean match(ResultDockable dockable, ResultLayout layout) {
+			return dockable.getLayout().equals(layout);
+		}
+
+		@Override
+		public ResultDockable read(ResultLayout layout) {
+			return null;
+		}
+
+		@Override
+		public ResultLayout write(ResultDockable laout) {
+			return null;
+		}
+		
+	}
+	
+	/**
+	 * Content of a {@link ResultDockable}
+	 * @author Bruno Spyckerelle
+	 *
+	 */
+	private class ResultLayout implements MultipleCDockableLayout{
+
+		private String title;
+		private Component content;
+		
+		public ResultLayout(String title, Component content){
+			this.title = title;
+			this.content = content;
+		}
+		
+		public ResultLayout() {
+			// do nothing
+		}
+
+		@Override
+		public boolean equals( Object obj ){
+			if( this == obj ){
+				return true;
+			}
+			if( obj == null ){
+				return false;
+			}
+			if( getClass() != obj.getClass() ){
+				return false;
+			}
+			ResultLayout other = (ResultLayout) obj;
+			return equals( title, other.title ) && 
+				equals( content, other.content );
+		}
+		
+		private boolean equals( Object a, Object b ){
+			if( a == null ){
+				return b == null;
+			}
+			else{
+				return a.equals( b );
+			}
+		}
+		
+		@Override
+		public void readStream(DataInputStream arg0) throws IOException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void readXML(XElement arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void writeStream(DataOutputStream arg0) throws IOException {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void writeXML(XElement arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
 }
