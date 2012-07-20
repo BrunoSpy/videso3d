@@ -33,6 +33,7 @@ import java.sql.Statement;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -41,12 +42,24 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 import bibliothek.extension.gui.dock.theme.EclipseTheme;
+import bibliothek.gui.DockController;
+import bibliothek.gui.DockStation;
+import bibliothek.gui.Dockable;
+import bibliothek.gui.dock.action.DockActionIcon;
+import bibliothek.gui.dock.action.actions.SimpleButtonAction;
 import bibliothek.gui.dock.common.CControl;
 import bibliothek.gui.dock.common.CLocation;
 import bibliothek.gui.dock.common.DefaultMultipleCDockable;
 import bibliothek.gui.dock.common.MultipleCDockableFactory;
 import bibliothek.gui.dock.common.MultipleCDockableLayout;
+import bibliothek.gui.dock.common.action.CAction;
+import bibliothek.gui.dock.common.action.core.CommonDropDownItem;
+import bibliothek.gui.dock.common.action.predefined.CCloseAction;
+import bibliothek.gui.dock.common.event.CFocusListener;
 import bibliothek.gui.dock.common.group.CGroupBehavior;
+import bibliothek.gui.dock.common.intern.CDockable;
+import bibliothek.gui.dock.common.intern.CommonDockable;
+import bibliothek.gui.dock.common.intern.action.CDropDownItem;
 import bibliothek.gui.dock.common.theme.CEclipseTheme;
 import bibliothek.gui.dock.common.theme.ThemeMap;
 import bibliothek.gui.dock.util.Priority;
@@ -56,6 +69,7 @@ import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.graphs.ConnexPanel;
 import fr.crnan.videso3d.graphs.ItiPanel;
+import fr.crnan.videso3d.graphs.ResultGraphPanel;
 import fr.crnan.videso3d.graphs.RoutePanel;
 import fr.crnan.videso3d.graphs.StarPanel;
 import fr.crnan.videso3d.graphs.TrajetPanel;
@@ -68,13 +82,11 @@ import glass.eclipse.theme.EclipseThemeExtension;
  * Fenêtre d'analyse des données Stip et Stpv.<br />
  * Cette classe est un singleton afin de n'être ouverte qu'une fois maximum.
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.4.0
  */
 public final class AnalyzeUI extends JFrame {
 
 	private static AnalyzeUI instance = null;
-
-	//private JTabbedPane tabPane = new JTabbedPane();
 
 	private ContextPanel context = new ContextPanel();
 	
@@ -93,8 +105,6 @@ public final class AnalyzeUI extends JFrame {
 	private JButton advancedSearch;
 
 	private SearchPanel searchPanel;
-	
-
 	
 	public final static AnalyzeUI getInstance(){
 		if(instance == null){
@@ -125,31 +135,50 @@ public final class AnalyzeUI extends JFrame {
 		dockable.setLocation(CLocation.base().normal());
 		dockable.setTitleText(content.getTitleTab());
 		
+		dockable.addAction(getInstance().new AllCloseAction(getInstance().control));
+		
 		getInstance().control.addDockable(dockable);
 		dockable.setVisible(true);
 		
+		//mise à jour du titre de l'onglet avec le nombre de résultats
 		content.addPropertyChangeListener(ResultPanel.PROPERTY_RESULT, new PropertyChangeListener() {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-			//	int index = getInstance().tabPane.indexOfComponent(content);
-			//	getInstance().tabPane.setTitleAt(index,	getInstance().tabPane.getTitleAt(index) + " ("+evt.getNewValue()+")");
 				dockable.setTitleText(content.getTitleTab()+" ("+evt.getNewValue()+")");
 				getInstance().nombreResultats.setText(evt.getNewValue().toString());
 			}
 			
 		});
-
 		
+		//certains panel gèrent eux-mêmes leur titre
+		content.addPropertyChangeListener(ResultPanel.TITLE_TAB_NAME, new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				dockable.setTitleText((String)evt.getNewValue());
+			}
+		});
 		
-	//	getInstance().tabPane.addTab(content.getTitleTab(), content);
+		//remettre les infos contextuelles de la balise lorsque l'on clique sur un onglet balise
+		dockable.addFocusListener(new CFocusListener() {
+			
+			@Override
+			public void focusLost(CDockable dockable) {}
+			
+			@Override
+			public void focusGained(CDockable dock) {
+				if(dock instanceof ResultDockable){
+					if(((ResultDockable)dock).getTitleText().startsWith("Balise")){
+						getContextPanel().showInfo(DatabaseManager.Type.STIP, StipController.BALISES, ((ResultDockable) dock).getTitleText().substring(7));
+					} else {
+						if(((ResultDockable)dock).getContent() instanceof ResultGraphPanel)
+							((ResultGraphPanel)((ResultDockable)dock).getContent()).tabSelected();
+					}
+				}
+			}
+		});
 		
-	//	ButtonTabComponent buttonTab = new ButtonTabComponent(getInstance().tabPane);
-	//	getInstance().tabPane.setTabComponentAt(getInstance().tabPane.indexOfComponent(content), buttonTab);
-	//	getInstance().tabPane.setSelectedIndex(getInstance().tabPane.indexOfComponent(content));
-
-		getInstance().setVisible(true);
-
 		//si type balise, on affiche les infos contextuelles sur cette balise
 		if(type.equals("balise")){
 			try {
@@ -160,7 +189,8 @@ public final class AnalyzeUI extends JFrame {
 				e.printStackTrace();
 			}
 		}
-
+		
+		getInstance().setVisible(true);
 	}
 
 	/**
@@ -237,20 +267,6 @@ public final class AnalyzeUI extends JFrame {
 		splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, context, control.getContentArea());
 		splitpane.setOneTouchExpandable(true);
 		splitpane.setContinuousLayout(true);
-		
-//		tabPane.addChangeListener(new ChangeListener(){
-//			@Override
-//			public void stateChanged(ChangeEvent e) {
-//				if(tabPane.getTabCount()>0 && tabPane.getSelectedIndex()>=0){
-//					String tabTitle = tabPane.getTitleAt(tabPane.getSelectedIndex());
-//					if(tabTitle.startsWith("Balise ")){
-//						getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.BALISES, tabTitle.substring(7));
-//					}else if(tabPane.getSelectedComponent() instanceof ResultGraphPanel){
-//						((ResultGraphPanel)tabPane.getSelectedComponent()).tabSelected();
-//					}
-//				}
-//			}
-//		});
 
 		this.getContentPane().add(splitpane);
 		this.pack();
@@ -324,7 +340,7 @@ public final class AnalyzeUI extends JFrame {
 		return type.equals("iti");
 	}
 	
-	private ResultPanel createResultPanel(boolean advanced, final String type, /*JTabbedPane tabPane,*/ final String... criteria){
+	private ResultPanel createResultPanel(boolean advanced, final String type, final String... criteria){
 		if(type.equals("iti")){
 			return new ItiPanel(advanced, criteria);
 		} else if(type.equals("route")){
@@ -337,8 +353,8 @@ public final class AnalyzeUI extends JFrame {
 			return new ConnexPanel(advanced, criteria);
 		} else if(type.equals("stars")){
 			return new StarPanel(advanced, criteria);
-		/*} else if(type.equals("liaison privilégiée")){
-			return new LiaisonPanel(criteria[2], tabPane);*/
+		} else if(type.equals("liaison privilégiée")){
+			return new LiaisonPanel(criteria[2]);
 		} else if(type.equals("base PLNS...")){
 			return new PLNSPanel(criteria[3]);
 		}
@@ -389,15 +405,22 @@ public final class AnalyzeUI extends JFrame {
 	
 	private class ResultDockable extends DefaultMultipleCDockable{
 
-	
+		private ResultPanel content;
+		
 		public ResultDockable(MultipleCDockableFactory<?, ?> factory,
-				Component content) {
+				ResultPanel content) {
 			super(factory, content);
 			add(content);
+			this.content = content;
+			
 		}
 		
 		public ResultLayout getLayout(){
 			return new ResultLayout(getTitleText(), getComponents()[0]);
+		}
+		
+		public ResultPanel getContent(){
+			return this.content;
 		}
 		
 	}
@@ -471,28 +494,116 @@ public final class AnalyzeUI extends JFrame {
 		}
 		
 		@Override
-		public void readStream(DataInputStream arg0) throws IOException {
-			// TODO Auto-generated method stub
-			
-		}
+		public void readStream(DataInputStream arg0) throws IOException {}
 
 		@Override
-		public void readXML(XElement arg0) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void readXML(XElement arg0) {}
 
 		@Override
-		public void writeStream(DataOutputStream arg0) throws IOException {
-			// TODO Auto-generated method stub
-			
-		}
+		public void writeStream(DataOutputStream arg0) throws IOException {}
 
 		@Override
-		public void writeXML(XElement arg0) {
-			// TODO Auto-generated method stub
-			
-		}
+		public void writeXML(XElement arg0) {}
 		
 	}
+	
+	private class AllCloseAction extends CDropDownItem<AllCloseAction.Action>{
+		/** the control for which this action works */
+		private CControl control;
+
+		/**
+		 * Creates a new action
+		 * @param control the control for which this action will be used
+		 */
+		public AllCloseAction( CControl control ) {
+			super( null );
+			if( control == null )
+				throw new NullPointerException( "control is null" );
+
+			this.control = control;
+			init( new Action() );
+
+			this.setTooltip("Fermer tous les onglets");
+			this.setText("Fermer tous les onglets");
+		}
+
+
+		public void close( CDockable dockable ){
+			while(control.getCDockableCount() > 0){
+				control.getCDockable(0).setVisible(false);
+			}
+		}
+
+		/**
+		 * Inspired by {@link CCloseAction}
+		 */
+		public class Action extends SimpleButtonAction implements CommonDropDownItem{
+			/** how often this action was bound */
+			private int count = 0;
+
+			private DockActionIcon icon;
+
+			/**
+			 * Creates a new action
+			 */
+			public Action(){
+				this( null );
+			}
+
+
+			public Action( DockController controller ){
+				icon = new DockActionIcon( "close", this ){
+					protected void changed( Icon oldValue, Icon newValue ){
+						setIcon( newValue );	
+					}
+				};
+
+				setController( controller );
+			}
+
+			public void setController( DockController controller ) {
+				icon.setController( controller );
+			}
+
+			@Override
+			public void action( Dockable dockable ) {
+				close( dockable );
+			}
+
+
+			protected void close( Dockable dockable ) {
+				if( dockable instanceof CommonDockable ){
+					AllCloseAction.this.close( ((CommonDockable)dockable).getDockable() );
+				}
+				else {
+					DockStation parent = dockable.getDockParent();
+					if( parent != null )
+						parent.drag( dockable );
+				}
+			}
+
+			@Override
+			protected void bound( Dockable dockable ) {
+				super.bound( dockable );
+				if( count == 0 ){
+					setController( control.intern().getController() );
+				}
+				count++;
+			}
+
+			@Override
+			protected void unbound( Dockable dockable ) {
+				super.unbound( dockable );
+				count--;
+				if( count == 0 ){
+					setController( null );
+				}
+			}
+
+			public CAction getAction(){
+				return AllCloseAction.this;
+			}
+		}
+	}
 }
+

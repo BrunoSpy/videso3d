@@ -30,8 +30,8 @@ import java.sql.SQLException;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 
 import fr.crnan.videso3d.DatabaseManager;
@@ -40,7 +40,7 @@ import fr.crnan.videso3d.DatabaseManager.Type;
 /**
  * Panel de résultats des liaisons privilégiées
  * @author Adrien Vidal
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class LiaisonPanel extends ResultPanel implements ActionListener{
 
@@ -48,22 +48,22 @@ public class LiaisonPanel extends ResultPanel implements ActionListener{
 	private JButton prec = new JButton("< Précédente ");
 	private JButton suiv = new JButton(" Suivante >");
 	private JPanel bottom = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-	private JTabbedPane tabPane;
 	private String titleTab = "LP";
 	private File f;
 	
 	private int searchNum;
 	
-	public LiaisonPanel(String searchNum, JTabbedPane tabPane){
+	public LiaisonPanel(String searchNum){
 		titleTab += " "+searchNum;
-		if(DatasManager.getController(Type.STPV) == null)
+		if(DatasManager.getController(Type.STPV) == null){
+			this.add(new JLabel("Pas de base STPV configurée"), BorderLayout.CENTER);
 			return;
+		}
 		try {
 			f = new File(DatabaseManager.getCurrentName(Type.STPV)+"_files","CODE");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.tabPane = tabPane;
 		this.searchNum = Integer.parseInt(searchNum);
 		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -146,7 +146,9 @@ public class LiaisonPanel extends ResultPanel implements ActionListener{
 			searchNum++;
 			displayLP();
 		}
-		tabPane.setTitleAt(tabPane.getSelectedIndex(), "Liaison "+searchNum);
+		String oldTitle = this.titleTab;
+		this.titleTab = "Liaison "+searchNum;
+		firePropertyChange(ResultPanel.TITLE_TAB_NAME, oldTitle, this.titleTab);
 	}
 
 	@Override
