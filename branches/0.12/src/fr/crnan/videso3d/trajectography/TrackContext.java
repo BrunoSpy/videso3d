@@ -39,18 +39,18 @@ import org.jdesktop.swingx.JXTaskPane;
 import org.jdesktop.swingx.plaf.TaskPaneUI;
 
 import fr.crnan.videso3d.Context;
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.ProgressSupport;
-import fr.crnan.videso3d.aip.AIP;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.aip.AIP;
+import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.ihm.ProgressMonitor;
 import fr.crnan.videso3d.ihm.components.VXTable;
-import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.globes.Globe;
 /**
  * 

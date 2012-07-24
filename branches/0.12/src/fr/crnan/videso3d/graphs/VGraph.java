@@ -19,9 +19,9 @@ package fr.crnan.videso3d.graphs;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.view.mxGraph;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.stip.StipController;
-import fr.crnan.videso3d.stpv.StpvController;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.stip.StipController;
+import fr.crnan.videso3d.databases.stpv.StpvController;
 /**
  * 
  * @author Bruno Spyckerelle

@@ -17,7 +17,7 @@ package fr.crnan.videso3d.graphics;
 
 import java.util.List;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 /**
  * Videso Polygon with annotation and link with a database

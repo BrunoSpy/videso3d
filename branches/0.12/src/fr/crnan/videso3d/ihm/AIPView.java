@@ -29,11 +29,11 @@ import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.Couple;
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.aip.AIP;
-import fr.crnan.videso3d.aip.AIPController;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.aip.AIP;
+import fr.crnan.videso3d.databases.aip.AIPController;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
 import fr.crnan.videso3d.ihm.components.TitleTwoButtons;

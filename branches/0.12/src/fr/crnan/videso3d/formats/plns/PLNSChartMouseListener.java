@@ -21,9 +21,9 @@ import org.jfree.chart.entity.CategoryItemEntity;
 import org.jfree.chart.entity.CategoryLabelEntity;
 import org.jfree.chart.plot.CategoryPlot;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.stpv.StpvController;
 import fr.crnan.videso3d.ihm.ContextPanel;
-import fr.crnan.videso3d.stpv.StpvController;
 /**
  * 
  * @author Bruno Spyckerelle

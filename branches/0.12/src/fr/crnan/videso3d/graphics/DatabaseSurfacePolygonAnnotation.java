@@ -17,8 +17,8 @@ package fr.crnan.videso3d.graphics;
 
 import java.util.List;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import gov.nasa.worldwind.geom.LatLon;
 
 /**

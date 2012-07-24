@@ -54,7 +54,7 @@ import javax.swing.JButton;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.formats.plns.PLNSFileFilter;
 import fr.crnan.videso3d.ihm.components.JUpperCaseComboBox;
 import fr.crnan.videso3d.ihm.components.TypeComboBox;

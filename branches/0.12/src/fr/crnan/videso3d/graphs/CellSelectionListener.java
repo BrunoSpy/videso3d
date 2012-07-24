@@ -20,10 +20,10 @@ import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraph;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.stip.StipController;
+import fr.crnan.videso3d.databases.stpv.StpvController;
 import fr.crnan.videso3d.ihm.ContextPanel;
-import fr.crnan.videso3d.stip.StipController;
-import fr.crnan.videso3d.stpv.StpvController;
 /**
  * Listener de cellule JGraph.<br />
  * Permet de mettre à jour la fenêtre contextuelle en fonction de la cellule sélectionnée

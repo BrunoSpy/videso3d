@@ -53,17 +53,17 @@ import javax.swing.table.AbstractTableModel;
 import org.jdesktop.swingx.JXTable;
 
 import eu.medsea.mimeutil.MimeUtil;
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.FileParser;
-import fr.crnan.videso3d.aip.AIP;
-import fr.crnan.videso3d.edimap.Cartes;
-import fr.crnan.videso3d.exsa.Exsa;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.aip.AIP;
+import fr.crnan.videso3d.databases.edimap.Cartes;
+import fr.crnan.videso3d.databases.exsa.Exsa;
+import fr.crnan.videso3d.databases.pays.Pays;
+import fr.crnan.videso3d.databases.radio.RadioDataManager;
+import fr.crnan.videso3d.databases.stip.Stip;
+import fr.crnan.videso3d.databases.stpv.Stpv;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
-import fr.crnan.videso3d.pays.Pays;
-import fr.crnan.videso3d.stip.Stip;
-import fr.crnan.videso3d.stpv.Stpv;
-import fr.crnan.videso3d.radio.RadioDataManager;
 import gov.nasa.worldwind.util.Logging;
 
 /**

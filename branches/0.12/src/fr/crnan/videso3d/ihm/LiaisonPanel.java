@@ -34,9 +34,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
 /**
  * Panel de résultats des liaisons privilégiées
  * @author Adrien Vidal

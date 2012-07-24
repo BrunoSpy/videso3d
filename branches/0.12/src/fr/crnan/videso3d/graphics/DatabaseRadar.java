@@ -15,7 +15,7 @@
 */
 package fr.crnan.videso3d.graphics;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import gov.nasa.worldwind.geom.LatLon;
 /**
  * 

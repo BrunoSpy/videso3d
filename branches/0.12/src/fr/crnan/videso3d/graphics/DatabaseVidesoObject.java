@@ -15,7 +15,7 @@
  */
 package fr.crnan.videso3d.graphics;
 
-import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager;
 
 /**
  * Extension d'un objet pour Videso contenant le lien à sa base de données

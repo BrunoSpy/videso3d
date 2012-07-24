@@ -25,14 +25,14 @@ import java.util.List;
 
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.ProgressSupport;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.VidesoController;
-import fr.crnan.videso3d.aip.AIPController;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.aip.AIPController;
+import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VidesoObject;
-import fr.crnan.videso3d.stip.StipController;
 import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.util.Logging;

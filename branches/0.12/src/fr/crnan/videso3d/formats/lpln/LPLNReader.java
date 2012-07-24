@@ -15,10 +15,10 @@
  */
 package fr.crnan.videso3d.formats.lpln;
 
+import fr.crnan.videso3d.databases.stip.PointNotFoundException;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
-import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.TracksModel;
 
 import java.beans.PropertyChangeListener;

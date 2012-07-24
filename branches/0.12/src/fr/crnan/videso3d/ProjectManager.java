@@ -39,8 +39,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.edimap.Carte;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.edimap.Carte;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.formats.geo.GEOWriter;

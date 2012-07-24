@@ -19,9 +19,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.Pallet;
-import fr.crnan.videso3d.stip.StipController;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.stip.StipController;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;

@@ -17,7 +17,7 @@ package fr.crnan.videso3d.graphics;
 
 import java.util.List;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 /**
  * 
@@ -36,12 +36,12 @@ public class Secteur2D extends SurfacePolygonAnnotation implements DatabaseVides
 	}
 
 	@Override
-	public fr.crnan.videso3d.DatabaseManager.Type getDatabaseType() {
+	public fr.crnan.videso3d.databases.DatabaseManager.Type getDatabaseType() {
 		return this.base;
 	}
 
 	@Override
-	public void setDatabaseType(fr.crnan.videso3d.DatabaseManager.Type type) {
+	public void setDatabaseType(fr.crnan.videso3d.databases.DatabaseManager.Type type) {
 		this.base = type;
 	}
 

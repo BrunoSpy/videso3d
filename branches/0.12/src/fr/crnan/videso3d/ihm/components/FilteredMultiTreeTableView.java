@@ -43,8 +43,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.jdesktop.swingx.JXTreeTable;
 
 import fr.crnan.videso3d.Couple;
+import fr.crnan.videso3d.databases.skyview.SkyViewController;
 import fr.crnan.videso3d.ihm.ProgressMonitor;
-import fr.crnan.videso3d.skyview.SkyViewController;
 
 
 /**

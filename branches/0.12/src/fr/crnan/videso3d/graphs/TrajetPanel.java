@@ -30,9 +30,9 @@ import javax.swing.SwingWorker;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxEvent;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.stip.StipController;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.stip.StipController;
 
 /**
  * Panneau de résultat représentant les trajets correspondants à la recherche

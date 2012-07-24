@@ -32,11 +32,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.stpv.StpvController;
 import fr.crnan.videso3d.ihm.components.DataView;
-import fr.crnan.videso3d.stpv.StpvController;
 /**
  * Sélecteur de données STPV
  * @author Bruno Spyckerelle

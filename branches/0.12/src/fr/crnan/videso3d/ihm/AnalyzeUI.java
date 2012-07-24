@@ -65,15 +65,15 @@ import bibliothek.gui.dock.common.theme.ThemeMap;
 import bibliothek.gui.dock.util.Priority;
 import bibliothek.util.xml.XElement;
 
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Videso3D;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.graphs.ConnexPanel;
 import fr.crnan.videso3d.graphs.ItiPanel;
 import fr.crnan.videso3d.graphs.ResultGraphPanel;
 import fr.crnan.videso3d.graphs.RoutePanel;
 import fr.crnan.videso3d.graphs.StarPanel;
 import fr.crnan.videso3d.graphs.TrajetPanel;
-import fr.crnan.videso3d.stip.StipController;
 import glass.eclipse.theme.CGlassEclipseTabPainter;
 import glass.eclipse.theme.CGlassStationPaint;
 import glass.eclipse.theme.CMiniPreviewMovingImageFactory;

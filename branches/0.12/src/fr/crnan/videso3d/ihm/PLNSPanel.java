@@ -41,7 +41,7 @@ import org.jfree.data.jdbc.JDBCPieDataset;
 import org.jfree.data.jdbc.JDBCXYDataset;
 
 import fr.crnan.videso3d.ProgressSupport;
-import fr.crnan.videso3d.DatabaseNotFoundException;
+import fr.crnan.videso3d.databases.DatabaseNotFoundException;
 import fr.crnan.videso3d.formats.plns.PLNSAnalyzer;
 import fr.crnan.videso3d.formats.plns.PLNSChartMouseListener;
 import fr.crnan.videso3d.ihm.components.TilingDesktopPane;

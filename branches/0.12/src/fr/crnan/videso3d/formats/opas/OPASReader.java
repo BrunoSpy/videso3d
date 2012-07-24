@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Vector;
 
+import fr.crnan.videso3d.databases.stip.PointNotFoundException;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
-import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
 

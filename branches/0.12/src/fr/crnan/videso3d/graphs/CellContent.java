@@ -16,9 +16,9 @@
 
 package fr.crnan.videso3d.graphs;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.stip.Stip;
-import fr.crnan.videso3d.stpv.Stpv;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.stip.Stip;
+import fr.crnan.videso3d.databases.stpv.Stpv;
 
 /**
  * Contenu d'une cellule

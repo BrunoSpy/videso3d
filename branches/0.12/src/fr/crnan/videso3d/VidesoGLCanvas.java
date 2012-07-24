@@ -36,7 +36,9 @@ import javax.xml.xpath.XPath;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.stip.Stip;
+import fr.crnan.videso3d.databases.stpv.Stpv;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.images.ImagesController;
 import fr.crnan.videso3d.geom.LatLonUtils;
@@ -62,8 +64,6 @@ import fr.crnan.videso3d.layers.LayerManagerLayer;
 import fr.crnan.videso3d.layers.LayerSet;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.layers.VerticalScaleBar;
-import fr.crnan.videso3d.stip.Stip;
-import fr.crnan.videso3d.stpv.Stpv;
 import fr.crnan.videso3d.util.VMeasureTool;
 
 import gov.nasa.worldwind.Factory;

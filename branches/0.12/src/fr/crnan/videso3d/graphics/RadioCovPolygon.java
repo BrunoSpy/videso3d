@@ -23,7 +23,7 @@ package fr.crnan.videso3d.graphics;
  *
  */
 
-import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager;
 import gov.nasa.worldwind.geom.*;
 import gov.nasa.worldwind.globes.Globe;
 //import gov.nasa.worldwind.globes.Globe;

@@ -32,11 +32,11 @@ import javax.swing.JOptionPane;
 
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseNotFoundException;
 import fr.crnan.videso3d.ProgressSupport;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseNotFoundException;
+import fr.crnan.videso3d.databases.stip.PointNotFoundException;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
-import fr.crnan.videso3d.stip.PointNotFoundException;
 import gov.nasa.worldwind.util.Logging;
 
 /**

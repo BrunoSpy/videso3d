@@ -27,13 +27,13 @@ import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.Couple;
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
 import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
-import fr.crnan.videso3d.stip.StipController;
 /**
  * Sélecteur d'objets Stip
  * @author Bruno Spyckerelle

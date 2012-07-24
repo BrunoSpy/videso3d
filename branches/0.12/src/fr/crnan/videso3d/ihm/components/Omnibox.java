@@ -39,10 +39,10 @@ import javax.swing.JToolBar;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import fr.crnan.videso3d.Couple;
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.ihm.ContextPanel;

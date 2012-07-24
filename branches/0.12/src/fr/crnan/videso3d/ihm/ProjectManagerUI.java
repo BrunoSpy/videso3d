@@ -44,10 +44,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.ProjectManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.ihm.components.VFileChooser;

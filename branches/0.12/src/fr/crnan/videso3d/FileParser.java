@@ -23,7 +23,7 @@ import java.text.ParseException;
 import javax.swing.SwingWorker;
 import javax.swing.event.EventListenerList;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
 
 
 /**

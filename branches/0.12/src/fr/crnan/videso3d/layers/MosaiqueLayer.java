@@ -21,8 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.crnan.videso3d.Couple;
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Pallet;
+import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.DatabasePolygonAnnotation;
 import fr.crnan.videso3d.graphics.DatabaseSurfacePolygonAnnotation;

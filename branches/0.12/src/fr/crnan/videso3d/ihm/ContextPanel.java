@@ -33,12 +33,12 @@ import bibliothek.gui.dock.common.DefaultSingleCDockable;
 import bibliothek.gui.dock.common.mode.ExtendedMode;
 
 import fr.crnan.videso3d.Context;
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.aip.AIP;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.aip.AIP;
+import fr.crnan.videso3d.databases.stip.StipController;
+import fr.crnan.videso3d.databases.stpv.StpvController;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
-import fr.crnan.videso3d.stip.StipController;
-import fr.crnan.videso3d.stpv.StpvController;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
