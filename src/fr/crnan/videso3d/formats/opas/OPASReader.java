@@ -36,6 +36,7 @@ import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
 
 /**
  * Lecteur de fichier OPAS
+ * TODO Ajouter les filtres 
  * @author Bruno Spyckerelle
  * @version 0.3.2
  */
@@ -75,8 +76,9 @@ public class OPASReader extends TrackFilesReader{
 	 */
 	public static Boolean isOpasFile(File file){
 		Boolean opas = false;
+		BufferedReader in = null;
 		try {
-			BufferedReader in = new BufferedReader(
+			in = new BufferedReader(
 					new InputStreamReader(
 					new FileInputStream(file)));
 			int count = 0; //nombre de lignes lues
@@ -90,6 +92,13 @@ public class OPASReader extends TrackFilesReader{
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if(in != null)
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 		return opas;
 	}
@@ -110,7 +119,7 @@ public class OPASReader extends TrackFilesReader{
         		if (sentence != null)
         		{
         			if(sentence.startsWith("Simulation de")){ //nouveau track
-        				if(track != null) {//on enregistre le précédent
+        				if(track != null && track.getNumPoints()>1) {//on enregistre le précédent
         					this.getModel().addTrack(track);
         				}
         				String[] words = sentence.split("\\s+");
@@ -121,7 +130,7 @@ public class OPASReader extends TrackFilesReader{
         		} 
         	}
         	//last Track
-        	if(track != null) {
+        	if(track != null && track.getNumPoints()>1) {
         		this.getModel().addTrack(track);
         	}
         }
