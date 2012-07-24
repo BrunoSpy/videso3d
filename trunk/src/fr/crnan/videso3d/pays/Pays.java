@@ -37,11 +37,11 @@ import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.DatabaseManager.Type;
 import gov.nasa.worldwind.geom.LatLon;
 /**
- * Lecteur des fichiers STIP relatifs aux contours des pays.
- * Ces fichiers nécessitent un traitement spécial car ils ne sont pas distribués avec les autres fichiers CA lors d'une livraison par le CESNAC.
+ * Lecteur des fichiers STIP relatifs aux contours des pays.<br />
+ * Ces fichiers nécessitent un traitement spécial car ils peuvent ne pas être distribués avec les autres fichiers CA lors d'une livraison par le CESNAC.<br />
  * Il s'agit des fichiers PAYS, CONTPAYS, et POINPAYS
  * @author Bruno Spyckerelle
- * @version 0.2.4
+ * @version 0.2.5
  */
 public class Pays extends FileParser {
 
@@ -102,13 +102,26 @@ public class Pays extends FileParser {
 	private void setPoinPays(String path) throws SQLException, IOException {
 		PreparedStatement insert = this.conn.prepareStatement("insert into poinpays (ref, latitude, longitude) " +
 		"values (?, ?, ?)");
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		while (in.ready()){
-			String line = in.readLine();
-			if(line.startsWith("PTP")){
-				PoinPays point = new PoinPays(line); 
-				this.insertPoinPays(point, insert);
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			while (in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("PTP")){
+					PoinPays point = new PoinPays(line); 
+					this.insertPoinPays(point, insert);
+				}
 			}
+		} catch (IOException e){
+			//handle the exception at a higher level
+			throw e;
+		} finally {
+			if(in != null)
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 		insert.executeBatch();
 		insert.close();
@@ -134,15 +147,28 @@ public class Pays extends FileParser {
 	private void setContPays(String path) throws SQLException, IOException {
 		PreparedStatement insert = this.conn.prepareStatement("insert into contpays (refcontour, refpoint) " +
 		"values (?, ?)");
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		String contName = new String();
-		while (in.ready()){
-			String line = in.readLine();
-			if(line.startsWith("CTR")){
-				contName = line.substring(4,9).trim();
-			} else if(line.startsWith("PTC")){
-				this.insertContPays(contName, line.substring(4, 10).trim(), insert);
+		BufferedReader in = null;
+		try{
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			String contName = new String();
+			while (in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("CTR")){
+					contName = line.substring(4,9).trim();
+				} else if(line.startsWith("PTC")){
+					this.insertContPays(contName, line.substring(4, 10).trim(), insert);
+				}
 			}
+		}  catch (IOException e){
+			//handle the exception at a higher level
+			throw e;
+		} finally {
+			if(in != null)
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 		insert.executeBatch();
 		insert.close();
@@ -166,18 +192,32 @@ public class Pays extends FileParser {
 	 */
 	private void setPays(String path) throws SQLException, IOException {
 		PreparedStatement insert = this.conn.prepareStatement("insert into pays (pays, contour, refcontour) " +
-		"values (?, ?, ?)");
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		String pays = new String();
-		String contName = new String();
-		while (in.ready()){
-			String line = in.readLine();
-			if(line.startsWith("PAY")){
-				pays = line.substring(4, 34).trim();
-				contName = line.substring(35, 65).trim();
-			} else if(line.startsWith("CTR")){
-				this.insertPays(pays, contName, line.substring(4, 9).trim(), insert);
+				"values (?, ?, ?)");
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+
+			String pays = new String();
+			String contName = new String();
+			while (in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("PAY")){
+					pays = line.substring(4, 34).trim();
+					contName = line.substring(35, 65).trim();
+				} else if(line.startsWith("CTR")){
+					this.insertPays(pays, contName, line.substring(4, 9).trim(), insert);
+				}
 			}
+		} catch (IOException e){
+			//handle the exception at a higher level
+			throw e;
+		} finally {
+			if(in != null)
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 		insert.executeBatch();
 		insert.close();
@@ -253,10 +293,22 @@ public class Pays extends FileParser {
 	 * = PAYS.date_CA
 	 * @throws IOException 
 	 */
-	private void createName() throws IOException {
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path + "/PAYS")));
-		String line = in.readLine();
-		this.name = "PAYS." + line.substring(33,41);
+	private void createName() {
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path + "/PAYS")));
+			String line = in.readLine();
+			this.name = "PAYS." + line.substring(33,41);
+		}  catch (IOException e){
+			e.printStackTrace();
+		} finally {
+			if(in != null)
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
 	}
 
 	/**
