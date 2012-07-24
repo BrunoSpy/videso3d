@@ -160,7 +160,7 @@ public class AirspaceMenu extends JPopupMenu {
 							VPolygon polygon = new VPolygon(((Polygon)airspace).getLocations());
 							polygon.setAltitudes(((Polygon)airspace).getAltitudes()[0],((Polygon)airspace).getAltitudes()[1] );
 							polygon.setAttributes(airspace.getAttributes());
-							wwd.deleteAirspace(airspace);
+							wwd.delete(airspace);
 							PolygonEditorsManager.editAirspace(polygon, true);
 						} else {
 							PolygonEditorsManager.editAirspace((Polygon) airspace, true);
@@ -269,7 +269,7 @@ public class AirspaceMenu extends JPopupMenu {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				wwd.deleteAirspace(airspace);
+				wwd.delete(airspace);
 			}
 		});
 		this.add(delete);

@@ -26,6 +26,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
 
@@ -33,7 +34,9 @@ import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.graphics.MovableBalise3D;
 import fr.crnan.videso3d.graphics.VPolygon;
+import fr.crnan.videso3d.graphics.editor.EllipsoidFactory;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
+import fr.crnan.videso3d.graphics.editor.ShapeEditorsManager;
 import fr.crnan.videso3d.ihm.components.DropDownButton;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
 import gov.nasa.worldwind.geom.Angle;
@@ -42,6 +45,7 @@ import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Globe;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
+import gov.nasa.worldwindx.examples.shapebuilder.RigidShapeEditor;
 import gov.nasa.worldwindx.examples.util.ShapeUtils;
 /**
  * Toolbar de dessin
@@ -200,6 +204,16 @@ public class DrawToolbar extends JToolBar {
 		points.addToToolBar(this);
 
 
+		//Ajout d'une ellipse
+		final JButton ellipse = new JButton(new ImageIcon(getClass().getResource("/resources/add_ellipse_22.png")));
+		ellipse.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ShapeEditorsManager.editShape(new EllipsoidFactory().createShape(wwd, true), RigidShapeEditor.TRANSLATION_MODE);
+			}
+		});
+		this.add(ellipse);
 	}
 	
 }

@@ -51,6 +51,7 @@ import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
+import fr.crnan.videso3d.graphics.editor.ShapeEditorsManager;
 import fr.crnan.videso3d.ihm.components.VidesoGLCanvasKeyListener;
 import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
 import fr.crnan.videso3d.layers.Balise2DLayer;
@@ -92,6 +93,7 @@ import gov.nasa.worldwind.layers.ScalebarLayer;
 import gov.nasa.worldwind.layers.SkyColorLayer;
 import gov.nasa.worldwind.layers.SkyGradientLayer;
 import gov.nasa.worldwind.layers.placename.PlaceNameLayer;
+import gov.nasa.worldwind.render.AbstractShape;
 import gov.nasa.worldwind.render.Path;
 import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.render.airspaces.Airspace;
@@ -211,6 +213,7 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 		//this.getSceneController().getGLRuntimeCapabilities().setVertexBufferObjectEnabled(true);
 		
 		PolygonEditorsManager.setWWD(this);
+		ShapeEditorsManager.setWWD(this);
 		
 		//position de départ centrée sur la France
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));		
@@ -805,6 +808,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 		}
 	}
 	
+	/*--------------------------------------------------------------*/
+	/*------------------  Suppression d'objets ---------------------*/
+	/*--------------------------------------------------------------*/
+	
 	public void delete(Object o){
 		if(o instanceof DatabaseVidesoObject){
 			DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType()).hideObject(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
@@ -815,40 +822,47 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 			this.deleteBalise((Balise) o);
 		} else if(o instanceof Path){
 			this.deletePath((Path)o);
+		} else if(o instanceof Renderable){
+			this.deleteRenderable((Renderable) o);
 		}
 	}
 	
-	public void deleteBalise(Balise balise){
-		if(balise instanceof DatabaseVidesoObject){
-			DatasManager.getController(((DatabaseVidesoObject) balise).getDatabaseType()).hideObject(((DatabaseVidesoObject) balise).getType(), ((DatabaseVidesoObject) balise).getName());
-		} else {
-			for(Layer l : this.getModel().getLayers()){
-				if(l instanceof BaliseLayer){
-					((BaliseLayer) l).removeBalise(balise);
-				}
+	private void deleteRenderable(Renderable renderable){
+		for(Layer l : this.getModel().getLayers()){
+			if(l instanceof RenderableLayer)
+				((RenderableLayer) l).removeRenderable(renderable);
+		}
+		//renderable in edition ?
+		if(renderable instanceof AbstractShape && ShapeEditorsManager.isEditing((AbstractShape) renderable)){
+			ShapeEditorsManager.stopEditShape((AbstractShape) renderable);
+		}
+	}
+	
+	private void deleteBalise(Balise balise){
+		for(Layer l : this.getModel().getLayers()){
+			if(l instanceof BaliseLayer){
+				((BaliseLayer) l).removeBalise(balise);
 			}
 		}
 		this.getSelectedObjects().remove(balise);
 	}
-	
-	public void deleteAirspace(Airspace airspace){
-		if(airspace instanceof DatabaseVidesoObject){
-			DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType()).hideObject(((DatabaseVidesoObject) airspace).getType(), ((DatabaseVidesoObject) airspace).getName());
-		} else {
-			for(Layer l : this.getModel().getLayers()){
-				if(l instanceof AirspaceLayer){
-					((AirspaceLayer) l).removeAirspace(airspace);
-				}
-			}
-			//si l'objet est en édition, supprimer l'éditeur
-			if(airspace instanceof Polygon){
-				PolygonEditorsManager.stopEditAirspace((Polygon) airspace);
+
+	private void deleteAirspace(Airspace airspace){
+		
+		for(Layer l : this.getModel().getLayers()){
+			if(l instanceof AirspaceLayer){
+				((AirspaceLayer) l).removeAirspace(airspace);
 			}
 		}
+		//si l'objet est en édition, supprimer l'éditeur
+		if(airspace instanceof Polygon){
+			PolygonEditorsManager.stopEditAirspace((Polygon) airspace);
+		}
+
 		this.getSelectedObjects().remove(airspace);
 	}
 
-	public void deletePath(Path p){
+	private void deletePath(Path p){
 		p.setVisible(false);
 		this.getSelectedObjects().remove(p);
 	}
