@@ -194,12 +194,22 @@ public class Stip extends FileParser{
 	 * @throws IOException 
 	 */
 	private void setConnexion(String path) throws IOException, SQLException {
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		in.readLine(); //suppression de la première ligne FORMAT
-		while(in.ready()){
-			String line = in.readLine();
-			if(line.length() >= 30)  
-				this.insertConnexion(new Connexion(line));
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+
+			in.readLine(); //suppression de la première ligne FORMAT
+			while(in.ready()){
+				String line = in.readLine();
+				if(line.length() >= 30)  
+					this.insertConnexion(new Connexion(line));
+			}
+		} catch (IOException e){
+			throw e;
+		} finally {
+			if (in != null){
+				in.close();
+			}
 		}
 	}
 
@@ -258,12 +268,21 @@ public class Stip extends FileParser{
 	 * @throws IOException 
 	 */
 	private void setBalInt(String path) throws IOException, SQLException{
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		in.readLine(); //suppression de la première ligne FORMAT
-		while(in.ready()){
-			String line = in.readLine();
-			if(line.length() >= 30)  
-				this.insertBalInt(new BalInt(line));
+		BufferedReader in = null;
+		try { 
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			in.readLine(); //suppression de la première ligne FORMAT
+			while(in.ready()){
+				String line = in.readLine();
+				if(line.length() >= 30)  
+					this.insertBalInt(new BalInt(line));
+			}
+		} catch (IOException e){
+			throw e;
+		} finally {
+			if (in != null){
+				in.close();
+			}
 		}
 	}
 
@@ -287,15 +306,25 @@ public class Stip extends FileParser{
 	 */
 	private void setTrajets(String path) throws IOException, SQLException {
 		Trajet trajet = null;
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		in.readLine(); //suppression de la première ligne FORMAT
-		while(in.ready()){
-			String line = in.readLine();
-			if(line.length() > 12 && !line.substring(7, 12).trim().isEmpty()) { //carte 1
-				if(trajet != null) this.insertTrajet(trajet); //insertion du trajet en base de données
-				trajet = new Trajet(line);
-			} else if(line.length()>30) { //cartes 2
-				trajet.addBalises(line);
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+
+			in.readLine(); //suppression de la première ligne FORMAT
+			while(in.ready()){
+				String line = in.readLine();
+				if(line.length() > 12 && !line.substring(7, 12).trim().isEmpty()) { //carte 1
+					if(trajet != null) this.insertTrajet(trajet); //insertion du trajet en base de données
+					trajet = new Trajet(line);
+				} else if(line.length()>30) { //cartes 2
+					trajet.addBalises(line);
+				}
+			}
+		} catch (IOException e){
+			throw e;
+		} finally {
+			if (in != null){
+				in.close();
 			}
 		}
 		if(trajet != null) this.insertTrajet(trajet);
@@ -339,14 +368,23 @@ public class Stip extends FileParser{
 	 */
 	private void setLieux(String path) throws IOException, SQLException {
 		Lieux lieux = null;
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		while(in.ready()){
-			String line = in.readLine();
-			if(line.startsWith("1")){
-				if(lieux != null) this.insertLieux(lieux);
-				lieux = new Lieux(line);
-			} else if (line.startsWith("M") || line.startsWith("D") || line.startsWith("R")){
-				lieux.addCarte(line);
+		BufferedReader in = null;
+		try { 
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			while(in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("1")){
+					if(lieux != null) this.insertLieux(lieux);
+					lieux = new Lieux(line);
+				} else if (line.startsWith("M") || line.startsWith("D") || line.startsWith("R")){
+					lieux.addCarte(line);
+				}
+			}
+		} catch (IOException e){
+			throw e;
+		} finally {
+			if (in != null){
+				in.close();
 			}
 		}
 		if(lieux != null) this.insertLieux(lieux);
@@ -394,18 +432,27 @@ public class Stip extends FileParser{
 	private void setItis(String path) throws IOException, SQLException{
 		Iti iti = null;
 		String line = "";
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		in.readLine(); //suppression de la première ligne
-		while (in.ready()){
-			line = in.readLine();
-			//reconnaissance d'une carte 2
-			if(line.length()> 27 && line.startsWith("                       ")){
-				//enregistrement de l'iti précédent
-				iti.addBalises(line);
-			} else if (line.length() >= 35 ){
-				if(iti != null)
-					this.insertIti(iti);
-				iti = new Iti(line);
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			in.readLine(); //suppression de la première ligne
+			while (in.ready()){
+				line = in.readLine();
+				//reconnaissance d'une carte 2
+				if(line.length()> 27 && line.startsWith("                       ")){
+					//enregistrement de l'iti précédent
+					iti.addBalises(line);
+				} else if (line.length() >= 35 ){
+					if(iti != null)
+						this.insertIti(iti);
+					iti = new Iti(line);
+				}
+			}
+		} catch (IOException e){
+			throw e;
+		} finally {
+			if (in != null){
+				in.close();
 			}
 		}
 		//insertion du dernier iti créé
@@ -450,31 +497,40 @@ public class Stip extends FileParser{
 	private void setRoute(String path) throws SQLException, IOException {
 		String name = "";
 		Route route = null;
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		while (in.ready()){
-			String line = in.readLine();
-			if(!line.startsWith("FORMAT") && line.length()>9){
-				if(line.substring(0, 7).trim().compareTo(name) != 0){
-					if(route != null){//nouvelle route on insère la route précédente avant d'en créer une nouvelle
-						try {
-							this.insertRoute(route);
-						} catch (SQLException e) {
-							e.printStackTrace();
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			while (in.ready()){
+				String line = in.readLine();
+				if(!line.startsWith("FORMAT") && line.length()>9){
+					if(line.substring(0, 7).trim().compareTo(name) != 0){
+						if(route != null){//nouvelle route on insère la route précédente avant d'en créer une nouvelle
+							try {
+								this.insertRoute(route);
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
 						}
+						name = line.substring(0, 7).trim();
+						route = new Route(name);
 					}
-					name = line.substring(0, 7).trim();
-					route = new Route(name);
-				}
 
-				String typeLigne  = line.substring(7, 9);
-				if(typeLigne.compareTo("RO") == 0){
-					route.setEspace(line.substring(11, 12));
-					route.addBalises(line.substring(15, 80));
-				} else if(typeLigne.compareTo("ES") == 0) {
-					route.addEntrees(line.substring(15, 80));
-				} else if(typeLigne.compareTo("SO") == 0) {
-					route.addSorties(line.substring(15, 80));
+					String typeLigne  = line.substring(7, 9);
+					if(typeLigne.compareTo("RO") == 0){
+						route.setEspace(line.substring(11, 12));
+						route.addBalises(line.substring(15, 80));
+					} else if(typeLigne.compareTo("ES") == 0) {
+						route.addEntrees(line.substring(15, 80));
+					} else if(typeLigne.compareTo("SO") == 0) {
+						route.addSorties(line.substring(15, 80));
+					}
 				}
+			}
+		} catch (IOException e){
+			throw e;
+		} finally {
+			if (in != null){
+				in.close();
 			}
 		}
 		//insertion de la dernière route
@@ -558,26 +614,36 @@ public class Stip extends FileParser{
 	private void setRoutSect(String path) throws SQLException, IOException {
 		Integer sectNum = -1;
 		CarteSecteur carteSect = null;
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		while (in.ready()){
-			String line = in.readLine();
-			if(line.startsWith("SRT")){
-				sectNum = new Integer(line.substring(17, 21));
-			} else if(line.startsWith("NIV")) {
-				carteSect = new CarteSecteur(sectNum, line);
-			} else if(line.startsWith("ETI")){
-				carteSect.addEtiquette(line);
-				try {
-					this.insertCarteSect(carteSect);
-				} catch (SQLException e) {
-					e.printStackTrace();
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+
+			while (in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("SRT")){
+					sectNum = new Integer(line.substring(17, 21));
+				} else if(line.startsWith("NIV")) {
+					carteSect = new CarteSecteur(sectNum, line);
+				} else if(line.startsWith("ETI")){
+					carteSect.addEtiquette(line);
+					try {
+						this.insertCarteSect(carteSect);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				} else if(line.startsWith("PT")){
+					if(line.startsWith("PTF")){
+						this.insertCartePoint(new CartePoint(sectNum, carteSect.getFlsup(), line), line.substring(11, 16).trim());
+					} else {
+						this.insertCartePoint(new CartePoint(sectNum, carteSect.getFlsup(), line), "");
+					}
 				}
-			} else if(line.startsWith("PT")){
-				if(line.startsWith("PTF")){
-					this.insertCartePoint(new CartePoint(sectNum, carteSect.getFlsup(), line), line.substring(11, 16).trim());
-				} else {
-					this.insertCartePoint(new CartePoint(sectNum, carteSect.getFlsup(), line), "");
-				}
+			}
+		} catch (IOException e){
+			throw e;
+		} finally {
+			if (in != null){
+				in.close();
 			}
 		}
 	}
@@ -613,20 +679,30 @@ public class Stip extends FileParser{
 	 */
 	private void setPoinSect(String path) throws IOException, SQLException {
 		PreparedStatement insert = this.conn.prepareStatement("insert into poinsect (ref, latitude, longitude) " +
-		"values (?, ?, ?)");
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		while (in.ready()){
-			String line = in.readLine();
-			if(line.startsWith("PTS")){
-				PoinSect point = new PoinSect(line); 
-				try {
-					this.insertPoinSect(point, insert);
-				} catch (SQLException e) {
-					e.printStackTrace();
+				"values (?, ?, ?)");
+		BufferedReader in = null;
+		try { 
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+
+			while (in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("PTS")){
+					PoinSect point = new PoinSect(line); 
+					try {
+						this.insertPoinSect(point, insert);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
 				}
 			}
+			insert.executeBatch();
+		} catch (IOException e){
+			throw e;
+		} finally {
+			if (in != null){
+				in.close();
+			}
 		}
-		insert.executeBatch();
 		insert.close();
 	}
 
@@ -651,15 +727,25 @@ public class Stip extends FileParser{
 	 */
 	private void setSecteur(String path) throws SQLException, IOException {
 		PreparedStatement insert = this.conn.prepareStatement("insert into secteurs (nom, centre, espace, numero, flinf, flsup, modes) " +
-		"values (?, ?, ?, ?, ?, ?, ?)");
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		while (in.ready()){
-			String line = in.readLine();
-			if(!line.startsWith("FORMAT") && (line.length()>20)){
-				if(!line.substring(4, 8).equalsIgnoreCase("SCAG") && !line.substring(20, 43).equalsIgnoreCase("* SECTEUR NON UTILISE *")){
-					SecteurLigne secteur = new SecteurLigne(line);
-					this.insertSecteur(secteur, insert);
+				"values (?, ?, ?, ?, ?, ?, ?)");
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+
+			while (in.ready()){
+				String line = in.readLine();
+				if(!line.startsWith("FORMAT") && (line.length()>20)){
+					if(!line.substring(4, 8).equalsIgnoreCase("SCAG") && !line.substring(20, 43).equalsIgnoreCase("* SECTEUR NON UTILISE *")){
+						SecteurLigne secteur = new SecteurLigne(line);
+						this.insertSecteur(secteur, insert);
+					}
 				}
+			}
+		} catch (IOException e){
+			throw e;
+		} finally {
+			if (in != null){
+				in.close();
 			}
 		}
 		insert.executeBatch();
@@ -691,13 +777,23 @@ public class Stip extends FileParser{
 	private void setCentre(String path) throws SQLException, IOException {
 		PreparedStatement insert = this.conn.prepareStatement("insert into centres (name, identite, numero, type) " +
 		"values (?, ?, ?, ?)");
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		while (in.ready()){
-			String line = in.readLine();
-			//TODO gérer un peu mieux la dernière ligne
-			if(!line.startsWith("FORMAT") && (line.length()>20)){ //on gère la première et la dernière ligne
-				Centre centre = new Centre(line);
-				this.insertCentre(centre, insert);
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+
+			while (in.ready()){
+				String line = in.readLine();
+				//TODO gérer un peu mieux la dernière ligne
+				if(!line.startsWith("FORMAT") && (line.length()>20)){ //on gère la première et la dernière ligne
+					Centre centre = new Centre(line);
+					this.insertCentre(centre, insert);
+				}
+			}
+		} catch (IOException e){
+			throw e;
+		} finally {
+			if (in != null){
+				in.close();
 			}
 		}
 		insert.executeBatch();
@@ -740,30 +836,41 @@ public class Stip extends FileParser{
 
 		PreparedStatement insert = this.conn.prepareStatement("insert into balises (name, publicated, latitude, longitude, centre, definition, sccag, sect1, limit1, sect2, limit2, sect3, limit3, sect4, limit4, sect5, limit5, sect6, limit6, sect7, limit7, sect8, limit8, sect9, limit9) " +
 		"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(balisePath)));
-		Balise balise = new Balise(precision);
-		while (in.ready()){
-			String line = in.readLine();
-			if (line.startsWith("1")) {
-				//la balise est vide lors du premier passage
-				if(balise.getIndicatif() != null) {//alors on stocke la balise précédente
-					this.insertBalise(balise, insert);
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(balisePath)));
+
+			Balise balise = new Balise(precision);
+			while (in.ready()){
+				String line = in.readLine();
+				if (line.startsWith("1")) {
+					//la balise est vide lors du premier passage
+					if(balise.getIndicatif() != null) {//alors on stocke la balise précédente
+						this.insertBalise(balise, insert);
+					}
+					balise = new Balise(line, precision);
+				} else if (line.startsWith("2")) {
+					balise.setLigne2(line);
+				} else if (line.startsWith("3") && !line.startsWith("31") && !line.startsWith("32") ) {
+					balise.setLigne3(line);
+				} else if (line.startsWith("31") && !line.startsWith("32")) {
+					balise.addLigne3(line);
+				} else if (line.startsWith("32")) {
+					balise.addLigne3(line);
 				}
-				balise = new Balise(line, precision);
-			} else if (line.startsWith("2")) {
-				balise.setLigne2(line);
-			} else if (line.startsWith("3") && !line.startsWith("31") && !line.startsWith("32") ) {
-				balise.setLigne3(line);
-			} else if (line.startsWith("31") && !line.startsWith("32")) {
-				balise.addLigne3(line);
-			} else if (line.startsWith("32")) {
-				balise.addLigne3(line);
+			}
+			//on n'oublie pas de stocker la dernière balise lue
+			if(balise != null) {
+				this.insertBalise(balise, insert);
+			}
+		} catch (IOException e){
+			throw e;
+		} finally {
+			if (in != null){
+				in.close();
 			}
 		}
-		//on n'oublie pas de stocker la dernière balise lue
-		if(balise != null) {
-			this.insertBalise(balise, insert);
-		}
+		
 		insert.close();
 	}
 

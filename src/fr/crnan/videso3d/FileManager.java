@@ -77,6 +77,7 @@ public class FileManager {
 		}
 		String[] a = new String[s.size()];
 		s.copyInto(a);
+		rdr.close();
 		return a;
 	}
 	
@@ -93,6 +94,7 @@ public class FileManager {
 		}
 		String[] a = new String[s.size()];
 		s.copyInto(a);
+		rdr.close();
 		return a;
 	}
 	
@@ -142,13 +144,15 @@ public class FileManager {
 
 		File src = file;
 		File dest = new File(dirName,src.getName());
+		FileChannel source = null;
+		FileChannel destination = null;
 		try {
 			if(!dest.exists()){
 				dest.createNewFile();
 			}
 
-			FileChannel source = new FileInputStream(src).getChannel();
-			FileChannel destination = new FileOutputStream(dest).getChannel();
+			source = new FileInputStream(src).getChannel();
+			destination = new FileOutputStream(dest).getChannel();
 
 			destination.transferFrom(source, 0, source.size());
 			
@@ -159,8 +163,17 @@ public class FileManager {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if(source !=null)
+					source.close();
+				if(destination != null)
+					destination.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		
+
 		return dest;
 	}
 	
@@ -172,24 +185,33 @@ public class FileManager {
 	public static File copyFile(File file){
 		File src = file;
 		File dest = new File(src.getName());
+		
+		FileChannel source = null;
+		FileChannel destination = null;
 		try {
 			
 			if(!dest.exists()){
 				dest.createNewFile();
 			}
 
-			FileChannel source = new FileInputStream(src).getChannel();
-			FileChannel destination = new FileOutputStream(dest).getChannel();
+			source = new FileInputStream(src).getChannel();
+			destination = new FileOutputStream(dest).getChannel();
 
 			destination.transferFrom(source, 0, source.size());
 			
-			source.close();
-			destination.close();
-
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if(source !=null)
+					source.close();
+				if(destination != null)
+					destination.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return dest;
@@ -203,24 +225,33 @@ public class FileManager {
 	public static File copyFile(String path){
 		File src = new File(path);
 		File dest = new File(src.getName());
+		
+		FileChannel source = null;
+		FileChannel destination = null;
 		try {
 			
 			if(!dest.exists()){
 				dest.createNewFile();
 			}
 
-			FileChannel source = new FileInputStream(src).getChannel();
-			FileChannel destination = new FileOutputStream(dest).getChannel();
+			source = new FileInputStream(src).getChannel();
+			destination = new FileOutputStream(dest).getChannel();
 
 			destination.transferFrom(source, 0, source.size());
-			
-			source.close();
-			destination.close();
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if(source !=null)
+					source.close();
+				if(destination != null)
+					destination.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return dest;
@@ -236,24 +267,32 @@ public class FileManager {
 	public static File copyFileAs(String path, String newName){
 		File src = new File(path);
 		File dest = new File(newName);
+		FileChannel source = null;
+		FileChannel destination = null;
 		try {
 			
 			if(!dest.exists()){
 				dest.createNewFile();
 			}
 
-			FileChannel source = new FileInputStream(src).getChannel();
-			FileChannel destination = new FileOutputStream(dest).getChannel();
+			source = new FileInputStream(src).getChannel();
+			destination = new FileOutputStream(dest).getChannel();
 
 			destination.transferFrom(source, 0, source.size());
 			
-			source.close();
-			destination.close();
-
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				if(source !=null)
+					source.close();
+				if(destination != null)
+					destination.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return dest;
