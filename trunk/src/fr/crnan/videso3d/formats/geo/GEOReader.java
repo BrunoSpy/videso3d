@@ -30,13 +30,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Vector;
 
 /**
  * Lecteur de fichiers Elvira GEO.<br />
  * @author Bruno Spyckerelle
- * @version 0.2.6
+ * @version 0.2.
  */
 public class GEOReader extends TrackFilesReader{
 		
@@ -69,9 +68,10 @@ public class GEOReader extends TrackFilesReader{
 	}
 
 	public static Boolean isGeoFile(File file){
+		BufferedReader in = null;
 		Boolean geo = false;
 		try {
-			BufferedReader in = new BufferedReader(
+			in = new BufferedReader(
 					new InputStreamReader(
 					new FileInputStream(file)));
 			int count = 0; //nombre de lignes lues
@@ -86,6 +86,13 @@ public class GEOReader extends TrackFilesReader{
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			if(in != null)
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 		return geo;
 	}
@@ -95,8 +102,7 @@ public class GEOReader extends TrackFilesReader{
     {
         String sentence;
 
-        BufferedReader in = new BufferedReader(
-        						new InputStreamReader(stream));
+        BufferedReader in = null;
         
         Double timeFileFilterBegin = null;
         Double timeFileFilterEnd = null;
@@ -115,6 +121,7 @@ public class GEOReader extends TrackFilesReader{
 
         try
         {
+        	in =  new BufferedReader(new InputStreamReader(stream));
         	GEOTrack track = null;
         	boolean trackValid = true;
         	while(in.ready()){
@@ -124,7 +131,7 @@ public class GEOReader extends TrackFilesReader{
         			if(!sentence.startsWith("!")  && !sentence.startsWith("Voie")){
         				if(track == null || track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0){
         					if(track != null) {
-        						if(trackValid) this.getModel().addTrack(track);
+        						if(trackValid && track.getNumPoints()>1) this.getModel().addTrack(track);
         					}
         					track = new GEOTrack(sentence);
         					trackValid = this.isTrackValid(track);
@@ -142,17 +149,19 @@ public class GEOReader extends TrackFilesReader{
         	//last Track
         	if(track != null){
         		//if layer is set, create immediately the track instead of memorizing it
-        		if(trackValid) this.getModel().addTrack(track);
+        		if(trackValid && track.getNumPoints()>1) this.getModel().addTrack(track);
         	}
-        }
-        catch (NoSuchElementException e)
-        {
-        	//noinspection UnnecessaryReturnStatement
-        	return;
         } catch (IOException e) {
         	e.printStackTrace();
 		} catch (Exception e){
 			e.printStackTrace();
+		} finally {
+			if(in != null)
+				try {
+					in.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
     }
 
