@@ -50,7 +50,7 @@ import gov.nasa.worldwindx.examples.util.ShapeUtils;
 /**
  * Toolbar de dessin
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class DrawToolbar extends JToolBar {
 
@@ -64,7 +64,7 @@ public class DrawToolbar extends JToolBar {
 	
 	public void createToolbar(){
 		final DropDownButton addAirspace = new DropDownButton(new ImageIcon(getClass().getResource("/resources/draw-polygon_22_1.png")));
-
+		addAirspace.setToolTipText("Créer un polygone 3D");
 
 		final JMenuItem addPolygon = new JMenuItem("Nouveau");
 		addPolygon.setToolTipText("Nouveau polygone");
@@ -128,14 +128,22 @@ public class DrawToolbar extends JToolBar {
 					attrs.setOutlineWidth(1.5);
 					VPolygon p = new VPolygon();
 					p.setAttributes(attrs);
+					BufferedReader input = null;
 					try {
-						BufferedReader input = new BufferedReader(new FileReader(file));
+						input = new BufferedReader(new FileReader(file));
 						String s = input.readLine();
 						p.restoreState(s);
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
 						e.printStackTrace();
+					} finally {
+						if(input != null)
+							try {
+								input.close();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 					}
 					PolygonEditorsManager.editAirspace(p, true);
 				}
@@ -167,9 +175,9 @@ public class DrawToolbar extends JToolBar {
 
 		//Ajouter points
 		final DropDownButton points = new DropDownButton(new ImageIcon(getClass().getResource("/resources/add_point_22.png")));
-
+		points.setToolTipText("Créer un point");
+		
 		final JMenuItem addPoint = new JMenuItem("Ajouter un point");
-		//			JButton addPoint = new JButton(new ImageIcon(getClass().getResource("/resources/add_point_22.png")));
 		addPoint.setToolTipText("Ajouter un point sur le globe");
 		addPoint.addActionListener(new ActionListener() {
 
@@ -206,6 +214,7 @@ public class DrawToolbar extends JToolBar {
 
 		//Ajout d'une ellipse
 		final JButton ellipse = new JButton(new ImageIcon(getClass().getResource("/resources/add_ellipse_22.png")));
+		ellipse.setToolTipText("Créer une ellipse 3D");
 		ellipse.addActionListener(new ActionListener() {
 			
 			@Override
