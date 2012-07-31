@@ -373,9 +373,9 @@ public class AIP extends FileParser{
 		String rwyName = rwy.getChildText("Rwy");
 		int orientation = getRunwayOrientation(rwyName);
 		String largeurString = rwy.getChildText("Largeur");
-		int largeur=-1;
+		double largeur=-1;
 		if(largeurString!=null)
-			largeur = Integer.parseInt(largeurString);
+			largeur = Double.parseDouble(largeurString);
 		String longueurString = rwy.getChildText("Longueur");
 		int longueur=-1;
 		if(longueurString!=null)
@@ -387,7 +387,7 @@ public class AIP extends FileParser{
 		ps.setString(3, rwyName);
 		ps.setInt(4, orientation);
 		ps.setInt(5, longueur);
-		ps.setInt(6, largeur);
+		ps.setDouble(6, largeur);
 		ps.executeUpdate();
 		
 		String latThr1 = rwy.getChildText("LatThr1");

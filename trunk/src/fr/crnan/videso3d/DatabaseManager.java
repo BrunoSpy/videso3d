@@ -989,7 +989,7 @@ public final class DatabaseManager {
 				"nom varchar(7),"+
 				"orientation integer,"+
 				"longueur integer,"+
-				"largeur integer,"+
+				"largeur double,"+
 				"lat1 double,"+
 				"lon1 double,"+
 				"lat2 double,"+
