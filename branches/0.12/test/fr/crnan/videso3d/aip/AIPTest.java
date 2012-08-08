@@ -16,8 +16,9 @@
 package fr.crnan.videso3d.aip;
 
 import static org.junit.Assert.assertEquals;
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.aip.AIP;
 import gov.nasa.worldwind.util.Logging;
 
 import java.beans.PropertyChangeEvent;

@@ -16,8 +16,9 @@
 package fr.crnan.videso3d.edimap;
 
 import static org.junit.Assert.*;
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.edimap.Cartes;
 import gov.nasa.worldwind.util.Logging;
 
 import java.beans.PropertyChangeEvent;

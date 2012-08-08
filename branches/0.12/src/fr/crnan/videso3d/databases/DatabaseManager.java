@@ -627,6 +627,34 @@ public final class DatabaseManager {
 				"debut_suppl int, " +
 				"fin_suppl int, " +
 				"code2 int)");
+		st.executeUpdate("create table double (id integer primary key autoincrement, " +
+				"entite varchar(2), " +
+				"destinataire varchar(2), " +
+				"identifiant varchar(2), " +
+				"strip varchar(3), " +
+				"bal1 varchar(5), " +
+				"bal2 varchar(5), " +
+				"flinf1 varchar(3), " +
+				"flsup1 varchar(3), " +
+				"flinf2 varchar(3), " +
+				"flsup2 varchar(3))");
+		st.executeUpdate("create table coor30 (id integer primary key autoincrement, " +
+				"donnant varchar(2), " +
+				"recevant varchar(2), " +
+				"val1 varchar(3), " +
+				"val2 varchar(3), " +
+				"val3 varchar(3), " +
+				"val4 varchar(3))");
+		st.executeUpdate("create table coor40 (id integer primary key autoincrement, " +
+				"donnant varchar(2), " +
+				"recevant varchar(2), " +
+				"bal1 varchar(5), " +
+				"bal2 varchar(5), " +
+				"balref varchar(5), " +
+				"val1 varchar(3), " +
+				"val2 varchar(3), " +
+				"val3 varchar(3), " +
+				"val4 varchar(3))");
 		st.close();
 		DatabaseManager.addDatabase(name, Type.STPV, new SimpleDateFormat().format(new Date()));
 	}

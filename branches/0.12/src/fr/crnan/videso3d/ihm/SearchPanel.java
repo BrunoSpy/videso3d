@@ -77,6 +77,10 @@ public class SearchPanel extends JPanel {
 	private JButton btnRechercher2;	
 	private JPanel plnsSearchPanel;
 	private TypeComboBox typeBoxPLNS;
+	private JPanel sectSearchPanel;
+	private TypeComboBox typeBoxSect;
+	private JUpperCaseComboBox searchFieldSect;
+	private JButton btnRechercher3;	
 	private JTextField choosePLNS;
 	private JButton analyserPLNS;
 	
@@ -95,7 +99,10 @@ public class SearchPanel extends JPanel {
 		//recherche dans une base PLNS
 		plnsSearchPanel = new JPanel();
 		add(plnsSearchPanel, "plns");
-		
+		//recherche d'un secteur
+		sectSearchPanel = new JPanel();
+		add(sectSearchPanel, "secteur");
+				
 		typeBox = new TypeComboBox();
 		typeBox.addActionListener(new ActionListener() {
 			
@@ -106,29 +113,15 @@ public class SearchPanel extends JPanel {
 					((CardLayout) getLayout()).show(SearchPanel.this, "liaison");
 				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("base PLNS...")) {
 					((CardLayout) getLayout()).show(SearchPanel.this, "plns");
+				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("secteur")) {
+					((CardLayout) getLayout()).show(SearchPanel.this, "secteur");
 				} else {
 					((CardLayout) getLayout()).show(SearchPanel.this, "default");
 				}
 				typeBoxLP.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 				typeBoxPLNS.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
-			}
-		});
-		
-		typeBoxPLNS = new TypeComboBox();
-		typeBoxPLNS.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
+				typeBoxSect.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 
-				if(((JComboBox)e.getSource()).getSelectedItem().equals("liaison privilégiée")){
-					((CardLayout) getLayout()).show(SearchPanel.this, "liaison");
-				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("base PLNS...")) {
-					((CardLayout) getLayout()).show(SearchPanel.this, "plns");
-				} else {
-					((CardLayout) getLayout()).show(SearchPanel.this, "default");
-				}
-				typeBoxLP.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
-				typeBox.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 			}
 		});
 		
@@ -145,11 +138,11 @@ public class SearchPanel extends JPanel {
 		searchField2 = new JUpperCaseComboBox(new DefaultComboBoxModel(results2));
 		searchField2.setEditable(true);
 		AutoCompleteDecorator.decorate(searchField2);
-		
 		btnRechercher = new JButton("Rechercher");
 		
-		typeBoxLP = new TypeComboBox();
-		typeBoxLP.addActionListener(new ActionListener() {
+		
+		typeBoxPLNS = new TypeComboBox();
+		typeBoxPLNS.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -158,17 +151,16 @@ public class SearchPanel extends JPanel {
 					((CardLayout) getLayout()).show(SearchPanel.this, "liaison");
 				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("base PLNS...")) {
 					((CardLayout) getLayout()).show(SearchPanel.this, "plns");
+				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("secteur")) {
+					((CardLayout) getLayout()).show(SearchPanel.this, "secteur");
 				} else {
 					((CardLayout) getLayout()).show(SearchPanel.this, "default");
 				}
-				typeBoxPLNS.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
+				typeBoxLP.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
+				typeBoxSect.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 				typeBox.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 			}
 		});
-
-		numLiaison = new JTextField();
-		numLiaison.setColumns(10);
-		btnRechercher2 = new JButton("Rechercher");
 		choosePLNS = new JTextField(20);
 		choosePLNS.addMouseListener(new MouseListener() {
 			
@@ -197,6 +189,81 @@ public class SearchPanel extends JPanel {
 			}
 		});
 		analyserPLNS = new JButton("Analyser");
+		
+		
+		typeBoxLP = new TypeComboBox();
+		typeBoxLP.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				if(((JComboBox)e.getSource()).getSelectedItem().equals("liaison privilégiée")){
+					((CardLayout) getLayout()).show(SearchPanel.this, "liaison");
+				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("base PLNS...")) {
+					((CardLayout) getLayout()).show(SearchPanel.this, "plns");
+				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("secteur")) {
+					((CardLayout) getLayout()).show(SearchPanel.this, "secteur");
+				} else {
+					((CardLayout) getLayout()).show(SearchPanel.this, "default");
+				}
+				typeBoxPLNS.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
+				typeBoxSect.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
+				typeBox.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
+			}
+		});
+
+		numLiaison = new JTextField();
+		numLiaison.setColumns(10);
+		numLiaison.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btnRechercher2.doClick();
+			}
+		});
+		btnRechercher2 = new JButton("Rechercher");
+		
+		
+		typeBoxSect = new TypeComboBox();
+		typeBoxSect.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				if(((JComboBox)e.getSource()).getSelectedItem().equals("liaison privilégiée")){
+					((CardLayout) getLayout()).show(SearchPanel.this, "liaison");
+				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("base PLNS...")) {
+					((CardLayout) getLayout()).show(SearchPanel.this, "plns");
+				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("secteur")) {
+					((CardLayout) getLayout()).show(SearchPanel.this, "secteur");
+				} else {
+					((CardLayout) getLayout()).show(SearchPanel.this, "default");
+				}
+				typeBoxPLNS.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
+				typeBoxLP.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
+				typeBox.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
+			}
+		});
+
+		//Liste des balises pour l'autocomplétion
+		Vector<String> resultsSect = getAllSecteurs();
+
+		searchFieldSect = new JUpperCaseComboBox(new DefaultComboBoxModel(resultsSect));
+		searchFieldSect.setEditable(true);
+		searchFieldSect.setToolTipText("<html>Nom du secteur.</html>");
+		AutoCompleteDecorator.decorate(searchFieldSect);
+		searchFieldSect.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if("comboBoxEdited".equals(e.getActionCommand())){
+					btnRechercher3.doClick();
+				}
+			}
+		});
+		btnRechercher3 = new JButton("Rechercher");
+		
+
+		
 		
 		this.applyLayout();
 		
@@ -244,32 +311,29 @@ public class SearchPanel extends JPanel {
 				}
 			}
 		});
-		numLiaison.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				btnRechercher2.doClick();
-			}
-		});
+		
+		
 		
 		//Action sur les boutons rechercher
 		ActionListener rechercheListener = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(!searchField1.getSelectedItem().toString().isEmpty() || !searchField2.getSelectedItem().toString().isEmpty() ||!numLiaison.getText().isEmpty()
-						||!choosePLNS.getText().isEmpty()){
+				if(!searchField1.getSelectedItem().toString().isEmpty() || !searchField2.getSelectedItem().toString().isEmpty() || !numLiaison.getText().isEmpty()
+						|| !choosePLNS.getText().isEmpty() || !searchFieldSect.getSelectedItem().toString().isEmpty()){
 					AnalyzeUI.showResults(false, typeBox.getSelectedItem().toString(),
 										  searchField1.getSelectedItem().toString(),
 										  searchField2.getSelectedItem().toString(),
 										  numLiaison.getText(), 
-										  choosePLNS.getText());
+										  choosePLNS.getText(),
+										  searchFieldSect.getSelectedItem().toString());
 				}
 			}
 		};
 		
 		btnRechercher.addActionListener(rechercheListener);
 		btnRechercher2.addActionListener(rechercheListener);
+		btnRechercher3.addActionListener(rechercheListener);
 		analyserPLNS.addActionListener(rechercheListener);
 		
 		
@@ -280,8 +344,10 @@ public class SearchPanel extends JPanel {
 		JLabel lblContenant = new JLabel("contenant");
 		JLabel lblEt = new JLabel("et");
 		JLabel lblNumro = new JLabel("numéro");
+		JLabel lblBigramme = new JLabel("bigramme");
 		JLabel lblObjetsRecherchs2 = new JLabel("Objets à analyser : ");
 		JLabel lblObjetsRecherchs3 = new JLabel("Objets à analyser : ");
+		JLabel lblObjetsRecherchs4 = new JLabel("Objets à analyser : ");
 		
 		GroupLayout gl_defaultSearchPanel = new GroupLayout(defaultSearchPanel);
 		gl_defaultSearchPanel.setHorizontalGroup(
@@ -358,8 +424,6 @@ public class SearchPanel extends JPanel {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(typeBoxPLNS, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-		//			.addComponent(lblNumro)
-		//			.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(choosePLNS, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(analyserPLNS, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)
@@ -372,12 +436,42 @@ public class SearchPanel extends JPanel {
 					.addGroup(gl_PLNSPanel.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lblObjetsRecherchs3)
 						.addComponent(typeBoxPLNS, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-		//				.addComponent(lblNumro)
 						.addComponent(choosePLNS, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(analyserPLNS))
 					.addContainerGap(25, Short.MAX_VALUE))
 		);
 		plnsSearchPanel.setLayout(gl_PLNSPanel);
+		
+		
+		GroupLayout gl_sectSearchPanel = new GroupLayout(sectSearchPanel);
+		gl_sectSearchPanel.setHorizontalGroup(
+				gl_sectSearchPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_sectSearchPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblObjetsRecherchs4)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(typeBoxSect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblBigramme)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(searchFieldSect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnRechercher3, GroupLayout.PREFERRED_SIZE, 92, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(180, Short.MAX_VALUE))
+		);
+		gl_sectSearchPanel.setVerticalGroup(
+				gl_sectSearchPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_sectSearchPanel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_sectSearchPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblObjetsRecherchs4)
+						.addComponent(typeBoxSect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblBigramme)
+						.addComponent(searchFieldSect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnRechercher3))
+					.addContainerGap(25, Short.MAX_VALUE))
+		);
+		sectSearchPanel.setLayout(gl_sectSearchPanel);
 	}
 	
 	public String getType(){
@@ -399,6 +493,27 @@ public class SearchPanel extends JPanel {
 			Statement st = DatabaseManager.getCurrentStip();
 			if(st != null){
 				ResultSet rs = st.executeQuery("select name from balises UNION select name from routes" /*UNION select nom from secteurs*/);
+				while(rs.next()){
+					results.add(rs.getString(1));
+				}
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		return results;
+	}
+	
+	/**
+	 * 
+	 * @return Un vecteur contenant tous les noms des secteurs STIP, avec une chaîne de caratères vide en première position.
+	 */
+	public Vector<String> getAllSecteurs(){
+		Vector<String> results = new Vector<String>();
+		results.add("");
+		try {
+			Statement st = DatabaseManager.getCurrentStip();
+			if(st != null){
+				ResultSet rs = st.executeQuery("select nom from secteurs order by nom");
 				while(rs.next()){
 					results.add(rs.getString(1));
 				}

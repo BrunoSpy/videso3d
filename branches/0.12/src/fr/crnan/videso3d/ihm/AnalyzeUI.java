@@ -171,6 +171,8 @@ public final class AnalyzeUI extends JFrame {
 				if(dock instanceof ResultDockable){
 					if(((ResultDockable)dock).getTitleText().startsWith("Balise")){
 						getContextPanel().showInfo(DatabaseManager.Type.STIP, StipController.BALISES, ((ResultDockable) dock).getTitleText().substring(7));
+					} else if( ((ResultDockable) dock).getTitleText().startsWith("Secteur ")){
+						getContextPanel().showInfo(DatabaseManager.Type.STIP, StipController.SECTEUR, ((ResultDockable) dock).getTitleText().substring(8));
 					} else {
 						if(((ResultDockable)dock).getContent() instanceof ResultGraphPanel)
 							((ResultGraphPanel)((ResultDockable)dock).getContent()).tabSelected();
@@ -184,6 +186,14 @@ public final class AnalyzeUI extends JFrame {
 			try {
 				if(DatabaseManager.getCurrentStip().executeQuery("select * from balises where name = '"+criteria[0]+"'").next()) {
 					getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.BALISES, criteria[0]);
+				} 
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} else if(type.equals("secteur")){
+			try {
+				if(DatabaseManager.getCurrentStip().executeQuery("select * from secteurs where nom = '"+criteria[0]+"'").next()) {
+					getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.SECTEUR, criteria[0]);
 				} 
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -353,6 +363,8 @@ public final class AnalyzeUI extends JFrame {
 			return new ConnexPanel(advanced, criteria);
 		} else if(type.equals("stars")){
 			return new StarPanel(advanced, criteria);
+		} else if(type.equals("secteur")){
+			return new SecteurPanel(criteria[4]);
 		} else if(type.equals("liaison privilégiée")){
 			return new LiaisonPanel(criteria[2]);
 		} else if(type.equals("base PLNS...")){

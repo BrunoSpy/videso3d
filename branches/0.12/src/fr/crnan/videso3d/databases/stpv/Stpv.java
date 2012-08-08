@@ -30,12 +30,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
 
-import fr.crnan.videso3d.FileManager;
-import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.FileManager;
+import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.stip.Stip;
-import fr.crnan.videso3d.databases.stip.StipController;
 
 /**
  * Lecteur de BDS Stpv
@@ -129,7 +128,6 @@ public class Stpv extends FileParser{
 	 */
 	@Override
 	protected void getFromFiles() throws IOException, SQLException {
-
 		this.setFile("LIEU");
 		this.setProgress(0);
 		this.setLieu(FileManager.getFile(path + "/LIEU"));
@@ -143,8 +141,15 @@ public class Stpv extends FileParser{
 		this.setProgress(3);
 		this.setBali(FileManager.getFile(path + "/BALI"));
 		this.setProgress(4);
+		this.setFile("CODE");
 		this.setCode(FileManager.getFile(path+ "/CODE"));
 		this.setProgress(5);
+		this.setFile("CONF");
+		this.setConf(FileManager.getFile(path+ "/CONF"));
+		this.setProgress(6);
+		this.setFile("COOR");
+		this.setCoor(FileManager.getFile(path+ "/COOR"));
+		this.setProgress(7);
 	}
 	
 	/**
@@ -163,7 +168,6 @@ public class Stpv extends FileParser{
 				insertCode30(line);
 			}
 		}
-		
 	}
 	
 	private void insertCode30(String line) throws SQLException{
@@ -460,8 +464,8 @@ public class Stpv extends FileParser{
 
 
 	private void insertLieu91(String line) throws SQLException {
-		PreparedStatement insert = this.conn.prepareStatement("insert into lieu91 (oaci, indicateur, secteur_donnant, secteur_recevant, bal1, bal2, piste, avion, tfl) " +
-				"values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		PreparedStatement insert = this.conn.prepareStatement("insert into lieu91 (oaci, indicateur, secteur_donnant, secteur_recevant, bal1, bal2, " +
+				"piste, avion, tfl) values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		insert.setString(1, line.substring(8, 12).trim());
 		insert.setString(2, line.substring(14, 17).trim());
 		insert.setString(3, line.substring(20, 22).trim());
@@ -567,12 +571,123 @@ public class Stpv extends FileParser{
 		insert.setString(1, line.substring(8, 12));
 		insert.executeUpdate();
 	}
+	
 
+	/**
+	 * 
+	 * @param path
+	 * @throws IOException
+	 * @throws SQLException
+	 */
+	private void setConf(String path) throws IOException, SQLException{
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+		while (in.ready()){
+			String line = in.readLine();
+			if(line.startsWith("CONF 12D")){
+				insertConf12D(line);
+			}
+		}
+	}
 
-
+	private void insertConf12D(String line) throws SQLException {
+		try{
+			PreparedStatement insert = this.conn.prepareStatement("insert into double (entite, destinataire, identifiant, strip, bal1, bal2, " +
+					"flinf1, flsup1, flinf2, flsup2) values (?,?,?,?,?,?,?,?,?,?)");
+			insert.setString(1, line.substring(14, 16));
+			insert.setString(2, line.substring(26, 28));
+			insert.setString(3, line.substring(20, 22));
+			insert.setString(4, line.substring(9, 13).equals("INHI") ? "Non" : "Oui");
+			if(line.length()<45){
+				insert.setString(5, line.substring(38));
+				for(int i = 6; i<11; i++){
+					insert.setString(i, "");
+				}
+			}else{
+				insert.setString(5, line.substring(38, 43));
+				if(line.length()<55){
+					insert.setString(6, line.substring(44));
+					for(int i = 7; i<11; i++){
+						insert.setString(i, "");
+					}
+				}else{
+					insert.setString(6, line.substring(44,49));
+					insert.setString(7, line.substring(52, 55));
+					if(line.length()>=61)
+						insert.setString(8, line.substring(58, 61));
+					else
+						insert.setString(8, "");
+					insert.setString(9, "");
+					insert.setString(10, "");
+					if(line.length()>=72){
+						insert.setString(9, line.substring(64, 67));
+						insert.setString(10, line.substring(70, 73));
+					}
+				}
+			}
+			insert.executeUpdate();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private void setCoor(String path) throws IOException, SQLException {
+		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+		while (in.ready()){
+			String line = in.readLine();
+			if(line.startsWith("COOR 30") || line.startsWith("COOR 40")){
+				insertCoor(line);
+			}
+		}
+	}
+	
+	private void insertCoor(String line) throws SQLException {
+		try{
+			PreparedStatement insert = null;
+			if(line.startsWith("COOR 30")){
+				insert = this.conn.prepareStatement("insert into coor30 (donnant, recevant, val1, val2, val3, val4) values (?,?,?,?,?,?)");
+				insert.setString(1, line.substring(20, 22));
+				if(line.length()>=28)
+					insert.setString(2, line.substring(26, 28));
+				else
+					insert.setString(2, line.substring(26, 27));
+			}else if(line.startsWith("COOR 40")){
+				insert = this.conn.prepareStatement("insert into coor40 (donnant, recevant, val1, val2, val3, val4, bal1, bal2, balref) values (?,?,?,?,?,?,?,?,?)");
+				insert.setString(1, line.substring(8, 10));
+				insert.setString(2, line.substring(14, 16));
+				insert.setString(7, line.substring(20, 25));
+				insert.setString(8, line.substring(26, 31));
+				if(line.length()>=37)
+					insert.setString(9, line.substring(32, 37));
+				else{
+					insert.setString(9, line.substring(32, line.length()));
+				}
+			}
+			if(line.length()>=43)
+				insert.setString(3, line.substring(39, 43));
+			else
+				insert.setString(3, "");
+			if(line.length()>=49)
+				insert.setString(4, line.substring(45, 49));
+			else
+				insert.setString(4, "");
+			if(line.length()>=67)
+				insert.setString(5, line.substring(63, 67));
+			else
+				insert.setString(5, "");
+			if(line.length()>=73)
+				insert.setString(6, line.substring(69));
+			else
+				insert.setString(6, "");
+			insert.executeUpdate();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public int numberFiles() {
-		return 5;
+		return 7;
 	}
 
 	/**
@@ -787,6 +902,8 @@ public class Stpv extends FileParser{
 		}
 		return nivTab;
 	}
+	
+
 	/**
 	 * 
 	 * @param type from {@link StipController}
@@ -811,6 +928,10 @@ public class Stpv extends FileParser{
 			return null;
 		}
 	}
+
+
+
+	
 
 
 
