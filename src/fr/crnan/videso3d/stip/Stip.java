@@ -1264,33 +1264,38 @@ public class Stip extends FileParser{
 					stop = true;
 					break;
 				}
-				balise+= rs.getString(i+9).equals("660") ? "*** " : String.format(rs.getString(i+9),"%3.0d")+" ";
+				int fl = rs.getInt(i+9);
+				balise+= fl == 660 ? "*** " : String.format("%03d",fl)+" ";
 				balise+= rs.getString(i+8)+"                  ";
 			}
 			balise+="\n";
 			if(!stop){
-				stop = false;
-				balise +="31"+name;
-				for(int i=1;i<=6;i+=2){
-					if(rs.getInt(i+15) == -1){
-						stop = true;
-						break;
+				if(rs.getInt(16) != -1){
+					balise +="31"+name;
+					for(int i=1;i<=5;i+=2){
+						if(rs.getInt(i+15) == -1){
+							stop = true;
+							break;
+						}
+						int fl = rs.getInt(i+15);
+						balise+= fl == 660 ? "*** " : String.format("%03d", fl)+" ";
+						balise+= rs.getString(i+14)+"                  ";
 					}
-					balise+= rs.getString(i+15).equals("660") ? "*** " : String.format(rs.getString(i+15),"%3.0d")+" ";
-					balise+= rs.getString(i+14)+"                  ";
-				}
-				balise += "\n";
+					balise += "\n";
+				}else
+					stop = true;
 			}
 			if(!stop){
-				stop = false;
-				balise +="32"+name;
-				for(int i=1;i<=6;i+=2){
-					if(rs.getInt(i+21) == -1){
-						stop = true;
-						break;
+				if(rs.getInt(22) != -1){
+					balise +="32"+name;
+					for(int i=1;i<=6;i+=2){
+						if(rs.getInt(i+21) == -1){
+							break;
+						}
+						int fl = rs.getInt(i+21);
+						balise+= fl == 660 ? "*** " : String.format("%03d", fl)+" ";
+						balise+= rs.getString(i+20)+"                  ";
 					}
-					balise+= rs.getString(i+21).equals("660") ? "*** " : String.format(rs.getString(i+21),"%3.0d")+" ";
-					balise+= rs.getString(i+20)+"                  ";
 				}
 			}
 		} catch(SQLException e){
