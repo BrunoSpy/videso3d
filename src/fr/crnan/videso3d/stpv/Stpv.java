@@ -643,7 +643,6 @@ public class Stpv extends FileParser{
 	
 	private void insertCoor(String line) throws SQLException {
 		try{
-			System.out.println(line);
 			PreparedStatement insert = null;
 			if(line.startsWith("COOR 30")){
 				insert = this.conn.prepareStatement("insert into coor30 (donnant, recevant, val1, val2, val3, val4) values (?,?,?,?,?,?)");
