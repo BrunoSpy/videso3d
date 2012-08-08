@@ -289,16 +289,15 @@ public class ItiPanel extends ResultGraphPanel {
 							idBal = rs.getInt(6);
 							second = null;
 						} else {
-							idBal = rs.getInt(6);
 							if(rs.getInt(3) == rs.getInt(6)){ //on raccorde
 								graph.insertEdge(parent, null, "", first, balisesByItis.get(rs.getInt(1)).get(rs.getInt(6)), GraphStyle.edgeTrajet);
 							} else {
 								if(second == null) {
-									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, idBal, rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
+									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(6), rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
 									second.setConnectable(false);
 									graph.insertEdge(parent, null, rs.getString(4), first, second, GraphStyle.edgeTrajet);
 								} else {
-									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, idBal, rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
+									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(6), rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
 									second.setConnectable(false);
 									graph.insertEdge(parent, null, "", first, second, GraphStyle.edgeTrajet);
 								}

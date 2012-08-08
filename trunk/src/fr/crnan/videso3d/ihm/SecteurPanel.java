@@ -368,13 +368,13 @@ public class SecteurPanel extends ResultPanel {
 			while(rs.next()){
 				Object[] objects = new Object[10];
 				objects[0] = "COOR 30";
-				objects[1] = rs.getString(1);
-				objects[2] = rs.getString(2);
-				for(int i=3; i<7;i++){
+				objects[1] = rs.getString(2);
+				objects[2] = rs.getString(3);
+				for(int i=3; i<6;i++){
 					objects[i]="";
 				}
-				for(int i=7; i<columns.length;i++){
-					objects[i]=rs.getString(i-4);
+				for(int i=6; i<columns.length;i++){
+					objects[i]=rs.getString(i-2);
 				}
 				model.addRow(objects);
 			}
@@ -384,7 +384,7 @@ public class SecteurPanel extends ResultPanel {
 				objects[0] = "COOR 40";
 				
 				for(int i=1; i<columns.length;i++){
-					objects[i]=rs.getString(i);;
+					objects[i]=rs.getString(i+1);;
 				}
 				model.addRow(objects);
 			}
