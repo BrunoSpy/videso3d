@@ -24,7 +24,8 @@ import javax.swing.JComboBox;
 public class TypeComboBox extends JComboBox {
 
 	public TypeComboBox(){
-		super(new String[]{"balise", /*"balint",*/ "iti", "trajet", "route", "connexion", "stars", "liaison privilégiée", "base PLNS..."});
+		super(new String[]{"balise", /*"balint",*/ "iti", "trajet", "route", "connexion", "stars", "secteur", "liaison privilégiée", "base PLNS..."});
+		super.setMaximumRowCount(15);
 	}
 	
 }

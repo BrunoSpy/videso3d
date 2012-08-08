@@ -66,16 +66,17 @@ public final class AnalyzeUI extends JFrame {
 	private JSplitPane splitpane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, context, tabPane);
 
 	private JLabel nombreResultats = new JLabel();
-	
+
 	private JPanel searchPanelContainer = new JPanel(new CardLayout(0, 0));
 	private JPanel topPanel;
-	
+
 	private AdvancedSearchPanel itiSearch, baliseSearch = null;
 
 	private JButton advancedSearch;
 
 	private SearchPanel searchPanel;
-	
+
+
 	public final static AnalyzeUI getInstance(){
 		if(instance == null){
 			instance = new AnalyzeUI();
@@ -108,7 +109,7 @@ public final class AnalyzeUI extends JFrame {
 		});
 
 		getInstance().tabPane.addTab(content.getTitleTab(), content);
-		
+
 		ButtonTabComponent buttonTab = new ButtonTabComponent(getInstance().tabPane);
 		getInstance().tabPane.setTabComponentAt(getInstance().tabPane.indexOfComponent(content), buttonTab);
 		getInstance().tabPane.setSelectedIndex(getInstance().tabPane.indexOfComponent(content));
@@ -120,6 +121,14 @@ public final class AnalyzeUI extends JFrame {
 			try {
 				if(DatabaseManager.getCurrentStip().executeQuery("select * from balises where name = '"+criteria[0]+"'").next()) {
 					getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.BALISES, criteria[0]);
+				} 
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}else if(type.equals("secteur")){
+			try {
+				if(DatabaseManager.getCurrentStip().executeQuery("select * from secteurs where nom = '"+criteria[0]+"'").next()) {
+					getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.SECTEUR, criteria[0]);
 				} 
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -150,24 +159,24 @@ public final class AnalyzeUI extends JFrame {
 		getContentPane().add(topPanel, BorderLayout.PAGE_START);
 
 		topPanel.add(searchPanelContainer);
-		
+
 		advancedSearch = new JButton("Recherche avancée");
 		advancedSearch.setEnabled(false);
-		
+
 		searchPanel = new SearchPanel();
 		searchPanel.getTypeComboBox().addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-					advancedSearch.setEnabled(isAdvancedSearchAvailable((String) ((JComboBox)e.getSource()).getSelectedItem()));
+				advancedSearch.setEnabled(isAdvancedSearchAvailable((String) ((JComboBox)e.getSource()).getSelectedItem()));
 			}
 		});
 		this.searchPanelContainer.add(searchPanel, "default");
-		
+
 		Box searchButtonBox = Box.createVerticalBox();
 		advancedSearch.addActionListener(new ActionListener() {
-			
-			
+
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(((JButton)e.getSource()).getText().equals("Recherche avancée")){
@@ -188,6 +197,7 @@ public final class AnalyzeUI extends JFrame {
 		splitpane.setOneTouchExpandable(true);
 		splitpane.setContinuousLayout(true);
 
+
 		tabPane.addChangeListener(new ChangeListener(){
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -195,6 +205,8 @@ public final class AnalyzeUI extends JFrame {
 					String tabTitle = tabPane.getTitleAt(tabPane.getSelectedIndex());
 					if(tabTitle.startsWith("Balise ")){
 						getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.BALISES, tabTitle.substring(7));
+					}else if(tabTitle.startsWith("Secteur ")){
+						getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.SECTEUR, tabTitle.substring(8));
 					}else if(tabPane.getSelectedComponent() instanceof ResultGraphPanel){
 						((ResultGraphPanel)tabPane.getSelectedComponent()).tabSelected();
 					}
@@ -214,24 +226,24 @@ public final class AnalyzeUI extends JFrame {
 		topPanel.validate();
 		advancedSearch.setText("Recherche avancée");
 	}
-	
+
 	private void setDefaultSearch(String type){
 		searchPanel.getTypeComboBox().setSelectedItem(type);
 		setDefaultSearch();
 	}
-	
+
 	private void setAdvancedSearchPanel(String type){
 		getAdvancedSearchPanel(type).getTypeComboBox().setSelectedItem(type);
 		topPanel.setPreferredSize(getAdvancedSearchPanel(type).getPreferredSize());
 		((CardLayout) searchPanelContainer.getLayout()).show(searchPanelContainer, type);
 		topPanel.validate();
 	}
-	
-	
+
+
 	private AdvancedSearchPanel getAdvancedSearchPanel(String type){
-		
+
 		ActionListener typeComboBoxListener = new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String type = (String) ((JComboBox)e.getSource()).getSelectedItem();
@@ -242,7 +254,7 @@ public final class AnalyzeUI extends JFrame {
 				}
 			}
 		};
-		
+
 		if(type.equals("iti")){
 			if(itiSearch == null){
 				itiSearch = new ItiSearchPanel();
@@ -256,7 +268,7 @@ public final class AnalyzeUI extends JFrame {
 			return null;
 		} else if(type.equals("balise")){
 			if(baliseSearch == null){
-				
+
 			}
 			return null;
 		} else if(type.equals("connexion")){
@@ -269,11 +281,11 @@ public final class AnalyzeUI extends JFrame {
 			return null;
 		}
 	}
-	
+
 	private boolean isAdvancedSearchAvailable(String type){
 		return type.equals("iti");
 	}
-	
+
 	private ResultPanel createResultPanel(boolean advanced, final String type, JTabbedPane tabPane, final String... criteria){
 		if(type.equals("iti")){
 			return new ItiPanel(advanced, criteria);
@@ -287,6 +299,8 @@ public final class AnalyzeUI extends JFrame {
 			return new ConnexPanel(advanced, criteria);
 		} else if(type.equals("stars")){
 			return new StarPanel(advanced, criteria);
+		} else if(type.equals("secteur")){
+			return new SecteurPanel(criteria[4]);
 		} else if(type.equals("liaison privilégiée")){
 			return new LiaisonPanel(criteria[2], tabPane);
 		} else if(type.equals("base PLNS...")){
@@ -322,14 +336,14 @@ public final class AnalyzeUI extends JFrame {
 
 		return statusBar;
 	}
-	
-	
+
+
 	public static ContextPanel getContextPanel(){
 		return getInstance().context;
 	}
-	
+
 	public static void updateSearchBoxes(){
 		getInstance().searchPanel.updateSearchBoxes();
 	}
-	
+
 }

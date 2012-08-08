@@ -220,6 +220,7 @@ public class ItiPanel extends ResultGraphPanel {
 					graph.getModel().beginUpdate();
 					while(rs.next()){
 						String name = rs.getString(1);
+						int balid = rs.getInt(4);
 						if(id != rs.getInt(3)) {
 							count++;
 							if(id != 0){//on termine l'iti précédent si il existe
@@ -240,14 +241,14 @@ public class ItiPanel extends ResultGraphPanel {
 							iti = (mxCell) graph.insertVertex(itiRoot, null, new CellContent(Type.STIP, StipController.ITI, id, rs.getString(6)), 0, 0, 80, 50, GraphStyle.groupStyle);
 							iti.setConnectable(false);
 							itis.add(iti);
-							first = (mxCell) graph.insertVertex(iti, null, new CellContent(Type.STIP, StipController.BALISES, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
+							first = (mxCell) graph.insertVertex(iti, null, new CellContent(Type.STIP, StipController.BALISES, balid, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
 							first.setConnectable(false);
-							balises.put(rs.getInt(4), first);
+							balises.put(balid, first);
 						} else {
 							String style = rs.getBoolean(2) ? 
 									(isSearchedBalise(advanced, name, criteria) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
 										(isSearchedBalise(advanced, name, criteria) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
-							mxCell bal = (mxCell) graph.insertVertex(iti, null, new CellContent(Type.STIP, StipController.BALISES, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
+							mxCell bal = (mxCell) graph.insertVertex(iti, null, new CellContent(Type.STIP, StipController.BALISES, balid, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							bal.setConnectable(false);
 							graph.insertEdge(iti, null, "", first, bal, GraphStyle.edgeStyle);
 							balises.put(rs.getInt(4), bal);
@@ -288,15 +289,16 @@ public class ItiPanel extends ResultGraphPanel {
 							idBal = rs.getInt(6);
 							second = null;
 						} else {
+							idBal = rs.getInt(6);
 							if(rs.getInt(3) == rs.getInt(6)){ //on raccorde
 								graph.insertEdge(parent, null, "", first, balisesByItis.get(rs.getInt(1)).get(rs.getInt(6)), GraphStyle.edgeTrajet);
 							} else {
 								if(second == null) {
-									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, 0, rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
+									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, idBal, rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
 									second.setConnectable(false);
 									graph.insertEdge(parent, null, rs.getString(4), first, second, GraphStyle.edgeTrajet);
 								} else {
-									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, 0, rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
+									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, idBal, rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
 									second.setConnectable(false);
 									graph.insertEdge(parent, null, "", first, second, GraphStyle.edgeTrajet);
 								}
