@@ -1,0 +1,260 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "LIMITE SECTEUR")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris clair")
+)
+(id_atc
+  (name "FOND SECTEUR")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 4)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(id_atc
+  (name "BORD SECTEUR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(map
+  (name "AO")
+  (number 235)
+  (comment "")
+  (date 14 10 2005)
+  (heure 10 29 22)
+  (ref_point
+    (name "TEMP")
+    (comment "")
+    (value
+      (nautical_mile 64 9208 64 2176)
+    )
+  )
+  (ref_point
+    (name "AO1PT10")
+    (comment "")
+    (value
+      (nautical_mile 64 11298 64 1914)
+    )
+  )
+  (ref_point
+    (name "AO1PT11")
+    (comment "")
+    (value
+      (nautical_mile 64 11892 64 2818)
+    )
+  )
+  (ref_point
+    (name "DG23")
+    (comment "")
+    (value
+      (nautical_mile 64 7148 64 5490)
+    )
+  )
+  (ref_point
+    (name "DG14")
+    (comment "")
+    (value
+      (nautical_mile 64 7458 64 5914)
+    )
+  )
+  (ref_point
+    (name "S3C")
+    (comment "")
+    (value
+      (nautical_mile 64 7935 64 6564)
+    )
+  )
+  (ref_point
+    (name "DG78")
+    (comment "")
+    (value
+      (nautical_mile 64 8343 64 4011)
+    )
+  )
+  (ref_point
+    (name "DG64")
+    (comment "")
+    (value
+      (nautical_mile 64 7994 64 4322)
+    )
+  )
+  (ref_point
+    (name "DO43")
+    (comment "")
+    (value
+      (nautical_mile 64 7895 64 4409)
+    )
+  )
+  (ref_point
+    (name "AO2PT4")
+    (comment "")
+    (value
+      (nautical_mile 64 12157 64 2569)
+    )
+  )
+  (ref_point
+    (name "AO2PT5")
+    (comment "")
+    (value
+      (nautical_mile 64 11515 64 1926)
+    )
+  )
+  (ref_point
+    (name "AO2PT6")
+    (comment "")
+    (value
+      (nautical_mile 64 10085 64 888)
+    )
+  )
+  (ref_point
+    (name "AO2PT7")
+    (comment "")
+    (value
+      (nautical_mile 64 9819 64 876)
+    )
+  )
+  (ref_point
+    (name "AO2PT8")
+    (comment "")
+    (value
+      (nautical_mile 64 9237 64 2118)
+    )
+  )
+  (submap
+    (number 1)
+    (name "AO")
+    (submap_type 5)
+    (entity
+      (name "6")
+      (id_atc "LIMITE SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "TEMP")
+        (point "AO1PT10")
+        (point "AO1PT11")
+      )
+    )
+    (entity
+      (name "2")
+      (id_atc "FOND SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DG23")
+        (point "DG14")
+        (point "S3C")
+        (point "AO1PT11")
+        (point "AO1PT10")
+        (point "TEMP")
+        (point "DG78")
+        (point "DG64")
+        (point "DO43")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "3")
+      (id_atc "BORD SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DG23")
+        (point "DG14")
+        (point "S3C")
+        (point "AO1PT11")
+        (point "AO1PT10")
+        (point "TEMP")
+        (point "DG78")
+        (point "DG64")
+        (point "DO43")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "5")
+      (id_atc "LIMITE SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "AO1PT11")
+        (point "AO1PT10")
+        (point "TEMP")
+      )
+    )
+    (entity
+      (name "7")
+      (id_atc "FOND SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DG23")
+        (point "DG14")
+        (point "S3C")
+        (point "AO2PT4")
+        (point "AO2PT5")
+        (point "AO2PT6")
+        (point "AO2PT7")
+        (point "AO2PT8")
+        (point "DG78")
+        (point "DG64")
+        (point "DO43")
+      )
+      (polygone 1)
+    )
+  )
+)

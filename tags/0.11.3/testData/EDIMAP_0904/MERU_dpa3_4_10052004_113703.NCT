@@ -1,0 +1,234 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "FOND PUITS 2")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 5)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris")
+)
+(map
+  (name "MERU")
+  (number 4)
+  (comment "")
+  (date 10 05 2004)
+  (heure 11 37 03)
+  (ref_point
+    (name "MERUE")
+    (comment "")
+    (value
+      (nautical_mile 64 4674 64 8923)
+    )
+  )
+  (ref_point
+    (name "MERUE2")
+    (comment "")
+    (value
+      (nautical_mile 64 4352 64 8953)
+    )
+  )
+  (ref_point
+    (name "MERUE3")
+    (comment "")
+    (value
+      (nautical_mile 64 4294 64 8969)
+    )
+  )
+  (ref_point
+    (name "MERUE4")
+    (comment "")
+    (value
+      (nautical_mile 64 4243 64 9011)
+    )
+  )
+  (ref_point
+    (name "MERUE5")
+    (comment "")
+    (value
+      (nautical_mile 64 4214 64 9065)
+    )
+  )
+  (ref_point
+    (name "MERUE6")
+    (comment "")
+    (value
+      (nautical_mile 64 4210 64 9135)
+    )
+  )
+  (ref_point
+    (name "MERUE7")
+    (comment "")
+    (value
+      (nautical_mile 64 4237 64 9201)
+    )
+  )
+  (ref_point
+    (name "MERUE8")
+    (comment "")
+    (value
+      (nautical_mile 64 4276 64 9239)
+    )
+  )
+  (ref_point
+    (name "MERUE9")
+    (comment "")
+    (value
+      (nautical_mile 64 4340 64 9265)
+    )
+  )
+  (ref_point
+    (name "MERUE10")
+    (comment "")
+    (value
+      (nautical_mile 64 4381 64 9267)
+    )
+  )
+  (ref_point
+    (name "MERUE11")
+    (comment "")
+    (value
+      (nautical_mile 64 4700 64 9237)
+    )
+  )
+  (ref_point
+    (name "MERUE12")
+    (comment "")
+    (value
+      (nautical_mile 64 4766 64 9217)
+    )
+  )
+  (ref_point
+    (name "MERUE13")
+    (comment "")
+    (value
+      (nautical_mile 64 4811 64 9177)
+    )
+  )
+  (ref_point
+    (name "MERUE14")
+    (comment "")
+    (value
+      (nautical_mile 64 4838 64 9126)
+    )
+  )
+  (ref_point
+    (name "MERUE15")
+    (comment "")
+    (value
+      (nautical_mile 64 4843 64 9069)
+    )
+  )
+  (ref_point
+    (name "MERUE16")
+    (comment "")
+    (value
+      (nautical_mile 64 4828 64 9011)
+    )
+  )
+  (ref_point
+    (name "MERUE17")
+    (comment "")
+    (value
+      (nautical_mile 64 4789 64 8961)
+    )
+  )
+  (ref_point
+    (name "MERUE18")
+    (comment "")
+    (value
+      (nautical_mile 64 4739 64 8932)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 3)
+    (keyboard 3)
+    (entity
+      (name "1")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "MERUE")
+        (point "MERUE2")
+        (point "MERUE3")
+        (point "MERUE4")
+        (point "MERUE5")
+        (point "MERUE6")
+        (point "MERUE7")
+        (point "MERUE8")
+        (point "MERUE9")
+        (point "MERUE10")
+        (point "MERUE11")
+        (point "MERUE12")
+        (point "MERUE13")
+        (point "MERUE14")
+        (point "MERUE15")
+        (point "MERUE16")
+        (point "MERUE17")
+        (point "MERUE18")
+      )
+      (polygone 1)
+    )
+  )
+)

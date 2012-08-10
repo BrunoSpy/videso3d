@@ -1,0 +1,530 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "TEXTE PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_2")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "TEXTE ZONE MILITAIRE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "R20")
+  (number 96)
+  (comment "CTL importe de VIDEOMAP")
+  (date 21 02 2008)
+  (heure 13 50 19)
+  (ref_point
+    (name "ARNON")
+    (comment "")
+    (value
+      (nautical_mile 64 5515 64 1021)
+    )
+  )
+  (ref_point
+    (name "R20T1")
+    (comment "")
+    (value
+      (nautical_mile 64 3911 64 1638)
+    )
+  )
+  (ref_point
+    (name "R20T2")
+    (comment "")
+    (value
+      (nautical_mile 64 7822 64 1750)
+    )
+  )
+  (ref_point
+    (name "R20T3")
+    (comment "")
+    (value
+      (nautical_mile 64 5712 64 -561)
+    )
+  )
+  (ref_point
+    (name "R2010")
+    (comment "")
+    (value
+      (nautical_mile 64 4396 64 -1737)
+    )
+  )
+  (ref_point
+    (name "R2011")
+    (comment "")
+    (value
+      (nautical_mile 64 3078 64 1541)
+    )
+  )
+  (ref_point
+    (name "R2013")
+    (comment "")
+    (value
+      (nautical_mile 64 4225 64 1608)
+    )
+  )
+  (ref_point
+    (name "R20B")
+    (comment "")
+    (value
+      (nautical_mile 64 6208 64 1452)
+    )
+  )
+  (ref_point
+    (name "R20L")
+    (comment "")
+    (value
+      (nautical_mile 64 6866 64 974)
+    )
+  )
+  (ref_point
+    (name "R20A")
+    (comment "")
+    (value
+      (nautical_mile 64 7376 64 558)
+    )
+  )
+  (ref_point
+    (name "R209")
+    (comment "")
+    (value
+      (nautical_mile 64 7631 64 -1619)
+    )
+  )
+  (ref_point
+    (name "R208")
+    (comment "")
+    (value
+      (nautical_mile 64 6910 64 -1998)
+    )
+  )
+  (ref_point
+    (name "R207")
+    (comment "")
+    (value
+      (nautical_mile 64 4396 64 -1735)
+    )
+  )
+  (ref_point
+    (name "R20M")
+    (comment "")
+    (value
+      (nautical_mile 64 4478 64 -1595)
+    )
+  )
+  (ref_point
+    (name "R206")
+    (comment "")
+    (value
+      (nautical_mile 64 5363 64 -106)
+    )
+  )
+  (ref_point
+    (name "R20I")
+    (comment "")
+    (value
+      (nautical_mile 64 5377 64 203)
+    )
+  )
+  (ref_point
+    (name "R20B5E")
+    (comment "")
+    (value
+      (nautical_mile 64 5377 64 203)
+    )
+  )
+  (ref_point
+    (name "R20B5F")
+    (comment "")
+    (value
+      (nautical_mile 64 5385 64 385)
+    )
+  )
+  (ref_point
+    (name "R20B5G")
+    (comment "")
+    (value
+      (nautical_mile 64 5029 64 672)
+    )
+  )
+  (ref_point
+    (name "R20B5H")
+    (comment "")
+    (value
+      (nautical_mile 64 4875 64 602)
+    )
+  )
+  (ref_point
+    (name "R20B2A")
+    (comment "")
+    (value
+      (nautical_mile 64 8351 64 582)
+    )
+  )
+  (ref_point
+    (name "R20B2B")
+    (comment "")
+    (value
+      (nautical_mile 64 8894 64 127)
+    )
+  )
+  (ref_point
+    (name "R20B2C")
+    (comment "")
+    (value
+      (nautical_mile 64 8620 64 -1743)
+    )
+  )
+  (ref_point
+    (name "R20B2D")
+    (comment "")
+    (value
+      (nautical_mile 64 7294 64 -1794)
+    )
+  )
+  (ref_point
+    (name "R20B1P1")
+    (comment "")
+    (value
+      (nautical_mile 64 8671 64 2261)
+    )
+  )
+  (ref_point
+    (name "R20B1P2")
+    (comment "")
+    (value
+      (nautical_mile 64 9015 64 817)
+    )
+  )
+  (ref_point
+    (name "R20B1P3")
+    (comment "")
+    (value
+      (nautical_mile 64 8351 64 582)
+    )
+  )
+  (ref_point
+    (name "R20B1P4")
+    (comment "")
+    (value
+      (nautical_mile 64 8364 64 636)
+    )
+  )
+  (ref_point
+    (name "R20B1P5")
+    (comment "")
+    (value
+      (nautical_mile 64 8474 64 903)
+    )
+  )
+  (ref_point
+    (name "R20B1P6")
+    (comment "")
+    (value
+      (nautical_mile 64 8331 64 1173)
+    )
+  )
+  (ref_point
+    (name "R20B1P7")
+    (comment "")
+    (value
+      (nautical_mile 64 7810 64 1508)
+    )
+  )
+  (ref_point
+    (name "R20B1P8")
+    (comment "")
+    (value
+      (nautical_mile 64 7624 64 2219)
+    )
+  )
+  (ref_point
+    (name "R199")
+    (comment "")
+    (value
+      (nautical_mile 64 4957 64 2295)
+    )
+  )
+  (ref_point
+    (name "R200")
+    (comment "")
+    (value
+      (nautical_mile 64 3099 64 1553)
+    )
+  )
+  (ref_point
+    (name "R201")
+    (comment "")
+    (value
+      (nautical_mile 64 3099 64 1029)
+    )
+  )
+  (ref_point
+    (name "R202")
+    (comment "")
+    (value
+      (nautical_mile 64 4036 64 82)
+    )
+  )
+  (ref_point
+    (name "R203")
+    (comment "")
+    (value
+      (nautical_mile 64 4754 64 566)
+    )
+  )
+  (ref_point
+    (name "R204")
+    (comment "")
+    (value
+      (nautical_mile 64 4876 64 604)
+    )
+  )
+  (ref_point
+    (name "R205")
+    (comment "")
+    (value
+      (nautical_mile 64 5431 64 1459)
+    )
+  )
+  (ref_point
+    (name "R20J")
+    (comment "")
+    (value
+      (nautical_mile 64 5444 64 2089)
+    )
+  )
+  (ref_point
+    (name "R20K")
+    (comment "")
+    (value
+      (nautical_mile 64 5091 64 2240)
+    )
+  )
+  (ref_point
+    (name "R20B501")
+    (comment "LF R20 B5")
+    (value
+      (nautical_mile 64 5444 64 2089)
+    )
+  )
+  (ref_point
+    (name "R20B502")
+    (comment "LF R20 B5")
+    (value
+      (nautical_mile 64 5764 64 1952)
+    )
+  )
+  (ref_point
+    (name "R20B503")
+    (comment "LF R20 B5")
+    (value
+      (nautical_mile 64 6829 64 2192)
+    )
+  )
+  (ref_point
+    (name "R20B504")
+    (comment "LF R20 B5")
+    (value
+      (nautical_mile 64 7624 64 2219)
+    )
+  )
+  (ref_point
+    (name "R20B505")
+    (comment "LF R20 B5")
+    (value
+      (nautical_mile 64 7810 64 1508)
+    )
+  )
+  (submap
+    (number 1)
+    (name "R20")
+    (submap_type 4)
+    (keyboard 3)
+    (entity
+      (name "12")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "R20B")
+        (point "R20L")
+        (point "R20A")
+        (point "R209")
+        (point "R208")
+        (point "R207")
+        (point "R20M")
+        (point "R206")
+        (point "R20I")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "13")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "R20B2A")
+        (point "R20B2B")
+        (point "R20B2C")
+        (point "R20B2D")
+      )
+    )
+    (entity
+      (name "16")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "R20B5E")
+        (point "R20B5F")
+        (point "R20B5G")
+        (point "R20B5H")
+      )
+    )
+    (entity
+      (name "18")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "R20B1P1")
+        (point "R20B1P2")
+        (point "R20B1P3")
+        (point "R20B1P4")
+        (point "R20B1P5")
+        (point "R20B1P6")
+        (point "R20B1P7")
+        (point "R20B1P8")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "19")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "R199")
+        (point "R200")
+        (point "R201")
+        (point "R202")
+        (point "R203")
+        (point "R204")
+        (point "R205")
+        (point "R20J")
+        (point "R20K")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "14")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "R20B501")
+        (point "R20B502")
+        (point "R20B503")
+        (point "R20B504")
+        (point "R20B505")
+      )
+    )
+  )
+)

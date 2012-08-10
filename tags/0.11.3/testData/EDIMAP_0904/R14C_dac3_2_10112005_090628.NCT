@@ -1,0 +1,140 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "BORD ZONE MILITAIRE FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "R14C")
+  (number 2)
+  (comment "")
+  (date 10 11 2005)
+  (heure 09 06 28)
+  (ref_point
+    (name "SIS15")
+    (comment "")
+    (value
+      (nautical_mile 64 10210 64 9153)
+    )
+  )
+  (ref_point
+    (name "SIS14")
+    (comment "")
+    (value
+      (nautical_mile 64 9826 64 9694)
+    )
+  )
+  (ref_point
+    (name "SIS16")
+    (comment "")
+    (value
+      (nautical_mile 64 9755 64 9643)
+    )
+  )
+  (ref_point
+    (name "SIS13")
+    (comment "")
+    (value
+      (nautical_mile 64 9601 64 9816)
+    )
+  )
+  (ref_point
+    (name "SIS17")
+    (comment "")
+    (value
+      (nautical_mile 64 9578 64 9708)
+    )
+  )
+  (ref_point
+    (name "SIS18")
+    (comment "")
+    (value
+      (nautical_mile 64 9601 64 9816)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 2)
+    (keyboard 3)
+    (entity
+      (name "1")
+      (id_atc "BORD ZONE MILITAIRE FIR")
+      (shape "EllipseEntity")
+      (geometry
+        (point "SIS15")
+        (azimuth 100 0)
+        (distance 64 663)
+        (distance 64 663)
+        (angle 100 3536)
+        (angle 100 4287)
+      )
+      (construction
+        (type 1)
+        (point "SIS14")
+        (point "SIS16")
+        (orientation 1)
+      )
+    )
+    (entity
+      (name "2")
+      (id_atc "BORD ZONE MILITAIRE FIR")
+      (shape "LineEntity")
+      (geometry
+        (point "SIS13")
+        (point "SIS14")
+      )
+    )
+    (entity
+      (name "3")
+      (id_atc "BORD ZONE MILITAIRE FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SIS16")
+        (point "SIS17")
+        (point "SIS18")
+      )
+    )
+  )
+)

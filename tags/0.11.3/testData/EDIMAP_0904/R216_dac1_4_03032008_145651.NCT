@@ -1,0 +1,173 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "TEXTE ZONE MILITAIRE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "R216")
+  (number 4)
+  (comment "")
+  (date 03 03 2008)
+  (heure 14 56 51)
+  (ref_point
+    (name "R21601")
+    (comment "LF R216 Niergnies")
+    (value
+      (nautical_mile 64 8052 64 12362)
+    )
+  )
+  (ref_point
+    (name "R21602")
+    (comment "LF R216 Niergnies")
+    (value
+      (nautical_mile 64 8426 64 12114)
+    )
+  )
+  (ref_point
+    (name "R21603")
+    (comment "LF R216 Niergnies")
+    (value
+      (nautical_mile 64 8491 64 11722)
+    )
+  )
+  (ref_point
+    (name "R21604")
+    (comment "LF R216 Niergnies")
+    (value
+      (nautical_mile 64 7482 64 11679)
+    )
+  )
+  (ref_point
+    (name "R21605")
+    (comment "LF R216 Niergnies")
+    (value
+      (nautical_mile 64 7537 64 11814)
+    )
+  )
+  (ref_point
+    (name "R21606")
+    (comment "LF R216 Niergnies")
+    (value
+      (nautical_mile 64 7921 64 12007)
+    )
+  )
+  (ref_point
+    (name "R21607")
+    (comment "LF R216 Niergnies")
+    (value
+      (nautical_mile 64 7971 64 12277)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 2)
+    (keyboard 1)
+    (entity
+      (name "1")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "R21601")
+        (point "R21602")
+        (point "R21603")
+        (point "R21604")
+        (point "R21605")
+        (point "R21606")
+        (point "R21607")
+      )
+    )
+    (entity
+      (name "2")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR")
+      (shape "EllipseEntity")
+      (geometry
+        (nautical_mile 64 7784 64 12537  0)
+        (azimuth 100 0)
+        (distance 64 320)
+        (distance 64 320)
+        (angle 100 21572)
+        (angle 100 23685)
+      )
+      (construction
+        (type 3)
+        (point "R21607")
+        (point "R21601")
+        (orientation 1)
+      )
+    )
+    (entity
+      (name "3")
+      (id_atc "TEXTE ZONE MILITAIRE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8009 64 11921  0)
+      )
+      (text_content "3300'AMSL")
+    )
+  )
+)

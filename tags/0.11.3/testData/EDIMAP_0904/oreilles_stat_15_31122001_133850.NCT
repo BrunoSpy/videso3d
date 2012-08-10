@@ -1,0 +1,514 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "EGA")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 30)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Lilas")
+)
+(map
+  (name "oreilles")
+  (number 15)
+  (comment "")
+  (date 31 12 2001)
+  (heure 13 38 50)
+  (ref_point
+    (name "TMA13P0")
+    (comment "")
+    (value
+      (nautical_mile 64 8689 64 10632)
+    )
+  )
+  (ref_point
+    (name "TMA13P1")
+    (comment "")
+    (value
+      (nautical_mile 64 9790 64 11013)
+    )
+  )
+  (ref_point
+    (name "TMA13P2")
+    (comment "")
+    (value
+      (nautical_mile 64 10298 64 9691)
+    )
+  )
+  (ref_point
+    (name "TMA13P3")
+    (comment "")
+    (value
+      (nautical_mile 64 9232 64 8911)
+    )
+  )
+  (ref_point
+    (name "TMA13P4")
+    (comment "")
+    (value
+      (nautical_mile 64 9029 64 9805)
+    )
+  )
+  (ref_point
+    (name "P14P1")
+    (comment "")
+    (value
+      (nautical_mile 64 9711 64 6388)
+    )
+  )
+  (ref_point
+    (name "P14P2")
+    (comment "")
+    (value
+      (nautical_mile 64 10431 64 5866)
+    )
+  )
+  (ref_point
+    (name "P14P3")
+    (comment "")
+    (value
+      (nautical_mile 64 9829 64 4770)
+    )
+  )
+  (ref_point
+    (name "P14P4")
+    (comment "")
+    (value
+      (nautical_mile 64 8486 64 3600)
+    )
+  )
+  (ref_point
+    (name "P14P5")
+    (comment "")
+    (value
+      (nautical_mile 64 7895 64 4409)
+    )
+  )
+  (ref_point
+    (name "P14P6")
+    (comment "")
+    (value
+      (nautical_mile 64 8260 64 4383)
+    )
+  )
+  (ref_point
+    (name "P15P1")
+    (comment "")
+    (value
+      (nautical_mile 64 2893 64 5932)
+    )
+  )
+  (ref_point
+    (name "P15P2")
+    (comment "")
+    (value
+      (nautical_mile 64 2869 64 5802)
+    )
+  )
+  (ref_point
+    (name "P15P3")
+    (comment "")
+    (value
+      (nautical_mile 64 3168 64 5151)
+    )
+  )
+  (ref_point
+    (name "P15P4")
+    (comment "")
+    (value
+      (nautical_mile 64 3654 64 4355)
+    )
+  )
+  (ref_point
+    (name "P15P5")
+    (comment "")
+    (value
+      (nautical_mile 64 3982 64 4142)
+    )
+  )
+  (ref_point
+    (name "P15P6")
+    (comment "")
+    (value
+      (nautical_mile 64 3960 64 4108)
+    )
+  )
+  (ref_point
+    (name "P15P7")
+    (comment "")
+    (value
+      (nautical_mile 64 3723 64 3519)
+    )
+  )
+  (ref_point
+    (name "P15P8")
+    (comment "")
+    (value
+      (nautical_mile 64 3260 64 3410)
+    )
+  )
+  (ref_point
+    (name "P15P9")
+    (comment "")
+    (value
+      (nautical_mile 64 2687 64 3284)
+    )
+  )
+  (ref_point
+    (name "P15P10")
+    (comment "")
+    (value
+      (nautical_mile 64 2643 64 3283)
+    )
+  )
+  (ref_point
+    (name "P15P11")
+    (comment "")
+    (value
+      (nautical_mile 64 1913 64 3595)
+    )
+  )
+  (ref_point
+    (name "P15P12")
+    (comment "")
+    (value
+      (nautical_mile 64 1700 64 4380)
+    )
+  )
+  (ref_point
+    (name "P15P13")
+    (comment "")
+    (value
+      (nautical_mile 64 1683 64 4441)
+    )
+  )
+  (ref_point
+    (name "P15P14")
+    (comment "")
+    (value
+      (nautical_mile 64 1604 64 4732)
+    )
+  )
+  (ref_point
+    (name "P15P15")
+    (comment "")
+    (value
+      (nautical_mile 64 1564 64 4882)
+    )
+  )
+  (ref_point
+    (name "P15P16")
+    (comment "")
+    (value
+      (nautical_mile 64 1778 64 5194)
+    )
+  )
+  (ref_point
+    (name "P15P17")
+    (comment "")
+    (value
+      (nautical_mile 64 1934 64 5422)
+    )
+  )
+  (ref_point
+    (name "P152P1")
+    (comment "")
+    (value
+      (nautical_mile 64 3982 64 4142)
+    )
+  )
+  (ref_point
+    (name "P152P2")
+    (comment "")
+    (value
+      (nautical_mile 64 4025 64 4114)
+    )
+  )
+  (ref_point
+    (name "P152P3")
+    (comment "")
+    (value
+      (nautical_mile 64 4005 64 3685)
+    )
+  )
+  (ref_point
+    (name "P152P4")
+    (comment "")
+    (value
+      (nautical_mile 64 3889 64 3403)
+    )
+  )
+  (ref_point
+    (name "P152P5")
+    (comment "")
+    (value
+      (nautical_mile 64 3649 64 3275)
+    )
+  )
+  (ref_point
+    (name "P152P6")
+    (comment "")
+    (value
+      (nautical_mile 64 3333 64 3364)
+    )
+  )
+  (ref_point
+    (name "P152P7")
+    (comment "")
+    (value
+      (nautical_mile 64 3260 64 3410)
+    )
+  )
+  (ref_point
+    (name "P152P8")
+    (comment "")
+    (value
+      (nautical_mile 64 3723 64 3519)
+    )
+  )
+  (ref_point
+    (name "P152P9")
+    (comment "")
+    (value
+      (nautical_mile 64 3960 64 4108)
+    )
+  )
+  (ref_point
+    (name "P151P1")
+    (comment "")
+    (value
+      (nautical_mile 64 1778 64 5194)
+    )
+  )
+  (ref_point
+    (name "P151P2")
+    (comment "")
+    (value
+      (nautical_mile 64 1564 64 4882)
+    )
+  )
+  (ref_point
+    (name "P151P3")
+    (comment "")
+    (value
+      (nautical_mile 64 1683 64 4441)
+    )
+  )
+  (ref_point
+    (name "P151P4")
+    (comment "")
+    (value
+      (nautical_mile 64 1392 64 4646)
+    )
+  )
+  (ref_point
+    (name "P151P5")
+    (comment "")
+    (value
+      (nautical_mile 64 1338 64 4810)
+    )
+  )
+  (ref_point
+    (name "P151P6")
+    (comment "")
+    (value
+      (nautical_mile 64 1387 64 4968)
+    )
+  )
+  (ref_point
+    (name "P151P7")
+    (comment "")
+    (value
+      (nautical_mile 64 1569 64 5111)
+    )
+  )
+  (ref_point
+    (name "P16P1")
+    (comment "")
+    (value
+      (nautical_mile 64 3489 64 10602)
+    )
+  )
+  (ref_point
+    (name "P16P2")
+    (comment "")
+    (value
+      (nautical_mile 64 4306 64 10160)
+    )
+  )
+  (ref_point
+    (name "P16P3")
+    (comment "")
+    (value
+      (nautical_mile 64 4111 64 9663)
+    )
+  )
+  (ref_point
+    (name "P16P4")
+    (comment "")
+    (value
+      (nautical_mile 64 3974 64 8611)
+    )
+  )
+  (ref_point
+    (name "P16P5")
+    (comment "")
+    (value
+      (nautical_mile 64 3320 64 8355)
+    )
+  )
+  (ref_point
+    (name "P16P6")
+    (comment "")
+    (value
+      (nautical_mile 64 3106 64 8608)
+    )
+  )
+  (ref_point
+    (name "P16P7")
+    (comment "")
+    (value
+      (nautical_mile 64 3210 64 9892)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 1)
+    (entity
+      (name "1")
+      (id_atc "EGA")
+      (shape "PolylineEntity")
+      (geometry
+        (point "TMA13P0")
+        (point "TMA13P1")
+        (point "TMA13P2")
+        (point "TMA13P3")
+        (point "TMA13P4")
+        (point "TMA13P0")
+      )
+    )
+    (entity
+      (name "3")
+      (id_atc "EGA")
+      (shape "PolylineEntity")
+      (geometry
+        (point "P14P1")
+        (point "P14P2")
+        (point "P14P3")
+        (point "P14P4")
+        (point "P14P5")
+        (point "P14P6")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "5")
+      (id_atc "EGA")
+      (shape "PolylineEntity")
+      (geometry
+        (point "P15P1")
+        (point "P15P2")
+        (point "P15P3")
+        (point "P15P4")
+        (point "P15P5")
+        (point "P15P6")
+        (point "P15P7")
+        (point "P15P8")
+        (point "P15P9")
+        (point "P15P10")
+        (point "P15P11")
+        (point "P15P12")
+        (point "P15P13")
+        (point "P15P14")
+        (point "P15P15")
+        (point "P15P16")
+        (point "P15P17")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "7")
+      (id_atc "EGA")
+      (shape "PolylineEntity")
+      (geometry
+        (point "P152P1")
+        (point "P152P2")
+        (point "P152P3")
+        (point "P152P4")
+        (point "P152P5")
+        (point "P152P6")
+        (point "P152P7")
+        (point "P152P8")
+        (point "P152P9")
+      )
+    )
+    (entity
+      (name "9")
+      (id_atc "EGA")
+      (shape "PolylineEntity")
+      (geometry
+        (point "P151P1")
+        (point "P151P2")
+        (point "P151P3")
+        (point "P151P4")
+        (point "P151P5")
+        (point "P151P6")
+        (point "P151P7")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "11")
+      (id_atc "EGA")
+      (shape "PolylineEntity")
+      (geometry
+        (point "P16P1")
+        (point "P16P2")
+        (point "P16P3")
+        (point "P16P4")
+        (point "P16P5")
+        (point "P16P6")
+        (point "P16P7")
+      )
+      (polygone 1)
+    )
+  )
+)
