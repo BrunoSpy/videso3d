@@ -29,6 +29,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatabaseManager.Type;
@@ -358,14 +359,29 @@ public class Stpv extends FileParser{
 	 * @throws IOException 
 	 */
 	private void createName() throws IOException{
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path+"/RESULTAT")));
+		BufferedReader in = null;
 		Boolean nameFound = false;
-		while (in.ready() && !nameFound){
-			String line = in.readLine();
-			if (line.startsWith("1     STPV - CAUTRA IV - CA:")){
-				this.name = "STPV_"+line.substring(29, 38).trim()+"."+line.substring(79, 88).trim();
-				nameFound = true;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(FileManager.getFile(path+"/RESULTAT"))));
+			Pattern pattern = Pattern.compile(".*STPV - CAUTRA IV - CA:.*");
+			while (in.ready() && !nameFound){
+				String line = in.readLine();
+				if (pattern.matcher(line).matches()){
+					int pos = line.indexOf(":");
+					this.name = "STPV_"+line.substring(pos+1, pos+10).trim()+"."+line.substring(pos+51, pos+60).trim();
+					nameFound = true;
+				}
 			}
+		} catch(IOException e){
+			//rethrow exception to cancel data import
+			throw e;
+		} finally {
+			if(in != null){
+				in.close();
+			}
+		}
+		if(nameFound == false){
+			throw new IOException("Format of the file RESULTAT unknown");
 		}
 	}
 
