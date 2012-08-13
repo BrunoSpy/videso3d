@@ -1,5 +1,22 @@
 = Version 0.11 =
 
+== 0.11.3 ==
+
+  * IHM
+    * Affichage des connexions et trajets sur la vue 3D
+    * Copié-collé depuis la vue 3D des stars, routes, connexions et trajets
+
+  * Analyse
+    * Ajout de l'analyse de secteurs (COOR STPV, ...)
+
+  * STPV
+    * Prise en compte du fichier COOR
+
+  * Trajectographie
+    * Optimisation de l'import de gros fichiers
+
+  * Multiples corrections de bugs
+
 == 0.11.1 et 0.11.2 ==
 
   * IHM
