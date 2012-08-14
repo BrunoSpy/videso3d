@@ -29,6 +29,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.databases.DatabaseManager.Type;
@@ -136,22 +137,32 @@ public class Stpv extends FileParser{
 		this.setRadr(FileManager.getFile(path + "/RADR"));
 		this.setFile("SECT");
 		this.setProgress(2);
+		System.out.println("SECT?");
 		this.setSect(FileManager.getFile(path + "/SECT"));
+		System.out.println("SECT.");
 		this.setFile("BALI");
 		this.setProgress(3);
+		System.out.println("BALI?");
 		this.setBali(FileManager.getFile(path + "/BALI"));
+		System.out.println("BALI.");
 		this.setProgress(4);
 		this.setFile("CODE");
+		System.out.println("CODE?");
 		this.setCode(FileManager.getFile(path+ "/CODE"));
+		System.out.println("CODE.");
 		this.setProgress(5);
 		this.setFile("CONF");
+		System.out.println("CONF?");
 		this.setConf(FileManager.getFile(path+ "/CONF"));
+		System.out.println("CONF.");
 		this.setProgress(6);
 		this.setFile("COOR");
+		System.out.println("COOR?");
 		this.setCoor(FileManager.getFile(path+ "/COOR"));
+		System.out.println("COOR.");
 		this.setProgress(7);
 	}
-	
+
 	/**
 	 * Parse le fichier Code 
 	 * @param path
@@ -159,14 +170,22 @@ public class Stpv extends FileParser{
 	 * @throws SQLException 
 	 */
 	private void setCode(String path) throws IOException, SQLException{
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		while (in.ready()){
-			String line = in.readLine();
-			if(line.startsWith("CODE 1")){
-				insertCode1(line);
-			} else if(line.startsWith("CODE 30")){
-				insertCode30(line);
+		BufferedReader in = null;
+		try{
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			while (in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("CODE 1")){
+					insertCode1(line);
+				} else if(line.startsWith("CODE 30")){
+					insertCode30(line);
+				}
 			}
+		}catch(IOException e){
+			throw e;
+		} finally{
+			if(in != null)
+				in.close();
 		}
 	}
 	
@@ -213,7 +232,11 @@ public class Stpv extends FileParser{
 	}
 	
 	private void insertCode1(String line) throws SQLException{
-		String[] words = line.split("\\s+");
+		//si la ligne est trop longue, on enlève les trois derniers caractères qui sont le numéro de la ligne
+		String temp = line;
+		if(line.length()>=80)
+			temp = line.substring(0, line.length()-3);
+		String[] words = temp.split("\\s+");
 		PreparedStatement st = this.conn.prepareStatement("insert into cat_code (name, code) values (?, ?)");
 		st.setString(1, words[2]);
 		for(int i=3;i<words.length;i+=2){
@@ -331,13 +354,21 @@ public class Stpv extends FileParser{
 	 * @throws IOException 
 	 */
 	private void setRadr(String path) throws IOException, SQLException {
-			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+		BufferedReader in = null;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while (in.ready()){
 				String line = in.readLine();
 				if(line.startsWith("RADR 30")){
 					this.insertMosaique(line);
 				}
 			}
+		} catch(IOException e){
+			throw e;
+		} finally {
+			if (in!= null)
+				in.close();
+		}
 	}
 
 
@@ -358,14 +389,29 @@ public class Stpv extends FileParser{
 	 * @throws IOException 
 	 */
 	private void createName() throws IOException{
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path+"/RESULTAT")));
+		BufferedReader in = null;
 		Boolean nameFound = false;
-		while (in.ready() && !nameFound){
-			String line = in.readLine();
-			if (line.startsWith("1     STPV - CAUTRA IV - CA:")){
-				this.name = "STPV_"+line.substring(29, 38).trim()+"."+line.substring(79, 88).trim();
-				nameFound = true;
+		try {
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(FileManager.getFile(path+"/RESULTAT"))));
+			Pattern pattern = Pattern.compile(".*STPV - CAUTRA IV - CA:.*");
+			while (in.ready() && !nameFound){
+				String line = in.readLine();
+				if (pattern.matcher(line).matches()){
+					int pos = line.indexOf(":");
+					this.name = "STPV_"+line.substring(pos+1, pos+10).trim()+"."+line.substring(pos+51, pos+60).trim();
+					nameFound = true;
+				}
 			}
+		} catch(IOException e){
+			//rethrow exception to cancel data import
+			throw e;
+		} finally {
+			if(in != null){
+				in.close();
+			}
+		}
+		if(nameFound == false){
+			throw new IOException("Format of the file RESULTAT unknown");
 		}
 	}
 
@@ -377,28 +423,36 @@ public class Stpv extends FileParser{
 	 * @throws IOException 
 	 */
 	private void setLieu(String path) throws IOException, SQLException {
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		while(in.ready()){
-			String line = in.readLine();
-			if(line.startsWith("LIEU 20")){
-				this.insertLieu20(line);
-			} else if(line.startsWith("LIEU 26") || line.startsWith("LIEU 26B")){
-				this.insertLieu26(line);
-			}  else if(line.startsWith("LIEU 27") || line.startsWith("LIEU 27B")){
-				this.insertLieu27(line);
-			} else if(line.startsWith("LIEU 6")) {
-				this.insertLieu6(line);
-			} else if (line.startsWith("LIEU 8")) {
-				this.insertLieu8(line);
-			} else if(line.startsWith("LIEU 90") && !line.startsWith("LIEU 901")){
-				this.insertLieu90(line);
-			} else if(line.startsWith("LIEU 901")){
-				this.insertLieu901(line);
-			} else if(line.startsWith("LIEU 91") && !line.startsWith("LIEU 91S")) {
-				this.insertLieu91(line);
-			} else if(line.startsWith("LIEU 91S")){
-				this.addLieu91S(line);
+		BufferedReader in = null;
+		try{
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			while(in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("LIEU 20")){
+					this.insertLieu20(line);
+				} else if(line.startsWith("LIEU 26") || line.startsWith("LIEU 26B")){
+					this.insertLieu26(line);
+				}  else if(line.startsWith("LIEU 27") || line.startsWith("LIEU 27B")){
+					this.insertLieu27(line);
+				} else if(line.startsWith("LIEU 6")) {
+					this.insertLieu6(line);
+				} else if (line.startsWith("LIEU 8")) {
+					this.insertLieu8(line);
+				} else if(line.startsWith("LIEU 90") && !line.startsWith("LIEU 901")){
+					this.insertLieu90(line);
+				} else if(line.startsWith("LIEU 901")){
+					this.insertLieu901(line);
+				} else if(line.startsWith("LIEU 91") && !line.startsWith("LIEU 91S")) {
+					this.insertLieu91(line);
+				} else if(line.startsWith("LIEU 91S")){
+					this.addLieu91S(line);
+				}
 			}
+		} catch(IOException e){
+			throw e;
+		} finally {
+			if(in != null)
+				in.close();
 		}
 	}
 
@@ -498,23 +552,55 @@ public class Stpv extends FileParser{
 		insert.addBatch();
 		if(line.trim().length() > 36) {
 			insert.setString(2, line.substring(26, 31).trim());
-			insert.setInt(3, new Integer(line.substring(34, 37).trim()));
-			insert.addBatch();
+			Integer xfl = null;
+			try{
+				xfl = new Integer(line.substring(34, 37).trim());
+			} catch(NumberFormatException e){
+				//do nothing
+			}
+			if(xfl != null){//line can be long enough be with just spaces
+				insert.setInt(3, xfl);
+				insert.addBatch();
+			}
 		}
 		if(line.trim().length() > 48){
 			insert.setString(2, line.substring(38, 43).trim());
-			insert.setInt(3, new Integer(line.substring(46, 49).trim()));
-			insert.addBatch();
+			Integer xfl = null;
+			try{
+				xfl = new Integer(line.substring(46, 49).trim());
+			} catch(NumberFormatException e){
+				//do nothing
+			}
+			if(xfl != null){//line can be long enough be with just spaces
+				insert.setInt(3, xfl);
+				insert.addBatch();
+			}
 		}
 		if(line.trim().length() > 60){
 			insert.setString(2, line.substring(50, 56).trim());
-			insert.setInt(3, new Integer(line.substring(58, 61).trim()));
-			insert.addBatch();
+			Integer xfl = null;
+			try{
+				xfl = new Integer(line.substring(58, 61).trim());
+			} catch(NumberFormatException e){
+				//do nothing
+			}
+			if(xfl != null){//line can be long enough be with just spaces
+				insert.setInt(3, new Integer(line.substring(58, 61).trim()));
+				insert.addBatch();
+			}
 		}
 		if(line.trim().length() > 72){
 			insert.setString(2, line.substring(62, 68).trim());
-			insert.setInt(3, new Integer(line.substring(70, 73).trim()));
-			insert.addBatch();
+			Integer xfl = null;
+			try{
+				xfl = new Integer(line.substring(70, 73).trim());
+			} catch(NumberFormatException e){
+				//do nothing
+			}
+			if(xfl != null){//line can be long enough be with just spaces
+				insert.setInt(3, xfl);
+				insert.addBatch();
+			}
 		}
 		insert.executeBatch();
 	}
@@ -580,16 +666,28 @@ public class Stpv extends FileParser{
 	 * @throws SQLException
 	 */
 	private void setConf(String path) throws IOException, SQLException{
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		while (in.ready()){
-			String line = in.readLine();
-			if(line.startsWith("CONF 12D")){
-				insertConf12D(line);
+		BufferedReader in = null;
+		try{
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			while (in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("CONF 12D")){
+					insertConf12D(line);
+				}
 			}
+		} catch(IOException e){
+			throw e;
+		} finally{
+			if (in != null)
+				in.close();
 		}
 	}
 
-	private void insertConf12D(String line) throws SQLException {
+	private void insertConf12D(String line_) {
+		String line = line_;
+		//si la ligne est trop longue, on enlève le numéro de ligne en trop
+		if(line.length() >= 80)
+			line = line.substring(0, line.length()-3).trim();
 		try{
 			PreparedStatement insert = this.conn.prepareStatement("insert into double (entite, destinataire, identifiant, strip, bal1, bal2, " +
 					"flinf1, flsup1, flinf2, flsup2) values (?,?,?,?,?,?,?,?,?,?)");
@@ -597,35 +695,39 @@ public class Stpv extends FileParser{
 			insert.setString(2, line.substring(26, 28));
 			insert.setString(3, line.substring(20, 22));
 			insert.setString(4, line.substring(9, 13).equals("INHI") ? "Non" : "Oui");
-			if(line.length()<45){
-				insert.setString(5, line.substring(38));
-				for(int i = 6; i<11; i++){
-					insert.setString(i, "");
-				}
-			}else{
-				insert.setString(5, line.substring(38, 43));
-				if(line.length()<55){
-					insert.setString(6, line.substring(44));
-					for(int i = 7; i<11; i++){
+			if(line.length()>28){
+				if(line.length()<45){
+					insert.setString(5, line.substring(38));
+					for(int i = 6; i<11; i++){
 						insert.setString(i, "");
 					}
 				}else{
-					insert.setString(6, line.substring(44,49));
-					insert.setString(7, line.substring(52, 55));
-					if(line.length()>=61)
-						insert.setString(8, line.substring(58, 61));
-					else
-						insert.setString(8, "");
-					insert.setString(9, "");
-					insert.setString(10, "");
-					if(line.length()>=72){
-						insert.setString(9, line.substring(64, 67));
-						insert.setString(10, line.substring(70, 73));
+					insert.setString(5, line.substring(38, 43));
+					if(line.length()<55){
+						insert.setString(6, line.substring(44));
+						for(int i = 7; i<11; i++){
+							insert.setString(i, "");
+						}
+					}else{
+						insert.setString(6, line.substring(44,49));
+						insert.setString(7, line.substring(52, 55));
+						if(line.length()>=61)
+							insert.setString(8, line.substring(58, 61));
+						else
+							insert.setString(8, "");
+						insert.setString(9, "");
+						insert.setString(10, "");
+						if(line.length()>=72){
+							insert.setString(9, line.substring(64, 67));
+							insert.setString(10, line.substring(70, 73));
+						}
 					}
 				}
 			}
 			insert.executeUpdate();
-		}catch(Exception e){
+		} catch(Exception e){
+			System.out.println(line_+"/"+line_.length());
+			System.out.println(line);
 			e.printStackTrace();
 		}
 	}
