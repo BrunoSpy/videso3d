@@ -137,29 +137,19 @@ public class Stpv extends FileParser{
 		this.setRadr(FileManager.getFile(path + "/RADR"));
 		this.setFile("SECT");
 		this.setProgress(2);
-		System.out.println("SECT?");
 		this.setSect(FileManager.getFile(path + "/SECT"));
-		System.out.println("SECT.");
 		this.setFile("BALI");
 		this.setProgress(3);
-		System.out.println("BALI?");
 		this.setBali(FileManager.getFile(path + "/BALI"));
-		System.out.println("BALI.");
 		this.setProgress(4);
 		this.setFile("CODE");
-		System.out.println("CODE?");
 		this.setCode(FileManager.getFile(path+ "/CODE"));
-		System.out.println("CODE.");
 		this.setProgress(5);
 		this.setFile("CONF");
-		System.out.println("CONF?");
 		this.setConf(FileManager.getFile(path+ "/CONF"));
-		System.out.println("CONF.");
 		this.setProgress(6);
 		this.setFile("COOR");
-		System.out.println("COOR?");
 		this.setCoor(FileManager.getFile(path+ "/COOR"));
-		System.out.println("COOR.");
 		this.setProgress(7);
 	}
 
@@ -229,6 +219,7 @@ public class Stpv extends FileParser{
 			if(line.length()>72) st.setBoolean(11, line.substring(68, 73).trim().equals("SOPT1"));
 			st.executeUpdate();
 		}
+		st.close();
 	}
 	
 	private void insertCode1(String line) throws SQLException{
@@ -258,24 +249,32 @@ public class Stpv extends FileParser{
 	 * @throws IOException 
 	 */
 	private void setBali(String path) throws IOException, SQLException {
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		String currentName = "";
-		ArrayList<String> currentLines = new ArrayList<String>();
-		while (in.ready()){
-			String line = in.readLine();
-			String name = (line.length()>12 ? line.substring(8, 13) : line.substring(8));
-			if(!name.equals(currentName)){
-				insertBali(currentLines, currentName.trim());
-				currentLines.clear();
-				currentName = name;
+		BufferedReader in = null;
+		try{
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			String currentName = "";
+			ArrayList<String> currentLines = new ArrayList<String>();
+			while (in.ready()){
+				String line = in.readLine();
+				String name = (line.length()>12 ? line.substring(8, 13) : line.substring(8));
+				if(!name.equals(currentName)){
+					insertBali(currentLines, currentName.trim());
+					currentLines.clear();
+					currentName = name;
+				}
+				if(line.startsWith("BALI 4") || line.startsWith("BALI 5")){
+					currentLines.add(line);
+				}
 			}
-			if(line.startsWith("BALI 4") || line.startsWith("BALI 5")){
-				currentLines.add(line);
-			}
+			insertBali(currentLines, currentName.trim());
+		} catch(IOException e){
+			throw e;
+		} finally{
+			if(in != null)
+				in.close();
 		}
-		insertBali(currentLines, currentName.trim());
 	}
-	
+
 	/**
 	 * Insertion en base de données d'une ligne BALI 4, ou BALI50 à BALI59
 	 * @param line
@@ -312,7 +311,7 @@ public class Stpv extends FileParser{
 		insertSLCT.close();
 	}
 	
-	
+
 	/**
 	 * Parse le fichier SECT
 	 * @param path
@@ -320,12 +319,20 @@ public class Stpv extends FileParser{
 	 * @throws IOException 
 	 */
 	private void setSect(String path) throws IOException, SQLException{
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		while (in.ready()){
-			String line = in.readLine();
-			if(line.startsWith("SECT 5") || line.startsWith("SECT 8")){
-				this.insertSect(line);
+		BufferedReader in = null;
+		try{
+			in =new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			while (in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("SECT 5") || line.startsWith("SECT 8")){
+					this.insertSect(line);
+				}
 			}
+		} catch(IOException e){
+			throw e;
+		} finally {
+			if(in != null)
+				in.close();
 		}
 	}
 	
@@ -732,14 +739,21 @@ public class Stpv extends FileParser{
 		}
 	}
 	
-	
 	private void setCoor(String path) throws IOException, SQLException {
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-		while (in.ready()){
-			String line = in.readLine();
-			if(line.startsWith("COOR 30") || line.startsWith("COOR 40")){
-				insertCoor(line);
+		BufferedReader in = null;
+		try{
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			while (in.ready()){
+				String line = in.readLine();
+				if(line.startsWith("COOR 30") || line.startsWith("COOR 40")){
+					insertCoor(line);
+				}
 			}
+		} catch(IOException e){
+			throw e;
+		} finally {
+			if(in != null)
+				in.close();
 		}
 	}
 	
