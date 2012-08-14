@@ -59,11 +59,15 @@ public class StipContext extends Context {
 			try {
 				final Statement st = DatabaseManager.getCurrentStip();
 				ResultSet rs = st.executeQuery("select * from secteurs where nom='"+name+"'");
-				taskpane1.add(new JLabel("<html><b>Espace</b> : "+(rs.getString(4).equals("U")?"UIR":"FIR")+"</html>"));
-				taskpane1.add(new JLabel("<html><b>Appartient au centre</b> : "+rs.getString(3)+"</html>"));
-				taskpane1.add(new JLabel("<html><b>Plafond</b> : "+rs.getString(7)+"</html>"));
-				taskpane1.add(new JLabel("<html><b>Plancher</b> : "+rs.getString(6)+"</html>"));
-				taskpane1.add(new JLabel("<html><b>Mode S</b> : "+(rs.getBoolean(8)?"Oui":"Non")));
+				if(rs.next()){
+					taskpane1.add(new JLabel("<html><b>Espace</b> : "+(rs.getString(4).equals("U")?"UIR":"FIR")+"</html>"));
+					taskpane1.add(new JLabel("<html><b>Appartient au centre</b> : "+rs.getString(3)+"</html>"));
+					taskpane1.add(new JLabel("<html><b>Plafond</b> : "+rs.getString(7)+"</html>"));
+					taskpane1.add(new JLabel("<html><b>Plancher</b> : "+rs.getString(6)+"</html>"));
+					taskpane1.add(new JLabel("<html><b>Mode S</b> : "+(rs.getBoolean(8)?"Oui":"Non")));
+				} else {
+					taskpane1.add(new JLabel("<html><i>Secteur non déclaré dans Satin</i></html>"));
+				}
 			} catch (SQLException e){
 				e.printStackTrace();
 			}
