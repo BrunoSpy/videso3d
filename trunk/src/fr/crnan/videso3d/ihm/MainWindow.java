@@ -457,7 +457,7 @@ public class MainWindow extends JFrame {
 	/* ******************************************************* */
 	
 	public void addTrajectoriesViews(File[] filesT){
-		this.addTrajectoriesViews(filesT, null, true);
+		this.addTrajectoriesViews(filesT, null, true, true);
 	}
 	
 	/**
@@ -469,7 +469,7 @@ public class MainWindow extends JFrame {
 	 */
 	//nombre de fichiers importés
 	int current = -1;
-	public void addTrajectoriesViews(File[] filesT, List<TrajectoryFileFilter> filters, boolean disjunctive){
+	public void addTrajectoriesViews(File[] filesT, List<TrajectoryFileFilter> filters, boolean disjunctive, boolean importRapide){
 		final ProgressMonitor progressMonitorT = new ProgressMonitor(this, "Import des trajectoires", "", 0, 100, false, true, false);
 		progressMonitorT.setMillisToDecideToPopup(0);
 		progressMonitorT.setMillisToPopup(0);
@@ -553,7 +553,7 @@ public class MainWindow extends JFrame {
 				layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
 				this.wwd.toggleLayer(layer, true);
 				//lecture et création des tracks à la volée
-				GEOReader reader = new GEOReader(geoFile, layer.getModel(), readerListener, filters, disjunctive);
+				GEOReader reader = new GEOReader(geoFile, layer.getModel(), readerListener, filters, disjunctive, importRapide);
 				if(reader.getModel().getAllTracks().size() > 0){
 					//changement du style en fonction de la conf
 					if(reader.getModel().getAllTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
