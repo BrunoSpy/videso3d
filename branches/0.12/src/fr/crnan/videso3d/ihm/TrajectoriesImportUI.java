@@ -42,6 +42,7 @@ import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
 import javax.swing.Box;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
@@ -82,7 +83,8 @@ public class TrajectoriesImportUI extends JDialog {
 	
 	private JCheckBox enableHeureDebut;
 	private JCheckBox enableHeureFin;
-	
+	private JCheckBox enableRapidite;
+	private JLabel toolTipRapidite;
 	private final ButtonGroup filterbtnGrp = new ButtonGroup();
 	
 	public TrajectoriesImportUI(final MainWindow mainWindow) {
@@ -326,7 +328,10 @@ public class TrajectoriesImportUI extends JDialog {
 				heureDebut.setEnabled(enableHeureDebut.isSelected());
 				minuteDebut.setEnabled(enableHeureDebut.isSelected());
 				secondesDebut.setEnabled(enableHeureDebut.isSelected());
-				
+				enableRapidite.setEnabled(enableHeureDebut.isSelected()||enableHeureFin.isSelected());
+				toolTipRapidite.setEnabled(enableRapidite.isEnabled());
+				if(!enableHeureDebut.isSelected() && !enableHeureFin.isSelected())
+					enableRapidite.setSelected(false);
 				if(((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() >
 				((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()){
 					heureDebut.setValue(heureFin.getValue());
@@ -357,7 +362,10 @@ public class TrajectoriesImportUI extends JDialog {
 				heureFin.setEnabled(enableHeureFin.isSelected());
 				minutesFin.setEnabled(enableHeureFin.isSelected());
 				secondesFin.setEnabled(enableHeureFin.isSelected());	
-				
+				enableRapidite.setEnabled(enableHeureDebut.isSelected()||enableHeureFin.isSelected());
+				toolTipRapidite.setEnabled(enableRapidite.isEnabled());
+				if(!enableHeureDebut.isSelected() && !enableHeureFin.isSelected())
+					enableRapidite.setSelected(false);
 				if(((SpinnerNumberModel)(heureDebut).getModel()).getNumber().intValue() >
 				((SpinnerNumberModel)(heureFin).getModel()).getNumber().intValue()){
 					heureFin.setValue(heureDebut.getValue());
@@ -379,37 +387,47 @@ public class TrajectoriesImportUI extends JDialog {
 			}
 		});
 		
-		GroupLayout gl_panel = new GroupLayout(filterContent);
-		gl_panel.setHorizontalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
+		enableRapidite = new JCheckBox("Import rapide");
+		enableRapidite.setEnabled(false);
+		enableRapidite.setToolTipText("Dégrade la précision : certaines trajectoires peuvent être tronquées au début ou à la fin, " +
+				"d'une durée allant jusqu'à une minute");
+		
+		toolTipRapidite = new JLabel(new ImageIcon(getClass().getResource("/resources/attention.png")));
+		toolTipRapidite.setToolTipText("Dégrade la précision : certaines trajectoires peuvent être tronquées au début ou à la fin, " +
+				"d'une durée allant jusqu'à une minute");
+		toolTipRapidite.setEnabled(false);
+		
+		GroupLayout gl_filterContent = new GroupLayout(filterContent);
+		gl_filterContent.setHorizontalGroup(
+			gl_filterContent.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_filterContent.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_filterContent.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblActiverLesFiltres)
-						.addGroup(gl_panel.createSequentialGroup()
-							.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-								.addComponent(lblAroportArrive, Alignment.LEADING)
-								.addComponent(lblAroportDpart, Alignment.LEADING)
-								.addComponent(lblFiltrerLesTrajectoires, Alignment.LEADING)
-								.addComponent(lblModeA, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
-								.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
+						.addGroup(gl_filterContent.createSequentialGroup()
+							.addGroup(gl_filterContent.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblAroportArrive)
+								.addComponent(lblAroportDpart)
+								.addComponent(lblFiltrerLesTrajectoires)
+								.addComponent(lblModeA, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+								.addGroup(gl_filterContent.createSequentialGroup()
 									.addComponent(lblHeureDebut)
-									.addPreferredGap(ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+									.addPreferredGap(ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
 									.addComponent(enableHeureDebut))
-								.addGroup(Alignment.LEADING, gl_panel.createSequentialGroup()
+								.addGroup(gl_filterContent.createSequentialGroup()
 									.addComponent(lblHeureDeFin)
-									.addPreferredGap(ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+									.addPreferredGap(ComponentPlacement.RELATED, 63, Short.MAX_VALUE)
 									.addComponent(enableHeureFin)
 									.addPreferredGap(ComponentPlacement.RELATED)))
 							.addGap(6)
-							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel.createSequentialGroup()
+							.addGroup(gl_filterContent.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_filterContent.createSequentialGroup()
 									.addComponent(heureFin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 									.addComponent(lblSep3)
 									.addComponent(minutesFin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 									.addComponent(lblSep4)
 									.addComponent(secondesFin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-								.addGroup(gl_panel.createSequentialGroup()
+								.addGroup(gl_filterContent.createSequentialGroup()
 									.addComponent(heureDebut, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 									.addComponent(lblSep1)
 									.addComponent(minuteDebut, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
@@ -419,80 +437,91 @@ public class TrajectoriesImportUI extends JDialog {
 								.addComponent(modeA, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)
 								.addComponent(rdbtnEt)
 								.addComponent(filterYes)
-								.addGroup(gl_panel.createParallelGroup(Alignment.TRAILING)
-									.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_filterContent.createParallelGroup(Alignment.TRAILING)
+									.addGroup(gl_filterContent.createParallelGroup(Alignment.LEADING)
 										.addComponent(filterNo)
 										.addComponent(rdbtnOu))
-									.addComponent(adep, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE))))))
+									.addComponent(adep, GroupLayout.PREFERRED_SIZE, 116, GroupLayout.PREFERRED_SIZE)))
+							.addGap(7))
+						.addGroup(gl_filterContent.createSequentialGroup()
+							.addGap(138)
+							.addComponent(enableRapidite, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(toolTipRapidite)
+							.addContainerGap())))
 		);
-		gl_panel.setVerticalGroup(
-			gl_panel.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel.createSequentialGroup()
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel.createSequentialGroup()
+		gl_filterContent.setVerticalGroup(
+			gl_filterContent.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_filterContent.createSequentialGroup()
+					.addGroup(gl_filterContent.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_filterContent.createSequentialGroup()
 							.addContainerGap()
-							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel.createSequentialGroup()
+							.addGroup(gl_filterContent.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_filterContent.createSequentialGroup()
 									.addComponent(filterNo)
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addComponent(rdbtnOu))
-								.addGroup(gl_panel.createSequentialGroup()
-									.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+								.addGroup(gl_filterContent.createSequentialGroup()
+									.addGroup(gl_filterContent.createParallelGroup(Alignment.BASELINE)
 										.addComponent(lblActiverLesFiltres)
 										.addComponent(filterYes))
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_panel.createSequentialGroup()
-											.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+									.addGroup(gl_filterContent.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_filterContent.createSequentialGroup()
+											.addGroup(gl_filterContent.createParallelGroup(Alignment.BASELINE)
 												.addComponent(lblFiltrerLesTrajectoires)
 												.addComponent(rdbtnEt))
 											.addPreferredGap(ComponentPlacement.RELATED)
-											.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+											.addGroup(gl_filterContent.createParallelGroup(Alignment.BASELINE)
 												.addComponent(adep, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 												.addComponent(lblAroportDpart)))
-										.addGroup(gl_panel.createSequentialGroup()
+										.addGroup(gl_filterContent.createSequentialGroup()
 											.addGap(58)
-											.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+											.addGroup(gl_filterContent.createParallelGroup(Alignment.BASELINE)
 												.addComponent(lblAroportArrive)
 												.addComponent(adest, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))))
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+									.addGroup(gl_filterContent.createParallelGroup(Alignment.BASELINE)
 										.addComponent(modeA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addComponent(lblModeA))))
-							.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel.createSequentialGroup()
+							.addGroup(gl_filterContent.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_filterContent.createSequentialGroup()
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+									.addGroup(gl_filterContent.createParallelGroup(Alignment.BASELINE)
 										.addComponent(heureDebut, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addComponent(lblSep1)
 										.addComponent(minuteDebut, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addComponent(lblSep2)
 										.addComponent(secondesDebut, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-								.addGroup(gl_panel.createSequentialGroup()
+								.addGroup(gl_filterContent.createSequentialGroup()
 									.addGap(12)
 									.addComponent(lblHeureDebut)))
 							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-						.addGroup(Alignment.TRAILING, gl_panel.createSequentialGroup()
+						.addGroup(gl_filterContent.createSequentialGroup()
 							.addContainerGap()
 							.addComponent(enableHeureDebut)
 							.addGap(10)))
-					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel.createParallelGroup(Alignment.BASELINE)
+					.addGroup(gl_filterContent.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_filterContent.createParallelGroup(Alignment.BASELINE)
 							.addComponent(heureFin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addComponent(lblSep3)
 							.addComponent(minutesFin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 							.addComponent(lblSep4)
 							.addComponent(secondesFin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_panel.createSequentialGroup()
+						.addGroup(gl_filterContent.createSequentialGroup()
 							.addGap(6)
 							.addComponent(lblHeureDeFin))
-						.addGroup(gl_panel.createSequentialGroup()
+						.addGroup(gl_filterContent.createSequentialGroup()
 							.addGap(4)
 							.addComponent(enableHeureFin)))
+					.addGap(7)
+					.addGroup(gl_filterContent.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(toolTipRapidite, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+						.addComponent(enableRapidite))
 					.addContainerGap())
 		);
-		gl_panel.linkSize(SwingConstants.HORIZONTAL, new Component[] {adep, adest, modeA});
-		filterContent.setLayout(gl_panel);
+		gl_filterContent.linkSize(SwingConstants.HORIZONTAL, new Component[] {adep, adest, modeA});
+		filterContent.setLayout(gl_filterContent);
 		
 	
 		getContentPane().add(filterContent);
@@ -520,7 +549,7 @@ public class TrajectoriesImportUI extends JDialog {
 						@Override
 						protected String doInBackground() throws Exception {
 							try {
-								mainWindow.addTrajectoriesViews(fileChooser.getSelectedFiles(), getFilters(), isDisjuntive());
+								mainWindow.addTrajectoriesViews(fileChooser.getSelectedFiles(), getFilters(), isDisjuntive(), enableRapidite.isSelected());
 							} catch(Exception e1){
 								e1.printStackTrace();
 							}

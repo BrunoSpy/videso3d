@@ -38,7 +38,8 @@ import java.util.Vector;
  * @version 0.2.
  */
 public class GEOReader extends TrackFilesReader{
-		
+	private boolean importRapide = false;	
+	
 	public GEOReader(Vector<File> files) throws PointNotFoundException {
 		super(files);
 		this.setModel(new TracksModel());
@@ -63,8 +64,9 @@ public class GEOReader extends TrackFilesReader{
 	
 	public GEOReader(Vector<File> files, TracksModel model,
 			PropertyChangeListener listener,
-			List<TrajectoryFileFilter> filters, boolean disjunctive) throws PointNotFoundException {
+			List<TrajectoryFileFilter> filters, boolean disjunctive, boolean importRapide) throws PointNotFoundException {
 		super(files, model, listener, filters, disjunctive);
+		this.importRapide=importRapide;
 	}
 
 	public static Boolean isGeoFile(File file){
@@ -124,40 +126,112 @@ public class GEOReader extends TrackFilesReader{
         	in =  new BufferedReader(new InputStreamReader(stream));
         	GEOTrack track = null;
         	boolean trackValid = true;
-        	while(in.ready()){
-        		sentence = in.readLine();
-        		if (sentence != null)
-        		{
-        			if(!sentence.startsWith("!")  && !sentence.startsWith("Voie")){
-        				if(track == null || track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0){
-        					if(track != null) {
-        						if(trackValid && track.getNumPoints()>1) this.getModel().addTrack(track);
-        					}
-        					track = new GEOTrack(sentence);
-        					trackValid = this.isTrackValid(track);
-        				} 
-        				if(trackValid){
-        					GEOTrackPoint point = new GEOTrackPoint(sentence);
-        					if((timeFileFilterBegin == null || (timeFileFilterBegin != null && point.getDecimalTime() > timeFileFilterBegin))
-        							&& (timeFileFilterEnd == null || (timeFileFilterEnd != null && point.getDecimalTime() < timeFileFilterEnd))){
-        						track.addTrackPoint(sentence);
-        					}
-        				}
-        			}
-        		} 
-        	}
-        	//last Track
-        	if(track != null){
-        		//if layer is set, create immediately the track instead of memorizing it
-        		if(trackValid && track.getNumPoints()>1) this.getModel().addTrack(track);
-        	}
+        	sentence = "!";
+    		while(sentence.startsWith("!")  || !sentence.startsWith("Voie")){
+    			sentence = in.readLine();
+    		}
+    		if(!importRapide||(timeFileFilterBegin==null&&timeFileFilterEnd==null)){
+    			while(in.ready()){
+    				sentence = in.readLine();
+    				if (sentence != null){
+    					if(track == null || track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0){
+    						if(track != null) {
+    							if(timeFileFilterEnd!=null){
+    								//Si on a atteint une trajectoire dont l'heure de début est postérieure à l'heure du filtre de fin, on arrête la lecture.
+    								if(Double.parseDouble(sentence.split("\t")[3])>timeFileFilterEnd)
+    									break;
+    							}
+    							if(trackValid && track.getNumPoints()>1) this.getModel().addTrack(track);
+    						}
+    						track = new GEOTrack(sentence);
+    						trackValid = this.isTrackValid(track);
+    					} 
+    					if(trackValid){
+    						GEOTrackPoint point = new GEOTrackPoint(sentence);
+    						if((timeFileFilterBegin == null || (timeFileFilterBegin != null && point.getDecimalTime() > timeFileFilterBegin))
+    								&& (timeFileFilterEnd == null || (timeFileFilterEnd != null && point.getDecimalTime() < timeFileFilterEnd))){
+    							track.addTrackPoint(sentence);
+    						}
+    					}
+    				}
+    			}
+    		}else{
+    				if(timeFileFilterBegin!=null&&timeFileFilterEnd==null){
+    					while(in.ready()){
+    					sentence = in.readLine();
+    					if(Double.parseDouble(sentence.split("\t")[3])<timeFileFilterBegin){
+    						for(int i=0;i<30;i++)
+    							in.readLine();
+    					}else{
+    						if(track == null || track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0){
+    							if(track != null) {
+    								if(trackValid && track.getNumPoints()>1) this.getModel().addTrack(track);
+    							}
+    							track = new GEOTrack(sentence);
+    							trackValid = this.isTrackValid(track);
+    						} 
+    						if(trackValid)
+    							track.addTrackPoint(sentence);
+    					}
+    				}
+    			}else if(timeFileFilterBegin==null&&timeFileFilterEnd!=null){
+    				while(in.ready()){
+    					if(Double.parseDouble(sentence.split("\t")[3])>timeFileFilterEnd){
+    						if(track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0)
+    							break;
+    						for(int i=0;i<30;i++)
+    							in.readLine();
+    					}else{
+    						if(track == null || track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0){
+    							if(track != null) {
+    								if(trackValid && track.getNumPoints()>1) this.getModel().addTrack(track);
+    							}
+    							track = new GEOTrack(sentence);
+    							trackValid = this.isTrackValid(track);
+    						} 
+    						if(trackValid)
+    							track.addTrackPoint(sentence);
+    					}
+    				}
+    			}else if(timeFileFilterBegin!=null&&timeFileFilterEnd!=null){
+    				while(in.ready()){
+    					double currentTime = Double.parseDouble(sentence.split("\t")[3]);
+    					if(currentTime < timeFileFilterBegin){
+    						for(int i=0;i<30;i++)
+    							in.readLine();
+    					}else if(currentTime > timeFileFilterEnd){
+    						if(track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0)
+    							break;
+    						for(int i=0;i<30;i++)
+    							in.readLine();
+    					}else{
+    						if(track == null || track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0){
+    							if(track != null) {
+    								if(trackValid && track.getNumPoints()>1) this.getModel().addTrack(track);
+    							}
+    							track = new GEOTrack(sentence);
+    							trackValid = this.isTrackValid(track);
+    						} 
+    						if(trackValid)
+    							track.addTrackPoint(sentence);
+    					}
+    				}
+    			}
+    		}
+
+
+    		//last Track
+    		if(track != null){
+    			//if layer is set, create immediately the track instead of memorizing it
+    			if(trackValid && track.getNumPoints()>1) this.getModel().addTrack(track);
+    		}
         } catch (IOException e) {
         	e.printStackTrace();
-		} catch (Exception e){
-			e.printStackTrace();
-		} finally {
-			if(in != null)
-				try {
+        } catch (Exception e){
+        	e.printStackTrace();
+        } finally {
+        	if(in != null)
+        		try {
 					in.close();
 				} catch (IOException e) {
 					e.printStackTrace();
