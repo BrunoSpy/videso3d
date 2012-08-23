@@ -21,7 +21,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import fr.crnan.videso3d.layers.ContoursPays.*;
+import fr.crnan.videso3d.layers.contourspays.*;
 import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.Pallet;
 import gov.nasa.worldwind.avlist.AVKey;
