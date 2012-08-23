@@ -77,7 +77,7 @@ public class MultiplePointsAddGUI extends JDialog {
 				"<ul><li>nom</li>" +
 				"<li>latitude</li>" +
 				"<li>longitude</li>" +
-				"<li>altitude en mètres</li>" +
+				"<li>altitude : nombre en mètres ou niveaux suivis de \"FL\"</li>" +
 				"<li>commentaire (optionnel)</li>" +
 				"</ul></ul>" +
 				"</html>");
@@ -132,7 +132,7 @@ public class MultiplePointsAddGUI extends JDialog {
 				this.addPoint(line);
 			}
 		} catch(ParseException e){
-			JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />L'import de la liste des points ne s'est pas déroulée correctemen.<br /><br />" +
+			JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />L'import de la liste des points ne s'est pas déroulée correctement.<br /><br />" +
 					"<b>Solution :</b><br />Vérifiez que le format de chaque ligne est correct.</html>", "Erreur", JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -145,7 +145,12 @@ public class MultiplePointsAddGUI extends JDialog {
 			try { 
 				altitude = new Double(words[3]);
 			} catch (NumberFormatException e){
-				altitude = null;
+				if(words[3].trim().endsWith("FL")){
+					String alt = words[3].trim();
+					altitude = new Double(alt.substring(0, alt.length()-2))*30.48;
+				} else {
+					altitude = null;
+				}
 			}
 			if(latlon != null && altitude != null){
 				MovableBalise3D point = new MovableBalise3D(words[0], new Position(latlon, altitude));
