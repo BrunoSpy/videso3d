@@ -200,6 +200,10 @@ public class ProjectManager extends ProgressSupport {
 
 		int index = file.getName().lastIndexOf(".");
 
+		if(index == -1){
+			return false;
+		}
+		
 		String name = file.getName().substring(0, index);
 
 		//count for xml files
@@ -590,13 +594,23 @@ public class ProjectManager extends ProgressSupport {
 		if(globe.exists()){
 			this.fireTaskProgress(progress++);
 			
-			BufferedReader input = new BufferedReader(new FileReader(globe));
-			String s = "";
-			while(input.ready()){
-				s += input.readLine();
+			BufferedReader input = null;
+			try {
+				input = new BufferedReader(new FileReader(globe));
+
+				String s = "";
+				while(input.ready()){
+					s += input.readLine();
+				}
+				wwd.getView().stopMovement();
+				wwd.getView().restoreState(s);
+			} catch (IOException e){
+				e.printStackTrace();
+			} finally{
+				if(input != null)
+					input.close();
 			}
-			wwd.getView().stopMovement();
-			wwd.getView().restoreState(s);
+			
 		}
 		//remove temp files
 		FileManager.removeTempFiles();

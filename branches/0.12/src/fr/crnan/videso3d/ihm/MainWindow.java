@@ -29,7 +29,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -163,11 +165,30 @@ public class MainWindow extends JFrame {
 
 
 		//fermeture des connections aux bases de données avant de quitter afin de ne pas perdre les dernières transactions
-		//et suppression des dossiers temporaires
+		//suppression des dossiers temporaires
+		//et enregistrement de la session
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
 				DatabaseManager.closeAll();
 				FileManager.removeTempFiles();
+				
+				//suppression de la dernière session
+				if(new File("session.vpj").exists()){
+					new File("session.vpj").delete();
+				}
+				ProjectManager project = new ProjectManager();
+				project.prepareSaving(wwd);
+				Set<String> types = new HashSet<String>();
+				for(DatabaseManager.Type type : project.getTypes()){
+					types.add(type.toString());
+				}
+				try {
+					project.saveProject(new File("session.vpj"), types, null, null, false, true);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 
@@ -211,6 +232,10 @@ public class MainWindow extends JFrame {
 					omniBox = new Omnibox(wwd, context);
 					for(DatabaseManager.Type t : DatabaseManager.getSelectedDatabases()){
 						omniBox.addDatabase(t, DatabaseManager.getAllVisibleObjects(t, omniBox), false);
+					}
+					//chargement de la session précédente si elle existe
+					if(new File("session.vpj").exists()){
+						new ProjectManager().loadProject(new File("session.vpj"), wwd, MainWindow.this, false);
 					}
 					wwd.firePropertyChange("step", "", "Création de l'interface");
 				} catch (Exception e) {
