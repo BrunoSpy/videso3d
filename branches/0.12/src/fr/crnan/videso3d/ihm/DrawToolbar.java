@@ -28,12 +28,14 @@ import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.graphics.MovableBalise3D;
 import fr.crnan.videso3d.graphics.VPolygon;
+import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.graphics.editor.EllipsoidFactory;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.graphics.editor.ShapeEditorsManager;
@@ -196,7 +198,12 @@ public class DrawToolbar extends JToolBar {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new MultiplePointsAddGUI(DrawToolbar.this.getParent(), wwd).setVisible(true);
+				MultiplePointsAddGUI gui = new MultiplePointsAddGUI();
+				if(gui.showDialog() == JOptionPane.OK_OPTION){
+					for(VidesoObject o : gui.getObjects()){
+						wwd.addObject(o);
+					}
+				};
 			}
 		});
 		points.getPopupMenu().add(addPoint);

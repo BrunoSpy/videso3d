@@ -31,7 +31,7 @@ import gov.nasa.worldwind.util.Logging;
 
 /**
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public class Videso3D {
 
@@ -42,6 +42,7 @@ public class Videso3D {
 		if (Configuration.isMacOS())
 		{
 			System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Videso 3D");
+			System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
 		}
 
 		// prevents flashing during window resizing

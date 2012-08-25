@@ -15,58 +15,39 @@
  */
 package fr.crnan.videso3d.ihm;
 
-import java.awt.Component;
 import java.awt.Dimension;
 
-import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingWorker;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.JPanel;
-import javax.swing.BoxLayout;
-
-import javax.swing.Box;
-import javax.swing.JSplitPane;
-
-import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.MovableBalise3D;
-import fr.crnan.videso3d.ihm.components.TitledPanel;
+import fr.crnan.videso3d.graphics.VidesoObject;
+import fr.crnan.videso3d.ihm.components.AddObjectDialog;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 
-import javax.swing.JButton;
-import javax.swing.SwingConstants;
 /**
  * IHM to add multiple points from a CSV table
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
-public class MultiplePointsAddGUI extends JDialog {
+public class MultiplePointsAddGUI extends AddObjectDialog {
+
+	private List<VidesoObject> points;
+	private int result = -1;
 	
-	private VidesoGLCanvas wwd;
-	
-	public MultiplePointsAddGUI(Component parent, VidesoGLCanvas wwd){
-		this.wwd = wwd;
-		this.setTitle("Ajout d'une liste de points");
-		this.setPreferredSize(new Dimension(700, 400));
-		JSplitPane splitPane = new JSplitPane();
-		splitPane.setOneTouchExpandable(true);
-		getContentPane().add(splitPane, BorderLayout.CENTER);
+	public MultiplePointsAddGUI(){
+		points = new ArrayList<VidesoObject>();
 		
-		final JTextArea textArea = new JTextArea();
-		splitPane.setRightComponent(textArea);
-		
-		JPanel helpPanel = new TitledPanel("Aide");
-		JLabel label = new JLabel("<html>" +
+		this.setHelpText("<html>" +
 				"Utiliser la zone de texte à droite pour ajouter" +
 				"<br/> des points avec annotation sur la vue 3D.<br/>" +
 				"<br/>" +
@@ -81,21 +62,18 @@ public class MultiplePointsAddGUI extends JDialog {
 				"<li>commentaire (optionnel)</li>" +
 				"</ul></ul>" +
 				"</html>");
-		label.setVerticalAlignment(SwingConstants.TOP);
-		JScrollPane scrollPane = new JScrollPane(label);
-		helpPanel.add(scrollPane, BorderLayout.CENTER);
-		splitPane.setLeftComponent(helpPanel);
-		
-		JPanel panel = new JPanel();
-		getContentPane().add(panel, BorderLayout.SOUTH);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		
-		Component horizontalGlue = Box.createHorizontalGlue();
-		panel.add(horizontalGlue);
-		
-		JButton validate = new JButton("Valider");
-		validate.addActionListener(new ActionListener() {
-			
+
+
+		this.setTitle("Ajout d'une liste de points");
+		this.setPreferredSize(new Dimension(700, 400));
+
+
+
+		final JTextArea textArea = new JTextArea();
+		this.setContentComponent(textArea);
+
+		this.addValidateAction(new ActionListener() {
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				new SwingWorker<Void, Void>() {
@@ -105,63 +83,76 @@ public class MultiplePointsAddGUI extends JDialog {
 						doProcessTxtArea(textArea);
 						return null;
 					}
+
+					@Override
+					protected void done() {
+						//close the dialog if OK
+						if(getResult() == JOptionPane.OK_OPTION){
+							MultiplePointsAddGUI.this.dispose();
+						}
+						
+					}
 				}.execute();
-				MultiplePointsAddGUI.this.dispose();
+				
 			}
 		});
-		panel.add(validate);
-		
-		JButton cancel = new JButton("Annuler");
-		cancel.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				MultiplePointsAddGUI.this.dispose();
-			}
-		});
-		panel.add(cancel);
-		
-		
+
+
 		this.pack();
 	}
-	
+
 	private void doProcessTxtArea(JTextArea txtArea){
+		result = JOptionPane.OK_OPTION;
 		String txt = txtArea.getText();
 		try{
 			for(String line : txt.split("\\n")){
 				this.addPoint(line);
 			}
 		} catch(ParseException e){
-			JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />L'import de la liste des points ne s'est pas déroulée correctement.<br /><br />" +
+			JOptionPane.showMessageDialog(this, "<html><b>Problème :</b><br />L'import de la liste des points ne s'est pas déroulée correctement.<br /><br />" +
 					"<b>Solution :</b><br />Vérifiez que le format de chaque ligne est correct.</html>", "Erreur", JOptionPane.ERROR_MESSAGE);
+			points.clear();
+			result = -1;
+			return;
 		}
+		
 	}
-	
+
 	private void addPoint(String line) throws ParseException {
 		String[] words = line.split(",");
 		if(words.length >= 4){
 			LatLon latlon = LatLonUtils.computeLatLonFromString(words[1]+","+words[2]);
 			Double altitude = null;
 			try { 
-				altitude = new Double(words[3]);
-			} catch (NumberFormatException e){
 				if(words[3].trim().endsWith("FL")){
 					String alt = words[3].trim();
 					altitude = new Double(alt.substring(0, alt.length()-2))*30.48;
 				} else {
-					altitude = null;
+					altitude = new Double(words[3]);
 				}
+			} catch (NumberFormatException e){
+				altitude = null;
 			}
 			if(latlon != null && altitude != null){
 				MovableBalise3D point = new MovableBalise3D(words[0], new Position(latlon, altitude));
 				if(words.length > 4)
 					point.setAnnotation(words[4]);
-				this.wwd.addObject(point);
+				points.add(point);
 			} else {
 				throw new ParseException("Ligne mal formée : "+line, 0);
 			}
 		} else {
 			throw new ParseException("Ligne mal formée : "+line, 0);
 		}
+	}
+
+	@Override
+	protected int getResult() {
+		return this.result;
+	}
+
+	@Override
+	public List<VidesoObject> getObjects() {
+		return points;
 	}
 }
