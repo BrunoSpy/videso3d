@@ -26,6 +26,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.List;
 
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.DatabaseManager;
@@ -758,5 +759,10 @@ public class Exsa extends FileParser {
 		return Type.EXSA;
 	}
 
-
+	@Override
+	public List<String> getRelevantFileNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }

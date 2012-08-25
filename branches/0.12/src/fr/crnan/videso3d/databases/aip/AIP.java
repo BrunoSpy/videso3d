@@ -1299,4 +1299,10 @@ public class AIP extends FileParser{
 		return Type.AIP;
 	}
 
+	@Override
+	public List<String> getRelevantFileNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

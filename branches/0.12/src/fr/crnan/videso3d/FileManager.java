@@ -43,7 +43,7 @@ import eu.medsea.mimeutil.MimeUtil;
  * Manages several kind of files.<br />
  * Manages compressed files.
  * @author Bruno Spyckerelle
- * @version 0.5.2
+ * @version 0.5.3
  */
 public class FileManager {
 
@@ -300,10 +300,10 @@ public class FileManager {
 	
 	
 	/**
-	 * Recherche le fichier correspondant au chemin en essaynt les différentes casses possibles.
+	 * Recherche le fichier correspondant au chemin en essayant les différentes casses possibles.
 	 * Essaye aussi de trouver le fichier en ajoutant l'extension ".txt"
 	 * @param path
-	 * @return path
+	 * @return modified path
 	 */
 	public static String getFile(String path){
 		File f = new File(path);
@@ -323,6 +323,37 @@ public class FileManager {
 		else {
 			return null;
 		}
+	}
+	
+	/**
+	 * Recherche si <code>files</code> contient <code>fileName</code> sans tenir en compte de la casse.<br />
+	 * Prend aussi en compte la possibilité d'un ".txt" en extension<br />
+	 * Cette méthode est l'inverse de {@link FileManager#getFile(String)}
+	 * @param files
+	 * @param fileName
+	 * @return True si la liste contient un fichier dont le nom est <code>fileName</code> ou <code>fileName.txt</code>
+	 */
+	public static boolean containsFile(List<File> files, String fileName){
+		for(File f : files){
+			if(f.getName().equalsIgnoreCase(fileName) || f.getName().equalsIgnoreCase(fileName+".txt"))
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Recherche si <code>fileNames</code> contient le nom de <code>file</code> sans tenir compte de la casse.<br />
+	 * Ignore aussi la présence possible de l'extension ".txt"
+	 * @param fileNames
+	 * @param file
+	 * @return True si la liste contient le nom de <code>file</code>.
+	 */
+	public static boolean containsFile(List<String> fileNames, File file){
+		for(String f : fileNames){
+			if(file.getName().equalsIgnoreCase(f) || file.getName().equalsIgnoreCase(f+".txt"))
+				return true;
+		}
+		return false;
 	}
 	
 	/**

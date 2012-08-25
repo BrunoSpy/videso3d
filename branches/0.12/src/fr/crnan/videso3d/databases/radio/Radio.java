@@ -19,6 +19,7 @@ package fr.crnan.videso3d.databases.radio;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.DatabaseManager;
@@ -135,5 +136,10 @@ public class Radio extends FileParser {
 		return Type.RadioCov;
 	}
 	
+	@Override
+	public List<String> getRelevantFileNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

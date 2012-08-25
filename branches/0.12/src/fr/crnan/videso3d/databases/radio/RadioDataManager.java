@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.DatabaseManager;
@@ -285,5 +286,11 @@ public class RadioDataManager extends FileParser {
 		return Type.RadioCov;
 	}
 
+	@Override
+	public List<String> getRelevantFileNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 
 }

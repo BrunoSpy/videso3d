@@ -27,6 +27,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -54,6 +55,9 @@ public class Stip extends FileParser{
 	 */
 	private int numberFiles = 13;
 
+	private final String[] fileNames = {"CENTRE", "SECT", "BALISE", "BALISEP", "POINSECT", "ROUTSECT", 
+										"ROUTE", "ITI", "LIEUX", "TRAJET", "BALINT", "CONNEX"};
+	
 	/**
 	 * Version des fichiers Stip
 	 * = Version CA + Livraison
@@ -1497,6 +1501,11 @@ public class Stip extends FileParser{
 	@Override
 	public Type getType() {
 		return Type.STIP;
+	}
+	
+	@Override
+	public List<String> getRelevantFileNames() {
+		return Arrays.asList(this.fileNames);
 	}
 
 }

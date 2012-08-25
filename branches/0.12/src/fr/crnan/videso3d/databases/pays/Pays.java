@@ -26,6 +26,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -41,7 +42,7 @@ import gov.nasa.worldwind.geom.LatLon;
  * Ces fichiers nécessitent un traitement spécial car ils peuvent ne pas être distribués avec les autres fichiers CA lors d'une livraison par le CESNAC.<br />
  * Il s'agit des fichiers PAYS, CONTPAYS, et POINPAYS
  * @author Bruno Spyckerelle
- * @version 0.2.5
+ * @version 0.2.6
  */
 public class Pays extends FileParser {
 
@@ -49,6 +50,8 @@ public class Pays extends FileParser {
 	 * Nombre de fichiers gérés
 	 */
 	private int numberFiles = 3;
+	
+	private final String[] fileNames = {"PAYS", "CONTPAYS", "POINPAYS"};
 	
 	/**
 	 * Version des fichiers Stip PAYS
@@ -388,10 +391,6 @@ public class Pays extends FileParser {
 			while(rs.next()) {
 				Integer point = new Integer((rs.getString(2)).substring(1));
 				if(point>= pointF1){
-//					QPointF coor = new Point(new Latitude((String)query.record().value("latitude")).toDecimal(),
-//							new Longitude((String)query.record().value("longitude").toString()).toDecimal(),
-//							Point.Type.Stéréographique).coordonneesCautra();
-//					polygon.add(coor.x()*64, coor.y()*-64);
 					polygon.add(LatLon.fromDegrees(rs.getDouble(3), rs.getDouble(4)));
 				}
 			}
@@ -410,6 +409,11 @@ public class Pays extends FileParser {
 	@Override
 	public Type getType() {
 		return Type.PAYS;
+	}
+	
+	@Override
+	public List<String> getRelevantFileNames() {
+		return Arrays.asList(this.fileNames);
 	}
 
 }

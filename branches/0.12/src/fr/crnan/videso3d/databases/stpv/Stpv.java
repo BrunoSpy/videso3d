@@ -27,7 +27,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
 
@@ -54,6 +56,7 @@ public class Stpv extends FileParser{
 	 */
 	private Connection conn;
 	
+	private final String[] fileNames = {"LIEU", "RADR", "SECT", "BALI", "CODE"};
 	
 	public Stpv(){
 		super();
@@ -1046,9 +1049,10 @@ public class Stpv extends FileParser{
 	}
 
 
-
-	
-
+	@Override
+	public List<String> getRelevantFileNames(){
+		return Arrays.asList(fileNames);
+	}
 
 
 	@Override
