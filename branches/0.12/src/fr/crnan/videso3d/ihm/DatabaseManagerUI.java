@@ -387,7 +387,12 @@ public class DatabaseManagerUI extends JDialog {
 						}
 						//copie des fichiers
 						for(File f : current.getValue()){
-							FileManager.copyFile(f, current.getKey().getName()+"_files");
+							//si le parser indique une liste des fichiers pertinents, ne copier que cette liste
+							if(current.getKey().getRelevantFileNames() == null || 
+									(current.getKey().getRelevantFileNames() != null 
+									&& FileManager.containsFile(current.getKey().getRelevantFileNames(), f))){
+								FileManager.copyFile(f, current.getKey().getName()+"_files");
+							} 
 						}
 						//suppression du listener
 						current.getKey().removePropertyChangeListener(this);
