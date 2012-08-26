@@ -21,8 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.crnan.videso3d.Couple;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
-import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.DatabasePolygonAnnotation;
 import fr.crnan.videso3d.graphics.DatabaseSurfacePolygonAnnotation;
@@ -139,7 +139,7 @@ public class MosaiqueLayer extends LayerSet {
 			Boolean numbers,
 			ShapeAttributes attr,
 			AirspaceAttributes airspaceAttr, 
-			DatabaseManager.Type base, 
+			DatasManager.Type base, 
 			int type,
 			String name){
 		this();
@@ -264,7 +264,7 @@ public class MosaiqueLayer extends LayerSet {
 			int hsens, 
 			int vsens, 
 			int numSens, ShapeAttributes attr, AirspaceAttributes airspaceAttr,
-			DatabaseManager.Type base,
+			DatasManager.Type base,
 			int type,
 			String name){
 

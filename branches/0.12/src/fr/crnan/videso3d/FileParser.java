@@ -24,7 +24,7 @@ import java.util.List;
 import javax.swing.SwingWorker;
 import javax.swing.event.EventListenerList;
 
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager.Type;
 
 
 /**
@@ -111,7 +111,7 @@ public abstract class FileParser extends SwingWorker<Integer, String>{
 	 */
 	public abstract String getName();
 	
-	public abstract Type getType();
+	public abstract DatasManager.Type getType();
 	
 	/**
 	 * 

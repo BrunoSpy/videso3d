@@ -39,10 +39,10 @@ import javax.swing.JToolBar;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import fr.crnan.videso3d.Couple;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
-import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.ihm.ContextPanel;
@@ -57,12 +57,12 @@ import gov.nasa.worldwind.geom.Position;
  */
 public class Omnibox {
 	
-	private Hashtable<DatabaseManager.Type, List<ItemCouple>> bases = new Hashtable<DatabaseManager.Type, List<ItemCouple>>();
+	private Hashtable<DatasManager.Type, List<ItemCouple>> bases = new Hashtable<DatasManager.Type, List<ItemCouple>>();
 		
-	private DatabaseManager.Type previouslySelectedBase;
-	private DatabaseManager.Type selectedBase;
+	private DatasManager.Type previouslySelectedBase;
+	private DatasManager.Type selectedBase;
 	
-	private HashMap<Type, JRadioButtonMenuItem> buttons = new HashMap<DatabaseManager.Type, JRadioButtonMenuItem>();
+	private HashMap<DatasManager.Type, JRadioButtonMenuItem> buttons = new HashMap<DatasManager.Type, JRadioButtonMenuItem>();
 	
 	private DropDownLabel chooseButton;
 	private ButtonGroup engines;
@@ -142,7 +142,7 @@ public class Omnibox {
 	 * @param controller Controller of the items
 	 * @param items
 	 */
-	public void addDatabase(final DatabaseManager.Type type, List<ItemCouple> items, boolean update){
+	public void addDatabase(final DatasManager.Type type, List<ItemCouple> items, boolean update){
 		if(items == null) {
 			removeDatabase(type);
 		}else{
@@ -175,7 +175,7 @@ public class Omnibox {
 	 * Removes all items of the specified database
 	 * @param type
 	 */
-	public void removeDatabase(DatabaseManager.Type type){
+	public void removeDatabase(DatasManager.Type type){
 		if(bases.containsKey(type)) {
 			buttons.get(type).setSelected(false);
 			bases.remove(type);
@@ -191,9 +191,9 @@ public class Omnibox {
 	public void update(){
 		Vector<ItemCouple> itemsVector = new Vector<ItemCouple>();
 		if(selectedBase == null){
-			final Iterator<Type> it = bases.keySet().iterator();
+			final Iterator<DatasManager.Type> it = bases.keySet().iterator();
 			while(it.hasNext()){
-				Type type = it.next();
+				DatasManager.Type type = it.next();
 				for(ItemCouple item : bases.get(type)){
 					itemsVector.add(item);
 				}

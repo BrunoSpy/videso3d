@@ -27,10 +27,10 @@ import java.util.Map.Entry;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.DatabaseRoute2D;
@@ -172,7 +172,7 @@ public class StpvController implements VidesoController {
 				MosaiqueLayer mLayer = new MosaiqueLayer(annotationTitle, grille, origine, 
 						width, height, size, hSens, vSens, numSens, 
 						squares, altitudes, numbers, attr, airspaceAttr, 
-						Type.STPV, MOSAIQUE, name);
+						DatasManager.Type.STPV, MOSAIQUE, name);
 				mosaiquesLayer.put(name, mLayer);
 				mLayer.setName("Mosaïque "+type+" "+name);
 				mLayer.set3D(false);
@@ -186,20 +186,20 @@ public class StpvController implements VidesoController {
 				this.createStar(name);
 			}
 			for(String balise : this.stars.get(name).getBalises()){
-				DatasManager.getController(Type.STIP).showObject(StipController.BALISES, balise);
+				DatasManager.getController(DatasManager.Type.STIP).showObject(StipController.BALISES, balise);
 			}
 			break;
 		default : 
 			break;
 		}
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(Type.STPV).showObject(type, name);
+		DatasManager.getView(DatasManager.Type.STPV).showObject(type, name);
 	}
 
 
 	private void createStar(String name) {
 		Integer id = new Integer(name);
-		DatabaseRoute2D star = new DatabaseRoute2D(name, Type.STPV, STAR);
+		DatabaseRoute2D star = new DatabaseRoute2D(name, DatasManager.Type.STPV, STAR);
 		try {
 			Statement st = DatabaseManager.getCurrentStpv();
 			ResultSet rs = st.executeQuery("select name from lieu901 where lieu90='"+id+"'");
@@ -257,14 +257,14 @@ public class StpvController implements VidesoController {
 			if(this.stars.containsKey(name)){
 				this.stars.get(name).setVisible(false);
 				for(String balise : this.stars.get(name).getBalises()){
-					DatasManager.getController(Type.STIP).showObject(StipController.BALISES, balise);
+					DatasManager.getController(DatasManager.Type.STIP).showObject(StipController.BALISES, balise);
 				}
 			}
 		default:
 			break;
 		}
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(Type.STPV).hideObject(type, name);
+		DatasManager.getView(DatasManager.Type.STPV).hideObject(type, name);
 	}
 
 	@Override

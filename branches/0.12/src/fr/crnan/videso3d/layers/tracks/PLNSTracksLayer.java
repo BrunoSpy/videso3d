@@ -25,8 +25,8 @@ import javax.swing.event.TableModelEvent;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.Pallet;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.plns.PLNSTrack;
@@ -161,7 +161,7 @@ public class PLNSTracksLayer extends TrajectoriesLayer {
 		//	LinkedList<String> balises = new LinkedList<String>();
 			for(PLNSTrackPoint point : track.getTrackPoints()){
 				positions.add(point.getPosition());
-				DatasManager.getController(Type.STIP).showObject(StipController.BALISES, point.getName());
+				DatasManager.getController(DatasManager.Type.STIP).showObject(StipController.BALISES, point.getName());
 			}
 			if(positions.size()>1){ //only add a line if there's enough points
 				Profil3D profil = new Profil3D(positions);

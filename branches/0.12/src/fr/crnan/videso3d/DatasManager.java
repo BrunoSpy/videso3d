@@ -20,7 +20,6 @@ import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.aip.AIPContext;
 import fr.crnan.videso3d.databases.aip.AIPController;
 import fr.crnan.videso3d.databases.edimap.EdimapContext;
@@ -42,25 +41,31 @@ import fr.crnan.videso3d.ihm.SkyView;
 import fr.crnan.videso3d.ihm.StipView;
 import fr.crnan.videso3d.ihm.StpvView;
 import fr.crnan.videso3d.ihm.StrView;
+import fr.crnan.videso3d.ihm.UserObjectsView;
 import fr.crnan.videso3d.ihm.components.DataView;
 import gov.nasa.worldwind.util.Logging;
 
 /**
  * Singleton gèrant les données sélectionnées.<br />
- * Enregistre les ccontroleurs, les contexts de façon à partager ces éléments avec<br />
- * parties de l'application qui en ont besoin.
+ * Enregistre les controleurs, les contexts de façon à partager ces éléments avec<br />
+ * les parties de l'application qui en ont besoin.
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public final class DatasManager {
 
+	/**
+	 * Types de base de données possibles
+	 */
+	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, RadioCov, SkyView, AIP, Databases, UserObject}
+
 	private static DatasManager instance = new DatasManager();
 	
-	private HashMap<DatabaseManager.Type, VidesoController> controllers = new HashMap<DatabaseManager.Type, VidesoController>();
+	private HashMap<DatasManager.Type, VidesoController> controllers = new HashMap<DatasManager.Type, VidesoController>();
 	
-	private HashMap<DatabaseManager.Type, Context> contexts = new HashMap<DatabaseManager.Type, Context>();
+	private HashMap<DatasManager.Type, Context> contexts = new HashMap<DatasManager.Type, Context>();
 	
-	private HashMap<DatabaseManager.Type, DataView> views = new HashMap<DatabaseManager.Type, DataView>();
+	private HashMap<DatasManager.Type, DataView> views = new HashMap<DatasManager.Type, DataView>();
 		
 	private PropertyChangeSupport support;
 	
@@ -69,21 +74,21 @@ public final class DatasManager {
 		support = new PropertyChangeSupport(this);
 	}
 	
-	public static void addDatas(DatabaseManager.Type type, VidesoController controller, Context context, DataView view){
+	private static void addDatas(DatasManager.Type type, VidesoController controller, Context context, DataView view){
 		instance.controllers.put(type, controller);
 		instance.contexts.put(type, context);
 		instance.views.put(type, view);
 	}
 	
-	public static VidesoController getController(DatabaseManager.Type type){
+	public static VidesoController getController(DatasManager.Type type){
 		return instance.controllers.get(type);
 	}
 	
-	public static Context getContext(DatabaseManager.Type type){
+	public static Context getContext(DatasManager.Type type){
 		return instance.contexts.get(type);
 	}
 	
-	public static DataView getView(DatabaseManager.Type type){
+	public static DataView getView(DatasManager.Type type){
 		return instance.views.get(type);
 	}
 	
@@ -92,7 +97,7 @@ public final class DatasManager {
 	 * @param type
 	 * @throws Exception 
 	 */
-	public static void createDatas(DatabaseManager.Type type, VidesoGLCanvas wwd) throws Exception{
+	public static void createDatas(DatasManager.Type type, VidesoGLCanvas wwd) throws Exception{
 		deleteDatas(type);
 		if(DatabaseManager.getCurrent(type) != null){
 			switch (type) {
@@ -121,6 +126,9 @@ public final class DatasManager {
 			case SkyView:
 				DatasManager.addDatas(type, new SkyViewController(wwd), new SkyViewContext(), new SkyView());
 				break;
+			case UserObject:
+				DatasManager.addDatas(type, new UserObjectsController(wwd), null, new UserObjectsView());
+				break;
 			default:
 				Logging.logger().severe("Type "+type+" inconnu");
 				throw new Exception("Type "+type+" inconnu");
@@ -129,7 +137,7 @@ public final class DatasManager {
 		instance.support.firePropertyChange("done", null, true);
 	}
 	
-	public static void deleteDatas(DatabaseManager.Type type){
+	public static void deleteDatas(DatasManager.Type type){
 		if(instance.controllers.containsKey(type)) {
 			instance.controllers.get(type).removeAllLayers();
 			instance.controllers.remove(type);
@@ -138,7 +146,7 @@ public final class DatasManager {
 		if(instance.contexts.containsKey(type)) instance.contexts.remove(type);
 	}
 	
-	public static int getNumberInitSteps(Type t){
+	public static int getNumberInitSteps(DatasManager.Type t){
 		switch (t) {
 		case STIP:
 			return StipController.getNumberInitSteps();
@@ -165,6 +173,19 @@ public final class DatasManager {
 	
 	public static Iterable<DataView> getViews() {
 		return instance.views.values();
+	}
+	
+	/**
+	 * Convenient method to get the {@link UserObjectsController}<br />
+	 * Creates the view and the controller if needed
+	 * @return
+	 * @throws Exception 
+	 */
+	public static UserObjectsController getUserObjectsController(VidesoGLCanvas wwd) throws Exception{
+		if(!instance.controllers.containsKey(Type.UserObject)){
+			createDatas(Type.UserObject, wwd);
+		}
+		return (UserObjectsController) getController(Type.UserObject);
 	}
 	
 	/* ****************************************************** */

@@ -23,7 +23,7 @@ package fr.crnan.videso3d.graphics;
  *
  */
 
-import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.DatasManager;
 import gov.nasa.worldwind.geom.*;
 import gov.nasa.worldwind.globes.Globe;
 //import gov.nasa.worldwind.globes.Globe;
@@ -41,7 +41,7 @@ import java.util.List;
 public class RadioCovPolygon extends AbstractAirspace implements DatabaseVidesoObject{
 
 	private int type;
-	private DatabaseManager.Type base;
+	private DatasManager.Type base;
 	
 	private boolean DEBUG = false;
 	private ArrayList<Curtain> curtains = new ArrayList<Curtain>();
@@ -316,12 +316,12 @@ public class RadioCovPolygon extends AbstractAirspace implements DatabaseVidesoO
 		}
 		
 		@Override
-		public DatabaseManager.Type getDatabaseType() {
+		public DatasManager.Type getDatabaseType() {
 			return this.base;
 		}
 
 		@Override
-		public void setDatabaseType(DatabaseManager.Type type) {
+		public void setDatabaseType(DatasManager.Type type) {
 			this.base = type;
 		}
 		

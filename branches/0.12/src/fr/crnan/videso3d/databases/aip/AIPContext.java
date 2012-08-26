@@ -33,8 +33,8 @@ import org.jdom2.Element;
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.aip.AIP.Altitude;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Route.Space;
@@ -49,7 +49,7 @@ public class AIPContext extends Context {
 
 	
 	private AIPController getController(){
-		return (AIPController) DatasManager.getController(Type.AIP);
+		return (AIPController) DatasManager.getController(DatasManager.Type.AIP);
 	}
 
 
@@ -181,7 +181,7 @@ public class AIPContext extends Context {
 	private JXTaskPane routeInfos(Element maRoute, String typeRoute, String pkRoute){
 		StringBuilder ACCTraverses = new StringBuilder();
 		try {	
-			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nomACC from ACCTraverses where routes_pk = ?");
+			PreparedStatement st = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select nomACC from ACCTraverses where routes_pk = ?");
 			st.setString(1, pkRoute);
 			ResultSet rs = st.executeQuery();
 			while(rs.next()){
@@ -271,7 +271,7 @@ public class AIPContext extends Context {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					getController().displayAnnotationAndGoTo(segmentPrecedent);
-					((ContextPanel)infosSegment.getParent().getParent().getParent().getParent()).showInfo(Type.AIP, AIP.AWY, segmentPrecedent.getName());
+					((ContextPanel)infosSegment.getParent().getParent().getParent().getParent()).showInfo(DatasManager.Type.AIP, AIP.AWY, segmentPrecedent.getName());
 				}
 			};
 			infosSegment.add(previous);
@@ -281,7 +281,7 @@ public class AIPContext extends Context {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					getController().displayAnnotationAndGoTo(segmentSuivant);
-					((ContextPanel)infosSegment.getParent().getParent().getParent().getParent()).showInfo(Type.AIP, AIP.AWY, segmentSuivant.getName());
+					((ContextPanel)infosSegment.getParent().getParent().getParent().getParent()).showInfo(DatasManager.Type.AIP, AIP.AWY, segmentSuivant.getName());
 				}
 			};
 			infosSegment.add(next);
@@ -296,7 +296,7 @@ public class AIPContext extends Context {
 
 		float latitude = 0, longitude = 0;
 		try {
-			PreparedStatement ps = DatabaseManager.prepareStatement(Type.AIP, "select lat, lon from NavFix where nom=? and type = ?");
+			PreparedStatement ps = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select lat, lon from NavFix where nom=? and type = ?");
 			ps.setString(1, name);
 			ps.setString(2, AIP.type2String(type));
 			ResultSet rs = ps.executeQuery();
@@ -367,7 +367,7 @@ public class AIPContext extends Context {
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
 							getController().highlight(AIP.AERODROME, adCode);
-							((ContextPanel)infosNavFix.getParent().getParent().getParent().getParent()).showInfo(Type.AIP, AIP.AERODROME, adCode);
+							((ContextPanel)infosNavFix.getParent().getParent().getParent().getParent()).showInfo(DatasManager.Type.AIP, AIP.AERODROME, adCode);
 						}
 					};
 					infosNavFix.add(adLink);
@@ -408,17 +408,17 @@ public class AIPContext extends Context {
 		try {
 			PreparedStatement ps=null;
 			if(type == AIP.AERODROME){
-				ps = DatabaseManager.prepareStatement(Type.AIP, "select pk from aerodromes where upper(code)=?");
+				ps = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select pk from aerodromes where upper(code)=?");
 				ps.setString(1, name.split("--")[0].trim());
 				ResultSet rs = ps.executeQuery();
 				pkAd = rs.getInt(1);
 			}else{
-				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from aerodromes where nom = ?");
+				ps = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select pk from aerodromes where nom = ?");
 				ps.setString(1, name);
 				ResultSet rs = ps.executeQuery();
 				pkAd = rs.getInt(1);
 			}
-			ps = DatabaseManager.prepareStatement(Type.AIP, "select pk from runways where pk_ad = ?");
+			ps = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select pk from runways where pk_ad = ?");
 			ps.setInt(1, pkAd);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){

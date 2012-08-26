@@ -15,7 +15,8 @@
  */
 package fr.crnan.videso3d.databases.edimap;
 
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
@@ -411,12 +412,12 @@ public class Carte implements DatabaseVidesoObject{
 	}
 
 	@Override
-	public Type getDatabaseType() {
-		return Type.Edimap;
+	public DatasManager.Type getDatabaseType() {
+		return DatasManager.Type.Edimap;
 	}
 
 	@Override
-	public void setDatabaseType(Type type) {}
+	public void setDatabaseType(DatasManager.Type type) {}
 
 	@Override
 	public void setType(int type) {

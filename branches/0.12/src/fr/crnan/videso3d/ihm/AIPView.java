@@ -30,8 +30,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.aip.AIP;
 import fr.crnan.videso3d.databases.aip.AIPController;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
@@ -92,7 +92,7 @@ public class AIPView extends FilteredMultiTreeTableView {
 
 	@Override
 	public AIPController getController() {
-		return (AIPController) DatasManager.getController(Type.AIP);
+		return (AIPController) DatasManager.getController(DatasManager.Type.AIP);
 	}
 	
 	private void fillZonesRootNode(DefaultMutableTreeNode root){

@@ -28,6 +28,7 @@ import javax.swing.table.DefaultTableModel;
 import org.jdesktop.swingx.JXTaskPane;
 
 import fr.crnan.videso3d.Context;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.ihm.components.VXTable;
 /**
@@ -53,7 +54,7 @@ public class STRContext extends Context {
 		ArrayList<String> fin = new ArrayList<String>();
 		ArrayList<String> espaces = new ArrayList<String>();
 		try {
-			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.EXSA, "select * from centscodf where vvf = ?");
+			PreparedStatement st = DatabaseManager.prepareStatement(DatasManager.Type.EXSA, "select * from centscodf where vvf = ?");
 			st.setString(1, name);
 			ResultSet rs = st.executeQuery();
 			while(rs.next()){

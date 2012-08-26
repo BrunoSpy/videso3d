@@ -19,8 +19,9 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.Pallet;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.stip.StipController;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
@@ -107,11 +108,11 @@ public class Profil3D {
 	}
 	
 	public void addBalise(String balise, Position position){
-		this.balises.add(new DatabaseBalise3D(balise, position, Type.STIP, StipController.BALISES));
+		this.balises.add(new DatabaseBalise3D(balise, position, DatasManager.Type.STIP, StipController.BALISES));
 	}
 	
 	public void addBalise(String balise, String annotation, Position position){
-		this.balises.add(new DatabaseBalise3D(balise, position, annotation, Type.STIP, StipController.BALISES));
+		this.balises.add(new DatabaseBalise3D(balise, position, annotation, DatasManager.Type.STIP, StipController.BALISES));
 		
 	}
 	

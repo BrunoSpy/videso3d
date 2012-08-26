@@ -65,6 +65,7 @@ import bibliothek.gui.dock.common.theme.ThemeMap;
 import bibliothek.gui.dock.util.Priority;
 import bibliothek.util.xml.XElement;
 
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.databases.stip.StipController;
@@ -170,9 +171,9 @@ public final class AnalyzeUI extends JFrame {
 			public void focusGained(CDockable dock) {
 				if(dock instanceof ResultDockable){
 					if(((ResultDockable)dock).getTitleText().startsWith("Balise")){
-						getContextPanel().showInfo(DatabaseManager.Type.STIP, StipController.BALISES, ((ResultDockable) dock).getTitleText().substring(7));
+						getContextPanel().showInfo(DatasManager.Type.STIP, StipController.BALISES, ((ResultDockable) dock).getTitleText().substring(7));
 					} else if( ((ResultDockable) dock).getTitleText().startsWith("Secteur ")){
-						getContextPanel().showInfo(DatabaseManager.Type.STIP, StipController.SECTEUR, ((ResultDockable) dock).getTitleText().substring(8));
+						getContextPanel().showInfo(DatasManager.Type.STIP, StipController.SECTEUR, ((ResultDockable) dock).getTitleText().substring(8));
 					} else {
 						if(((ResultDockable)dock).getContent() instanceof ResultGraphPanel)
 							((ResultGraphPanel)((ResultDockable)dock).getContent()).tabSelected();
@@ -185,7 +186,7 @@ public final class AnalyzeUI extends JFrame {
 		if(type.equals("balise")){
 			try {
 				if(DatabaseManager.getCurrentStip().executeQuery("select * from balises where name = '"+criteria[0]+"'").next()) {
-					getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.BALISES, criteria[0]);
+					getInstance().context.showInfo(DatasManager.Type.STIP, StipController.BALISES, criteria[0]);
 				} 
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -193,7 +194,7 @@ public final class AnalyzeUI extends JFrame {
 		} else if(type.equals("secteur")){
 			try {
 				if(DatabaseManager.getCurrentStip().executeQuery("select * from secteurs where nom = '"+criteria[0]+"'").next()) {
-					getInstance().context.showInfo(DatabaseManager.Type.STIP, StipController.SECTEUR, criteria[0]);
+					getInstance().context.showInfo(DatasManager.Type.STIP, StipController.SECTEUR, criteria[0]);
 				} 
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -378,7 +379,7 @@ public final class AnalyzeUI extends JFrame {
 		String versionStip = "";
 		String versionStpv = "";
 		try {
-			Statement st = DatabaseManager.getCurrent(DatabaseManager.Type.Databases);
+			Statement st = DatabaseManager.getCurrent(DatasManager.Type.Databases);
 			ResultSet rs = st.executeQuery("select * from databases where selected = '1' and type = 'STIP'");
 			if(rs.next()) versionStip = rs.getString(2);
 			rs = st.executeQuery("select * from databases where selected = '1' and type = 'STPV'");

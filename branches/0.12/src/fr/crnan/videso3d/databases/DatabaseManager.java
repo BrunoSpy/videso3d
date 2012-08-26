@@ -65,10 +65,6 @@ public final class DatabaseManager {
 	public static String BASE_SELECTED = "fr.crnan.videso3d.baseselected";
 	
 	/**
-	 * Types de base de données possibles
-	 */
-	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, RadioCov, SkyView, AIP, Databases};
-	/**
 	 * Base des frontières Pays
 	 */
 	private Connection currentPays;
@@ -159,7 +155,7 @@ public final class DatabaseManager {
 	 * @return {@link Connection} Connection vers la base sélectionnée
 	 * @throws SQLException 
 	 */
-	public static Connection selectDB(Type type, String name) throws SQLException{
+	public static Connection selectDB(DatasManager.Type type, String name) throws SQLException{
 		try {
 			Class.forName("org.sqlite.JDBC");
 		} catch (ClassNotFoundException e) {
@@ -301,9 +297,9 @@ public final class DatabaseManager {
 	 * @return Boolean Vrai si la base de données existe
 	 * @throws SQLException 
 	 */
-	public static Boolean databaseExists(Type type, String name) throws SQLException{
+	public static Boolean databaseExists(DatasManager.Type type, String name) throws SQLException{
 		Boolean exists = false;
-		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 		ResultSet result = st.executeQuery("SELECT * FROM databases WHERE name = '"+name+"' and type ='"+type.toString()+"'");
 		if (result.next()) exists = true;
 		result.close();
@@ -319,7 +315,7 @@ public final class DatabaseManager {
 	public static Boolean isSelected(Integer id){
 		Boolean result = false;
 		try {
-			Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+			Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 			ResultSet rs = st.executeQuery("select * from databases where id='"+id+"' and selected = '1'");
 			if (rs.next()) {
 				result = true;
@@ -338,13 +334,13 @@ public final class DatabaseManager {
 	 * @param type Type de la base de données
 	 * @param date Date associée
 	 */
-	private static void addDatabase(String name, Type type, String date){
+	private static void addDatabase(String name, DatasManager.Type type, String date){
 		try {
-			Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+			Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 			st.executeUpdate("UPDATE databases SET selected = 0 WHERE selected = 1 and type = '"+type.toString()+"'");
 			st.close();
 			String insert = "insert into databases (name, type, date, selected) values (?, ?, ?, ?)";
-			PreparedStatement insertDatabase = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement(insert);
+			PreparedStatement insertDatabase = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").prepareStatement(insert);
 			insertDatabase.setString(1, name);
 			insertDatabase.setString(2, type.toString());
 			insertDatabase.setString(3, date);
@@ -358,7 +354,7 @@ public final class DatabaseManager {
 		//à l'ajout d'une base de données, l'envoi de propertychange est demandé par le Filemanager à la fin de l'import
 	}
 
-	public static void addDatabase(String name, Type type) throws SQLException{
+	public static void addDatabase(String name, DatasManager.Type type) throws SQLException{
 		if(!databaseExists(type, name)){
 			addDatabase(name, type, new SimpleDateFormat().format(new Date()));
 		}
@@ -373,7 +369,7 @@ public final class DatabaseManager {
 	public static void createSkyView(String name, String path){
 		PreparedStatement insertClef;
 		try {
-			insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
+			insertClef = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
 			insertClef.setString(1, "path");
 			insertClef.setString(2, name);
 			insertClef.setString(3, path);
@@ -382,7 +378,7 @@ public final class DatabaseManager {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		DatabaseManager.addDatabase(name, Type.SkyView, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, DatasManager.Type.SkyView, new SimpleDateFormat().format(new Date()));
 	}
 	
 	/**
@@ -391,7 +387,7 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static void createEXSA(String name) throws SQLException{
-		Statement st = DatabaseManager.selectDB(Type.EXSA, name).createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.EXSA, name).createStatement();
 		st.executeUpdate("create table caragener (id integer primary key autoincrement," +
 				"name varchar(20), " +
 				"date varchar(30), " +
@@ -518,7 +514,7 @@ public final class DatabaseManager {
 				"name varchar(2))");
 		st.close();
 		//on ajoute le nom de la base
-		DatabaseManager.addDatabase(name, Type.EXSA, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, DatasManager.Type.EXSA, new SimpleDateFormat().format(new Date()));
 		
 	}
 	/**
@@ -527,7 +523,7 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static void createSTPV(String name, String path) throws SQLException {
-		Statement st = DatabaseManager.selectDB(Type.STPV, name).createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.STPV, name).createStatement();
 		st.executeUpdate("create table mosaique (id integer primary key autoincrement, " +
 				"type varchar(2), " +
 				"xcautra int, " +
@@ -656,7 +652,7 @@ public final class DatabaseManager {
 				"val3 varchar(3), " +
 				"val4 varchar(3))");
 		st.close();
-		DatabaseManager.addDatabase(name, Type.STPV, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, DatasManager.Type.STPV, new SimpleDateFormat().format(new Date()));
 	}
 
 	/**
@@ -665,14 +661,14 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static void createODS(String name) throws SQLException {
-		Statement st = DatabaseManager.selectDB(Type.Ods, name).createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Ods, name).createStatement();
 		st.executeUpdate("create table cartesdyn (id integer primary key autoincrement," +
 				"edimap varchar(16), " +
 				"str varchar(16),  " +
 				"secteur varchar(3)" +
 		")");
 		st.close();
-		DatabaseManager.addDatabase(name, Type.Ods, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, DatasManager.Type.Ods, new SimpleDateFormat().format(new Date()));
 	}
 
 	/**
@@ -681,20 +677,20 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static void createEdimap(String name, String path) throws SQLException {
-		Statement st = DatabaseManager.selectDB(Type.Edimap, name).createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Edimap, name).createStatement();
 		st.executeUpdate("create table cartes (id integer primary key autoincrement," +
 				"name varchar(32), " +
 				"type varchar(16), " +
 				"fichier varchar(64)" +
 		")");
 		st.close();
-		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
+		PreparedStatement insertClef = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
 		insertClef.setString(1, "path");
 		insertClef.setString(2, name);
 		insertClef.setString(3, path);
 		insertClef.executeUpdate();
 		insertClef.close();
-		DatabaseManager.addDatabase(name, Type.Edimap, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, DatasManager.Type.Edimap, new SimpleDateFormat().format(new Date()));
 	}
 
 	/**
@@ -703,7 +699,7 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static void createSTIP(String name) throws SQLException {
-		Statement st = DatabaseManager.selectDB(Type.STIP, name).createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.STIP, name).createStatement();
 		st.executeUpdate("create table balises (id integer primary key autoincrement," +
 				"name varchar(5), " +
 				"publicated boolean, " +
@@ -887,7 +883,7 @@ public final class DatabaseManager {
 				"balid int, " +
 				"appartient boolean)");
 		//on référence la base de données
-		DatabaseManager.addDatabase(name, Type.STIP, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, DatasManager.Type.STIP, new SimpleDateFormat().format(new Date()));
 	}
 	/**
 	 * Crée la structue des tables d'une base PAYS
@@ -895,7 +891,7 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static void createPays(String name) throws SQLException{
-		Statement st = DatabaseManager.selectDB(Type.PAYS, name).createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.PAYS, name).createStatement();
 		//table contenant les données du fichier POINPAYS
 		st.executeUpdate("create table poinpays (id integer primary key autoincrement, " +
 				"ref varchar(6), " +
@@ -912,7 +908,7 @@ public final class DatabaseManager {
 		"refcontour varchar(5))");
 		st.close();
 		//on référence la base de données
-		DatabaseManager.addDatabase(name, Type.PAYS, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, DatasManager.Type.PAYS, new SimpleDateFormat().format(new Date()));
 		
 	}
 
@@ -922,7 +918,7 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static void createRadioCov(String name, String path) throws SQLException {
-		Statement st = DatabaseManager.selectDB(Type.RadioCov, name).createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.RadioCov, name).createStatement();
 		/*
 		st.executeUpdate("create table radio (id integer primary key autoincrement," +
 				"name varchar(32), " +
@@ -952,20 +948,20 @@ public final class DatabaseManager {
 		String date = new SimpleDateFormat().format(new Date());
 		int databaseId = 0;
 		
-		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
+		PreparedStatement insertClef = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
 		insertClef.setString(1, "path");
 		insertClef.setString(2, name);
 		insertClef.setString(3, path);
 		insertClef.executeUpdate();
 		insertClef.close();
-		DatabaseManager.addDatabase(name, Type.RadioCov, date);
+		DatabaseManager.addDatabase(name, DatasManager.Type.RadioCov, date);
 		
-		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 		ResultSet rs = st.executeQuery("select id from databases where name = '"+name+"'");				
 		 rs.next();
 		 databaseId = rs.getInt(1);			
 		
-		PreparedStatement insertRadio = DatabaseManager.selectDB(Type.RadioCov, "radio").prepareStatement("insert into radio(databaseId,path) values (?,?)");
+		PreparedStatement insertRadio = DatabaseManager.selectDB(DatasManager.Type.RadioCov, "radio").prepareStatement("insert into radio(databaseId,path) values (?,?)");
 		insertRadio.setInt(1, databaseId);
 		
 		insertRadio.setString(2,path);
@@ -979,7 +975,7 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static void createAIP(String name, String path) throws SQLException{
-		Statement st = DatabaseManager.selectDB(Type.AIP, name).createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.AIP, name).createStatement();
 		
 		st.executeUpdate("create table volumes (id integer primary key autoincrement," +
 				"pk integer,"+
@@ -1029,7 +1025,7 @@ public final class DatabaseManager {
 				")");
 		st.close();
 		
-		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
+		PreparedStatement insertClef = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
 		insertClef.setString(1, "path");
 		insertClef.setString(2, name);
 		insertClef.setString(3, new File(path).getName());
@@ -1037,7 +1033,7 @@ public final class DatabaseManager {
 		insertClef.close();
 		
 		//on référence la base de données
-		DatabaseManager.addDatabase(name, Type.AIP, new SimpleDateFormat().format(new Date()));
+		DatabaseManager.addDatabase(name, DatasManager.Type.AIP, new SimpleDateFormat().format(new Date()));
 	}
 	
 	/**
@@ -1045,7 +1041,7 @@ public final class DatabaseManager {
 	 * @param name Nom de la base
 	 * @throws SQLException 
 	 */
-	public static void deleteDatabase(String name, Type type) throws SQLException{
+	public static void deleteDatabase(String name, DatasManager.Type type) throws SQLException{
 		//fermeture de la connection courante
 		switch (type) {
 		case STPV:
@@ -1112,7 +1108,7 @@ public final class DatabaseManager {
 		}
 
 		//suppression du fichier correspondant seulement si ce n'est pas une base SkyView
-		if(type.compareTo(Type.SkyView) != 0 && name != null) {
+		if(type.compareTo(DatasManager.Type.SkyView) != 0 && name != null) {
 			File file = new File(name);
 			if(file.exists() && !file.delete()) {	
 				try {
@@ -1126,7 +1122,7 @@ public final class DatabaseManager {
 			}
 		}
 		//on vérifie si la bdd était sélectionnée
-		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 		ResultSet rs = st.executeQuery("select selected from databases where name = '"+name+"'");
 		boolean changed = false;
 		if(rs.next() && rs.getBoolean(1)){
@@ -1149,7 +1145,7 @@ public final class DatabaseManager {
 	 */
 	public static void deleteDatabase(Integer id) throws SQLException{
 		//on recherche d'abord le nom correspondant
-		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 		ResultSet rs = st.executeQuery("select name, type from databases where id = " + id.toString());
 		rs.next();
 		String name = rs.getString(1);
@@ -1166,8 +1162,8 @@ public final class DatabaseManager {
 	 * @param type Type de la base de données
 	 * @throws SQLException 
 	 */
-	public static void selectDatabase(Integer id, Type type) throws SQLException {
-		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+	public static void selectDatabase(Integer id, DatasManager.Type type) throws SQLException {
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 		st.executeUpdate("update databases set selected = 0 where type = '"+type.toString()+"'");
 		st.executeUpdate("update databases set selected = 1 where id ='"+id+"'");
 		ResultSet result = st.executeQuery("select name from databases where id ='"+id+"'");
@@ -1184,8 +1180,8 @@ public final class DatabaseManager {
 	 * @return true si une base a été sélectionnée
 	 * @throws SQLException 
 	 */
-	public static boolean selectDatabase(Type type) throws SQLException{
-		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+	public static boolean selectDatabase(DatasManager.Type type) throws SQLException{
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 		ResultSet rs = st.executeQuery("select max(id) from databases where type ='"+type.toString()+"'");
 		if(rs.next()){
 			selectDatabase(rs.getInt(1), type);
@@ -1213,8 +1209,8 @@ public final class DatabaseManager {
 	 * @param type
 	 * @throws SQLException
 	 */
-	public static void selectDatabase(String name, Type type) throws SQLException {
-		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+	public static void selectDatabase(String name, DatasManager.Type type) throws SQLException {
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 		ResultSet rs = st.executeQuery("select id from databases where name ='"+name+"'");
 		if(rs.next()){
 			selectDatabase(rs.getInt(1), type);
@@ -1225,8 +1221,8 @@ public final class DatabaseManager {
 	 * Désélectionne la base de données sélectionnée de type <code>type</code>
 	 * @param type de la base de données
 	 */
-	public static void unselectDatabase(Type type) throws SQLException{
-		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+	public static void unselectDatabase(DatasManager.Type type) throws SQLException{
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 		ResultSet result = st.executeQuery("select * from databases where selected = 1 and type = '"+type.toString()+"'");
 		Integer id = null;
 		if(result.next()){
@@ -1245,7 +1241,7 @@ public final class DatabaseManager {
 	 * @param id de la base de données
 	 */
 	private static void unselectDatabase(Integer id) throws SQLException{
-		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 		st.executeUpdate("update databases set selected = 0 where id ='"+id+"'");
 		st.close();
 	}
@@ -1257,11 +1253,11 @@ public final class DatabaseManager {
 	 * @return Statement
 	 * @throws SQLException 
 	 */
-	public static Statement getCurrent(Type type) throws SQLException{
-		if(type.equals(Type.Databases)){
-			return DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+	public static Statement getCurrent(DatasManager.Type type) throws SQLException{
+		if(type.equals(DatasManager.Type.Databases)){
+			return DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 		} else {
-			Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+			Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 			ResultSet result = st.executeQuery("select name from databases where selected = 1 and type = '"+type.toString()+"'");
 			String connectionName = null;
 			if(result.next()) {
@@ -1281,9 +1277,9 @@ public final class DatabaseManager {
 	 * @return {@link PreparedStatement}
 	 * @throws SQLException
 	 */
-	public static PreparedStatement prepareStatement(Type type, String sqlRequest) throws SQLException{
-		if(type.equals(Type.Databases)){
-			return DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement(sqlRequest);
+	public static PreparedStatement prepareStatement(DatasManager.Type type, String sqlRequest) throws SQLException{
+		if(type.equals(DatasManager.Type.Databases)){
+			return DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").prepareStatement(sqlRequest);
 		} else {
 			String connectionName = getCurrentName(type);
 			return connectionName == null ? null : DatabaseManager.selectDB(type, connectionName).prepareStatement(sqlRequest);
@@ -1297,8 +1293,8 @@ public final class DatabaseManager {
 	 * @return QSQLDatabase
 	 * @throws SQLException 
 	 */
-	public static String getCurrentName(Type type) throws SQLException{
-		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+	public static String getCurrentName(DatasManager.Type type) throws SQLException{
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 		String name = null;
 		ResultSet rs = st.executeQuery("select name from databases where selected = 1 and type = '"+type+"'");
 		while(rs.next()){
@@ -1316,7 +1312,7 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	private static int getId(String name) throws SQLException{
-		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 		ResultSet rs = st.executeQuery("select id from databases where name = '"+name+"'");
 		Integer id = null;
 		while(rs.next()){
@@ -1335,7 +1331,7 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	private static String getSkyViewPath(String name) throws SQLException{
-		Statement st = DatabaseManager.selectDB(Type.Databases, "databases").createStatement();
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 		ResultSet rs = st.executeQuery("select value from clefs where type ='"+name+"' and name = 'path'");
 		if(rs.next()){
 			return rs.getString(1);
@@ -1350,7 +1346,7 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static Statement getCurrentStip() throws SQLException {
-		return DatabaseManager.getCurrent(Type.STIP);
+		return DatabaseManager.getCurrent(DatasManager.Type.STIP);
 	}
 
 	/**
@@ -1359,7 +1355,7 @@ public final class DatabaseManager {
 	 * @throws SQLException
 	 */
 	public static Statement getCurrentStpv() throws SQLException {
-		return DatabaseManager.getCurrent(Type.STPV);
+		return DatabaseManager.getCurrent(DatasManager.Type.STPV);
 	}
 	
 	/**
@@ -1368,7 +1364,7 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static Statement getCurrentExsa() throws SQLException {
-		return DatabaseManager.getCurrent(Type.EXSA);
+		return DatabaseManager.getCurrent(DatasManager.Type.EXSA);
 	}
 
 	/**
@@ -1377,7 +1373,7 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static Statement getCurrentEdimap() throws SQLException {
-		return DatabaseManager.getCurrent(Type.Edimap);
+		return DatabaseManager.getCurrent(DatasManager.Type.Edimap);
 	}
 
 	/**
@@ -1386,7 +1382,7 @@ public final class DatabaseManager {
 	 * @throws SQLException 
 	 */
 	public static Statement getCurrentRadioCov() throws SQLException {
-		return DatabaseManager.getCurrent(Type.RadioCov);
+		return DatabaseManager.getCurrent(DatasManager.Type.RadioCov);
 	}
 	
 	/**
@@ -1411,7 +1407,7 @@ public final class DatabaseManager {
 	 * @throws SQLException
 	 */
 	public static Statement getCurrentSkyView() throws SQLException {
-		return DatabaseManager.getCurrent(Type.SkyView);
+		return DatabaseManager.getCurrent(DatasManager.Type.SkyView);
 	}
 	
 	/**
@@ -1420,7 +1416,7 @@ public final class DatabaseManager {
 	 * @throws SQLException
 	 */
 	public static Statement getCurrentAIP() throws SQLException {
-		return DatabaseManager.getCurrent(Type.AIP);
+		return DatabaseManager.getCurrent(DatasManager.Type.AIP);
 	}
 	
 	public static void closeAll(){
@@ -1444,7 +1440,7 @@ public final class DatabaseManager {
 	 * Indique au DatabaseManager que l'import d'une base de données est terminé
 	 * @param type Type de la base de données importées
 	 */
-	public static void importFinished(Type type){
+	public static void importFinished(DatasManager.Type type){
 		Logging.logger().info("La base de type "+type.toString()+" a changée.");
 		instance.support.firePropertyChange(BASE_SELECTED, null, type);
 	}
@@ -1462,25 +1458,25 @@ public final class DatabaseManager {
 	 * @param type Chaine de caractères à convertir
 	 * @return Le Type correspondant
 	 */
-	public static Type stringToType(String type){
+	public static DatasManager.Type stringToType(String type){
 		if(type.equalsIgnoreCase("STIP")) {
-			return Type.STIP;
+			return DatasManager.Type.STIP;
 		} else if(type.equalsIgnoreCase("PAYS")){
-			return Type.PAYS;
+			return DatasManager.Type.PAYS;
 		} else if(type.equalsIgnoreCase("STPV")){
-			return Type.STPV;
+			return DatasManager.Type.STPV;
 		} else if(type.equalsIgnoreCase("EXSA")){
-			return Type.EXSA;
+			return DatasManager.Type.EXSA;
 		} else if(type.equalsIgnoreCase("Edimap")){
-			return Type.Edimap;
+			return DatasManager.Type.Edimap;
 		} else if(type.equalsIgnoreCase("Ods")){
-			return Type.Ods;
+			return DatasManager.Type.Ods;
 		} else if(type.equalsIgnoreCase("RadioCov")){
-			return Type.RadioCov;
+			return DatasManager.Type.RadioCov;
 		} else if(type.equalsIgnoreCase("SkyView")){
-			return Type.SkyView;
+			return DatasManager.Type.SkyView;
 		} else if(type.equalsIgnoreCase("AIP")){
-			return Type.AIP;
+			return DatasManager.Type.AIP;
 		} //else if(type.equalsIgnoreCase("KML")){
 //				return Type.KML;
 //		}		
@@ -1494,7 +1490,7 @@ public final class DatabaseManager {
 	 * @return liste des éléments visibles
 	 * @throws SQLException
 	 */
-	public static List<ItemCouple> getAllVisibleObjects(Type type, Omnibox omnibox) throws SQLException{
+	public static List<ItemCouple> getAllVisibleObjects(DatasManager.Type type, Omnibox omnibox) throws SQLException{
 		List<ItemCouple> items = new LinkedList<ItemCouple>();
 		VidesoController controller = DatasManager.getController(type);
 		Statement st;
@@ -1530,7 +1526,7 @@ public final class DatabaseManager {
 					int typeInt = AIP.string2type(rs.getString(2));
 					String nom = rs.getString(1);
 					if(typeInt == AIP.AERODROME){
-						PreparedStatement ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select code from aerodromes where nom=?");
+						PreparedStatement ps = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select code from aerodromes where nom=?");
 						ps.setString(1, nom);
 						ResultSet rs2 = ps.executeQuery();
 						items.add(new ItemCouple(controller, new Couple<Integer,String>(typeInt, rs2.getString(1)+" -- "+nom)));
@@ -1585,14 +1581,14 @@ public final class DatabaseManager {
 	 * Returns all selected databases but PAYS
 	 * @return liste des bases de données sélectionnées
 	 */
-	public static List<Type> getSelectedDatabases(){
-		List<Type> bases = new ArrayList<DatabaseManager.Type>();
+	public static List<DatasManager.Type> getSelectedDatabases(){
+		List<DatasManager.Type> bases = new ArrayList<DatasManager.Type>();
 		try {
-			Statement st = DatabaseManager.getCurrent(Type.Databases);
+			Statement st = DatabaseManager.getCurrent(DatasManager.Type.Databases);
 			ResultSet rs = st.executeQuery("select type from databases where selected ='1'");
 			while(rs.next()){
-				Type t = DatabaseManager.stringToType(rs.getString(1));
-				if(! t.equals(Type.PAYS)) bases.add(DatabaseManager.stringToType(rs.getString(1)));
+				DatasManager.Type t = DatabaseManager.stringToType(rs.getString(1));
+				if(! t.equals(DatasManager.Type.PAYS)) bases.add(DatabaseManager.stringToType(rs.getString(1)));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -1607,7 +1603,7 @@ public final class DatabaseManager {
 	 */
 	public static void setComment(int id, String comment){
 		try {
-			Statement st = DatabaseManager.getCurrent(Type.Databases);
+			Statement st = DatabaseManager.getCurrent(DatasManager.Type.Databases);
 			st.executeUpdate("update databases set commentaire = '"+comment+"' where id ='"+id+"'");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -1635,7 +1631,7 @@ public final class DatabaseManager {
 		instance.support.removePropertyChangeListener(propertyName, l);
 	}
 	
-	public static void fireBaseSelected(Type type){
+	public static void fireBaseSelected(DatasManager.Type type){
 		instance.support.firePropertyChange(BASE_SELECTED, null, type);
 	}
 }

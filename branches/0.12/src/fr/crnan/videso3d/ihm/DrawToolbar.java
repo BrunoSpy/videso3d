@@ -31,6 +31,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.graphics.MovableBalise3D;
@@ -186,7 +187,11 @@ public class DrawToolbar extends JToolBar {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				MovableBalise3D point = new MovableBalise3D("Nouveau point", ShapeUtils.getNewShapePosition(wwd));
-				wwd.addObject(point);
+				try {
+					DatasManager.getUserObjectsController(wwd).addObject(point);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				wwd.getDraggerListener().addDraggableObject(point);
 			}
 		});
@@ -201,7 +206,11 @@ public class DrawToolbar extends JToolBar {
 				MultiplePointsAddGUI gui = new MultiplePointsAddGUI();
 				if(gui.showDialog() == JOptionPane.OK_OPTION){
 					for(VidesoObject o : gui.getObjects()){
-						wwd.addObject(o);
+						try {
+							DatasManager.getUserObjectsController(wwd).addObject(o);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				};
 			}

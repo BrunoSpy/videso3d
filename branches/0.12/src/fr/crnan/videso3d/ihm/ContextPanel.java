@@ -33,8 +33,8 @@ import bibliothek.gui.dock.common.DefaultSingleCDockable;
 import bibliothek.gui.dock.common.mode.ExtendedMode;
 
 import fr.crnan.videso3d.Context;
-import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.aip.AIP;
 import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.databases.stpv.StpvController;
@@ -50,7 +50,7 @@ public class ContextPanel extends JPanel{
 	
 	private TitledPanel titleAreaPanel = new TitledPanel("Informations");
 
-	private HashMap<DatabaseManager.Type, Context> taskpanes = new HashMap<DatabaseManager.Type, Context>();
+	private HashMap<DatasManager.Type, Context> taskpanes = new HashMap<DatasManager.Type, Context>();
 		
 	private DefaultSingleCDockable dockable;
 	
@@ -97,11 +97,11 @@ public class ContextPanel extends JPanel{
 	 * @param pane
 	 * @param base type de base données à laquelle se réfère ces données
 	 */
-	public void addTaskPane(Context pane, DatabaseManager.Type base){
+	public void addTaskPane(Context pane, DatasManager.Type base){
 			this.taskpanes.put(base, pane);
 	}
 
-	public void removeTaskPane(DatabaseManager.Type base){
+	public void removeTaskPane(DatasManager.Type base){
 		this.taskpanes.remove(base);
 	}
 	
@@ -109,7 +109,7 @@ public class ContextPanel extends JPanel{
 	 * Affiche les infos pertinentes pour l'objet en fonction de son type et de son nom
 	 * @param name Nom de l'objet
 	 */
-	public void showInfo(DatabaseManager.Type base, int type, String name){
+	public void showInfo(DatasManager.Type base, int type, String name){
 		content.removeAll();
 		hasTaskpanes = false;
 		if(base != null) {
@@ -122,32 +122,32 @@ public class ContextPanel extends JPanel{
 			case STIP:
 				switch (type) {
 				case StipController.ROUTES:
-					this.addTaskpanes(Type.STIP, type, name);
-					this.addTaskpanes(Type.AIP, AIP.AWY, name);
+					this.addTaskpanes(DatasManager.Type.STIP, type, name);
+					this.addTaskpanes(DatasManager.Type.AIP, AIP.AWY, name);
 					break;
 				case StipController.SECTEUR:
-					this.addTaskpanes(Type.STIP, type, name);
-					this.addTaskpanes(Type.STPV, StpvController.SECTEUR, name);
+					this.addTaskpanes(DatasManager.Type.STIP, type, name);
+					this.addTaskpanes(DatasManager.Type.STPV, StpvController.SECTEUR, name);
 					break;
 				case StipController.BALISES:
-					this.addTaskpanes(Type.STIP, type, name);
-					this.addTaskpanes(Type.STPV, StpvController.BALISE, name);
+					this.addTaskpanes(DatasManager.Type.STIP, type, name);
+					this.addTaskpanes(DatasManager.Type.STPV, StpvController.BALISE, name);
 					break;
 				case StipController.ITI:
-					this.addTaskpanes(Type.STIP, type, name);
+					this.addTaskpanes(DatasManager.Type.STIP, type, name);
 					break;
 				case StipController.CONNEXION:
-					this.addTaskpanes(Type.STIP, type, name);
+					this.addTaskpanes(DatasManager.Type.STIP, type, name);
 					break;
 				case StipController.TRAJET:
-					this.addTaskpanes(Type.STIP, type, name);
+					this.addTaskpanes(DatasManager.Type.STIP, type, name);
 					break;
 				}
 				break;
 			case AIP:
 				if(type == AIP.WPT){
-					this.addTaskpanes(Type.STIP, StipController.BALISES, name);
-					this.addTaskpanes(Type.STPV, StpvController.BALISE, name);
+					this.addTaskpanes(DatasManager.Type.STIP, StipController.BALISES, name);
+					this.addTaskpanes(DatasManager.Type.STPV, StpvController.BALISE, name);
 					this.addTaskpanes(base, type, name);
 				} else {
 					this.addTaskpanes(base, type, name);
@@ -191,7 +191,7 @@ public class ContextPanel extends JPanel{
 	 * @param type
 	 * @param name
 	 */
-	private void addTaskpanes(DatabaseManager.Type base, int type, String name){
+	private void addTaskpanes(DatasManager.Type base, int type, String name){
 		if(taskpanes.get(base) != null) {
 			List<JXTaskPane> panesList = taskpanes.get(base).getTaskPanes(type, name);
 			if(panesList != null){

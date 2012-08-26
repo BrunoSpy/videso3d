@@ -15,7 +15,8 @@
 */
 package fr.crnan.videso3d.graphics;
 
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import gov.nasa.worldwind.geom.LatLon;
 /**
  * 
@@ -28,23 +29,23 @@ public class DatabaseCylinder extends Cylinder implements DatabaseVidesoObject{
 		super();
 	}
 	
-	public DatabaseCylinder(String name, Type database, int type,
+	public DatabaseCylinder(String name, DatasManager.Type database, int type,
 			LatLon center, int flinf, int flsup, double rayon) {
 		super(name, center, flinf, flsup, rayon);
 		this.setDatabaseType(database);
 		this.setType(type);
 	}
 
-	private Type database;
+	private DatasManager.Type database;
 	private int type;
 
 	@Override
-	public Type getDatabaseType() {
+	public DatasManager.Type getDatabaseType() {
 		return this.database;
 	}
 
 	@Override
-	public void setDatabaseType(Type type) {
+	public void setDatabaseType(DatasManager.Type type) {
 		this.database = type;
 	}
 

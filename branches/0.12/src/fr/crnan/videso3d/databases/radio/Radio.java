@@ -21,9 +21,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 
 
 public class Radio extends FileParser {		
@@ -71,10 +72,10 @@ public class Radio extends FileParser {
 			// System.out.println("(Radio.java / Appel méthode doInBackground())");
 			
 			//création de la connection à la base de données
-			this.conn = DatabaseManager.selectDB(Type.RadioCov, this.name);
+			this.conn = DatabaseManager.selectDB(DatasManager.Type.RadioCov, this.name);
 			this.conn.setAutoCommit(false); //fixes performance issue
 		
-			if(!DatabaseManager.databaseExists(Type.RadioCov, this.name)){
+			if(!DatabaseManager.databaseExists(DatasManager.Type.RadioCov, this.name)){
 				
 				System.out.println("(Radio.java) / La base de données n'existe pas" +"");
 				
@@ -109,7 +110,7 @@ public class Radio extends FileParser {
 	public void done(){
 		if(this.isCancelled()){//si le parsing a été annulé, on fait le ménage
 			try {
-				DatabaseManager.deleteDatabase(this.name, Type.RadioCov);
+				DatabaseManager.deleteDatabase(this.name, DatasManager.Type.RadioCov);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -132,8 +133,8 @@ public class Radio extends FileParser {
 	}
 
 	@Override
-	public Type getType() {
-		return Type.RadioCov;
+	public DatasManager.Type getType() {
+		return DatasManager.Type.RadioCov;
 	}
 	
 	@Override

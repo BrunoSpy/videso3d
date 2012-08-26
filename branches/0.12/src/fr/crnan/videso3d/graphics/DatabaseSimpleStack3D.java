@@ -15,7 +15,8 @@
 */
 package fr.crnan.videso3d.graphics;
 
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import gov.nasa.worldwind.geom.LatLon;
 /**
  * 
@@ -24,7 +25,7 @@ import gov.nasa.worldwind.geom.LatLon;
  */
 public class DatabaseSimpleStack3D extends SimpleStack3D implements DatabaseVidesoObject {
 
-	private Type base;
+	private DatasManager.Type base;
 	private int type;
 	
 	public DatabaseSimpleStack3D(){
@@ -32,7 +33,7 @@ public class DatabaseSimpleStack3D extends SimpleStack3D implements DatabaseVide
 	}
 	
 	public DatabaseSimpleStack3D(String name, LatLon center, double rayonInt,
-			double rayonExt, int flInf, int flSup, Type base, int type) {
+			double rayonExt, int flInf, int flSup, DatasManager.Type base, int type) {
 		super(name, center, rayonInt, rayonExt, flInf, flSup);
 		this.setDatabaseType(base);
 		this.setType(type);
@@ -40,12 +41,12 @@ public class DatabaseSimpleStack3D extends SimpleStack3D implements DatabaseVide
 
 	
 	@Override
-	public Type getDatabaseType() {
+	public DatasManager.Type getDatabaseType() {
 		return this.base;
 	}
 
 	@Override
-	public void setDatabaseType(Type type) {
+	public void setDatabaseType(DatasManager.Type type) {
 		this.base = type;
 	}
 

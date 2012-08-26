@@ -24,10 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.aip.AIPController;
 import fr.crnan.videso3d.databases.edimap.EdimapController;
 import fr.crnan.videso3d.databases.exsa.STRController;
@@ -191,9 +191,9 @@ public class AirspaceMenu extends JPopupMenu {
 						PolygonsSetFilter filter = null;
 						if(airspace instanceof Secteur3D){
 							name = ((Secteur3D) airspace).getName().split(" ")[0];
-							if(((Secteur3D) airspace).getDatabaseType() == Type.STIP){
+							if(((Secteur3D) airspace).getDatabaseType() == DatasManager.Type.STIP){
 								filter = new PolygonsSetFilter(name, ((StipController)DatasManager.getController(((Secteur3D) airspace).getDatabaseType())).getPolygons(((Secteur3D) airspace).getName()));
-							}else if(((Secteur3D) airspace).getDatabaseType() == Type.AIP){
+							}else if(((Secteur3D) airspace).getDatabaseType() == DatasManager.Type.AIP){
 								filter = new PolygonsSetFilter(name, ((AIPController)DatasManager.getController(((Secteur3D) airspace).getDatabaseType())).getPolygons(((Secteur3D) airspace).getType(), ((Secteur3D) airspace).getName()));
 							} 							
 						} else {

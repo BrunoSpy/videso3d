@@ -17,7 +17,8 @@ package fr.crnan.videso3d.graphics;
 
 import java.util.LinkedList;
 
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 /**
@@ -39,16 +40,16 @@ public class DatabaseSurfacePolyline extends VSurfacePolyline implements Databas
 		super(new BasicShapeAttributes());
 	}
 
-	private Type dataBaseType;
+	private DatasManager.Type dataBaseType;
 	private int type;
 
 	@Override
-	public Type getDatabaseType() {
+	public DatasManager.Type getDatabaseType() {
 		return this.dataBaseType;
 	}
 
 	@Override
-	public void setDatabaseType(Type type) {
+	public void setDatabaseType(DatasManager.Type type) {
 		this.dataBaseType = type;
 	}
 

@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import java.util.Vector;
 
 
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Triplet;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.databases.stip.PointNotFoundException;
@@ -505,7 +506,7 @@ public class FPLReader extends TrackFilesReader {
 	private LinkedList<LPLNTrackPoint> getRouteSTIPBetween(String b1, String b2, String r, double elevation) {
 		try {
 			if(DatabaseManager.getCurrentStip() != null){
-				boolean routeKnownBySTIP = isRouteKnown(b1, b2, r, DatabaseManager.Type.STIP);
+				boolean routeKnownBySTIP = isRouteKnown(b1, b2, r, DatasManager.Type.STIP);
 				if(routeKnownBySTIP){
 					return findKnownSTIPRoute(b1, b2, r, elevation);
 				}else{
@@ -523,7 +524,7 @@ public class FPLReader extends TrackFilesReader {
 	private LinkedList<LPLNTrackPoint> getRouteAIPBetween(String b1, String b2, String r, double elevation){
 		try {
 			if(DatabaseManager.getCurrentAIP() != null){
-				boolean routeKnownByAIP = isRouteKnown(b1, b2, r, DatabaseManager.Type.AIP);
+				boolean routeKnownByAIP = isRouteKnown(b1, b2, r, DatasManager.Type.AIP);
 				if(routeKnownByAIP){
 					return findKnownAIPRoute(b1, b2, r, elevation);
 				}else{
@@ -626,18 +627,18 @@ public class FPLReader extends TrackFilesReader {
 	 * @param t le type de la base dans laquelle on veut chercher
 	 * @return true si la route est connue de la base <code>t</code> et contient les deux balises, false sinon.
 	 */
-	private boolean isRouteKnown(String b1, String b2, String r, DatabaseManager.Type t){
+	private boolean isRouteKnown(String b1, String b2, String r, DatasManager.Type t){
 		try{
 			if(DatabaseManager.getCurrent(t) != null){
 				Statement st = DatabaseManager.getCurrent(t);
-				if(t == DatabaseManager.Type.STIP){
+				if(t == DatasManager.Type.STIP){
 					ResultSet rs = st.executeQuery("select id from routebalise where route ='"+r+"'" +
 							" AND (balise='"+b1+"' OR balise='"+b2+"')");
 					if(rs.next()){
 						if(rs.next())
 							return true;
 					}
-				}else if(t == DatabaseManager.Type.AIP){
+				}else if(t == DatasManager.Type.AIP){
 					int[] pk = findAIPRouteAndBalises(b1, b2, r);
 					if(pk[0]!=-1 && pk[1]!=-1 && pk[2]!=-1){
 						ResultSet rs = st.executeQuery("select navFixExtremite from segments where pkRoute ="+pk[0]+" " +
@@ -659,7 +660,7 @@ public class FPLReader extends TrackFilesReader {
 
 
 					}
-				}else if(t == DatabaseManager.Type.SkyView){
+				}else if(t == DatasManager.Type.SkyView){
 					ResultSet rs = st.executeQuery("select SEQ from AIRWAY where IDENT ='"+r+"'" +
 							" AND (FROM_FIX_IDENT='"+b1+"' OR TO_FIX_IDENT='"+b1+"')");
 					if(rs.next()){
@@ -844,7 +845,7 @@ public class FPLReader extends TrackFilesReader {
 		LPLNTrackPoint airport = null;
 		try{
 			if(DatabaseManager.getCurrentAIP()!=null){
-				PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select latRef, lonRef from aerodromes where code = ?");
+				PreparedStatement st = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select latRef, lonRef from aerodromes where code = ?");
 				st.setString(1, code);
 				ResultSet rs = st.executeQuery();
 				if(rs.next()){
@@ -854,7 +855,7 @@ public class FPLReader extends TrackFilesReader {
 				}
 				st.close();
 			}else if(DatabaseManager.getCurrentSkyView()!=null && airport == null){
-				PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.SkyView, "select LATITUDE, LONGITUDE from AIRPORT where ident = ?");
+				PreparedStatement st = DatabaseManager.prepareStatement(DatasManager.Type.SkyView, "select LATITUDE, LONGITUDE from AIRPORT where ident = ?");
 				st.setString(1, code);
 				ResultSet rs = st.executeQuery();
 				if(rs.next()){
@@ -864,7 +865,7 @@ public class FPLReader extends TrackFilesReader {
 				}
 				st.close();
 			}else if(DatabaseManager.getCurrentStip()!=null && airport == null){
-				PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.STIP, "select LATITUDE, LONGITUDE from balises where name = ?");
+				PreparedStatement st = DatabaseManager.prepareStatement(DatasManager.Type.STIP, "select LATITUDE, LONGITUDE from balises where name = ?");
 				st.setString(1, code);
 				ResultSet rs = st.executeQuery();
 				if(rs.next()){

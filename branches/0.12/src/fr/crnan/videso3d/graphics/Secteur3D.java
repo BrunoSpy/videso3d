@@ -18,7 +18,7 @@ package fr.crnan.videso3d.graphics;
 
 import java.util.ArrayList;
 
-import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.geom.LatLon;
@@ -48,7 +48,7 @@ public class Secteur3D extends DatabasePolygonAnnotation {
 	 * @param t Type de secteur
 	 * @param base de données origine
 	 */
-	public Secteur3D(String name, Integer plancher, Integer plafond, int t, DatabaseManager.Type base, TextLayer tl){
+	public Secteur3D(String name, Integer plancher, Integer plafond, int t, DatasManager.Type base, TextLayer tl){
 		super();
 		this.setName(name);
 		this.setType(t);

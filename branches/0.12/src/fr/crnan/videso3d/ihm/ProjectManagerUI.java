@@ -44,14 +44,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.ProgressSupport;
-import fr.crnan.videso3d.ProjectManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
-import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
+import fr.crnan.videso3d.project.ProjectManager;
 import gov.nasa.worldwind.util.Logging;
 
 /**
@@ -120,7 +120,7 @@ public class ProjectManagerUI extends JDialog {
 			JPanel list = new JPanel();
 			list.setLayout(new BoxLayout(list, BoxLayout.Y_AXIS));
 			list.setBorder(BorderFactory.createTitledBorder(i+". Choisir les données à exporter :"));
-			for(DatabaseManager.Type type : this.projectManager.getTypes()){
+			for(DatasManager.Type type : this.projectManager.getTypes()){
 				Box element = Box.createHorizontalBox();
 				JCheckBox checkbox = new JCheckBox(type.toString());
 				checkbox.addItemListener(new ItemListener() {

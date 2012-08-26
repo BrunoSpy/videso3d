@@ -34,7 +34,8 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.stip.Stip;
@@ -89,9 +90,9 @@ public class Stpv extends FileParser{
 		try {
 			this.createName();
 			//si la base de données n'existe pas
-			if(!DatabaseManager.databaseExists(Type.STPV, this.name)){
+			if(!DatabaseManager.databaseExists(DatasManager.Type.STPV, this.name)){
 				//on crée la connection à la db
-				this.conn = DatabaseManager.selectDB(Type.STPV, this.name);
+				this.conn = DatabaseManager.selectDB(DatasManager.Type.STPV, this.name);
 				this.conn.setAutoCommit(false);
 				//puis la structure de la base de donnée
 				DatabaseManager.createSTPV(this.name, this.path);
@@ -99,7 +100,7 @@ public class Stpv extends FileParser{
 				this.getFromFiles();
 				this.conn.commit();
 			} else {
-				DatabaseManager.selectDatabase(this.name, Type.STPV);
+				DatabaseManager.selectDatabase(this.name, DatasManager.Type.STPV);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -115,7 +116,7 @@ public class Stpv extends FileParser{
 	public void done(){
 		if(this.isCancelled()){
 			try {
-				DatabaseManager.deleteDatabase(name, Type.STPV);
+				DatabaseManager.deleteDatabase(name, DatasManager.Type.STPV);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -1063,8 +1064,8 @@ public class Stpv extends FileParser{
 
 
 	@Override
-	public Type getType() {
-		return Type.STPV;
+	public DatasManager.Type getType() {
+		return DatasManager.Type.STPV;
 	}
 
 

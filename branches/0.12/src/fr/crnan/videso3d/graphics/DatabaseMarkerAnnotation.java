@@ -15,7 +15,8 @@
  */
 package fr.crnan.videso3d.graphics;
 
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import gov.nasa.worldwind.geom.Position;
 /**
  * 
@@ -28,16 +29,16 @@ public class DatabaseMarkerAnnotation extends MarkerAnnotation implements Databa
 		super(position, attrs);
 	}
 
-	private Type base;
+	private DatasManager.Type base;
 	private int type;
 
 	@Override
-	public Type getDatabaseType() {
+	public DatasManager.Type getDatabaseType() {
 		return this.base;
 	}
 
 	@Override
-	public void setDatabaseType(Type type) {
+	public void setDatabaseType(DatasManager.Type type) {
 		this.base = type;
 	}
 

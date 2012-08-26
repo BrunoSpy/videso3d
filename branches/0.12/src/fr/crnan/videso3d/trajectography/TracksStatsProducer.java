@@ -24,9 +24,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.VidesoController;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.aip.AIPController;
 import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.formats.VidesoTrack;
@@ -51,7 +51,7 @@ public class TracksStatsProducer extends ProgressSupport {
 	 * @param objectType {@link VidesoObject#getType()}
 	 * @return Tous les secteurs traversés par <code>track</code>
 	 */
-	public Collection<Secteur3D> computeContainingSectors(final VidesoTrack track, Type type, int objectType){
+	public Collection<Secteur3D> computeContainingSectors(final VidesoTrack track, DatasManager.Type type, int objectType){
 		if(DatasManager.getController(type) == null){
 			Logging.logger().severe("Controller inexistant");
 			return null;
@@ -59,7 +59,7 @@ public class TracksStatsProducer extends ProgressSupport {
 		List<Secteur3D> containingSecteurs = new ArrayList<Secteur3D>();
 		Collection<Object> secteurs;
 		VidesoController controller;
-		if(type.equals(Type.STIP)){
+		if(type.equals(DatasManager.Type.STIP)){
 			controller = (StipController) DatasManager.getController(type);
 			((ProgressSupport) controller).addPropertyChangeListener(new PropertyChangeListener() {
 
@@ -73,7 +73,7 @@ public class TracksStatsProducer extends ProgressSupport {
 				}
 			});
 			secteurs = controller.getObjects(StipController.SECTEUR);
-		} else if(type.equals(Type.AIP)){
+		} else if(type.equals(DatasManager.Type.AIP)){
 			controller = (AIPController) DatasManager.getController(type);
 			((ProgressSupport) controller).addPropertyChangeListener(new PropertyChangeListener() {
 

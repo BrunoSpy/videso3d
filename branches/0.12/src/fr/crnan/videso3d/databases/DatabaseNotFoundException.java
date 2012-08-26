@@ -15,7 +15,8 @@
  */
 package fr.crnan.videso3d.databases;
 
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 
 
 /**
@@ -25,14 +26,14 @@ import fr.crnan.videso3d.databases.DatabaseManager.Type;
  */
 public class DatabaseNotFoundException extends Exception {
 
-	private Type type;
+	private DatasManager.Type type;
 	
-	public DatabaseNotFoundException(Type type){
+	public DatabaseNotFoundException(DatasManager.Type type){
 		super();
 		this.type = type;
 	}
 	
-	public Type getDatabaseType(){
+	public DatasManager.Type getDatabaseType(){
 		return type;
 	}
 	

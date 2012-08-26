@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.PolygonAnnotation;
@@ -42,7 +42,7 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 	
 	private class Volume extends PolygonAnnotation implements DatabaseVidesoObject {
 		
-		private DatabaseManager.Type base;
+		private DatasManager.Type base;
 		
 		private int type;
 		
@@ -58,12 +58,12 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 		}
 
 		@Override
-		public Type getDatabaseType() {
+		public DatasManager.Type getDatabaseType() {
 			return this.base;
 		}
 
 		@Override
-		public void setDatabaseType(Type type) {
+		public void setDatabaseType(DatasManager.Type type) {
 			this.base = type;
 		}
 
@@ -149,7 +149,7 @@ public class MosaiqueEntity extends LinkedList<Airspace>{
 						volume.setLocations(locations);
 						volume.setName(name);
 						volume.setType(Cartes.EDIMAP_VOLUME);
-						volume.setDatabaseType(Type.Edimap);
+						volume.setDatabaseType(DatasManager.Type.Edimap);
 						this.add(volume);
 						
 					}

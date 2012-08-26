@@ -15,8 +15,8 @@
  */
 package fr.crnan.videso3d.graphics;
 
-import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.geom.Position;
 
@@ -27,32 +27,32 @@ import gov.nasa.worldwind.geom.Position;
  */
 public class DatabaseBalise3D extends Balise3D implements DatabaseVidesoObject {
 
-	private Type base;
+	private DatasManager.Type base;
 	private int type;
 
 	public DatabaseBalise3D(){
 		super();
 	}
 	
-	public DatabaseBalise3D(CharSequence name, Position position, String annotation, DatabaseManager.Type base, int type){
+	public DatabaseBalise3D(CharSequence name, Position position, String annotation, DatasManager.Type base, int type){
 		super(name, position, annotation);
 		this.setType(type);
 		this.setDatabaseType(base);
 	}
 	
-	public DatabaseBalise3D(String balise, Position position, Type base, int type) {
+	public DatabaseBalise3D(String balise, Position position, DatasManager.Type base, int type) {
 		super(balise,  position, null);
 		this.setType(type);
 		this.setDatabaseType(base);
 	}
 	
 	@Override
-	public Type getDatabaseType() {
+	public DatasManager.Type getDatabaseType() {
 		return this.base;
 	}
 
 	@Override
-	public void setDatabaseType(Type type) {
+	public void setDatabaseType(DatasManager.Type type) {
 		this.base = type;
 	}
 

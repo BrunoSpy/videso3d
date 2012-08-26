@@ -35,10 +35,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import fr.crnan.videso3d.Couple;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.Latitude;
 import fr.crnan.videso3d.geom.Longitude;
 
@@ -97,9 +98,9 @@ public class Stip extends FileParser{
 		try {
 			//récupération du nom de la base à créer
 			this.createName();
-			if(!DatabaseManager.databaseExists(Type.STIP, this.name)){
+			if(!DatabaseManager.databaseExists(DatasManager.Type.STIP, this.name)){
 				//création de la connection à la base de données
-				this.conn = DatabaseManager.selectDB(Type.STIP, this.name);
+				this.conn = DatabaseManager.selectDB(DatasManager.Type.STIP, this.name);
 				this.conn.setAutoCommit(false); //fixes performance issue
 				//création de la structure de la base de données
 				DatabaseManager.createSTIP(this.name);
@@ -115,7 +116,7 @@ public class Stip extends FileParser{
 				this.conn.commit();
 				this.setProgress(this.numberFiles());
 			} else {
-				DatabaseManager.selectDatabase(this.name, Type.STIP);
+				DatabaseManager.selectDatabase(this.name, DatasManager.Type.STIP);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -131,7 +132,7 @@ public class Stip extends FileParser{
 	public void done() {
 		if(this.isCancelled()){//si le parsing a été annulé, on fait le ménage
 			try {
-				DatabaseManager.deleteDatabase(this.name, Type.STIP);
+				DatabaseManager.deleteDatabase(this.name, DatasManager.Type.STIP);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -1499,8 +1500,8 @@ public class Stip extends FileParser{
 	}
 
 	@Override
-	public Type getType() {
-		return Type.STIP;
+	public DatasManager.Type getType() {
+		return DatasManager.Type.STIP;
 	}
 	
 	@Override

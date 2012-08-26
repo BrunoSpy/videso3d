@@ -28,9 +28,10 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import gov.nasa.worldwind.util.Logging;
 
 /**
@@ -110,9 +111,9 @@ public class Exsa extends FileParser {
 		try {
 			//on récupère le nom de la base de données
 			this.createName();
-			if(!DatabaseManager.databaseExists(Type.EXSA, this.name)){
+			if(!DatabaseManager.databaseExists(DatasManager.Type.EXSA, this.name)){
 				//on crée la connection avec bdd avec ce nom
-				this.conn = DatabaseManager.selectDB(Type.EXSA, this.name);
+				this.conn = DatabaseManager.selectDB(DatasManager.Type.EXSA, this.name);
 				this.conn.setAutoCommit(false);
 				//puis la structure de la base de donnée
 				DatabaseManager.createEXSA(this.name);
@@ -120,7 +121,7 @@ public class Exsa extends FileParser {
 				this.getFromFiles();
 				this.conn.commit();
 			} else {
-				DatabaseManager.selectDatabase(this.name, Type.EXSA);
+				DatabaseManager.selectDatabase(this.name, DatasManager.Type.EXSA);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -139,7 +140,7 @@ public class Exsa extends FileParser {
 	public void done(){
 		if(this.isCancelled()){
 			try {
-				DatabaseManager.deleteDatabase(name, Type.EXSA);
+				DatabaseManager.deleteDatabase(name, DatasManager.Type.EXSA);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -755,8 +756,8 @@ public class Exsa extends FileParser {
 	}
 
 	@Override
-	public Type getType() {
-		return Type.EXSA;
+	public DatasManager.Type getType() {
+		return DatasManager.Type.EXSA;
 	}
 
 	@Override

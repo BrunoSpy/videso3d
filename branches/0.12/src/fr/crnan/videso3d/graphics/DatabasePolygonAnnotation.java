@@ -17,7 +17,8 @@ package fr.crnan.videso3d.graphics;
 
 import java.util.List;
 
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 /**
  * Videso Polygon with annotation and link with a database
@@ -26,7 +27,7 @@ import fr.crnan.videso3d.geom.LatLonCautra;
  */
 public class DatabasePolygonAnnotation extends PolygonAnnotation implements DatabaseVidesoObject {
 
-	private Type base;
+	private DatasManager.Type base;
 	private int type;
 
 	public DatabasePolygonAnnotation(){
@@ -38,12 +39,12 @@ public class DatabasePolygonAnnotation extends PolygonAnnotation implements Data
 	}
 
 	@Override
-	public Type getDatabaseType() {
+	public DatasManager.Type getDatabaseType() {
 		return this.base;
 	}
 
 	@Override
-	public void setDatabaseType(Type type) {
+	public void setDatabaseType(DatasManager.Type type) {
 		this.base = type;
 	}
 	

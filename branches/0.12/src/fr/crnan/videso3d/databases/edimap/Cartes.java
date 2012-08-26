@@ -28,9 +28,10 @@ import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
 import fr.crnan.videso3d.layers.LayerSet;
 import fr.crnan.videso3d.layers.PriorityRenderableLayer;
@@ -147,7 +148,7 @@ public class Cartes extends FileParser {
 		this.secteurs = new ArrayList<Entity>();
 		this.volumes = new ArrayList<Entity>();
 		try {
-			this.version = DatabaseManager.getCurrentName(Type.Edimap);
+			this.version = DatabaseManager.getCurrentName(DatasManager.Type.Edimap);
 			//TODO prendre en compte la possibilité qu'il n'y ait pas de bdd Edimap
 			Statement edimapDB = DatabaseManager.getCurrentEdimap();
 			if(edimapDB != null){
@@ -218,9 +219,9 @@ public class Cartes extends FileParser {
 	@Override
 	protected void getFromFiles() {
 		try {
-			this.conn = DatabaseManager.selectDB(DatabaseManager.Type.Edimap, this.version);
+			this.conn = DatabaseManager.selectDB(DatasManager.Type.Edimap, this.version);
 			this.conn.setAutoCommit(false); //fixes performance issue
-			if(!DatabaseManager.databaseExists(Type.Edimap, this.version)){
+			if(!DatabaseManager.databaseExists(DatasManager.Type.Edimap, this.version)){
 				DatabaseManager.createEdimap(this.version, this.path);
 				this.insertCartes();
 				try {
@@ -229,7 +230,7 @@ public class Cartes extends FileParser {
 					e.printStackTrace();
 				}
 			} else {
-				DatabaseManager.selectDatabase(this.version, Type.Edimap);
+				DatabaseManager.selectDatabase(this.version, DatasManager.Type.Edimap);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -341,8 +342,8 @@ public class Cartes extends FileParser {
 		if(cartes.containsKey(name+type)) {
 			return cartes.get(name+type);
 		} else {
-			Statement st = DatabaseManager.getCurrent(DatabaseManager.Type.Databases);
-			ResultSet rs = st.executeQuery("select * from clefs where name='path' and type='"+DatabaseManager.getCurrentName(DatabaseManager.Type.Edimap)+"'");
+			Statement st = DatabaseManager.getCurrent(DatasManager.Type.Databases);
+			ResultSet rs = st.executeQuery("select * from clefs where name='path' and type='"+DatabaseManager.getCurrentName(DatasManager.Type.Edimap)+"'");
 			if(rs.next()){
 				this.path = rs.getString(4);
 			} 
@@ -482,8 +483,8 @@ public class Cartes extends FileParser {
 	}
 
 	@Override
-	public Type getType() {
-		return Type.Edimap;
+	public DatasManager.Type getType() {
+		return DatasManager.Type.Edimap;
 	}
 
 	/**

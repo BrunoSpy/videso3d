@@ -32,8 +32,8 @@ import org.jdesktop.swingx.JXTaskPane;
 
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.geom.Latitude;
 import fr.crnan.videso3d.geom.Longitude;
@@ -46,7 +46,7 @@ import fr.crnan.videso3d.ihm.AnalyzeUI;
 public class StipContext extends Context {
 
 	private StipController getController(){
-		return (StipController) DatasManager.getController(Type.STIP);
+		return (StipController) DatasManager.getController(DatasManager.Type.STIP);
 	}
 
 	@Override
@@ -382,7 +382,7 @@ public class StipContext extends Context {
 				}
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					DatasManager.getController(Type.STIP).highlight(StipController.ITI, name);
+					DatasManager.getController(DatasManager.Type.STIP).highlight(StipController.ITI, name);
 				}
 			});
 
@@ -411,7 +411,7 @@ public class StipContext extends Context {
 				}
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					DatasManager.getController(Type.STIP).highlight(StipController.CONNEXION, name);
+					DatasManager.getController(DatasManager.Type.STIP).highlight(StipController.CONNEXION, name);
 				}
 			});			
 			taskpane1.add(new JLabel("<html><b>Type</b> : "+rs.getString(4)+"</html>"));
@@ -447,7 +447,7 @@ public class StipContext extends Context {
 					}
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						DatasManager.getController(Type.STIP).highlight(StipController.TRAJET, name);
+						DatasManager.getController(DatasManager.Type.STIP).highlight(StipController.TRAJET, name);
 					}
 				});		
 				trajet.add(new JLabel("<html><b>Type</b> : "+rs.getString(6)));

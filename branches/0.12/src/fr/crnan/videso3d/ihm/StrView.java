@@ -33,8 +33,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.exsa.STRController;
 import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
@@ -173,7 +173,7 @@ public class StrView extends JPanel implements DataView{
 	
 	@Override
 	public STRController getController(){
-		return (STRController) DatasManager.getController(Type.EXSA);
+		return (STRController) DatasManager.getController(DatasManager.Type.EXSA);
 	}
 	
 	/**

@@ -27,7 +27,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.exsa.STRController;
 import fr.crnan.videso3d.databases.skyview.SkyViewController;
 import fr.crnan.videso3d.databases.stpv.StpvController;
@@ -188,7 +188,7 @@ public class AirspaceListener implements SelectListener {
 				//Uniquement pour les objets balises STIP
 				if((o instanceof Marker || o instanceof PointPlacemark) && (o instanceof DatabaseVidesoObject)){
 
-					if(((DatabaseVidesoObject) o).getDatabaseType().equals(Type.STIP)){
+					if(((DatabaseVidesoObject) o).getDatabaseType().equals(DatasManager.Type.STIP)){
 						JMenu analyseItem = new JMenu("Analyse");
 						JMenuItem analyseIti = new JMenuItem("Itinéraires");
 						JMenuItem analyseTrajet = new JMenuItem("Trajets");
@@ -407,7 +407,7 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							wwd.delete(o);
+							wwd.delete((VidesoObject) o);
 						}
 					});
 				}

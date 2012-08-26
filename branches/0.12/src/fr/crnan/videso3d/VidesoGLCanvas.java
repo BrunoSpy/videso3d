@@ -36,7 +36,7 @@ import javax.xml.xpath.XPath;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.stip.Stip;
 import fr.crnan.videso3d.databases.stpv.Stpv;
 import fr.crnan.videso3d.formats.VidesoTrack;
@@ -47,17 +47,16 @@ import fr.crnan.videso3d.globes.FlatGlobeCautra;
 import fr.crnan.videso3d.graphics.Aerodrome;
 import fr.crnan.videso3d.graphics.Balise;
 import fr.crnan.videso3d.graphics.Balise2D;
-import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
+import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.graphics.editor.ShapeEditorsManager;
 import fr.crnan.videso3d.ihm.components.VidesoGLCanvasKeyListener;
 import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
 import fr.crnan.videso3d.layers.Balise2DLayer;
-import fr.crnan.videso3d.layers.Balise3DLayer;
 import fr.crnan.videso3d.layers.BaliseLayer;
 import fr.crnan.videso3d.layers.FrontieresStipLayer;
 import fr.crnan.videso3d.layers.LayerManagerLayer;
@@ -67,7 +66,6 @@ import fr.crnan.videso3d.layers.VerticalScaleBar;
 import fr.crnan.videso3d.util.VMeasureTool;
 
 import gov.nasa.worldwind.Factory;
-import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.WorldWind;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.avlist.AVList;
@@ -109,7 +107,7 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.9.6
+ * @version 0.9.7
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwner{
@@ -301,10 +299,10 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 		String selection = new String("");
 		for(Object o : getSelectedObjects()){
 			if(o instanceof DatabaseVidesoObject){
-				if(((DatabaseVidesoObject) o).getDatabaseType().compareTo(Type.STIP) == 0){
+				if(((DatabaseVidesoObject) o).getDatabaseType().compareTo(DatasManager.Type.STIP) == 0){
 					selection += Stip.getString(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
 					selection += "\n";
-				}else if(((DatabaseVidesoObject) o).getDatabaseType().compareTo(Type.STPV) == 0){
+				}else if(((DatabaseVidesoObject) o).getDatabaseType().compareTo(DatasManager.Type.STPV) == 0){
 					selection += Stpv.getString(new Integer(((DatabaseVidesoObject) o).getType()),new Integer(((DatabaseVidesoObject) o).getName()));
 					selection += "\n";
 				}
@@ -578,8 +576,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 	public void resetView() {
 
 		if(this.annotationLayer != null) this.annotationLayer.removeAllAnnotations();
-
-		this.deleteAllUserObjects();
 		
 		this.getView().stopMovement();
 		this.getView().setEyePosition(Position.fromDegrees(47, 0, 2500e3));
@@ -816,7 +812,12 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 		if(o instanceof DatabaseVidesoObject){
 			DatasManager.getController(((DatabaseVidesoObject) o).getDatabaseType()).hideObject(((DatabaseVidesoObject) o).getType(), ((DatabaseVidesoObject) o).getName());
 			this.getSelectedObjects().remove(o);
+		} else if(DatasManager.getController(Type.UserObject) != null && 
+				((UserObjectsController) DatasManager.getController(Type.UserObject)).manages(o)) {
+			((UserObjectsController) DatasManager.getController(Type.UserObject)).removeObject(o);
+			this.getSelectedObjects().remove(o);
 		} else if(o instanceof Airspace){
+			//TODO useless
 			this.deleteAirspace((Airspace) o);
 		} else if(o instanceof Balise){
 			this.deleteBalise((Balise) o);
@@ -865,70 +866,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 	private void deletePath(Path p){
 		p.setVisible(false);
 		this.getSelectedObjects().remove(p);
-	}
-	
-	/*--------------------------------------------------------------*/
-	/*------------------  Création d'objets   ----------------------*/
-	/*--------------------------------------------------------------*/
-	
-	private RenderableLayer renderableLayer;
-	private Balise3DLayer balise3DLayer;
-	
-	/**
-	 * Add an object to the adequate layer<br />
-	 * In order to be saved in a project, objects have to be {@link Restorable}
-	 * @param o 3D object
-	 */
-	public void addObject(Restorable o){
-		if(o instanceof Renderable){
-			if(renderableLayer == null){
-				renderableLayer = new RenderableLayer();
-				renderableLayer.setName("Objets personnalisés");
-				this.toggleLayer(renderableLayer, true);
-			}
-			renderableLayer.addRenderable((Renderable) o);
-		} else if(o instanceof Balise3D){
-			if(balise3DLayer == null){
-				balise3DLayer = new Balise3DLayer("Points personnalisés");
-				balise3DLayer.setPickEnabled(true);
-				this.toggleLayer(balise3DLayer, true);
-			}
-			balise3DLayer.addBalise((Balise) o);
-		}
-	}
-	
-	public boolean hasUserObjects(){
-		return (renderableLayer != null && renderableLayer.getRenderables().iterator().hasNext()) ||
-				(balise3DLayer != null && balise3DLayer.getVisibleBalises().size() > 0);
-	}
-	
-	/**
-	 * @return All visible and restorable objects added by user  
-	 */
-	public List<Restorable> getUserObjects(){
-		List<Restorable> objects = new ArrayList<Restorable>();
-		if(renderableLayer != null){
-			for(Renderable r : renderableLayer.getRenderables()){
-				if(r instanceof Restorable){
-					objects.add((Restorable) r);
-				}
-			}
-		}
-		if(balise3DLayer != null){
-			for(Balise3D b : balise3DLayer.getVisibleBalises()){
-				objects.add(b);
-			}
-		}
-		return objects;
-	}
-	
-	/**
-	 * Supprime tous les objets ajoutés par l'utilisateur
-	 */
-	public void deleteAllUserObjects(){
-		if(renderableLayer != null)
-			renderableLayer.removeAllRenderables();
-		if(balise3DLayer != null)
-			balise3DLayer.eraseAllBalises();
-	}
+	}	
+
 }

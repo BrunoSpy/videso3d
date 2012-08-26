@@ -30,10 +30,10 @@ import java.util.List;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.DatabaseBalise2D;
@@ -141,7 +141,7 @@ public class SkyViewController implements VidesoController {
 					if(rs.next()){
 						Balise2D airport = new DatabaseBalise2D(name, 
 												new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(8), rs.getString(9)), 0), 
-												DatabaseManager.Type.SkyView,
+												DatasManager.Type.SkyView,
 												SkyViewController.TYPE_AIRPORT,
 												airports.getTextLayer());
 						airport.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
@@ -162,7 +162,7 @@ public class SkyViewController implements VidesoController {
 					ResultSet rs = st.executeQuery("select * from waypoint where ident='"+name+"'");
 					if(rs.next()){
 						DatabaseBalise2D waypoint = new DatabaseBalise2D(name, new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(7), rs.getString(8)), 0),
-								DatabaseManager.Type.SkyView,
+								DatasManager.Type.SkyView,
 								SkyViewController.TYPE_WAYPOINT,
 								waypoints.getTextLayer());
 						waypoint.setAnnotation("<b>"+name+"</b><br /><br />"+rs.getString(4));
@@ -179,7 +179,7 @@ public class SkyViewController implements VidesoController {
 			break;
 		}
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(Type.SkyView).showObject(type, name);
+		DatasManager.getView(DatasManager.Type.SkyView).showObject(type, name);
 	}
 
 	@Override
@@ -200,7 +200,7 @@ public class SkyViewController implements VidesoController {
 			break;
 		}
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(Type.SkyView).hideObject(type, name);
+		DatasManager.getView(DatasManager.Type.SkyView).hideObject(type, name);
 	}
 
 	@Override
@@ -310,7 +310,7 @@ public class SkyViewController implements VidesoController {
 			}
 			for(LinkedList<Couple<String, String>> route : routes){
 				DatabaseRoute2D r = new DatabaseRoute2D(ident, type.equals("H")? Route.Space.UIR : Route.Space.FIR,
-						Type.SkyView,
+						DatasManager.Type.SkyView,
 						SkyViewController.TYPE_ROUTE
 						);
 				LinkedList<LatLon> loc = new LinkedList<LatLon>();
@@ -464,7 +464,7 @@ public class SkyViewController implements VidesoController {
 			while(rs.next()){
 				String ident = rs.getString(1);
 				DatabaseBalise2D waypoint = new DatabaseBalise2D(ident, new Position(LatLonUtils.computeLatLonFromSkyviewString(rs.getString(3), rs.getString(4)), 0),
-						DatabaseManager.Type.SkyView,
+						DatasManager.Type.SkyView,
 						SkyViewController.TYPE_WAYPOINT,
 						waypoints.getTextLayer());
 				waypoint.setAnnotation("<b>"+ident+"</b><br /><br />"+rs.getString(2));

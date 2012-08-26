@@ -29,7 +29,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
@@ -80,7 +79,7 @@ public class StipView extends FilteredMultiTreeTableView {
 	
 	@Override
 	public StipController getController(){
-		return (StipController) DatasManager.getController(Type.STIP);
+		return (StipController) DatasManager.getController(DatasManager.Type.STIP);
 	}
 	
 	private void fillRoutesRootNode(DefaultMutableTreeNode root){

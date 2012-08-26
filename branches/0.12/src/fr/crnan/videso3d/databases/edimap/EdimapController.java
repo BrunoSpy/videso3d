@@ -26,8 +26,8 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import gov.nasa.worldwind.Restorable;
@@ -103,7 +103,7 @@ public class EdimapController implements VidesoController {
 			this.toggleLayer(this.cartes.getLayer(), true);
 			this.cartes.getLayer().firePropertyChange(AVKey.LAYER, null, this.cartes.getLayer());
 			//synchroniser la vue si l'appel n'a pas été fait par la vue
-			DatasManager.getView(Type.Edimap).showObject(type, name);
+			DatasManager.getView(DatasManager.Type.Edimap).showObject(type, name);
 		}
 	}
 
@@ -122,7 +122,7 @@ public class EdimapController implements VidesoController {
 			carte.setLocationsVisible(false);
 			this.cartes.getLayer().firePropertyChange(AVKey.LAYER, null, this.cartes.getLayer());
 			//synchroniser la vue si l'appel n'a pas été fait par la vue
-			DatasManager.getView(Type.Edimap).hideObject(type, name);
+			DatasManager.getView(DatasManager.Type.Edimap).hideObject(type, name);
 		}
 	}
 

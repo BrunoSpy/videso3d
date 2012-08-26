@@ -66,7 +66,6 @@ import fr.crnan.videso3d.CompatibilityVersionException;
 import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.FileManager;
-import fr.crnan.videso3d.ProjectManager;
 import fr.crnan.videso3d.SplashScreen;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -88,6 +87,7 @@ import fr.crnan.videso3d.layers.tracks.LPLNTracksLayer;
 import fr.crnan.videso3d.layers.tracks.OPASTracksLayer;
 import fr.crnan.videso3d.layers.tracks.PLNSTracksLayer;
 import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
+import fr.crnan.videso3d.project.ProjectManager;
 import fr.crnan.videso3d.trajectography.PLNSTracksModel;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
@@ -173,17 +173,17 @@ public class MainWindow extends JFrame {
 				FileManager.removeTempFiles();
 				
 				//suppression de la dernière session
-				if(new File("session.vpj").exists()){
-					new File("session.vpj").delete();
+				if(new File(Configuration.SESSION_FILENAME).exists()){
+					new File(Configuration.SESSION_FILENAME).delete();
 				}
 				ProjectManager project = new ProjectManager();
 				project.prepareSaving(wwd);
 				Set<String> types = new HashSet<String>();
-				for(DatabaseManager.Type type : project.getTypes()){
+				for(DatasManager.Type type : project.getTypes()){
 					types.add(type.toString());
 				}
 				try {
-					project.saveProject(new File("session.vpj"), types, null, null, false, true);
+					project.saveProject(new File(Configuration.SESSION_FILENAME), types, null, null, false, true);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (SQLException e1) {
@@ -205,7 +205,7 @@ public class MainWindow extends JFrame {
 		//compter le nombre d'étapes d'init
 		Integer temp = 0;
 		temp += wwd.getNumberInitSteps();
-		for(DatabaseManager.Type t : DatabaseManager.getSelectedDatabases()) {
+		for(DatasManager.Type t : DatabaseManager.getSelectedDatabases()) {
 			temp += DatasManager.getNumberInitSteps(t);
 		}
 		temp++;
@@ -226,16 +226,16 @@ public class MainWindow extends JFrame {
 			protected String doInBackground() {
 				try {
 					wwd.initialize();
-					for(DatabaseManager.Type t : DatabaseManager.getSelectedDatabases()) {
+					for(DatasManager.Type t : DatabaseManager.getSelectedDatabases()) {
 						DatasManager.createDatas(t, wwd);
 					}
 					omniBox = new Omnibox(wwd, context);
-					for(DatabaseManager.Type t : DatabaseManager.getSelectedDatabases()){
+					for(DatasManager.Type t : DatabaseManager.getSelectedDatabases()){
 						omniBox.addDatabase(t, DatabaseManager.getAllVisibleObjects(t, omniBox), false);
 					}
 					//chargement de la session précédente si elle existe
-					if(new File("session.vpj").exists()){
-						new ProjectManager().loadProject(new File("session.vpj"), wwd, MainWindow.this, false);
+					if(new File(Configuration.SESSION_FILENAME).exists()){
+						new ProjectManager().loadProject(new File(Configuration.SESSION_FILENAME), wwd, MainWindow.this, false);
 					}
 					wwd.firePropertyChange("step", "", "Création de l'interface");
 				} catch (Exception e) {
@@ -318,7 +318,7 @@ public class MainWindow extends JFrame {
 		//save location of future panel
 		locationDatas = dockableDatas.getBaseLocation().aside();
 
-		for(DatabaseManager.Type type : DatabaseManager.getSelectedDatabases()){
+		for(DatasManager.Type type : DatabaseManager.getSelectedDatabases()){
 			this.updateDockables(type);
 		}
 
@@ -328,7 +328,7 @@ public class MainWindow extends JFrame {
 		wwd.addSelectListener(airspaceListener);
 
 		//initialisation contextpanel
-		for(DatabaseManager.Type t : DatabaseManager.getSelectedDatabases()){	
+		for(DatasManager.Type t : DatabaseManager.getSelectedDatabases()){	
 			context.addTaskPane(DatasManager.getContext(t), t);
 			AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(t), t);	
 		}
@@ -348,7 +348,7 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				DatabaseManager.Type type = (DatabaseManager.Type) evt.getNewValue();
+				DatasManager.Type type = (DatasManager.Type) evt.getNewValue();
 				control.removeSingleDockable(type.toString());
 				DatasManager.deleteDatas(type);
 				omniBox.removeDatabase(type);
@@ -376,7 +376,7 @@ public class MainWindow extends JFrame {
 						} catch (Exception e){
 							e.printStackTrace();
 						}
-						DatabaseManager.Type type = (DatabaseManager.Type) evt.getNewValue();
+						DatasManager.Type type = (DatasManager.Type) evt.getNewValue();
 						DatasManager.createDatas(type, wwd);
 						omniBox.addDatabase(type, DatabaseManager.getAllVisibleObjects(type, omniBox), true);
 						return null;
@@ -384,7 +384,7 @@ public class MainWindow extends JFrame {
 
 					@Override
 					protected void done() {
-						DatabaseManager.Type type = (DatabaseManager.Type) evt.getNewValue();
+						DatasManager.Type type = (DatasManager.Type) evt.getNewValue();
 							if(DatasManager.getView(type) != null){
 								updateDockables(type);
 								context.addTaskPane(DatasManager.getContext(type), type);
@@ -418,7 +418,7 @@ public class MainWindow extends JFrame {
 	 * @param type Type de la base de données
 	 * @param empty Vrai si il n'y a plus de tabs
 	 */
-	private void updateDockables(final DatabaseManager.Type type){
+	private void updateDockables(final DatasManager.Type type){
 		this.control.removeSingleDockable(type.toString());
 		DefaultSingleCDockable dockable = new DefaultSingleCDockable(type.toString(), type.toString(), (Component) DatasManager.getView(type),
 				new CCloseAction(control){
@@ -478,6 +478,22 @@ public class MainWindow extends JFrame {
 		});
 		
 		this.addDockable(dockable);
+	}
+	
+	/**
+	 * Get the UserObjectView and create it if needed
+	 */
+	public UserObjectsView getUserObjectView(){
+		if(DatasManager.getView(DatasManager.Type.UserObject) == null){
+			 try {
+				DatasManager.createDatas(DatasManager.Type.UserObject, this.wwd);
+				//add it to the HMI
+				this.updateDockables(DatasManager.Type.UserObject);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return (UserObjectsView) DatasManager.getView(DatasManager.Type.UserObject);
 	}
 	
 	/* ******************************************************* */

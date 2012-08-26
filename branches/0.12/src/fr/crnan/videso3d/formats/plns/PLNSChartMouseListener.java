@@ -21,7 +21,8 @@ import org.jfree.chart.entity.CategoryItemEntity;
 import org.jfree.chart.entity.CategoryLabelEntity;
 import org.jfree.chart.plot.CategoryPlot;
 
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.stpv.StpvController;
 import fr.crnan.videso3d.ihm.ContextPanel;
 /**
@@ -43,18 +44,18 @@ public class PLNSChartMouseListener implements ChartMouseListener {
 			CategoryItemEntity entity = (CategoryItemEntity) evt.getEntity();
 			//try to guess the type of the entity
 			if(entity.getColumnKey() instanceof String && ((String)entity.getColumnKey()).matches("C.")){
-				this.context.showInfo(Type.STPV, StpvController.CATEGORIE_CODE, (String)entity.getColumnKey());
+				this.context.showInfo(DatasManager.Type.STPV, StpvController.CATEGORIE_CODE, (String)entity.getColumnKey());
 			} else if(entity.getColumnKey() instanceof Integer && evt.getChart().getPlot() instanceof CategoryPlot && 
 					((CategoryPlot)evt.getChart().getPlot()).getDomainAxis().getLabel().equals("LP")){
-				this.context.showInfo(Type.STPV, StpvController.LIAISON_PRIVILEGIEE, ((Integer)entity.getColumnKey()).toString());			
+				this.context.showInfo(DatasManager.Type.STPV, StpvController.LIAISON_PRIVILEGIEE, ((Integer)entity.getColumnKey()).toString());			
 			}
 		} else if(evt.getEntity() instanceof CategoryLabelEntity){
 			CategoryLabelEntity entity = (CategoryLabelEntity) evt.getEntity();
 			if(entity.getKey() instanceof String && ((String)entity.getKey()).matches("C.")){
-				this.context.showInfo(Type.STPV, StpvController.CATEGORIE_CODE, (String)entity.getKey());
+				this.context.showInfo(DatasManager.Type.STPV, StpvController.CATEGORIE_CODE, (String)entity.getKey());
 			} else if(entity.getKey() instanceof Integer && evt.getChart().getPlot() instanceof CategoryPlot && 
 					((CategoryPlot)evt.getChart().getPlot()).getDomainAxis().getLabel().equals("LP")){
-				this.context.showInfo(Type.STPV, StpvController.LIAISON_PRIVILEGIEE, ((Integer)entity.getKey()).toString());			
+				this.context.showInfo(DatasManager.Type.STPV, StpvController.LIAISON_PRIVILEGIEE, ((Integer)entity.getKey()).toString());			
 			}
 		}
 	}

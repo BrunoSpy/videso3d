@@ -33,8 +33,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.stpv.StpvController;
 import fr.crnan.videso3d.ihm.components.DataView;
 /**
@@ -72,7 +72,7 @@ public class StpvView extends JPanel implements DataView{
 
 	@Override
 	public StpvController getController() {
-		return (StpvController) DatasManager.getController(Type.STPV);
+		return (StpvController) DatasManager.getController(DatasManager.Type.STPV);
 	}
 	
 	private JPanel buildPanel(JPanel panel, String query){

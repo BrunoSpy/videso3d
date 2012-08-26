@@ -31,8 +31,8 @@ import org.jdesktop.swingx.JXTaskPane;
 
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 /**
  * 
@@ -159,7 +159,7 @@ public class StpvContext extends Context {
 						}
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							DatasManager.getController(Type.STPV).highlight(StpvController.STAR, name);
+							DatasManager.getController(DatasManager.Type.STPV).highlight(StpvController.STAR, name);
 						}
 					});
 					Statement st3 = DatabaseManager.getCurrentStpv();

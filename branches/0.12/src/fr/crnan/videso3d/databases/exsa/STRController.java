@@ -29,11 +29,11 @@ import java.util.Map.Entry;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.graphics.Cylinder;
 import fr.crnan.videso3d.graphics.DatabaseCylinder;
@@ -149,7 +149,7 @@ public class STRController implements VidesoController {
 					ResultSet rs = st.executeQuery("select * from radrgener, radrtechn where radrgener.name = radrtechn.name and radrgener.name ='"+name+"'");
 					if(rs.next()){
 						DatabaseRadar radar = new DatabaseRadar(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")), rs.getInt("portee"), 
-								DatabaseManager.Type.EXSA, STRController.RADAR);
+								DatasManager.Type.EXSA, STRController.RADAR);
 						radar.setAnnotation("<html><b>Radar : "+name+"</b><br /><br />" +
 								"Portée : "+rs.getInt("portee")+"NM<br />" +
 								"Numéro : "+rs.getInt("numero")+"<br />" +
@@ -177,7 +177,7 @@ public class STRController implements VidesoController {
 					if(rs.next()){
 						DatabaseSimpleStack3D stack = new DatabaseSimpleStack3D(name, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")),
 								rs.getDouble("rayonint"), rs.getDouble("rayonext"), rs.getInt("flinf"), rs.getInt("flsup"),
-								Type.EXSA, STACK);
+								DatasManager.Type.EXSA, STACK);
 						stack.setAnnotation("<html><b>Stack : "+name+"</b><br /><br />" +
 								"Type : "+rs.getString("type")+"<br />" +
 								"Rayon : "+rs.getInt("rayonint")+" NM<br />" +
@@ -215,7 +215,7 @@ public class STRController implements VidesoController {
 					Statement st = DatabaseManager.getCurrentExsa();
 					ResultSet rs = st.executeQuery("select * from centtmaf where name='"+name+"'");
 					if(rs.next()){
-						DatabaseCylinder tmaFilet = new DatabaseCylinder(name, Type.EXSA, TMA_F, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")),
+						DatabaseCylinder tmaFilet = new DatabaseCylinder(name, DatasManager.Type.EXSA, TMA_F, LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")),
 								0, rs.getInt("fl"), rs.getDouble("rayon"));
 						tmaFilet.setAnnotation("<html><b>TMA Filet : "+name+"</b><br /><br />" +
 								"Rayon : "+rs.getInt("rayon")+" NM<br />" +
@@ -249,7 +249,7 @@ public class STRController implements VidesoController {
 			break;
 		}
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(Type.EXSA).showObject(type, name);
+		DatasManager.getView(DatasManager.Type.EXSA).showObject(type, name);
 		
 	}
 
@@ -473,7 +473,7 @@ public class STRController implements VidesoController {
 			MosaiqueLayer mLayer = new MosaiqueLayer(annotationTitle, grille, origine, width, 
 													height, size, hSens, vSens, numSens, squares,
 													altitudes, numbers, attr, airspaceAttr,
-													Type.EXSA, type, name);
+													DatasManager.Type.EXSA, type, name);
 			mosaiquesLayer.put(type+"-"+name, mLayer);
 			mLayer.setName("Mosaïque "+type+" "+name);
 			mLayer.set3D(!flat);
@@ -502,7 +502,7 @@ public class STRController implements VidesoController {
 			this.toggleLayer(this.mosaiquesLayer.get(type+"-"+name), false);
 		}
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(Type.EXSA).hideObject(type, name);
+		DatasManager.getView(DatasManager.Type.EXSA).hideObject(type, name);
 	}
 
 	@Override

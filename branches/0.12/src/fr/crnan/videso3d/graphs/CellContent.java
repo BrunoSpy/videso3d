@@ -16,7 +16,7 @@
 
 package fr.crnan.videso3d.graphs;
 
-import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.databases.stip.Stip;
 import fr.crnan.videso3d.databases.stpv.Stpv;
 
@@ -29,7 +29,7 @@ public class CellContent {
 	
 	private int type;
 	
-	private DatabaseManager.Type base;
+	private DatasManager.Type base;
 	
 	private int id = 0;
 	
@@ -40,7 +40,7 @@ public class CellContent {
 	 * @param type
 	 * @param id
 	 */
-	public CellContent(DatabaseManager.Type base, int type, int id, String name){
+	public CellContent(DatasManager.Type base, int type, int id, String name){
 		this.type = type;
 		this.base = base;
 		this.id = id;
@@ -61,7 +61,7 @@ public class CellContent {
 		return name;
 	}
 	
-	public DatabaseManager.Type getBase() {
+	public DatasManager.Type getBase() {
 		return base;
 	}
 

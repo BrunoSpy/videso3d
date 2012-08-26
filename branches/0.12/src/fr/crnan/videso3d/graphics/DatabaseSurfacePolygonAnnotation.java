@@ -17,8 +17,8 @@ package fr.crnan.videso3d.graphics;
 
 import java.util.List;
 
-import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import gov.nasa.worldwind.geom.LatLon;
 
 /**
@@ -36,16 +36,16 @@ public class DatabaseSurfacePolygonAnnotation extends SurfacePolygonAnnotation i
 		super(locations);
 	}
 
-	private Type base;
+	private DatasManager.Type base;
 	private int type;
 
 	@Override
-	public DatabaseManager.Type getDatabaseType() {
+	public DatasManager.Type getDatabaseType() {
 		return this.base;
 	}
 
 	@Override
-	public void setDatabaseType(DatabaseManager.Type type) {
+	public void setDatabaseType(DatasManager.Type type) {
 		this.base = type;
 	}
 	

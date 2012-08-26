@@ -40,9 +40,9 @@ import org.jdesktop.swingx.plaf.TaskPaneUI;
 
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.aip.AIP;
 import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.formats.TrackFilesReader;
@@ -222,7 +222,7 @@ public class TrackContext extends Context {
 							@Override
 							protected Integer doInBackground() throws Exception {
 								progress.setNote("Calcul des secteurs STIP traversés");
-								secteurs = stats.computeContainingSectors(track, Type.STIP, StipController.SECTEUR);
+								secteurs = stats.computeContainingSectors(track, DatasManager.Type.STIP, StipController.SECTEUR);
 								return null;
 							}
 
@@ -243,7 +243,7 @@ public class TrackContext extends Context {
 													}
 													@Override
 													public void actionPerformed(ActionEvent arg0) {
-														DatasManager.getController(Type.STIP).showObject(StipController.SECTEUR, tSecteur.getName());
+														DatasManager.getController(DatasManager.Type.STIP).showObject(StipController.SECTEUR, tSecteur.getName());
 													}
 										});
 										stipList.add(action);
@@ -276,7 +276,7 @@ public class TrackContext extends Context {
 							@Override
 							protected Integer doInBackground() throws Exception {
 								progress.setNote("Calcul des secteurs AIP traversés");
-								secteurs = stats.computeContainingSectors(track, Type.AIP, AIP.CTL);
+								secteurs = stats.computeContainingSectors(track, DatasManager.Type.AIP, AIP.CTL);
 								return null;
 							}
 
@@ -297,7 +297,7 @@ public class TrackContext extends Context {
 													}
 													@Override
 													public void actionPerformed(ActionEvent arg0) {
-														DatasManager.getController(Type.AIP).showObject(AIP.CTL, tSecteur.getName().split("\\s+")[0]);
+														DatasManager.getController(DatasManager.Type.AIP).showObject(AIP.CTL, tSecteur.getName().split("\\s+")[0]);
 													}
 										});
 										aipList.add(action);
@@ -329,7 +329,7 @@ public class TrackContext extends Context {
 							@Override
 							protected Integer doInBackground() throws Exception {
 								progress.setNote("Calcul des TMA AIP traversées");
-								secteurs = stats.computeContainingSectors(track, Type.AIP, AIP.TMA);
+								secteurs = stats.computeContainingSectors(track, DatasManager.Type.AIP, AIP.TMA);
 								return null;
 							}
 
@@ -350,7 +350,7 @@ public class TrackContext extends Context {
 													}
 													@Override
 													public void actionPerformed(ActionEvent arg0) {
-														DatasManager.getController(Type.AIP).showObject(AIP.TMA, tSecteur.getName());
+														DatasManager.getController(DatasManager.Type.AIP).showObject(AIP.TMA, tSecteur.getName());
 													}
 										});
 										aipList2.add(action);
@@ -381,7 +381,7 @@ public class TrackContext extends Context {
 							@Override
 							protected Integer doInBackground() throws Exception {
 								progress.setNote("Calcul des CTR AIP traversées");
-								secteurs = stats.computeContainingSectors(track, Type.AIP, AIP.CTR);
+								secteurs = stats.computeContainingSectors(track, DatasManager.Type.AIP, AIP.CTR);
 								return null;
 							}
 
@@ -402,7 +402,7 @@ public class TrackContext extends Context {
 													}
 													@Override
 													public void actionPerformed(ActionEvent arg0) {
-														DatasManager.getController(Type.AIP).showObject(AIP.CTR, tSecteur.getName());
+														DatasManager.getController(DatasManager.Type.AIP).showObject(AIP.CTR, tSecteur.getName());
 													}
 										});
 										aipList3.add(action);

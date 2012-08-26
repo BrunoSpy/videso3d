@@ -16,8 +16,8 @@
 
 package fr.crnan.videso3d.graphics;
 
-import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 
 /**
  * 
@@ -27,36 +27,36 @@ import fr.crnan.videso3d.databases.DatabaseManager.Type;
 public class DatabaseRoute2D extends Route2D implements DatabaseVidesoObject {
 
 	private int type;
-	private Type base;
+	private DatasManager.Type base;
 	
 	public DatabaseRoute2D(){
 		super();
 	}
 	
-	public DatabaseRoute2D(String name, Space s, DatabaseManager.Type base, int type){
+	public DatabaseRoute2D(String name, Space s, DatasManager.Type base, int type){
 		this(base, type);
 		this.setAnnotation("Route "+name);
 		this.setSpace(s);
 		this.setName(name);
 	}
-	public DatabaseRoute2D(DatabaseManager.Type base, int type) {
+	public DatabaseRoute2D(DatasManager.Type base, int type) {
 		super();
 		this.setDatabaseType(base);
 		this.setType(type);
 	}
 	
-	public DatabaseRoute2D(String name, DatabaseManager.Type base, int type) {
+	public DatabaseRoute2D(String name, DatasManager.Type base, int type) {
 		this(base, type);
 		this.setName(name);
 	}
 
 	@Override
-	public DatabaseManager.Type getDatabaseType() {
+	public DatasManager.Type getDatabaseType() {
 		return this.base;
 	}
 
 	@Override
-	public void setDatabaseType(DatabaseManager.Type type) {
+	public void setDatabaseType(DatasManager.Type type) {
 		this.base = type;
 	}
 	

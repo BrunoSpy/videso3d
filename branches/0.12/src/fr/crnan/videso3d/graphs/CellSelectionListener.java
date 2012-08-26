@@ -20,7 +20,8 @@ import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxEventSource.mxIEventListener;
 import com.mxgraph.view.mxGraph;
 
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.databases.stpv.StpvController;
 import fr.crnan.videso3d.ihm.ContextPanel;
@@ -56,21 +57,21 @@ public class CellSelectionListener implements mxIEventListener {
 			case STIP:
 				switch (content.getType()) {
 				case StipController.ROUTES:
-					context.showInfo(Type.STIP, StipController.ROUTES, content.getName());
+					context.showInfo(DatasManager.Type.STIP, StipController.ROUTES, content.getName());
 					break;
 				case StipController.BALISES:
-					context.showInfo(Type.STIP, StipController.BALISES, content.getName());
+					context.showInfo(DatasManager.Type.STIP, StipController.BALISES, content.getName());
 					break;
 				case StipController.ITI:
-					context.showInfo(Type.STIP, StipController.ITI, new Integer(content.getId()).toString());
+					context.showInfo(DatasManager.Type.STIP, StipController.ITI, new Integer(content.getId()).toString());
 					context.setTitle("Informations sur "+content.getName());
 					break;
 				case StipController.TRAJET:
-					context.showInfo(Type.STIP, StipController.TRAJET, new Integer(content.getId()).toString());
+					context.showInfo(DatasManager.Type.STIP, StipController.TRAJET, new Integer(content.getId()).toString());
 					context.setTitle("Informations sur "+content.getName());
 					break;
 				case StipController.CONNEXION:
-					context.showInfo(Type.STIP, StipController.CONNEXION, new Integer(content.getId()).toString());
+					context.showInfo(DatasManager.Type.STIP, StipController.CONNEXION, new Integer(content.getId()).toString());
 					context.setTitle("Informations sur "+content.getName());
 					break;
 				default:
@@ -80,7 +81,7 @@ public class CellSelectionListener implements mxIEventListener {
 			case STPV:
 				switch (content.getType()) {
 				case StpvController.STAR:
-					context.showInfo(Type.STPV, StpvController.STAR, new Integer(content.getId()).toString());
+					context.showInfo(DatasManager.Type.STPV, StpvController.STAR, new Integer(content.getId()).toString());
 					context.setTitle("Informations sur "+content.getName());
 					break;
 

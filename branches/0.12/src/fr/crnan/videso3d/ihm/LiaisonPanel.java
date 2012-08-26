@@ -35,8 +35,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 /**
  * Panel de résultats des liaisons privilégiées
  * @author Adrien Vidal
@@ -55,12 +55,12 @@ public class LiaisonPanel extends ResultPanel implements ActionListener{
 	
 	public LiaisonPanel(String searchNum){
 		titleTab += " "+searchNum;
-		if(DatasManager.getController(Type.STPV) == null){
+		if(DatasManager.getController(DatasManager.Type.STPV) == null){
 			this.add(new JLabel("Pas de base STPV configurée"), BorderLayout.CENTER);
 			return;
 		}
 		try {
-			f = new File(DatabaseManager.getCurrentName(Type.STPV)+"_files","CODE");
+			f = new File(DatabaseManager.getCurrentName(DatasManager.Type.STPV)+"_files","CODE");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

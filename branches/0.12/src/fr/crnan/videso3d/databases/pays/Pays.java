@@ -33,9 +33,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import gov.nasa.worldwind.geom.LatLon;
 /**
  * Lecteur des fichiers STIP relatifs aux contours des pays.<br />
@@ -249,8 +250,8 @@ public class Pays extends FileParser {
 		try {
 			//récupération du nom de la base à créer
 			this.createName();
-			if(!DatabaseManager.databaseExists(Type.PAYS, this.name)){
-				this.conn = DatabaseManager.selectDB(Type.PAYS, this.name);
+			if(!DatabaseManager.databaseExists(DatasManager.Type.PAYS, this.name)){
+				this.conn = DatabaseManager.selectDB(DatasManager.Type.PAYS, this.name);
 				this.conn.setAutoCommit(false);
 				//création de la structure de la base de données
 				DatabaseManager.createPays(this.name);
@@ -259,7 +260,7 @@ public class Pays extends FileParser {
 				this.createIndexes();
 				this.conn.commit();
 			} else {
-				DatabaseManager.selectDatabase(this.name, Type.PAYS);
+				DatabaseManager.selectDatabase(this.name, DatasManager.Type.PAYS);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -281,7 +282,7 @@ public class Pays extends FileParser {
 	public void done(){
 		if(this.isCancelled()){
 			try {
-				DatabaseManager.deleteDatabase(name, Type.PAYS);
+				DatabaseManager.deleteDatabase(name, DatasManager.Type.PAYS);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -407,8 +408,8 @@ public class Pays extends FileParser {
 	}
 
 	@Override
-	public Type getType() {
-		return Type.PAYS;
+	public DatasManager.Type getType() {
+		return DatasManager.Type.PAYS;
 	}
 	
 	@Override

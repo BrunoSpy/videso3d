@@ -15,7 +15,7 @@
  */
 package fr.crnan.videso3d.graphics;
 
-import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.DatasManager;
 
 /**
  * Extension d'un objet pour Videso contenant le lien à sa base de données
@@ -31,13 +31,13 @@ public interface DatabaseVidesoObject extends VidesoObject {
 	 * Not null.
 	 * @return
 	 */
-	public DatabaseManager.Type getDatabaseType();
+	public DatasManager.Type getDatabaseType();
 	
 	/**
 	 * 
 	 * @param type Type de base de données
 	 */
-	public void setDatabaseType(DatabaseManager.Type type);
+	public void setDatabaseType(DatasManager.Type type);
 
 	/**
 	 * 

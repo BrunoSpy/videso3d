@@ -32,13 +32,13 @@ import org.jdom2.Element;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.MultiValueMap;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.aip.AIP.Altitude;
 import fr.crnan.videso3d.databases.aip.RoutesSegments.Segment;
 import fr.crnan.videso3d.graphics.Aerodrome;
@@ -264,7 +264,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			this.addZone(type,name);
 		}
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(Type.AIP).showObject(type, name);
+		DatasManager.getView(DatasManager.Type.AIP).showObject(type, name);
 	}
 
 	@Override
@@ -290,7 +290,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			this.hideZone(type,name);
 		}
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(Type.AIP).hideObject(type, name);
+		DatasManager.getView(DatasManager.Type.AIP).hideObject(type, name);
 	}
 
 	
@@ -383,7 +383,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 
 			Element maZone = aip.findElementByName(type, name);
 			Couple<Altitude,Altitude> niveaux = aip.getLevels(maZone);
-			Secteur3D zone = new Secteur3D(name, niveaux.getFirst().getFL(), niveaux.getSecond().getFL(),type, DatabaseManager.Type.AIP, textLayer);
+			Secteur3D zone = new Secteur3D(name, niveaux.getFirst().getFL(), niveaux.getSecond().getFL(),type, DatasManager.Type.AIP, textLayer);
 
 			BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
 			attrs.setDrawOutline(true);
@@ -468,13 +468,13 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		}
 		try {
 			String previousNavFix = null;
-			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select NavFix.nom from NavFix, routes where routes.pk = ? AND routes.navFixExtremite = NavFix.pk");
+			PreparedStatement st = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select NavFix.nom from NavFix, routes where routes.pk = ? AND routes.navFixExtremite = NavFix.pk");
 			st.setString(1, routeID);
 			ResultSet rs = st.executeQuery();
 			if(rs.next()){
 				previousNavFix = rs.getString(1);
 			}
-			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP,"select segments.pk, NavFix.nom from segments, NavFix where pkRoute = ? AND NavFix.pk = segments.navFixExtremite ORDER BY sequence");
+			st = DatabaseManager.prepareStatement(DatasManager.Type.AIP,"select segments.pk, NavFix.nom from segments, NavFix where pkRoute = ? AND NavFix.pk = segments.navFixExtremite ORDER BY sequence");
 			st.setString(1, routeID);
 			ResultSet segments = st.executeQuery();
 			while(segments.next()){
@@ -494,7 +494,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 							loc.add(LatLon.fromDegrees(48, 0));
 						}
 
-						DatabaseRoute2D segment2D = new DatabaseRoute2D(segmentName, routeType, Type.AIP, type);
+						DatabaseRoute2D segment2D = new DatabaseRoute2D(segmentName, routeType, DatasManager.Type.AIP, type);
 						List<Integer> directions = new ArrayList<Integer>();
 						Parity sens = null;
 						String sensString = segment.getChildText("Circulation");
@@ -527,7 +527,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 						routes2D.addRoute(segment2D, segmentName);
 
 						//TODO prendre en compte le sens de circulation pour les routes 3D... 
-						DatabaseRoute3D segment3D = new DatabaseRoute3D(segmentName, routeType, Type.AIP, type);
+						DatabaseRoute3D segment3D = new DatabaseRoute3D(segmentName, routeType, DatasManager.Type.AIP, type);
 						segment3D.setLocations(loc);
 						boolean lowerTerrainConformant = false, upperTerrainConformant = false;
 						if(altis.getFirst().isTerrainConforming()){
@@ -590,13 +590,13 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	public void displayRouteNavFixs(String pkRoute, boolean display, boolean withLocations){
 		List<Couple<String,String>> navFixExtremites = new ArrayList<Couple<String,String>>();
 		try {
-			PreparedStatement st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select nom, type from NavFix, segments where segments.pkRoute = ? AND segments.navFixExtremite = NavFix.pk");
+			PreparedStatement st = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select nom, type from NavFix, segments where segments.pkRoute = ? AND segments.navFixExtremite = NavFix.pk");
 			st.setString(1, pkRoute);
 			ResultSet rs = st.executeQuery();
 			while(rs.next()){
 				navFixExtremites.add(new Couple<String,String>(rs.getString(1), rs.getString(2)));
 			}
-			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select NavFix.nom, NavFix.type from NavFix, routes where routes.pk = ? AND routes.navFixExtremite = NavFix.pk");
+			st = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select NavFix.nom, NavFix.type from NavFix, routes where routes.pk = ? AND routes.navFixExtremite = NavFix.pk");
 			st.setString(1, pkRoute);
 			rs = st.executeQuery();
 			if(rs.next()){
@@ -634,7 +634,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			double freq = 0;
 			PreparedStatement ps;
 			try {
-				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select lat, lon, type, frequence from NavFix where nom = ? and type = ?");
+				ps = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select lat, lon, type, frequence from NavFix where nom = ? and type = ?");
 				ps.setString(1, name);
 				ps.setString(2, AIP.type2String(type));
 				ResultSet rs = ps.executeQuery();
@@ -647,7 +647,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			Balise2D navFix = new DatabaseBalise2D(name, Position.fromDegrees(latitude, longitude), Type.AIP, type, navFixLayer.getTextLayer());
+			Balise2D navFix = new DatabaseBalise2D(name, Position.fromDegrees(latitude, longitude), DatasManager.Type.AIP, type, navFixLayer.getTextLayer());
 			String annotation = "<html><b>"+name+"</b><br/><i>Type : </i>"+typeString;
 			if(freq != 0){
 				annotation += "<br/><i>Fréq. : </i>"+freq;
@@ -658,7 +658,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			navFixLayer.addBalise(navFix);
 			navFixLayer.showBalise(navFix);
 			
-			Balise3D navFix3D = new DatabaseBalise3D(name, Position.fromDegrees(latitude, longitude, 665*30.47), Type.AIP, type);
+			Balise3D navFix3D = new DatabaseBalise3D(name, Position.fromDegrees(latitude, longitude, 665*30.47), DatasManager.Type.AIP, type);
 			navFix3D.setAnnotation(annotation);
 			navFixLayer3D.addBalise(navFix3D);
 			navFixLayer3D.showBalise(navFix3D);
@@ -696,12 +696,12 @@ public class AIPController extends ProgressSupport implements VidesoController {
 			PreparedStatement ps;
 			try{
 				if(type == AIP.AERODROME){
-					ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk, latRef, lonRef from aerodromes where upper(code) = ?");
+					ps = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select pk, latRef, lonRef from aerodromes where upper(code) = ?");
 					ps.setString(1, nom.split("--")[0].trim());
 					rs = ps.executeQuery();
 
 				}else{
-					ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk, latRef, lonRef from aerodromes where nom = ?");
+					ps = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select pk, latRef, lonRef from aerodromes where nom = ?");
 					ps.setString(1, nom);
 					rs = ps.executeQuery();
 				}
@@ -711,7 +711,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 					lonRef = rs.getDouble(3);
 				}
 
-				ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select * from runways where pk_ad=?");
+				ps = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select * from runways where pk_ad=?");
 				ps.setInt(1, pk);
 				ResultSet rs2 = ps.executeQuery();
 				boolean runwayExists = false;
@@ -725,15 +725,15 @@ public class AIPController extends ProgressSupport implements VidesoController {
 						double lon2 = rs2.getDouble("lon2");
 						double largeur = rs2.getDouble("largeur");
 						DatabasePisteAerodrome piste = new DatabasePisteAerodrome(type, nom, nomPiste, lat1, lon1, lat2, lon2, largeur, 
-								Position.fromDegrees(latRef, lonRef), Type.AIP, arptLayer.getTextLayer());
+								Position.fromDegrees(latRef, lonRef), DatasManager.Type.AIP, arptLayer.getTextLayer());
 						arptLayer.addAirport(piste);
 					}else{
-						MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), nomPiste, DatabaseManager.Type.AIP, arptLayer.getTextLayer());
+						MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), nomPiste, DatasManager.Type.AIP, arptLayer.getTextLayer());
 						arptLayer.addAirport(airportBalise);
 					}
 				}
 				if(!runwayExists){
-					MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), "Pistes inconnues", DatabaseManager.Type.AIP, arptLayer.getTextLayer());
+					MarqueurAerodrome airportBalise = new MarqueurAerodrome(type, nom, Position.fromDegrees(latRef, lonRef), "Pistes inconnues", DatasManager.Type.AIP, arptLayer.getTextLayer());
 					arptLayer.addAirport(airportBalise);
 				}
 			}catch(SQLException e){
@@ -929,7 +929,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 		PreparedStatement st;
 		ResultSet rs;
 		if(splittedRouteName.length<3){
-			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from routes where nom = ? AND type = ?");
+			st = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select pk from routes where nom = ? AND type = ?");
 			st.setString(1, route);
 			st.setString(2, typeRoute);
 			rs = st.executeQuery();
@@ -937,7 +937,7 @@ public class AIPController extends ProgressSupport implements VidesoController {
 				pkRoute=rs.getString(1);
 			}
 		}else{
-			st = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select pk from routes where nom LIKE ? AND type = ?");
+			st = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select pk from routes where nom LIKE ? AND type = ?");
 			st.setString(1, route+" -%");
 			st.setString(2, typeRoute);
 			rs = st.executeQuery();
@@ -1015,9 +1015,9 @@ public class AIPController extends ProgressSupport implements VidesoController {
 	private int getNearSequence(String pkRoute, int originalSequence, int nextOrPrevious) throws SQLException{
 		PreparedStatement ps = null;
 		if(nextOrPrevious>0){
-			ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select sequence from segments where pkRoute = ? ORDER BY sequence DESC");
+			ps = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select sequence from segments where pkRoute = ? ORDER BY sequence DESC");
 		}else{
-			ps = DatabaseManager.prepareStatement(DatabaseManager.Type.AIP, "select sequence from segments where pkRoute = ? ORDER BY sequence ASC");
+			ps = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select sequence from segments where pkRoute = ? ORDER BY sequence ASC");
 		}
 		ps.setString(1, pkRoute);
 		ResultSet rs = ps.executeQuery();

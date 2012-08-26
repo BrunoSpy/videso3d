@@ -30,8 +30,9 @@ import javax.swing.SwingWorker;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxEvent;
 
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.stip.StipController;
 
 /**
@@ -111,7 +112,7 @@ public class TrajetPanel extends ResultGraphPanel {
 							//nouveau trajet
 							if(rs.getInt(3) != eclatement_id || rs.getInt(5) != raccordement_id){
 								//nouveau groupe
-								trajetGroupe = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, new CellContent(Type.STIP, StipController.TRAJET, idTrajet, rs.getString(2)), 0, 0, 80, 50, GraphStyle.groupStyle);
+								trajetGroupe = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, new CellContent(DatasManager.Type.STIP, StipController.TRAJET, idTrajet, rs.getString(2)), 0, 0, 80, 50, GraphStyle.groupStyle);
 								trajetGroupe.setConnectable(false);
 								trajetsGroupes.add(trajetGroupe);
 								eclatement_id = rs.getInt(3);
@@ -127,13 +128,13 @@ public class TrajetPanel extends ResultGraphPanel {
 							if(rs.getString(14) != null){
 								condition += " + "+rs.getString(14)+" "+rs.getString(15);
 							}
-							trajet = (mxCell) graph.insertVertex(trajetGroupe, null, new CellContent(Type.STIP, StipController.TRAJET, idTrajet, condition), 0, 0, 0, 0, GraphStyle.groupStyleFolded);
+							trajet = (mxCell) graph.insertVertex(trajetGroupe, null, new CellContent(DatasManager.Type.STIP, StipController.TRAJET, idTrajet, condition), 0, 0, 0, 0, GraphStyle.groupStyleFolded);
 							trajet.setConnectable(false);
 							trajets.add(trajet);
-							first = (mxCell) graph.insertVertex(trajet, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
+							first = (mxCell) graph.insertVertex(trajet, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
 							first.setConnectable(false);
 						} else {
-							mxCell second = (mxCell) graph.insertVertex(trajet, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
+							mxCell second = (mxCell) graph.insertVertex(trajet, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
 							second.setConnectable(false);
 							graph.insertEdge(trajet, null, "", first, second, GraphStyle.edgeStyle);
 							first = second;

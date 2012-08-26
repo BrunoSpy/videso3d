@@ -37,9 +37,10 @@ import org.jdom2.filter.Filter;
 import org.jdom2.input.SAXBuilder;
 
 import fr.crnan.videso3d.Couple;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.graphics.Route;
 
 /**
@@ -142,11 +143,11 @@ public class AIP extends FileParser{
 
 		final SAXBuilder sxb = new SAXBuilder();
 		try {
-			this.name = DatabaseManager.getCurrentName(DatabaseManager.Type.AIP);
+			this.name = DatabaseManager.getCurrentName(DatasManager.Type.AIP);
 			//on récupère le chemin d'accès au fichier xml à parser
-			Statement st = DatabaseManager.getCurrent(DatabaseManager.Type.Databases);
+			Statement st = DatabaseManager.getCurrent(DatasManager.Type.Databases);
 			ResultSet rs;
-			rs = st.executeQuery("select * from clefs where name='path' and type='"+DatabaseManager.getCurrentName(DatabaseManager.Type.AIP)+"'");
+			rs = st.executeQuery("select * from clefs where name='path' and type='"+DatabaseManager.getCurrentName(DatasManager.Type.AIP)+"'");
 			if(rs.next()){
 				this.fileName = rs.getString(4);
 				//Construction du document dans un autre thread afin de ne pas bloquer l'initialisation
@@ -195,9 +196,9 @@ public class AIP extends FileParser{
 		try {
 			//récupération du nom de la base à créer
 			this.createName();
-			if(!DatabaseManager.databaseExists(Type.AIP, this.name)){
+			if(!DatabaseManager.databaseExists(DatasManager.Type.AIP, this.name)){
 				//création de la connection à la base de données
-				this.conn = DatabaseManager.selectDB(Type.AIP, this.name);
+				this.conn = DatabaseManager.selectDB(DatasManager.Type.AIP, this.name);
 				this.conn.setAutoCommit(false); //fixes performance issue
 				//création de la structure de la base de données
 				DatabaseManager.createAIP(this.name,path);
@@ -206,7 +207,7 @@ public class AIP extends FileParser{
 				this.conn.commit();
 				this.setProgress(this.numberFiles());
 			} else {
-				DatabaseManager.selectDatabase(this.name, Type.AIP);
+				DatabaseManager.selectDatabase(this.name, DatasManager.Type.AIP);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -962,7 +963,7 @@ public class AIP extends FileParser{
 	public void done() {
 		if(this.isCancelled()){//si le parsing a été annulé, on fait le ménage
 			try {
-				DatabaseManager.deleteDatabase(name, Type.AIP);
+				DatabaseManager.deleteDatabase(name, DatasManager.Type.AIP);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -1075,7 +1076,7 @@ public class AIP extends FileParser{
 		PreparedStatement st;
 		String pk="";
 		try {
-			st = DatabaseManager.prepareStatement(Type.AIP, "select pk from NavFix where nom = ?");
+			st = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select pk from NavFix where nom = ?");
 			st.setString(1, name);
 			ResultSet rs = st.executeQuery();
 			if(rs.next()){
@@ -1101,7 +1102,7 @@ public class AIP extends FileParser{
 		if(type>=AIP.AWY){
 			String table = (type>=AIP.DMEATT) ? "NavFix" : "routes";
 			try {
-				PreparedStatement st = DatabaseManager.prepareStatement(Type.AIP, "select pk from "+table+" where nom = ?");
+				PreparedStatement st = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select pk from "+table+" where nom = ?");
 				st.setString(1, name);
 				ResultSet rs = st.executeQuery();
 				if(rs.next()){
@@ -1113,7 +1114,7 @@ public class AIP extends FileParser{
 		}else{
 			String typeString=type2String(type);
 			try {
-				PreparedStatement st = DatabaseManager.prepareStatement(Type.AIP, "select pk from volumes where type = ? AND nom = ?");
+				PreparedStatement st = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select pk from volumes where type = ? AND nom = ?");
 				st.setString(1, typeString);
 				st.setString(2, name);
 				ResultSet rs = st.executeQuery();
@@ -1180,7 +1181,7 @@ public class AIP extends FileParser{
 		ArrayList<Couple<String,String>> routeNames = new ArrayList<Couple<String,String>>();
 		try {
 			this.getName();
-			this.conn = DatabaseManager.selectDB(Type.AIP, this.name);
+			this.conn = DatabaseManager.selectDB(DatasManager.Type.AIP, this.name);
 			PreparedStatement ps = this.conn.prepareStatement("select nom, type from routes");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
@@ -1295,8 +1296,8 @@ public class AIP extends FileParser{
 
 
 	@Override
-	public Type getType() {
-		return Type.AIP;
+	public DatasManager.Type getType() {
+		return DatasManager.Type.AIP;
 	}
 
 	@Override

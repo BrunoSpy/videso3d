@@ -26,10 +26,10 @@ import java.util.List;
 import javax.swing.SwingWorker;
 
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.ihm.RadioCovView;
 import fr.crnan.videso3d.layers.RadioCovLayer;
 import gov.nasa.worldwind.Restorable;
@@ -81,7 +81,7 @@ public class RadioCovController implements VidesoController {
 			
 			@Override
 			protected void done(){
-				RadioCovView radioView  = (RadioCovView)DatasManager.getView(Type.RadioCov);
+				RadioCovView radioView  = (RadioCovView)DatasManager.getView(DatasManager.Type.RadioCov);
 				if(radioView.initRadioCovAirspaces())
 					radioView.feedPanel();
 			}
@@ -130,7 +130,7 @@ public class RadioCovController implements VidesoController {
 		radioCovLayer.addVisibleRadioCov(name);		
 		this.wwd.redrawNow();
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(Type.RadioCov).showObject(type, name);
+		DatasManager.getView(DatasManager.Type.RadioCov).showObject(type, name);
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public class RadioCovController implements VidesoController {
 		radioCovLayer.removeVisibleRadioCov(name);
 		this.wwd.redrawNow();
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(Type.RadioCov).hideObject(type, name);
+		DatasManager.getView(DatasManager.Type.RadioCov).hideObject(type, name);
 	}
 
 	@Override

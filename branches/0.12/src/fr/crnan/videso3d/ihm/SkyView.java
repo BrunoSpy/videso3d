@@ -28,9 +28,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.MultiValueMap;
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
 import fr.crnan.videso3d.databases.skyview.SkyViewController;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
@@ -62,7 +62,7 @@ public class SkyView extends FilteredMultiTreeTableView {
 
 	@Override
 	public SkyViewController getController() {
-		return (SkyViewController) DatasManager.getController(Type.SkyView);
+		return (SkyViewController) DatasManager.getController(DatasManager.Type.SkyView);
 	}
 
 	private void fillRootNode(DefaultMutableTreeNode root) {
