@@ -1,0 +1,303 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "BORD SECTEUR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(id_atc
+  (name "FOND SECTEUR")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 4)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(map
+  (name "DG")
+  (number 20)
+  (comment "")
+  (date 27 01 2006)
+  (heure 10 36 50)
+  (ref_point
+    (name "DG11")
+    (comment "")
+    (value
+      (nautical_mile 64 5059 64 7752)
+    )
+  )
+  (ref_point
+    (name "DG12")
+    (comment "")
+    (value
+      (nautical_mile 64 6470 64 7793)
+    )
+  )
+  (ref_point
+    (name "DG13")
+    (comment "")
+    (value
+      (nautical_mile 64 7692 64 6234)
+    )
+  )
+  (ref_point
+    (name "DG23")
+    (comment "")
+    (value
+      (nautical_mile 64 7148 64 5490)
+    )
+  )
+  (ref_point
+    (name "DG24")
+    (comment "")
+    (value
+      (nautical_mile 64 7236 64 5364)
+    )
+  )
+  (ref_point
+    (name "DG63")
+    (comment "")
+    (value
+      (nautical_mile 64 7895 64 4409)
+    )
+  )
+  (ref_point
+    (name "DG64")
+    (comment "")
+    (value
+      (nautical_mile 64 7994 64 4322)
+    )
+  )
+  (ref_point
+    (name "DG78")
+    (comment "")
+    (value
+      (nautical_mile 64 8343 64 4011)
+    )
+  )
+  (ref_point
+    (name "DG103")
+    (comment "")
+    (value
+      (nautical_mile 64 8706 64 3243)
+    )
+  )
+  (ref_point
+    (name "DG104")
+    (comment "")
+    (value
+      (nautical_mile 64 7011 64 2886)
+    )
+  )
+  (ref_point
+    (name "DG105")
+    (comment "")
+    (value
+      (nautical_mile 64 5330 64 2834)
+    )
+  )
+  (ref_point
+    (name "DG101")
+    (comment "")
+    (value
+      (nautical_mile 64 4374 64 3243)
+    )
+  )
+  (ref_point
+    (name "DG91")
+    (comment "")
+    (value
+      (nautical_mile 64 4410 64 3566)
+    )
+  )
+  (ref_point
+    (name "DG71")
+    (comment "")
+    (value
+      (nautical_mile 64 4528 64 4215)
+    )
+  )
+  (ref_point
+    (name "DG611")
+    (comment "")
+    (value
+      (nautical_mile 64 4546 64 4318)
+    )
+  )
+  (ref_point
+    (name "DG51")
+    (comment "")
+    (value
+      (nautical_mile 64 4842 64 4990)
+    )
+  )
+  (ref_point
+    (name "DG45")
+    (comment "")
+    (value
+      (nautical_mile 64 4865 64 5043)
+    )
+  )
+  (ref_point
+    (name "DG34")
+    (comment "")
+    (value
+      (nautical_mile 64 4841 64 5291)
+    )
+  )
+  (ref_point
+    (name "DG16")
+    (comment "")
+    (value
+      (nautical_mile 64 4760 64 6142)
+    )
+  )
+  (ref_point
+    (name "DG17")
+    (comment "")
+    (value
+      (nautical_mile 64 4319 64 6901)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 5)
+    (entity
+      (name "1")
+      (id_atc "BORD SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DG11")
+        (point "DG12")
+        (point "DG13")
+        (point "DG23")
+        (point "DG24")
+        (point "DG63")
+        (point "DG64")
+        (point "DG78")
+        (point "DG103")
+        (point "DG104")
+        (point "DG105")
+        (point "DG101")
+        (point "DG91")
+        (point "DG71")
+        (point "DG611")
+        (point "DG51")
+        (point "DG45")
+        (point "DG34")
+        (point "DG16")
+        (point "DG17")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "2")
+      (id_atc "BORD SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DG11")
+        (point "DG12")
+        (point "DG13")
+        (point "DG23")
+        (point "DG24")
+        (point "DG63")
+        (point "DG64")
+        (point "DG78")
+        (point "DG103")
+        (point "DG104")
+        (point "DG105")
+        (point "DG101")
+        (point "DG91")
+        (point "DG71")
+        (point "DG611")
+        (point "DG51")
+        (point "DG45")
+        (point "DG34")
+        (point "DG16")
+        (point "DG17")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "3")
+      (id_atc "FOND SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "DG11")
+        (point "DG12")
+        (point "DG13")
+        (point "DG23")
+        (point "DG24")
+        (point "DG63")
+        (point "DG64")
+        (point "DG78")
+        (point "DG103")
+        (point "DG104")
+        (point "DG105")
+        (point "DG101")
+        (point "DG91")
+        (point "DG71")
+        (point "DG611")
+        (point "DG51")
+        (point "DG45")
+        (point "DG34")
+        (point "DG16")
+        (point "DG17")
+      )
+      (polygone 1)
+    )
+  )
+)
