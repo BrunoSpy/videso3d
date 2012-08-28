@@ -32,11 +32,12 @@ import javax.swing.JOptionPane;
 
 import org.jfree.data.category.DefaultCategoryDataset;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseNotFoundException;
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.ProgressSupport;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseNotFoundException;
+import fr.crnan.videso3d.databases.stip.PointNotFoundException;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
-import fr.crnan.videso3d.stip.PointNotFoundException;
 import gov.nasa.worldwind.util.Logging;
 
 /**
@@ -134,7 +135,7 @@ public class PLNSAnalyzer extends ProgressSupport{
 			//initialisation des catégories
 			Statement st = DatabaseManager.getCurrentStpv();
 			if(st == null){
-				throw new DatabaseNotFoundException(DatabaseManager.Type.STPV);
+				throw new DatabaseNotFoundException(DatasManager.Type.STPV);
 			}
 			ResultSet rs = st.executeQuery("select distinct name from cat_code where 1");
 			while(rs.next()){

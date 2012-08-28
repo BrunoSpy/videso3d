@@ -543,7 +543,7 @@ public class TrajectoriesImportUI extends JDialog {
 				fileChooser.addChoosableFileFilter(new FPLFileFilter());
 				fileChooser.addChoosableFileFilter(new PLNSFileFilter());
 				fileChooser.addChoosableFileFilter(new GEOFileFilter());
-				if(fileChooser.showOpenDialog(getThis()) == VFileChooser.APPROVE_OPTION){
+				if(fileChooser.showOpenDialog(TrajectoriesImportUI.this) == VFileChooser.APPROVE_OPTION){
 					
 					new SwingWorker<String, Integer>(){
 						@Override
@@ -558,7 +558,7 @@ public class TrajectoriesImportUI extends JDialog {
 					}.execute();
 
 				}
-				getThis().dispose();
+				TrajectoriesImportUI.this.dispose();
 			}
 		});
 		
@@ -569,7 +569,7 @@ public class TrajectoriesImportUI extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				getThis().dispose();
+				TrajectoriesImportUI.this.dispose();
 			}
 		});
 		
@@ -610,8 +610,5 @@ public class TrajectoriesImportUI extends JDialog {
 			return null;
 		}
 	}
-	
-	private JDialog getThis(){
-		return this;
-	}
+
 }

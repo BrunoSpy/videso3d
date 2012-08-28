@@ -29,7 +29,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -38,6 +40,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JToolBar;
 import javax.swing.SwingWorker;
 import javax.swing.ToolTipManager;
 
@@ -60,14 +63,14 @@ import bibliothek.gui.dock.util.Priority;
 import fr.crnan.videso3d.AirspaceListener;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.CompatibilityVersionException;
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.FileManager;
-import fr.crnan.videso3d.ProjectManager;
 import fr.crnan.videso3d.SplashScreen;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.stip.PointNotFoundException;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.geo.GEOReader;
 import fr.crnan.videso3d.formats.lpln.LPLNReader;
@@ -84,7 +87,8 @@ import fr.crnan.videso3d.layers.tracks.LPLNTracksLayer;
 import fr.crnan.videso3d.layers.tracks.OPASTracksLayer;
 import fr.crnan.videso3d.layers.tracks.PLNSTracksLayer;
 import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
-import fr.crnan.videso3d.stip.PointNotFoundException;
+import fr.crnan.videso3d.project.Project;
+import fr.crnan.videso3d.project.ProjectManager;
 import fr.crnan.videso3d.trajectography.PLNSTracksModel;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
@@ -141,6 +145,9 @@ public class MainWindow extends JFrame {
 		JPopupMenu.setDefaultLightWeightPopupEnabled(false);
 	}
 
+
+	private JToolBar drawToolbar;
+
 	private JPanel toolbars;
 	
 	public MainWindow(){
@@ -159,11 +166,30 @@ public class MainWindow extends JFrame {
 
 
 		//fermeture des connections aux bases de données avant de quitter afin de ne pas perdre les dernières transactions
-		//et suppression des dossiers temporaires
+		//suppression des dossiers temporaires
+		//et enregistrement de la session
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
 				DatabaseManager.closeAll();
 				FileManager.removeTempFiles();
+				
+				//suppression de la dernière session
+				if(new File(Configuration.SESSION_FILENAME).exists()){
+					new File(Configuration.SESSION_FILENAME).delete();
+				}
+				ProjectManager project = new ProjectManager();
+				project.prepareSaving(wwd);
+				Set<String> types = new HashSet<String>();
+				for(DatasManager.Type type : project.getTypes()){
+					types.add(type.toString());
+				}
+				try {
+					project.saveProject(new File(Configuration.SESSION_FILENAME), types, null, null, false, true);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 
@@ -180,7 +206,7 @@ public class MainWindow extends JFrame {
 		//compter le nombre d'étapes d'init
 		Integer temp = 0;
 		temp += wwd.getNumberInitSteps();
-		for(DatabaseManager.Type t : DatabaseManager.getSelectedDatabases()) {
+		for(DatasManager.Type t : DatabaseManager.getSelectedDatabases()) {
 			temp += DatasManager.getNumberInitSteps(t);
 		}
 		temp++;
@@ -201,12 +227,18 @@ public class MainWindow extends JFrame {
 			protected String doInBackground() {
 				try {
 					wwd.initialize();
-					for(DatabaseManager.Type t : DatabaseManager.getSelectedDatabases()) {
+					for(DatasManager.Type t : DatabaseManager.getSelectedDatabases()) {
 						DatasManager.createDatas(t, wwd);
 					}
 					omniBox = new Omnibox(wwd, context);
-					for(DatabaseManager.Type t : DatabaseManager.getSelectedDatabases()){
+					for(DatasManager.Type t : DatabaseManager.getSelectedDatabases()){
 						omniBox.addDatabase(t, DatabaseManager.getAllVisibleObjects(t, omniBox), false);
+					}
+					//chargement de la session précédente si elle existe
+					if(new File(Configuration.SESSION_FILENAME).exists()){
+						//don't add it to the userobjectView as all objects
+						//are linked to a database
+						new ProjectManager().loadProject(new File(Configuration.SESSION_FILENAME), wwd, MainWindow.this, false);
 					}
 					wwd.firePropertyChange("step", "", "Création de l'interface");
 				} catch (Exception e) {
@@ -289,7 +321,7 @@ public class MainWindow extends JFrame {
 		//save location of future panel
 		locationDatas = dockableDatas.getBaseLocation().aside();
 
-		for(DatabaseManager.Type type : DatabaseManager.getSelectedDatabases()){
+		for(DatasManager.Type type : DatabaseManager.getSelectedDatabases()){
 			this.updateDockables(type);
 		}
 
@@ -299,7 +331,7 @@ public class MainWindow extends JFrame {
 		wwd.addSelectListener(airspaceListener);
 
 		//initialisation contextpanel
-		for(DatabaseManager.Type t : DatabaseManager.getSelectedDatabases()){	
+		for(DatasManager.Type t : DatabaseManager.getSelectedDatabases()){	
 			context.addTaskPane(DatasManager.getContext(t), t);
 			AnalyzeUI.getContextPanel().addTaskPane(DatasManager.getContext(t), t);	
 		}
@@ -319,7 +351,7 @@ public class MainWindow extends JFrame {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				DatabaseManager.Type type = (DatabaseManager.Type) evt.getNewValue();
+				DatasManager.Type type = (DatasManager.Type) evt.getNewValue();
 				control.removeSingleDockable(type.toString());
 				DatasManager.deleteDatas(type);
 				omniBox.removeDatabase(type);
@@ -347,7 +379,7 @@ public class MainWindow extends JFrame {
 						} catch (Exception e){
 							e.printStackTrace();
 						}
-						DatabaseManager.Type type = (DatabaseManager.Type) evt.getNewValue();
+						DatasManager.Type type = (DatasManager.Type) evt.getNewValue();
 						DatasManager.createDatas(type, wwd);
 						omniBox.addDatabase(type, DatabaseManager.getAllVisibleObjects(type, omniBox), true);
 						return null;
@@ -355,7 +387,7 @@ public class MainWindow extends JFrame {
 
 					@Override
 					protected void done() {
-						DatabaseManager.Type type = (DatabaseManager.Type) evt.getNewValue();
+						DatasManager.Type type = (DatasManager.Type) evt.getNewValue();
 							if(DatasManager.getView(type) != null){
 								updateDockables(type);
 								context.addTaskPane(DatasManager.getContext(type), type);
@@ -365,6 +397,18 @@ public class MainWindow extends JFrame {
 						progressMonitor.close();
 					}
 				}.execute();
+			}
+		});
+		
+		//listen to the datasmanager to detect creation of a user object view
+		DatasManager.addPropertyChangeListener("new datas", new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				DatasManager.Type type = (DatasManager.Type) evt.getNewValue();
+				if(type.equals(DatasManager.Type.UserObject)){
+					MainWindow.this.setUserObjectViewVisible();
+				}
 			}
 		});
 		
@@ -389,9 +433,8 @@ public class MainWindow extends JFrame {
 	 * @param type Type de la base de données
 	 * @param empty Vrai si il n'y a plus de tabs
 	 */
-	private void updateDockables(final DatabaseManager.Type type){
+	private void updateDockables(final DatasManager.Type type){
 		this.control.removeSingleDockable(type.toString());
-
 		DefaultSingleCDockable dockable = new DefaultSingleCDockable(type.toString(), type.toString(), (Component) DatasManager.getView(type),
 				new CCloseAction(control){
 
@@ -434,7 +477,7 @@ public class MainWindow extends JFrame {
 				i++;
 			} while (control.getSingleDockable(view.getTitle()+"-"+i) != null);
 		}
-		
+
 		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?view.getTitle():view.getTitle()+"-"+i,
 				view.getTitle(),
 				(Component) view,
@@ -450,6 +493,25 @@ public class MainWindow extends JFrame {
 		});
 		
 		this.addDockable(dockable);
+	}
+	
+	/**
+	 * Get the UserObjectView and create it if needed
+	 */
+	public void setUserObjectViewVisible(){
+		if(this.control.getSingleDockable(DatasManager.Type.UserObject.toString()) == null){
+			if(DatasManager.getView(DatasManager.Type.UserObject) == null){
+				try {
+					DatasManager.createDatas(DatasManager.Type.UserObject, wwd);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			DefaultSingleCDockable dockable = new DefaultSingleCDockable(DatasManager.Type.UserObject.toString(), DatasManager.Type.UserObject.toString(), 
+					(Component) DatasManager.getView(DatasManager.Type.UserObject));
+			dockable.setCloseable(false);
+			this.addDockable(dockable);
+		}
 	}
 	
 	/* ******************************************************* */
@@ -694,7 +756,6 @@ public class MainWindow extends JFrame {
 					wwd.removeLayer(layer);
 					control.removeDockable((SingleCDockable) dockable);
 					//force close instead of just changing the visibility
-					dockable = null;
 					layer.getModel().dispose();
 					layer.dispose();
 			}
@@ -751,8 +812,9 @@ public class MainWindow extends JFrame {
 
 			@Override
 			protected Void doInBackground() throws Exception {
+				Project p = null;
 				try {
-					project.loadProject(file, wwd, getThis(), false);
+					p = project.loadProject(file, wwd, MainWindow.this, false);
 				} catch (CompatibilityVersionException e) {
 					if(JOptionPane.showConfirmDialog(null, "<html>Le fichier que souhaitez importer n'est pas compatible avec la version de Videso que vous utilisez.<br/>" +
 							"Souhaitez vous tout de même l'importer ?<br/><br/>" +
@@ -760,7 +822,7 @@ public class MainWindow extends JFrame {
 							"<i>Information : </i> Version du fichier : "+e.getMessage()+"</html>",
 							"Version du fichier incompatible.", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE)
 							== JOptionPane.YES_OPTION) {
-						project.loadProject(file, wwd, getThis(), true);
+						p = project.loadProject(file, wwd, MainWindow.this, true);
 					}
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
@@ -771,14 +833,30 @@ public class MainWindow extends JFrame {
 				} catch (Exception e){
 					e.printStackTrace();
 				}
+				if(p != null){
+					try{
+						DatasManager.getUserObjectsController(wwd).addProject(p);
+					} catch(Exception e){
+						e.printStackTrace();
+					}
+				}
 				return null;
 			}
 
 		}.execute();
 	}
-	
-	private MainWindow getThis(){
-		return this;
-	}
 
+	public void setDrawToolbar(boolean selected) {
+		if(drawToolbar == null){
+			this.drawToolbar = new DrawToolbar(wwd);
+			this.drawToolbar.setFloatable(true);
+		}
+		if(selected){
+			this.toolbars.add(drawToolbar, BorderLayout.PAGE_START);
+			this.validate();
+		} else {
+			this.toolbars.remove(drawToolbar);
+			this.validate();
+		}
+	}
 }

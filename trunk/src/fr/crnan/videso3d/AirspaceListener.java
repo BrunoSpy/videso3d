@@ -25,14 +25,17 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.exsa.STRController;
+import fr.crnan.videso3d.databases.exsa.STRController;
+import fr.crnan.videso3d.databases.skyview.SkyViewController;
+import fr.crnan.videso3d.databases.stpv.StpvController;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoAnnotation;
 import fr.crnan.videso3d.graphics.VidesoObject;
+import fr.crnan.videso3d.graphics.editor.ShapeEditorsManager;
 import fr.crnan.videso3d.ihm.AnalyzeUI;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.ihm.ShapeAttributesDialog;
@@ -43,8 +46,6 @@ import fr.crnan.videso3d.ihm.components.ImageMenu;
 import fr.crnan.videso3d.ihm.components.MovePositionDialog;
 import fr.crnan.videso3d.ihm.components.MultipleSelectionMenu;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
-import fr.crnan.videso3d.skyview.SkyViewController;
-import fr.crnan.videso3d.stpv.StpvController;
 import gov.nasa.worldwind.Movable;
 import gov.nasa.worldwind.event.SelectEvent;
 import gov.nasa.worldwind.event.SelectListener;
@@ -60,6 +61,7 @@ import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.markers.Marker;
+import gov.nasa.worldwindx.examples.shapebuilder.RigidShapeEditor;
 
 /**
  * Listener d'évènements sur les airspaces et shapes
@@ -185,7 +187,7 @@ public class AirspaceListener implements SelectListener {
 				//Uniquement pour les objets balises STIP
 				if((o instanceof Marker || o instanceof PointPlacemark) && (o instanceof DatabaseVidesoObject)){
 
-					if(((DatabaseVidesoObject) o).getDatabaseType().equals(Type.STIP)){
+					if(((DatabaseVidesoObject) o).getDatabaseType().equals(DatasManager.Type.STIP)){
 						JMenu analyseItem = new JMenu("Analyse");
 						JMenuItem analyseIti = new JMenuItem("Itinéraires");
 						JMenuItem analyseTrajet = new JMenuItem("Trajets");
@@ -287,6 +289,82 @@ public class AirspaceListener implements SelectListener {
 					menu.add(changePos);
 				}
 				
+				menu.add(new JSeparator());
+				
+				//Edition des shapes
+				if(o instanceof AbstractShape && !ShapeEditorsManager.isEditor((AbstractShape) o)){
+					boolean isEditing = ShapeEditorsManager.isEditing((AbstractShape) o);
+					
+					JMenu editShape = new JMenu("Editer...");
+					
+								
+					if(!isEditing ||
+						(isEditing && !ShapeEditorsManager.getEditMode((AbstractShape) o).equals(RigidShapeEditor.TRANSLATION_MODE))) {
+						JMenuItem editMove = new JMenuItem("Position");
+						editMove.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								ShapeEditorsManager.editShape((AbstractShape) o, RigidShapeEditor.TRANSLATION_MODE);
+							}
+						});
+						editShape.add(editMove);
+					}
+					
+					if(!isEditing ||
+							(isEditing && !ShapeEditorsManager.getEditMode((AbstractShape) o).equals(RigidShapeEditor.ROTATION_MODE))) {
+						JMenuItem editMove = new JMenuItem("Rotation");
+						editMove.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								ShapeEditorsManager.editShape((AbstractShape) o, RigidShapeEditor.ROTATION_MODE);
+							}
+						});
+						editShape.add(editMove);
+					}
+
+					if(!isEditing ||
+							(isEditing && !ShapeEditorsManager.getEditMode((AbstractShape) o).equals(RigidShapeEditor.SCALE_MODE))) {
+						JMenuItem editMove = new JMenuItem("Echelle");
+						editMove.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								ShapeEditorsManager.editShape((AbstractShape) o, RigidShapeEditor.SCALE_MODE);
+							}
+						});
+						editShape.add(editMove);
+					}
+					
+					if(!isEditing ||
+							(isEditing && !ShapeEditorsManager.getEditMode((AbstractShape) o).equals(RigidShapeEditor.SKEW_MODE))) {
+						JMenuItem editMove = new JMenuItem("Inclinaison");
+						editMove.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								ShapeEditorsManager.editShape((AbstractShape) o, RigidShapeEditor.SKEW_MODE);
+							}
+						});
+						editShape.add(editMove);
+					}
+					
+					menu.add(editShape);
+						
+					if(isEditing){
+						JMenuItem stopEditShape = new JMenuItem("Terminer l'édition");
+						stopEditShape.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								ShapeEditorsManager.stopEditShape((AbstractShape) o);
+							}
+						});
+						menu.add(stopEditShape);
+					} 					
+				}
+				
 				//Changement du nom des objets ne provenant pas d'une base de données
 				if(o instanceof VidesoObject && !(o instanceof DatabaseVidesoObject)){
 					JMenuItem changeName = new JMenuItem("Renommer...");
@@ -328,7 +406,7 @@ public class AirspaceListener implements SelectListener {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							wwd.delete(o);
+							wwd.delete((VidesoObject) o);
 						}
 					});
 				}

@@ -43,7 +43,7 @@ import javax.swing.DefaultComboBoxModel;
  */
 public class MovePositionDialog extends JDialog {
 
-	private int result;
+	private int result=-1;
 	
 	private Position pos;
 	

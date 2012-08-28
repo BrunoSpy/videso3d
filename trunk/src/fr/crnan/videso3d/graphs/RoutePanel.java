@@ -30,9 +30,10 @@ import javax.swing.SwingWorker;
 
 import com.mxgraph.model.mxCell;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.stip.StipController;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.stip.StipController;
 /**
  * Affichage des résultats de type Route
  * @author Bruno Spyckerelle
@@ -109,13 +110,13 @@ public class RoutePanel extends ResultGraphPanel {
 							
 							idRoute = rs.getInt(1);
 							//nouvelle route
-							route = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, new CellContent(Type.STIP, StipController.ROUTES, idRoute, rs.getString(2)), 0, 0, 80, 50, GraphStyle.groupStyleHorizontal);
+							route = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, new CellContent(DatasManager.Type.STIP, StipController.ROUTES, idRoute, rs.getString(2)), 0, 0, 80, 50, GraphStyle.groupStyleHorizontal);
 							route.setConnectable(false);
 							routes.add(route);
 							String style = rs.getBoolean(5) ? 
 									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
 										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
-							first = (mxCell) graph.insertVertex(route, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
+							first = (mxCell) graph.insertVertex(route, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							first.setConnectable(false);
 							//insertion des entrees
 							ResultSet rsEntrees = DatabaseManager.getCurrentStip().executeQuery("select routeentrees.entree, routes.id from routes, routeentrees where routes.id = routeentrees.routeid and routes.id = '"+idRoute+"'");
@@ -129,7 +130,7 @@ public class RoutePanel extends ResultGraphPanel {
 							String style = rs.getBoolean(5) ? 
 									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
 										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
-							mxCell second = (mxCell) graph.insertVertex(route, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
+							mxCell second = (mxCell) graph.insertVertex(route, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							second.setConnectable(false);
 							style = "";
 							if(sens.equals("=")){

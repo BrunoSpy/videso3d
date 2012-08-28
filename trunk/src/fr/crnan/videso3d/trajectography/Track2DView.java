@@ -36,10 +36,9 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.TextAnchor;
 
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.aip.AIP;
-import fr.crnan.videso3d.aip.AIPController;
+import fr.crnan.videso3d.databases.aip.AIP;
+import fr.crnan.videso3d.databases.aip.AIPController;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrack;
 import fr.crnan.videso3d.formats.lpln.LPLNTrackPoint;
@@ -80,7 +79,7 @@ public class Track2DView extends JFrame{
 			}
 			//ajout des secteurs AIP avec des XYPolygonAnnotation
 			Collection<Object> secteurs;
-			AIPController controller = (AIPController) DatasManager.getController(DatabaseManager.Type.AIP);
+			AIPController controller = (AIPController) DatasManager.getController(DatasManager.Type.AIP);
 			secteurs = controller.getObjects(AIP.CTL);
 			for(int i=0;i<=600;i+=10){
 				last = null;

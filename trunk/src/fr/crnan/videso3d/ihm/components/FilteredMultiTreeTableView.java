@@ -42,9 +42,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.jdesktop.swingx.JXTreeTable;
 
-import fr.crnan.videso3d.Couple;
+import fr.crnan.videso3d.databases.skyview.SkyViewController;
 import fr.crnan.videso3d.ihm.ProgressMonitor;
-import fr.crnan.videso3d.skyview.SkyViewController;
 
 
 /**
@@ -117,39 +116,38 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 			@Override
 			public void treeNodesInserted(TreeModelEvent e) {}
 
-			
-			@SuppressWarnings("unchecked")
 			@Override
 			public void treeNodesChanged(TreeModelEvent e) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.getTreePath().getLastPathComponent();
-				Couple<String, Boolean> source = (Couple<String, Boolean>)node.getUserObject();
-				int type = getController().string2type(((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[1])).getUserObject()).getFirst());
+				FilteredTreeTableNode source = (FilteredTreeTableNode)node.getUserObject();
+				int type = getController().string2type(((FilteredTreeTableNode)((DefaultMutableTreeNode)(e.getPath()[1])).getUserObject()).getName());
+				//TODO enlever cette verrue
 				if(getController() instanceof SkyViewController && type == SkyViewController.TYPE_WAYPOINT){
 					if(!node.isLeaf()){
-						if(source.getSecond()){
+						if(source.isVisible()){
 							if(e.getPath().length==3)
-								((SkyViewController)getController()).showAllWaypoints(((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getFirst());
+								((SkyViewController)getController()).showAllWaypoints(((FilteredTreeTableNode)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getName());
 							else
 								((SkyViewController)getController()).showAllWaypoints(null);
 						} else {
 							if(e.getPath().length==3)
-								((SkyViewController)getController()).hideAllWaypoints(((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getFirst());
+								((SkyViewController)getController()).hideAllWaypoints(((FilteredTreeTableNode)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getName());
 							else
 								((SkyViewController)getController()).hideAllWaypoints(null);
 						}
 					}else{
-						if(source.getSecond()){
-							getController().showObject(type, source.getFirst());
+						if(source.isVisible()){
+							getController().showObject(type, source.getName());
 						} else {
-							getController().hideObject(type, source.getFirst());
+							getController().hideObject(type, source.getName());
 						}
 					}
 				}else{
 					if(node.isLeaf()){
-						if(source.getSecond()){
-							getController().showObject(type, source.getFirst());
+						if(source.isVisible()){
+							getController().showObject(type, source.getName());
 						} else {
-							getController().hideObject(type, source.getFirst());
+							getController().hideObject(type, source.getName());
 						}
 					}
 				}
@@ -226,13 +224,12 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 
 		treeTable.addMouseListener(new MouseAdapter(){
 			@Override
-			@SuppressWarnings("unchecked")
 			public void mouseClicked(MouseEvent e){
 				if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2){
 					int row = treeTable.rowAtPoint(e.getPoint());  
 					Object[] path = treeTable.getPathForRow(row).getPath();
 					if(((DefaultMutableTreeNode)path[path.length-1]).isLeaf()){
-						String type = ((Couple<String, Boolean>)((DefaultMutableTreeNode)path[1]).getUserObject()).getFirst();
+						String type = ((FilteredTreeTableNode)((DefaultMutableTreeNode)path[1]).getUserObject()).getName();
 						String name = (String) treeTable.getValueAt(row, 0);
 						getController().highlight(getController().string2type(type),name);
 						treeTable.setValueAt(true, row, 1);
@@ -241,7 +238,7 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 					final int row = treeTable.rowAtPoint(e.getPoint());
 					final Object[] path = treeTable.getPathForRow(row).getPath();
 
-					if(getController().isColorEditable(getController().string2type(((Couple<String, Boolean>)((DefaultMutableTreeNode)path[1]).getUserObject()).getFirst()))){
+					if(getController().isColorEditable(getController().string2type(((FilteredTreeTableNode)((DefaultMutableTreeNode)path[1]).getUserObject()).getName()))){
 
 						final JPopupMenu menu = new JPopupMenu();
 						JMenuItem color = new JMenuItem("Changer la couleur ...");
@@ -251,10 +248,10 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 							public void actionPerformed(ActionEvent arg0) {
 								Color color = JColorChooser.showDialog(menu, "Couleur du secteur", null);
 								DefaultMutableTreeNode node = (DefaultMutableTreeNode) treeTable.getPathForRow(row).getLastPathComponent();
-								String type = ((Couple<String, Boolean>)((DefaultMutableTreeNode)path[1]).getUserObject()).getFirst();
+								String type = ((FilteredTreeTableNode)((DefaultMutableTreeNode)path[1]).getUserObject()).getName();
 								if(color != null){
 									for(DefaultMutableTreeNode child :  ((FilteredTreeTableModel) treeTable.getTreeTableModel()).getChildList(node)){
-										getController().setColor(color, getController().string2type(type), ((Couple<String,Boolean>) child.getUserObject()).getFirst());
+										getController().setColor(color, getController().string2type(type), ((FilteredTreeTableNode) child.getUserObject()).getName());
 									}
 
 								}

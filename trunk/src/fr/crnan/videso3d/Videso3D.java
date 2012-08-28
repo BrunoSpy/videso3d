@@ -31,17 +31,18 @@ import gov.nasa.worldwind.util.Logging;
 
 /**
  * @author Bruno Spyckerelle
- * @version 0.3.1
+ * @version 0.3.2
  */
 public class Videso3D {
 
-	public static final String VERSION = "0.11.4";
+	public static final String VERSION = "0.12.0";
 	
 	public static void main(final String[] args)
 	{
 		if (Configuration.isMacOS())
 		{
 			System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Videso 3D");
+			System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
 		}
 
 		// prevents flashing during window resizing

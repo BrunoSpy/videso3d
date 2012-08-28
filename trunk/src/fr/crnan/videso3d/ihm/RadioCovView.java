@@ -36,15 +36,15 @@ import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.radio.RadioCovController;
 import fr.crnan.videso3d.graphics.RadioCovPolygon;
 import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.ihm.components.VBiSlider;
 import fr.crnan.videso3d.ihm.components.VBiSlider.*;
 import fr.crnan.videso3d.layers.FilterableAirspaceLayer;
-import fr.crnan.videso3d.radio.RadioCovController;
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.airspaces.Airspace;
@@ -289,7 +289,7 @@ public class RadioCovView extends JPanel implements DataView {
 	
 	@Override
 	public RadioCovController getController() {
-		return (RadioCovController) DatasManager.getController(Type.RadioCov);
+		return (RadioCovController) DatasManager.getController(DatasManager.Type.RadioCov);
 	}
 	
 	@Override

@@ -50,6 +50,8 @@ public final class Configuration {
 	public static final String TRAJECTOGRAPHIE_MULTICOLOR_PARAM = "fr.crnan.videso3d.trajectographie.multicolor.param";
 	public static final String TRAJECTOGRAPHIE_MULTICOLOR_VALUES = "fr.crnan.videso3d.trajectographie.multicolor.values";
 	
+	public static final String SESSION_FILENAME = "session.vpj";
+	
 	private static Configuration instance = new Configuration();
 
 	private Properties properties;

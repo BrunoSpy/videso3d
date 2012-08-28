@@ -29,8 +29,6 @@ import javax.swing.tree.TreePath;
 
 import org.jdesktop.swingx.treetable.AbstractTreeTableModel;
 
-import fr.crnan.videso3d.Couple;
-
 /**
  * TreeTableModel suitable for STIP, SkyView and AIP GUI
  * @author Bruno Spyckerelle
@@ -51,6 +49,7 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 	public FilteredTreeTableModel(DefaultMutableTreeNode root) {
 		super(root);
 		this.support = new PropertyChangeSupport(this);
+		
 	}
 
 	public void setViewFilter(ViewFilter filter){
@@ -68,11 +67,11 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 		Object value = null;
 		if(node instanceof DefaultMutableTreeNode){
 			Object o = ((DefaultMutableTreeNode)node).getUserObject();
-			if(o instanceof Couple){
+			if(o instanceof FilteredTreeTableNode){
 				if(column == 0){
-					value = ((Couple<String, Boolean>)o).getFirst();
+					value = ((FilteredTreeTableNode)o).getName();
 				} else if(column ==1) {
-					value = ((Couple<String, Boolean>)o).getSecond();
+					value = ((FilteredTreeTableNode)o).isVisible();
 				}
 			}
 		}
@@ -133,7 +132,7 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 				int count = 0;
 				for(int i = 0; i < ((DefaultMutableTreeNode)parent).getChildCount();i++){
 					DefaultMutableTreeNode child = (DefaultMutableTreeNode) ((DefaultMutableTreeNode)parent).getChildAt(i);
-					if(isLeaf(child) && this.filter.isShown(child) && ((Couple<String, Boolean>) child.getUserObject()).getSecond() == value){
+					if(isLeaf(child) && this.filter.isShown(child) && ((FilteredTreeTableNode) child.getUserObject()).isVisible() == value){
 						count++;
 					} else {
 						count += getLeafsCount(child, value);
@@ -144,7 +143,7 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 				int count = 0;
 				for(int i = 0; i < ((DefaultMutableTreeNode)parent).getChildCount();i++){
 					DefaultMutableTreeNode child = (DefaultMutableTreeNode) ((DefaultMutableTreeNode)parent).getChildAt(i);
-					if(isLeaf(child)&& ((Couple<String, Boolean>) child.getUserObject()).getSecond() == value){
+					if(isLeaf(child)&& ((FilteredTreeTableNode) child.getUserObject()).isVisible() == value){
 						count++;
 					} else {
 						count += getLeafsCount(child, value);
@@ -186,12 +185,11 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 		}.execute();
 	}
 
-	@SuppressWarnings("unchecked")
 	private void setValueAt(Object value, Object node, int column, boolean first, boolean fireEvent){
 		
 		if(column == 1){
 			DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) node;
-			Boolean old = ((Couple<String, Boolean>)((DefaultMutableTreeNode)treeNode).getUserObject()).getSecond();
+			Boolean old = ((FilteredTreeTableNode)((DefaultMutableTreeNode)treeNode).getUserObject()).isVisible();
 			//do nothing if old value equals new value
 			if(old == value)
 				return;
@@ -204,14 +202,14 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 			//ne pas changer la valeur des nodes non affichés
 			if(filter != null){
 				if(!treeNode.isLeaf()){
-					((Couple<String, Boolean>) treeNode.getUserObject()).setSecond((Boolean)value);
+					((FilteredTreeTableNode) treeNode.getUserObject()).setVisible((Boolean)value);
 					for(int i=0;i<treeNode.getChildCount();i++){
 						DefaultMutableTreeNode child = (DefaultMutableTreeNode) treeNode.getChildAt(i);
 						setValueAt(value, child, column, false, true);
 					}
 				} else {
 					if(this.filter.isShown((DefaultMutableTreeNode) node)){
-						((Couple<String, Boolean>) treeNode.getUserObject()).setSecond((Boolean)value);
+						((FilteredTreeTableNode) treeNode.getUserObject()).setVisible((Boolean)value);
 						count++;
 						if((Boolean) value) 
 							this.support.firePropertyChange("progress", count-1, count);
@@ -219,17 +217,17 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 					}
 				}
 			} else {
-				((Couple<String, Boolean>) treeNode.getUserObject()).setSecond((Boolean)value);
+				((FilteredTreeTableNode) treeNode.getUserObject()).setVisible((Boolean)value);
 				if(!treeNode.isLeaf()){
 					try{
 						if(fireEvent)
 							this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);
 
-						String nodeName = ((Couple<String, Boolean>) treeNode.getUserObject()).getFirst();
+						String nodeName = ((FilteredTreeTableNode) treeNode.getUserObject()).getName();
 						if(nodeName.equals("Waypoints"))
 							fireEvent = false;
-						else if(treeNode.getParent() instanceof Couple<?, ?>){
-							if(((Couple<String, Boolean>)((DefaultMutableTreeNode)treeNode.getParent()).getUserObject()).getFirst().equals("Waypoints"))
+						else if(treeNode.getParent() instanceof FilteredTreeTableNode){
+							if(((FilteredTreeTableNode)((DefaultMutableTreeNode)treeNode.getParent()).getUserObject()).getName().equals("Waypoints"))
 								fireEvent = false;
 						}
 						for(int i=0;i<treeNode.getChildCount();i++){

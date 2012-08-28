@@ -31,9 +31,10 @@ import javax.swing.SwingWorker;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxEvent;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.stip.StipController;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.stip.StipController;
 
 /**
  * Connexions recherchées, sous forme de graphe
@@ -122,7 +123,7 @@ public class ConnexPanel extends ResultGraphPanel {
 							count++;
 							if(id != 0){//on termine l'iti précédent si il existe
 								if(type.equals("D")){
-									mxCell balConnex = (mxCell) graph.insertVertex(connex, null, new CellContent(Type.STIP, StipController.BALISES, 0, connexion), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
+									mxCell balConnex = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, 0, connexion), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
 									graph.insertEdge(connex, null, "", first, balConnex, GraphStyle.edgeStyle);
 								}
 								
@@ -140,20 +141,20 @@ public class ConnexPanel extends ResultGraphPanel {
 								connexionsRoot.add(connexRoot);
 								terrain = rs.getString(2);
 							}
-							connex = (mxCell) graph.insertVertex(connexRoot, null, new CellContent(Type.STIP, StipController.CONNEXION, id, rs.getString(6)+"->"+rs.getString(7)), 0, 0, 80, 50, GraphStyle.groupStyle);
+							connex = (mxCell) graph.insertVertex(connexRoot, null, new CellContent(DatasManager.Type.STIP, StipController.CONNEXION, id, rs.getString(6)+"->"+rs.getString(7)), 0, 0, 80, 50, GraphStyle.groupStyle);
 							connex.setConnectable(false);
 							connexions.add(connex);							
 							
 							String style = rs.getBoolean(14) ? 
 									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
 										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
-							first = (mxCell) graph.insertVertex(connex, null, new CellContent(Type.STIP, StipController.BALISES, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
+							first = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							first.setConnectable(false);
 							balises.put(rs.getInt(13), first);
 							
 							if(rs.getString(4).equals("A")){
 								connexion = rs.getString(3);
-								mxCell balConnex = (mxCell) graph.insertVertex(connex, null, new CellContent(Type.STIP, StipController.BALISES, 0, connexion), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
+								mxCell balConnex = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, 0, connexion), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
 								graph.insertEdge(connex, null, "", balConnex, first, GraphStyle.edgeStyle);
 							}
 							
@@ -161,7 +162,7 @@ public class ConnexPanel extends ResultGraphPanel {
 							String style = rs.getBoolean(14) ? 
 									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
 										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
-							mxCell bal = (mxCell) graph.insertVertex(connex, null, new CellContent(Type.STIP, StipController.BALISES, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
+							mxCell bal = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							bal.setConnectable(false);
 							graph.insertEdge(connex, null, "", first, bal, GraphStyle.edgeStyle);
 							balises.put(rs.getInt(13), bal);
@@ -179,7 +180,7 @@ public class ConnexPanel extends ResultGraphPanel {
 					//on termine le dernier iti si il existe
 					if(connex != null){
 						if(type.equals("D")){
-							mxCell balConnex = (mxCell) graph.insertVertex(connex, null, new CellContent(Type.STIP, StipController.BALISES, 0, connexion), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
+							mxCell balConnex = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, 0, connexion), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
 							graph.insertEdge(connex, null, "", first, balConnex, GraphStyle.edgeStyle);
 						}
 //						first.setStyle(GraphStyle.baliseDefault);

@@ -30,10 +30,11 @@ import javax.swing.SwingWorker;
 import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxEvent;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
-import fr.crnan.videso3d.stip.StipController;
-import fr.crnan.videso3d.stpv.StpvController;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.stip.StipController;
+import fr.crnan.videso3d.databases.stpv.StpvController;
 /**
  * 
  * @author Bruno Spyckerelle
@@ -159,7 +160,7 @@ public class StarPanel extends ResultGraphPanel {
 							starsRoot.add(starRoot);
 							terrain = rs.getString(1);
 						}
-						star = (mxCell) graph.insertVertex(starRoot, null, new CellContent(Type.STPV, StpvController.STAR, id, rs.getString(17)), 0, 0, 80, 50, GraphStyle.groupStyle);
+						star = (mxCell) graph.insertVertex(starRoot, null, new CellContent(DatasManager.Type.STPV, StpvController.STAR, id, rs.getString(17)), 0, 0, 80, 50, GraphStyle.groupStyle);
 						star.setConnectable(false);
 						stars.add(star);
 						first = null;
@@ -167,7 +168,7 @@ public class StarPanel extends ResultGraphPanel {
 							if(!rs.getString(3+i).trim().isEmpty()){
 								String name = rs.getString(3+i);
 								String style = ((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle);
-								mxCell bal = (mxCell) graph.insertVertex(star, null, new CellContent(Type.STIP, StipController.BALISES, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
+								mxCell bal = (mxCell) graph.insertVertex(star, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 								bal.setConnectable(false);
 								if(first != null){
 									graph.insertEdge(star, null, "", first, bal, GraphStyle.edgeStyle);
