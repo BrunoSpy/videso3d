@@ -36,12 +36,12 @@ import javax.swing.table.DefaultTableModel;
 
 import org.jdesktop.swingx.JXTable;
 
-import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.stip.Stip;
+import fr.crnan.videso3d.databases.stip.StipController;
+import fr.crnan.videso3d.databases.stpv.Stpv;
+import fr.crnan.videso3d.databases.stpv.StpvController;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
-import fr.crnan.videso3d.stip.Stip;
-import fr.crnan.videso3d.stip.StipController;
-import fr.crnan.videso3d.stpv.Stpv;
-import fr.crnan.videso3d.stpv.StpvController;
 
 /**
  * Résultats de données Stip/Stpv sur une balise/terrain

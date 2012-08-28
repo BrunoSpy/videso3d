@@ -19,19 +19,20 @@ package fr.crnan.videso3d;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.List;
 
 import javax.swing.SwingWorker;
 import javax.swing.event.EventListenerList;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager.Type;
 
 
 /**
  * Importe les données de fichiers et les stocke en base de données
  * L'import des données doit être fait dans la méthode doInBackground() afin d'être fait dans un thread secondaire.
- * doInBackground() renvoit le nombre de fichiers traités et publie le nom des fichiers traités
+ * <code>doInBackground()</code> renvoit le nombre de fichiers traités et publie le nom des fichiers traités
  * @author Bruno Spyckerelle
- * @version 0.3.3
+ * @version 0.3.4
  */
 public abstract class FileParser extends SwingWorker<Integer, String>{
 	
@@ -110,5 +111,12 @@ public abstract class FileParser extends SwingWorker<Integer, String>{
 	 */
 	public abstract String getName();
 	
-	public abstract Type getType();
+	public abstract DatasManager.Type getType();
+	
+	/**
+	 * 
+	 * @return Liste des fichiers utiles et quiil faudra copier à l'import.<br /> Renvoie <code>null</code> si tous les fichiers doivent être copiés.
+	 */
+	public abstract List<String> getRelevantFileNames();
+	
 }

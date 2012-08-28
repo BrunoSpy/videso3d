@@ -34,7 +34,7 @@ import gov.nasa.worldwind.render.airspaces.ScreenSizeDetailLevel;
 /**
  * Adds the ability to find if a point is inside the Polygon
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.1.4
  */
 public class VPolygon extends Polygon implements Highlightable{
 
@@ -246,5 +246,5 @@ public class VPolygon extends Polygon implements Highlightable{
         this.highlightAttrs = highlightAttrs;
         if(highlighted) this.setAttributes(this.highlightAttrs);
     }
-	
+
 }

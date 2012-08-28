@@ -38,13 +38,14 @@ import javax.swing.table.JTableHeader;
 
 import org.jdesktop.swingx.JXTable;
 
-import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
-import fr.crnan.videso3d.stip.Stip;
-import fr.crnan.videso3d.stip.StipController;
-import fr.crnan.videso3d.stpv.Stpv;
-import fr.crnan.videso3d.stpv.StpvController;
+import fr.crnan.videso3d.databases.stip.Stip;
+import fr.crnan.videso3d.databases.stip.StipController;
+import fr.crnan.videso3d.databases.stpv.Stpv;
+import fr.crnan.videso3d.databases.stpv.StpvController;
 
 /**
  * Résultats de données Stip/Stpv sur un secteur
@@ -138,7 +139,7 @@ public class SecteurPanel extends ResultPanel {
 				if(e.getClickCount()==2){
 					JXTable target = (JXTable)e.getSource();
 					int row = target.getSelectedRow();
-					context.showInfo(Type.STIP, StipController.BALISES, (String) target.getValueAt(row, 0));
+					context.showInfo(DatasManager.Type.STIP, StipController.BALISES, (String) target.getValueAt(row, 0));
 				}
 			}
 		});

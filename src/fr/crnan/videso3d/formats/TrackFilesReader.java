@@ -17,8 +17,8 @@
 package fr.crnan.videso3d.formats;
 
 import fr.crnan.videso3d.ProgressSupport;
+import fr.crnan.videso3d.databases.stip.PointNotFoundException;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
-import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
 import gov.nasa.worldwind.util.Logging;

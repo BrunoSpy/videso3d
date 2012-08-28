@@ -95,7 +95,7 @@ public class MultipleSelectionMenu extends JPopupMenu{
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					for(Airspace a : airspaces)
-						wwd.deleteAirspace(a);
+						wwd.delete(a);
 				}
 			});
 			deleteMenu.add(airspacesItem);
@@ -108,7 +108,7 @@ public class MultipleSelectionMenu extends JPopupMenu{
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					for(Balise a : balises)
-						wwd.deleteBalise(a);
+						wwd.delete(a);
 				}
 			});
 			deleteMenu.add(balisesItem);
@@ -121,7 +121,7 @@ public class MultipleSelectionMenu extends JPopupMenu{
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					for(Path a : trajectoires)
-						wwd.deletePath(a);
+						wwd.delete(a);
 				}
 			});
 			deleteMenu.add(trajItem);

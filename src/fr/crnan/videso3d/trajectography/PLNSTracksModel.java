@@ -25,11 +25,11 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import fr.crnan.videso3d.ProgressSupport;
+import fr.crnan.videso3d.databases.stip.PointNotFoundException;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.formats.plns.PLNSExtractor;
 import fr.crnan.videso3d.formats.plns.PLNSTrack;
 import fr.crnan.videso3d.formats.plns.PLNSTrackPoint;
-import fr.crnan.videso3d.stip.PointNotFoundException;
 
 /**
  * TracksModel that uses a PLNS SQLite database to store tracks.<br />

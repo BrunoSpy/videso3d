@@ -26,18 +26,17 @@ import java.util.HashMap;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import fr.crnan.videso3d.Couple;
-import fr.crnan.videso3d.DatabaseManager;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.stip.StipController;
+import fr.crnan.videso3d.ihm.components.FilteredTreeTableNode;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
 import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
-import fr.crnan.videso3d.stip.StipController;
 /**
  * Sélecteur d'objets Stip
  * @author Bruno Spyckerelle
- * @version 0.6.1
+ * @version 0.6.2
  */
 @SuppressWarnings("serial")
 public class StipView extends FilteredMultiTreeTableView {
@@ -80,26 +79,26 @@ public class StipView extends FilteredMultiTreeTableView {
 	
 	@Override
 	public StipController getController(){
-		return (StipController) DatasManager.getController(Type.STIP);
+		return (StipController) DatasManager.getController(DatasManager.Type.STIP);
 	}
 	
 	private void fillRoutesRootNode(DefaultMutableTreeNode root){
 		try{
 			Statement st = DatabaseManager.getCurrentStip();
 			
-			DefaultMutableTreeNode awy = new DefaultMutableTreeNode(new Couple<String, Boolean>("AWY", false));
+			DefaultMutableTreeNode awy = new DefaultMutableTreeNode(new FilteredTreeTableNode("AWY", false));
 			root.add(awy);
 			ResultSet rs = st.executeQuery("select name from routes where espace='F' order by name");
 			while(rs.next()){
-				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false));
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new FilteredTreeTableNode(rs.getString(1), false));
 				awy.add(node);
 				routes.put(rs.getString(1), node);
 			}
-			DefaultMutableTreeNode pdr = new DefaultMutableTreeNode(new Couple<String, Boolean>("PDR", false));
+			DefaultMutableTreeNode pdr = new DefaultMutableTreeNode(new FilteredTreeTableNode("PDR", false));
 			root.add(pdr);
 			rs = st.executeQuery("select name from routes where espace='U' order by name");
 			while(rs.next()){
-				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false));
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new FilteredTreeTableNode(rs.getString(1), false));
 				pdr.add(node);
 				routes.put(rs.getString(1), node);
 			}
@@ -115,19 +114,19 @@ public class StipView extends FilteredMultiTreeTableView {
 		try{
 			Statement st = DatabaseManager.getCurrentStip();
 			
-			DefaultMutableTreeNode pub = new DefaultMutableTreeNode(new Couple<String, Boolean>("Publiées", false));
+			DefaultMutableTreeNode pub = new DefaultMutableTreeNode(new FilteredTreeTableNode("Publiées", false));
 			root.add(pub);
 			ResultSet rs = st.executeQuery("select name from balises where publicated='1' order by name");
 			while(rs.next()){
-				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false));
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new FilteredTreeTableNode(rs.getString(1), false));
 				balises.put(rs.getString(1), node);
 				pub.add(node);
 			}
-			DefaultMutableTreeNode np = new DefaultMutableTreeNode(new Couple<String, Boolean>("Non publiées", false));
+			DefaultMutableTreeNode np = new DefaultMutableTreeNode(new FilteredTreeTableNode("Non publiées", false));
 			root.add(np);
 			rs = st.executeQuery("select name from balises where publicated='0' order by name");
 			while(rs.next()){
-				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString(1), false));
+				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new FilteredTreeTableNode(rs.getString(1), false));
 				balises.put(rs.getString(1), node);
 				np.add(node);
 			}
@@ -140,32 +139,32 @@ public class StipView extends FilteredMultiTreeTableView {
 	
 	private void fillSecteursRootNode(DefaultMutableTreeNode root){
 			
-			DefaultMutableTreeNode aix = new DefaultMutableTreeNode(new Couple<String, Boolean>("Aix", false));
+			DefaultMutableTreeNode aix = new DefaultMutableTreeNode(new FilteredTreeTableNode("Aix", false));
 			this.fillSecteursNode(aix, "AIX", "F");
 			this.fillSecteursNode(aix, "AIX", "U");
 			root.add(aix);
 			
-			DefaultMutableTreeNode bord = new DefaultMutableTreeNode(new Couple<String, Boolean>("Bordeaux", false));
+			DefaultMutableTreeNode bord = new DefaultMutableTreeNode(new FilteredTreeTableNode("Bordeaux", false));
 			this.fillSecteursNode(bord, "BORD", "F");
 			this.fillSecteursNode(bord, "BORD", "U");		
 			root.add(bord);
 			
-			DefaultMutableTreeNode bst = new DefaultMutableTreeNode(new Couple<String, Boolean>("Brest", false));
+			DefaultMutableTreeNode bst = new DefaultMutableTreeNode(new FilteredTreeTableNode("Brest", false));
 			this.fillSecteursNode(bst, "BRST", "F");
 			this.fillSecteursNode(bst, "BRST", "U");
 			root.add(bst);
 			
-			DefaultMutableTreeNode paris = new DefaultMutableTreeNode(new Couple<String, Boolean>("Paris", false));
+			DefaultMutableTreeNode paris = new DefaultMutableTreeNode(new FilteredTreeTableNode("Paris", false));
 			this.fillSecteursNode(paris, "PARI", "F");
 			this.fillSecteursNode(paris, "PARI", "U");
 			root.add(paris);
 			
-			DefaultMutableTreeNode reim = new DefaultMutableTreeNode(new Couple<String, Boolean>("Reims", false));
+			DefaultMutableTreeNode reim = new DefaultMutableTreeNode(new FilteredTreeTableNode("Reims", false));
 			this.fillSecteursNode(reim, "REIM", "F");
 			this.fillSecteursNode(reim, "REIM", "U");
 			root.add(reim);			
 			
-			DefaultMutableTreeNode autre = new DefaultMutableTreeNode(new Couple<String, Boolean>("Autres", false));
+			DefaultMutableTreeNode autre = new DefaultMutableTreeNode(new FilteredTreeTableNode("Autres", false));
 			this.fillSecteursNode(autre, "Autre", "F");
 			this.fillSecteursNode(autre, "Autre", "U");
 			root.add(autre);
@@ -173,13 +172,13 @@ public class StipView extends FilteredMultiTreeTableView {
 	}
 	
 	private void fillSecteursNode(DefaultMutableTreeNode root, String centre, String type){
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode(new Couple<String, Boolean>(type.equals("F") ? "FIR" : "UIR", false));
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(new FilteredTreeTableNode(type.equals("F") ? "FIR" : "UIR", false));
 		try {
 			Statement st = DatabaseManager.getCurrentStip();
 			String centreCondition = centre.equals("Autre") ? "centre != 'REIM' and centre != 'PARI' and centre != 'AIX' and centre != 'BRST' and centre != 'BORD'" : "centre = '"+centre+"'" ;
 			ResultSet rs = st.executeQuery("select * from secteurs where "+centreCondition+" and espace ='"+type+"' order by nom");
 			while(rs.next()){
-				DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(new Couple<String, Boolean>(rs.getString("nom"), false));
+				DefaultMutableTreeNode leaf = new DefaultMutableTreeNode(new FilteredTreeTableNode(rs.getString("nom"), false));
 				this.secteurs.put(rs.getString("nom"), leaf);
 				node.add(leaf);
 			}

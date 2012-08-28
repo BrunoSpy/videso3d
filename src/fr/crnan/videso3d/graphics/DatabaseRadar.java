@@ -15,7 +15,8 @@
 */
 package fr.crnan.videso3d.graphics;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import gov.nasa.worldwind.geom.LatLon;
 /**
  * 
@@ -28,23 +29,23 @@ public class DatabaseRadar extends Radar implements DatabaseVidesoObject{
 		super();
 	}
 	
-	public DatabaseRadar(String name, LatLon pos, Integer portee, Type base,
+	public DatabaseRadar(String name, LatLon pos, Integer portee, DatasManager.Type base,
 			int type) {
 		super(name, pos, portee);
 		this.setDatabaseType(base);
 		this.setType(type);
 	}
 
-	private Type base;
+	private DatasManager.Type base;
 	private int type;
 
 	@Override
-	public Type getDatabaseType() {
+	public DatasManager.Type getDatabaseType() {
 		return this.base;
 	}
 
 	@Override
-	public void setDatabaseType(Type type) {
+	public void setDatabaseType(DatasManager.Type type) {
 		this.base = type;
 	}
 	

@@ -53,6 +53,7 @@ import gov.nasa.worldwind.util.WWIO;
 import gov.nasa.worldwind.util.WWUtil;
 
 /**
+ * EXPERIMENTAL
  * @author Mickael Papail
  * @author Bruno Spyckerelle
  * @version 0.2.0

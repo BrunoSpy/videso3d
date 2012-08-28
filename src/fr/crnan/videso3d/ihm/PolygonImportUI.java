@@ -1,3 +1,18 @@
+/*
+ * This file is part of ViDESO.
+ * ViDESO is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ViDESO is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
@@ -23,15 +38,20 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
+import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.PolygonAnnotation;
-import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
-
+/**
+ * IHM d'import de liste de points pour créer un polygone 3D
+ * @author Adrien Vidal
+ * @version 0.1.2
+ */
 public class PolygonImportUI extends JFrame implements ActionListener{
 
 	private final JTextField nameText;
@@ -40,7 +60,11 @@ public class PolygonImportUI extends JFrame implements ActionListener{
 	private JTextArea coordArea;
 	private JButton importButton, cancelButton;
 		
-	public PolygonImportUI(){
+	private VidesoGLCanvas wwd;
+	
+	public PolygonImportUI(VidesoGLCanvas wwd){
+		this.wwd = wwd;
+		
 		this.setTitle("Création d'un polygone...");
 		JLabel nameLabel = new JLabel("Nom du polygone ");
 		nameText = new JTextField("Polygone",12);
@@ -136,8 +160,7 @@ public class PolygonImportUI extends JFrame implements ActionListener{
 				p.setAttributes(attrs);
 				p.setAnnotation("<html><b>"+nameText.getText()+"</b><br/><i>Polygone importé</i></html>");
 				if(!p.getLocations().isEmpty()){
-					PolygonEditorsManager.editAirspace(p, true);
-					PolygonEditorsManager.stopEditAirspace(p);
+					DatasManager.getUserObjectsController(wwd).addObject(p);
 				}
 				setVisible(false);
 				dispose();	
@@ -229,11 +252,22 @@ public class PolygonImportUI extends JFrame implements ActionListener{
 
 	private void addLocationsToList(ArrayList<LatLon> locationsList, String line){
 		String[] points = line.split("\\s+");
+		boolean pointsFound = false;
 		for(String p : points){
 			p = p.toUpperCase();
 			if(	p.matches("\\d{1,3}([\\.,]\\d{1,4})?[NS]\\d{1,3}([\\.,]\\d{1,4})?[EW]")
 					|| p.matches("\\d{1,3}D(\\d{1,2}')?(\\d{1,2}\")?[NS],?\\d{1,3}D(\\d{1,2}')?(\\d{1,2}\")?[EW]")){
 				LatLon latlon = LatLonUtils.computeLatLonFromString(p);
+				if(latlon != null){
+					locationsList.add(latlon);
+					pointsFound = true;
+				}
+			}
+		}
+		//if no point was found, try with just one point per line
+		if(!pointsFound){
+			LatLon latlon = LatLonUtils.computeLatLonFromString(line);
+			if(latlon != null){
 				locationsList.add(latlon);
 			}
 		}

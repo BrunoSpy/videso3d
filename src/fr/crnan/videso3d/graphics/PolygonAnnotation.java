@@ -59,6 +59,9 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
 	}
 	@Override
 	public VidesoAnnotation getAnnotation(Position pos){
+		if(annotation == null){
+			annotation = new VidesoAnnotation(this.getName());
+		}
 		annotation.setPosition(pos);
 		return annotation;
 	}
@@ -124,6 +127,7 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
         super.doGetRestorableState(rs, context);
       
         rs.addStateValueAsString(context, "annotation", this.getAnnotation(Position.ZERO).getText());
+        rs.addStateValueAsString(context, "name", this.getName());
     }
 
     @Override
@@ -134,6 +138,10 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
         String annotation = rs.getStateValueAsString(context, "annotation");
         if(annotation != null)
         	this.setAnnotation(annotation);
+        
+        String name = rs.getStateValueAsString(context, "name");
+        if(name != null)
+        	this.setName(name);
         
     }
 }

@@ -17,7 +17,8 @@ package fr.crnan.videso3d.graphics;
 
 import java.util.ArrayList;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.layers.TextLayer;
 import gov.nasa.worldwind.geom.LatLon;
@@ -31,7 +32,7 @@ import gov.nasa.worldwind.render.UserFacingText;
  */
 public class DatabasePisteAerodrome extends PisteAerodrome implements DatabaseVidesoObject{
 
-	private Type base;
+	private DatasManager.Type base;
 	private int type;
 
 	private boolean locationsVisible = false;
@@ -40,7 +41,7 @@ public class DatabasePisteAerodrome extends PisteAerodrome implements DatabaseVi
 	
 	public DatabasePisteAerodrome(int type, String name, String nomPiste,
 			double lat1, double lon1, double lat2, double lon2, double largeur,
-			Position ref, Type base, TextLayer tl) {
+			Position ref, DatasManager.Type base, TextLayer tl) {
 		super(name, nomPiste, lat1, lon1, lat2, lon2, largeur, ref);
 		this.setDatabaseType(base);
 		this.setType(type);
@@ -77,7 +78,7 @@ public class DatabasePisteAerodrome extends PisteAerodrome implements DatabaseVi
 	}
 
 	@Override
-	public Type getDatabaseType() {
+	public DatasManager.Type getDatabaseType() {
 		return this.base;
 	}
 
@@ -85,7 +86,7 @@ public class DatabasePisteAerodrome extends PisteAerodrome implements DatabaseVi
 	 * Non implémenté
 	 */
 	@Override
-	public void setDatabaseType(Type base) {
+	public void setDatabaseType(DatasManager.Type base) {
 		this.base = base;
 	}
 

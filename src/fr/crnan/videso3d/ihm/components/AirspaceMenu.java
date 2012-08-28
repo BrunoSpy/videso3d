@@ -23,14 +23,14 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
-import fr.crnan.videso3d.aip.AIPController;
-import fr.crnan.videso3d.edimap.EdimapController;
-import fr.crnan.videso3d.exsa.STRController;
+import fr.crnan.videso3d.databases.aip.AIPController;
+import fr.crnan.videso3d.databases.edimap.EdimapController;
+import fr.crnan.videso3d.databases.exsa.STRController;
+import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
@@ -39,7 +39,6 @@ import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.AirspaceAttributesDialog;
 import fr.crnan.videso3d.ihm.ContextPanel;
 import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
-import fr.crnan.videso3d.stip.StipController;
 import fr.crnan.videso3d.trajectography.PolygonsSetFilter;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.Material;
@@ -160,10 +159,11 @@ public class AirspaceMenu extends JPopupMenu {
 							VPolygon polygon = new VPolygon(((Polygon)airspace).getLocations());
 							polygon.setAltitudes(((Polygon)airspace).getAltitudes()[0],((Polygon)airspace).getAltitudes()[1] );
 							polygon.setAttributes(airspace.getAttributes());
-							wwd.deleteAirspace(airspace);
-							PolygonEditorsManager.editAirspace(polygon, true);
+							wwd.delete(airspace);
+							DatasManager.getUserObjectsController(wwd).addObject(airspace);
+							PolygonEditorsManager.editAirspace(polygon);
 						} else {
-							PolygonEditorsManager.editAirspace((Polygon) airspace, true);
+							PolygonEditorsManager.editAirspace((Polygon) airspace);
 						}
 					}
 				});		
@@ -191,9 +191,9 @@ public class AirspaceMenu extends JPopupMenu {
 						PolygonsSetFilter filter = null;
 						if(airspace instanceof Secteur3D){
 							name = ((Secteur3D) airspace).getName().split(" ")[0];
-							if(((Secteur3D) airspace).getDatabaseType() == Type.STIP){
+							if(((Secteur3D) airspace).getDatabaseType() == DatasManager.Type.STIP){
 								filter = new PolygonsSetFilter(name, ((StipController)DatasManager.getController(((Secteur3D) airspace).getDatabaseType())).getPolygons(((Secteur3D) airspace).getName()));
-							}else if(((Secteur3D) airspace).getDatabaseType() == Type.AIP){
+							}else if(((Secteur3D) airspace).getDatabaseType() == DatasManager.Type.AIP){
 								filter = new PolygonsSetFilter(name, ((AIPController)DatasManager.getController(((Secteur3D) airspace).getDatabaseType())).getPolygons(((Secteur3D) airspace).getType(), ((Secteur3D) airspace).getName()));
 							} 							
 						} else {
@@ -269,7 +269,7 @@ public class AirspaceMenu extends JPopupMenu {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				wwd.deleteAirspace(airspace);
+				wwd.delete(airspace);
 			}
 		});
 		this.add(delete);

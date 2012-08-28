@@ -25,10 +25,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import fr.crnan.videso3d.ProgressSupport;
+import fr.crnan.videso3d.databases.stip.PointNotFoundException;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
-import fr.crnan.videso3d.stip.PointNotFoundException;
 import fr.crnan.videso3d.trajectography.PLNSTracksModel;
 /**
  * 

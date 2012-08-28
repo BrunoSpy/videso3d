@@ -22,11 +22,18 @@ import javax.swing.JPanel;
  * Panel de résultats.
  * Doit permettre la liaison avec le panel contextuel
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.2.3
  */
 public abstract class ResultPanel extends JPanel {
-	
+	/**
+	 * Property fired when the number of results is known
+	 */
 	public static String PROPERTY_RESULT = "number_results_changed";
+	
+	/**
+	 * Property fired when the tile of the tab is changed
+	 */
+	public static String TITLE_TAB_NAME = "title_tab_name";
 	
 	public abstract void setContext(ContextPanel context);
 		

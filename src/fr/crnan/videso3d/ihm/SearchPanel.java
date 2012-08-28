@@ -54,7 +54,7 @@ import javax.swing.JButton;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
-import fr.crnan.videso3d.DatabaseManager;
+import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.formats.plns.PLNSFileFilter;
 import fr.crnan.videso3d.ihm.components.JUpperCaseComboBox;
 import fr.crnan.videso3d.ihm.components.TypeComboBox;
@@ -110,17 +110,18 @@ public class SearchPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 				if(((JComboBox)e.getSource()).getSelectedItem().equals("liaison privilégiée")){
-					((CardLayout) getLayout()).show(getThis(), "liaison");
+					((CardLayout) getLayout()).show(SearchPanel.this, "liaison");
 				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("base PLNS...")) {
-					((CardLayout) getLayout()).show(getThis(), "plns");
+					((CardLayout) getLayout()).show(SearchPanel.this, "plns");
 				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("secteur")) {
-					((CardLayout) getLayout()).show(getThis(), "secteur");
+					((CardLayout) getLayout()).show(SearchPanel.this, "secteur");
 				} else {
-					((CardLayout) getLayout()).show(getThis(), "default");
+					((CardLayout) getLayout()).show(SearchPanel.this, "default");
 				}
 				typeBoxLP.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 				typeBoxPLNS.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 				typeBoxSect.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
+
 			}
 		});
 		
@@ -147,13 +148,13 @@ public class SearchPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 				if(((JComboBox)e.getSource()).getSelectedItem().equals("liaison privilégiée")){
-					((CardLayout) getLayout()).show(getThis(), "liaison");
+					((CardLayout) getLayout()).show(SearchPanel.this, "liaison");
 				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("base PLNS...")) {
-					((CardLayout) getLayout()).show(getThis(), "plns");
+					((CardLayout) getLayout()).show(SearchPanel.this, "plns");
 				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("secteur")) {
-					((CardLayout) getLayout()).show(getThis(), "secteur");
+					((CardLayout) getLayout()).show(SearchPanel.this, "secteur");
 				} else {
-					((CardLayout) getLayout()).show(getThis(), "default");
+					((CardLayout) getLayout()).show(SearchPanel.this, "default");
 				}
 				typeBoxLP.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 				typeBoxSect.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
@@ -197,13 +198,13 @@ public class SearchPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 				if(((JComboBox)e.getSource()).getSelectedItem().equals("liaison privilégiée")){
-					((CardLayout) getLayout()).show(getThis(), "liaison");
+					((CardLayout) getLayout()).show(SearchPanel.this, "liaison");
 				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("base PLNS...")) {
-					((CardLayout) getLayout()).show(getThis(), "plns");
+					((CardLayout) getLayout()).show(SearchPanel.this, "plns");
 				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("secteur")) {
-					((CardLayout) getLayout()).show(getThis(), "secteur");
+					((CardLayout) getLayout()).show(SearchPanel.this, "secteur");
 				} else {
-					((CardLayout) getLayout()).show(getThis(), "default");
+					((CardLayout) getLayout()).show(SearchPanel.this, "default");
 				}
 				typeBoxPLNS.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 				typeBoxSect.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
@@ -229,13 +230,13 @@ public class SearchPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 				if(((JComboBox)e.getSource()).getSelectedItem().equals("liaison privilégiée")){
-					((CardLayout) getLayout()).show(getThis(), "liaison");
+					((CardLayout) getLayout()).show(SearchPanel.this, "liaison");
 				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("base PLNS...")) {
-					((CardLayout) getLayout()).show(getThis(), "plns");
+					((CardLayout) getLayout()).show(SearchPanel.this, "plns");
 				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("secteur")) {
-					((CardLayout) getLayout()).show(getThis(), "secteur");
+					((CardLayout) getLayout()).show(SearchPanel.this, "secteur");
 				} else {
-					((CardLayout) getLayout()).show(getThis(), "default");
+					((CardLayout) getLayout()).show(SearchPanel.this, "default");
 				}
 				typeBoxPLNS.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 				typeBoxLP.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
@@ -471,10 +472,6 @@ public class SearchPanel extends JPanel {
 					.addContainerGap(25, Short.MAX_VALUE))
 		);
 		sectSearchPanel.setLayout(gl_sectSearchPanel);
-	}
-	
-	private JPanel getThis(){
-		return this;
 	}
 	
 	public String getType(){
