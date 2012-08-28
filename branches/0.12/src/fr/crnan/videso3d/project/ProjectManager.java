@@ -54,7 +54,6 @@ import fr.crnan.videso3d.formats.geo.GEOWriter;
 import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.formats.images.ImageUtils;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
-import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.ihm.MainWindow;
 import fr.crnan.videso3d.layers.tracks.GEOTracksLayer;
 import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
@@ -147,9 +146,6 @@ public class ProjectManager extends ProgressSupport {
 			}
 		}
 		
-		//other objects
-		if(PolygonEditorsManager.getLayer().getAirspaces().iterator().hasNext())
-			this.otherObjects = true;
 		//objects from other projets
 		//TODO use UserObjectController ?
 //		for(Layer l : wwd.getModel().getLayers()){
@@ -322,7 +318,7 @@ public class ProjectManager extends ProgressSupport {
 		//objects previously loaded with a project
 		//and user generated objects
 		//TODO !!
-//		if(types != null && types.contains("Autres objets affichés.")){
+		if(types != null && types.contains("Autres objets affichés.")){
 //			for(Layer l : wwd.getModel().getLayers()){
 //				if(l.getName().equals(AIRSPACE_LAYER_NAME)){
 //					for(Airspace r : ((AirspaceLayer) l).getAirspaces()){
@@ -353,10 +349,10 @@ public class ProjectManager extends ProgressSupport {
 //					this.saveObjectInXml(a, new File(xmlDir, a.getClass().getName()+"-"+format.format(count++)+".xml"));
 //			}
 //			//user added objects
-//			for(Restorable r : wwd.getUserObjects()){
-//				this.saveObjectInXml(r, new File(xmlDir, r.getClass().getName()+"-"+format.format(count++)+".xml"));
-//			}
-//		}
+			for(Restorable r : DatasManager.getUserObjectsController(wwd).getUserObjects()){
+				this.saveObjectInXml(r, new File(xmlDir, r.getClass().getName()+"-"+format.format(count++)+".xml"));
+			}
+		}
 		
 		
 		
@@ -392,7 +388,7 @@ public class ProjectManager extends ProgressSupport {
 	 * @throws IllegalAccessException 
 	 * @throws InstantiationException 
 	 */
-	public void loadProject(File file, VidesoGLCanvas ww, MainWindow window, boolean force)
+	public Project loadProject(File file, VidesoGLCanvas ww, MainWindow window, boolean force)
 			throws FileNotFoundException, IOException, ClassNotFoundException, CompatibilityVersionException, InstantiationException, IllegalAccessException {
 
 		this.wwd = ww;
@@ -611,6 +607,8 @@ public class ProjectManager extends ProgressSupport {
 		//remove temp files
 		FileManager.removeTempFiles();
 		this.fireTaskProgress(max);
+		
+		return project;
 	}
 
 	private void selectObjectWithController(File databases, String suffix, DatasManager.Type type){

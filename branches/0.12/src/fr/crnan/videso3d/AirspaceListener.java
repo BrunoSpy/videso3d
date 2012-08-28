@@ -27,7 +27,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.exsa.STRController;
 import fr.crnan.videso3d.databases.skyview.SkyViewController;
 import fr.crnan.videso3d.databases.stpv.StpvController;

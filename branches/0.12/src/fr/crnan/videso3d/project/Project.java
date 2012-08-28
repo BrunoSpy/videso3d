@@ -26,11 +26,13 @@ import fr.crnan.videso3d.databases.edimap.Carte;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.RestorableUserFacingText;
+import fr.crnan.videso3d.layers.ProjectLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.GeographicText;
 import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.render.SurfaceImage;
 import gov.nasa.worldwind.render.airspaces.Airspace;
+import gov.nasa.worldwind.util.Logging;
 
 /**
  * Videso Project<br />
@@ -61,6 +63,8 @@ public class Project {
 	
 	//Propertychange Support
 	private PropertyChangeSupport support = new PropertyChangeSupport(this);
+	
+	private ProjectLayer projectLayer;
 	
 	/**
 	 * Property fired when an object is added.<br />
@@ -125,6 +129,29 @@ public class Project {
 			addText((GeographicText) o);
 		}else if(o instanceof Layer) {
 			addLayer((Layer) o);
+		} else {
+			Logging.logger().warning("Unsupported class "+o.getClass());
+		}
+	}
+	
+	public void removeObject(Object o){
+		if(o instanceof Carte){
+			removeCarte((Carte) o);
+		} else if(o instanceof Airspace){
+			removeAirspace((Airspace) o);
+		} else if(o instanceof Renderable){
+			removeRenderable((Renderable) o);
+		} else if(o instanceof Balise2D){
+			removeBalise2D((Balise2D) o);
+		} else if(o instanceof Balise3D){
+			removeBalise3D((Balise3D) o);
+		} else if(o instanceof RestorableUserFacingText){
+			removeText((GeographicText) o);
+		}else if(o instanceof Layer) {
+			removeLayer((Layer) o);
+		} else {
+			Logging.logger().warning("Unsupported class "+o.getClass());
+			throw new IllegalArgumentException();
 		}
 	}
 	
@@ -238,6 +265,48 @@ public class Project {
 	
 	public List<Layer> getLayers(){
 		return this.layers;
+	}
+	
+	public List<Object> getAllObjects(){
+		List<Object> objects = new ArrayList<Object>();
+		for(Carte c : this.getCartes()){
+			objects.add(c);
+		}
+		for(Airspace a : this.getAirspaces()){
+			objects.add(a);
+		}
+		for(Renderable r : this.getRenderables()){
+			objects.add(r);
+		}
+		for(Balise2D b : this.getBalises2D()){
+			objects.add(b);
+		}
+		for(Balise3D b : this.getBalises3D()){
+			objects.add(b);
+		}
+		for(GeographicText t : this.getTexts()){
+			objects.add(t);
+		}
+		for(Layer l : this.getLayers()){
+			objects.add(l);
+		}
+		return objects;
+	}
+	
+	/**
+	 * Set the {@link ProjectLayer} that will display this project<br />
+	 * Don't confuse with {@link #addLayer(Layer)} that will add a layer object to this project
+	 * @param layer
+	 */
+	public void setProjectLayer(ProjectLayer layer){
+		if(this.projectLayer != null || !layer.getProject().equals(this)){
+			throw new IllegalArgumentException("Project layer already set or project layer linked to another project");
+		}
+		this.projectLayer = layer;
+	}
+	
+	public ProjectLayer getProjectLayer(){
+		return this.projectLayer;
 	}
 	
 	/* *********** Property Change *********** */

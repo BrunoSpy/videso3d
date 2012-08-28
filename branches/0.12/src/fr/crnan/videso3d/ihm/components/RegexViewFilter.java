@@ -20,12 +20,11 @@ import java.util.regex.Pattern;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import fr.crnan.videso3d.Couple;
 /**
  * Affiche les éléments dont le nom correspond à l'expression régulière.<br />
  * Garde affiché les éléments cochés.
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public class RegexViewFilter implements ViewFilter {
 	
@@ -51,7 +50,7 @@ public class RegexViewFilter implements ViewFilter {
 	
 	@Override
 	public boolean isShown(DefaultMutableTreeNode node) {
-		return pattern.matcher(((Couple<String, Boolean>)node.getUserObject()).getFirst()).matches() /*|| ((Couple<String, Boolean>)node.getUserObject()).getSecond()*/;
+		return pattern.matcher(((FilteredTreeTableNode)node.getUserObject()).getName()).matches() /*|| ((Couple<String, Boolean>)node.getUserObject()).getSecond()*/;
 	}
 
 }

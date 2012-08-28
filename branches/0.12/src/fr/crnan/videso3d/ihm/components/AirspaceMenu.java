@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -161,9 +160,10 @@ public class AirspaceMenu extends JPopupMenu {
 							polygon.setAltitudes(((Polygon)airspace).getAltitudes()[0],((Polygon)airspace).getAltitudes()[1] );
 							polygon.setAttributes(airspace.getAttributes());
 							wwd.delete(airspace);
-							PolygonEditorsManager.editAirspace(polygon, true);
+							DatasManager.getUserObjectsController(wwd).addObject(airspace);
+							PolygonEditorsManager.editAirspace(polygon);
 						} else {
-							PolygonEditorsManager.editAirspace((Polygon) airspace, true);
+							PolygonEditorsManager.editAirspace((Polygon) airspace);
 						}
 					}
 				});		

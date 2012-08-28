@@ -28,7 +28,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import fr.crnan.videso3d.databases.DatabaseManager;
-import fr.crnan.videso3d.databases.DatabaseManager.Type;
+import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.stip.Stip;
 import gov.nasa.worldwind.util.Logging;
 /**

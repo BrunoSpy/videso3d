@@ -99,7 +99,7 @@ public final class DatasManager {
 	 */
 	public static void createDatas(DatasManager.Type type, VidesoGLCanvas wwd) throws Exception{
 		deleteDatas(type);
-		if(DatabaseManager.getCurrent(type) != null){
+		if(DatabaseManager.getCurrent(type) != null || type.equals(Type.UserObject)){
 			switch (type) {
 			case STIP:
 				DatasManager.addDatas(type, new StipController(wwd), new StipContext(), new StipView());
@@ -127,7 +127,14 @@ public final class DatasManager {
 				DatasManager.addDatas(type, new SkyViewController(wwd), new SkyViewContext(), new SkyView());
 				break;
 			case UserObject:
-				DatasManager.addDatas(type, new UserObjectsController(wwd), null, new UserObjectsView());
+				//le controleur a besoin de la vue
+				System.out.println("test0");
+				UserObjectsView view = new UserObjectsView();
+				instance.views.put(type, view);
+				System.out.println("test1");
+				instance.controllers.put(type, new UserObjectsController(wwd, view));
+				System.out.println("test2");
+				instance.contexts.put(type, null);
 				break;
 			default:
 				Logging.logger().severe("Type "+type+" inconnu");
@@ -135,6 +142,7 @@ public final class DatasManager {
 			}
 		}
 		instance.support.firePropertyChange("done", null, true);
+		instance.support.firePropertyChange("new datas", null, type);
 	}
 	
 	public static void deleteDatas(DatasManager.Type type){
@@ -181,9 +189,15 @@ public final class DatasManager {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static UserObjectsController getUserObjectsController(VidesoGLCanvas wwd) throws Exception{
+	public static UserObjectsController getUserObjectsController(VidesoGLCanvas wwd){
 		if(!instance.controllers.containsKey(Type.UserObject)){
-			createDatas(Type.UserObject, wwd);
+			try {
+				System.out.println("test?");
+				createDatas(Type.UserObject, wwd);
+				System.out.println("test2?");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return (UserObjectsController) getController(Type.UserObject);
 	}

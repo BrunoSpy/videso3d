@@ -87,6 +87,7 @@ import fr.crnan.videso3d.layers.tracks.LPLNTracksLayer;
 import fr.crnan.videso3d.layers.tracks.OPASTracksLayer;
 import fr.crnan.videso3d.layers.tracks.PLNSTracksLayer;
 import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
+import fr.crnan.videso3d.project.Project;
 import fr.crnan.videso3d.project.ProjectManager;
 import fr.crnan.videso3d.trajectography.PLNSTracksModel;
 import fr.crnan.videso3d.trajectography.TracksModel;
@@ -235,6 +236,8 @@ public class MainWindow extends JFrame {
 					}
 					//chargement de la session précédente si elle existe
 					if(new File(Configuration.SESSION_FILENAME).exists()){
+						//don't add it to the userobjectView as all objects
+						//are linked to a database
 						new ProjectManager().loadProject(new File(Configuration.SESSION_FILENAME), wwd, MainWindow.this, false);
 					}
 					wwd.firePropertyChange("step", "", "Création de l'interface");
@@ -397,6 +400,18 @@ public class MainWindow extends JFrame {
 			}
 		});
 		
+		//listen to the datasmanager to detect creation of a user object view
+		DatasManager.addPropertyChangeListener("new datas", new PropertyChangeListener() {
+			
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				DatasManager.Type type = (DatasManager.Type) evt.getNewValue();
+				if(type.equals(DatasManager.Type.UserObject)){
+					MainWindow.this.setUserObjectViewVisible();
+				}
+			}
+		});
+		
 		//Barre d'actions
 		toolbars = new JPanel();
 		toolbars.setLayout(new BoxLayout(toolbars, BoxLayout.Y_AXIS));
@@ -483,17 +498,20 @@ public class MainWindow extends JFrame {
 	/**
 	 * Get the UserObjectView and create it if needed
 	 */
-	public UserObjectsView getUserObjectView(){
-		if(DatasManager.getView(DatasManager.Type.UserObject) == null){
-			 try {
-				DatasManager.createDatas(DatasManager.Type.UserObject, this.wwd);
-				//add it to the HMI
-				this.updateDockables(DatasManager.Type.UserObject);
-			} catch (Exception e) {
-				e.printStackTrace();
+	public void setUserObjectViewVisible(){
+		if(this.control.getSingleDockable(DatasManager.Type.UserObject.toString()) == null){
+			if(DatasManager.getView(DatasManager.Type.UserObject) == null){
+				try {
+					DatasManager.createDatas(DatasManager.Type.UserObject, wwd);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
+			DefaultSingleCDockable dockable = new DefaultSingleCDockable(DatasManager.Type.UserObject.toString(), DatasManager.Type.UserObject.toString(), 
+					(Component) DatasManager.getView(DatasManager.Type.UserObject));
+			dockable.setCloseable(false);
+			this.addDockable(dockable);
 		}
-		return (UserObjectsView) DatasManager.getView(DatasManager.Type.UserObject);
 	}
 	
 	/* ******************************************************* */
@@ -794,8 +812,9 @@ public class MainWindow extends JFrame {
 
 			@Override
 			protected Void doInBackground() throws Exception {
+				Project p = null;
 				try {
-					project.loadProject(file, wwd, MainWindow.this, false);
+					p = project.loadProject(file, wwd, MainWindow.this, false);
 				} catch (CompatibilityVersionException e) {
 					if(JOptionPane.showConfirmDialog(null, "<html>Le fichier que souhaitez importer n'est pas compatible avec la version de Videso que vous utilisez.<br/>" +
 							"Souhaitez vous tout de même l'importer ?<br/><br/>" +
@@ -803,7 +822,7 @@ public class MainWindow extends JFrame {
 							"<i>Information : </i> Version du fichier : "+e.getMessage()+"</html>",
 							"Version du fichier incompatible.", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE)
 							== JOptionPane.YES_OPTION) {
-						project.loadProject(file, wwd, MainWindow.this, true);
+						p = project.loadProject(file, wwd, MainWindow.this, true);
 					}
 				} catch (FileNotFoundException e1) {
 					e1.printStackTrace();
@@ -813,6 +832,13 @@ public class MainWindow extends JFrame {
 					e1.printStackTrace();
 				} catch (Exception e){
 					e.printStackTrace();
+				}
+				if(p != null){
+					try{
+						DatasManager.getUserObjectsController(wwd).addProject(p);
+					} catch(Exception e){
+						e.printStackTrace();
+					}
 				}
 				return null;
 			}

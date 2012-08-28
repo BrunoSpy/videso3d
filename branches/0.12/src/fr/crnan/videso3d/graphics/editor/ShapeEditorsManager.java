@@ -17,7 +17,6 @@ package fr.crnan.videso3d.graphics.editor;
 
 import java.util.HashMap;
 
-import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import gov.nasa.worldwind.render.AbstractShape;
 import gov.nasa.worldwind.render.Ellipsoid;
@@ -60,12 +59,6 @@ public final class ShapeEditorsManager {
 		if(isEditing(shape)) {
 			instance.editors.get(shape).setEditMode(mode);
 		} else {
-			try {
-				DatasManager.getUserObjectsController(instance.wwd).addObject(shape);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
 			AbstractShapeEditor editor = null;
 			if(shape instanceof Ellipsoid){
 				editor = new EllipsoidFactory().createEditor(shape);

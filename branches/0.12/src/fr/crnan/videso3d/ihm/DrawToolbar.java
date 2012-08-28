@@ -35,7 +35,8 @@ import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.graphics.MovableBalise3D;
-import fr.crnan.videso3d.graphics.VPolygon;
+import fr.crnan.videso3d.graphics.PolygonAnnotation;
+import fr.crnan.videso3d.graphics.VEllipsoid;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.graphics.editor.EllipsoidFactory;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
@@ -75,7 +76,7 @@ public class DrawToolbar extends JToolBar {
 
 			@Override
 			public void actionPerformed(ActionEvent evt) {
-				VPolygon polygon = new VPolygon();
+				PolygonAnnotation polygon = new PolygonAnnotation();
 				polygon.setAltitudes(0.0, 0.0);
 				polygon.setTerrainConforming(true, false);
 				BasicAirspaceAttributes attrs = new BasicAirspaceAttributes();
@@ -106,8 +107,9 @@ public class DrawToolbar extends JToolBar {
 				polygon.setAltitudes(0.0, maxElevation + sizeInMeters);
 				polygon.setTerrainConforming(true, false);
 				polygon.setLocations(locations);
-
-				PolygonEditorsManager.editAirspace(polygon, true);
+				polygon.setName("Polygon");
+				DatasManager.getUserObjectsController(wwd).addObject(polygon);
+				PolygonEditorsManager.editAirspace(polygon);
 			}
 		});
 
@@ -129,7 +131,7 @@ public class DrawToolbar extends JToolBar {
 					attrs.setOpacity(0.2);
 					attrs.setOutlineOpacity(0.9);
 					attrs.setOutlineWidth(1.5);
-					VPolygon p = new VPolygon();
+					PolygonAnnotation p = new PolygonAnnotation();
 					p.setAttributes(attrs);
 					BufferedReader input = null;
 					try {
@@ -148,7 +150,8 @@ public class DrawToolbar extends JToolBar {
 								e.printStackTrace();
 							}
 					}
-					PolygonEditorsManager.editAirspace(p, true);
+					DatasManager.getUserObjectsController(wwd).addObject(p);
+					PolygonEditorsManager.editAirspace(p);
 				}
 			}
 		});
@@ -159,7 +162,7 @@ public class DrawToolbar extends JToolBar {
 
                 @Override
                 public void actionPerformed(ActionEvent arg0) {
-                        new PolygonImportUI().setVisible(true);
+                        new PolygonImportUI(wwd).setVisible(true);
                 }
         });
 		
@@ -235,7 +238,13 @@ public class DrawToolbar extends JToolBar {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ShapeEditorsManager.editShape(new EllipsoidFactory().createShape(wwd, true), RigidShapeEditor.TRANSLATION_MODE);
+				VEllipsoid ellipsoid = (VEllipsoid) new EllipsoidFactory().createShape(wwd, true);
+				try {
+					DatasManager.getUserObjectsController(wwd).addObject(ellipsoid);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				ShapeEditorsManager.editShape(ellipsoid, RigidShapeEditor.TRANSLATION_MODE);
 			}
 		});
 		this.add(ellipse);

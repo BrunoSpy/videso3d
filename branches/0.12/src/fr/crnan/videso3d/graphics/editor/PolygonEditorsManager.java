@@ -18,20 +18,17 @@ package fr.crnan.videso3d.graphics.editor;
 import java.util.HashMap;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
-import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.render.airspaces.Polygon;
 /**
  * Manages all PolygonEditors
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.2.0
  */
 public final class PolygonEditorsManager {
 
 	private HashMap<Polygon, PolygonEditor> polygonEditors = new HashMap<Polygon, PolygonEditor>();
 	
 	private VidesoGLCanvas wwd;
-	
-	private AirspaceLayer editorLayer = new AirspaceLayer();
 	
 	private static PolygonEditorsManager instance = new PolygonEditorsManager();
 	
@@ -46,18 +43,14 @@ public final class PolygonEditorsManager {
 	/**
 	 * Enable editing of an airspace
 	 * @param airspace
-	 * @param orphan True : doesn't belong to an airspace
 	 */
-	public static void editAirspace(Polygon airspace, boolean orphan){
-		if(orphan){
-			instance.editorLayer.addAirspace(airspace);
-			instance.wwd.toggleLayer(instance.editorLayer, true);
-		}
+	public static void editAirspace(Polygon airspace){
 		PolygonEditor editor = new PolygonEditor();
 		editor.setPolygon(airspace);
 		editor.setUseRubberBand(true);
 		editor.setKeepControlPointsAboveTerrain(true);
 		editor.setArmed(true);
+		editor.setName("Polygon Editor");
 		instance.polygonEditors.put(airspace, editor);
 		instance.wwd.toggleLayer(editor, true);
 		AirspaceEditorController controller = new AirspaceEditorController(instance.wwd);
@@ -81,7 +74,4 @@ public final class PolygonEditorsManager {
 		return instance.polygonEditors.containsKey(polygon);
 	}
 	
-	public static AirspaceLayer getLayer(){
-		return instance.editorLayer;
-	}
 }

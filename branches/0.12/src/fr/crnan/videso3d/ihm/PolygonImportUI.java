@@ -38,10 +38,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.Pallet;
+import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.PolygonAnnotation;
-import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.globes.Earth;
 import gov.nasa.worldwind.render.Material;
@@ -49,7 +50,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * IHM d'import de liste de points pour créer un polygone 3D
  * @author Adrien Vidal
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class PolygonImportUI extends JFrame implements ActionListener{
 
@@ -59,7 +60,11 @@ public class PolygonImportUI extends JFrame implements ActionListener{
 	private JTextArea coordArea;
 	private JButton importButton, cancelButton;
 		
-	public PolygonImportUI(){
+	private VidesoGLCanvas wwd;
+	
+	public PolygonImportUI(VidesoGLCanvas wwd){
+		this.wwd = wwd;
+		
 		this.setTitle("Création d'un polygone...");
 		JLabel nameLabel = new JLabel("Nom du polygone ");
 		nameText = new JTextField("Polygone",12);
@@ -155,8 +160,7 @@ public class PolygonImportUI extends JFrame implements ActionListener{
 				p.setAttributes(attrs);
 				p.setAnnotation("<html><b>"+nameText.getText()+"</b><br/><i>Polygone importé</i></html>");
 				if(!p.getLocations().isEmpty()){
-					PolygonEditorsManager.editAirspace(p, true);
-					PolygonEditorsManager.stopEditAirspace(p);
+					DatasManager.getUserObjectsController(wwd).addObject(p);
 				}
 				setVisible(false);
 				dispose();	

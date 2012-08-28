@@ -17,7 +17,9 @@ package fr.crnan.videso3d.graphics;
 
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.geom.Position;
+import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Ellipsoid;
+import gov.nasa.worldwind.util.RestorableSupport;
 /**
  * 
  * @author Bruno Spyckerelle
@@ -26,6 +28,13 @@ import gov.nasa.worldwind.render.Ellipsoid;
 public class VEllipsoid extends Ellipsoid implements VidesoObject {
 
 	private VidesoAnnotation annotation;
+	
+	public VEllipsoid(){
+		super();
+		//bug fix to BasicShapeAttributes#restoreState
+		this.setAttributes(new BasicShapeAttributes());
+		this.getAttributes().setEnableLighting(true);
+	}
 	
 	@Override
 	public void setAnnotation(String text) {
@@ -58,4 +67,27 @@ public class VEllipsoid extends Ellipsoid implements VidesoObject {
 		return super.getAttributes();
 	}
 
+    @Override
+    protected void doGetRestorableState(RestorableSupport rs, RestorableSupport.StateObject context)
+    {
+        super.doGetRestorableState(rs, context);
+      
+        rs.addStateValueAsString(context, "annotation", this.getAnnotation(Position.ZERO).getText());
+        rs.addStateValueAsString(context, "name", this.getName());
+    }
+
+    @Override
+    protected void doRestoreState(RestorableSupport rs, RestorableSupport.StateObject context)
+    {
+        super.doRestoreState(rs, context);
+        
+        String annotation = rs.getStateValueAsString(context, "annotation");
+        if(annotation != null)
+        	this.setAnnotation(annotation);
+        
+        String name = rs.getStateValueAsString(context, "name");
+        if(name != null)
+        	this.setName(name);
+    }
+	
 }

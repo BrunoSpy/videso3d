@@ -25,10 +25,12 @@ import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.RestorableUserFacingText;
 import fr.crnan.videso3d.project.Project;
+import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.GeographicText;
 import gov.nasa.worldwind.render.Renderable;
 import gov.nasa.worldwind.render.airspaces.Airspace;
+import gov.nasa.worldwind.util.Logging;
 
 /**
  * 
@@ -78,29 +80,15 @@ public class ProjectLayer extends LayerSet {
 		});
 		
 		//initialize layer
-		for(Carte c : this.project.getCartes()){
-			this.addObject(c);
-		}
-		for(Airspace a : this.project.getAirspaces()){
-			this.addObject(a);
-		}
-		for(Renderable r : this.project.getRenderables()){
-			this.addObject(r);
-		}
-		for(Balise2D b : this.project.getBalises2D()){
-			this.addObject(b);
-		}
-		for(Balise3D b : this.project.getBalises3D()){
-			this.addObject(b);
-		}
-		for(GeographicText t : this.project.getTexts()){
-			this.addObject(t);
-		}
-		for(Layer l : this.project.getLayers()){
-			this.addObject(l);
+		for(Object o : this.project.getAllObjects()){
+			this.addObject(o);
 		}
 	}
 
+	public Project getProject(){
+		return this.project;
+	}
+	
 	public void addObject(Object o){
 		if(o instanceof Carte){
 			((Carte) o).setLayers(xmlRenderables, xmlAirspaces, xmlTexts);
@@ -119,7 +107,11 @@ public class ProjectLayer extends LayerSet {
 			xmlTexts.addGeographicText((GeographicText) o);
 		}else if(o instanceof Layer) {
 			this.add((Layer)o);
+		} else {
+			Logging.logger().warning("Unable to add object of class "+o.getClass());
+			throw new IllegalArgumentException();
 		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 	
 	public void removeObject(Object o){
@@ -138,6 +130,33 @@ public class ProjectLayer extends LayerSet {
 		}else if(o instanceof Layer) {
 			this.remove((Layer)o);
 		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
 
+	public void setVisible(Object o, boolean visible){
+		if(o instanceof Carte){
+			((Carte) o).setVisible(visible);
+		} else if(o instanceof Airspace){
+			((Airspace) o).setVisible(visible);
+		} else if(o instanceof Renderable){
+			if(!visible){
+				xmlRenderables.removeRenderable((Renderable) o);
+			} else {
+				xmlRenderables.addRenderable((Renderable) o);
+			}
+		} else if(o instanceof Balise2D){
+			xmlBalises.hideBalise((Balise) o);
+		} else if(o instanceof Balise3D){
+			xmlBalises3D.hideBalise((Balise) o);
+		} else if(o instanceof RestorableUserFacingText){
+			((GeographicText) o).setVisible(visible);
+		}else if(o instanceof Layer) {
+			((Layer)o).setEnabled(visible);
+		} else {
+			Logging.logger().warning("Unable to add object of class "+o.getClass());
+			throw new IllegalArgumentException();
+		}
+		this.firePropertyChange(AVKey.LAYER, null, this);
+	}
+	
 }
