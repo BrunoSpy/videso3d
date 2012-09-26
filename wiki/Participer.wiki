@@ -20,7 +20,7 @@ Pour installer Subversive :
   * Cliquer sur Next, accepter les licenses et finir.
 
 Il faut ensuite ajouter un connecteur :
-  * Il faut d'abord ajouter le site suivant dans _Install New Softwares_ http://community.polarion.com/projects/subversive/download/eclipse/2.0/galileo-site/
+  * Il faut d'abord ajouter le site suivant dans _Install New Softwares_ http://community.polarion.com/projects/subversive/download/eclipse/2.0/galileo-site/  (remplacer galileo par le nom de votre version d'Eclipse)
   * Dans _Subversive SVN Connectors_, choisir _SVNKit 1.3.0_
   * Cliquer sur Next, accepter les licenses et finir.
 
