@@ -22,9 +22,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+
+import org.jfree.data.xy.XYSeries;
 
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.databases.aip.AIPController;
@@ -33,14 +35,16 @@ import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VidesoObject;
+import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Globe;
+import gov.nasa.worldwind.render.Path;
 import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.util.Logging;
 
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.0.3
+ * @version 0.0.4
  */
 public class TracksStatsProducer extends ProgressSupport {
 		
@@ -171,5 +175,43 @@ public class TracksStatsProducer extends ProgressSupport {
 		return length;
 	}
 	
+	static Integer num = 0;
+	/**
+	 * Calcul le développé d'une trajectoire par rapport à une altitude de référence.<br />
+	 * Si la trajectoire ne contient pas l'altitude de référence, une régression linéaire est effectuée.
+	 * @param p
+	 * @param ref altitude de référence, en mètres
+	 * @param departure Si vrai, cherche l'altitude de ref au début de la trajectoire, sinon à la fin.
+	 * @return
+	 */
+	public XYSeries computeDevelopedPath(Path p, double ref, boolean departure, Globe globe){
+		XYSeries series = new XYSeries(num.toString());
+		//calcul du développé brut
+		Position last = null;
+		double total = 0.0;
+		List<Double> dist = new ArrayList<Double>();
+		List<Double> alt = new ArrayList<Double>();
+		for(Position pos : p.getPositions()){
+			if(last != null){
+				total += LatLonUtils.computeDistance(last, pos, globe);
+			}
+			dist.add(total);
+			alt.add(pos.getElevation());
+			last = pos;
+		}
+		//translation par rapport à l'altitude de réf
+		ListIterator<Double> iterator = alt.listIterator(departure ? 0 : alt.size());
+		if(departure){
+			while(iterator.hasNext()){
+				
+			}
+		} else {
+			while(iterator.hasPrevious()){
+				
+			}
+		}
+		num++;
+		return series;
+	}
 	
 }
