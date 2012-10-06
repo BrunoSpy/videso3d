@@ -16,6 +16,7 @@
 package fr.crnan.videso3d;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -59,7 +60,6 @@ import gov.nasa.worldwind.render.PointPlacemark;
 import gov.nasa.worldwind.render.SurfaceImage;
 import gov.nasa.worldwind.render.SurfaceShape;
 import gov.nasa.worldwind.render.airspaces.Airspace;
-import gov.nasa.worldwind.render.airspaces.AirspaceAttributes;
 import gov.nasa.worldwind.render.markers.Marker;
 import gov.nasa.worldwindx.examples.shapebuilder.RigidShapeEditor;
 
@@ -127,9 +127,7 @@ public class AirspaceListener implements SelectListener {
 			}
 			
 			if(o instanceof Airspace){
-				AirspaceMenu menu = new AirspaceMenu((Airspace)o, 
-						(AirspaceAttributes) ((Airspace)o).getAttributes(), 
-						context, wwd){
+				AirspaceMenu menu = new AirspaceMenu((Airspace)o, context, wwd){
 
 					/* (non-Javadoc)
 					 * @see javax.swing.JPopupMenu#setVisible(boolean)
@@ -141,7 +139,10 @@ public class AirspaceListener implements SelectListener {
 					}						
 				};
 				
-				menu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
+				JPopupMenu popMenu = new JPopupMenu();
+				for(Component c : menu.getMenuComponents())
+					popMenu.add(c);
+				popMenu.show(wwd, event.getMouseEvent().getX(), event.getMouseEvent().getY());
 			} else if(o instanceof SurfaceImage){
 				ImageMenu imageMenu = new ImageMenu((SurfaceImage) o, wwd){
 					/* (non-Javadoc)

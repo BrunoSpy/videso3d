@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import fr.crnan.videso3d.DatasManager;
@@ -58,44 +59,54 @@ import javax.swing.event.ChangeListener;
 /**
  * Contextual menu for {@link Airspace}
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.2.0
  */
-public class AirspaceMenu extends JPopupMenu {
+public class AirspaceMenu extends JMenu {
 
-	private Airspace airspace;
-	private AirspaceAttributes attrs;
+	private List<Airspace> airspaces;
 	private ContextPanel context;
 	private VidesoGLCanvas wwd;
 	
-	public AirspaceMenu(Airspace airspace, AirspaceAttributes attrs, ContextPanel context, VidesoGLCanvas wwd){
-		super("Menu");
-		this.airspace = airspace;
-		this.attrs = attrs;
+	public AirspaceMenu(List<Airspace> airspaces, ContextPanel context, VidesoGLCanvas wwd){
+		super("Airspaces");
+		this.airspaces = airspaces;
 		this.context = context;
 		this.wwd = wwd;		
 		
 		this.createMenu();
 	}
 	
-	private JPopupMenu getMenu(){
-		return this;
+	public AirspaceMenu(Airspace airspace, ContextPanel context, VidesoGLCanvas wwd){
+		super("Airspaces");
+		this.airspaces = new ArrayList<Airspace>();
+		this.airspaces.add(airspace);
+		this.context = context;
+		this.wwd = wwd;		
+		
+		this.createMenu();
 	}
 	
 	private void createMenu(){
-		if(airspace instanceof VidesoObject){
-			if(airspace instanceof DatabaseVidesoObject) {
+		if(airspaces.size() == 1 && context != null){
+			//only shows infos if there's only one selected airspace
+			if(airspaces.get(0) instanceof DatabaseVidesoObject) {
 				JMenuItem info = new JMenuItem("Informations...");
 				info.addActionListener(new ActionListener() {
 
 					@Override
 					public void actionPerformed(ActionEvent event) {
-						DatabaseVidesoObject o = (DatabaseVidesoObject) airspace;
+						DatabaseVidesoObject o = (DatabaseVidesoObject) airspaces.get(0);
 						context.showInfo(o.getDatabaseType(), o.getType(), o.getName());
 					}
 				});
 				this.add(info);
 				this.add(new JSeparator());
 			}
+		}
+		if(airspaces.size() == 1 && airspaces.get(0) instanceof VidesoObject){
+			
+			final Airspace airspace = airspaces.get(0);
+			
 			JMenuItem colorItem = new JMenuItem("Couleur...");
 			colorItem.addActionListener(new ActionListener() {
 				@Override
@@ -109,27 +120,42 @@ public class AirspaceMenu extends JPopupMenu {
 			
 		} else {
 
-
 			JMenuItem colorItem = new JMenuItem("Couleur...");
 			colorItem.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					Color color = JColorChooser.showDialog(getMenu(), "Couleur", attrs.getMaterial().getDiffuse());
+					Color initialColor;
+					if(airspaces.get(0).getAttributes() != null){
+						initialColor = airspaces.get(0).getAttributes().getMaterial().getDiffuse();
+					} else {
+						initialColor = Color.BLUE;
+					}
+					Color color = JColorChooser.showDialog(AirspaceMenu.this, "Couleur", initialColor);
 					if(color != null) {
-						attrs.setMaterial(new Material(color));
-						attrs.setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+						for(Airspace a : airspaces){
+							if(a instanceof VidesoObject && ((VidesoObject) a).getNormalAttributes() != null){
+								((AirspaceAttributes)((VidesoObject) a).getNormalAttributes()).setMaterial(new Material(color));
+								((AirspaceAttributes)((VidesoObject) a).getNormalAttributes()).setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+							} else if(a.getAttributes() != null){
+								a.getAttributes().setMaterial(new Material(color));
+								a.getAttributes().setOutlineMaterial(new Material(Pallet.makeBrighter(color)));
+							}
+						}
 					}
 				}
 			});
 			this.add(colorItem);
 
 			OpacityMenuItem opacityItem = new OpacityMenuItem();
-			opacityItem.setValue((int)(attrs.getOpacity()*100.0));
+			opacityItem.setValue((int)(airspaces.get(0).getAttributes().getOpacity()*100.0));
 			opacityItem.addChangeListener(new ChangeListener() {
 				@Override
 				public void stateChanged(ChangeEvent e) {
 					JSlider source = (JSlider)e.getSource();
-					attrs.setOpacity(source.getValue()/100.0);
+					for(Airspace a : airspaces) {
+						if(a.getAttributes() != null)
+							a.getAttributes().setOpacity(source.getValue()/100.0);
+					}
 					wwd.redraw();
 				}
 			});
@@ -138,48 +164,57 @@ public class AirspaceMenu extends JPopupMenu {
 		}
 		this.add(new JSeparator());
 		
-		if(airspace instanceof Polygon){
-			if(PolygonEditorsManager.isEditing((Polygon) airspace)){
-				JMenuItem edit = new JMenuItem("Terminer l'édition");
-				edit.addActionListener(new ActionListener() {
+		if(airspaces.size() == 1){
+			final Airspace airspace = airspaces.get(0);
+			if(airspace instanceof Polygon){
+				if(PolygonEditorsManager.isEditing((Polygon) airspace)){
+					JMenuItem edit = new JMenuItem("Terminer l'édition");
+					edit.addActionListener(new ActionListener() {
 
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						PolygonEditorsManager.stopEditAirspace((Polygon) airspace);
-					}
-				});		
-				this.add(edit);
-			} else {
-				JMenuItem edit = new JMenuItem("Editer");
-				edit.addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						if(airspace instanceof Secteur3D){
-							VPolygon polygon = new VPolygon(((Polygon)airspace).getLocations());
-							polygon.setAltitudes(((Polygon)airspace).getAltitudes()[0],((Polygon)airspace).getAltitudes()[1] );
-							polygon.setAttributes(airspace.getAttributes());
-							wwd.delete(airspace);
-							DatasManager.getUserObjectsController(wwd).addObject(airspace);
-							PolygonEditorsManager.editAirspace(polygon);
-						} else {
-							PolygonEditorsManager.editAirspace((Polygon) airspace);
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							PolygonEditorsManager.stopEditAirspace((Polygon) airspace);
 						}
-					}
-				});		
-				this.add(edit);
+					});		
+					this.add(edit);
+				} else {
+					JMenuItem edit = new JMenuItem("Editer");
+					edit.addActionListener(new ActionListener() {
+
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							if(airspace instanceof Secteur3D){
+								VPolygon polygon = new VPolygon(((Polygon)airspace).getLocations());
+								polygon.setAltitudes(((Polygon)airspace).getAltitudes()[0],((Polygon)airspace).getAltitudes()[1] );
+								polygon.setAttributes(airspace.getAttributes());
+								wwd.delete(airspace);
+								DatasManager.getUserObjectsController(wwd).addObject(airspace);
+								PolygonEditorsManager.editAirspace(polygon);
+							} else {
+								PolygonEditorsManager.editAirspace((Polygon) airspace);
+							}
+						}
+					});		
+					this.add(edit);
+				}
+				this.add(new JSeparator());
 			}
-			this.add(new JSeparator());
 		}
 		
 		List<TrajectoriesLayer> trajLayers = new ArrayList<TrajectoriesLayer>();
 		for(Layer l : this.wwd.getModel().getLayers()){
 			if(l instanceof TrajectoriesLayer){
-			//	if(((TrajectoriesLayer) l).isPolygonFilterable())
-					trajLayers.add((TrajectoriesLayer) l);
+				//	if(((TrajectoriesLayer) l).isPolygonFilterable())
+				trajLayers.add((TrajectoriesLayer) l);
 			}
 		}
-		if(airspace instanceof VPolygon && trajLayers.size() > 0 ){
+		
+		boolean vpolygons = true;
+		for(Airspace a : airspaces){
+			vpolygons = vpolygons && (a instanceof VPolygon);
+		}
+		//every airspace has to be a VPolygon to be used as a filter
+		if(vpolygons && trajLayers.size() > 0 ){
 			JMenu filter = new JMenu("Filtrer...");
 			for(final TrajectoriesLayer l : trajLayers){
 				JMenuItem layer = new JMenuItem(l.getName());
@@ -189,7 +224,8 @@ public class AirspaceMenu extends JPopupMenu {
 					public void actionPerformed(ActionEvent arg0) {
 						String name = new String();
 						PolygonsSetFilter filter = null;
-						if(airspace instanceof Secteur3D){
+						if(airspaces.size() == 1 && airspaces.get(0) instanceof Secteur3D){
+							Airspace airspace = airspaces.get(0);
 							name = ((Secteur3D) airspace).getName().split(" ")[0];
 							if(((Secteur3D) airspace).getDatabaseType() == DatasManager.Type.STIP){
 								filter = new PolygonsSetFilter(name, ((StipController)DatasManager.getController(((Secteur3D) airspace).getDatabaseType())).getPolygons(((Secteur3D) airspace).getName()));
@@ -197,9 +233,9 @@ public class AirspaceMenu extends JPopupMenu {
 								filter = new PolygonsSetFilter(name, ((AIPController)DatasManager.getController(((Secteur3D) airspace).getDatabaseType())).getPolygons(((Secteur3D) airspace).getType(), ((Secteur3D) airspace).getName()));
 							} 							
 						} else {
-							name = "Polygone";
+							name = "Polygones";
 							List<VPolygon> polygons = new ArrayList<VPolygon>();
-							polygons.add((VPolygon) airspace);
+							polygons.addAll((Collection<? extends VPolygon>) airspaces);
 							filter = new PolygonsSetFilter(name, polygons);
 						}
 						
@@ -212,64 +248,70 @@ public class AirspaceMenu extends JPopupMenu {
 			this.add(new JSeparator());
 		}
 		
-		JMenuItem save = new JMenuItem("Sauver ...");
-		save.addActionListener(new ActionListener() {
+		if(airspaces.size() == 1){
 			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				VFileChooser fileChooser = new VFileChooser();
-				fileChooser.setMultiSelectionEnabled(false);
-				if(fileChooser.showSaveDialog(getMenu()) == VFileChooser.APPROVE_OPTION){
-					File file = fileChooser.getSelectedFile();
-					if(!(file.exists()) || 
-							(file.exists() &&
-							JOptionPane.showConfirmDialog(null, "Le fichier existe déjà.\n\nSouhaitez-vous réellement l'écraser ?",
-								"Confirmer la suppression du fichier précédent",
-								JOptionPane.OK_CANCEL_OPTION,
-								JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION)) {
-						String xmlString = airspace.getRestorableState();
-						if(xmlString != null){
-							try{
-								PrintWriter of = new PrintWriter(file);
-								of.write(xmlString);
-								of.flush();
-								of.close();
-							}
-							catch (Exception e){
-								e.printStackTrace();
+			final Airspace airspace = airspaces.get(0);
+			
+			//TODO encore utile avec la gestion de projet ???
+			JMenuItem save = new JMenuItem("Sauver ...");
+			save.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					VFileChooser fileChooser = new VFileChooser();
+					fileChooser.setMultiSelectionEnabled(false);
+					if(fileChooser.showSaveDialog(AirspaceMenu.this) == VFileChooser.APPROVE_OPTION){
+						File file = fileChooser.getSelectedFile();
+						if(!(file.exists()) || 
+								(file.exists() &&
+										JOptionPane.showConfirmDialog(null, "Le fichier existe déjà.\n\nSouhaitez-vous réellement l'écraser ?",
+												"Confirmer la suppression du fichier précédent",
+												JOptionPane.OK_CANCEL_OPTION,
+												JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION)) {
+							String xmlString = airspace.getRestorableState();
+							if(xmlString != null){
+								try{
+									PrintWriter of = new PrintWriter(file);
+									of.write(xmlString);
+									of.flush();
+									of.close();
+								}
+								catch (Exception e){
+									e.printStackTrace();
+								}
 							}
 						}
 					}
 				}
-			}
-		});
-		this.add(save);
-		
-		//Coordonnées
-		if(airspace instanceof DatabaseVidesoObject){
-			VidesoController c = DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType());
-			if(!(c instanceof STRController || c instanceof EdimapController)){
-				final int type = ((DatabaseVidesoObject) airspace).getType();
-				final String name = ((DatabaseVidesoObject) airspace).getName();
-				final boolean locationsVisible = c.areLocationsVisible(type, name);
-				JMenuItem locationsItem = new JMenuItem((locationsVisible ? "Cacher" : "Afficher") +" les coordonnées");
-				this.add(locationsItem);
-				locationsItem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						VidesoController c = DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType());
-						c.setLocationsVisible(type, name, !locationsVisible);
-					}
-				});
+			});
+			this.add(save);
+
+			//Coordonnées
+			if(airspace instanceof DatabaseVidesoObject){
+				VidesoController c = DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType());
+				if(!(c instanceof STRController || c instanceof EdimapController)){
+					final int type = ((DatabaseVidesoObject) airspace).getType();
+					final String name = ((DatabaseVidesoObject) airspace).getName();
+					final boolean locationsVisible = c.areLocationsVisible(type, name);
+					JMenuItem locationsItem = new JMenuItem((locationsVisible ? "Cacher" : "Afficher") +" les coordonnées");
+					this.add(locationsItem);
+					locationsItem.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent arg0) {
+							VidesoController c = DatasManager.getController(((DatabaseVidesoObject) airspace).getDatabaseType());
+							c.setLocationsVisible(type, name, !locationsVisible);
+						}
+					});
+				}
 			}
 		}
-		
 		JMenuItem delete = new JMenuItem("Supprimer");
 		delete.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				wwd.delete(airspace);
+				for(Airspace a : airspaces)
+					wwd.delete(a);
 			}
 		});
 		this.add(delete);

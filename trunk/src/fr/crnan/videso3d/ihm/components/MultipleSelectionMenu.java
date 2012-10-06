@@ -42,6 +42,8 @@ public class MultipleSelectionMenu extends JPopupMenu{
 	public MultipleSelectionMenu(final List<?> objects, final VidesoGLCanvas wwd) {
 		super("Menu");
 		
+		JMenu allMenu = new JMenu("Tous les objets...");
+		
 		JMenuItem copy = new JMenuItem("Copier dans le presse-papier");
 		copy.addActionListener(new ActionListener() {
 			
@@ -50,12 +52,10 @@ public class MultipleSelectionMenu extends JPopupMenu{
 				wwd.copySelectedObjectsToClipboard();
 			}
 		});
-
-		this.add(copy);
 		
-		JMenu deleteMenu = new JMenu("Supprimer...");
+		allMenu.add(copy);
 		
-		JMenuItem delete = new JMenuItem("Tout ("+objects.size()+" objets)");
+		JMenuItem delete = new JMenuItem("Supprimer tout ("+objects.size()+" objets)");
 		delete.addActionListener(new ActionListener() {
 			
 			@Override
@@ -71,9 +71,9 @@ public class MultipleSelectionMenu extends JPopupMenu{
 			
 		});
 		
-		deleteMenu.add(delete);
-		
-		deleteMenu.addSeparator();
+		allMenu.add(delete);
+			
+		this.add(allMenu);
 		
 		final List<Airspace> airspaces = new ArrayList<Airspace>();
 		final List<Balise> balises = new ArrayList<Balise>();
@@ -89,20 +89,11 @@ public class MultipleSelectionMenu extends JPopupMenu{
 				
 		}
 		if(!airspaces.isEmpty()){
-			JMenuItem airspacesItem = new JMenuItem("Airspaces ("+airspaces.size()+")");
-			airspacesItem.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					for(Airspace a : airspaces)
-						wwd.delete(a);
-				}
-			});
-			deleteMenu.add(airspacesItem);
+			this.add(new AirspaceMenu(airspaces, null, wwd));
 		}
 		
 		if(!balises.isEmpty()){
-			JMenuItem balisesItem = new JMenuItem("Balises ("+balises.size()+")");
+			JMenuItem balisesItem = new JMenuItem("Supprimer balises ("+balises.size()+")");
 			balisesItem.addActionListener(new ActionListener() {
 				
 				@Override
@@ -111,22 +102,12 @@ public class MultipleSelectionMenu extends JPopupMenu{
 						wwd.delete(a);
 				}
 			});
-			deleteMenu.add(balisesItem);
+			this.add(balisesItem);
 		}
 		
 		if(!trajectoires.isEmpty()){
-			JMenuItem trajItem = new JMenuItem("Trajectoires ("+trajectoires.size()+")");
-			trajItem.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					for(Path a : trajectoires)
-						wwd.delete(a);
-				}
-			});
-			deleteMenu.add(trajItem);
+			this.add(new TrajectoriesMenu(trajectoires, wwd));
 		}
-		this.add(deleteMenu);
 	}
 
 }
