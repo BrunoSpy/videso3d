@@ -38,7 +38,6 @@ import org.jdom2.input.SAXBuilder;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.graphics.Route;
@@ -374,21 +373,21 @@ public class AIP extends FileParser{
 		String rwyName = rwy.getChildText("Rwy");
 		int orientation = getRunwayOrientation(rwyName);
 		String largeurString = rwy.getChildText("Largeur");
-		int largeur=-1;
+		double largeur=-1;
 		if(largeurString!=null)
-			largeur = Integer.parseInt(largeurString);
+			largeur = Double.parseDouble(largeurString);
 		String longueurString = rwy.getChildText("Longueur");
-		int longueur=-1;
+		double longueur=-1;
 		if(longueurString!=null)
-			longueur = Integer.parseInt(longueurString);
+			longueur = Double.parseDouble(longueurString);
 		
 		PreparedStatement ps  = this.conn.prepareStatement("insert into runways (pk, pk_ad, nom, orientation, longueur, largeur) VALUES (?, ?, ?, ?, ?, ?)");
 		ps.setInt(1, pk);
 		ps.setInt(2, pkAerodrome);
 		ps.setString(3, rwyName);
 		ps.setInt(4, orientation);
-		ps.setInt(5, longueur);
-		ps.setInt(6, largeur);
+		ps.setDouble(5, longueur);
+		ps.setDouble(6, largeur);
 		ps.executeUpdate();
 		
 		String latThr1 = rwy.getChildText("LatThr1");

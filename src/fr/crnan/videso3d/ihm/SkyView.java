@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.ihm;
 
+import java.awt.BorderLayout;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,16 +25,22 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import org.jdesktop.swingx.JXTreeTable;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.MultiValueMap;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.databases.skyview.SkyViewController;
 import fr.crnan.videso3d.ihm.components.FilteredMultiTreeTableView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
+import fr.crnan.videso3d.ihm.components.FilteredTreeTableNode;
 
 /**
  * Interface de sélection de données SkyView
@@ -65,11 +72,83 @@ public class SkyView extends FilteredMultiTreeTableView {
 		return (SkyViewController) DatasManager.getController(DatasManager.Type.SkyView);
 	}
 
+	
+
+
+	@Override
+	public void addTableTree(final FilteredTreeTableModel model, String title, JPanel titlePanel){
+
+		super.models.add(model);	
+System.out.println("addtt overridden");
+		//éléments de l'IHM
+		JPanel tablePanel = new JPanel();
+		tablePanel.setLayout(new BorderLayout());
+		if(title != null && titlePanel == null){
+			tablePanel.setBorder(BorderFactory.createTitledBorder(title));
+		}else{
+			tablePanel.setBorder(BorderFactory.createTitledBorder(""));
+		}
+
+
+		final JXTreeTable treeTable = new JXTreeTable();
+		super.tables.add(new JXTreeTable());
+
+
+		model.addTreeModelListener(new TreeModelListener() {
+
+			@Override
+			public void treeStructureChanged(TreeModelEvent e) {
+				if(getFiltre().isEmpty()){
+					treeTable.collapseAll();
+				} else {
+					treeTable.expandAll();
+				}
+			}
+
+
+			@Override
+			public void treeNodesRemoved(TreeModelEvent e) {}
+
+			@Override
+			public void treeNodesInserted(TreeModelEvent e) {}
+
+			@Override
+			public void treeNodesChanged(TreeModelEvent e) {
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.getTreePath().getLastPathComponent();
+				FilteredTreeTableNode source = (FilteredTreeTableNode)node.getUserObject();
+				int type = getController().string2type(((FilteredTreeTableNode)((DefaultMutableTreeNode)(e.getPath()[1])).getUserObject()).getName());
+				if(!node.isLeaf()){
+					if(source.isVisible()){
+						if(e.getPath().length==3)
+							((SkyViewController)getController()).showAllWaypoints(((FilteredTreeTableNode)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getName());
+						else
+							((SkyViewController)getController()).showAllWaypoints(null);
+					} else {
+						if(e.getPath().length==3)
+							((SkyViewController)getController()).hideAllWaypoints(((FilteredTreeTableNode)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getName());
+						else
+							((SkyViewController)getController()).hideAllWaypoints(null);
+					}
+				}else{
+					if(source.isVisible()){
+						getController().showObject(type, source.getName());
+					} else {
+						getController().hideObject(type, source.getName());
+					}
+				}
+			}
+		});
+	}
+
+	
+	
+	
+	
 	private void fillRootNode(DefaultMutableTreeNode root) {
 		try {
 			Statement st = DatabaseManager.getCurrentSkyView();
 			//Ajout des routes
-			DefaultMutableTreeNode routes = new DefaultMutableTreeNode(new Couple<String, Boolean>("Routes", false));
+			DefaultMutableTreeNode routes = new DefaultMutableTreeNode(new FilteredTreeTableNode("Routes", false));
 			root.add(routes);
 			//HashMap ayant pour clés les codes OACI des pays, et en valeurs un couple contenant le noeud correspondant au pays 
 			//et la liste des routes déjà trouvées pour ce pays
@@ -81,14 +160,14 @@ public class SkyView extends FilteredMultiTreeTableView {
 				Couple<DefaultMutableTreeNode,LinkedList<String>> stateNode = awyStateNodesMap.get(stateName);
 				//Pour chaque route trouvée, on regarde si le noeud du pays a déjà été créé, et si non, on le crée.
 				if(stateNode==null){
-					stateNode = new Couple<DefaultMutableTreeNode,LinkedList<String>> (new DefaultMutableTreeNode(new Couple<String, Boolean>(stateName, false)), new LinkedList<String>());
+					stateNode = new Couple<DefaultMutableTreeNode,LinkedList<String>> (new DefaultMutableTreeNode(new FilteredTreeTableNode(stateName, false)), new LinkedList<String>());
 					awyStateNodesMap.put(stateName, stateNode);
 				}
 
 				String routeName = rs.getString(1);
 				//On vérifie que cette route n'a pas déjà été ajoutée au noeud du pays
 				if(!stateNode.getSecond().contains(routeName)){
-					DefaultMutableTreeNode routeNode = new DefaultMutableTreeNode(new Couple<String, Boolean>(routeName, false));
+					DefaultMutableTreeNode routeNode = new DefaultMutableTreeNode(new FilteredTreeTableNode(routeName, false));
 					//on rajoute le noeud de la route au noeud du pays
 					stateNode.getFirst().add(routeNode);
 					//on rajoute le nom de la route dans la liste des routes trouvées pour ce pays afin d'éviter les doublons
@@ -110,12 +189,12 @@ public class SkyView extends FilteredMultiTreeTableView {
 			}
 			
 			//Ajout des waypoints
-			DefaultMutableTreeNode waypoints = new DefaultMutableTreeNode(new Couple<String, Boolean>("Waypoints", false));
+			DefaultMutableTreeNode waypoints = new DefaultMutableTreeNode(new FilteredTreeTableNode("Waypoints", false));
 			root.add(waypoints);
 			fillTypeNode(SkyViewController.TYPE_WAYPOINT,waypoints, st);
 			
 			//Ajout des aéroports
-			DefaultMutableTreeNode airports = new DefaultMutableTreeNode(new Couple<String, Boolean>("Airports", false));
+			DefaultMutableTreeNode airports = new DefaultMutableTreeNode(new FilteredTreeTableNode("Airports", false));
 			root.add(airports);
 			fillTypeNode(SkyViewController.TYPE_AIRPORT,airports, st);
 			
@@ -142,12 +221,12 @@ public class SkyView extends FilteredMultiTreeTableView {
 				DefaultMutableTreeNode stateNode = wptStateNodesMap.get(stateName);
 				//Si le noeud corredspondant au pays "stateName" n'existe pas, on le crée 
 				if(stateNode==null){
-					stateNode = new DefaultMutableTreeNode(new Couple<String, Boolean>(stateName, false));
+					stateNode = new DefaultMutableTreeNode(new FilteredTreeTableNode(stateName, false));
 					wptStateNodesMap.put(stateName, stateNode);
 				}
 				//On crée le noeud du waypoint et on l'ajoute au noeud de son pays
 				String wptName = rs.getString(1);
-				DefaultMutableTreeNode wptNode = new DefaultMutableTreeNode(new Couple<String, Boolean>(wptName, false));
+				DefaultMutableTreeNode wptNode = new DefaultMutableTreeNode(new FilteredTreeTableNode(wptName, false));
 				stateNode.add(wptNode);
 				nodes.put(wptName, wptNode);
 			}
@@ -181,6 +260,10 @@ public class SkyView extends FilteredMultiTreeTableView {
 
 	public static boolean isSkyViewFile(File file) {
 		return file.getName().toLowerCase().endsWith("mdb");
+	}
+	
+	private String getFiltre(){
+		return super.filtre.getText();
 	}
 
 }

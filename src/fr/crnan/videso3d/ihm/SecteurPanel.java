@@ -39,7 +39,6 @@ import javax.swing.table.JTableHeader;
 import org.jdesktop.swingx.JXTable;
 
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 import fr.crnan.videso3d.databases.stip.Stip;

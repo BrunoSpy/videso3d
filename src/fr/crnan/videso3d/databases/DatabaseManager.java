@@ -1015,8 +1015,8 @@ public final class DatabaseManager {
 				"pk_ad integer,"+
 				"nom varchar(7),"+
 				"orientation integer,"+
-				"longueur integer,"+
-				"largeur integer,"+
+				"longueur double,"+
+				"largeur double,"+
 				"lat1 double,"+
 				"lon1 double,"+
 				"lat2 double,"+
