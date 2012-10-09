@@ -42,7 +42,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import org.jdesktop.swingx.JXTreeTable;
 
-import fr.crnan.videso3d.databases.skyview.SkyViewController;
 import fr.crnan.videso3d.ihm.ProgressMonitor;
 
 
@@ -53,12 +52,12 @@ import fr.crnan.videso3d.ihm.ProgressMonitor;
  */
 public abstract class FilteredMultiTreeTableView extends JPanel implements DataView {
 
-	private JTextField filtre = new JTextField(20);
+	protected JTextField filtre = new JTextField(20);
 	
 	private VerticalMultipleSplitPanes splitPanes = new VerticalMultipleSplitPanes();
 
-	private List<JXTreeTable> tables = new LinkedList<JXTreeTable>();
-	private List<FilteredTreeTableModel> models = new LinkedList<FilteredTreeTableModel>();
+	protected List<JXTreeTable> tables = new LinkedList<JXTreeTable>();
+	protected List<FilteredTreeTableModel> models = new LinkedList<FilteredTreeTableModel>();
 	
 	private int numberTables = 0;
 	private JPanel panel = new JPanel();
@@ -81,7 +80,6 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 	}
 
 	public void addTableTree(final FilteredTreeTableModel model, String title, JPanel titlePanel){
-		
 		models.add(model);	
 		
 		//éléments de l'IHM
@@ -121,34 +119,11 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.getTreePath().getLastPathComponent();
 				FilteredTreeTableNode source = (FilteredTreeTableNode)node.getUserObject();
 				int type = getController().string2type(((FilteredTreeTableNode)((DefaultMutableTreeNode)(e.getPath()[1])).getUserObject()).getName());
-				//TODO enlever cette verrue
-				if(getController() instanceof SkyViewController && type == SkyViewController.TYPE_WAYPOINT){
-					if(!node.isLeaf()){
-						if(source.isVisible()){
-							if(e.getPath().length==3)
-								((SkyViewController)getController()).showAllWaypoints(((FilteredTreeTableNode)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getName());
-							else
-								((SkyViewController)getController()).showAllWaypoints(null);
-						} else {
-							if(e.getPath().length==3)
-								((SkyViewController)getController()).hideAllWaypoints(((FilteredTreeTableNode)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getName());
-							else
-								((SkyViewController)getController()).hideAllWaypoints(null);
-						}
-					}else{
-						if(source.isVisible()){
-							getController().showObject(type, source.getName());
-						} else {
-							getController().hideObject(type, source.getName());
-						}
-					}
-				}else{
-					if(node.isLeaf()){
-						if(source.isVisible()){
-							getController().showObject(type, source.getName());
-						} else {
-							getController().hideObject(type, source.getName());
-						}
+				if(node.isLeaf()){
+					if(source.isVisible()){
+						getController().showObject(type, source.getName());
+					} else {
+						getController().hideObject(type, source.getName());
 					}
 				}
 			}

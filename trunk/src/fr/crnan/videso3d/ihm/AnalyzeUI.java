@@ -193,8 +193,8 @@ public final class AnalyzeUI extends JFrame {
 			}
 		} else if(type.equals("secteur")){
 			try {
-				if(DatabaseManager.getCurrentStip().executeQuery("select * from secteurs where nom = '"+criteria[0]+"'").next()) {
-					getInstance().context.showInfo(DatasManager.Type.STIP, StipController.SECTEUR, criteria[0]);
+				if(DatabaseManager.getCurrentStip().executeQuery("select * from secteurs where nom = '"+criteria[4]+"'").next()) {
+					getInstance().context.showInfo(DatasManager.Type.STIP, StipController.SECTEUR, criteria[4]);
 				} 
 			} catch (SQLException e) {
 				e.printStackTrace();
