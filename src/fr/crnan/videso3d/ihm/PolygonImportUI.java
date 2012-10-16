@@ -229,11 +229,22 @@ public class PolygonImportUI extends JFrame implements ActionListener{
 
 	private void addLocationsToList(ArrayList<LatLon> locationsList, String line){
 		String[] points = line.split("\\s+");
+		boolean pointsFound = false;
 		for(String p : points){
 			p = p.toUpperCase();
 			if(	p.matches("\\d{1,3}([\\.,]\\d{1,4})?[NS]\\d{1,3}([\\.,]\\d{1,4})?[EW]")
 					|| p.matches("\\d{1,3}D(\\d{1,2}')?(\\d{1,2}\")?[NS],?\\d{1,3}D(\\d{1,2}')?(\\d{1,2}\")?[EW]")){
 				LatLon latlon = LatLonUtils.computeLatLonFromString(p);
+				if(latlon != null){
+					locationsList.add(latlon);
+					pointsFound = true;
+				}
+			}
+		}
+		//if no point was found, try with just one point per line
+		if(!pointsFound){
+			LatLon latlon = LatLonUtils.computeLatLonFromString(line);
+			if(latlon != null){
 				locationsList.add(latlon);
 			}
 		}
