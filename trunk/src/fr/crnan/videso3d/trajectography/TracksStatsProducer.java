@@ -26,6 +26,7 @@ import java.util.ListIterator;
 
 import org.jfree.data.xy.XYSeries;
 
+import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.VidesoController;
@@ -184,34 +185,105 @@ public class TracksStatsProducer extends ProgressSupport {
 	 * @param departure Si vrai, cherche l'altitude de ref au début de la trajectoire, sinon à la fin.
 	 * @return
 	 */
-	public XYSeries computeDevelopedPath(Path p, double ref, boolean departure, Globe globe){
+	public static XYSeries computeDevelopedPath(Path p, double ref, boolean departure, Globe globe){
 		XYSeries series = new XYSeries(num.toString());
 		//calcul du développé brut
 		Position last = null;
 		double total = 0.0;
-		List<Double> dist = new ArrayList<Double>();
-		List<Double> alt = new ArrayList<Double>();
+		//liste (x,y)=(dist, alt)
+		List<Couple<Double, Double>> points = new ArrayList<Couple<Double, Double>>();
 		for(Position pos : p.getPositions()){
 			if(last != null){
 				total += LatLonUtils.computeDistance(last, pos, globe);
 			}
-			dist.add(total);
-			alt.add(pos.getElevation());
+			points.add(new Couple<Double, Double>(total, pos.getElevation()));
 			last = pos;
 		}
 		//translation par rapport à l'altitude de réf
-		ListIterator<Double> iterator = alt.listIterator(departure ? 0 : alt.size());
+		ListIterator<Couple<Double, Double>> iterator = points.listIterator(departure ? 0 : points.size());
 		if(departure){
-			while(iterator.hasNext()){
-				
+			Couple<Double, Double> lastPoint = null;
+			Double translation = null;
+			while(iterator.hasNext() && translation == null){
+				if(lastPoint == null){
+					lastPoint = iterator.next();
+				} else {
+					Couple<Double, Double> temp = iterator.next();
+					if(ref >= lastPoint.getSecond() && ref <= temp.getSecond()){
+						//on a trouvé deux positions qui contiennent l'altitude de référence
+						//régression linéaire pour trouver la distance à retrancher
+						if(lastPoint.getSecond().compareTo(temp.getSecond()) == 0){
+							translation = lastPoint.getFirst();
+						} else {
+							double a = lastPoint.getSecond() - temp.getSecond();
+							double b = temp.getFirst() - lastPoint.getFirst();
+							double c = -(b*temp.getSecond()+a*temp.getFirst());
+							translation = -(b*ref+c)/a;
+						}
+					} else {
+						lastPoint = temp;
+					}
+				}
+			}
+			for(Couple<Double, Double> point : points){
+				series.add(point.getFirst() - translation, point.getSecond());
 			}
 		} else {
-			while(iterator.hasPrevious()){
-				
+			Couple<Double, Double> lastPoint = null;
+			Double translation = null;
+			while(iterator.hasPrevious() && translation == null){
+
+				if(lastPoint == null){
+					lastPoint = iterator.previous();
+				} else {
+					Couple<Double, Double> temp = iterator.previous();
+					if((ref >= lastPoint.getSecond() && ref <= temp.getSecond()) ||
+							(ref <= lastPoint.getSecond() && ref >= temp.getSecond())){
+						//on a trouvé deux positions qui contiennent l'altitude de référence
+						//régression linéaire pour trouver la distance à retrancher
+						if(lastPoint.getSecond().compareTo(temp.getSecond()) == 0){
+							translation = lastPoint.getFirst();
+						} else {
+							double a = lastPoint.getSecond() - temp.getSecond();
+							double b = temp.getFirst() - lastPoint.getFirst();
+							double c = -(b*temp.getSecond()+a*temp.getFirst());
+							translation = -(b*ref+c)/a;
+						}
+					} else {
+						lastPoint = temp;
+					}
+				}
+			}
+			for(Couple<Double, Double> point : points){
+				//TODO ref en dehors de la trajectoire...
+				if(translation != null)
+					series.add(point.getFirst() - translation, point.getSecond());
 			}
 		}
 		num++;
 		return series;
 	}
 	
+	/**
+	 * Calcule la plus petite altitude commune à toutes les trajectoires
+	 * @param paths
+	 * @return
+	 */
+	public static double computeReferenceAltitude(List<Path> paths){
+		double ref = 0.0;
+
+		for(Path p : paths){
+			Double min = null;
+			for(Position pos : p.getPositions()){
+				if(min == null)
+					min = pos.getElevation();
+				if(pos.getElevation() < min)
+					min = pos.getElevation();
+			}
+			if(min > ref)
+				ref = min;
+		}
+		
+		return ref;
+	}
 }

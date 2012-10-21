@@ -16,6 +16,7 @@
 package fr.crnan.videso3d.ihm.components;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.ihm.TrajectoryProjectionGUI;
 import gov.nasa.worldwind.render.Path;
 
 import java.awt.event.ActionEvent;
@@ -52,7 +53,7 @@ public class TrajectoriesMenu extends JMenu {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				
+				new TrajectoryProjectionGUI(paths, wwd.getModel().getGlobe()).setVisible(true);
 			}
 		});
 		
