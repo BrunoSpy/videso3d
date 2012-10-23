@@ -44,7 +44,6 @@ import org.jdesktop.swingx.JXTreeTable;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.ihm.ProgressMonitor;
-import fr.crnan.videso3d.skyview.SkyViewController;
 
 
 /**
@@ -54,12 +53,12 @@ import fr.crnan.videso3d.skyview.SkyViewController;
  */
 public abstract class FilteredMultiTreeTableView extends JPanel implements DataView {
 
-	private JTextField filtre = new JTextField(20);
+	protected JTextField filtre = new JTextField(20);
 	
 	private VerticalMultipleSplitPanes splitPanes = new VerticalMultipleSplitPanes();
 
-	private List<JXTreeTable> tables = new LinkedList<JXTreeTable>();
-	private List<FilteredTreeTableModel> models = new LinkedList<FilteredTreeTableModel>();
+	protected List<JXTreeTable> tables = new LinkedList<JXTreeTable>();
+	protected List<FilteredTreeTableModel> models = new LinkedList<FilteredTreeTableModel>();
 	
 	private int numberTables = 0;
 	private JPanel panel = new JPanel();
@@ -124,33 +123,11 @@ public abstract class FilteredMultiTreeTableView extends JPanel implements DataV
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.getTreePath().getLastPathComponent();
 				Couple<String, Boolean> source = (Couple<String, Boolean>)node.getUserObject();
 				int type = getController().string2type(((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[1])).getUserObject()).getFirst());
-				if(getController() instanceof SkyViewController && type == SkyViewController.TYPE_WAYPOINT){
-					if(!node.isLeaf()){
-						if(source.getSecond()){
-							if(e.getPath().length==3)
-								((SkyViewController)getController()).showAllWaypoints(((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getFirst());
-							else
-								((SkyViewController)getController()).showAllWaypoints(null);
-						} else {
-							if(e.getPath().length==3)
-								((SkyViewController)getController()).hideAllWaypoints(((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getFirst());
-							else
-								((SkyViewController)getController()).hideAllWaypoints(null);
-						}
-					}else{
-						if(source.getSecond()){
-							getController().showObject(type, source.getFirst());
-						} else {
-							getController().hideObject(type, source.getFirst());
-						}
-					}
-				}else{
-					if(node.isLeaf()){
-						if(source.getSecond()){
-							getController().showObject(type, source.getFirst());
-						} else {
-							getController().hideObject(type, source.getFirst());
-						}
+				if(node.isLeaf()){
+					if(source.getSecond()){
+						getController().showObject(type, source.getFirst());
+					} else {
+						getController().hideObject(type, source.getFirst());
 					}
 				}
 			}

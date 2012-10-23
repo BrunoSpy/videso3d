@@ -16,6 +16,7 @@
 
 package fr.crnan.videso3d.ihm;
 
+import java.awt.BorderLayout;
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,7 +25,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import org.jdesktop.swingx.JXTreeTable;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatabaseManager;
@@ -64,6 +71,79 @@ public class SkyView extends FilteredMultiTreeTableView {
 	public SkyViewController getController() {
 		return (SkyViewController) DatasManager.getController(Type.SkyView);
 	}
+
+	
+	@Override
+	public void addTableTree(final FilteredTreeTableModel model, String title, JPanel titlePanel){
+
+		super.models.add(model);
+		//éléments de l'IHM
+		JPanel tablePanel = new JPanel();
+		tablePanel.setLayout(new BorderLayout());
+		if(title != null && titlePanel == null){
+			tablePanel.setBorder(BorderFactory.createTitledBorder(title));
+		}else{
+			tablePanel.setBorder(BorderFactory.createTitledBorder(""));
+		}
+
+
+		final JXTreeTable treeTable = new JXTreeTable();
+		super.tables.add(new JXTreeTable());
+
+
+		model.addTreeModelListener(new TreeModelListener() {
+
+			@Override
+			public void treeStructureChanged(TreeModelEvent e) {
+				if(getFiltre().isEmpty()){
+					treeTable.collapseAll();
+				} else {
+					treeTable.expandAll();
+				}
+			}
+
+
+			@Override
+			public void treeNodesRemoved(TreeModelEvent e) {}
+
+			@Override
+			public void treeNodesInserted(TreeModelEvent e) {}
+
+			@SuppressWarnings("unchecked")
+			@Override
+			public void treeNodesChanged(TreeModelEvent e) {
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode)e.getTreePath().getLastPathComponent();
+				Couple<String, Boolean> source = (Couple<String, Boolean>)node.getUserObject();
+				int type = getController().string2type(((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[1])).getUserObject()).getFirst());
+				if(!node.isLeaf()){
+					if(source.getSecond()){
+						if(e.getPath().length==3)
+							((SkyViewController)getController()).showAllWaypoints(((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getFirst());
+						else
+							((SkyViewController)getController()).showAllWaypoints(null);
+					} else {
+						if(e.getPath().length==3)
+							((SkyViewController)getController()).hideAllWaypoints(((Couple<String, Boolean>)((DefaultMutableTreeNode)(e.getPath()[2])).getUserObject()).getFirst());
+						else
+							((SkyViewController)getController()).hideAllWaypoints(null);
+					}
+				}else{
+					if(source.getSecond()){
+						getController().showObject(type, source.getFirst());
+					} else {
+						getController().hideObject(type, source.getFirst());
+					}
+				}
+			}
+		});
+	}
+
+
+
+
+
+
+
 
 	private void fillRootNode(DefaultMutableTreeNode root) {
 		try {
@@ -182,5 +262,8 @@ public class SkyView extends FilteredMultiTreeTableView {
 	public static boolean isSkyViewFile(File file) {
 		return file.getName().toLowerCase().endsWith("mdb");
 	}
-
+	
+	private String getFiltre(){
+		return super.filtre.getText();
+	}
 }
