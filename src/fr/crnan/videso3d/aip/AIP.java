@@ -377,16 +377,16 @@ public class AIP extends FileParser{
 		if(largeurString!=null)
 			largeur = Double.parseDouble(largeurString);
 		String longueurString = rwy.getChildText("Longueur");
-		int longueur=-1;
+		double longueur=-1;
 		if(longueurString!=null)
-			longueur = Integer.parseInt(longueurString);
+			longueur = Double.parseDouble(longueurString);
 		
 		PreparedStatement ps  = this.conn.prepareStatement("insert into runways (pk, pk_ad, nom, orientation, longueur, largeur) VALUES (?, ?, ?, ?, ?, ?)");
 		ps.setInt(1, pk);
 		ps.setInt(2, pkAerodrome);
 		ps.setString(3, rwyName);
 		ps.setInt(4, orientation);
-		ps.setInt(5, longueur);
+		ps.setDouble(5, longueur);
 		ps.setDouble(6, largeur);
 		ps.executeUpdate();
 		
