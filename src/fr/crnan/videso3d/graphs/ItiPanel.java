@@ -40,7 +40,7 @@ import fr.crnan.videso3d.stip.StipController;
 /**
  * Itis recherchés sour forme de graphe
  * @author Bruno Spyckerelle
- * @version 0.2.0
+ * @version 0.2.1
  */
 public class ItiPanel extends ResultGraphPanel {
 
@@ -293,11 +293,11 @@ public class ItiPanel extends ResultGraphPanel {
 								graph.insertEdge(parent, null, "", first, balisesByItis.get(rs.getInt(1)).get(rs.getInt(6)), GraphStyle.edgeTrajet);
 							} else {
 								if(second == null) {
-									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(6), rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
+									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(6), rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, (rs.getBoolean(7) ? GraphStyle.baliseTrajet : GraphStyle.baliseTrajetTravers));
 									second.setConnectable(false);
 									graph.insertEdge(parent, null, rs.getString(4), first, second, GraphStyle.edgeTrajet);
 								} else {
-									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(6), rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTrajet);
+									second = (mxCell) graph.insertVertex(parent, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(6), rs.getString(5)), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, (rs.getBoolean(7) ? GraphStyle.baliseTrajet : GraphStyle.baliseTrajetTravers));
 									second.setConnectable(false);
 									graph.insertEdge(parent, null, "", first, second, GraphStyle.edgeTrajet);
 								}
