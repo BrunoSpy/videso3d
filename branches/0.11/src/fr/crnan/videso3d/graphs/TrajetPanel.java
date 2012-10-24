@@ -133,7 +133,10 @@ public class TrajetPanel extends ResultGraphPanel {
 							first = (mxCell) graph.insertVertex(trajet, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
 							first.setConnectable(false);
 						} else {
-							mxCell second = (mxCell) graph.insertVertex(trajet, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
+							String style = rs.getBoolean(18) ?
+									((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) :
+									((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
+							mxCell second = (mxCell) graph.insertVertex(trajet, null, new CellContent(Type.STIP, StipController.BALISES, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							second.setConnectable(false);
 							graph.insertEdge(trajet, null, "", first, second, GraphStyle.edgeStyle);
 							first = second;
