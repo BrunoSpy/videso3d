@@ -18,7 +18,7 @@ package fr.crnan.videso3d.graphs;
 /**
  * Style de cellules
  * @author Bruno Spyckerelle
- * @version 0.2
+ * @version 0.2.1
  */
 public final class GraphStyle {
 
@@ -54,6 +54,15 @@ public final class GraphStyle {
 	 * Balise trajet en surbrillance
 	 */
 	public static String baliseTrajetHighlight = baliseDefault+"shape=ellipse;fillColor=yellow;opacity=40;dashed=true;fontSize=8;";
+	
+	/**
+	 * Balise travers dans un trajet (vue iti)
+	 */
+	public static String baliseTrajetTravers = baliseDefault+"shape=cloud;fillColor=white;opacity=40;dashed=true;fontSize=8;";
+	/**
+	 * Balise travers en surbrillance dans un trajet (vue iti)
+	 */
+	public static String baliseTrajetHighlightTravers = baliseDefault+"shape=cloud;fillColor=yellow;opacity=40;dashed=true;fontSize=8;";
 	
 	
 	/**
