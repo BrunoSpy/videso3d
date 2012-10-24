@@ -31,14 +31,13 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxEvent;
 
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.databases.stip.StipController;
 
 /**
  * Panneau de résultat représentant les trajets correspondants à la recherche
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class TrajetPanel extends ResultGraphPanel {
 
@@ -134,7 +133,10 @@ public class TrajetPanel extends ResultGraphPanel {
 							first = (mxCell) graph.insertVertex(trajet, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
 							first.setConnectable(false);
 						} else {
-							mxCell second = (mxCell) graph.insertVertex(trajet, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, ((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle));
+							String style = rs.getBoolean(18) ?
+									((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) :
+									((nameMatch(balise1, name) || nameMatch(balise2,name))? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
+							mxCell second = (mxCell) graph.insertVertex(trajet, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, rs.getInt(17), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							second.setConnectable(false);
 							graph.insertEdge(trajet, null, "", first, second, GraphStyle.edgeStyle);
 							first = second;
