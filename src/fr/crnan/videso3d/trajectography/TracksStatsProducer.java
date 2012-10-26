@@ -36,9 +36,7 @@ import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VidesoObject;
-import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.globes.Globe;
-import gov.nasa.worldwind.render.Path;
 import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.util.Logging;
 
@@ -176,7 +174,6 @@ public class TracksStatsProducer extends ProgressSupport {
 		return length;
 	}
 	
-	static Integer num = 0;
 	/**
 	 * Calcul le développé d'une trajectoire par rapport à une altitude de référence.<br />
 	 * Si la trajectoire ne contient pas l'altitude de référence, une régression linéaire est effectuée.
@@ -185,16 +182,16 @@ public class TracksStatsProducer extends ProgressSupport {
 	 * @param departure Si vrai, cherche l'altitude de ref au début de la trajectoire, sinon à la fin.
 	 * @return
 	 */
-	public static XYSeries computeDevelopedPath(Path p, double ref, boolean departure, Globe globe){
-		XYSeries series = new XYSeries(num.toString());
+	public static XYSeries computeDevelopedPath(VidesoTrack t, double ref, boolean departure, Globe globe){
+		XYSeries series = new XYSeries(t.getName());
 		//calcul du développé brut
-		Position last = null;
+		TrackPoint last = null;
 		double total = 0.0;
 		//liste (x,y)=(dist, alt)
 		List<Couple<Double, Double>> points = new ArrayList<Couple<Double, Double>>();
-		for(Position pos : p.getPositions()){
+		for(TrackPoint pos : t.getTrackPoints()){
 			if(last != null){
-				total += LatLonUtils.computeDistance(last, pos, globe);
+				total += LatLonUtils.computeDistance(last.getPosition(), pos.getPosition(), globe);
 			}
 			points.add(new Couple<Double, Double>(total, pos.getElevation()));
 			last = pos;
@@ -260,7 +257,6 @@ public class TracksStatsProducer extends ProgressSupport {
 					series.add(point.getFirst() - translation, point.getSecond());
 			}
 		}
-		num++;
 		return series;
 	}
 	
@@ -269,12 +265,12 @@ public class TracksStatsProducer extends ProgressSupport {
 	 * @param paths
 	 * @return
 	 */
-	public static double computeReferenceAltitude(List<Path> paths){
+	public static double computeReferenceAltitude(List<VidesoTrack> tracks){
 		double ref = 0.0;
 
-		for(Path p : paths){
+		for(VidesoTrack t : tracks){
 			Double min = null;
-			for(Position pos : p.getPositions()){
+			for(TrackPoint pos : t.getTrackPoints()){
 				if(min == null)
 					min = pos.getElevation();
 				if(pos.getElevation() < min)

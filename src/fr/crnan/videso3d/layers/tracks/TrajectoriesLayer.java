@@ -19,13 +19,14 @@ import java.awt.Color;
 import java.util.List;
 
 import fr.crnan.videso3d.Couple;
+import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.layers.LayerSet;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer contenant des trajectoires et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.8.0
+ * @version 0.8.1
  */
 public abstract class TrajectoriesLayer extends LayerSet {
 
@@ -97,6 +98,20 @@ public abstract class TrajectoriesLayer extends LayerSet {
 	 */
 	public abstract void setModel(TracksModel model);
 		
+	/**
+	 * 
+	 * @param p
+	 * @return The corresponding track
+	 */
+	public abstract VidesoTrack getTrack(Object p);
+	
+	/**
+	 * 
+	 * @param track
+	 * @return The graphical object corresponding to the track
+	 */
+	public abstract Object getLine(VidesoTrack track);
+	
 	/**
 	 * Possibilité de sélectionner les tracks (avec highlight) ?
 	 * @return

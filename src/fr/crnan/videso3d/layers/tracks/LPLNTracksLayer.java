@@ -410,4 +410,15 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 		return 0;
 	}
 
+	@Override
+	public VidesoTrack getTrack(Object p) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object getLine(VidesoTrack track) {
+		return this.profils.get(track);
+	}
+
 }

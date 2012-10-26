@@ -15,9 +15,9 @@
  */
 package fr.crnan.videso3d.ihm;
 
+import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.trajectography.TracksStatsProducer;
 import gov.nasa.worldwind.globes.Globe;
-import gov.nasa.worldwind.render.Path;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ import org.jfree.data.xy.XYSeriesCollection;
  */
 public class TrajectoryProjectionGUI extends JFrame{
 
-	public TrajectoryProjectionGUI(List<Path> paths, Globe globe){
+	public TrajectoryProjectionGUI(List<VidesoTrack> tracks, Globe globe){
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -49,11 +49,11 @@ public class TrajectoryProjectionGUI extends JFrame{
 		JMenuItem mntmNewMenuItem = new JMenuItem("New menu item");
 		mnParamtres.add(mntmNewMenuItem);
 		
-		double ref = TracksStatsProducer.computeReferenceAltitude(paths);
+		double ref = TracksStatsProducer.computeReferenceAltitude(tracks);
 		XYSeriesCollection dataset = new XYSeriesCollection();
 		
-		for(Path p : paths){
-			dataset.addSeries(TracksStatsProducer.computeDevelopedPath(p, ref, false, globe));
+		for(VidesoTrack t : tracks){
+			dataset.addSeries(TracksStatsProducer.computeDevelopedPath(t, ref, false, globe));
 		}
 		
 		JFreeChart chart = ChartFactory.createXYLineChart("Projection",

@@ -51,7 +51,6 @@ import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.Route;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
-import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.graphics.editor.PolygonEditorsManager;
 import fr.crnan.videso3d.graphics.editor.ShapeEditorsManager;
 import fr.crnan.videso3d.ihm.components.VidesoGLCanvasKeyListener;
@@ -63,6 +62,7 @@ import fr.crnan.videso3d.layers.LayerManagerLayer;
 import fr.crnan.videso3d.layers.LayerSet;
 import fr.crnan.videso3d.layers.VAnnotationLayer;
 import fr.crnan.videso3d.layers.VerticalScaleBar;
+import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
 import fr.crnan.videso3d.util.VMeasureTool;
 
 import gov.nasa.worldwind.Factory;
@@ -825,6 +825,8 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 			this.deletePath((Path)o);
 		} else if(o instanceof Renderable){
 			this.deleteRenderable((Renderable) o);
+		} else if(o instanceof VidesoTrack) {
+			this.deleteTrack((VidesoTrack) o);
 		}
 	}
 	
@@ -868,4 +870,13 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 		this.getSelectedObjects().remove(p);
 	}	
 
+	private void deleteTrack(VidesoTrack t){
+		for(Layer l : this.getModel().getLayers()){
+			if(l instanceof TrajectoriesLayer){
+				this.getSelectedObjects().remove(((TrajectoriesLayer) l).getLine(t));
+				((TrajectoriesLayer) l).getModel().removeTrack(t);
+			}
+		}
+	}	
+	
 }

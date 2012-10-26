@@ -16,8 +16,8 @@
 package fr.crnan.videso3d.ihm.components;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.ihm.TrajectoryProjectionGUI;
-import gov.nasa.worldwind.render.Path;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,36 +28,38 @@ import javax.swing.JMenuItem;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.0.1
+ * @version 0.0.2
  */
 public class TrajectoriesMenu extends JMenu {
 
-	public TrajectoriesMenu(final List<Path> paths, final VidesoGLCanvas wwd){
+	public TrajectoriesMenu(final List<VidesoTrack> tracks, final VidesoGLCanvas wwd){
 		
 		super("Trajectoires...");
-		
-		JMenuItem delete = new JMenuItem("Supprimer");
-		delete.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				for(Path p : paths)
-					wwd.delete(p);
-			}
-		});
-		
-		this.add(delete);
 		
 		JMenuItem graph = new JMenuItem("Projection");
 		graph.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new TrajectoryProjectionGUI(paths, wwd.getModel().getGlobe()).setVisible(true);
+				new TrajectoryProjectionGUI(tracks, wwd.getModel().getGlobe()).setVisible(true);
 			}
 		});
 		
 		this.add(graph);
+		
+		this.addSeparator();
+		
+		JMenuItem delete = new JMenuItem("Supprimer");
+		delete.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				for(VidesoTrack p : tracks)
+					wwd.delete(p);
+			}
+		});
+		
+		this.add(delete);
 	}
 	
 }
