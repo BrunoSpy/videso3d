@@ -58,6 +58,8 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 		
 	protected HashMap<VidesoTrack, AltitudeFilterablePath> lines = new HashMap<VidesoTrack, AltitudeFilterablePath>();
 	
+	protected HashMap<AltitudeFilterablePath, VidesoTrack> tracks = new HashMap<AltitudeFilterablePath, VidesoTrack>();
+	
 	/**
 	 * Couleurs des tracks
 	 */
@@ -216,10 +218,21 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 		return this.model;
 	}
 	
+	@Override
+	public VidesoTrack getTrack(Object p){
+		return this.tracks.get(p);
+	}
+	
+	@Override
+	public Object getLine(VidesoTrack t){
+		return this.lines.get(t);
+	}
+	
 	protected void removeTrack(VidesoTrack track){
 		Path line = this.lines.get(track);
 		if(line != null){
 			this.lines.remove(track);
+			this.tracks.remove(line);
 			this.layer.removeRenderable(line);
 			this.layer.firePropertyChange(AVKey.LAYER, null, this.layer);
 		}
@@ -293,6 +306,7 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 				line.setAltitudeMode(WorldWind.ABSOLUTE);
 				line.setPositions(positions);
 				lines.put(track, line);
+				tracks.put(line, track);
 				//update model following direct modifications
 				line.addPropertyChangeListener(new PropertyChangeListener() {
 					

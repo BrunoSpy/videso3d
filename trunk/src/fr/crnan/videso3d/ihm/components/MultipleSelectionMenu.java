@@ -26,7 +26,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.graphics.Balise;
+import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
+import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.Path;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 
@@ -77,17 +80,27 @@ public class MultipleSelectionMenu extends JPopupMenu{
 		
 		final List<Airspace> airspaces = new ArrayList<Airspace>();
 		final List<Balise> balises = new ArrayList<Balise>();
-		final List<Path> trajectoires = new ArrayList<Path>();
+		final List<VidesoTrack> trajectoires = new ArrayList<VidesoTrack>();
 		for(Object o : objects){
 			if(o instanceof Airspace) {
 				airspaces.add((Airspace) o);
 			} else if(o instanceof Balise){
 				balises.add((Balise) o);
 			} else if(o instanceof Path){
-				trajectoires.add((Path) o);
+				for(Layer l : wwd.getModel().getLayers()){
+					if(l instanceof TrajectoriesLayer){
+						VidesoTrack track = ((TrajectoriesLayer) l).getTrack((Path) o);
+						if(track != null)
+							trajectoires.add(track);
+					}
+				}
 			}
 				
 		}
+		
+		if(!airspaces.isEmpty() || !balises.isEmpty() || !trajectoires.isEmpty())
+			this.addSeparator();
+		
 		if(!airspaces.isEmpty()){
 			this.add(new AirspaceMenu(airspaces, null, wwd));
 		}

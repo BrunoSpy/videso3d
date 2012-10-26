@@ -25,7 +25,6 @@ import javax.swing.event.TableModelEvent;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.formats.VidesoTrack;
@@ -433,6 +432,17 @@ public class PLNSTracksLayer extends TrajectoriesLayer {
 	public int getParamColor() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public VidesoTrack getTrack(Object p) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Object getLine(VidesoTrack track) {
+		return this.profils.get(track);
 	}
 
 	
