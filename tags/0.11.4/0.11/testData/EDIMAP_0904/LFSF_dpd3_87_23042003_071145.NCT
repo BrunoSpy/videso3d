@@ -1,0 +1,217 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "TEXTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+  (id_atc_preactif "TEXTE PREACTIVABLE")
+  (id_atc_predorm "TEXTE PREACTIVABLE")
+)
+(id_atc
+  (name "TEXTE PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "LFSF")
+  (number 87)
+  (comment "CTL importe de VIDEOMAP")
+  (date 23 04 2003)
+  (heure 07 11 45)
+  (ref_point
+    (name "97R0")
+    (comment "")
+    (value
+      (nautical_mile 64 15573 64 10236)
+    )
+  )
+  (ref_point
+    (name "97R1")
+    (comment "")
+    (value
+      (nautical_mile 64 16221 64 9034)
+    )
+  )
+  (ref_point
+    (name "97R2")
+    (comment "")
+    (value
+      (nautical_mile 64 16460 64 8090)
+    )
+  )
+  (ref_point
+    (name "97R3")
+    (comment "")
+    (value
+      (nautical_mile 64 16031 64 7279)
+    )
+  )
+  (ref_point
+    (name "97R4")
+    (comment "")
+    (value
+      (nautical_mile 64 14748 64 8240)
+    )
+  )
+  (ref_point
+    (name "97R5")
+    (comment "")
+    (value
+      (nautical_mile 64 14681 64 9135)
+    )
+  )
+  (ref_point
+    (name "97R6")
+    (comment "")
+    (value
+      (nautical_mile 64 12894 64 9294)
+    )
+  )
+  (ref_point
+    (name "97R7")
+    (comment "")
+    (value
+      (nautical_mile 64 14900 64 10118)
+    )
+  )
+  (ref_point
+    (name "97R8")
+    (comment "")
+    (value
+      (nautical_mile 64 14991 64 10018)
+    )
+  )
+  (ref_point
+    (name "97R9")
+    (comment "")
+    (value
+      (nautical_mile 64 15234 64 10034)
+    )
+  )
+  (ref_point
+    (name "97R10")
+    (comment "")
+    (value
+      (nautical_mile 64 15500 64 10214)
+    )
+  )
+  (ref_point
+    (name "97R11")
+    (comment "")
+    (value
+      (nautical_mile 64 13998 64 9521)
+    )
+  )
+  (submap
+    (number 1)
+    (name "LFSF")
+    (submap_type 4)
+    (keyboard 3)
+    (entity
+      (name "430")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "97R0")
+        (point "97R1")
+        (point "97R2")
+        (point "97R3")
+        (point "97R4")
+        (point "97R5")
+        (point "97R6")
+        (point "97R7")
+        (point "97R8")
+        (point "97R9")
+        (point "97R10")
+        (point "97R0")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "LFSF")
+      (id_atc "TEXTE PREACTIVABLE")
+      (shape "TextEntity")
+      (geometry
+        (point "97R11")
+      )
+      (text_content "LFSF/FL195")
+    )
+  )
+)

@@ -1,0 +1,155 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "DEFAUT")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 63)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(map
+  (name "VIKZ")
+  (number 4)
+  (comment "")
+  (date 07 03 2008)
+  (heure 13 06 01)
+  (ref_point
+    (name "VIKZ01")
+    (comment "Volume d'intéret pour le regroupement UKUZ")
+    (value
+      (nautical_mile 64 -1690 64 13231)
+    )
+  )
+  (ref_point
+    (name "VIKZ02")
+    (comment "Volume d'intéret pour le regroupement UKUZ")
+    (value
+      (nautical_mile 64 933 64 14846)
+    )
+  )
+  (ref_point
+    (name "VIKZ03")
+    (comment "Volume d'intéret pour le regroupement UKUZ")
+    (value
+      (nautical_mile 64 4636 64 10134)
+    )
+  )
+  (ref_point
+    (name "VIKZ04")
+    (comment "Volume d'intéret pour le regroupement UKUZ")
+    (value
+      (nautical_mile 64 2739 64 8068)
+    )
+  )
+  (ref_point
+    (name "VIKZ05")
+    (comment "Volume d'intéret pour le regroupement UKUZ")
+    (value
+      (nautical_mile 64 -630 64 8328)
+    )
+  )
+  (ref_point
+    (name "VIKZ06")
+    (comment "Volume d'intéret pour le regroupement UKUZ")
+    (value
+      (nautical_mile 64 -620 64 11533)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 2)
+    (keyboard 3)
+    (entity
+      (name "1")
+      (id_atc "DEFAUT")
+      (shape "PolylineEntity")
+      (geometry
+        (point "VIKZ01")
+        (point "VIKZ02")
+        (point "VIKZ03")
+        (point "VIKZ04")
+        (point "VIKZ05")
+        (point "VIKZ06")
+      )
+      (polygone 1)
+      (line_width 2)
+      (line_style "SingleLine")
+      (priority 42)
+      (text_font "1")
+      (fill_visibility 0)
+      (designabilite 0)
+      (foreground_color "Vert salle de bain")
+    )
+    (entity
+      (name "2")
+      (id_atc "DEFAUT")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1194 64 10778  0)
+      )
+      (text_content "FL295")
+      (line_width 1)
+      (line_style "SingleLine")
+      (priority 63)
+      (text_font "1")
+      (fill_visibility 0)
+      (designabilite 0)
+      (foreground_color "Vert salle de bain")
+    )
+    (entity
+      (name "3")
+      (id_atc "DEFAUT")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1194 64 10601  0)
+      )
+      (text_content "FL285")
+      (line_width 1)
+      (line_style "SingleLine")
+      (priority 63)
+      (text_font "1")
+      (fill_visibility 0)
+      (designabilite 0)
+      (foreground_color "Vert salle de bain")
+    )
+  )
+)

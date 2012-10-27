@@ -1,0 +1,234 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "FOND PUITS 2")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 5)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris")
+)
+(map
+  (name "BALO")
+  (number 4)
+  (comment "")
+  (date 10 05 2004)
+  (heure 11 34 52)
+  (ref_point
+    (name "BALOD")
+    (comment "")
+    (value
+      (nautical_mile 64 3820 64 6073)
+    )
+  )
+  (ref_point
+    (name "BALOD2")
+    (comment "")
+    (value
+      (nautical_mile 64 3902 64 6098)
+    )
+  )
+  (ref_point
+    (name "BALOD3")
+    (comment "")
+    (value
+      (nautical_mile 64 3991 64 6088)
+    )
+  )
+  (ref_point
+    (name "BALOD4")
+    (comment "")
+    (value
+      (nautical_mile 64 4065 64 6045)
+    )
+  )
+  (ref_point
+    (name "BALOD5")
+    (comment "")
+    (value
+      (nautical_mile 64 4110 64 5990)
+    )
+  )
+  (ref_point
+    (name "BALOD6")
+    (comment "")
+    (value
+      (nautical_mile 64 4135 64 5916)
+    )
+  )
+  (ref_point
+    (name "BALOD7")
+    (comment "")
+    (value
+      (nautical_mile 64 4127 64 5820)
+    )
+  )
+  (ref_point
+    (name "BALOD8")
+    (comment "")
+    (value
+      (nautical_mile 64 4090 64 5751)
+    )
+  )
+  (ref_point
+    (name "BALOD9")
+    (comment "")
+    (value
+      (nautical_mile 64 4025 64 5696)
+    )
+  )
+  (ref_point
+    (name "BALOD10")
+    (comment "")
+    (value
+      (nautical_mile 64 3629 64 5483)
+    )
+  )
+  (ref_point
+    (name "BALOD11")
+    (comment "")
+    (value
+      (nautical_mile 64 3565 64 5461)
+    )
+  )
+  (ref_point
+    (name "BALOD12")
+    (comment "")
+    (value
+      (nautical_mile 64 3476 64 5463)
+    )
+  )
+  (ref_point
+    (name "BALOD13")
+    (comment "")
+    (value
+      (nautical_mile 64 3410 64 5491)
+    )
+  )
+  (ref_point
+    (name "BALOD14")
+    (comment "")
+    (value
+      (nautical_mile 64 3347 64 5554)
+    )
+  )
+  (ref_point
+    (name "BALOD15")
+    (comment "")
+    (value
+      (nautical_mile 64 3317 64 5622)
+    )
+  )
+  (ref_point
+    (name "BALOD16")
+    (comment "")
+    (value
+      (nautical_mile 64 3314 64 5707)
+    )
+  )
+  (ref_point
+    (name "BALOD17")
+    (comment "")
+    (value
+      (nautical_mile 64 3354 64 5800)
+    )
+  )
+  (ref_point
+    (name "BALOD18")
+    (comment "")
+    (value
+      (nautical_mile 64 3424 64 5860)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 4)
+    (keyboard 3)
+    (entity
+      (name "1")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "BALOD")
+        (point "BALOD2")
+        (point "BALOD3")
+        (point "BALOD4")
+        (point "BALOD5")
+        (point "BALOD6")
+        (point "BALOD7")
+        (point "BALOD8")
+        (point "BALOD9")
+        (point "BALOD10")
+        (point "BALOD11")
+        (point "BALOD12")
+        (point "BALOD13")
+        (point "BALOD14")
+        (point "BALOD15")
+        (point "BALOD16")
+        (point "BALOD17")
+        (point "BALOD18")
+      )
+      (polygone 1)
+    )
+  )
+)

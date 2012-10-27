@@ -1,0 +1,1133 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "ROUTE_CONDITIONNELLE_C_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "SYMBOLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "ROUTE CONDITIONNELLE C")
+  (line_width 1)
+  (line_style "SingleLineDotted")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "ROUTE CONDITIONNELLE A")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(map
+  (name "TMWW")
+  (number 174)
+  (comment "CTL importe de VIDEOMAP")
+  (date 10 02 2005)
+  (heure 10 53 59)
+  (ref_point
+    (name "ARSIL")
+    (comment "")
+    (value
+      (nautical_mile 64 10361 64 6265)
+    )
+  )
+  (ref_point
+    (name "ASTIK")
+    (comment "")
+    (value
+      (nautical_mile 64 8176 64 7317)
+    )
+  )
+  (ref_point
+    (name "BOKSI")
+    (comment "")
+    (value
+      (nautical_mile 64 8317 64 7521)
+    )
+  )
+  (ref_point
+    (name "BSN")
+    (comment "")
+    (value
+      (nautical_mile 64 7703 64 8562)
+    )
+  )
+  (ref_point
+    (name "BT")
+    (comment "")
+    (value
+      (nautical_mile 64 6215 64 7687)
+    )
+  )
+  (ref_point
+    (name "CTL")
+    (comment "")
+    (value
+      (nautical_mile 64 9025 64 8424)
+    )
+  )
+  (ref_point
+    (name "EVX")
+    (comment "")
+    (value
+      (nautical_mile 64 3087 64 7832)
+    )
+  )
+  (ref_point
+    (name "MARGY")
+    (comment "")
+    (value
+      (nautical_mile 64 9497 64 7043)
+    )
+  )
+  (ref_point
+    (name "MOMOD")
+    (comment "")
+    (value
+      (nautical_mile 64 6901 64 7454)
+    )
+  )
+  (ref_point
+    (name "MONUR")
+    (comment "")
+    (value
+      (nautical_mile 64 6933 64 11119)
+    )
+  )
+  (ref_point
+    (name "MTD")
+    (comment "")
+    (value
+      (nautical_mile 64 6231 64 9913)
+    )
+  )
+  (ref_point
+    (name "PERNO")
+    (comment "")
+    (value
+      (nautical_mile 64 9999 64 8286)
+    )
+  )
+  (ref_point
+    (name "PGS")
+    (comment "")
+    (value
+      (nautical_mile 64 6638 64 7796)
+    )
+  )
+  (ref_point
+    (name "RETRO")
+    (comment "")
+    (value
+      (nautical_mile 64 8758 64 7157)
+    )
+  )
+  (ref_point
+    (name "TUSKO")
+    (comment "")
+    (value
+      (nautical_mile 64 8597 64 7536)
+    )
+  )
+  (ref_point
+    (name "VAKSO")
+    (comment "")
+    (value
+      (nautical_mile 64 5719 64 9497)
+    )
+  )
+  (ref_point
+    (name "TMWW1")
+    (comment "")
+    (value
+      (nautical_mile 64 5802 64 8449)
+    )
+  )
+  (ref_point
+    (name "TMWW2")
+    (comment "")
+    (value
+      (nautical_mile 64 5445 64 7875)
+    )
+  )
+  (ref_point
+    (name "TMWW3")
+    (comment "")
+    (value
+      (nautical_mile 64 5491 64 7848)
+    )
+  )
+  (ref_point
+    (name "TMWW4")
+    (comment "")
+    (value
+      (nautical_mile 64 5555 64 7856)
+    )
+  )
+  (ref_point
+    (name "TMWW7")
+    (comment "")
+    (value
+      (nautical_mile 64 5857 64 8222)
+    )
+  )
+  (ref_point
+    (name "TMWW8")
+    (comment "")
+    (value
+      (nautical_mile 64 5912 64 8144)
+    )
+  )
+  (ref_point
+    (name "TMWW11")
+    (comment "")
+    (value
+      (nautical_mile 64 6715 64 8057)
+    )
+  )
+  (ref_point
+    (name "TMWW12")
+    (comment "")
+    (value
+      (nautical_mile 64 7392 64 7986)
+    )
+  )
+  (ref_point
+    (name "TMWW13")
+    (comment "")
+    (value
+      (nautical_mile 64 7665 64 8012)
+    )
+  )
+  (ref_point
+    (name "TMWW16")
+    (comment "")
+    (value
+      (nautical_mile 64 5425 64 7908)
+    )
+  )
+  (ref_point
+    (name "TMWW17")
+    (comment "")
+    (value
+      (nautical_mile 64 5723 64 7395)
+    )
+  )
+  (ref_point
+    (name "TMWW18")
+    (comment "")
+    (value
+      (nautical_mile 64 4791 64 7585)
+    )
+  )
+  (ref_point
+    (name "TMWW19")
+    (comment "")
+    (value
+      (nautical_mile 64 8723 64 7463)
+    )
+  )
+  (ref_point
+    (name "TMWW20")
+    (comment "")
+    (value
+      (nautical_mile 64 8957 64 7340)
+    )
+  )
+  (ref_point
+    (name "TMWW26")
+    (comment "")
+    (value
+      (nautical_mile 64 6533 64 6659)
+    )
+  )
+  (ref_point
+    (name "TMWW28")
+    (comment "")
+    (value
+      (nautical_mile 64 9464 64 6583)
+    )
+  )
+  (ref_point
+    (name "TMWW29")
+    (comment "")
+    (value
+      (nautical_mile 64 8960 64 6431)
+    )
+  )
+  (ref_point
+    (name "TMWW30")
+    (comment "")
+    (value
+      (nautical_mile 64 8564 64 6253)
+    )
+  )
+  (ref_point
+    (name "TMWW31")
+    (comment "")
+    (value
+      (nautical_mile 64 5867 64 6123)
+    )
+  )
+  (ref_point
+    (name "TMWW41")
+    (comment "")
+    (value
+      (nautical_mile 64 5528 64 8693)
+    )
+  )
+  (ref_point
+    (name "TMWW42")
+    (comment "")
+    (value
+      (nautical_mile 64 7301 64 6995)
+    )
+  )
+  (ref_point
+    (name "CGN")
+    (comment "")
+    (value
+      (nautical_mile 64 6323 64 7865)
+    )
+  )
+  (ref_point
+    (name "BVS")
+    (comment "")
+    (value
+      (nautical_mile 64 5402 64 9443)
+    )
+  )
+  (ref_point
+    (name "AMOGA")
+    (comment "")
+    (value
+      (nautical_mile 64 5898 64 10796)
+    )
+  )
+  (ref_point
+    (name "PON")
+    (comment "")
+    (value
+      (nautical_mile 64 5142 64 8123)
+    )
+  )
+  (ref_point
+    (name "NIBAR")
+    (comment "")
+    (value
+      (nautical_mile 64 8597 64 8167)
+    )
+  )
+  (ref_point
+    (name "NIPOR")
+    (comment "")
+    (value
+      (nautical_mile 64 10117 64 8395)
+    )
+  )
+  (ref_point
+    (name "LAURA")
+    (comment "")
+    (value
+      (nautical_mile 64 8512 64 7670)
+    )
+  )
+  (ref_point
+    (name "LAGIL")
+    (comment "")
+    (value
+      (nautical_mile 64 10711 64 7597)
+    )
+  )
+  (ref_point
+    (name "BATAG")
+    (comment "")
+    (value
+      (nautical_mile 64 8559 64 7191)
+    )
+  )
+  (ref_point
+    (name "BUBLI")
+    (comment "")
+    (value
+      (nautical_mile 64 10542 64 7090)
+    )
+  )
+  (ref_point
+    (name "PIVER")
+    (comment "")
+    (value
+      (nautical_mile 64 5759 64 6985)
+    )
+  )
+  (ref_point
+    (name "MANLGL")
+    (comment "")
+    (value
+      (nautical_mile 64 2040 64 7266)
+    )
+  )
+  (ref_point
+    (name "PG264")
+    (comment "")
+    (value
+      (nautical_mile 64 6074 64 7731)
+    )
+  )
+  (ref_point
+    (name "TMWW9")
+    (comment "")
+    (value
+      (nautical_mile 64 4114 64 7978)
+    )
+  )
+  (ref_point
+    (name "PG282")
+    (comment "")
+    (value
+      (nautical_mile 64 5385 64 8079)
+    )
+  )
+  (ref_point
+    (name "NURMO")
+    (comment "")
+    (value
+      (nautical_mile 64 6855 64 10986)
+    )
+  )
+  (ref_point
+    (name "POWW1")
+    (comment "")
+    (value
+      (nautical_mile 64 3850 64 6837)
+    )
+  )
+  (ref_point
+    (name "LGL")
+    (comment "")
+    (value
+      (nautical_mile 64 1347 64 6885)
+    )
+  )
+  (ref_point
+    (name "PO262")
+    (comment "")
+    (value
+      (nautical_mile 64 5102 64 8650)
+    )
+  )
+  (ref_point
+    (name "PO260")
+    (comment "")
+    (value
+      (nautical_mile 64 4422 64 6842)
+    )
+  )
+  (ref_point
+    (name "PO204")
+    (comment "")
+    (value
+      (nautical_mile 64 5431 64 6265)
+    )
+  )
+  (ref_point
+    (name "VASPO1")
+    (comment "odran")
+    (value
+      (nautical_mile 64 4138 64 4970)
+    )
+  )
+  (ref_point
+    (name "VASPO2")
+    (comment "vasol")
+    (value
+      (nautical_mile 64 4765 64 5934)
+    )
+  )
+  (ref_point
+    (name "VASPO3")
+    (comment "po615")
+    (value
+      (nautical_mile 64 6108 64 6164)
+    )
+  )
+  (ref_point
+    (name "VASPO4")
+    (comment "po615")
+    (value
+      (nautical_mile 64 7294 64 6315)
+    )
+  )
+  (ref_point
+    (name "NAPIX")
+    (comment "")
+    (value
+      (nautical_mile 64 8597 64 8167)
+    )
+  )
+  (ref_point
+    (name "PG278")
+    (comment "")
+    (value
+      (nautical_mile 64 6743 64 8159)
+    )
+  )
+  (ref_point
+    (name "CLM")
+    (comment "")
+    (value
+      (nautical_mile 64 7648 64 7238)
+    )
+  )
+  (ref_point
+    (name "PG289")
+    (comment "")
+    (value
+      (nautical_mile 64 5551 64 7066)
+    )
+  )
+  (ref_point
+    (name "PEKIM")
+    (comment "")
+    (value
+      (nautical_mile 64 7248 64 5034)
+    )
+  )
+  (ref_point
+    (name "LALUX")
+    (comment "")
+    (value
+      (nautical_mile 64 6178 64 5039)
+    )
+  )
+  (ref_point
+    (name "ODEBU")
+    (comment "")
+    (value
+      (nautical_mile 64 6736 64 5036)
+    )
+  )
+  (ref_point
+    (name "ADADA")
+    (comment "")
+    (value
+      (nautical_mile 64 5138 64 5042)
+    )
+  )
+  (ref_point
+    (name "PO246")
+    (comment "")
+    (value
+      (nautical_mile 64 5561 64 6468)
+    )
+  )
+  (ref_point
+    (name "PO270")
+    (comment "")
+    (value
+      (nautical_mile 64 5253 64 5967)
+    )
+  )
+  (ref_point
+    (name "PG268")
+    (comment "")
+    (value
+      (nautical_mile 64 5058 64 7615)
+    )
+  )
+  (ref_point
+    (name "RBT")
+    (comment "")
+    (value
+      (nautical_mile 64 5080 64 6420)
+    )
+  )
+  (ref_point
+    (name "EDOXA")
+    (comment "")
+    (value
+      (nautical_mile 64 5666 64 5041)
+    )
+  )
+  (ref_point
+    (name "RBTN")
+    (comment "")
+    (value
+      (nautical_mile 64 5078 64 6460)
+    )
+  )
+  (ref_point
+    (name "PG267")
+    (comment "")
+    (value
+      (nautical_mile 64 5226 64 7634)
+    )
+  )
+  (ref_point
+    (name "DEROL")
+    (comment "")
+    (value
+      (nautical_mile 64 5385 64 6520)
+    )
+  )
+  (ref_point
+    (name "LATRA")
+    (comment "")
+    (value
+      (nautical_mile 64 6480 64 4267)
+    )
+  )
+  (ref_point
+    (name "PG266")
+    (comment "")
+    (value
+      (nautical_mile 64 5346 64 7648)
+    )
+  )
+  (ref_point
+    (name "OL")
+    (comment "")
+    (value
+      (nautical_mile 64 6069 64 6740)
+    )
+  )
+  (ref_point
+    (name "DOPAP")
+    (comment "")
+    (value
+      (nautical_mile 64 5706 64 6623)
+    )
+  )
+  (ref_point
+    (name "PO300")
+    (comment "")
+    (value
+      (nautical_mile 64 6048 64 5832)
+    )
+  )
+  (ref_point
+    (name "PO302")
+    (comment "")
+    (value
+      (nautical_mile 64 7277 64 5989)
+    )
+  )
+  (ref_point
+    (name "PO304")
+    (comment "")
+    (value
+      (nautical_mile 64 7820 64 6517)
+    )
+  )
+  (ref_point
+    (name "PO271")
+    (comment "")
+    (value
+      (nautical_mile 64 5132 64 5759)
+    )
+  )
+  (ref_point
+    (name "PO301")
+    (comment "")
+    (value
+      (nautical_mile 64 5918 64 5770)
+    )
+  )
+  (ref_point
+    (name "PO244")
+    (comment "")
+    (value
+      (nautical_mile 64 5614 64 6506)
+    )
+  )
+  (ref_point
+    (name "PO243")
+    (comment "")
+    (value
+      (nautical_mile 64 5665 64 6544)
+    )
+  )
+  (ref_point
+    (name "PB254")
+    (comment "")
+    (value
+      (nautical_mile 64 5572 64 7701)
+    )
+  )
+  (ref_point
+    (name "OPALE")
+    (comment "")
+    (value
+      (nautical_mile 64 4683 64 11203)
+    )
+  )
+  (ref_point
+    (name "PG276")
+    (comment "")
+    (value
+      (nautical_mile 64 5853 64 8226)
+    )
+  )
+  (ref_point
+    (name "PB253")
+    (comment "")
+    (value
+      (nautical_mile 64 5731 64 7454)
+    )
+  )
+  (ref_point
+    (name "PB258")
+    (comment "")
+    (value
+      (nautical_mile 64 4983 64 7371)
+    )
+  )
+  (ref_point
+    (name "HOL")
+    (comment "")
+    (value
+      (nautical_mile 64 4630 64 6705)
+    )
+  )
+  (submap
+    (number 1)
+    (name "TMWW")
+    (submap_type 4)
+    (keyboard 1)
+    (entity
+      (name "729")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "EVX")
+        (point "TMWW18")
+      )
+    )
+    (entity
+      (name "742")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "BATAG")
+        (point "BUBLI")
+      )
+    )
+    (entity
+      (name "743")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "NIBAR")
+        (point "NIPOR")
+      )
+    )
+    (entity
+      (name "35")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "MANLGL")
+        (point "PG264")
+      )
+    )
+    (entity
+      (name "36")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "EVX")
+        (point "TMWW9")
+      )
+    )
+    (entity
+      (name "37")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "TMWW9")
+        (point "TMWW16")
+      )
+    )
+    (entity
+      (name "38")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "TMWW9")
+        (point "PON")
+      )
+    )
+    (entity
+      (name "39")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "PON")
+        (point "PG282")
+      )
+    )
+    (entity
+      (name "43")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "POWW1")
+        (point "LGL")
+      )
+    )
+    (entity
+      (name "44")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "POWW1")
+        (point "EVX")
+      )
+    )
+    (entity
+      (name "47")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "BVS")
+        (point "AMOGA")
+      )
+    )
+    (entity
+      (name "48")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "MTD")
+        (point "NURMO")
+      )
+    )
+    (entity
+      (name "49")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "BVS")
+        (point "PO262")
+        (point "MTD")
+      )
+    )
+    (entity
+      (name "50")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "PO262")
+        (point "PO260")
+      )
+    )
+    (entity
+      (name "51")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "PO260")
+        (point "PO204")
+      )
+    )
+    (entity
+      (name "57")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "NAPIX")
+        (point "PG278")
+      )
+    )
+    (entity
+      (name "58")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "PIVER")
+        (point "CLM")
+      )
+    )
+    (entity
+      (name "59")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "CLM")
+        (point "BATAG")
+      )
+    )
+    (entity
+      (name "62")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "PG278")
+        (point "BATAG")
+      )
+    )
+    (entity
+      (name "63")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "CLM")
+        (point "NAPIX")
+      )
+    )
+    (entity
+      (name "46")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "PG268")
+        (point "RBT")
+        (point "EDOXA")
+      )
+    )
+    (entity
+      (name "64")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "ADADA")
+        (point "RBTN")
+      )
+    )
+    (entity
+      (name "45")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "PG267")
+        (point "DEROL")
+        (point "LALUX")
+        (point "LATRA")
+      )
+    )
+    (entity
+      (name "52")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "PG266")
+        (point "PG289")
+        (point "OL")
+        (point "PEKIM")
+      )
+    )
+    (entity
+      (name "61")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "PG289")
+        (point "DOPAP")
+        (point "ODEBU")
+      )
+    )
+    (entity
+      (name "54")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "PO300")
+        (point "PO302")
+        (point "NAPIX")
+      )
+    )
+    (entity
+      (name "55")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "PO302")
+        (point "PO304")
+        (point "BATAG")
+      )
+    )
+    (entity
+      (name "65")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "PO246")
+        (point "PO270")
+        (point "PO271")
+        (point "ADADA")
+      )
+    )
+    (entity
+      (name "66")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "PO270")
+        (point "EDOXA")
+      )
+    )
+    (entity
+      (name "69")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "PO246")
+        (point "PO301")
+        (point "LALUX")
+      )
+    )
+    (entity
+      (name "68")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "PO300")
+        (point "ODEBU")
+      )
+    )
+    (entity
+      (name "67")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "PO244")
+        (point "PO300")
+        (point "PEKIM")
+      )
+    )
+    (entity
+      (name "70")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "PO243")
+        (point "PO246")
+      )
+    )
+    (entity
+      (name "41")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "OPALE")
+        (point "PG276")
+      )
+    )
+    (entity
+      (name "73")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "PG276")
+        (point "AMOGA")
+      )
+    )
+    (entity
+      (name "74")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "PG276")
+        (point "NURMO")
+      )
+    )
+    (entity
+      (name "77")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "EVX")
+        (point "LGL")
+      )
+    )
+  )
+)

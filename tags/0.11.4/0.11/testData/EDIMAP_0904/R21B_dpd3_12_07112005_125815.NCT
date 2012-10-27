@@ -1,0 +1,218 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "TEXTE PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "TEXTE_ZONE_MILITAIRE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "TEXTE_ZONE_MILITAIRE_PREACTIVABLE")
+  (id_atc_predorm "TEXTE_ZONE_MILITAIRE_PREACTIVABLE")
+)
+(id_atc
+  (name "TEXTE_ZONE_MILITAIRE_PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "R21B")
+  (number 12)
+  (comment "")
+  (date 07 11 2005)
+  (heure 12 58 15)
+  (ref_point
+    (name "R21A2")
+    (comment "")
+    (value
+      (nautical_mile 64 14680 64 9137)
+    )
+  )
+  (ref_point
+    (name "R212")
+    (comment "")
+    (value
+      (nautical_mile 64 15859 64 9013)
+    )
+  )
+  (ref_point
+    (name "R213")
+    (comment "")
+    (value
+      (nautical_mile 64 15892 64 8800)
+    )
+  )
+  (ref_point
+    (name "R214")
+    (comment "")
+    (value
+      (nautical_mile 64 15937 64 7113)
+    )
+  )
+  (ref_point
+    (name "R21B5")
+    (comment "")
+    (value
+      (nautical_mile 64 15829 64 6912)
+    )
+  )
+  (ref_point
+    (name "R21A4")
+    (comment "")
+    (value
+      (nautical_mile 64 13749 64 6755)
+    )
+  )
+  (ref_point
+    (name "R21A5")
+    (comment "")
+    (value
+      (nautical_mile 64 11315 64 6601)
+    )
+  )
+  (ref_point
+    (name "R21A6")
+    (comment "")
+    (value
+      (nautical_mile 64 10618 64 7304)
+    )
+  )
+  (ref_point
+    (name "R21A7")
+    (comment "")
+    (value
+      (nautical_mile 64 10548 64 8106)
+    )
+  )
+  (ref_point
+    (name "R21A8")
+    (comment "")
+    (value
+      (nautical_mile 64 11251 64 8145)
+    )
+  )
+  (ref_point
+    (name "R21A1")
+    (comment "")
+    (value
+      (nautical_mile 64 12894 64 9296)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 4)
+    (keyboard 3)
+    (entity
+      (name "2")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "R21A4")
+        (point "R21A5")
+        (point "R21A6")
+        (point "R21A7")
+        (point "R21A8")
+        (point "R21A1")
+        (point "R21A2")
+        (point "R212")
+        (point "R213")
+        (point "R214")
+        (point "R21B5")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "4")
+      (id_atc "TEXTE_ZONE_MILITAIRE_PREACTIVABLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11666 64 7443)
+      )
+      (text_content "115/195")
+    )
+    (entity
+      (name "5")
+      (id_atc "TEXTE_ZONE_MILITAIRE_PREACTIVABLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11826 64 8258)
+      )
+      (text_content "DRACH")
+    )
+  )
+)

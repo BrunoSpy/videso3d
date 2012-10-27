@@ -1,0 +1,625 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(symbol
+  (name "Symb1")
+  (value "90")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "DEFAUT")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 63)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(map
+  (name "NUCL")
+  (number 25)
+  (comment "")
+  (date 17 09 2007)
+  (heure 13 34 37)
+  (ref_point
+    (name "SAC")
+    (comment "")
+    (value
+      (nautical_mile 64 5469 64 6673)
+    )
+  )
+  (ref_point
+    (name "BEL")
+    (comment "")
+    (value
+      (nautical_mile 64 7463 64 2058)
+    )
+  )
+  (ref_point
+    (name "CHO")
+    (comment "")
+    (value
+      (nautical_mile 64 11837 64 12222)
+    )
+  )
+  (ref_point
+    (name "DAM")
+    (comment "")
+    (value
+      (nautical_mile 64 6522 64 2925)
+    )
+  )
+  (ref_point
+    (name "GRA")
+    (comment "")
+    (value
+      (nautical_mile 64 5175 64 15464)
+    )
+  )
+  (ref_point
+    (name "NOG")
+    (comment "")
+    (value
+      (nautical_mile 64 8979 64 6031)
+    )
+  )
+  (ref_point
+    (name "PAL")
+    (comment "")
+    (value
+      (nautical_mile 64 1584 64 10997)
+    )
+  )
+  (ref_point
+    (name "PEN")
+    (comment "")
+    (value
+      (nautical_mile 64 3012 64 11449)
+    )
+  )
+  (ref_point
+    (name "SLA")
+    (comment "")
+    (value
+      (nautical_mile 64 4095 64 2809)
+    )
+  )
+  (ref_point
+    (name "HAV1")
+    (comment "ZIT HAV")
+    (value
+      (nautical_mile 64 525 64 9663)
+    )
+  )
+  (ref_point
+    (name "HAV2")
+    (comment "ZIT HAV")
+    (value
+      (nautical_mile 64 761 64 9640)
+    )
+  )
+  (ref_point
+    (name "HAV3")
+    (comment "ZIT HAV")
+    (value
+      (nautical_mile 64 752 64 9536)
+    )
+  )
+  (ref_point
+    (name "HAV4")
+    (comment "ZIT HAV")
+    (value
+      (nautical_mile 64 741 64 9433)
+    )
+  )
+  (ref_point
+    (name "HAV5")
+    (comment "ZIT HAV")
+    (value
+      (nautical_mile 64 504 64 9456)
+    )
+  )
+  (ref_point
+    (name "HAV6")
+    (comment "ZIT HAV")
+    (value
+      (nautical_mile 64 515 64 9559)
+    )
+  )
+  (ref_point
+    (name "HAV7")
+    (comment "ZIT HAV")
+    (value
+      (nautical_mile 64 525 64 9663)
+    )
+  )
+  (ref_point
+    (name "MOR")
+    (comment "")
+    (value
+      (nautical_mile 64 10866 64 8887)
+    )
+  )
+  (ref_point
+    (name "RIP1")
+    (comment "ZIT RIP")
+    (value
+      (nautical_mile 64 1803 64 1235)
+    )
+  )
+  (ref_point
+    (name "RIP2")
+    (comment "ZIT RIP")
+    (value
+      (nautical_mile 64 1847 64 1204)
+    )
+  )
+  (ref_point
+    (name "RIP3")
+    (comment "ZIT RIP")
+    (value
+      (nautical_mile 64 1851 64 1171)
+    )
+  )
+  (ref_point
+    (name "RIP4")
+    (comment "ZIT RIP")
+    (value
+      (nautical_mile 64 1731 64 925)
+    )
+  )
+  (ref_point
+    (name "RIP5")
+    (comment "ZIT RIP")
+    (value
+      (nautical_mile 64 1576 64 1143)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 1)
+    (entity
+      (name "SAC")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5469 64 6673  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "14")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5363 64 15372  0)
+      )
+      (text_content "GRA33")
+    )
+    (entity
+      (name "15")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3226 64 11328  0)
+      )
+      (text_content "PEN37")
+    )
+    (entity
+      (name "16")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1794 64 10896  0)
+      )
+      (text_content "PAL35")
+    )
+    (entity
+      (name "17")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 12048 64 12120  0)
+      )
+      (text_content "CHO37")
+    )
+    (entity
+      (name "18")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11107 64 8792  0)
+      )
+      (text_content "MOR41")
+    )
+    (entity
+      (name "20")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9204 64 5917  0)
+      )
+      (text_content "NOG35")
+    )
+    (entity
+      (name "21")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4783 64 6636  0)
+      )
+      (text_content "SAC10")
+    )
+    (entity
+      (name "22")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5842 64 6140  0)
+      )
+      (text_content "BRU38")
+    )
+    (entity
+      (name "23")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6726 64 2821  0)
+      )
+      (text_content "DAM37")
+    )
+    (entity
+      (name "24")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7684 64 1934  0)
+      )
+      (text_content "BEL37")
+    )
+    (entity
+      (name "25")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4318 64 2688  0)
+      )
+      (text_content "LAU36")
+    )
+    (entity
+      (name "26")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1898 64 1017  0)
+      )
+      (text_content "RIP35")
+    )
+    (entity
+      (name "27")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "BEL")
+        (azimuth 100 0)
+        (distance 64 173)
+        (distance 64 173)
+        (angle 100 0)
+        (angle 100 36000)
+      )
+    )
+    (entity
+      (name "28")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (nautical_mile 64 5609 64 6226  0)
+        (azimuth 100 0)
+        (distance 64 173)
+        (distance 64 173)
+        (angle 100 0)
+        (angle 100 36000)
+      )
+      (line_width 2)
+      (line_style "SingleLine")
+      (priority 57)
+      (text_font "1")
+      (fill_visibility 0)
+      (designabilite 0)
+      (foreground_color "Vert salle de bain")
+    )
+    (entity
+      (name "29")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (nautical_mile 64 436 64 897  0)
+        (azimuth 100 0)
+        (distance 64 173)
+        (distance 64 173)
+        (angle 100 0)
+        (angle 100 36000)
+      )
+    )
+    (entity
+      (name "30")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -302 64 861  0)
+      )
+      (text_content "CHI34")
+    )
+    (entity
+      (name "31")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "CHO")
+        (azimuth 100 0)
+        (distance 64 173)
+        (distance 64 173)
+        (angle 100 0)
+        (angle 100 36000)
+      )
+    )
+    (entity
+      (name "32")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "DAM")
+        (azimuth 100 0)
+        (distance 64 173)
+        (distance 64 173)
+        (angle 100 0)
+        (angle 100 36000)
+      )
+    )
+    (entity
+      (name "33")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (nautical_mile 64 5776 64 6985  0)
+        (azimuth 100 0)
+        (distance 64 173)
+        (distance 64 173)
+        (angle 100 0)
+        (angle 100 36000)
+      )
+    )
+    (entity
+      (name "34")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6001 64 6868  0)
+      )
+      (text_content "FON38")
+    )
+    (entity
+      (name "35")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "GRA")
+        (azimuth 100 0)
+        (distance 64 173)
+        (distance 64 173)
+        (angle 100 0)
+        (angle 100 36000)
+      )
+    )
+    (entity
+      (name "36")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (nautical_mile 64 1389 64 9528  0)
+        (azimuth 100 0)
+        (distance 64 173)
+        (distance 64 173)
+        (angle 100 0)
+        (angle 100 36000)
+      )
+    )
+    (entity
+      (name "37")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1606 64 9414  0)
+      )
+      (text_content "GRAV33")
+    )
+    (entity
+      (name "38")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "NOG")
+        (azimuth 100 0)
+        (distance 64 173)
+        (distance 64 173)
+        (angle 100 0)
+        (angle 100 36000)
+      )
+    )
+    (entity
+      (name "39")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "PAL")
+        (azimuth 100 0)
+        (distance 64 173)
+        (distance 64 173)
+        (angle 100 0)
+        (angle 100 36000)
+      )
+    )
+    (entity
+      (name "40")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "PEN")
+        (azimuth 100 0)
+        (distance 64 173)
+        (distance 64 173)
+        (angle 100 0)
+        (angle 100 36000)
+      )
+    )
+    (entity
+      (name "41")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "SLA")
+        (azimuth 100 0)
+        (distance 64 173)
+        (distance 64 173)
+        (angle 100 0)
+        (angle 100 36000)
+      )
+    )
+    (entity
+      (name "42")
+      (id_atc "SYMBOLE")
+      (shape "LineEntity")
+      (geometry
+        (point "HAV1")
+        (point "HAV2")
+      )
+    )
+    (entity
+      (name "43")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "HAV3")
+        (azimuth 100 0)
+        (distance 64 104)
+        (distance 64 104)
+        (angle 100 17390)
+        (angle 100 35505)
+      )
+      (construction
+        (type 1)
+        (point "HAV2")
+        (point "HAV4")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "44")
+      (id_atc "SYMBOLE")
+      (shape "LineEntity")
+      (geometry
+        (point "HAV4")
+        (point "HAV5")
+      )
+    )
+    (entity
+      (name "45")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "HAV6")
+        (azimuth 100 0)
+        (distance 64 104)
+        (distance 64 104)
+        (angle 100 35450)
+        (angle 100 17390)
+      )
+      (construction
+        (type 1)
+        (point "HAV5")
+        (point "HAV7")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "46")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -533 64 9447  0)
+      )
+      (text_content "HAV33")
+    )
+    (entity
+      (name "47")
+      (id_atc "SYMBOLE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "MOR")
+        (azimuth 100 0)
+        (distance 64 173)
+        (distance 64 173)
+        (angle 100 0)
+        (angle 100 36000)
+      )
+    )
+    (entity
+      (name "48")
+      (id_atc "SYMBOLE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "RIP1")
+        (point "RIP2")
+        (point "RIP3")
+        (point "RIP4")
+        (point "RIP5")
+      )
+      (polygone 1)
+    )
+  )
+)

@@ -1,0 +1,672 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "BORD_TSA_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Lilas")
+)
+(id_atc
+  (name "TEXTE_ZONE_MILITAIRE_PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_2")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "TEXTE ZONE MILITAIRE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "SRTA")
+  (number 209)
+  (comment "NECTAR 23/03/2000")
+  (date 21 04 2005)
+  (heure 08 40 22)
+  (ref_point
+    (name "SRTACT1")
+    (comment "")
+    (value
+      (nautical_mile 64 10182 64 9147)
+    )
+  )
+  (ref_point
+    (name "SRTAPT1")
+    (comment "")
+    (value
+      (nautical_mile 64 10616 64 9844)
+    )
+  )
+  (ref_point
+    (name "SRTAPT2")
+    (comment "")
+    (value
+      (nautical_mile 64 10989 64 8985)
+    )
+  )
+  (ref_point
+    (name "SRTAPT3")
+    (comment "")
+    (value
+      (nautical_mile 64 10482 64 9032)
+    )
+  )
+  (ref_point
+    (name "SRTACT2")
+    (comment "")
+    (value
+      (nautical_mile 64 10182 64 9147)
+    )
+  )
+  (ref_point
+    (name "SRTAPT4")
+    (comment "")
+    (value
+      (nautical_mile 64 10242 64 8832)
+    )
+  )
+  (ref_point
+    (name "SRTAPT5")
+    (comment "")
+    (value
+      (nautical_mile 64 10140 64 8669)
+    )
+  )
+  (ref_point
+    (name "SRTAPT6")
+    (comment "")
+    (value
+      (nautical_mile 64 9904 64 8499)
+    )
+  )
+  (ref_point
+    (name "SRTACT3")
+    (comment "")
+    (value
+      (nautical_mile 64 10182 64 9147)
+    )
+  )
+  (ref_point
+    (name "SRTAPT7")
+    (comment "")
+    (value
+      (nautical_mile 64 9509 64 9363)
+    )
+  )
+  (ref_point
+    (name "SRTAPT8")
+    (comment "")
+    (value
+      (nautical_mile 64 9567 64 9426)
+    )
+  )
+  (ref_point
+    (name "SRTAPT9")
+    (comment "")
+    (value
+      (nautical_mile 64 9741 64 9613)
+    )
+  )
+  (ref_point
+    (name "SRTACT4")
+    (comment "")
+    (value
+      (nautical_mile 64 10182 64 9147)
+    )
+  )
+  (ref_point
+    (name "SRTAPT10")
+    (comment "")
+    (value
+      (nautical_mile 64 10076 64 9779)
+    )
+  )
+  (ref_point
+    (name "SRTBPT1")
+    (comment "")
+    (value
+      (nautical_mile 64 10989 64 8985)
+    )
+  )
+  (ref_point
+    (name "SRTBPT2")
+    (comment "")
+    (value
+      (nautical_mile 64 10561 64 8629)
+    )
+  )
+  (ref_point
+    (name "SRTBCT1")
+    (comment "")
+    (value
+      (nautical_mile 64 10182 64 9147)
+    )
+  )
+  (ref_point
+    (name "SRTBPT3")
+    (comment "")
+    (value
+      (nautical_mile 64 10383 64 8538)
+    )
+  )
+  (ref_point
+    (name "SRTBPT4")
+    (comment "")
+    (value
+      (nautical_mile 64 9706 64 8355)
+    )
+  )
+  (ref_point
+    (name "SRTBPT5")
+    (comment "")
+    (value
+      (nautical_mile 64 9904 64 8499)
+    )
+  )
+  (ref_point
+    (name "SRTBPT6")
+    (comment "")
+    (value
+      (nautical_mile 64 10140 64 8669)
+    )
+  )
+  (ref_point
+    (name "SRTBPT7")
+    (comment "")
+    (value
+      (nautical_mile 64 10242 64 8832)
+    )
+  )
+  (ref_point
+    (name "SRTBCT2")
+    (comment "")
+    (value
+      (nautical_mile 64 10182 64 9147)
+    )
+  )
+  (ref_point
+    (name "SRTBPT8")
+    (comment "")
+    (value
+      (nautical_mile 64 10482 64 9032)
+    )
+  )
+  (ref_point
+    (name "SRTCCT1")
+    (comment "")
+    (value
+      (nautical_mile 64 10876 64 9478)
+    )
+  )
+  (ref_point
+    (name "SRTCPT1")
+    (comment "")
+    (value
+      (nautical_mile 64 11259 64 9714)
+    )
+  )
+  (ref_point
+    (name "SRTCPT2")
+    (comment "")
+    (value
+      (nautical_mile 64 11190 64 9156)
+    )
+  )
+  (ref_point
+    (name "SRTCPT4")
+    (comment "")
+    (value
+      (nautical_mile 64 10482 64 9032)
+    )
+  )
+  (ref_point
+    (name "SRTCCT2")
+    (comment "")
+    (value
+      (nautical_mile 64 10182 64 9147)
+    )
+  )
+  (ref_point
+    (name "SRTCPT5")
+    (comment "")
+    (value
+      (nautical_mile 64 10242 64 8832)
+    )
+  )
+  (ref_point
+    (name "SRTCPT8")
+    (comment "")
+    (value
+      (nautical_mile 64 9706 64 8355)
+    )
+  )
+  (ref_point
+    (name "SRTCCT3")
+    (comment "")
+    (value
+      (nautical_mile 64 9564 64 8881)
+    )
+  )
+  (ref_point
+    (name "SRTCPT9")
+    (comment "")
+    (value
+      (nautical_mile 64 9567 64 9426)
+    )
+  )
+  (ref_point
+    (name "SRTCPT10")
+    (comment "")
+    (value
+      (nautical_mile 64 9741 64 9613)
+    )
+  )
+  (ref_point
+    (name "SRTCCT4")
+    (comment "")
+    (value
+      (nautical_mile 64 10182 64 9147)
+    )
+  )
+  (ref_point
+    (name "SRTCPT11")
+    (comment "")
+    (value
+      (nautical_mile 64 10076 64 9779)
+    )
+  )
+  (ref_point
+    (name "SRTCPT12")
+    (comment "")
+    (value
+      (nautical_mile 64 10616 64 9844)
+    )
+  )
+  (ref_point
+    (name "SRTCPT13")
+    (comment "")
+    (value
+      (nautical_mile 64 11259 64 9714)
+    )
+  )
+  (ref_point
+    (name "SRTCPT3")
+    (comment "")
+    (value
+      (nautical_mile 64 10989 64 8985)
+    )
+  )
+  (submap
+    (number 1)
+    (name "LFSR")
+    (submap_type 2)
+    (keyboard 3)
+    (entity
+      (name "2")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "EllipseEntity")
+      (geometry
+        (point "SRTACT1")
+        (azimuth 100 0)
+        (distance 64 821)
+        (distance 64 821)
+        (angle 100 25864)
+        (angle 100 32809)
+      )
+      (construction
+        (type 1)
+        (point "SRTAPT1")
+        (point "SRTAPT2")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "3")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "LineEntity")
+      (geometry
+        (point "SRTAPT2")
+        (point "SRTAPT3")
+      )
+    )
+    (entity
+      (name "4")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "EllipseEntity")
+      (geometry
+        (point "SRTACT2")
+        (azimuth 100 0)
+        (distance 64 321)
+        (distance 64 321)
+        (angle 100 19078)
+        (angle 100 24902)
+      )
+      (construction
+        (type 1)
+        (point "SRTAPT3")
+        (point "SRTAPT4")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "5")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SRTAPT4")
+        (point "SRTAPT5")
+        (point "SRTAPT6")
+      )
+    )
+    (entity
+      (name "6")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "EllipseEntity")
+      (geometry
+        (point "SRTACT3")
+        (azimuth 100 0)
+        (distance 64 705)
+        (distance 64 705)
+        (angle 100 7220)
+        (angle 100 15678)
+      )
+      (construction
+        (type 1)
+        (point "SRTAPT6")
+        (point "SRTAPT7")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "7")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SRTAPT7")
+        (point "SRTAPT8")
+        (point "SRTAPT9")
+      )
+    )
+    (entity
+      (name "8")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "EllipseEntity")
+      (geometry
+        (point "SRTACT4")
+        (azimuth 100 0)
+        (distance 64 642)
+        (distance 64 642)
+        (angle 100 952)
+        (angle 100 4342)
+      )
+      (construction
+        (type 1)
+        (point "SRTAPT9")
+        (point "SRTAPT10")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "9")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "LineEntity")
+      (geometry
+        (point "SRTAPT10")
+        (point "SRTAPT1")
+      )
+    )
+    (entity
+      (name "10")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "LineEntity")
+      (geometry
+        (point "SRTBPT1")
+        (point "SRTBPT2")
+      )
+    )
+    (entity
+      (name "11")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "EllipseEntity")
+      (geometry
+        (point "SRTBCT1")
+        (azimuth 100 0)
+        (distance 64 642)
+        (distance 64 642)
+        (angle 100 19826)
+        (angle 100 21619)
+      )
+      (construction
+        (type 1)
+        (point "SRTBPT2")
+        (point "SRTBPT3")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "12")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SRTBPT3")
+        (point "SRTBPT4")
+        (point "SRTBPT5")
+        (point "SRTBPT6")
+        (point "SRTBPT7")
+      )
+    )
+    (entity
+      (name "13")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "EllipseEntity")
+      (geometry
+        (point "SRTBCT2")
+        (azimuth 100 0)
+        (distance 64 321)
+        (distance 64 321)
+        (angle 100 19078)
+        (angle 100 24902)
+      )
+      (construction
+        (type 1)
+        (point "SRTBPT7")
+        (point "SRTBPT8")
+        (orientation 1)
+      )
+    )
+    (entity
+      (name "14")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "EllipseEntity")
+      (geometry
+        (point "SRTCCT1")
+        (azimuth 100 0)
+        (distance 64 450)
+        (distance 64 450)
+        (angle 100 22427)
+        (angle 100 30164)
+      )
+      (construction
+        (type 1)
+        (point "SRTCPT1")
+        (point "SRTCPT2")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "16")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "EllipseEntity")
+      (geometry
+        (point "SRTCCT2")
+        (azimuth 100 0)
+        (distance 64 321)
+        (distance 64 321)
+        (angle 100 19078)
+        (angle 100 24902)
+      )
+      (construction
+        (type 1)
+        (point "SRTCPT4")
+        (point "SRTCPT5")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "18")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "EllipseEntity")
+      (geometry
+        (point "SRTCCT3")
+        (azimuth 100 0)
+        (distance 64 545)
+        (distance 64 545)
+        (angle 100 35968)
+        (angle 100 19510)
+      )
+      (construction
+        (type 1)
+        (point "SRTCPT8")
+        (point "SRTCPT9")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "20")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "EllipseEntity")
+      (geometry
+        (point "SRTCCT4")
+        (azimuth 100 0)
+        (distance 64 642)
+        (distance 64 642)
+        (angle 100 952)
+        (angle 100 4342)
+      )
+      (construction
+        (type 1)
+        (point "SRTCPT10")
+        (point "SRTCPT11")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "21")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "SRTCPT11")
+        (point "SRTCPT12")
+        (point "SRTCPT13")
+      )
+    )
+    (entity
+      (name "22")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2")
+      (shape "LineEntity")
+      (geometry
+        (point "SRTCPT2")
+        (point "SRTCPT3")
+      )
+    )
+    (entity
+      (name "19")
+      (id_atc "TEXTE ZONE MILITAIRE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10303 64 8672)
+      )
+      (text_content "FL55")
+    )
+  )
+)

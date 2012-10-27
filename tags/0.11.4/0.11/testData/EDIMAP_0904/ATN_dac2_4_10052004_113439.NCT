@@ -1,0 +1,260 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "FOND PUITS 2")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 5)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris")
+)
+(map
+  (name "ATN")
+  (number 4)
+  (comment "")
+  (date 10 05 2004)
+  (heure 11 34 39)
+  (ref_point
+    (name "ATN")
+    (comment "")
+    (value
+      (nautical_mile 64 11232 64 -441)
+    )
+  )
+  (ref_point
+    (name "ATN2")
+    (comment "")
+    (value
+      (nautical_mile 64 11319 64 -623)
+    )
+  )
+  (ref_point
+    (name "ATN3")
+    (comment "")
+    (value
+      (nautical_mile 64 11332 64 -789)
+    )
+  )
+  (ref_point
+    (name "ATN4")
+    (comment "")
+    (value
+      (nautical_mile 64 11283 64 -967)
+    )
+  )
+  (ref_point
+    (name "ATN5")
+    (comment "")
+    (value
+      (nautical_mile 64 11160 64 -1128)
+    )
+  )
+  (ref_point
+    (name "ATN6")
+    (comment "")
+    (value
+      (nautical_mile 64 11009 64 -1218)
+    )
+  )
+  (ref_point
+    (name "ATN7")
+    (comment "")
+    (value
+      (nautical_mile 64 10801 64 -1252)
+    )
+  )
+  (ref_point
+    (name "ATN8")
+    (comment "")
+    (value
+      (nautical_mile 64 10613 64 -1206)
+    )
+  )
+  (ref_point
+    (name "ATN9")
+    (comment "")
+    (value
+      (nautical_mile 64 10423 64 -1073)
+    )
+  )
+  (ref_point
+    (name "ATN10")
+    (comment "")
+    (value
+      (nautical_mile 64 9934 64 -409)
+    )
+  )
+  (ref_point
+    (name "ATN11")
+    (comment "")
+    (value
+      (nautical_mile 64 9854 64 -252)
+    )
+  )
+  (ref_point
+    (name "ATN12")
+    (comment "")
+    (value
+      (nautical_mile 64 9834 64 -51)
+    )
+  )
+  (ref_point
+    (name "ATN13")
+    (comment "")
+    (value
+      (nautical_mile 64 9894 64 141)
+    )
+  )
+  (ref_point
+    (name "ATN14")
+    (comment "")
+    (value
+      (nautical_mile 64 10019 64 289)
+    )
+  )
+  (ref_point
+    (name "ATN15")
+    (comment "")
+    (value
+      (nautical_mile 64 10215 64 387)
+    )
+  )
+  (ref_point
+    (name "ATN16")
+    (comment "")
+    (value
+      (nautical_mile 64 10391 64 399)
+    )
+  )
+  (ref_point
+    (name "ATN17")
+    (comment "")
+    (value
+      (nautical_mile 64 10607 64 326)
+    )
+  )
+  (ref_point
+    (name "ATN18")
+    (comment "")
+    (value
+      (nautical_mile 64 10744 64 202)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 2)
+    (keyboard 2)
+    (entity
+      (name "1")
+      (id_atc "ROUTE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ATN")
+        (point "ATN2")
+        (point "ATN3")
+        (point "ATN4")
+        (point "ATN5")
+        (point "ATN6")
+        (point "ATN7")
+        (point "ATN8")
+        (point "ATN9")
+        (point "ATN10")
+        (point "ATN11")
+        (point "ATN12")
+        (point "ATN13")
+        (point "ATN14")
+        (point "ATN15")
+        (point "ATN16")
+        (point "ATN17")
+        (point "ATN18")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "2")
+      (id_atc "FOND PUITS 2")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ATN2")
+        (point "ATN3")
+        (point "ATN4")
+        (point "ATN5")
+        (point "ATN6")
+        (point "ATN7")
+        (point "ATN8")
+        (point "ATN9")
+        (point "ATN10")
+        (point "ATN11")
+        (point "ATN12")
+        (point "ATN13")
+        (point "ATN14")
+        (point "ATN15")
+        (point "ATN16")
+        (point "ATN17")
+        (point "ATN18")
+        (point "ATN")
+      )
+      (polygone 1)
+    )
+  )
+)

@@ -1,0 +1,236 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "BORD SECTEUR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(id_atc
+  (name "FOND SECTEUR")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 4)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris fonce")
+)
+(id_atc
+  (name "LIMITE SECTEUR")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 27)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris clair")
+)
+(map
+  (name "TM")
+  (number 218)
+  (comment "")
+  (date 17 10 2008)
+  (heure 14 41 08)
+  (ref_point
+    (name "TM1")
+    (comment "")
+    (value
+      (nautical_mile 64 15054 64 10016)
+    )
+  )
+  (ref_point
+    (name "TM2")
+    (comment "")
+    (value
+      (nautical_mile 64 12150 64 7871)
+    )
+  )
+  (ref_point
+    (name "TM3")
+    (comment "")
+    (value
+      (nautical_mile 64 8072 64 7933)
+    )
+  )
+  (ref_point
+    (name "TM4")
+    (comment "")
+    (value
+      (nautical_mile 64 7601 64 8322)
+    )
+  )
+  (ref_point
+    (name "TM5")
+    (comment "")
+    (value
+      (nautical_mile 64 8318 64 8504)
+    )
+  )
+  (ref_point
+    (name "TM6")
+    (comment "")
+    (value
+      (nautical_mile 64 10189 64 8978)
+    )
+  )
+  (ref_point
+    (name "TM7")
+    (comment "")
+    (value
+      (nautical_mile 64 12156 64 9729)
+    )
+  )
+  (ref_point
+    (name "TM8")
+    (comment "")
+    (value
+      (nautical_mile 64 13606 64 10350)
+    )
+  )
+  (ref_point
+    (name "TM9")
+    (comment "")
+    (value
+      (nautical_mile 64 13686 64 10094)
+    )
+  )
+  (ref_point
+    (name "TM10")
+    (comment "")
+    (value
+      (nautical_mile 64 14624 64 10260)
+    )
+  )
+  (ref_point
+    (name "AP001")
+    (comment "")
+    (value
+      (nautical_mile 64 9844 64 8886)
+    )
+  )
+  (ref_point
+    (name "AP02")
+    (comment "")
+    (value
+      (nautical_mile 64 9843 64 8748)
+    )
+  )
+  (ref_point
+    (name "AP03")
+    (comment "")
+    (value
+      (nautical_mile 64 9406 64 8337)
+    )
+  )
+  (ref_point
+    (name "AP04")
+    (comment "")
+    (value
+      (nautical_mile 64 9646 64 7897)
+    )
+  )
+  (submap
+    (number 1)
+    (name "TM")
+    (submap_type 5)
+    (entity
+      (name "863")
+      (id_atc "BORD SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "TM1")
+        (point "TM10")
+        (point "TM9")
+        (point "TM8")
+        (point "TM7")
+        (point "TM6")
+        (point "TM5")
+        (point "TM4")
+        (point "TM3")
+        (point "TM2")
+        (point "TM1")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "864")
+      (id_atc "FOND SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "TM1")
+        (point "TM10")
+        (point "TM9")
+        (point "TM8")
+        (point "TM7")
+        (point "TM6")
+        (point "TM5")
+        (point "TM4")
+        (point "TM3")
+        (point "TM2")
+        (point "TM1")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "3")
+      (id_atc "LIMITE SECTEUR")
+      (shape "PolylineEntity")
+      (geometry
+        (point "AP001")
+        (point "AP02")
+        (point "AP03")
+        (point "AP04")
+      )
+    )
+  )
+)
