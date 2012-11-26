@@ -44,9 +44,9 @@ import fr.crnan.videso3d.ihm.components.DropDownButton;
 import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
 import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
+import fr.crnan.videso3d.util.VScreenShotAction;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.ogc.kml.KMLRoot;
-import gov.nasa.worldwindx.examples.util.ScreenShotAction;
 
 /**
  * Toolbar of the main window
@@ -151,7 +151,7 @@ public class MainToolbar extends JToolBar {
 		//Screenshot
 		JButton snapshot = new JButton(new ImageIcon(getClass().getResource("/resources/snapshot.png")));
 		snapshot.setToolTipText("Capture d'écran de la vue 3D");
-		snapshot.addActionListener(new ScreenShotAction(wwd));
+		snapshot.addActionListener(new VScreenShotAction(wwd));
 		this.add(snapshot);
 		
 		this.addSeparator();
