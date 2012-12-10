@@ -29,7 +29,6 @@ import java.text.ParseException;
 import java.util.List;
 
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import gov.nasa.worldwind.util.Logging;
