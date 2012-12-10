@@ -63,7 +63,7 @@ public class CentCentr {
 		/**
 		 * Version des données ADP
 		 */
-		private String versionADP;
+		private String versionADP = "";
 		
 		//Constructor
 		
@@ -85,7 +85,9 @@ public class CentCentr {
 				this.setNivPlancherRvsm(word[7+i]);
 				this.setNivPlafondRvsm(word[8+i]);
 				this.setTypeDonnees(word[9+i]);
-				this.setVersionADP(word[10+i]);
+				if(word.length>10+i){//paramètre spécifique CRNAN
+					this.setVersionADP(word[10+i]);
+				}
 			} else {
 				throw new ParseException("CENT_CENTR Parse Error at " + line, 0);
 			}
