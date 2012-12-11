@@ -34,7 +34,8 @@ import javax.swing.JRadioButton;
 public class TitleTwoButtons extends JPanel {
 
 	private JRadioButton firstButton;
-	
+	private JRadioButton secondButton;
+	private ButtonGroup group;
 	
 	/**
 	 * 
@@ -44,7 +45,7 @@ public class TitleTwoButtons extends JPanel {
 	 * @param first True if the first button should be activated by default
 	 */
 	public TitleTwoButtons(String title, String firstLabel, String secondLabel, Boolean first){
-		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));		
 		this.setBorder(BorderFactory.createEmptyBorder(0, 17, 1, 3));
 		
 		//Title
@@ -57,24 +58,40 @@ public class TitleTwoButtons extends JPanel {
 		firstButton.setSelected(first);
 		
 		//second button
-		JRadioButton secondButton = new JRadioButton(secondLabel);
+		secondButton = new JRadioButton(secondLabel);
 		secondButton.setSelected(!first);
 		
 		//group
-		ButtonGroup group = new ButtonGroup();
+		group = new ButtonGroup();
 		group.add(firstButton);
 		group.add(secondButton);
 		
 		JPanel groupPanel = new JPanel();
 		groupPanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 3));
 		groupPanel.setLayout(new BoxLayout(groupPanel, BoxLayout.X_AXIS));
-		groupPanel.add(Box.createHorizontalGlue());
+		//groupPanel.add(Box.createHorizontalGlue());
 		groupPanel.add(firstButton);
 		groupPanel.add(secondButton);
 		
 		this.add(groupPanel);
 	}
 	
+	public JRadioButton getFirstButton() {
+		return firstButton;
+	}
+	public JRadioButton getSecondButton() {
+		return secondButton;
+	}	
+	public void setFirstButton(JRadioButton button){
+		firstButton=button;
+	}
+	public void setSecondButton(JRadioButton button){
+		secondButton=button;
+	}		
+	public ButtonGroup getButtonGroup() {
+		return group;
+	}
+			
 	/**
 	 * Adds a listener to the first radio button
 	 * @param listener

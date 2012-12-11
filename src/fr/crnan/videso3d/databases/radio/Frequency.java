@@ -22,12 +22,15 @@ package fr.crnan.videso3d.databases.radio;
  */
 
 
+import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.render.Material;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 
 import fr.crnan.videso3d.graphics.RadioCovPolygon;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collection;
 
 
 public class Frequency {
@@ -35,6 +38,13 @@ public class Frequency {
 	private double freqValue = 0;	
 	private RadioCovPolygon[] volumes = new RadioCovPolygon[4];
 	private String[] antennas = new String[4];
+	private Color color1 = new Color(178,242,251,0);
+	private Color color2 = new Color(253,206,139,0);
+	
+	private ArrayList<Frequency> freqList = new ArrayList<Frequency>();
+	private AirspaceLayer radioCovList;
+	private Collection<Airspace> airspaces;
+	
 
 	public void setNorm1(RadioCovPolygon norm1) {
 		volumes[0]=norm1;
@@ -45,7 +55,7 @@ public class Frequency {
 		volumes[0].getAttributes().setOutlineMaterial(new Material(outlineColor));
 		volumes[0].getAttributes().setOpacity(0.8);
 		volumes[0].getAttributes().setOutlineOpacity(0.9);
-		volumes[0].getAttributes().setOutlineWidth(3.0);
+		volumes[0].getAttributes().setOutlineWidth(1.0);
 	}
 	public void setNorm2(RadioCovPolygon norm2) {
 		volumes[1]=norm2;
@@ -61,19 +71,19 @@ public class Frequency {
 	}		
 		
 	private void setVolumes(RadioCovPolygon norm1, RadioCovPolygon sec1, RadioCovPolygon norm2, RadioCovPolygon sec2) {		
-		if (norm1 != null) { volumes[0]=norm1; this.setupDefaultMaterial(volumes[0],Color.BLUE);}
-		if (sec1 !=null) { volumes[1]=sec1; this.setupDefaultMaterial(volumes[1],Color.GREEN);}
-		if (norm2 !=null) { volumes[2]=norm2; this.setupDefaultMaterial(volumes[2],Color.BLUE);}
-		if (sec2 !=null) { volumes[3]=norm2; this.setupDefaultMaterial(volumes[3],Color.GREEN);}						
+		if (norm1 != null) { volumes[0]=norm1; this.setupDefaultMaterial(volumes[0],color1);}
+		if (sec1 !=null) { volumes[1]=sec1; this.setupDefaultMaterial(volumes[1],color2);}
+		if (norm2 !=null) { volumes[2]=norm2; this.setupDefaultMaterial(volumes[2],color1);}
+		if (sec2 !=null) { volumes[3]=sec2; this.setupDefaultMaterial(volumes[3],color2);}						
 		/* volumes[2]=sec1;  //this.setupDefaultMaterial(volumes[2],Color.BLUE);
 		volumes[3]=sec2;  //this.setupDefaultMaterial(volumes[3],Color.GREEN); */		
 	}		
 	
 	public void setColors() {
-		if (volumes[0] != null) {  this.setupDefaultMaterial(volumes[0],Color.BLUE);}
-		if (volumes[1] != null) {  this.setupDefaultMaterial(volumes[1],Color.GREEN);}
-		if (volumes[2] != null) {  this.setupDefaultMaterial(volumes[2],Color.BLUE);}
-		if (volumes[3] != null) {  this.setupDefaultMaterial(volumes[3],Color.GREEN);}						
+		if (volumes[0] != null) {  this.setupDefaultMaterial(volumes[0],color1);}
+		if (volumes[1] != null) {  this.setupDefaultMaterial(volumes[1],color2);}
+		if (volumes[2] != null) {  this.setupDefaultMaterial(volumes[2],color1);}
+		if (volumes[3] != null) {  this.setupDefaultMaterial(volumes[3],color2);}						
 	}
 	
 	
@@ -107,10 +117,9 @@ public class Frequency {
         a.getAttributes().setOutlineMaterial(new Material(outlineColor));
         a.getAttributes().setOpacity(0.1);
         a.getAttributes().setOutlineOpacity(0.9);
-        a.getAttributes().setOutlineWidth(3.0);
+        a.getAttributes().setOutlineWidth(1.0);
     }
 	
 	
 }
-
 	
