@@ -1,18 +1,3 @@
-/*
- * This file is part of ViDESO.
- * ViDESO is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * ViDESO is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
- */
 
 package fr.crnan.videso3d.databases.radio;
 
@@ -35,9 +20,12 @@ import fr.crnan.videso3d.layers.RadioCovLayer;
 import gov.nasa.worldwind.Restorable;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.render.airspaces.Airspace;
+
+
 /**
  * 
  * @author Bruno Spyckerelle
+ * @author Mickael Papail
  * @version 0.2.1
  */
 public class RadioCovController implements VidesoController {
@@ -49,7 +37,8 @@ public class RadioCovController implements VidesoController {
 	 */
 	private RadioCovLayer radioCovLayer;
 	
-	public static final int ANTENNE = 0; 
+	public static final int ANTENNE = 0;
+	private boolean visionMode;
 	
 	public RadioCovController(final VidesoGLCanvas wwd){
 		this.wwd = wwd;
@@ -81,15 +70,20 @@ public class RadioCovController implements VidesoController {
 			
 			@Override
 			protected void done(){
-				RadioCovView radioView  = (RadioCovView)DatasManager.getView(DatasManager.Type.RadioCov);
-				if(radioView.initRadioCovAirspaces())
-					radioView.feedPanel();
-			}
-			
+				RadioCovView radioView  = (RadioCovView)DatasManager.getView(Type.RadioCov);				
+				if(radioView.initRadioCovAirspaces() && radioView.initRadioFrequencies()) {}
+					radioView.create3DPage1();
+					radioView.create3DPage2();										
+			}			
 		}.execute();
 	
 	}
 
+	
+	public void setVisionMode(boolean visionMode) {
+		this.visionMode = visionMode;
+	}
+	
 	@Override
 	public void highlight(int type, String name) {
 		this.showObject(type, name);
@@ -130,7 +124,7 @@ public class RadioCovController implements VidesoController {
 		radioCovLayer.addVisibleRadioCov(name);		
 		this.wwd.redrawNow();
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(DatasManager.Type.RadioCov).showObject(type, name);
+		DatasManager.getView(Type.RadioCov).showObject(type, name);
 	}
 
 	@Override
@@ -138,7 +132,7 @@ public class RadioCovController implements VidesoController {
 		radioCovLayer.removeVisibleRadioCov(name);
 		this.wwd.redrawNow();
 		//synchroniser la vue si l'appel n'a pas été fait par la vue
-		DatasManager.getView(DatasManager.Type.RadioCov).hideObject(type, name);
+		DatasManager.getView(Type.RadioCov).hideObject(type, name);
 	}
 
 	@Override
