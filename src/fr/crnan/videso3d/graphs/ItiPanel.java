@@ -270,7 +270,7 @@ public class ItiPanel extends ResultGraphPanel {
 
 					progressBar.setValue(3);
 
-					rs = st.executeQuery("select iditi, trajetid, raccordement_id, cond1, balise, balid from couple_trajets, baltrajets where couple_trajets.trajetid = baltrajets.idtrajet and iditi in ("+findItisSQL+") ");
+					rs = st.executeQuery("select iditi, trajetid, raccordement_id, cond1, balise, balid, appartient from couple_trajets, baltrajets where couple_trajets.trajetid = baltrajets.idtrajet and iditi in ("+findItisSQL+") ");
 
 					progressBar.setValue(4);
 
