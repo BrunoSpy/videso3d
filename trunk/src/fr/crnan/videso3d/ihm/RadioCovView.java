@@ -6,7 +6,7 @@
  * (at your option) any later version.
  *
  * ViDESO is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY; without even the implied warranty o
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
@@ -78,9 +78,7 @@ import gov.nasa.worldwind.render.airspaces.Curtain;
 
 // Gestion des mouvements de camera
 // import gov.nasa.worldwind.animation.*;
-//import gov.nasa.worldwind.view.*;
-
-
+// import gov.nasa.worldwind.view.*;
 // import com.visutools.nav.bislider.BiSliderAdapter;
 
 import java.util.Hashtable;
@@ -355,12 +353,13 @@ public class RadioCovView extends JPanel implements DataView {
 			}					
 		}					
 		comboFreq.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String string = (String)comboFreq.getSelectedItem();
-				matchFrequency(string); /*Initialise le texte des checkBox (methode setText, ainsi que celui des biSliders*/
-				/*sur la page des fréquences , récupération des noms  */
-				
-//				display.setText((String)comboFreq.getSelectedItem());
+			public void actionPerformed(ActionEvent e) {				
+				//System.out.println("sélection dans la combobox");
+				reset();
+				String string = (String)comboFreq.getSelectedItem();				
+				matchFrequency(string);   /* Initialise le texte des checkBox (methode setText, ainsi que celui des biSliders */				
+				/*sur la page des fréquences , récupération des noms  */				
+				// display.setText((String)comboFreq.getSelectedItem());
 			}				
 		});	
 		
@@ -542,7 +541,7 @@ public class RadioCovView extends JPanel implements DataView {
 				// TODO exageration verticale																
 			
 				// Mode 3d : gestion du panel antennes On retire les JSliders et on positionne les biSliders
-				for (VBiSlider b :biSliders) {
+				for (VBiSlider b : biSliders) {
 					b.setVisible(true);
 					// bugfix  Correction de bug : On force la suppression de la la couleur aux biSliders qui ne sont pas sélectionnés ; le passage du 2D ou 3D génère des bigs
 					for (JCheckBox c : checkboxes) {
@@ -689,20 +688,25 @@ public class RadioCovView extends JPanel implements DataView {
 			}
 		}		
 	}		
-	
-	
-	
+		
 	@Override
-	public void reset() {	
-		for(JCheckBox check : checkboxes){
-			if(check.isSelected()){
-				check.setSelected(false);
-			}
+	public void reset() {
+		getController().hideAllRadioCovLayers();
+		getController().redrawNow();
+		for (int i=0;i<4;i++) {
+			//if (jCheckBox[i].isSelected())
+			jCheckBox[i].setSelected(false);
 		}
+		for(JCheckBox check : checkboxes){
+		//	if(check.isSelected()){
+			check.setSelected(false);
+		//	}
+		}
+		
 	}		
 		
 	/**
-	 * A voir pour une éventuelle factorisation mais pas pour le moment.*/
+	 * A voir pour une éventuelle factorisation*/
 	/**
 	 * Titre du panel Routes.<br />
 	 * Contient un sélecteur pour choisir la méthode de représentation (2D/3D).
@@ -891,12 +895,12 @@ public class RadioCovView extends JPanel implements DataView {
 	 * @param freq
 	 * Initialise les checkBox et BiSliders de la page des fréquences après sélection d'une fréquence dans la comboBox.
 	 */
-	public void matchFrequency(String freq) {
+	public void matchFrequency(String freq) {	
 		for (Frequency f : freqList.getFrequencies()) {			
 			if (f.getSectorName() == freq) {
 				frequency = f;					
 				f.setColors();				
-				/*CheckBox Normale 1*/
+				/*Liste des CheckBox */
 				for (int i=0;i<4;i++) {				
 					if (f.getVolumes()[i]==null) {
 						jCheckBox[i].setEnabled(false); 
@@ -908,15 +912,16 @@ public class RadioCovView extends JPanel implements DataView {
 						freqJSlider[i].setName("");
 					}				
 					else {					
-							System.out.println("volume "+i+" "+frequency.getVolumes()[i].getName());						
+							// System.out.println("volume "+i+" "+frequency.getVolumes()[i].getName());						
 							jCheckBox[i].setEnabled(true); 
-						// seules les couvertures normales sont sélectionnées par défaut
+						// seules les couvertures normales sont sélectionnées par défaut //  
 						if ((i==0) || (i==2)) {
 							jCheckBox[i].setSelected(true);		
 						}
 						if ((i==1) || (i==3)) {
 							jCheckBox[i].setSelected(false);
 							freqBiSlider[i].setUnhighlighted();
+							// Force l'effacement de l'objet affiché (Une couverture secours pouvait etre une couverture normale précédemment.)
 						}
 // 	TODO				Rechercher le radioCovPolygon qui correspond au name et ensuite utiliser la ligne écrite ci-dessous.				
 // 	!!!      			biSlider.setName(((RadioCovPolygon) airspace).getName());
@@ -935,12 +940,13 @@ public class RadioCovView extends JPanel implements DataView {
 						}
 */						
 						if (jCheckBox[i].isSelected()) {							
-							// pour mettre en surbrillance les biSliders qui ont leurs checkBox de sélectionnée
-							if (visionMode==true) {freqBiSlider[i].setHighlighted();}
+							// pour mettre en surbrillance les biSliders qui ont leurs checkBox de sélectionnée pour le mode visu 3D
+							if (visionMode==false) {freqBiSlider[i].setHighlighted();}
 							
 							// déclencher l'affichage de la couverture radio de la checkBox sélectionnée
 							// frequency.getVolumes[i].getName = antennaName
-							getController().showObject(RadioCovController.ANTENNE, frequency.getVolumes()[i].getName());
+							
+							//getController().showObject(RadioCovController.ANTENNE, frequency.getVolumes()[i].getName());
 						}																			
 					}
 				}
@@ -991,7 +997,7 @@ public class RadioCovView extends JPanel implements DataView {
 			//for(JSlider s : sliders){					
 			for (JCheckBox check : checkboxes)	{
 				if (check.isSelected()) {
-					System.out.println("check sélectionnée");
+//					System.out.println("check sélectionnée");
 					antennaName = check.getName();
 					System.out.println(antennaName);
 					for (Airspace airspace : radioCovAirspaces.getAirspaces()) {
@@ -1042,7 +1048,7 @@ public class RadioCovView extends JPanel implements DataView {
 			for (JCheckBox check : checkboxes)	{
 				if (check.isSelected()) {					
 					antennaName = check.getName();
-					System.out.println(antennaName);
+//					System.out.println(antennaName);
 					for (Airspace airspace : radioCovAirspaces.getAirspaces()) {
 					if ((airspace  instanceof RadioCovPolygon && ((RadioCovPolygon)airspace).getName().equals(antennaName))) {																														
 							radioCov = (RadioCovPolygon)airspace;
@@ -1052,8 +1058,8 @@ public class RadioCovView extends JPanel implements DataView {
 							alt = radioObjectAltitudes(radioCov);
 							int indiceMin = altSearch(alt,currentMinAlt,0,tabRadioCov.length);
 							int indiceMax = altSearch(alt,currentMaxAlt,0,tabRadioCov.length);														
-							System.out.println("indice min :"+indiceMin);
-							System.out.println("indice max :"+indiceMax);							
+//							System.out.println("indice min :"+indiceMin);
+//							System.out.println("indice max :"+indiceMax);							
 							radioCov.setVisible(0,tabRadioCov.length, false);
 							radioCov.setVisible(indiceMin,indiceMax,true);																																				
 							getController().showObject(RadioCovController.ANTENNE, antennaName);					
