@@ -19,9 +19,9 @@ import javax.swing.JComboBox;
 /**
  * Combobox with available type searches for search panels af AnalyzeUI
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
-public class TypeComboBox extends JComboBox {
+public class TypeComboBox extends JComboBox<String> {
 
 	public TypeComboBox(){
 		super(new String[]{"balise", /*"balint",*/ "iti", "trajet", "route", "connexion", "stars", "secteur", "liaison privilégiée", "base PLNS..."});
