@@ -34,7 +34,6 @@ import javax.swing.JScrollPane;
 import org.jdesktop.swingx.JXMultiSplitPane;
 
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.databases.edimap.Cartes;
 import fr.crnan.videso3d.databases.edimap.EdimapController;

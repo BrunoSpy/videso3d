@@ -63,14 +63,14 @@ import fr.crnan.videso3d.ihm.components.VFileChooser;
 /**
  * Default search panel
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class SearchPanel extends JPanel {
 	private JUpperCaseComboBox searchField1;
 	private JUpperCaseComboBox searchField2;
 	private JTextField numLiaison;
 	private JPanel defaultSearchPanel;
-	private JComboBox typeBox;
+	private JComboBox<String> typeBox;
 	private JButton btnRechercher;
 	private JPanel liaisonPrivilegieePanel;
 	private TypeComboBox typeBoxLP;
@@ -128,14 +128,14 @@ public class SearchPanel extends JPanel {
 		//Liste des balises pour l'autocomplétion
 		Vector<String> results = getAllStipItems();
 		
-		searchField1 = new JUpperCaseComboBox(new DefaultComboBoxModel(results));
+		searchField1 = new JUpperCaseComboBox(new DefaultComboBoxModel<String>(results));
 		searchField1.setEditable(true);
 		searchField1.setToolTipText("<html>Nom de la balise ou du terrain recherché.<br />Exemple : LF* renverra toutes les informations sur les terrains français.</html>");
 		AutoCompleteDecorator.decorate(searchField1);
 		
 		@SuppressWarnings("unchecked")
 		Vector<String> results2 = (Vector<String>) results.clone();
-		searchField2 = new JUpperCaseComboBox(new DefaultComboBoxModel(results2));
+		searchField2 = new JUpperCaseComboBox(new DefaultComboBoxModel<String>(results2));
 		searchField2.setEditable(true);
 		AutoCompleteDecorator.decorate(searchField2);
 		btnRechercher = new JButton("Rechercher");
@@ -147,18 +147,22 @@ public class SearchPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				if(((JComboBox)e.getSource()).getSelectedItem().equals("liaison privilégiée")){
-					((CardLayout) getLayout()).show(SearchPanel.this, "liaison");
-				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("base PLNS...")) {
-					((CardLayout) getLayout()).show(SearchPanel.this, "plns");
-				} else if(((JComboBox)e.getSource()).getSelectedItem().equals("secteur")) {
-					((CardLayout) getLayout()).show(SearchPanel.this, "secteur");
-				} else {
-					((CardLayout) getLayout()).show(SearchPanel.this, "default");
+				if(e.getSource() instanceof JComboBox<?>){
+					JComboBox<String> source = (JComboBox<String>) e.getSource();
+					
+					if(source.getSelectedItem().equals("liaison privilégiée")){
+						((CardLayout) getLayout()).show(SearchPanel.this, "liaison");
+					} else if(source.getSelectedItem().equals("base PLNS...")) {
+						((CardLayout) getLayout()).show(SearchPanel.this, "plns");
+					} else if(source.getSelectedItem().equals("secteur")) {
+						((CardLayout) getLayout()).show(SearchPanel.this, "secteur");
+					} else {
+						((CardLayout) getLayout()).show(SearchPanel.this, "default");
+					}
+					typeBoxLP.setSelectedItem(source.getSelectedItem());
+					typeBoxSect.setSelectedItem(source.getSelectedItem());
+					typeBox.setSelectedItem(source.getSelectedItem());
 				}
-				typeBoxLP.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
-				typeBoxSect.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
-				typeBox.setSelectedItem(((JComboBox)e.getSource()).getSelectedItem());
 			}
 		});
 		choosePLNS = new JTextField(20);
@@ -247,7 +251,7 @@ public class SearchPanel extends JPanel {
 		//Liste des balises pour l'autocomplétion
 		Vector<String> resultsSect = getAllSecteurs();
 
-		searchFieldSect = new JUpperCaseComboBox(new DefaultComboBoxModel(resultsSect));
+		searchFieldSect = new JUpperCaseComboBox(new DefaultComboBoxModel<String>(resultsSect));
 		searchFieldSect.setEditable(true);
 		searchFieldSect.setToolTipText("<html>Nom du secteur.</html>");
 		AutoCompleteDecorator.decorate(searchFieldSect);
@@ -478,7 +482,7 @@ public class SearchPanel extends JPanel {
 		return (String) typeBox.getSelectedItem();
 	}
 	
-	public JComboBox getTypeComboBox(){
+	public JComboBox<String> getTypeComboBox(){
 		return typeBox;
 	}
 	
@@ -526,10 +530,10 @@ public class SearchPanel extends JPanel {
 	
 	public void updateSearchBoxes(){
 		Vector<String> results1 = getAllStipItems();
-		searchField1.setModel(new DefaultComboBoxModel(results1));
+		searchField1.setModel(new DefaultComboBoxModel<String>(results1));
 		@SuppressWarnings("unchecked")
 		Vector<String> results2 = (Vector<String>) results1.clone();
-		searchField2.setModel(new DefaultComboBoxModel(results2));
+		searchField2.setModel(new DefaultComboBoxModel<String>(results2));
 		
 		
 	}

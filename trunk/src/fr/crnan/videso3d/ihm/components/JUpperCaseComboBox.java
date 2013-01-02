@@ -23,16 +23,16 @@ import javax.swing.JComboBox;
 /**
  * {@link JComboBox} with forced upper case letters
  * @author Adrien Vidal
- * @version 0.1.0
+ * @version 0.1.1
  */
-public class JUpperCaseComboBox extends JComboBox {
+public class JUpperCaseComboBox extends JComboBox<String> {
 
 	public JUpperCaseComboBox(){
 		super();
 		this.setEditor(new JUpperCaseComboBoxEditor());
 	}
 
-	public JUpperCaseComboBox(DefaultComboBoxModel defaultComboBoxModel) {
+	public JUpperCaseComboBox(DefaultComboBoxModel<String> defaultComboBoxModel) {
 		super(defaultComboBoxModel);
 		this.setEditor(new JUpperCaseComboBoxEditor());
 		this.setPreferredSize(new Dimension(111,24));
