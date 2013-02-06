@@ -224,7 +224,7 @@ public class FilteredTreeTableModel extends AbstractTreeTableModel {
 							this.modelSupport.fireChildChanged(new TreePath(treeNode.getPath()), 0, treeNode);
 
 						String nodeName = ((FilteredTreeTableNode) treeNode.getUserObject()).getName();
-						if(nodeName.equals("Waypoints"))
+						if(nodeName != null && nodeName.equals("Waypoints"))
 							fireEvent = false;
 						else if(treeNode.getParent() instanceof FilteredTreeTableNode){
 							if(((FilteredTreeTableNode)((DefaultMutableTreeNode)treeNode.getParent()).getUserObject()).getName().equals("Waypoints"))

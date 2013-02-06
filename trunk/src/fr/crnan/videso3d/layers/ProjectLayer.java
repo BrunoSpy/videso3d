@@ -89,6 +89,10 @@ public class ProjectLayer extends LayerSet {
 		return this.project;
 	}
 	
+	public boolean contains(Object o){
+		return this.getProject().contains(o);
+	}
+	
 	public void addObject(Object o){
 		if(o instanceof Carte){
 			((Carte) o).setLayers(xmlRenderables, xmlAirspaces, xmlTexts);
@@ -134,6 +138,8 @@ public class ProjectLayer extends LayerSet {
 	}
 
 	public void setVisible(Object o, boolean visible){
+		if(!this.contains(o))
+			 return; 
 		if(o instanceof Carte){
 			((Carte) o).setVisible(visible);
 		} else if(o instanceof Airspace){
@@ -153,7 +159,7 @@ public class ProjectLayer extends LayerSet {
 		}else if(o instanceof Layer) {
 			((Layer)o).setEnabled(visible);
 		} else {
-			Logging.logger().warning("Unable to add object of class "+o.getClass());
+			Logging.logger().warning("Unable to set visibility of object of class "+o.getClass());
 			throw new IllegalArgumentException();
 		}
 		this.firePropertyChange(AVKey.LAYER, null, this);

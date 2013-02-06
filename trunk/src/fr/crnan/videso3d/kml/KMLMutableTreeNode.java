@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.kml;
 
+import fr.crnan.videso3d.ihm.components.FilteredTreeTableNode;
 import gov.nasa.worldwind.ogc.kml.KMLAbstractContainer;
 import gov.nasa.worldwind.ogc.kml.KMLAbstractFeature;
 import gov.nasa.worldwind.ogc.kml.KMLNetworkLink;
@@ -33,18 +34,19 @@ import javax.swing.tree.TreeNode;
  * @author Bruno Spyckerelle
  * @version 0.1.0
  */
-public class KMLMutableTreeNode implements MutableTreeNode {
+public class KMLMutableTreeNode extends FilteredTreeTableNode implements MutableTreeNode  {
 
 	protected MutableTreeNode parent;
 	protected List<MutableTreeNode> children;
 	protected KMLAbstractFeature feature;
 	
-	public KMLMutableTreeNode(KMLAbstractFeature kmlFeature){
-		
+	public KMLMutableTreeNode(String name, boolean visible, KMLAbstractFeature kmlFeature){
+		super(name, visible);
 		this.feature = kmlFeature;
 		
-		
 	}
+	
+	
 	
     /**
      * Creates a new <code>KMLMutableTreeNode</code> from the specified <code>feature</code>. This maps the feature type
@@ -53,25 +55,24 @@ public class KMLMutableTreeNode implements MutableTreeNode {
      *
      * @param feature the KML feature to create a new <code>KMLMutableTreeNode</code> for.
      *
-     * @return a new <code>KMLMutableTreeNode</code>.
+     * @return a new <code>MutableTreeNode</code>.
      *
      * @throws IllegalArgumentException if the <code>feature</code> is <code>null</code>.
      */
-    public static KMLMutableTreeNode fromKMLFeature(KMLAbstractFeature feature)
-    {
+    public static MutableTreeNode fromKMLFeature(KMLAbstractFeature feature) {
         if (feature == null)
         {
             String message = Logging.getMessage("nullValue.FeatureIsNull");
             Logging.logger().severe(message);
             throw new IllegalArgumentException(message);
         }
-
+        
         if (feature instanceof KMLNetworkLink)
             return new KMLNetworkLinkMutableTreeNode((KMLNetworkLink) feature);
         else if (feature instanceof KMLAbstractContainer)
             return new KMLContainerMutableTreeNode((KMLAbstractContainer) feature);
-        else
-            return new KMLMutableTreeNode(feature);
+        else 
+            return new KMLMutableTreeNode(feature.getName(), true, feature);
     }
 	
 	@Override
@@ -169,7 +170,6 @@ public class KMLMutableTreeNode implements MutableTreeNode {
 
 	@Override
 	public void setUserObject(Object object) {
-		// TODO Auto-generated method stub
 		
 	}
 

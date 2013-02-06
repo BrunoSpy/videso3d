@@ -67,9 +67,13 @@ public class ProjectManagerUI extends JDialog {
 	private Set<String> imageList;
 	private Set<String> trajectories;
 	
+	private VidesoGLCanvas wwd;
+	
 	public ProjectManagerUI(Window parent, VidesoGLCanvas wwd){
 		super(parent);
 			
+		this.wwd = wwd;
+		
 		projectManager = new ProjectManager();
 		projectManager.prepareSaving(wwd);
 
@@ -77,7 +81,7 @@ public class ProjectManagerUI extends JDialog {
 		imageList = new HashSet<String>();
 		trajectories = new HashSet<String>();
 		
-		if(projectManager.getTypes().isEmpty() && projectManager.getImages().isEmpty() && !projectManager.isOtherObjects()){
+		if(projectManager.getTypes().isEmpty() && !projectManager.hasImages() && !projectManager.isOtherObjects()){
 			error();
 		} else {
 
@@ -159,7 +163,7 @@ public class ProjectManagerUI extends JDialog {
 			content.add(list);
 		}
 		
-		List<EditableSurfaceImage> imagesList = this.projectManager.getImages();
+		List<EditableSurfaceImage> imagesList = DatasManager.getUserObjectsController(wwd).getImages();
 		
 		if(imagesList != null && !imagesList.isEmpty()){
 			i++;

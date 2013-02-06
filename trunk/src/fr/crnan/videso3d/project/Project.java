@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.crnan.videso3d.databases.edimap.Carte;
+import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.RestorableUserFacingText;
@@ -40,7 +41,7 @@ import gov.nasa.worldwind.util.Logging;
  * Fires a PropertyChangeEvent when an object is added or removed<br />
  * Created by a {@link ProjectManager}
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class Project {
 
@@ -57,7 +58,7 @@ public class Project {
 	private List<Balise2D> balises2D = new ArrayList<Balise2D>();
 	private List<Balise3D> balises3D = new ArrayList<Balise3D>();
 	private List<GeographicText> texts = new ArrayList<GeographicText>();
-	private List<SurfaceImage> images = new ArrayList<SurfaceImage>();
+	private List<EditableSurfaceImage> images = new ArrayList<EditableSurfaceImage>();
 	private List<Layer> layers = new ArrayList<Layer>();
 	
 	
@@ -119,6 +120,8 @@ public class Project {
 			addCarte((Carte) o);
 		} else if(o instanceof Airspace){
 			addAirspace((Airspace) o);
+		} else if(o instanceof EditableSurfaceImage){
+			addImage((EditableSurfaceImage) o);
 		} else if(o instanceof Renderable){
 			addRenderable((Renderable) o);
 		} else if(o instanceof Balise2D){
@@ -139,6 +142,8 @@ public class Project {
 			removeCarte((Carte) o);
 		} else if(o instanceof Airspace){
 			removeAirspace((Airspace) o);
+		} else if(o instanceof EditableSurfaceImage){
+			removeImage((EditableSurfaceImage) o);
 		} else if(o instanceof Renderable){
 			removeRenderable((Renderable) o);
 		} else if(o instanceof Balise2D){
@@ -239,17 +244,17 @@ public class Project {
 		return texts;
 	}
 
-	public void addImage(SurfaceImage image){
+	public void addImage(EditableSurfaceImage image){
 		this.images.add(image);
 		this.firePropertyChange(OBJECT_ADDED, null, image);
 	}
 
-	public void removeImage(SurfaceImage image){
+	public void removeImage(EditableSurfaceImage image){
 		this.images.remove(image);
 		this.firePropertyChange(OBJECT_REMOVED, null, image);
 	}
 	
-	public List<SurfaceImage> getImages() {
+	public List<EditableSurfaceImage> getImages() {
 		return images;
 	}
 	
@@ -290,7 +295,33 @@ public class Project {
 		for(Layer l : this.getLayers()){
 			objects.add(l);
 		}
+		for(SurfaceImage i : this.getImages()){
+			objects.add(i);
+		}
 		return objects;
+	}
+	
+	public boolean contains(Object o){
+		if(o instanceof Carte){
+			return this.getCartes().contains(o);
+		} else if(o instanceof Airspace){
+			return this.getAirspaces().contains(o);
+		} else if(o instanceof EditableSurfaceImage){
+			return this.getImages().contains(o);
+		} else if(o instanceof Renderable){
+			return this.getRenderables().contains(o);
+		} else if(o instanceof Balise2D){
+			return this.getBalises2D().contains(o);
+		} else if(o instanceof Balise3D){
+			return this.getBalises3D().contains(o);
+		} else if(o instanceof RestorableUserFacingText){
+			return this.getTexts().contains(o);
+		}else if(o instanceof Layer) {
+			return this.getLayers().contains(o);
+		} else {
+			Logging.logger().warning("Unsupported class "+o.getClass());
+			return false;
+		}
 	}
 	
 	/**

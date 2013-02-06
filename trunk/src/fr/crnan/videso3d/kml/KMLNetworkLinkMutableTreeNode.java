@@ -24,7 +24,7 @@ import gov.nasa.worldwind.ogc.kml.KMLAbstractFeature;
 public class KMLNetworkLinkMutableTreeNode extends KMLMutableTreeNode {
 
 	public KMLNetworkLinkMutableTreeNode(KMLAbstractFeature kmlFeature) {
-		super(kmlFeature);
+		super(kmlFeature.getName(), true, kmlFeature);
 	}
 
 }

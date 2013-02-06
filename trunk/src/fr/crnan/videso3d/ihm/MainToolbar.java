@@ -34,16 +34,19 @@ import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.stream.XMLStreamException;
 
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.formats.images.ImageUtils;
 import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.ihm.components.DropDownButton;
 import fr.crnan.videso3d.ihm.components.DropDownToggleButton;
 import fr.crnan.videso3d.ihm.components.Omnibox;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
+import fr.crnan.videso3d.kml.KMLUtils;
 import fr.crnan.videso3d.util.VScreenShotAction;
 import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.ogc.kml.KMLRoot;
@@ -167,8 +170,9 @@ public class MainToolbar extends JToolBar {
 				if(fileChooser.showOpenDialog(mainWindow)== JFileChooser.APPROVE_OPTION){
 					try {
 						KMLRoot kmlRoot = KMLRoot.createAndParse(fileChooser.getSelectedFile());
-						kmlRoot.setField(AVKey.DISPLAY_NAME, KMLView.formName(fileChooser.getSelectedFile(), kmlRoot));
-						mainWindow.addKMLView(new KMLView(kmlRoot, wwd));
+						kmlRoot.setField(AVKey.DISPLAY_NAME, KMLUtils.formName(fileChooser.getSelectedFile(), kmlRoot));
+						//mainWindow.addKMLView(new KMLView(kmlRoot, wwd));
+						DatasManager.getUserObjectsController(wwd).addKML(kmlRoot);
 					} catch (IOException e) {
 						e.printStackTrace();
 					} catch (XMLStreamException e) {
@@ -192,7 +196,8 @@ public class MainToolbar extends JToolBar {
 				VFileChooser file = new VFileChooser();
 				file.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 				if(file.showOpenDialog(null) == VFileChooser.APPROVE_OPTION){
-					wwd.getImagesController().importImage(file.getSelectedFile());
+					//import permanent -> pas de prise en compte par le UserObjectController
+					ImageUtils.importImage(file.getSelectedFile(), wwd);
 				}
 			}
 		});
@@ -206,7 +211,7 @@ public class MainToolbar extends JToolBar {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				VFileChooser file = new VFileChooser();
+				final VFileChooser file = new VFileChooser();
 				file.setFileSelectionMode(JFileChooser.FILES_ONLY);
 				file.setMultiSelectionEnabled(true);
 				ArrayList<String> imgFilter = new ArrayList<String>();
@@ -219,7 +224,28 @@ public class MainToolbar extends JToolBar {
 				file.addChoosableFileFilter(
 						new FileNameExtensionFilter("Images", imgFilter.toArray(new String[]{})));
 				if(file.showOpenDialog(null) == VFileChooser.APPROVE_OPTION){
-					wwd.getImagesController().addEditableImages(file.getSelectedFiles());
+					final ProgressMonitor progress = new ProgressMonitor(MainToolbar.this,
+																	"Import des images",
+																	"", 
+																	0, 
+																	100);					
+					progress.setProgress(0);
+					progress.setIndeterminate(true);
+					new SwingWorker<Void, Void>() {
+
+						@Override
+						protected Void doInBackground() throws Exception {
+							DatasManager.getUserObjectsController(wwd).addObjects(ImageUtils.createEditableImages(file.getSelectedFiles(), wwd));
+
+							return null;
+						}
+						
+						@Override
+						protected void done() {
+							progress.close();
+						}
+						
+					}.execute();
 				}
 			}
 		});

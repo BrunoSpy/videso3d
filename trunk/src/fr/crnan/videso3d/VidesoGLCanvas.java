@@ -40,7 +40,6 @@ import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.stip.Stip;
 import fr.crnan.videso3d.databases.stpv.Stpv;
 import fr.crnan.videso3d.formats.VidesoTrack;
-import fr.crnan.videso3d.formats.images.ImagesController;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.globes.EarthFlatCautra;
 import fr.crnan.videso3d.globes.FlatGlobeCautra;
@@ -107,7 +106,7 @@ import gov.nasa.worldwind.view.orbit.FlatOrbitView;
 /**
  * Extension de WorldWindCanvas prenant en compte la création d'éléments 3D
  * @author Bruno Spyckerelle
- * @version 0.9.7
+ * @version 0.9.8
  */
 @SuppressWarnings("serial")
 public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwner{
@@ -126,11 +125,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 	private FlatGlobeCautra flatGlobe;
 	private Globe roundGlobe;
 	private String projection;
-	
-	/**
-	 * Gestion des images
-	 */
-	private ImagesController imagesController;
 	
 	/**
 	 * Outil de mesure (alidade)
@@ -270,13 +264,6 @@ public class VidesoGLCanvas extends WorldWindowGLCanvas implements ClipboardOwne
 				position = layers.indexOf(l);
 		}
 		layers.add(position, layer);
-	}
-
-	public ImagesController getImagesController(){
-		if(this.imagesController == null){
-			this.imagesController = new ImagesController(this);
-		}
-		return this.imagesController;
 	}
 	
 	public HighlightController getHighlightController(){
