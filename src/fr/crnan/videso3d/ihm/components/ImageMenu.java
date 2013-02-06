@@ -21,6 +21,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.formats.images.ImageUtils;
@@ -37,7 +38,7 @@ import javax.swing.event.ChangeListener;
 /**
  * Contextual menu for {@link SurfaceImage}
  * @author Bruno Spyckerelle
- * @version 0.0.2
+ * @version 0.0.3
  */
 public class ImageMenu extends JPopupMenu {
 
@@ -96,7 +97,7 @@ public class ImageMenu extends JPopupMenu {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				wwd.getImagesController().deleteImage(image);
+				DatasManager.getUserObjectsController(wwd).removeObject(image);
 			}
 		});
 		

@@ -15,40 +15,42 @@
  */
 package fr.crnan.videso3d.kml;
 
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
+import fr.crnan.videso3d.ihm.components.FilteredTreeTableNode;
+import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.ogc.kml.KMLAbstractContainer;
 import gov.nasa.worldwind.ogc.kml.KMLAbstractFeature;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.2.0
  */
-public class KMLContainerMutableTreeNode extends KMLMutableTreeNode {
+public class KMLContainerMutableTreeNode extends DefaultMutableTreeNode {
 
-	public KMLContainerMutableTreeNode(KMLAbstractFeature kmlFeature) {
-		super(kmlFeature);
+	public KMLContainerMutableTreeNode(KMLAbstractContainer kmlFeature) {
+		String name = kmlFeature.getName();
 		
-		for (KMLAbstractFeature child : this.getFeature().getFeatures())  {
+		if(name == null)
+			name = ((String) kmlFeature.getRoot().getField(AVKey.DISPLAY_NAME));
+		
+		if(name == null)
+			name = "Name not found";
+		
+		FilteredTreeTableNode node = new FilteredTreeTableNode(name , true);
+		this.setUserObject(node);
+		
+		for (KMLAbstractFeature child : kmlFeature.getFeatures())  {
             if (child != null){
             	MutableTreeNode featureNode = KMLMutableTreeNode.fromKMLFeature(child);
             	if(featureNode != null)
-            		this.insert(featureNode);
+            		this.add(new DefaultMutableTreeNode(featureNode));
             }
                 
         }
 	}
 
-    /**
-     * Indicates the KML container this node represents.
-     *
-     * @return this node's KML container.
-     */
-    @Override
-    public KMLAbstractContainer getFeature() {
-        return (KMLAbstractContainer) super.getFeature();
-    }
-	
     @Override
     public boolean isLeaf(){
     	return false;

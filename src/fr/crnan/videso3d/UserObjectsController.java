@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d;
 
+import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.graphics.Balise;
 import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.VidesoObject;
@@ -29,9 +30,12 @@ import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.layers.Layer;
 import gov.nasa.worldwind.layers.RenderableLayer;
+import gov.nasa.worldwind.ogc.kml.KMLRoot;
+import gov.nasa.worldwind.ogc.kml.impl.KMLController;
 import gov.nasa.worldwind.render.AbstractShape;
 import gov.nasa.worldwind.render.Highlightable;
 import gov.nasa.worldwind.render.Renderable;
+import gov.nasa.worldwind.render.SurfaceImage;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.Polygon;
 
@@ -44,7 +48,7 @@ import java.util.List;
  * Controls the objects created by the user<br />
  * A view has to be created before the controller.
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class UserObjectsController implements VidesoController {
 	
@@ -57,15 +61,17 @@ public class UserObjectsController implements VidesoController {
 	 * User generated objects
 	 */
 	private List<Restorable> userObjects;
-
+	
 	/**
 	 * Every objects : either user generated or linked to a project
 	 */
 	private List<Object> objects;
 	
+	//TODO fusionner les calques dans un layerset
 	private RenderableLayer renderableLayer;
 	private Balise3DLayer balise3DLayer;
 	private AirspaceLayer airspaceLayer;
+	private RenderableLayer imagesLayer;
 	
 	private VidesoGLCanvas wwd;
 	private UserObjectsView view;
@@ -89,6 +95,12 @@ public class UserObjectsController implements VidesoController {
 		airspaceLayer = new AirspaceLayer();
 		airspaceLayer.setName("User Generated Airspaces");
 		this.wwd.toggleLayer(airspaceLayer, true);
+		
+		imagesLayer = new RenderableLayer();
+		imagesLayer.setName("User Images");
+		imagesLayer.setPickEnabled(true);
+		this.wwd.toggleLayer(imagesLayer, true);
+	
 	}
 	
 	public int getID(Object o){
@@ -109,6 +121,8 @@ public class UserObjectsController implements VidesoController {
 			if(o instanceof Airspace){
 				airspaceLayer.removeAirspace((Airspace)o);
 				PolygonEditorsManager.stopEditAirspace((Polygon) o);
+			} else if(o instanceof SurfaceImage){
+				imagesLayer.removeRenderable((Renderable) o);
 			} else	if(o instanceof Renderable){
 				renderableLayer.removeRenderable((Renderable) o);
 			} else if(o instanceof Balise3D){
@@ -123,6 +137,16 @@ public class UserObjectsController implements VidesoController {
 		objects.remove(o);
 		
 		this.view.remove(o);
+	}
+	
+	public void addKML(KMLRoot kml){
+		KMLController kmlController = new KMLController(kml);
+		this.renderableLayer.addRenderable(kmlController);
+		this.view.addKML(kml);
+	}
+	
+	public void refreshKML(){
+		this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
 	}
 	
 	public void addProject(Project project){
@@ -144,6 +168,8 @@ public class UserObjectsController implements VidesoController {
 		if(o instanceof VidesoObject){
 			if(o instanceof Airspace){
 				airspaceLayer.addAirspace((Airspace)o);
+			} else if(o instanceof EditableSurfaceImage) {
+				imagesLayer.addRenderable((Renderable) o);
 			} else	if(o instanceof Renderable){
 				renderableLayer.addRenderable((Renderable) o);
 			} else if(o instanceof Balise3D){
@@ -158,7 +184,17 @@ public class UserObjectsController implements VidesoController {
 	}
 	
 	/**
-	 * 
+	 * Add objects to the adequate layer.<br />
+	 * @param objects
+	 */
+	public void addObjects(List<? extends Restorable> objects){
+		for(Restorable r : objects){
+			this.addObject(r);
+		}
+	}
+	
+	/**
+	 * Images are not taken into account, use {@link #hasImages()} to know if there are images.
 	 * @return True if objects independant of any project
 	 */
 	public boolean hasUserObjects(){
@@ -167,8 +203,13 @@ public class UserObjectsController implements VidesoController {
 				(airspaceLayer != null && airspaceLayer.getAirspaces().iterator().hasNext());
 	}
 	
+	public boolean hasImages(){
+		return (imagesLayer != null && imagesLayer.getRenderables().iterator().hasNext());
+	}
+	
 	/**
-	 * @return All visible and restorable objects added by user and not part of a project
+	 * To retrieve images, use {@link #getImages()}
+	 * @return All visible and restorable objects added by user and not part of a project except images
 	 */
 	public List<Restorable> getUserObjects(){
 		List<Restorable> objects = new ArrayList<Restorable>();
@@ -192,6 +233,18 @@ public class UserObjectsController implements VidesoController {
 			}
 		}
 		return objects;
+	}
+	
+	public List<EditableSurfaceImage> getImages(){
+		List<EditableSurfaceImage> images = new ArrayList<EditableSurfaceImage>();
+		if(hasImages()){
+			for(Renderable r : imagesLayer.getRenderables()){
+				if(r instanceof EditableSurfaceImage){
+					images.add((EditableSurfaceImage) r);
+				}
+			}
+		}
+		return images;
 	}
 	
 	/**
@@ -247,7 +300,10 @@ public class UserObjectsController implements VidesoController {
 				if(o instanceof Airspace) {
 					((Airspace) o).setVisible(true);
 					this.airspaceLayer.firePropertyChange(AVKey.LAYER, null, this.airspaceLayer);
-				} else if(o instanceof Renderable){
+				} else if(o instanceof EditableSurfaceImage){
+					this.imagesLayer.addRenderable((Renderable) o);
+					this.imagesLayer.firePropertyChange(AVKey.LAYER, null, imagesLayer);
+				}else if(o instanceof Renderable){
 					this.renderableLayer.addRenderable((Renderable) o);
 					this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
 				} else if(o instanceof Balise3D) {
@@ -270,6 +326,9 @@ public class UserObjectsController implements VidesoController {
 					((Airspace) o).setVisible(false);
 					this.airspaceLayer.firePropertyChange(AVKey.LAYER, null, this.airspaceLayer);
 					PolygonEditorsManager.stopEditAirspace((Polygon) o);
+				} else if(o instanceof EditableSurfaceImage){
+					this.imagesLayer.removeRenderable((Renderable) o);
+					this.imagesLayer.firePropertyChange(AVKey.LAYER, null, imagesLayer);
 				} else if(o instanceof Renderable){
 					this.renderableLayer.removeRenderable((Renderable) o);
 					if(o instanceof AbstractShape)

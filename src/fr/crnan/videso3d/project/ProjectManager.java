@@ -91,8 +91,7 @@ import gov.nasa.worldwind.layers.Layer;
 public class ProjectManager extends ProgressSupport {
 
 	private HashMap<DatasManager.Type, HashMap<Integer, List<String>>> objects;
-	private List<EditableSurfaceImage> images;
-
+	
 	private boolean otherObjects = false;
 	private boolean trajectories = false;
 	
@@ -101,7 +100,6 @@ public class ProjectManager extends ProgressSupport {
 	public ProjectManager(){
 		super();
 		objects = new HashMap<DatasManager.Type, HashMap<Integer,List<String>>>();
-		images = new ArrayList<EditableSurfaceImage>();
 	}
 
 	/**
@@ -133,11 +131,6 @@ public class ProjectManager extends ProgressSupport {
 
 		}
 
-		//images
-		if(!wwd.getImagesController().getImages().isEmpty()){
-			this.images = wwd.getImagesController().getImages();
-		}
-
 		//trajectoires
 		for(Layer l : wwd.getModel().getLayers()){
 			if(l instanceof GEOTracksLayer){
@@ -158,15 +151,16 @@ public class ProjectManager extends ProgressSupport {
 //			}
 //		}
 		//user added objects
-		if(DatasManager.getController(Type.UserObject) != null && ((UserObjectsController) DatasManager.getController(Type.UserObject)).hasUserObjects())
+		if(DatasManager.getController(Type.UserObject) != null && ((UserObjectsController) DatasManager.getController(Type.UserObject)).hasUserObjects()){
 			this.otherObjects = true;
+		}
 	}
 
 	/**
 	 * Before invoking this method, <code>prepareSaving</code> has to be called once.
 	 * @param file .vpj file
 	 * @param types Types d'objets à enregistrer
-	 * @param images Nom de images à enregistrer
+	 * @param images Nom des images à enregistrer
 	 * @param trajectories Nom des trajectoires à enregistrer
 	 * @param databasesIncluded If true, include databases into the project file. Only usefull if <code>onlyLinks</code> is true
 	 * @param onlyLinks If true, save links to databases. If false, save standalone objects.
@@ -289,7 +283,7 @@ public class ProjectManager extends ProgressSupport {
 		//save images
 		File imagesDir = new File(main.getAbsolutePath()+ "/images");
 		imagesDir.mkdir();
-		for(EditableSurfaceImage si : this.getImages()){
+		for(EditableSurfaceImage si : DatasManager.getUserObjectsController(wwd).getImages()){
 			if(images.contains(si.getName())){
 				int idx = si.getName().lastIndexOf(".");
 				String newName = si.getName();
@@ -319,35 +313,6 @@ public class ProjectManager extends ProgressSupport {
 		//and user generated objects
 		//TODO !!
 		if(types != null && types.contains("Autres objets affichés.")){
-//			for(Layer l : wwd.getModel().getLayers()){
-//				if(l.getName().equals(AIRSPACE_LAYER_NAME)){
-//					for(Airspace r : ((AirspaceLayer) l).getAirspaces()){
-//						this.saveObjectInXml(
-//								(Restorable) r, 
-//								new File(xmlDir, r.getClass().getName()+"-"+format.format(count++)+".xml"));
-//					}
-//				} else if(l.getName().equals(RENDERABLE_LAYER_NAME)){
-//					for(Renderable r : ((RenderableLayer) l).getRenderables()){
-//						if(r instanceof Restorable){
-//							this.saveObjectInXml(
-//									(Restorable) r, 
-//									new File(xmlDir, r.getClass().getName()+"-"+format.format(count++)+".xml"));
-//						}
-//					}
-//				} else if(l.getName().equals(BALISES2D_LAYER_NAME)){
-//					for(Balise2D b : ((Balise2DLayer)l).getVisibleBalises()){
-//						this.saveObjectInXml(b, new File(xmlDir, b.getClass().getName()+"-"+format.format(count++)+".xml"));
-//					}
-//				} else if(l.getName().equals(BALISES3D_LAYER_NAME)){
-//					for(Balise3D b : ((Balise3DLayer)l).getVisibleBalises()){
-//						this.saveObjectInXml(b, new File(xmlDir, b.getClass().getName()+"-"+format.format(count++)+".xml"));
-//					}
-//				}
-//			}
-//			for(Airspace a : PolygonEditorsManager.getLayer().getAirspaces()){
-//				if(a.isVisible())
-//					this.saveObjectInXml(a, new File(xmlDir, a.getClass().getName()+"-"+format.format(count++)+".xml"));
-//			}
 //			//user added objects
 			for(Restorable r : DatasManager.getUserObjectsController(wwd).getUserObjects()){
 				this.saveObjectInXml(r, new File(xmlDir, r.getClass().getName()+"-"+format.format(count++)+".xml"));
@@ -553,6 +518,7 @@ public class ProjectManager extends ProgressSupport {
 					} else {
 						o.restoreState(s);
 					}
+					
 				} catch (IOException e){
 					throw e;
 				} finally{
@@ -568,7 +534,7 @@ public class ProjectManager extends ProgressSupport {
 		if(imageDir.exists() && imageDir.isDirectory()){
 			for(File i : imageDir.listFiles()){
 				this.fireTaskProgress(progress++);
-				wwd.getImagesController().addEditableImages(new File[]{i});
+				project.addObject(ImageUtils.createEditableImage(i, wwd));
 			}
 		}
 
@@ -637,14 +603,6 @@ public class ProjectManager extends ProgressSupport {
 				}
 		}
 	}
-	
-	/**
-	 * Exportable images
-	 * @return List of exportable images
-	 */
-	public List<EditableSurfaceImage> getImages() {
-		return this.images;
-	}
 
 	public boolean isOtherObjects() {
 		return otherObjects;
@@ -652,6 +610,10 @@ public class ProjectManager extends ProgressSupport {
 
 	public boolean isTrajectories(){
 		return trajectories;
+	}
+	
+	public boolean hasImages(){
+		return DatasManager.getUserObjectsController(wwd).hasImages();
 	}
 	
 	/**

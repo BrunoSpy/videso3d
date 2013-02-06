@@ -220,6 +220,15 @@ public class ProgressMonitor extends Object implements Accessible
     }
 
     /**
+     * 
+     * @param indeterminate
+     */
+    public void setIndeterminate(boolean indeterminate){
+    	if(this.myBar != null)
+    		this.myBar.setIndeterminate(indeterminate);
+    }
+    
+    /**
      * {@link JDialog#setAlwaysOnTop(boolean)}
      * @param top
      */

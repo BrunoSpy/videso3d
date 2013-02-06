@@ -41,6 +41,7 @@ import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.UserObjectsController;
 import fr.crnan.videso3d.databases.edimap.Carte;
+import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.graphics.Balise2D;
 import fr.crnan.videso3d.graphics.Balise3D;
 import fr.crnan.videso3d.graphics.VidesoObject;
@@ -48,13 +49,14 @@ import fr.crnan.videso3d.ihm.components.DataView;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableNode;
 import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
 import fr.crnan.videso3d.ihm.components.RegexViewFilter;
+import fr.crnan.videso3d.ihm.components.UserObjectNode;
 import fr.crnan.videso3d.ihm.components.UserObjectTreeTableModel;
+import fr.crnan.videso3d.kml.KMLMutableTreeNode;
 import fr.crnan.videso3d.project.Project;
-import gov.nasa.worldwind.avlist.AVKey;
 import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.ogc.kml.KMLRoot;
 import gov.nasa.worldwind.render.GeographicText;
 import gov.nasa.worldwind.render.Renderable;
-import gov.nasa.worldwind.render.SurfaceImage;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 /**
  * Panel for the Data Explorer showing all objects created by the user either by importing a project or by using the {@link DrawToolbar}<br />
@@ -71,28 +73,10 @@ public class UserObjectsView extends JPanel implements DataView {
 	private JTextField filtre = new JTextField(20);
 	private JPanel panel = new JPanel();
 	
+	
 	private HashMap<Integer, UserObjectNode> objects = new HashMap<Integer, UserObjectNode>();
 	
 	private JXTreeTable treeTable;
-	
-	public class UserObjectNode extends FilteredTreeTableNode {
-		
-		private int id;
-
-		public UserObjectNode(String name, int id, boolean visible){
-			super(name, visible);
-			this.setId(id);
-		}
-
-		public int getId() {
-			return id;
-		}
-
-		public void setId(int id) {
-			this.id = id;
-		}
-
-	}
 	
 	public UserObjectsView(){
 		
@@ -138,6 +122,10 @@ public class UserObjectsView extends JPanel implements DataView {
 						} else {
 							getController().hideObject(((UserObjectNode) source).getId(), source.getName());
 						}
+					} else if(source instanceof KMLMutableTreeNode){
+						//TODO faire ça côté controleur, nécessite de revoir tout le controleur cependant...
+						((KMLMutableTreeNode) source).getFeature().setVisibility(source.isVisible());
+						getController().refreshKML();
 					}
 				}
 			}
@@ -219,17 +207,12 @@ public class UserObjectsView extends JPanel implements DataView {
 
 	@Override
 	public void showObject(int type, String name) {
-		this.rootModel.setValueAt(true, this.objects.get(type), 1);
+		//TODO synchroniser vue si modif directe de la vue 3D
 	}
 
 	@Override
 	public void hideObject(int type, String name) {
-		this.rootModel.setValueAt(false, this.objects.get(type), 1);
-	}
-
-	
-	public void remove(Object object){
-		
+		//TODO synchroniser vue si modif directe de la vue 3D
 	}
 	
 	public void addProject(Project project){
@@ -283,8 +266,8 @@ public class UserObjectsView extends JPanel implements DataView {
 		if(!project.getImages().isEmpty()){
 			DefaultMutableTreeNode imagesNode = new DefaultMutableTreeNode(new FilteredTreeTableNode("Images", true));
 			projectNode.add(imagesNode);
-			for(SurfaceImage i : project.getImages()){
-				imagesNode.add(new DefaultMutableTreeNode(new UserObjectNode((String) i.getValue(AVKey.NAME),getController().getID(i), true)));
+			for(EditableSurfaceImage i : project.getImages()){
+				imagesNode.add(new DefaultMutableTreeNode(new UserObjectNode((String) i.getName(),getController().getID(i), true)));
 			}
 		}
 		if(!project.getLayers().isEmpty()){
@@ -297,21 +280,31 @@ public class UserObjectsView extends JPanel implements DataView {
 			}
 		}
 		
-		
-		
 		rootModel.addProject(projectNode);
 		
 		treeTable.validate();
 	}
 
+	public void addKML(KMLRoot kml){
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) KMLMutableTreeNode.fromKMLFeature(kml.getFeature());
+		rootModel.addKMLNode(node);
+		treeTable.validate();
+	}
+	
+	/**
+	 * Add a user object, not a project
+	 * @param o
+	 */
 	public void addObject(VidesoObject o){
 		UserObjectNode node = new UserObjectNode(o.getName(), getController().getID(o), true);
 		objects.put(node.getId(), node);
-		rootModel.addObjectNode(new DefaultMutableTreeNode(node));
-		
+		rootModel.addObjectNode(new DefaultMutableTreeNode(node));	
 	}
 	
-
+	public void remove(Object o){
+		//TODO la suppression d'un objet a des effets de bords (liste des objets non mise à jour)
+	}
+	
 	@Override
 	public void reset() {
 		

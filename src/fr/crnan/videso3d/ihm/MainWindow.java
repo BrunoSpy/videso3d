@@ -463,37 +463,37 @@ public class MainWindow extends JFrame {
 		return statusBar;
 	}
 
-	/**
-	 * Adds a KMLView to the data explorer
-	 * @param view
-	 */
-	public void addKMLView(final KMLView view){
-		if(!(view instanceof Component))
-			return;
-		
-		int i = 0;
-		if(control.getSingleDockable(view.getTitle()) != null){
-			do{
-				i++;
-			} while (control.getSingleDockable(view.getTitle()+"-"+i) != null);
-		}
-
-		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?view.getTitle():view.getTitle()+"-"+i,
-				view.getTitle(),
-				(Component) view,
-				new CCloseAction(control){
-
-					@Override
-					public void close(CDockable dockable) {
-						super.close(dockable);
-						control.removeDockable((SingleCDockable) dockable);
-						wwd.removeLayer(view.getLayer());
-					}
-		
-		});
-		
-		this.addDockable(dockable);
-	}
+//	/**
+//	 * Adds a KMLView to the data explorer
+//	 * @param view
+//	 */
+//	public void addKMLView(final KMLView view){
+//		if(!(view instanceof Component))
+//			return;
+//		
+//		int i = 0;
+//		if(control.getSingleDockable(view.getTitle()) != null){
+//			do{
+//				i++;
+//			} while (control.getSingleDockable(view.getTitle()+"-"+i) != null);
+//		}
+//
+//		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?view.getTitle():view.getTitle()+"-"+i,
+//				view.getTitle(),
+//				(Component) view,
+//				new CCloseAction(control){
+//
+//					@Override
+//					public void close(CDockable dockable) {
+//						super.close(dockable);
+//						control.removeDockable((SingleCDockable) dockable);
+//						wwd.removeLayer(view.getLayer());
+//					}
+//		
+//		});
+//		
+//		this.addDockable(dockable);
+//	}
 	
 	/**
 	 * Get the UserObjectView and create it if needed
