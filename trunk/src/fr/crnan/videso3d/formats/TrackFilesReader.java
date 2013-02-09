@@ -18,6 +18,7 @@ package fr.crnan.videso3d.formats;
 
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.databases.stip.PointNotFoundException;
+import fr.crnan.videso3d.ihm.ProgressMonitor;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
@@ -33,21 +34,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.SwingWorker;
+
 /**
  * Lecteur de fichiers trace radar<br/>
  * Envoie la progression de la lecture des fichiers avec une valeur comprise entre 0 et 100.
  * @author Bruno Spyckerelle
- * @version 0.6.0
+ * @version 0.6.1
  */
 public abstract class TrackFilesReader extends ProgressSupport{
 
 	private String name;
 		
+	private boolean cancelled = false;
+	
 	private List<File> files = new ArrayList<File>();
+	
+	private Vector<File> selectedFiles;
 	
 	protected int numberFiles = 0;
 	
 	private TracksModel model;
+	
+	private ProgressMonitor monitor = null;
 	
 	public TrackFilesReader(){}
 
@@ -60,13 +69,8 @@ public abstract class TrackFilesReader extends ProgressSupport{
 	 * @param listener
 	 * @throws PointNotFoundException
 	 */
-	public TrackFilesReader(Vector<File> files, TracksModel model, PropertyChangeListener listener) throws PointNotFoundException {
-		this(files, model, listener, null, true);
-	}
-	
 	public TrackFilesReader(Vector<File> files, TracksModel model) throws PointNotFoundException {
-		this(files, model, null);
-		
+		this(files, model, null, true);
 	}
 	
 	public TrackFilesReader(File selectedFile, TracksModel model) throws PointNotFoundException {
@@ -77,6 +81,8 @@ public abstract class TrackFilesReader extends ProgressSupport{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		if(isCancel())
+			fireTaskProgress(100);
 	}
 	
 	public TrackFilesReader(Vector<File> files) throws PointNotFoundException {
@@ -87,33 +93,63 @@ public abstract class TrackFilesReader extends ProgressSupport{
 		this(selectedFile, new TracksModel());
 	}
 	
+	/**
+	 * Prepare the reader.<br />
+	 * To effectively read the files, call {@link #doRead()}
+	 * @param files
+	 * @param model
+	 * @param listener 
+	 * @param filters
+	 * @param disjunctive
+	 * @throws PointNotFoundException
+	 */
 	public TrackFilesReader(Vector<File> files, TracksModel model,
-			PropertyChangeListener listener,
 			List<TrajectoryFileFilter> filters, boolean disjunctive) throws PointNotFoundException {
 		this.setModel(model);
 		this.numberFiles = files.size();
-		if(listener !=  null) this.addPropertyChangeListener(listener);
 		this.filters = filters;
 		this.disjunctive = disjunctive;
+		this.selectedFiles = files;
+	}
+
+	/**
+	 * Effectively launch the reading of the files
+	 * @throws PointNotFoundException
+	 */
+	public void doRead() throws PointNotFoundException {
 		this.fireTaskStarts(100);
-		for(File f : files){
-			try {
-				this.files.add(f);
-				this.readFile(f.getAbsolutePath());
-			} catch (IOException e) {
-				e.printStackTrace();
+		for(File f : selectedFiles){
+			if(!isCancel()){
+				try {
+					this.files.add(f);
+					this.readFile(f.getAbsolutePath());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
 
-
+	/**
+	 * If the reader is monitored by a {@link ProgressMonitor},
+	 * calling this setter will allow the reader to cancel the task if {@link ProgressMonitor#isCanceled()};
+	 * @param monitor
+	 */
+	public void setProgressMonitor(ProgressMonitor monitor){
+		this.monitor = monitor;
+	}
+	
+	protected ProgressMonitor getProgressMonitor(){
+		return this.monitor;
+	}
+	
 	/**
 	 * @param path
 	 * @throws IllegalArgumentException if <code>path</code> is null
 	 * @throws java.io.IOException
 	 * @throws PointNotFoundException 
 	 */
-	public void readFile(String path) throws IOException, PointNotFoundException
+	protected void readFile(String path) throws IOException, PointNotFoundException
 	{
 		if (path == null)
 		{
@@ -134,7 +170,7 @@ public abstract class TrackFilesReader extends ProgressSupport{
 		this.fireTaskInfo(file.getName());
 		
 		this.setName(file.getName());
-		ProgressInputStream fis = new ProgressInputStream(new FileInputStream(file));
+		final ProgressInputStream fis = new ProgressInputStream(new FileInputStream(file));
 		fis.addPropertyChangeListener(ProgressInputStream.UPDATE, new PropertyChangeListener() {
 			
 			@Override
@@ -142,7 +178,8 @@ public abstract class TrackFilesReader extends ProgressSupport{
 				fireTaskProgress(((files.size()-1)*100)/numberFiles+((Integer)evt.getNewValue()/numberFiles));
 			}
 		});
-		this.doReadStream(fis);
+		this.doReadStream(fis);		
+		
 	}
 	
 	public void setName(String name) {
@@ -153,7 +190,27 @@ public abstract class TrackFilesReader extends ProgressSupport{
 		return name;
 	}
 	
+	/**
+	 * Executed in a {@link SwingWorker}
+	 * @param fis
+	 * @throws PointNotFoundException
+	 */
 	protected abstract void doReadStream(ProgressInputStream fis) throws PointNotFoundException;
+	
+	/**
+	 * Stop and cancel reading of files
+	 */
+	public void cancel(){
+		this.cancelled = true;
+	}
+	
+	/**
+	 * 
+	 * @return True if reading has been cancelled
+	 */
+	public boolean isCancel(){
+		return this.getProgressMonitor() != null ? (this.getProgressMonitor().isCanceled() || this.cancelled) : this.cancelled;
+	}
 	
 	protected abstract boolean isTrackValid(VidesoTrack track);
 	

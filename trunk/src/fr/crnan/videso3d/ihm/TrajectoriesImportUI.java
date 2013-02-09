@@ -544,19 +544,11 @@ public class TrajectoriesImportUI extends JDialog {
 				fileChooser.addChoosableFileFilter(new PLNSFileFilter());
 				fileChooser.addChoosableFileFilter(new GEOFileFilter());
 				if(fileChooser.showOpenDialog(TrajectoriesImportUI.this) == VFileChooser.APPROVE_OPTION){
-					
-					new SwingWorker<String, Integer>(){
-						@Override
-						protected String doInBackground() throws Exception {
-							try {
-								mainWindow.addTrajectoriesViews(fileChooser.getSelectedFiles(), getFilters(), isDisjuntive(), enableRapidite.isSelected());
-							} catch(Exception e1){
-								e1.printStackTrace();
-							}
-							return null;
-						}
-					}.execute();
-
+					mainWindow.addTrajectoriesViews(
+							fileChooser.getSelectedFiles(), 
+							getFilters(), 
+							isDisjuntive(), 
+							enableRapidite.isSelected());
 				}
 				TrajectoriesImportUI.this.dispose();
 			}
