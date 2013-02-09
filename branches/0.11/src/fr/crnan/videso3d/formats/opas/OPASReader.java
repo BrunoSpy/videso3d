@@ -16,7 +16,6 @@
 
 package fr.crnan.videso3d.formats.opas;
 
-import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,10 +40,6 @@ import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
  * @version 0.3.2
  */
 public class OPASReader extends TrackFilesReader{
-
-	public OPASReader(Vector<File> files, TracksModel model, PropertyChangeListener listener) throws PointNotFoundException{
-		super(files, model, listener);
-	}
 	
 	public OPASReader(Vector<File> files, TracksModel model) throws PointNotFoundException{
 		super(files, model);
@@ -65,9 +60,8 @@ public class OPASReader extends TrackFilesReader{
 	}
 
 	public OPASReader(Vector<File> files, TracksModel model,
-			PropertyChangeListener readerListener,
 			List<TrajectoryFileFilter> filters, boolean disjunctive) throws PointNotFoundException {
-		super(files, model, readerListener, filters, disjunctive);
+		super(files, model, filters, disjunctive);
 	}
 
 	/**

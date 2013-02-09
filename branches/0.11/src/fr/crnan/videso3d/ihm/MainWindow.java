@@ -469,7 +469,7 @@ public class MainWindow extends JFrame {
 	 */
 	//nombre de fichiers importés
 	int current = -1;
-	public void addTrajectoriesViews(File[] filesT, List<TrajectoryFileFilter> filters, boolean disjunctive, boolean importRapide){
+	public void addTrajectoriesViews(File[] filesT, final List<TrajectoryFileFilter> filters, final boolean disjunctive, final boolean importRapide){
 		final ProgressMonitor progressMonitorT = new ProgressMonitor(this, "Import des trajectoires", "", 0, 100, false, true, false);
 		progressMonitorT.setMillisToDecideToPopup(0);
 		progressMonitorT.setMillisToPopup(0);
@@ -479,12 +479,12 @@ public class MainWindow extends JFrame {
 		
 		progressMonitorT.setNote("Détection des types de fichiers...");
 		
-		Vector<File> opasFile = new Vector<File>();
-		Vector<File> geoFile = new Vector<File>();
-		Vector<File> lplnFile = new Vector<File>();
-		Vector<File> fplFile = new Vector<File>();
-		Vector<File> plnsFile = new Vector<File>();
-		Vector<File> sqlitePlnsFile = new Vector<File>();
+		final Vector<File> opasFile = new Vector<File>();
+		final Vector<File> geoFile = new Vector<File>();
+		final Vector<File> lplnFile = new Vector<File>();
+		final Vector<File> fplFile = new Vector<File>();
+		final Vector<File> plnsFile = new Vector<File>();
+		final Vector<File> sqlitePlnsFile = new Vector<File>();
 		for(File f : files){
 			if(OPASReader.isOpasFile(f)) {
 				opasFile.add(f);
@@ -510,7 +510,7 @@ public class MainWindow extends JFrame {
 										+(plnsFile.size() > 0 ? 1 : 0 )
 										+(sqlitePlnsFile.size() > 0 ? 1 : 0 )));
 		
-		PropertyChangeListener readerListener = new PropertyChangeListener() {
+		final PropertyChangeListener readerListener = new PropertyChangeListener() {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
@@ -525,150 +525,194 @@ public class MainWindow extends JFrame {
 			}
 		};
 
-		if(opasFile.size()>0){
-			try{
-				OPASTracksLayer layer = new OPASTracksLayer(new TracksModel());
-				layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
-				this.wwd.toggleLayer(layer, true);
-				//lecture et création des tracks à la volée
-				OPASReader reader = new OPASReader(opasFile, layer.getModel(), readerListener);
-				if(reader.getModel().getAllTracks().size() > 0){
-					//changement du style en fonction de la conf
-					if(reader.getModel().getAllTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
-						layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
-					}
-					layer.setName(reader.getName());
-					this.addTrajectoriesView(reader, layer);
-				} else {
-					//aucune trajectoire trouvée dans les fichiers
-					opasFile.clear();
-				}
-			} catch (PointNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-		if(geoFile.size()>0){
-			try{
-				GEOTracksLayer layer = new GEOTracksLayer(new TracksModel());
-				layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
-				this.wwd.toggleLayer(layer, true);
-				//lecture et création des tracks à la volée
-				GEOReader reader = new GEOReader(geoFile, layer.getModel(), readerListener, filters, disjunctive, importRapide);
-				if(reader.getModel().getAllTracks().size() > 0){
-					//changement du style en fonction de la conf
-					if(reader.getModel().getAllTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
-						layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
-					}
-					layer.setName(reader.getName());
-					this.addTrajectoriesView(reader, layer);
-				} else {
-					//aucune trajectoire trouvée dans les fichiers
-					geoFile.clear();
-				}
-			} catch (PointNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-		if(lplnFile.size()>0){
-			try {
-				LPLNTracksLayer layer = new LPLNTracksLayer(new TracksModel());
-				LPLNReader reader = new LPLNReader(lplnFile, layer.getModel(), readerListener);
-				this.wwd.toggleLayer(layer, true);
-				if(reader.getModel().getAllTracks().size() > 0){
-					this.addTrajectoriesView(reader, layer);
-				} else {
-					lplnFile.clear();
-				}
-			} catch (PointNotFoundException e) {
-				Logging.logger().warning("Point non trouvé : "+e.getName());
-				JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Impossible de trouver certains points du fichier ("+e.getName()+").<br /><br />" +
-						"<b>Solution :</b><br />Vérifiez qu'une base de données STIP existe et qu'elle est cohérente avec le fichier de trajectoires.</html>",
-						"Erreur", JOptionPane.ERROR_MESSAGE);
-			}
-		}
-		if(fplFile.size()>0){
-			try {
-				FPLTracksLayer layer = new FPLTracksLayer(new TracksModel());
-				FPLReader fplR = new FPLReader(fplFile, layer.getModel(), readerListener);
-				this.wwd.toggleLayer(layer, true);
-				String msgErreur = fplR.getErrorMessage();
-				if(!msgErreur.isEmpty())
-					JOptionPane.showMessageDialog(null, msgErreur, "Erreur lors de la lecture du plan de vol", JOptionPane.ERROR_MESSAGE);
-				if(fplR.getModel().getAllTracks().size()>0)
-					this.addTrajectoriesView(fplR, layer);
-				else 
-					fplFile.clear();
-			} catch (PointNotFoundException e) {
-				e.printStackTrace();
-			}
-		}
-		if(plnsFile.size()>0){
-			//choix de la base de données
-			VFileChooser fileChooser = new VFileChooser();
-			fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-			fileChooser.setMultiSelectionEnabled(false);
-			fileChooser.setDialogTitle("Sélectionner le fichier de base de données");
-			fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-			File database;
-			if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
-				database = fileChooser.getSelectedFile();
-				try{
-					PLNSTracksLayer layer = new PLNSTracksLayer(new PLNSTracksModel());
-					this.wwd.toggleLayer(layer, true);
-					PLNSReader reader = new PLNSReader(plnsFile.toArray(new File[]{}), database, (PLNSTracksModel)layer.getModel(), readerListener);
-					this.addTrajectoriesView(reader, layer);
-				} catch(PointNotFoundException e){
-					Logging.logger().warning("Point non trouvé : "+e.getName());
-					JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Impossible de trouver certains points du fichier ("+e.getName()+").<br /><br />" +
-							"<b>Solution :</b><br />Vérifiez qu'une base de données STIP existe et qu'elle est cohérente avec le fichier de trajectoires.</html>",
-							"Erreur", JOptionPane.ERROR_MESSAGE);
-				}
-			} else {
-				//pas de base de données choisie, on met plnsFile à 0 pour déclencher un message d'erreur
-				plnsFile.clear();
-			}
-		}
-		
-		if(sqlitePlnsFile.size() > 0){
-			try {
-				for(File f : sqlitePlnsFile){
-					
-					PLNSTracksModel model = new PLNSTracksModel();
-					PLNSTracksLayer layer = new PLNSTracksLayer(model);
-					this.wwd.toggleLayer(layer, true);
-					
-					final ProgressMonitor progress = new ProgressMonitor(this, "Import des trajectoires", "", 0, 100);
-					model.getProgressSupport().addPropertyChangeListener(new PropertyChangeListener() {
-						
-						@Override
-						public void propertyChange(PropertyChangeEvent evt) {
-							if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
-								progress.setMaximum(((Integer) evt.getNewValue()));
-							} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
-								progress.setProgress((Integer) evt.getNewValue());
-							} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
-								progress.setNote((String)evt.getNewValue());
+		new SwingWorker<Void, Void>() {
+
+			@Override
+			protected Void doInBackground() throws Exception {
+
+				if(opasFile.size()>0){
+					try{
+						OPASTracksLayer layer = new OPASTracksLayer(new TracksModel());
+						layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
+						MainWindow.this.wwd.toggleLayer(layer, true);
+						//lecture et création des tracks à la volée
+						OPASReader reader = new OPASReader(opasFile, layer.getModel());
+						reader.addPropertyChangeListener(readerListener);
+						reader.setProgressMonitor(progressMonitorT);
+						reader.doRead();
+						if(reader.getModel().getAllTracks().size() > 0 && !reader.isCancel()){
+							//changement du style en fonction de la conf
+							if(reader.getModel().getAllTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
+								layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
 							}
+							layer.setName(reader.getName());
+							MainWindow.this.addTrajectoriesView(reader, layer);
+						} else {
+							//aucune trajectoire trouvée dans les fichiers
+							opasFile.clear();
+							MainWindow.this.wwd.removeLayer(layer);
+							layer.getModel().dispose();
+							layer.dispose();
 						}
-					});
-					model.setDatabase(f);
-					this.addTrajectoriesView(new PLNSReader(f, (PLNSTracksModel) layer.getModel(), readerListener), layer);
+					} catch (PointNotFoundException e) {
+						e.printStackTrace();
+					}
 				}
-			} catch (PointNotFoundException e) {
-				Logging.logger().warning("Point non trouvé : "+e.getName());
-				JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Impossible de trouver certains points du fichier ("+e.getName()+").<br /><br />" +
-						"<b>Solution :</b><br />Vérifiez qu'une base de données STIP existe et qu'elle est cohérente avec le fichier de trajectoires.</html>",
-						"Erreur", JOptionPane.ERROR_MESSAGE);
+				if(geoFile.size()>0){
+					try{
+						GEOTracksLayer layer = new GEOTracksLayer(new TracksModel());
+						layer.setPrecision(Double.parseDouble(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_PRECISION, "0.01")));
+						MainWindow.this.wwd.toggleLayer(layer, true);
+						//lecture et création des tracks à la volée
+						GEOReader reader = new GEOReader(geoFile, layer.getModel(), filters, disjunctive, importRapide);
+						reader.addPropertyChangeListener(readerListener);
+						reader.setProgressMonitor(progressMonitorT);
+						reader.doRead();
+						if(reader.getModel().getAllTracks().size() > 0 && !reader.isCancel()){
+							//changement du style en fonction de la conf
+							if(reader.getModel().getAllTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
+								layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
+							}
+							layer.setName(reader.getName());
+							MainWindow.this.addTrajectoriesView(reader, layer);
+						} else {
+							//aucune trajectoire trouvée dans les fichiers
+							//ou annulation
+							geoFile.clear();
+							MainWindow.this.wwd.removeLayer(layer);
+							layer.getModel().dispose();
+							layer.dispose();
+							
+						}
+					} catch (PointNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+				if(lplnFile.size()>0){
+					try {
+						LPLNTracksLayer layer = new LPLNTracksLayer(new TracksModel());
+						LPLNReader reader = new LPLNReader(lplnFile, layer.getModel());
+						reader.addPropertyChangeListener(readerListener);
+						reader.setProgressMonitor(progressMonitorT);
+						reader.doRead();
+						MainWindow.this.wwd.toggleLayer(layer, true);
+						if(reader.getModel().getAllTracks().size() > 0 && !reader.isCancel()){
+							MainWindow.this.addTrajectoriesView(reader, layer);
+						} else {
+							lplnFile.clear();
+							MainWindow.this.wwd.removeLayer(layer);
+							layer.getModel().dispose();
+							layer.dispose();
+						}
+					} catch (PointNotFoundException e) {
+						Logging.logger().warning("Point non trouvé : "+e.getName());
+						JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Impossible de trouver certains points du fichier ("+e.getName()+").<br /><br />" +
+								"<b>Solution :</b><br />Vérifiez qu'une base de données STIP existe et qu'elle est cohérente avec le fichier de trajectoires.</html>",
+								"Erreur", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				if(fplFile.size()>0){
+					try {
+						FPLTracksLayer layer = new FPLTracksLayer(new TracksModel());
+						FPLReader fplR = new FPLReader(fplFile, layer.getModel());
+						fplR.addPropertyChangeListener(readerListener);
+						fplR.setProgressMonitor(progressMonitorT);
+						fplR.doRead();
+						MainWindow.this.wwd.toggleLayer(layer, true);
+						String msgErreur = fplR.getErrorMessage();
+						if(!msgErreur.isEmpty())
+							JOptionPane.showMessageDialog(null, msgErreur, "Erreur lors de la lecture du plan de vol", JOptionPane.ERROR_MESSAGE);
+						if(fplR.getModel().getAllTracks().size()>0)
+							MainWindow.this.addTrajectoriesView(fplR, layer);
+						else  {
+							fplFile.clear();
+							MainWindow.this.wwd.removeLayer(layer);
+							layer.getModel().dispose();
+							layer.dispose();
+						}
+					} catch (PointNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+				if(plnsFile.size()>0){
+					//choix de la base de données
+					VFileChooser fileChooser = new VFileChooser();
+					fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+					fileChooser.setMultiSelectionEnabled(false);
+					fileChooser.setDialogTitle("Sélectionner le fichier de base de données");
+					fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+					File database;
+					if(fileChooser.showOpenDialog(MainWindow.this) == JFileChooser.APPROVE_OPTION){
+						database = fileChooser.getSelectedFile();
+						try{
+							PLNSTracksLayer layer = new PLNSTracksLayer(new PLNSTracksModel());
+							MainWindow.this.wwd.toggleLayer(layer, true);
+							PLNSReader reader = new PLNSReader(plnsFile.toArray(new File[]{}), database, (PLNSTracksModel)layer.getModel(), readerListener);
+							MainWindow.this.addTrajectoriesView(reader, layer);
+						} catch(PointNotFoundException e){
+							Logging.logger().warning("Point non trouvé : "+e.getName());
+							JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Impossible de trouver certains points du fichier ("+e.getName()+").<br /><br />" +
+									"<b>Solution :</b><br />Vérifiez qu'une base de données STIP existe et qu'elle est cohérente avec le fichier de trajectoires.</html>",
+									"Erreur", JOptionPane.ERROR_MESSAGE);
+						}
+					} else {
+						//pas de base de données choisie, on met plnsFile à 0 pour déclencher un message d'erreur
+						plnsFile.clear();
+					}
+				}
+
+				if(sqlitePlnsFile.size() > 0){
+					try {
+						for(File f : sqlitePlnsFile){
+
+							PLNSTracksModel model = new PLNSTracksModel();
+							PLNSTracksLayer layer = new PLNSTracksLayer(model);
+							MainWindow.this.wwd.toggleLayer(layer, true);
+
+							final ProgressMonitor progress = new ProgressMonitor(MainWindow.this, "Import des trajectoires", "", 0, 100);
+							model.getProgressSupport().addPropertyChangeListener(new PropertyChangeListener() {
+
+								@Override
+								public void propertyChange(PropertyChangeEvent evt) {
+									if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
+										progress.setMaximum(((Integer) evt.getNewValue()));
+									} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
+										progress.setProgress((Integer) evt.getNewValue());
+									} else if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
+										progress.setNote((String)evt.getNewValue());
+									}
+								}
+							});
+							model.setDatabase(f);
+							MainWindow.this.addTrajectoriesView(new PLNSReader(f, (PLNSTracksModel) layer.getModel(), readerListener), layer);
+						}
+					} catch (PointNotFoundException e) {
+						Logging.logger().warning("Point non trouvé : "+e.getName());
+						JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Impossible de trouver certains points du fichier ("+e.getName()+").<br /><br />" +
+								"<b>Solution :</b><br />Vérifiez qu'une base de données STIP existe et qu'elle est cohérente avec le fichier de trajectoires.</html>",
+								"Erreur", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				return null;
 			}
-		}
-		current = -1;
-		progressMonitorT.close();
-		if(opasFile.size() == 0 && geoFile.size() == 0 && lplnFile.size() == 0 
-				&& fplFile.size()==0 && plnsFile.size() == 0 && sqlitePlnsFile.size() == 0){
-			Logging.logger().warning("Aucun fichier trajectoire trouvé.");
-			JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucun fichier trajectoire trouvé.<br /><br />" +
-					"<b>Solution :</b><br />Vérifiez que les fichiers sélectionnés sont bien dans un format pris en compte.</html>", "Erreur", JOptionPane.ERROR_MESSAGE);
-		}
+
+			@Override
+			protected void done() {
+				current = -1;
+				if((opasFile.size() == 0 && geoFile.size() == 0 && lplnFile.size() == 0 
+						&& fplFile.size()==0 && plnsFile.size() == 0 && sqlitePlnsFile.size() == 0)
+					&& !progressMonitorT.isCanceled()){
+					//pas de trajecto trouvée et pas d'annulation => problème
+					Logging.logger().warning("Aucun fichier trajectoire trouvé.");
+					JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucun fichier trajectoire trouvé.<br /><br />" +
+							"<b>Solution :</b><br />Vérifiez que les fichiers sélectionnés sont bien dans un format pris en compte.</html>", "Erreur", JOptionPane.ERROR_MESSAGE);
+				}
+				progressMonitorT.close();
+			}
+
+
+		}.execute();
+
 	
 	}
 	
