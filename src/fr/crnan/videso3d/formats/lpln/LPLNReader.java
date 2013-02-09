@@ -21,7 +21,6 @@ import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.trajectography.TracksModel;
 
-import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -45,10 +44,6 @@ public class LPLNReader extends TrackFilesReader{
 
 	public LPLNReader(Vector<File> files, TracksModel model) throws PointNotFoundException {
 		super(files, model);
-	}
-	
-	public LPLNReader(Vector<File> files, TracksModel model, PropertyChangeListener listener) throws PointNotFoundException {
-		super(files, model, listener);
 	}
 	
 	public LPLNReader(File selectedFile) throws PointNotFoundException {

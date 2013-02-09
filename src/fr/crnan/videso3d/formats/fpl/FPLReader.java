@@ -15,7 +15,6 @@
  */
 package fr.crnan.videso3d.formats.fpl;
 
-import java.beans.PropertyChangeListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -72,10 +71,6 @@ public class FPLReader extends TrackFilesReader {
 
 	public FPLReader(File selectedFile, TracksModel model) throws PointNotFoundException {
 		super(selectedFile, model);
-	}
-
-	public FPLReader(Vector<File> files, TracksModel model, PropertyChangeListener listener) throws PointNotFoundException{
-		super(files, model, listener);
 	}
 	
 	public FPLReader(Vector<File> files, TracksModel model) throws PointNotFoundException{
