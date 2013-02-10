@@ -32,7 +32,6 @@ import org.jdesktop.swingx.JXTaskPane;
 
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.geom.Latitude;
@@ -267,7 +266,7 @@ public class StipContext extends Context {
 
 			taskpane2.add(new AbstractAction() {
 				{
-					putValue(Action.NAME, "Appartient à "+(st.executeQuery("select COUNT(*) from (select distinct balconnexions.idconn from connexions, balconnexions where connexions.id = balconnexions.idconn and (balconnexions.balise = '"+name+"' or connexions.connexion = '"+name+"'))")).getInt(1)
+					putValue(Action.NAME, "Appartient à "+(st.executeQuery("select COUNT(*) from (select distinct balconnexions.idconn from connexions, balconnexions where connexions.id = balconnexions.idconn and (balconnexions.balise = '"+name+"' or connexions.connexion = '"+name+"' or terrain = '"+name+"'))")).getInt(1)
 							+" connexions.");
 				}
 				@Override
