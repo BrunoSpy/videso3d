@@ -267,7 +267,7 @@ public class StipContext extends Context {
 
 			taskpane2.add(new AbstractAction() {
 				{
-					putValue(Action.NAME, "Appartient à "+(st.executeQuery("select COUNT(*) from (select distinct balconnexions.idconn from connexions, balconnexions where connexions.id = balconnexions.idconn and (balconnexions.balise = '"+name+"' or connexions.connexion = '"+name+"'))")).getInt(1)
+					putValue(Action.NAME, "Appartient à "+(st.executeQuery("select COUNT(*) from (select distinct balconnexions.idconn from connexions, balconnexions where connexions.id = balconnexions.idconn and (balconnexions.balise = '"+name+"' or connexions.connexion = '"+name+"' or terrain ='"+name+"'))")).getInt(1)
 							+" connexions.");
 				}
 				@Override
