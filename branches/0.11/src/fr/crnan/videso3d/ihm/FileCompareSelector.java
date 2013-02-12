@@ -32,6 +32,7 @@
 package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -51,9 +52,7 @@ import java.awt.Color;
 import javax.swing.JList;
 
 import fr.crnan.videso3d.DatabaseManager;
-import fr.crnan.videso3d.DatabaseManager.Type;
 import fr.crnan.videso3d.ihm.components.DiffPanel;
-import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseWheelEvent;
@@ -76,8 +75,8 @@ import java.awt.GridLayout;
 public class FileCompareSelector extends JFrame {
 
 	private final JPanel contentPanel = new JPanel();
-	private JList listTypes;
-	private JList listFiles;
+	private JList<DatabaseManager.Type> listTypes;
+	private JList<String> listFiles;
 	private JPanel basesPanel;
 	private DiffPanel comparePanel;
 	private File path2;
@@ -101,7 +100,7 @@ public class FileCompareSelector extends JFrame {
 		contentPanel.add(typePanel);
 		typePanel.setLayout(new BorderLayout(0, 0));
 		
-		listTypes = new JList();
+		listTypes = new JList<DatabaseManager.Type>();
 		listTypes.setOpaque(false);
 		JScrollPane scrollTypes = new JScrollPane(listTypes);
 		scrollTypes.setBorder(null);
@@ -127,7 +126,7 @@ public class FileCompareSelector extends JFrame {
 		contentPanel.add(filesPanel);
 		filesPanel.setLayout(new BorderLayout(0, 0));
 		
-		listFiles = new JList();
+		listFiles = new JList<String>();
 		listFiles.setOpaque(false);
 		listFiles.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listFiles.addListSelectionListener(new ListSelectionListener() {
@@ -135,10 +134,10 @@ public class FileCompareSelector extends JFrame {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				
-				if(((JList) e.getSource()).getModel().getSize()>e.getLastIndex()){
+				if(((JList<String>) e.getSource()).getModel().getSize()>e.getLastIndex()){
 					for(int i = e.getFirstIndex();i<=e.getLastIndex();i++){
-						if(((JList) e.getSource()).isSelectedIndex(i)){
-							final String file = (String) ((JList) e.getSource()).getModel().getElementAt(i);
+						if(((JList<String>) e.getSource()).isSelectedIndex(i)){
+							final String file = (String) ((JList<String>) e.getSource()).getModel().getElementAt(i);
 							try {
 								comparePanel.compareFiles(new File(path1, file), new File(path2, file));
 							} catch (IOException e1) {
@@ -178,8 +177,8 @@ public class FileCompareSelector extends JFrame {
 	}
 	
 	private void fillTypes(){
-		DefaultListModel listModel = new DefaultListModel();
-		for(Type t : Type.values()){
+		DefaultListModel<DatabaseManager.Type> listModel = new DefaultListModel<DatabaseManager.Type>();
+		for(DatabaseManager.Type t : DatabaseManager.Type.values()){
 			listModel.addElement(t);
 		}
 		listTypes.setModel(listModel);
@@ -188,10 +187,10 @@ public class FileCompareSelector extends JFrame {
 			
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if(((JList) e.getSource()).getModel().getSize()>e.getLastIndex()){
+				if(((JList<DatabaseManager.Type>) e.getSource()).getModel().getSize()>e.getLastIndex()){
 					for(int i = e.getFirstIndex();i<=e.getLastIndex();i++){
-						if(((JList) e.getSource()).isSelectedIndex(i)){
-							fillDatabases((Type) ((JList)e.getSource()).getModel().getElementAt(i));
+						if(((JList<DatabaseManager.Type>) e.getSource()).isSelectedIndex(i)){
+							fillDatabases((DatabaseManager.Type) ((JList<DatabaseManager.Type>)e.getSource()).getModel().getElementAt(i));
 						}
 					}
 				}
@@ -201,7 +200,7 @@ public class FileCompareSelector extends JFrame {
 	}
 	
 
-	private void fillDatabases(Type type){
+	private void fillDatabases(DatabaseManager.Type type){
 		basesPanel.removeAll();
 		comparePanel.clear();
 		try {
@@ -237,7 +236,7 @@ public class FileCompareSelector extends JFrame {
 		
 		files1.retainAll(files2);
 		
-		DefaultListModel files = new DefaultListModel();
+		DefaultListModel<String> files = new DefaultListModel<String>();
 		for(String f : files1){
 			files.addElement(f);
 		}
