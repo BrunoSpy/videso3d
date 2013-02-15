@@ -20,21 +20,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.databases.stip.StipController;
 import gov.nasa.worldwind.geom.LatLon;
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.render.BasicShapeAttributes;
 import gov.nasa.worldwind.render.Material;
-import gov.nasa.worldwind.render.Polyline;
+import gov.nasa.worldwind.render.Path;
 import gov.nasa.worldwind.render.SurfacePolyline;
 /**
  * Profil d'un vol avec affichage des couples balise/niveau.<br />
  * Le profil est à la fois dessiné en 3D et en projeté sur le sol.<br />
  * Requiert une base de données STIP sélectionnée.
  * @author Bruno Spyckerelle
- * @version 0.3
+ * @version 0.4.0
  */
 public class Profil3D {
 
@@ -46,11 +45,8 @@ public class Profil3D {
 	/**
 	 * Profil
 	 */
-	private Polyline profil = new Polyline();
-	/**
-	 * Profil 3D
-	 */
-	private VPolyline curtain = new VPolyline();
+	private Path profil = new Path();
+
 	/**
 	 * Projection du profil
 	 */
@@ -77,10 +73,20 @@ public class Profil3D {
 		BasicShapeAttributes attrsH = new BasicShapeAttributes(attrs);
 		attrsH.setInteriorMaterial(new Material(Pallet.makeBrighter(attrs.getInteriorMaterial().getDiffuse())));
 		projected.setHighlightAttributes(attrsH);
-		curtain.setPlain(true);
-		curtain.setColor(insideColor);
-		profil.setColor(outsideColor);
-		profil.setLineWidth(2.0);
+		profil.setExtrude(isPlain());
+		
+		BasicShapeAttributes attrsP = new BasicShapeAttributes();
+		attrsP.setOutlineWidth(2.0);
+		attrsP.setOutlineMaterial(new Material(outsideColor));
+		attrsP.setInteriorMaterial(new Material(insideColor));
+		attrsP.setInteriorOpacity(0.60);
+		
+		BasicShapeAttributes attrsPH = new BasicShapeAttributes(attrsP);
+		attrsPH.setOutlineMaterial(Material.YELLOW);
+		
+		profil.setAttributes(attrsP);
+		profil.setHighlightAttributes(attrsPH);
+
 	}
 	/**
 	 * Profil sans balises
@@ -89,7 +95,6 @@ public class Profil3D {
 	public Profil3D(Iterable<? extends Position> positions){
 		this();
 		profil.setPositions(positions);
-		curtain.setPositions(positions);
 		this.withMarkers = false;
 	}
 	
@@ -124,7 +129,6 @@ public class Profil3D {
 			i++;
 		}
 		profil.setPositions(positions);
-		curtain.setPositions(positions);
 		projected.setLocations(positions);
 	}
 	
@@ -136,7 +140,6 @@ public class Profil3D {
 			i++;
 		}
 		profil.setPositions(positions);
-		curtain.setPositions(positions);
 		projected.setLocations(positions);
 	}
 	
@@ -152,11 +155,7 @@ public class Profil3D {
 		return this.plain;
 	}
 	
-	public Polyline getCurtain(){
-		return this.curtain;
-	}
-	
-	public Polyline getProfil(){
+	public Path getProfil(){
 		return this.profil;
 	}
 	
@@ -169,17 +168,13 @@ public class Profil3D {
 	}
 
 	public void highlight(Boolean b) {
-		if(b){
-			curtain.setColor(Pallet.makeBrighter(new Color(1.0f, 1.0f, 0.0f, 0.4f)));
-		} else {
-			curtain.setColor(insideColor);
-		}
+		this.getProfil().setHighlighted(b);
 	}
 	
 
 	public void setOutsideColor(Color c){
 		this.outsideColor = c;
-		this.profil.setColor(c);
+		this.getProfil().getAttributes().setOutlineMaterial(new Material(c));
 	}
 
 	public Color getOutsideColor(){
@@ -188,7 +183,7 @@ public class Profil3D {
 	
 	public void setInsideColor(Color c){
 		this.insideColor = c;
-		this.curtain.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 60));
+		this.getProfil().getAttributes().setInteriorMaterial(new Material(c));
 	}
 
 	public Color getInsideColor(){

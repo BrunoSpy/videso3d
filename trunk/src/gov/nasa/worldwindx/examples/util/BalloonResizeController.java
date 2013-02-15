@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2012 United States Government as represented by the Administrator of the
+ * National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ */
+
 package gov.nasa.worldwindx.examples.util;
 
 import gov.nasa.worldwind.WorldWindow;
@@ -14,7 +20,7 @@ import java.awt.event.*;
  * directly. Instead, {@link BalloonController} will instantiate it when a balloon needs to be resized.
  *
  * @author pabercrombie
- * @version $Id: BalloonResizeController.java 1 2011-07-16 23:22:47Z dcollins $
+ * @version $Id: BalloonResizeController.java 1171 2013-02-11 21:45:02Z dcollins $
  *
  * @see BalloonController
  */

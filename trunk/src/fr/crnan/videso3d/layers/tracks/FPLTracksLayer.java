@@ -34,7 +34,7 @@ import gov.nasa.worldwind.tracks.Track;
 /**
  * Layer d'accueil pour les trajectoires plan de vol.
  * @author Adrien Vidal
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class FPLTracksLayer extends LPLNTracksLayer {
 		
@@ -166,7 +166,7 @@ public class FPLTracksLayer extends LPLNTracksLayer {
 		Color c = new Color(color.getRed(), color.getGreen(), color.getBlue(), this.getDefaultOutsideColor().getAlpha());
 		if(profils!=null){
 			for(Profil3D p : profils.values()){
-				p.getProfil().setColor(c);
+				p.setOutsideColor(c);
 			}
 			this.firePropertyChange(AVKey.LAYER, null, this);
 
@@ -183,7 +183,7 @@ public class FPLTracksLayer extends LPLNTracksLayer {
 	public void setDefaultInsideColor(Color color) {
 		if(profils!=null){
 			for(Profil3D p : profils.values()){
-				p.getCurtain().setColor(color);
+				p.setInsideColor(color);
 			}
 			this.firePropertyChange(AVKey.LAYER, null, this);
 
@@ -202,7 +202,7 @@ public class FPLTracksLayer extends LPLNTracksLayer {
 		Color c = new Color(defaultInsideColor.getRed(), defaultInsideColor.getGreen(), defaultInsideColor.getBlue(), (int)(opacity*255));
 		if(profils!=null){
 			for(Profil3D p : profils.values()){
-				p.getCurtain().setColor(c);
+				p.setInsideColor(c);
 			}
 			this.firePropertyChange(AVKey.LAYER, null, this);
 		}
@@ -217,7 +217,7 @@ public class FPLTracksLayer extends LPLNTracksLayer {
 	public void setDefaultWidth(double width) {
 		if(profils!=null){
 			for(Profil3D p : profils.values()){
-				p.getProfil().setLineWidth(width);
+				p.getProfil().getAttributes().setOutlineWidth(width);
 			}		
 			this.firePropertyChange(AVKey.LAYER, null, this);
 		}

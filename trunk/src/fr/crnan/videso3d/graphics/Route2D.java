@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.sun.opengl.util.BufferUtil;
+import com.jogamp.common.nio.Buffers;
 
 import fr.crnan.videso3d.Couple;
 import gov.nasa.worldwind.View;
@@ -46,7 +46,7 @@ import gov.nasa.worldwind.util.RestorableSupport.StateObject;
  * Route en 2D.<br />
  * Couleurs respectant le codage SIA
  * @author Bruno Spyckerelle
- * @version 0.3.2
+ * @version 0.3.3
  */
 public class Route2D extends DirectedPath implements Route{
 
@@ -310,7 +310,7 @@ public class Route2D extends DirectedPath implements Route{
         final int FLOATS_PER_ARROWHEAD = 9; // 3 points * 3 coordinates per point
         FloatBuffer buffer = (FloatBuffer) pathData.getValue(ARROWS_KEY);
         if (buffer == null || buffer.capacity() < numPositions * FLOATS_PER_ARROWHEAD)
-            buffer = BufferUtil.newFloatBuffer(FLOATS_PER_ARROWHEAD * numPositions);
+            buffer = Buffers.newDirectFloatBuffer(FLOATS_PER_ARROWHEAD * numPositions);
         pathData.setValue(ARROWS_KEY, buffer);
 
         buffer.clear();

@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2001, 2010 United States Government
- * as represented by the Administrator of the
+ * Copyright (C) 2012 United States Government as represented by the Administrator of the
  * National Aeronautics and Space Administration.
  * All Rights Reserved.
  */
@@ -29,7 +28,7 @@ import java.awt.event.*;
  * conditions are true, or if the event is {@code null}.</li> </ul>
  *
  * @author pabercrombie
- * @version $Id: HotSpotController.java 1 2011-07-16 23:22:47Z dcollins $
+ * @version $Id: HotSpotController.java 1171 2013-02-11 21:45:02Z dcollins $
  */
 public class HotSpotController implements SelectListener, MouseMotionListener
 {

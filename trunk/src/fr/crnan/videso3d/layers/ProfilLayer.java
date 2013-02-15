@@ -21,7 +21,7 @@ import gov.nasa.worldwind.layers.RenderableLayer;
 /**
  * Layer d'accueil pour des {@link Profil3D}
  * @author Bruno Spyckerelle
- * @version 0.2.2
+ * @version 0.2.3
  */
 @SuppressWarnings("serial")
 public class ProfilLayer extends LayerSet {
@@ -54,7 +54,6 @@ public class ProfilLayer extends LayerSet {
 			this.baliseLayer.addBalises(profil3d.getBalises());
 			this.baliseLayer.showAll();
 		}
-		if(profil3d.isPlain()) this.renderableLayer.addRenderable(profil3d.getCurtain());
 	}
 	
 	public void removeAllRenderables(){
@@ -66,7 +65,6 @@ public class ProfilLayer extends LayerSet {
 	public void removeProfil3D(Profil3D profil){
 		this.shapeLayer.removeRenderable(profil.getProjection());
 		this.renderableLayer.removeRenderable(profil.getProfil());
-		if(profil.isPlain()) this.renderableLayer.removeRenderable(profil.getCurtain());
 		if(profil.withMarkers()) {
 			for(Balise3D b : profil.getBalises()){
 				this.baliseLayer.removeBalise(b);

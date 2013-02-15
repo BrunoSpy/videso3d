@@ -19,7 +19,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.sun.opengl.util.BufferUtil;
+import com.jogamp.common.nio.Buffers;
 
 import gov.nasa.worldwind.geom.Position;
 import gov.nasa.worldwind.geom.Vec4;
@@ -29,7 +29,7 @@ import gov.nasa.worldwind.render.Path;
  * Filters segments of the Path that are that fully inside maxAltitude and minAltitude<br/>
  * If the path is splitted in mulptiple visible segments, only the first one will be displayed
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  *
  */
 public class AltitudeFilterablePath extends Path {
@@ -80,12 +80,12 @@ public class AltitudeFilterablePath extends Path {
         }
 
         if (pathData.getPolePositions() == null || pathData.getPolePositions().capacity() < usefullPositions.size() * 2)
-            pathData.setPolePositions(BufferUtil.newIntBuffer(usefullPositions.size() * 2));
+            pathData.setPolePositions(Buffers.newDirectIntBuffer(usefullPositions.size() * 2));
         else
             pathData.getPolePositions().clear();     
         
         if (pathData.getPositionPoints() == null || pathData.getPositionPoints().capacity() < this.usefullPositions.size())
-            pathData.setPositionPoints(BufferUtil.newIntBuffer(this.usefullPositions.size()));
+            pathData.setPositionPoints(Buffers.newDirectIntBuffer(this.usefullPositions.size()));
         else
             pathData.getPositionPoints().clear();
 

@@ -1,16 +1,14 @@
 /*
-Copyright (C) 2001, 2010 United States Government
-as represented by the Administrator of the
-National Aeronautics and Space Administration.
-All Rights Reserved.
-*/
+ * Copyright (C) 2012 United States Government as represented by the Administrator of the
+ * National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ */
 
 package gov.nasa.worldwindx.examples.util;
 
 import gov.nasa.worldwind.*;
 import gov.nasa.worldwind.avlist.*;
 import gov.nasa.worldwind.event.*;
-import gov.nasa.worldwindx.examples.kml.KMLViewController;
 import gov.nasa.worldwind.exception.WWTimeoutException;
 import gov.nasa.worldwind.geom.*;
 import gov.nasa.worldwind.layers.RenderableLayer;
@@ -20,6 +18,7 @@ import gov.nasa.worldwind.pick.*;
 import gov.nasa.worldwind.render.*;
 import gov.nasa.worldwind.terrain.Terrain;
 import gov.nasa.worldwind.util.*;
+import gov.nasa.worldwindx.examples.kml.KMLViewController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,7 +69,7 @@ import java.util.Timer;
  * possible actions are AVKey.RESIZE, AVKey.BACK, AVKey.FORWARD, and AVKey.CLOSE.
  *
  * @author pabercrombie
- * @version $Id: BalloonController.java 1 2011-07-16 23:22:47Z dcollins $
+ * @version $Id: BalloonController.java 1171 2013-02-11 21:45:02Z dcollins $
  */
 public class BalloonController extends MouseAdapter implements SelectListener
 {
@@ -275,13 +274,14 @@ public class BalloonController extends MouseAdapter implements SelectListener
                     this.onBalloonAction((AbstractBrowserBalloon) topObject, pickedObject.getStringValue(AVKey.ACTION));
                 }
             }
-            else if (event.isLeftPress() || event.isLeftDoubleClick())
+            else if (event.isLeftDoubleClick())
             {
-                // Call onLinkActivated for left press and left double click even though we don't want to follow links
-                // when these events occur. onLinkActivated will determine if the URL is something that the controller
-                // should handle, and consume the event if so. If we don't consume the event, the balloon may take action
-                // when a left press event occurs on a link that the balloon controller will handle (for example,
-                // a link to a KML file.)
+                // Call onLinkActivated for left double click even though we don't want to follow links when these
+                // events occur. onLinkActivated determines if the URL is something that the controller should handle,
+                // and consume the event if so. onLinkActivated does not perform the associated link action unless the
+                // event is a left click. If we don't consume the event, the balloon may take action when a left press
+                // event occurs on a link that the balloon controller will handle (for example, a link to a KML file.)
+                // We avoid consuming left press events, since doing so prevents the WorldWindow from gaining focus.
                 String url = this.getUrl(pickedObject);
                 if (url != null)
                 {

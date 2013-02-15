@@ -1,31 +1,28 @@
 /*
-Copyright (C) 2001, 2009 United States Government
-as represented by the Administrator of the
-National Aeronautics and Space Administration.
-All Rights Reserved.
-*/
+ * Copyright (C) 2012 United States Government as represented by the Administrator of the
+ * National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ */
 
 package gov.nasa.worldwindx.examples.util;
 
-import gov.nasa.worldwind.event.RenderingEvent;
-import gov.nasa.worldwind.event.RenderingListener;
+import com.jogamp.opengl.util.awt.Screenshot;
 import gov.nasa.worldwind.WorldWindow;
+import gov.nasa.worldwind.event.*;
 
+import javax.media.opengl.*;
 import javax.swing.*;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GL;
-import java.io.File;
-import java.io.IOException;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
+import java.io.*;
 
 /**
  * @author tag
- * @version $Id: ScreenShotAction.java 1 2011-07-16 23:22:47Z dcollins $
+ * @version $Id: ScreenShotAction.java 1171 2013-02-11 21:45:02Z dcollins $
  */
 public class ScreenShotAction extends AbstractAction implements RenderingListener
 {
-    WorldWindow wwd;
+    protected WorldWindow wwd;
     protected File snapFile;
     JFileChooser fileChooser;
 
@@ -102,7 +99,7 @@ public class ScreenShotAction extends AbstractAction implements RenderingListene
                 GLAutoDrawable glad = (GLAutoDrawable) event.getSource();
                 int[] viewport = new int[4];
                 glad.getGL().glGetIntegerv(GL.GL_VIEWPORT, viewport, 0);
-                com.sun.opengl.util.Screenshot.writeToFile(this.snapFile, viewport[2] + 10, viewport[3], false);
+                Screenshot.writeToFile(this.snapFile, viewport[2] + 10, viewport[3], false);
                 glad.getGL().glViewport(0, 0, glad.getWidth(), glad.getHeight());
                 System.out.printf("Image saved to file %s\n", this.snapFile.getPath());
             }
@@ -112,7 +109,7 @@ public class ScreenShotAction extends AbstractAction implements RenderingListene
             }
             finally
             {
-               // this.snapFile = null;
+                this.snapFile = null;
                 this.wwd.removeRenderingListener(this);
             }
         }

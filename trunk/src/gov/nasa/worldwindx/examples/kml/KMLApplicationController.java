@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2001, 2010 United States Government
- * as represented by the Administrator of the
+ * Copyright (C) 2012 United States Government as represented by the Administrator of the
  * National Aeronautics and Space Administration.
  * All Rights Reserved.
  */
@@ -27,7 +26,7 @@ import java.beans.*;
  * controller will open the description balloon for a KML feature when the feature is clicked in the feature tree.
  *
  * @author pabercrombie
- * @version $Id: KMLApplicationController.java 1 2011-07-16 23:22:47Z dcollins $
+ * @version $Id: KMLApplicationController.java 1171 2013-02-11 21:45:02Z dcollins $
  */
 public class KMLApplicationController implements SelectListener, PropertyChangeListener
 {
