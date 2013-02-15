@@ -32,7 +32,7 @@ public interface BaliseLayer extends Layer {
 	/**
 	 * Ajoute plusieurs balises.<br />
 	 * Utiliser <code>showAll</code> ou <b>showBalise</b> pour rendre visible la balise.
-	 * @param balise Balise à ajouter
+	 * @param balises Balises à ajouter
 	 */
 	public void addBalises(Iterable<? extends Balise> balises);
 	
@@ -79,7 +79,7 @@ public interface BaliseLayer extends Layer {
 	/**
 	 * Enlève une balise de la vue.<br />
 	 * Cette balise est toujours accessible pour être à nouveau affichée plus tard.
-	 * @param name
+	 * @param b
 	 */
 	public void hideBalise(Balise b);
 
