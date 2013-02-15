@@ -1,9 +1,8 @@
 /*
-Copyright (C) 2001, 2009 United States Government
-as represented by the Administrator of the
-National Aeronautics and Space Administration.
-All Rights Reserved.
-*/
+ * Copyright (C) 2012 United States Government as represented by the Administrator of the
+ * National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ */
 package gov.nasa.worldwindx.examples.util;
 
 import gov.nasa.worldwind.WorldWindow;
@@ -22,7 +21,7 @@ import java.awt.*;
  * box next to the layer name. The order of layers in the list can be changed by dragging the layer names.
  *
  * @author Patrick Murris
- * @version $Id: LayerManagerLayer.java 1 2011-07-16 23:22:47Z dcollins $
+ * @version $Id: LayerManagerLayer.java 1171 2013-02-11 21:45:02Z dcollins $
  */
 public class LayerManagerLayer extends RenderableLayer implements SelectListener
 {

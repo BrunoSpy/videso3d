@@ -30,7 +30,7 @@ import gov.nasa.worldwindx.examples.util.ScreenShotAction;
 /**
  * Takes a screenshot and adds a watermark
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class VScreenShotAction extends ScreenShotAction {
 
@@ -59,8 +59,11 @@ public class VScreenShotAction extends ScreenShotAction {
 			} catch (IOException e) {
 				e.printStackTrace();
 			} 
-
-			this.snapFile = null;
+			finally
+			{
+				this.snapFile = null;
+				this.wwd.removeRenderingListener(this);
+			}
 		}
 	}
 

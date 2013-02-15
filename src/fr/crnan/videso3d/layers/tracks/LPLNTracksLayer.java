@@ -287,9 +287,9 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	@Override
 	public void setDefaultOpacity(double opacity) {
 		this.defaultOpacity  = opacity;
-		Color c = new Color(defaultInsideColor.getRed(), defaultInsideColor.getGreen(), defaultInsideColor.getBlue(), (int)(opacity*255));
+//		Color c = new Color(defaultInsideColor.getRed(), defaultInsideColor.getGreen(), defaultInsideColor.getBlue(), (int)(opacity*255));
 		for(Profil3D p : profils.values()){
-			p.getCurtain().setColor(c);
+			p.getProfil().getAttributes().setInteriorOpacity(opacity);
 		}
 		this.firePropertyChange(AVKey.LAYER, null, this);
 	}
@@ -302,7 +302,7 @@ public class LPLNTracksLayer extends TrajectoriesLayer {
 	@Override
 	public void setDefaultWidth(double width) {
 		for(Profil3D p : profils.values()){
-			p.getProfil().setLineWidth(width);
+			p.getProfil().getAttributes().setOutlineWidth(width);
 		}
 		this.defaultWidth = width;
 		this.firePropertyChange(AVKey.LAYER, null, this);

@@ -1,7 +1,8 @@
-/* Copyright (C) 2001, 2011 United States Government as represented by
-the Administrator of the National Aeronautics and Space Administration.
-All Rights Reserved.
-*/
+/*
+ * Copyright (C) 2012 United States Government as represented by the Administrator of the
+ * National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ */
 package gov.nasa.worldwindx.examples.shapebuilder;
 
 import gov.nasa.worldwind.*;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 
 /**
  * @author pabercrombie
- * @version $Id: ExtrudedPolygonEditor.java 1 2011-07-16 23:22:47Z dcollins $
+ * @version $Id: ExtrudedPolygonEditor.java 1171 2013-02-11 21:45:02Z dcollins $
  */
 public class ExtrudedPolygonEditor extends AbstractShapeEditor
 {

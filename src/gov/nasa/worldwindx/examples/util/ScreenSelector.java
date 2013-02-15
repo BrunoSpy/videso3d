@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 United States Government as represented by the Administrator of the
+ * Copyright (C) 2012 United States Government as represented by the Administrator of the
  * National Aeronautics and Space Administration.
  * All Rights Reserved.
  */
@@ -12,7 +12,7 @@ import gov.nasa.worldwind.render.*;
 import gov.nasa.worldwind.util.*;
 import gov.nasa.worldwindx.applications.worldwindow.util.Util;
 
-import javax.media.opengl.GL;
+import javax.media.opengl.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -73,7 +73,7 @@ import java.util.List;
  * createSelectionRectangle, and return a subclass of the internal class ScreenSelector.SelectionRectangle.
  *
  * @author dcollins
- * @version $Id: ScreenSelector.java 168 2011-11-06 00:03:08Z dcollins $
+ * @version $Id: ScreenSelector.java 1171 2013-02-11 21:45:02Z dcollins $
  */
 public class ScreenSelector extends WWObjectImpl implements MouseListener, MouseMotionListener, SelectListener
 {
@@ -132,41 +132,41 @@ public class ScreenSelector extends WWObjectImpl implements MouseListener, Mouse
             this.endPoint.setLocation(point);
 
             // Compute the selection's extremes along the x axis.
-            double minx, maxx;
+            double minX, maxX;
             if (this.startPoint.x < this.endPoint.x)
             {
-                minx = this.startPoint.x;
-                maxx = this.endPoint.x;
+                minX = this.startPoint.x;
+                maxX = this.endPoint.x;
             }
             else
             {
-                minx = this.endPoint.x;
-                maxx = this.startPoint.x;
+                minX = this.endPoint.x;
+                maxX = this.startPoint.x;
             }
 
             // Compute the selection's extremes along the y axis. The selection is defined in AWT screen coordinates, so
             // the origin is in the upper left corner and the y axis points down.
-            double miny, maxy;
+            double minY, maxY;
             if (this.startPoint.y < this.endPoint.y)
             {
-                miny = this.startPoint.y;
-                maxy = this.endPoint.y;
+                minY = this.startPoint.y;
+                maxY = this.endPoint.y;
             }
             else
             {
-                miny = this.endPoint.y;
-                maxy = this.startPoint.y;
+                minY = this.endPoint.y;
+                maxY = this.startPoint.y;
             }
 
             // If only one of the selection rectangle's dimensions is zero, then the selection is either a horizontal or
             // vertical line. In this case, we set the zero dimension to 1 because both dimensions must be nonzero to
             // perform a selection.
-            if (minx == maxx && miny < maxy)
-                maxx = minx + 1;
-            if (miny == maxy && minx < maxx)
-                miny = maxy - 1;
+            if (minX == maxX && minY < maxY)
+                maxX = minX + 1;
+            if (minY == maxY && minX < maxX)
+                minY = maxY - 1;
 
-            this.rect.setRect(minx, maxy, maxx - minx, maxy - miny);
+            this.rect.setRect(minX, maxY, maxX - minX, maxY - minY);
         }
 
         public void clearSelection()
@@ -229,13 +229,16 @@ public class ScreenSelector extends WWObjectImpl implements MouseListener, Mouse
 
         protected void drawOrderedRenderable(DrawContext dc)
         {
-            int attrs = GL.GL_COLOR_BUFFER_BIT // For blend enable, alpha enable, blend func, alpha func.
-                | GL.GL_CURRENT_BIT // For current color.
-                | GL.GL_DEPTH_BUFFER_BIT; // For depth test disable.
+            int attrs = GL2.GL_COLOR_BUFFER_BIT // For blend enable, alpha enable, blend func, alpha func.
+                | GL2.GL_CURRENT_BIT // For current color.
+                | GL2.GL_DEPTH_BUFFER_BIT; // For depth test disable.
 
-            GL gl = dc.getGL();
+            Rectangle viewport = dc.getView().getViewport();
+            Rectangle selection = this.getSelection();
+
+            GL2 gl = dc.getGL().getGL2(); // GL initialization checks for GL2 compatibility.
             this.BEogsh.pushAttrib(gl, attrs);
-            this.BEogsh.pushClientAttrib(gl, GL.GL_VERTEX_ARRAY);
+            this.BEogsh.pushClientAttrib(gl, GL2.GL_VERTEX_ARRAY);
             try
             {
                 // Configure the modelview-projection matrix to transform vertex points from screen rectangle
@@ -245,18 +248,17 @@ public class ScreenSelector extends WWObjectImpl implements MouseListener, Mouse
                 // area is filled. If we scaled by (width, height), GL line rasterization would fill one pixel beyond
                 // the actual selected area.
                 this.BEogsh.pushProjectionIdentity(gl);
-                gl.glOrtho(0, dc.getDrawableWidth(), 0, dc.getDrawableHeight(), -1, 1); // l, r, b, t, n, f
+                gl.glOrtho(0, viewport.getWidth(), 0, viewport.getHeight(), -1, 1); // l, r, b, t, n, f
                 this.BEogsh.pushModelviewIdentity(gl);
-                Rectangle r = this.getSelection();
                 gl.glTranslated(0.5, 0.5, 0.0);
-                gl.glTranslated(r.getMinX(), dc.getDrawableHeight() - r.getMinY(), 0);
-                gl.glScaled(r.getWidth() - 1, r.getHeight() - 1, 1);
+                gl.glTranslated(selection.getX(), viewport.getHeight() - selection.getY(), 0);
+                gl.glScaled(selection.getWidth() - 1, selection.getHeight() - 1, 1);
 
                 // Disable the depth test and enable blending so this screen rectangle appears on top of the existing
                 // framebuffer contents.
                 gl.glDisable(GL.GL_DEPTH_TEST);
                 gl.glEnable(GL.GL_BLEND);
-                OGLUtil.applyBlending(gl, false); // SelectionRectangle does not use premultplied colors.
+                OGLUtil.applyBlending(gl, false); // SelectionRectangle does not use pre-multiplied colors.
 
                 // Draw this screen rectangle's interior as a filled quadrilateral.
                 Color c = this.getInteriorColor() != null ? this.getInteriorColor() : DEFAULT_INTERIOR_COLOR;
@@ -270,7 +272,7 @@ public class ScreenSelector extends WWObjectImpl implements MouseListener, Mouse
             }
             finally
             {
-                this.BEogsh.pop(dc.getGL());
+                this.BEogsh.pop(gl);
             }
         }
     }
@@ -509,7 +511,7 @@ public class ScreenSelector extends WWObjectImpl implements MouseListener, Mouse
         this.sendMessage(new Message(SELECTION_STARTED, this));
     }
 
-    @SuppressWarnings( {"UnusedParameters"})
+    @SuppressWarnings({"UnusedParameters"})
     protected void selectionEnded(MouseEvent mouseEvent)
     {
         this.selectionRect.clearSelection();
