@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.crnan.videso3d.ihm.components;
+package fr.crnan.videso3d.ihm.contextualmenus;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,7 +23,6 @@ import java.util.List;
 
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.VidesoTrack;
@@ -37,13 +36,12 @@ import gov.nasa.worldwind.render.airspaces.Airspace;
  * Menu for right click on selection<br />
  * Copy is done only for Stip objects
  * @author Bruno Spyckerelle
- * @version 0.0.2
+ * @version 0.0.3
  *
  */
-public class MultipleSelectionMenu extends JPopupMenu{
+public class MultipleSelectionMenu extends JMenu{
 
 	public MultipleSelectionMenu(final List<?> objects, final VidesoGLCanvas wwd) {
-		super("Menu");
 		
 		JMenu allMenu = new JMenu("Tous les objets...");
 		
@@ -102,7 +100,7 @@ public class MultipleSelectionMenu extends JPopupMenu{
 			this.addSeparator();
 		
 		if(!airspaces.isEmpty()){
-			this.add(new AirspaceMenu(airspaces, null, wwd));
+			this.add(new AirspaceMenu(airspaces, wwd));
 		}
 		
 		if(!balises.isEmpty()){

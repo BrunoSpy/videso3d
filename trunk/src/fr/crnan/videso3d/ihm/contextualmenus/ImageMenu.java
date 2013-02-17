@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.crnan.videso3d.ihm.components;
+package fr.crnan.videso3d.ihm.contextualmenus;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,12 +25,14 @@ import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.formats.images.ImageUtils;
+import fr.crnan.videso3d.ihm.components.OpacityMenuItem;
+import fr.crnan.videso3d.ihm.components.VFileChooser;
 
 import gov.nasa.worldwind.render.SurfaceImage;
 
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
@@ -38,9 +40,9 @@ import javax.swing.event.ChangeListener;
 /**
  * Contextual menu for {@link SurfaceImage}
  * @author Bruno Spyckerelle
- * @version 0.0.3
+ * @version 0.0.4
  */
-public class ImageMenu extends JPopupMenu {
+public class ImageMenu extends JMenu {
 
 	private SurfaceImage image;
 	private VidesoGLCanvas wwd;
@@ -110,7 +112,7 @@ public class ImageMenu extends JPopupMenu {
 			public void actionPerformed(ActionEvent e) {
 				VFileChooser fileChooser = new VFileChooser();
 				fileChooser.setMultiSelectionEnabled(false);
-				if(fileChooser.showSaveDialog(getMenu()) == VFileChooser.APPROVE_OPTION){
+				if(fileChooser.showSaveDialog(ImageMenu.this) == VFileChooser.APPROVE_OPTION){
 					File file = fileChooser.getSelectedFile();
 					if(!(file.exists()) || 
 							(file.exists() &&
@@ -134,8 +136,5 @@ public class ImageMenu extends JPopupMenu {
 		});
 		this.add(save);
 	}
-	
-	private JPopupMenu getMenu(){
-		return this;
-	}
+
 }

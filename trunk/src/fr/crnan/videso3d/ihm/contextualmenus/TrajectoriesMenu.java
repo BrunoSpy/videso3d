@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU General Public License
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.crnan.videso3d.ihm.components;
+package fr.crnan.videso3d.ihm.contextualmenus;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.VidesoTrack;

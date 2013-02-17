@@ -23,11 +23,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
@@ -51,6 +54,7 @@ import fr.crnan.videso3d.ihm.components.FilteredTreeTableModel;
 import fr.crnan.videso3d.ihm.components.RegexViewFilter;
 import fr.crnan.videso3d.ihm.components.UserObjectNode;
 import fr.crnan.videso3d.ihm.components.UserObjectTreeTableModel;
+import fr.crnan.videso3d.ihm.contextualmenus.ContextualMenu;
 import fr.crnan.videso3d.kml.KMLMutableTreeNode;
 import fr.crnan.videso3d.project.Project;
 import gov.nasa.worldwind.layers.Layer;
@@ -183,10 +187,22 @@ public class UserObjectsView extends JPanel implements DataView {
 						if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2){
 
 						} else if(e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==1 ){
+
 							//getController().highlight(((UserObjectNode)node.getUserObject()).getId(), ((UserObjectNode)node.getUserObject()).getName());
 						} else if(e.getButton() == MouseEvent.BUTTON2 && e.getClickCount()==1 ){
+
 							//Menu pour supprimer/éditer
 							//D'abord refactoriser les menus avant de faire cette fonction
+						} else if(e.getButton() == MouseEvent.BUTTON3 && e.getClickCount()==1 ){
+							List<Object> list = new ArrayList<Object>();
+							list.add(getController().getObject(((UserObjectNode) node.getUserObject()).getId()));
+							JPopupMenu menu = new ContextualMenu(list,
+																null,
+																getController().getWWD(),
+																e);
+							if(menu != null){
+								menu.show(UserObjectsView.this, e.getX(), e.getY());
+							}
 						}
 					}
 				}
@@ -301,8 +317,12 @@ public class UserObjectsView extends JPanel implements DataView {
 		rootModel.addObjectNode(new DefaultMutableTreeNode(node));	
 	}
 	
-	public void remove(Object o){
-		//TODO la suppression d'un objet a des effets de bords (liste des objets non mise à jour)
+	public void remove(int idObject){
+		//si objet utilisateur
+		if(this.objects.containsKey(idObject)){
+			UserObjectNode node = this.objects.get(idObject);
+			this.rootModel.removeObjectNode(node);
+		}
 	}
 	
 	@Override
