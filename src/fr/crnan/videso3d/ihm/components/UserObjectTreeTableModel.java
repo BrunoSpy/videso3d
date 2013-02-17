@@ -15,10 +15,11 @@
  */
 package fr.crnan.videso3d.ihm.components;
 
+import java.util.Enumeration;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import fr.crnan.videso3d.kml.KMLMutableTreeNode;
 /**
  * 
  * @author Bruno Spyckerelle
@@ -43,6 +44,18 @@ public class UserObjectTreeTableModel extends FilteredTreeTableModel {
 	public void removeObjectNode(DefaultMutableTreeNode node){
 		this.userObjectNode.remove(node);
 		this.modelSupport.fireTreeStructureChanged(new TreePath(userObjectNode));
+	}
+	
+	public void removeObjectNode(UserObjectNode node){
+		Enumeration<DefaultMutableTreeNode> children = this.userObjectNode.children();
+		while(children.hasMoreElements()){
+			DefaultMutableTreeNode child = children.nextElement();
+			if(child.getUserObject().equals(node)) {
+				this.userObjectNode.remove(child);
+				this.modelSupport.fireTreeStructureChanged(new TreePath(userObjectNode));
+				return;
+			}
+		}
 	}
 	
 	public void addProject(DefaultMutableTreeNode node){

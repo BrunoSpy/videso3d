@@ -42,6 +42,7 @@ import gov.nasa.worldwind.render.airspaces.Polygon;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 /**
@@ -65,7 +66,8 @@ public class UserObjectsController implements VidesoController {
 	/**
 	 * Every objects : either user generated or linked to a project
 	 */
-	private List<Object> objects;
+	private HashMap<Integer, Object> objects;
+	private HashMap<Object, Integer> ids;
 	
 	//TODO fusionner les calques dans un layerset
 	private RenderableLayer renderableLayer;
@@ -82,7 +84,8 @@ public class UserObjectsController implements VidesoController {
 		
 		this.userObjects = new ArrayList<Restorable>();
 		this.projects = new ArrayList<Project>();
-		this.objects = new ArrayList<Object>();
+		this.objects = new HashMap<Integer, Object>();
+		this.ids = new HashMap<Object, Integer>();
 		
 		renderableLayer = new RenderableLayer();
 		renderableLayer.setName("Renderable User Objects");
@@ -103,8 +106,28 @@ public class UserObjectsController implements VidesoController {
 	
 	}
 	
+	public VidesoGLCanvas getWWD(){
+		return this.wwd;
+	}
+	
 	public int getID(Object o){
-		return this.objects.indexOf(o);
+		return this.ids.get(o);
+	}
+	
+	/**
+	 * 
+	 * @return Next available id
+	 */
+	private int getNextId(){
+		if(this.ids.isEmpty()){
+			return 0;
+		} else {
+			return Collections.max(this.ids.values()) +1;
+		}
+	}
+	
+	public Object getObject(int id){
+		return this.objects.get(id);
 	}
 		
 	/**
@@ -113,18 +136,23 @@ public class UserObjectsController implements VidesoController {
 	 * @return True if this controller manages <code>o</code>
 	 */
 	public boolean manages(Object o){
-		return objects.contains(o);
+		return this.objects.containsValue(o);
 	}
 	
 	public void removeObject(Object o){
 		if(userObjects.contains(o)){
 			if(o instanceof Airspace){
 				airspaceLayer.removeAirspace((Airspace)o);
+				//stop l'édition
 				PolygonEditorsManager.stopEditAirspace((Polygon) o);
 			} else if(o instanceof SurfaceImage){
 				imagesLayer.removeRenderable((Renderable) o);
 			} else	if(o instanceof Renderable){
 				renderableLayer.removeRenderable((Renderable) o);
+				if(o instanceof AbstractShape){
+					//stop l'édition au cas où
+					ShapeEditorsManager.stopEditShape((AbstractShape) o);
+				}
 			} else if(o instanceof Balise3D){
 				balise3DLayer.removeBalise((Balise) o);
 			}
@@ -134,9 +162,10 @@ public class UserObjectsController implements VidesoController {
 				p.removeObject(o);
 			}
 		}
-		objects.remove(o);
-		
-		this.view.remove(o);
+		int id = this.getID(o);
+		objects.remove(id);
+		ids.remove(o);
+		this.view.remove(id);
 	}
 	
 	public void addKML(KMLRoot kml){
@@ -154,7 +183,13 @@ public class UserObjectsController implements VidesoController {
 		ProjectLayer layer = new ProjectLayer(project);
 		project.setProjectLayer(layer);
 		this.wwd.toggleLayer(layer, true);
-		this.objects.addAll(project.getAllObjects());
+		
+		
+		for(Object o : project.getAllObjects()){
+			int id = this.getNextId();
+			this.objects.put(id, o);
+			this.ids.put(o, id);
+		}
 		
 		this.view.addProject(project);
 	}
@@ -176,7 +211,9 @@ public class UserObjectsController implements VidesoController {
 				balise3DLayer.addBalise((Balise) o);
 			}
 			this.userObjects.add(o);
-			this.objects.add(o);
+			int id = this.getNextId();
+			this.objects.put(id, o);
+			this.ids.put(o, id);
 			this.view.addObject((VidesoObject) o);
 		} else {
 			throw new IllegalArgumentException("Object must be of class VidesoObject");

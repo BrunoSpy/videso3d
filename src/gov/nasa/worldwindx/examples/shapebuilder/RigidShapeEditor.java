@@ -154,16 +154,16 @@ public class RigidShapeEditor extends AbstractShapeEditor
     }
 
     public void setEditMode(String editMode)
-    {
-        if (editMode.equalsIgnoreCase("move"))
+    {    	
+    	if (editMode.equalsIgnoreCase("move") || editMode.equalsIgnoreCase(TRANSLATION_MODE))
             this.editMode = TRANSLATION_MODE;
-        else if (editMode.equalsIgnoreCase("scale"))
+        else if (editMode.equalsIgnoreCase("scale") || editMode.equalsIgnoreCase(SCALE_MODE))
             this.editMode = SCALE_MODE;
-        else if (editMode.equalsIgnoreCase("rotate"))
+        else if (editMode.equalsIgnoreCase("rotate") || editMode.equalsIgnoreCase(ROTATION_MODE))
             this.editMode = ROTATION_MODE;
-        else if (editMode.equalsIgnoreCase("skew"))
+        else if (editMode.equalsIgnoreCase("skew") || editMode.equalsIgnoreCase(SKEW_MODE))
             this.editMode = SKEW_MODE;
-        else if (editMode.equalsIgnoreCase("texture"))
+        else if (editMode.equalsIgnoreCase("texture") || editMode.equalsIgnoreCase(TEXTURE_MODE))
             this.editMode = TEXTURE_MODE;
     }
 
