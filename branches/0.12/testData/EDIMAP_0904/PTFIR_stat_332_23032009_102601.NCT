@@ -1,0 +1,6870 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(symbol
+  (name "Symb1")
+  (value "75")
+)
+(symbol
+  (name "Symb2")
+  (value "73")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "ROUTE CONDITIONNELLE C")
+  (line_width 1)
+  (line_style "SingleLineDotted")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "TEXTE BALISE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "DEFAUT")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 63)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "TEXTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+  (id_atc_preactif "TEXTE PREACTIVABLE")
+  (id_atc_predorm "TEXTE PREACTIVABLE")
+)
+(id_atc
+  (name "TEXTE PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "BORD EGA")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Lie de vin")
+)
+(map
+  (name "PTFIR")
+  (number 332)
+  (comment "")
+  (date 23 03 2009)
+  (heure 10 26 01)
+  (ref_point
+    (name "QPR")
+    (comment "")
+    (value
+      (nautical_mile 64 -10799 64 3967)
+    )
+  )
+  (ref_point
+    (name "GU")
+    (comment "")
+    (value
+      (nautical_mile 64 -10948 64 5979)
+    )
+  )
+  (ref_point
+    (name "GAI")
+    (comment "")
+    (value
+      (nautical_mile 64 5064 64 -11642)
+    )
+  )
+  (ref_point
+    (name "MTL")
+    (comment "")
+    (value
+      (nautical_mile 64 13128 64 -9001)
+    )
+  )
+  (ref_point
+    (name "TOP")
+    (comment "")
+    (value
+      (nautical_mile 64 21436 64 -6915)
+    )
+  )
+  (ref_point
+    (name "MTZ")
+    (comment "")
+    (value
+      (nautical_mile 64 15611 64 9376)
+    )
+  )
+  (ref_point
+    (name "AMB")
+    (comment "")
+    (value
+      (nautical_mile 64 2777 64 1666)
+    )
+  )
+  (ref_point
+    (name "OLINO")
+    (comment "")
+    (value
+      (nautical_mile 64 2762 64 -432)
+    )
+  )
+  (ref_point
+    (name "LUSON")
+    (comment "")
+    (value
+      (nautical_mile 64 -3583 64 -1890)
+    )
+  )
+  (ref_point
+    (name "LMG")
+    (comment "")
+    (value
+      (nautical_mile 64 2757 64 -4529)
+    )
+  )
+  (ref_point
+    (name "POI")
+    (comment "")
+    (value
+      (nautical_mile 64 789 64 -1606)
+    )
+  )
+  (ref_point
+    (name "CGC")
+    (comment "")
+    (value
+      (nautical_mile 64 -839 64 -5147)
+    )
+  )
+  (ref_point
+    (name "KARPU")
+    (comment "")
+    (value
+      (nautical_mile 64 -3847 64 1094)
+    )
+  )
+  (ref_point
+    (name "NTS")
+    (comment "")
+    (value
+      (nautical_mile 64 -4223 64 665)
+    )
+  )
+  (ref_point
+    (name "LOR")
+    (comment "")
+    (value
+      (nautical_mile 64 -8914 64 3121)
+    )
+  )
+  (ref_point
+    (name "LUTIL")
+    (comment "")
+    (value
+      (nautical_mile 64 223 64 2291)
+    )
+  )
+  (ref_point
+    (name "MONTU")
+    (comment "")
+    (value
+      (nautical_mile 64 -3017 64 -246)
+    )
+  )
+  (ref_point
+    (name "ANG")
+    (comment "")
+    (value
+      (nautical_mile 64 -2221 64 2075)
+    )
+  )
+  (ref_point
+    (name "CMF")
+    (comment "")
+    (value
+      (nautical_mile 64 8540 64 -4479)
+    )
+  )
+  (ref_point
+    (name "BOBSI")
+    (comment "")
+    (value
+      (nautical_mile 64 13263 64 -2193)
+    )
+  )
+  (ref_point
+    (name "DANBO")
+    (comment "")
+    (value
+      (nautical_mile 64 13550 64 -3700)
+    )
+  )
+  (ref_point
+    (name "KELUK")
+    (comment "")
+    (value
+      (nautical_mile 64 15060 64 -1164)
+    )
+  )
+  (ref_point
+    (name "LESPI")
+    (comment "")
+    (value
+      (nautical_mile 64 10583 64 -3195)
+    )
+  )
+  (ref_point
+    (name "OMANI")
+    (comment "")
+    (value
+      (nautical_mile 64 10001 64 -1846)
+    )
+  )
+  (ref_point
+    (name "LSE")
+    (comment "")
+    (value
+      (nautical_mile 64 13685 64 -4380)
+    )
+  )
+  (ref_point
+    (name "MOTAL")
+    (comment "")
+    (value
+      (nautical_mile 64 5771 64 2297)
+    )
+  )
+  (ref_point
+    (name "OSKIN")
+    (comment "")
+    (value
+      (nautical_mile 64 8905 64 2957)
+    )
+  )
+  (ref_point
+    (name "LCA")
+    (comment "")
+    (value
+      (nautical_mile 64 5688 64 -1105)
+    )
+  )
+  (ref_point
+    (name "NEV")
+    (comment "")
+    (value
+      (nautical_mile 64 7678 64 731)
+    )
+  )
+  (ref_point
+    (name "AVD")
+    (comment "")
+    (value
+      (nautical_mile 64 6907 64 341)
+    )
+  )
+  (ref_point
+    (name "ATN")
+    (comment "")
+    (value
+      (nautical_mile 64 11232 64 -441)
+    )
+  )
+  (ref_point
+    (name "MOU")
+    (comment "")
+    (value
+      (nautical_mile 64 9597 64 -904)
+    )
+  )
+  (ref_point
+    (name "LISMO")
+    (comment "")
+    (value
+      (nautical_mile 64 15215 64 61)
+    )
+  )
+  (ref_point
+    (name "DIJ")
+    (comment "")
+    (value
+      (nautical_mile 64 13326 64 1473)
+    )
+  )
+  (ref_point
+    (name "KUTAN")
+    (comment "")
+    (value
+      (nautical_mile 64 11015 64 3402)
+    )
+  )
+  (ref_point
+    (name "LUREN")
+    (comment "")
+    (value
+      (nautical_mile 64 10087 64 4194)
+    )
+  )
+  (ref_point
+    (name "TUNOR")
+    (comment "")
+    (value
+      (nautical_mile 64 10702 64 3678)
+    )
+  )
+  (ref_point
+    (name "ALOGA")
+    (comment "")
+    (value
+      (nautical_mile 64 14279 64 1636)
+    )
+  )
+  (ref_point
+    (name "TINIL")
+    (comment "")
+    (value
+      (nautical_mile 64 13247 64 2723)
+    )
+  )
+  (ref_point
+    (name "RLP")
+    (comment "")
+    (value
+      (nautical_mile 64 13559 64 3939)
+    )
+  )
+  (ref_point
+    (name "ANNET")
+    (comment "")
+    (value
+      (nautical_mile 64 -9990 64 10450)
+    )
+  )
+  (ref_point
+    (name "CLIFF")
+    (comment "")
+    (value
+      (nautical_mile 64 1779 64 14942)
+    )
+  )
+  (ref_point
+    (name "GURLU")
+    (comment "")
+    (value
+      (nautical_mile 64 2378 64 13385)
+    )
+  )
+  (ref_point
+    (name "INGOR")
+    (comment "")
+    (value
+      (nautical_mile 64 -627 64 9088)
+    )
+  )
+  (ref_point
+    (name "KOKOS")
+    (comment "")
+    (value
+      (nautical_mile 64 -4247 64 7374)
+    )
+  )
+  (ref_point
+    (name "JSY")
+    (comment "")
+    (value
+      (nautical_mile 64 -5149 64 8607)
+    )
+  )
+  (ref_point
+    (name "CAN")
+    (comment "")
+    (value
+      (nautical_mile 64 -1147 64 8349)
+    )
+  )
+  (ref_point
+    (name "LGL")
+    (comment "")
+    (value
+      (nautical_mile 64 1347 64 6885)
+    )
+  )
+  (ref_point
+    (name "CHW")
+    (comment "")
+    (value
+      (nautical_mile 64 2524 64 5703)
+    )
+  )
+  (ref_point
+    (name "DIN")
+    (comment "")
+    (value
+      (nautical_mile 64 -5309 64 6172)
+    )
+  )
+  (ref_point
+    (name "ARE")
+    (comment "")
+    (value
+      (nautical_mile 64 -9230 64 5334)
+    )
+  )
+  (ref_point
+    (name "SENLO")
+    (comment "")
+    (value
+      (nautical_mile 64 -2901 64 8012)
+    )
+  )
+  (ref_point
+    (name "VADOM")
+    (comment "")
+    (value
+      (nautical_mile 64 3243 64 5984)
+    )
+  )
+  (ref_point
+    (name "EVX")
+    (comment "")
+    (value
+      (nautical_mile 64 3087 64 7832)
+    )
+  )
+  (ref_point
+    (name "PON")
+    (comment "")
+    (value
+      (nautical_mile 64 5142 64 8123)
+    )
+  )
+  (ref_point
+    (name "BATAG")
+    (comment "")
+    (value
+      (nautical_mile 64 8559 64 7191)
+    )
+  )
+  (ref_point
+    (name "DIDOR")
+    (comment "")
+    (value
+      (nautical_mile 64 8249 64 9067)
+    )
+  )
+  (ref_point
+    (name "KOPOR")
+    (comment "")
+    (value
+      (nautical_mile 64 6063 64 9758)
+    )
+  )
+  (ref_point
+    (name "LAURA")
+    (comment "")
+    (value
+      (nautical_mile 64 8512 64 7670)
+    )
+  )
+  (ref_point
+    (name "NAPIX")
+    (comment "")
+    (value
+      (nautical_mile 64 8597 64 8167)
+    )
+  )
+  (ref_point
+    (name "UTELA")
+    (comment "")
+    (value
+      (nautical_mile 64 7502 64 7467)
+    )
+  )
+  (ref_point
+    (name "BSN")
+    (comment "")
+    (value
+      (nautical_mile 64 7703 64 8562)
+    )
+  )
+  (ref_point
+    (name "KOVIN")
+    (comment "")
+    (value
+      (nautical_mile 64 7782 64 9711)
+    )
+  )
+  (ref_point
+    (name "LORTA")
+    (comment "")
+    (value
+      (nautical_mile 64 8104 64 9454)
+    )
+  )
+  (ref_point
+    (name "SOLBA")
+    (comment "")
+    (value
+      (nautical_mile 64 8976 64 9002)
+    )
+  )
+  (ref_point
+    (name "VELER")
+    (comment "")
+    (value
+      (nautical_mile 64 8478 64 8831)
+    )
+  )
+  (ref_point
+    (name "KOTUN")
+    (comment "")
+    (value
+      (nautical_mile 64 9843 64 6872)
+    )
+  )
+  (ref_point
+    (name "TRO")
+    (comment "")
+    (value
+      (nautical_mile 64 10171 64 5067)
+    )
+  )
+  (ref_point
+    (name "LUVAL")
+    (comment "")
+    (value
+      (nautical_mile 64 13212 64 5409)
+    )
+  )
+  (ref_point
+    (name "MANAG")
+    (comment "")
+    (value
+      (nautical_mile 64 13292 64 4679)
+    )
+  )
+  (ref_point
+    (name "PILON")
+    (comment "")
+    (value
+      (nautical_mile 64 14673 64 4385)
+    )
+  )
+  (ref_point
+    (name "SDI")
+    (comment "")
+    (value
+      (nautical_mile 64 12451 64 6683)
+    )
+  )
+  (ref_point
+    (name "NAY")
+    (comment "")
+    (value
+      (nautical_mile 64 15171 64 6667)
+    )
+  )
+  (ref_point
+    (name "LANVI")
+    (comment "")
+    (value
+      (nautical_mile 64 14857 64 5594)
+    )
+  )
+  (ref_point
+    (name "BUBLI")
+    (comment "")
+    (value
+      (nautical_mile 64 10542 64 7090)
+    )
+  )
+  (ref_point
+    (name "GIMER")
+    (comment "")
+    (value
+      (nautical_mile 64 9978 64 9348)
+    )
+  )
+  (ref_point
+    (name "LAGIL")
+    (comment "")
+    (value
+      (nautical_mile 64 10711 64 7597)
+    )
+  )
+  (ref_point
+    (name "NIPOR")
+    (comment "")
+    (value
+      (nautical_mile 64 10117 64 8395)
+    )
+  )
+  (ref_point
+    (name "RANUX")
+    (comment "")
+    (value
+      (nautical_mile 64 11000 64 8530)
+    )
+  )
+  (ref_point
+    (name "BAXIR")
+    (comment "")
+    (value
+      (nautical_mile 64 9827 64 7126)
+    )
+  )
+  (ref_point
+    (name "DIKOL")
+    (comment "")
+    (value
+      (nautical_mile 64 10213 64 8482)
+    )
+  )
+  (ref_point
+    (name "GITAN")
+    (comment "")
+    (value
+      (nautical_mile 64 10128 64 9400)
+    )
+  )
+  (ref_point
+    (name "SOTUS")
+    (comment "")
+    (value
+      (nautical_mile 64 10166 64 9414)
+    )
+  )
+  (ref_point
+    (name "GITAN2")
+    (comment "")
+    (value
+      (nautical_mile 64 10172 64 9299)
+    )
+  )
+  (ref_point
+    (name "MEDOX")
+    (comment "")
+    (value
+      (nautical_mile 64 12804 64 9392)
+    )
+  )
+  (ref_point
+    (name "MET")
+    (comment "")
+    (value
+      (nautical_mile 64 15476 64 8557)
+    )
+  )
+  (ref_point
+    (name "ABUDA")
+    (comment "")
+    (value
+      (nautical_mile 64 4347 64 12029)
+    )
+  )
+  (ref_point
+    (name "AMOGA")
+    (comment "")
+    (value
+      (nautical_mile 64 5898 64 10796)
+    )
+  )
+  (ref_point
+    (name "BANGI")
+    (comment "")
+    (value
+      (nautical_mile 64 4155 64 11286)
+    )
+  )
+  (ref_point
+    (name "NITAR")
+    (comment "")
+    (value
+      (nautical_mile 64 5554 64 11305)
+    )
+  )
+  (ref_point
+    (name "ABB")
+    (comment "")
+    (value
+      (nautical_mile 64 4586 64 12106)
+    )
+  )
+  (ref_point
+    (name "SOMIL")
+    (comment "")
+    (value
+      (nautical_mile 64 5742 64 10734)
+    )
+  )
+  (ref_point
+    (name "NURMO")
+    (comment "")
+    (value
+      (nautical_mile 64 6855 64 10986)
+    )
+  )
+  (ref_point
+    (name "PERON")
+    (comment "")
+    (value
+      (nautical_mile 64 7054 64 11325)
+    )
+  )
+  (ref_point
+    (name "VERMA")
+    (comment "")
+    (value
+      (nautical_mile 64 8041 64 11702)
+    )
+  )
+  (ref_point
+    (name "LESDO")
+    (comment "")
+    (value
+      (nautical_mile 64 8258 64 10973)
+    )
+  )
+  (ref_point
+    (name "BELDI")
+    (comment "")
+    (value
+      (nautical_mile 64 6414 64 11469)
+    )
+  )
+  (ref_point
+    (name "BILGO")
+    (comment "")
+    (value
+      (nautical_mile 64 8563 64 11347)
+    )
+  )
+  (ref_point
+    (name "MTD")
+    (comment "")
+    (value
+      (nautical_mile 64 6231 64 9913)
+    )
+  )
+  (ref_point
+    (name "XORBI")
+    (comment "")
+    (value
+      (nautical_mile 64 6087 64 11312)
+    )
+  )
+  (ref_point
+    (name "ALESO")
+    (comment "")
+    (value
+      (nautical_mile 64 3017 64 13787)
+    )
+  )
+  (ref_point
+    (name "DIMAL")
+    (comment "")
+    (value
+      (nautical_mile 64 3354 64 13456)
+    )
+  )
+  (ref_point
+    (name "GUBAR")
+    (comment "")
+    (value
+      (nautical_mile 64 2832 64 12939)
+    )
+  )
+  (ref_point
+    (name "RATUK")
+    (comment "")
+    (value
+      (nautical_mile 64 4003 64 14102)
+    )
+  )
+  (ref_point
+    (name "SOVAT")
+    (comment "")
+    (value
+      (nautical_mile 64 3579 64 14565)
+    )
+  )
+  (ref_point
+    (name "VESAN")
+    (comment "")
+    (value
+      (nautical_mile 64 4986 64 13029)
+    )
+  )
+  (ref_point
+    (name "BNE")
+    (comment "")
+    (value
+      (nautical_mile 64 4670 64 13994)
+    )
+  )
+  (ref_point
+    (name "ING")
+    (comment "")
+    (value
+      (nautical_mile 64 4242 64 14946)
+    )
+  )
+  (ref_point
+    (name "TRACA")
+    (comment "")
+    (value
+      (nautical_mile 64 4796 64 14871)
+    )
+  )
+  (ref_point
+    (name "DENIN")
+    (comment "")
+    (value
+      (nautical_mile 64 8440 64 13144)
+    )
+  )
+  (ref_point
+    (name "FERDI")
+    (comment "")
+    (value
+      (nautical_mile 64 8849 64 15255)
+    )
+  )
+  (ref_point
+    (name "CMB")
+    (comment "")
+    (value
+      (nautical_mile 64 7778 64 12570)
+    )
+  )
+  (ref_point
+    (name "MEDIL")
+    (comment "")
+    (value
+      (nautical_mile 64 9048 64 13066)
+    )
+  )
+  (ref_point
+    (name "ARVOL")
+    (comment "")
+    (value
+      (nautical_mile 64 8574 64 13828)
+    )
+  )
+  (ref_point
+    (name "LUMIL")
+    (comment "")
+    (value
+      (nautical_mile 64 7300 64 13288)
+    )
+  )
+  (ref_point
+    (name "TULNI")
+    (comment "")
+    (value
+      (nautical_mile 64 8046 64 13850)
+    )
+  )
+  (ref_point
+    (name "AKOVI")
+    (comment "")
+    (value
+      (nautical_mile 64 9079 64 14628)
+    )
+  )
+  (ref_point
+    (name "RENSA")
+    (comment "")
+    (value
+      (nautical_mile 64 12224 64 10123)
+    )
+  )
+  (ref_point
+    (name "VEDUS")
+    (comment "")
+    (value
+      (nautical_mile 64 11946 64 10350)
+    )
+  )
+  (ref_point
+    (name "XERAM")
+    (comment "")
+    (value
+      (nautical_mile 64 10165 64 10249)
+    )
+  )
+  (ref_point
+    (name "ANARU")
+    (comment "")
+    (value
+      (nautical_mile 64 9400 64 9954)
+    )
+  )
+  (ref_point
+    (name "KENAP")
+    (comment "")
+    (value
+      (nautical_mile 64 10157 64 11643)
+    )
+  )
+  (ref_point
+    (name "MATIX")
+    (comment "")
+    (value
+      (nautical_mile 64 9684 64 12157)
+    )
+  )
+  (ref_point
+    (name "MOPIL")
+    (comment "")
+    (value
+      (nautical_mile 64 10153 64 12372)
+    )
+  )
+  (ref_point
+    (name "ROKRO")
+    (comment "")
+    (value
+      (nautical_mile 64 10663 64 11374)
+    )
+  )
+  (ref_point
+    (name "VAKER")
+    (comment "")
+    (value
+      (nautical_mile 64 10001 64 10186)
+    )
+  )
+  (ref_point
+    (name "IDOSA")
+    (comment "")
+    (value
+      (nautical_mile 64 14624 64 11097)
+    )
+  )
+  (ref_point
+    (name "RAPOR")
+    (comment "")
+    (value
+      (nautical_mile 64 13028 64 10401)
+    )
+  )
+  (ref_point
+    (name "DIK")
+    (comment "")
+    (value
+      (nautical_mile 64 15235 64 11607)
+    )
+  )
+  (ref_point
+    (name "VALEK")
+    (comment "")
+    (value
+      (nautical_mile 64 14468 64 10207)
+    )
+  )
+  (ref_point
+    (name "RODRI")
+    (comment "")
+    (value
+      (nautical_mile 64 9406 64 15144)
+    )
+  )
+  (ref_point
+    (name "CIV")
+    (comment "")
+    (value
+      (nautical_mile 64 9395 64 13979)
+    )
+  )
+  (ref_point
+    (name "IDOKO")
+    (comment "")
+    (value
+      (nautical_mile 64 9535 64 13083)
+    )
+  )
+  (ref_point
+    (name "DEN")
+    (comment "")
+    (value
+      (nautical_mile 64 9806 64 15174)
+    )
+  )
+  (ref_point
+    (name "LNO")
+    (comment "")
+    (value
+      (nautical_mile 64 13987 64 14313)
+    )
+  )
+  (ref_point
+    (name "MILPA")
+    (comment "")
+    (value
+      (nautical_mile 64 15646 64 -2096)
+    )
+  )
+  (ref_point
+    (name "MOROK")
+    (comment "")
+    (value
+      (nautical_mile 64 17352 64 2261)
+    )
+  )
+  (ref_point
+    (name "PENDU")
+    (comment "")
+    (value
+      (nautical_mile 64 15744 64 1946)
+    )
+  )
+  (ref_point
+    (name "BLM")
+    (comment "")
+    (value
+      (nautical_mile 64 19461 64 3365)
+    )
+  )
+  (ref_point
+    (name "TRA")
+    (comment "")
+    (value
+      (nautical_mile 64 21871 64 3838)
+    )
+  )
+  (ref_point
+    (name "LUL")
+    (comment "")
+    (value
+      (nautical_mile 64 16326 64 3302)
+    )
+  )
+  (ref_point
+    (name "LXI")
+    (comment "")
+    (value
+      (nautical_mile 64 16454 64 3679)
+    )
+  )
+  (ref_point
+    (name "GIVOR")
+    (comment "")
+    (value
+      (nautical_mile 64 16266 64 7044)
+    )
+  )
+  (ref_point
+    (name "GTQ")
+    (comment "")
+    (value
+      (nautical_mile 64 16982 64 8372)
+    )
+  )
+  (ref_point
+    (name "STR")
+    (comment "")
+    (value
+      (nautical_mile 64 19324 64 6729)
+    )
+  )
+  (ref_point
+    (name "HELEN")
+    (comment "")
+    (value
+      (nautical_mile 64 9352 64 16524)
+    )
+  )
+  (ref_point
+    (name "SANDY")
+    (comment "")
+    (value
+      (nautical_mile 64 2589 64 15645)
+    )
+  )
+  (ref_point
+    (name "DVR")
+    (comment "")
+    (value
+      (nautical_mile 64 3286 64 16030)
+    )
+  )
+  (ref_point
+    (name "BIG")
+    (comment "")
+    (value
+      (nautical_mile 64 87 64 16652)
+    )
+  )
+  (ref_point
+    (name "NIK")
+    (comment "")
+    (value
+      (nautical_mile 64 10126 64 16294)
+    )
+  )
+  (ref_point
+    (name "TDP")
+    (comment "")
+    (value
+      (nautical_mile 64 14689 64 -5302)
+    )
+  )
+  (ref_point
+    (name "423")
+    (comment "")
+    (value
+      (nautical_mile 64 9529 64 -4080)
+    )
+  )
+  (ref_point
+    (name "398")
+    (comment "")
+    (value
+      (nautical_mile 64 8053 64 13260)
+    )
+  )
+  (ref_point
+    (name "346")
+    (comment "")
+    (value
+      (nautical_mile 64 10685 64 4481)
+    )
+  )
+  (ref_point
+    (name "405")
+    (comment "")
+    (value
+      (nautical_mile 64 3922 64 -1982)
+    )
+  )
+  (ref_point
+    (name "414")
+    (comment "")
+    (value
+      (nautical_mile 64 12402 64 2524)
+    )
+  )
+  (ref_point
+    (name "AMORO")
+    (comment "")
+    (value
+      (nautical_mile 64 12034 64 -1573)
+    )
+  )
+  (ref_point
+    (name "437")
+    (comment "")
+    (value
+      (nautical_mile 64 -640 64 5189)
+    )
+  )
+  (ref_point
+    (name "452")
+    (comment "")
+    (value
+      (nautical_mile 64 9205 64 3923)
+    )
+  )
+  (ref_point
+    (name "462")
+    (comment "")
+    (value
+      (nautical_mile 64 1067 64 3613)
+    )
+  )
+  (ref_point
+    (name "466")
+    (comment "")
+    (value
+      (nautical_mile 64 -640 64 5189)
+    )
+  )
+  (ref_point
+    (name "470")
+    (comment "")
+    (value
+      (nautical_mile 64 1656 64 5756)
+    )
+  )
+  (ref_point
+    (name "TUNAX")
+    (comment "")
+    (value
+      (nautical_mile 64 521 64 3507)
+    )
+  )
+  (ref_point
+    (name "457")
+    (comment "")
+    (value
+      (nautical_mile 64 -647 64 3280)
+    )
+  )
+  (ref_point
+    (name "474")
+    (comment "")
+    (value
+      (nautical_mile 64 -4474 64 4163)
+    )
+  )
+  (ref_point
+    (name "454")
+    (comment "")
+    (value
+      (nautical_mile 64 -628 64 4086)
+    )
+  )
+  (ref_point
+    (name "390")
+    (comment "")
+    (value
+      (nautical_mile 64 400 64 6073)
+    )
+  )
+  (ref_point
+    (name "434")
+    (comment "")
+    (value
+      (nautical_mile 64 -3944 64 2343)
+    )
+  )
+  (ref_point
+    (name "467")
+    (comment "")
+    (value
+      (nautical_mile 64 10890 64 10289)
+    )
+  )
+  (ref_point
+    (name "393")
+    (comment "")
+    (value
+      (nautical_mile 64 -109 64 5237)
+    )
+  )
+  (ref_point
+    (name "ETNOS")
+    (comment "")
+    (value
+      (nautical_mile 64 8979 64 6767)
+    )
+  )
+  (ref_point
+    (name "INKAK")
+    (comment "")
+    (value
+      (nautical_mile 64 9541 64 5608)
+    )
+  )
+  (ref_point
+    (name "NANOP")
+    (comment "")
+    (value
+      (nautical_mile 64 10791 64 5141)
+    )
+  )
+  (ref_point
+    (name "OMAKO")
+    (comment "")
+    (value
+      (nautical_mile 64 8714 64 6319)
+    )
+  )
+  (ref_point
+    (name "478")
+    (comment "")
+    (value
+      (nautical_mile 64 10318 64 5612)
+    )
+  )
+  (ref_point
+    (name "TIRET")
+    (comment "")
+    (value
+      (nautical_mile 64 4519 64 2833)
+    )
+  )
+  (ref_point
+    (name "VEROS")
+    (comment "")
+    (value
+      (nautical_mile 64 5749 64 1387)
+    )
+  )
+  (ref_point
+    (name "483")
+    (comment "")
+    (value
+      (nautical_mile 64 3325 64 3339)
+    )
+  )
+  (ref_point
+    (name "ARDOD")
+    (comment "")
+    (value
+      (nautical_mile 64 -2348 64 2824)
+    )
+  )
+  (ref_point
+    (name "BALOD")
+    (comment "")
+    (value
+      (nautical_mile 64 3820 64 6073)
+    )
+  )
+  (ref_point
+    (name "BENAR")
+    (comment "")
+    (value
+      (nautical_mile 64 1911 64 4824)
+    )
+  )
+  (ref_point
+    (name "ODRAN")
+    (comment "")
+    (value
+      (nautical_mile 64 4138 64 4971)
+    )
+  )
+  (ref_point
+    (name "BALAN")
+    (comment "")
+    (value
+      (nautical_mile 64 2740 64 -1841)
+    )
+  )
+  (ref_point
+    (name "ABSIE")
+    (comment "")
+    (value
+      (nautical_mile 64 -1214 64 -1597)
+    )
+  )
+  (ref_point
+    (name "LUGEN")
+    (comment "")
+    (value
+      (nautical_mile 64 -2281 64 -1588)
+    )
+  )
+  (ref_point
+    (name "TIRAV")
+    (comment "")
+    (value
+      (nautical_mile 64 -3683 64 -1508)
+    )
+  )
+  (ref_point
+    (name "BOBRI")
+    (comment "")
+    (value
+      (nautical_mile 64 -3138 64 -597)
+    )
+  )
+  (ref_point
+    (name "GODAN")
+    (comment "")
+    (value
+      (nautical_mile 64 -5089 64 2530)
+    )
+  )
+  (ref_point
+    (name "TABIL")
+    (comment "")
+    (value
+      (nautical_mile 64 -2426 64 3689)
+    )
+  )
+  (ref_point
+    (name "NAMAR")
+    (comment "")
+    (value
+      (nautical_mile 64 -1185 64 3403)
+    )
+  )
+  (ref_point
+    (name "ERIGA")
+    (comment "")
+    (value
+      (nautical_mile 64 -6226 64 -444)
+    )
+  )
+  (ref_point
+    (name "DOPAP")
+    (comment "")
+    (value
+      (nautical_mile 64 5706 64 6623)
+    )
+  )
+  (ref_point
+    (name "DEROL")
+    (comment "")
+    (value
+      (nautical_mile 64 5385 64 6520)
+    )
+  )
+  (ref_point
+    (name "MOKNO")
+    (comment "")
+    (value
+      (nautical_mile 64 4060 64 9425)
+    )
+  )
+  (ref_point
+    (name "DPE2AC")
+    (comment "")
+    (value
+      (nautical_mile 64 4357 64 8953)
+    )
+  )
+  (ref_point
+    (name "KEREX")
+    (comment "")
+    (value
+      (nautical_mile 64 2296 64 8956)
+    )
+  )
+  (ref_point
+    (name "DIDAK")
+    (comment "")
+    (value
+      (nautical_mile 64 -642 64 4841)
+    )
+  )
+  (ref_point
+    (name "ELBOX")
+    (comment "")
+    (value
+      (nautical_mile 64 2031 64 8797)
+    )
+  )
+  (ref_point
+    (name "SOKMU")
+    (comment "")
+    (value
+      (nautical_mile 64 3594 64 9018)
+    )
+  )
+  (ref_point
+    (name "SONUR")
+    (comment "")
+    (value
+      (nautical_mile 64 10925 64 9676)
+    )
+  )
+  (ref_point
+    (name "MOLEK")
+    (comment "")
+    (value
+      (nautical_mile 64 7859 64 5126)
+    )
+  )
+  (ref_point
+    (name "KELON")
+    (comment "")
+    (value
+      (nautical_mile 64 9832 64 7224)
+    )
+  )
+  (ref_point
+    (name "OL")
+    (comment "")
+    (value
+      (nautical_mile 64 6069 64 6740)
+    )
+  )
+  (ref_point
+    (name "GORET")
+    (comment "")
+    (value
+      (nautical_mile 64 10405 64 3928)
+    )
+  )
+  (ref_point
+    (name "KOTAP")
+    (comment "")
+    (value
+      (nautical_mile 64 5899 64 5018)
+    )
+  )
+  (ref_point
+    (name "ABDOS")
+    (comment "")
+    (value
+      (nautical_mile 64 6566 64 2664)
+    )
+  )
+  (ref_point
+    (name "DEPOM")
+    (comment "")
+    (value
+      (nautical_mile 64 5693 64 1300)
+    )
+  )
+  (ref_point
+    (name "OKEKO")
+    (comment "")
+    (value
+      (nautical_mile 64 8118 64 2238)
+    )
+  )
+  (ref_point
+    (name "OKASI")
+    (comment "")
+    (value
+      (nautical_mile 64 7152 64 4290)
+    )
+  )
+  (ref_point
+    (name "ODEBU")
+    (comment "")
+    (value
+      (nautical_mile 64 6736 64 5036)
+    )
+  )
+  (ref_point
+    (name "EDOXA")
+    (comment "")
+    (value
+      (nautical_mile 64 5666 64 5041)
+    )
+  )
+  (ref_point
+    (name "ADADA")
+    (comment "")
+    (value
+      (nautical_mile 64 5138 64 5042)
+    )
+  )
+  (ref_point
+    (name "AGOPA")
+    (comment "")
+    (value
+      (nautical_mile 64 5175 64 4229)
+    )
+  )
+  (ref_point
+    (name "ARKIP")
+    (comment "")
+    (value
+      (nautical_mile 64 5289 64 2502)
+    )
+  )
+  (ref_point
+    (name "LALUX")
+    (comment "")
+    (value
+      (nautical_mile 64 6178 64 5039)
+    )
+  )
+  (ref_point
+    (name "MONOT")
+    (comment "")
+    (value
+      (nautical_mile 64 6327 64 4262)
+    )
+  )
+  (ref_point
+    (name "PEKIM")
+    (comment "")
+    (value
+      (nautical_mile 64 7248 64 5034)
+    )
+  )
+  (ref_point
+    (name "PILUL")
+    (comment "")
+    (value
+      (nautical_mile 64 7848 64 4316)
+    )
+  )
+  (ref_point
+    (name "PIMUP")
+    (comment "")
+    (value
+      (nautical_mile 64 8812 64 2267)
+    )
+  )
+  (ref_point
+    (name "OKEPI")
+    (comment "")
+    (value
+      (nautical_mile 64 8819 64 747)
+    )
+  )
+  (ref_point
+    (name "GIPEX")
+    (comment "")
+    (value
+      (nautical_mile 64 6797 64 3024)
+    )
+  )
+  (ref_point
+    (name "SANCE")
+    (comment "")
+    (value
+      (nautical_mile 64 7169 64 1149)
+    )
+  )
+  (ref_point
+    (name "RESMI")
+    (comment "")
+    (value
+      (nautical_mile 64 5591 64 6107)
+    )
+  )
+  (ref_point
+    (name "AMODO")
+    (comment "")
+    (value
+      (nautical_mile 64 7624 64 5601)
+    )
+  )
+  (ref_point
+    (name "TABOV")
+    (comment "")
+    (value
+      (nautical_mile 64 4200 64 6363)
+    )
+  )
+  (ref_point
+    (name "PIGOP")
+    (comment "")
+    (value
+      (nautical_mile 64 3408 64 6508)
+    )
+  )
+  (ref_point
+    (name "DIVDA")
+    (comment "")
+    (value
+      (nautical_mile 64 9829 64 3926)
+    )
+  )
+  (ref_point
+    (name "TUR")
+    (comment "")
+    (value
+      (nautical_mile 64 1906 64 1631)
+    )
+  )
+  (ref_point
+    (name "POLLY")
+    (comment "")
+    (value
+      (nautical_mile 64 7138 64 3559)
+    )
+  )
+  (ref_point
+    (name "LIMGO")
+    (comment "")
+    (value
+      (nautical_mile 64 15681 64 10777)
+    )
+  )
+  (ref_point
+    (name "TILVI")
+    (comment "")
+    (value
+      (nautical_mile 64 13949 64 10532)
+    )
+  )
+  (ref_point
+    (name "TALUD")
+    (comment "")
+    (value
+      (nautical_mile 64 13543 64 10475)
+    )
+  )
+  (ref_point
+    (name "SAMPO")
+    (comment "")
+    (value
+      (nautical_mile 64 -3293 64 4715)
+    )
+  )
+  (ref_point
+    (name "MENOX")
+    (comment "")
+    (value
+      (nautical_mile 64 8530 64 -1494)
+    )
+  )
+  (ref_point
+    (name "LEMIN")
+    (comment "")
+    (value
+      (nautical_mile 64 8084 64 -1736)
+    )
+  )
+  (ref_point
+    (name "RISUN")
+    (comment "")
+    (value
+      (nautical_mile 64 6922 64 -2323)
+    )
+  )
+  (ref_point
+    (name "LEGRI")
+    (comment "")
+    (value
+      (nautical_mile 64 11528 64 -3079)
+    )
+  )
+  (ref_point
+    (name "538")
+    (comment "")
+    (value
+      (nautical_mile 64 11435 64 -391)
+    )
+  )
+  (ref_point
+    (name "SAV")
+    (comment "Saverne  IAF LFST")
+    (value
+      (nautical_mile 64 18900 64 7812)
+    )
+  )
+  (ref_point
+    (name "BAKIX")
+    (comment "")
+    (value
+      (nautical_mile 64 18059 64 5957)
+    )
+  )
+  (ref_point
+    (name "ANDLO")
+    (comment "IAF LFST")
+    (value
+      (nautical_mile 64 18881 64 6262)
+    )
+  )
+  (ref_point
+    (name "TITOX")
+    (comment "Point SID Rnav LFLC")
+    (value
+      (nautical_mile 64 9852 64 -1492)
+    )
+  )
+  (ref_point
+    (name "ROMGI")
+    (comment "Point tournant SID LFLC")
+    (value
+      (nautical_mile 64 8305 64 -2997)
+    )
+  )
+  (ref_point
+    (name "ATRID")
+    (comment "Point STAR LFLC")
+    (value
+      (nautical_mile 64 8982 64 -387)
+    )
+  )
+  (ref_point
+    (name "NEPAP")
+    (comment "Point STAR LFLC")
+    (value
+      (nautical_mile 64 9681 64 -27)
+    )
+  )
+  (ref_point
+    (name "OLIRI")
+    (comment "Point STAR LFLC")
+    (value
+      (nautical_mile 64 9027 64 -1207)
+    )
+  )
+  (ref_point
+    (name "ARSOM")
+    (comment "Point STAR LFLC")
+    (value
+      (nautical_mile 64 9130 64 -3117)
+    )
+  )
+  (ref_point
+    (name "CLM")
+    (comment "")
+    (value
+      (nautical_mile 64 7648 64 7238)
+    )
+  )
+  (ref_point
+    (name "LAMUT")
+    (comment "")
+    (value
+      (nautical_mile 64 7826 64 603)
+    )
+  )
+  (ref_point
+    (name "KOTIS")
+    (comment "")
+    (value
+      (nautical_mile 64 7333 64 1015)
+    )
+  )
+  (ref_point
+    (name "AVLON")
+    (comment "")
+    (value
+      (nautical_mile 64 9916 64 2393)
+    )
+  )
+  (ref_point
+    (name "VASOL")
+    (comment "")
+    (value
+      (nautical_mile 64 4803 64 5996)
+    )
+  )
+  (ref_point
+    (name "DOMUS")
+    (comment "")
+    (value
+      (nautical_mile 64 4979 64 7319)
+    )
+  )
+  (ref_point
+    (name "SONOS")
+    (comment "")
+    (value
+      (nautical_mile 64 3618 64 10131)
+    )
+  )
+  (ref_point
+    (name "SULEX")
+    (comment "")
+    (value
+      (nautical_mile 64 7254 64 11670)
+    )
+  )
+  (ref_point
+    (name "VENOR")
+    (comment "")
+    (value
+      (nautical_mile 64 6604 64 10556)
+    )
+  )
+  (ref_point
+    (name "ABY")
+    (comment "")
+    (value
+      (nautical_mile 64 6969 64 11568)
+    )
+  )
+  (ref_point
+    (name "DIVEM")
+    (comment "")
+    (value
+      (nautical_mile 64 8801 64 9722)
+    )
+  )
+  (ref_point
+    (name "ERTIP")
+    (comment "")
+    (value
+      (nautical_mile 64 11333 64 4678)
+    )
+  )
+  (ref_point
+    (name "SOMDA")
+    (comment "")
+    (value
+      (nautical_mile 64 10873 64 5437)
+    )
+  )
+  (ref_point
+    (name "RIVEK")
+    (comment "")
+    (value
+      (nautical_mile 64 8203 64 -2401)
+    )
+  )
+  (ref_point
+    (name "DIKRO")
+    (comment "")
+    (value
+      (nautical_mile 64 -2778 64 9955)
+    )
+  )
+  (ref_point
+    (name "ALIMO")
+    (comment "")
+    (value
+      (nautical_mile 64 10000 64 6847)
+    )
+  )
+  (ref_point
+    (name "PETAN")
+    (comment "")
+    (value
+      (nautical_mile 64 14697 64 10373)
+    )
+  )
+  (ref_point
+    (name "MMD")
+    (comment "")
+    (value
+      (nautical_mile 64 12859 64 9622)
+    )
+  )
+  (ref_point
+    (name "GONEK")
+    (comment "")
+    (value
+      (nautical_mile 64 1553 64 4309)
+    )
+  )
+  (ref_point
+    (name "LATGO")
+    (comment "")
+    (value
+      (nautical_mile 64 -639 64 5689)
+    )
+  )
+  (ref_point
+    (name "TALAR")
+    (comment "")
+    (value
+      (nautical_mile 64 12321 64 -3676)
+    )
+  )
+  (ref_point
+    (name "ROBAL")
+    (comment "")
+    (value
+      (nautical_mile 64 8921 64 13565)
+    )
+  )
+  (ref_point
+    (name "EPR")
+    (comment "Epernon")
+    (value
+      (nautical_mile 64 4221 64 6292)
+    )
+  )
+  (submap
+    (number 1)
+    (name "FIRG")
+    (submap_type 1)
+    (entity
+      (name "QPR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -10799 64 3967  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "GU")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -10948 64 5979  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "GAI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5064 64 -11642  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MTL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 13128 64 -9001  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TOP")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 21436 64 -6915  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LUSON")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -3583 64 -1890  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LMG")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 2757 64 -4529  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "POI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 789 64 -1606  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "CGC")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -839 64 -5147  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "KARPU")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -3847 64 1094  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "NTS")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -4223 64 665  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LOR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -8914 64 3121  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LUTIL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 223 64 2291  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MONTU")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -3017 64 -246  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ANG")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -2221 64 2075  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "AMB")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 2777 64 1666  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "OLINO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 2762 64 -432  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "CMF")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8540 64 -4479  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BOBSI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 13263 64 -2193  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DANBO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 13550 64 -3700  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "KELUK")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 15060 64 -1164  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "OMANI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10001 64 -1846  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LSE")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 13685 64 -4380  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MOTAL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5771 64 2297  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "OSKIN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8905 64 2957  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "NEV")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7678 64 731  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ATN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 11232 64 -441  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MOU")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9597 64 -904  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LISMO")
+      (id_atc "ROUTE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 15215 64 61  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DIJ")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 13326 64 1473  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "KUTAN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 11015 64 3402  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LUREN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10087 64 4194  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TUNOR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10702 64 3678  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TINIL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 13247 64 2723  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "RLP")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 13559 64 3939  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ANNET")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -9990 64 10450  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "CLIFF")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 1779 64 14942  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "GURLU")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 2378 64 13385  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "KOKOS")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -4247 64 7374  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "JSY")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -5149 64 8607  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "CAN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -1147 64 8349  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LGL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 1347 64 6885  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "CHW")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 2524 64 5703  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DIN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -5309 64 6172  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ARE")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -9230 64 5334  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "SENLO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -2901 64 8012  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "VADOM")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 3243 64 5984  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "EVX")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 3087 64 7832  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "PON")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5142 64 8123  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DIDOR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8249 64 9067  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "KOPOR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6063 64 9758  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "UTELA")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7502 64 7467  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BSN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7703 64 8562  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "KOVIN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7782 64 9711  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "KOTUN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9843 64 6872  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TRO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10171 64 5067  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LUVAL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 13212 64 5409  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MANAG")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 13292 64 4679  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "PILON")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 14673 64 4385  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LANVI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 14857 64 5594  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BUBLI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10542 64 7090  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "GIMER")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9978 64 9348  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LAGIL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10711 64 7597  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "NIPOR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10117 64 8395  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "RANUX")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 11000 64 8530  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BAXIR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9827 64 7126  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DIKOL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10213 64 8482  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "GITAN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10128 64 9400  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "SOTUS")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10166 64 9414  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MEDOX")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 12804 64 9392  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MET")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 15476 64 8557  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BANGI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4155 64 11286  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "NITAR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5554 64 11305  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ABB")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4586 64 12106  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "SOMIL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5742 64 10734  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "NURMO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6855 64 10986  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "PERON")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7054 64 11325  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "VERMA")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8041 64 11702  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LESDO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8258 64 10973  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BELDI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6414 64 11469  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BILGO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8563 64 11347  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MTD")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6231 64 9913  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ALESO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 3017 64 13787  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "SOVAT")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 3579 64 14565  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BNE")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4670 64 13994  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ING")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4242 64 14946  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DENIN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8440 64 13144  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "CMB")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7778 64 12570  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MEDIL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9048 64 13066  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ARVOL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8574 64 13828  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LUMIL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7300 64 13288  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TULNI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8046 64 13850  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "AKOVI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9079 64 14628  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "RENSA")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 12224 64 10123  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "VEDUS")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 11946 64 10350  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "XERAM")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10165 64 10249  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "KENAP")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10157 64 11643  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MATIX")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9684 64 12157  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MOPIL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10153 64 12372  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "VAKER")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10001 64 10186  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "IDOSA")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 14624 64 11097  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "RAPOR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 13028 64 10401  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DIK")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 15235 64 11607  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "VALEK")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 14468 64 10207  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "CIV")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9395 64 13979  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "IDOKO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9535 64 13083  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DEN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9806 64 15174  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LNO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 13987 64 14313  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MILPA")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 15646 64 -2096  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MOROK")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 17352 64 2261  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "PENDU")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 15744 64 1946  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BLM")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 19461 64 3365  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TRA")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 21871 64 3838  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LUL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 16326 64 3302  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LXI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 16454 64 3679  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "GIVOR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 16266 64 7044  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "GTQ")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 16982 64 8372  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "STR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 19324 64 6729  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "HELEN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9352 64 16524  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DVR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 3286 64 16030  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BIG")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 87 64 16652  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "NIK")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10126 64 16294  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TDP")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 14689 64 -5302  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "423")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9529 64 -4080  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "398")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8053 64 13260  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "346")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10685 64 4481  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "405")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 3922 64 -1982  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "414")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 12402 64 2524  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "AMORO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 12034 64 -1573  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "437")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -640 64 5189  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "452")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9205 64 3923  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "462")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 1067 64 3613  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "466")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -640 64 5189  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "470")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 1656 64 5756  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TUNAX")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 521 64 3507  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "457")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -647 64 3280  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "474")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -4474 64 4163  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "454")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -628 64 4086  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "390")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 400 64 6073  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "434")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -3944 64 2343  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "467")
+      (id_atc "ROUTE CONDITIONNELLE C")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10890 64 10289  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "393")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -109 64 5237  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ETNOS")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8979 64 6767  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "INKAK")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9541 64 5608  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "NANOP")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10791 64 5141  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "OMAKO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8714 64 6319  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "478")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10318 64 5612  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "483")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 3325 64 3339  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TIRET")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4519 64 2833  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "VEROS")
+      (id_atc "ROUTE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5749 64 1387  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BALAN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 2740 64 -1841  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ABSIE")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -1214 64 -1597  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LUGEN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -2281 64 -1588  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TIRAV")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -3683 64 -1508  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BOBRI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -3138 64 -597  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "GODAN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -5089 64 2530  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TABIL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -2426 64 3689  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "NAMAR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -1185 64 3403  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ERIGA")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -6226 64 -444  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DOPAP")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5706 64 6623  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DEROL")
+      (id_atc "ROUTE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5385 64 6520  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MOKNO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4060 64 9425  0)
+      )
+      (entity_symbol Symb2)
+    )
+    (entity
+      (name "DPE2AC")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4357 64 8953  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "KEREX")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 2296 64 8956  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DIDAK")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -642 64 4841  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ELBOX")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 2031 64 8797  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "SOKMU")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 3594 64 9018  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "SONUR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10925 64 9676  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MOLEK")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7859 64 5126  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "KELON")
+      (id_atc "ROUTE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9832 64 7224  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "OL")
+      (id_atc "ROUTE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6069 64 6740  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "GORET")
+      (id_atc "DEFAUT")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10405 64 3928  0)
+      )
+      (entity_symbol Symb1)
+      (line_width 1)
+      (line_style "SingleLine")
+      (priority 57)
+      (text_font "1")
+      (fill_visibility 0)
+      (designabilite 0)
+      (foreground_color "Vert salle de bain")
+    )
+    (entity
+      (name "KOTAP")
+      (id_atc "ROUTE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5899 64 5018  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ABDOS")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6566 64 2664  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DEPOM")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5693 64 1300  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "OKEKO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8118 64 2238  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "OKASI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7152 64 4290  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ODEBU")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6736 64 5036  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "EDOXA")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5666 64 5041  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ADADA")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5138 64 5042  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "AGOPA")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5175 64 4229  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ARKIP")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5289 64 2502  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LALUX")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6178 64 5039  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MONOT")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6327 64 4262  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "PEKIM")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7248 64 5034  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "PILUL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7848 64 4316  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "PIMUP")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8812 64 2267  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "OKEPI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8819 64 747  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "GIPEX")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6797 64 3024  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "SANCE")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7169 64 1149  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "RESMI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 5591 64 6107  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "AMODO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7624 64 5601  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TABOV")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4200 64 6363  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "PIGOP")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 3408 64 6508  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DIVDA")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9829 64 3926  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TUR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 1906 64 1631  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "POLLY")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7138 64 3559  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LIMGO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 15681 64 10777  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TILVI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 13949 64 10532  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TALUD")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 13543 64 10475  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "SAMPO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -3293 64 4715  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "RISUN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6922 64 -2323  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "538")
+      (id_atc "BORD EGA")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 11435 64 -391  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LEGRI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 11528 64 -3079  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "SAV")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 18900 64 7812  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BAKIX")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 18059 64 5957  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ANDLO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 18881 64 6262  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TITOX")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9852 64 -1492  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ROMGI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8305 64 -2997  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ATRID")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8982 64 -387  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "NEPAP")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9681 64 -27  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "OLIRI")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9027 64 -1207  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ARSOM")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9130 64 -3117  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "CLM")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7648 64 7238  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LAMUT")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7826 64 603  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "KOTIS")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7333 64 1015  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "AVLON")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 9916 64 2393  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "VASOL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4803 64 5996  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DOMUS")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4979 64 7319  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "SONOS")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 3618 64 10131  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "SULEX")
+      (id_atc "TEXTE BALISE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 7254 64 11670  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "BANGI")
+      (id_atc "TEXTE BALISE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4155 64 11286  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "XORBI")
+      (id_atc "TEXTE BALISE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6087 64 11312  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "VENOR")
+      (id_atc "TEXTE BALISE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6604 64 10556  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ABY")
+      (id_atc "TEXTE BALISE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 6969 64 11568  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DIVEM")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8801 64 9722  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ERTIP")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 11333 64 4678  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "SOMDA")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10873 64 5437  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "RIVEK")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8203 64 -2401  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "DIKRO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -2778 64 9955  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ALIMO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 10000 64 6847  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "PETAN")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 14697 64 10373  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "MMD")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 12859 64 9622  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "GONEK")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 1553 64 4309  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "LATGO")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 -639 64 5689  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "TALAR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 12321 64 -3676  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "ROBAL")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 8921 64 13565  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "EPR")
+      (id_atc "SYMBOLE")
+      (shape "PointEntity")
+      (geometry
+        (nautical_mile 64 4221 64 6292  0)
+      )
+      (entity_symbol Symb1)
+    )
+    (entity
+      (name "3")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "QPR")
+      )
+      (text_content "QPR")
+    )
+    (entity
+      (name "4")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "GU")
+      )
+      (text_content "GU")
+    )
+    (entity
+      (name "8")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "GAI")
+      )
+      (text_content "GAI")
+    )
+    (entity
+      (name "9")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MTL")
+      )
+      (text_content "MTL")
+    )
+    (entity
+      (name "10")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "TOP")
+      )
+      (text_content "TOP")
+    )
+    (entity
+      (name "14")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "AMB")
+      )
+      (text_content "AMB")
+    )
+    (entity
+      (name "16")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "OLINO")
+      )
+      (text_content "OLINO")
+    )
+    (entity
+      (name "21")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LUSON")
+      )
+      (text_content "LUSON")
+    )
+    (entity
+      (name "22")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LMG")
+      )
+      (text_content "LMG")
+    )
+    (entity
+      (name "23")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "POI")
+      )
+      (text_content "POI")
+    )
+    (entity
+      (name "24")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "CGC")
+      )
+      (text_content "CNA")
+    )
+    (entity
+      (name "28")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "KARPU")
+      )
+      (text_content "KARPU")
+    )
+    (entity
+      (name "29")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "NTS")
+      )
+      (text_content "NTS")
+    )
+    (entity
+      (name "30")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LOR")
+      )
+      (text_content "LOR")
+    )
+    (entity
+      (name "42")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MONTU")
+      )
+      (text_content "MONTU")
+    )
+    (entity
+      (name "46")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ANG")
+      )
+      (text_content "ANG")
+    )
+    (entity
+      (name "50")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LUTIL")
+      )
+      (text_content "LUTIL")
+    )
+    (entity
+      (name "59")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "CMF")
+      )
+      (text_content "CFA")
+    )
+    (entity
+      (name "76")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "OMANI")
+      )
+      (text_content "OMANI")
+    )
+    (entity
+      (name "81")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LESPI")
+      )
+      (text_content "LESPI")
+    )
+    (entity
+      (name "85")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "KELUK")
+      )
+      (text_content "KELUK")
+    )
+    (entity
+      (name "86")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "DANBO")
+      )
+      (text_content "DANBO")
+    )
+    (entity
+      (name "88")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "BOBSI")
+      )
+      (text_content "BOBSI")
+    )
+    (entity
+      (name "103")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LCA")
+      )
+      (text_content "LCA")
+    )
+    (entity
+      (name "104")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "NEV")
+      )
+      (text_content "NEV")
+    )
+    (entity
+      (name "107")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "OSKIN")
+      )
+      (text_content "OSKIN")
+    )
+    (entity
+      (name "110")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MOTAL")
+      )
+      (text_content "MOTAL")
+    )
+    (entity
+      (name "112")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "AVD")
+      )
+      (text_content "AVD")
+    )
+    (entity
+      (name "118")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MOU")
+      )
+      (text_content "MOU")
+    )
+    (entity
+      (name "123")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "DIJ")
+      )
+      (text_content "DJL")
+    )
+    (entity
+      (name "126")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LISMO")
+      )
+      (text_content "LISMO")
+    )
+    (entity
+      (name "132")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "TUNOR")
+      )
+      (text_content "TUNOR")
+    )
+    (entity
+      (name "133")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "KUTAN")
+      )
+      (text_content "KUTAN")
+    )
+    (entity
+      (name "134")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LUREN")
+      )
+      (text_content "LUREN")
+    )
+    (entity
+      (name "141")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ALOGA")
+      )
+      (text_content "DERAK")
+    )
+    (entity
+      (name "143")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "TINIL")
+      )
+      (text_content "TINIL")
+    )
+    (entity
+      (name "144")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "RLP")
+      )
+      (text_content "RLP")
+    )
+    (entity
+      (name "159")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "KOKOS")
+      )
+      (text_content "KOKOS")
+    )
+    (entity
+      (name "161")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "CAN")
+      )
+      (text_content "CAN")
+    )
+    (entity
+      (name "162")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LGL")
+      )
+      (text_content "LGL")
+    )
+    (entity
+      (name "163")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "CHW")
+      )
+      (text_content "CHW")
+    )
+    (entity
+      (name "164")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "GURLU")
+      )
+      (text_content "GURLU")
+    )
+    (entity
+      (name "165")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "CLIFF")
+      )
+      (text_content "CLIFF")
+    )
+    (entity
+      (name "166")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "DIN")
+      )
+      (text_content "DIN")
+    )
+    (entity
+      (name "167")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ARE")
+      )
+      (text_content "ARE")
+    )
+    (entity
+      (name "168")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "INGOR")
+      )
+      (text_content "INGOR")
+    )
+    (entity
+      (name "169")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ANNET")
+      )
+      (text_content "ANNET")
+    )
+    (entity
+      (name "171")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -5149 64 8607  0)
+      )
+      (text_content "JSY")
+    )
+    (entity
+      (name "172")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -2901 64 8012  0)
+      )
+      (text_content "SENLO")
+    )
+    (entity
+      (name "177")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "VADOM")
+      )
+      (text_content "VADOM")
+    )
+    (entity
+      (name "203")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "EVX")
+      )
+      (text_content "EVX")
+    )
+    (entity
+      (name "204")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "PON")
+      )
+      (text_content "PON")
+    )
+    (entity
+      (name "218")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "KOPOR")
+      )
+      (text_content "KOPOR")
+    )
+    (entity
+      (name "219")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "DIDOR")
+      )
+      (text_content "DIDOR")
+    )
+    (entity
+      (name "220")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "NAPIX")
+      )
+      (text_content "NAPIX")
+    )
+    (entity
+      (name "221")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "UTELA")
+      )
+      (text_content "UTELA")
+    )
+    (entity
+      (name "222")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "BATAG")
+      )
+      (text_content "BATAG")
+    )
+    (entity
+      (name "223")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LAURA")
+      )
+      (text_content "LAURA")
+    )
+    (entity
+      (name "224")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "BSN")
+      )
+      (text_content "BSN")
+    )
+    (entity
+      (name "225")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "KOVIN")
+      )
+      (text_content "KOVIN")
+    )
+    (entity
+      (name "227")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LORTA")
+      )
+      (text_content "LORTA")
+    )
+    (entity
+      (name "228")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "SOLBA")
+      )
+      (text_content "SOLBA")
+    )
+    (entity
+      (name "229")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "VELER")
+      )
+      (text_content "VELER")
+    )
+    (entity
+      (name "245")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10877 64 5439  0)
+      )
+      (text_content "SOMDA")
+    )
+    (entity
+      (name "253")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LUVAL")
+      )
+      (text_content "LUVAL")
+    )
+    (entity
+      (name "254")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MANAG")
+      )
+      (text_content "MANAG")
+    )
+    (entity
+      (name "255")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "PILON")
+      )
+      (text_content "PILON")
+    )
+    (entity
+      (name "256")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "SDI")
+      )
+      (text_content "SDI")
+    )
+    (entity
+      (name "257")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "NAY")
+      )
+      (text_content "NAY")
+    )
+    (entity
+      (name "258")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LANVI")
+      )
+      (text_content "LANVI")
+    )
+    (entity
+      (name "269")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LAGIL")
+      )
+      (text_content "LASIV")
+    )
+    (entity
+      (name "270")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "BUBLI")
+      )
+      (text_content "BUBLI")
+    )
+    (entity
+      (name "271")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "NIPOR")
+      )
+      (text_content "NIPOR")
+    )
+    (entity
+      (name "272")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "RANUX")
+      )
+      (text_content "RANUX")
+    )
+    (entity
+      (name "273")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "GIMER")
+      )
+      (text_content "GIMER")
+    )
+    (entity
+      (name "274")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "BAXIR")
+      )
+      (text_content "BAXIR")
+    )
+    (entity
+      (name "275")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "DIKOL")
+      )
+      (text_content "DIKOL")
+    )
+    (entity
+      (name "276")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "GITAN2")
+      )
+      (text_content "GITAN")
+    )
+    (entity
+      (name "277")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "SOTUS")
+      )
+      (text_content "SOTUS")
+    )
+    (entity
+      (name "280")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MEDOX")
+      )
+      (text_content "MEDOX")
+    )
+    (entity
+      (name "281")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MET")
+      )
+      (text_content "MET")
+    )
+    (entity
+      (name "289")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "AMOGA")
+      )
+      (text_content "ATREX")
+    )
+    (entity
+      (name "290")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "NITAR")
+      )
+      (text_content "NITAR")
+    )
+    (entity
+      (name "292")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ABUDA")
+      )
+      (text_content "ABUDA")
+    )
+    (entity
+      (name "293")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "SOMIL")
+      )
+      (text_content "SOMIL")
+    )
+    (entity
+      (name "295")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "BANGI")
+      )
+      (text_content "BANGI")
+    )
+    (entity
+      (name "303")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "NURMO")
+      )
+      (text_content "NURMO")
+    )
+    (entity
+      (name "304")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LESDO")
+      )
+      (text_content "LESDO")
+    )
+    (entity
+      (name "305")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "BELDI")
+      )
+      (text_content "BELDI")
+    )
+    (entity
+      (name "306")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "BILGO")
+      )
+      (text_content "BILGO")
+    )
+    (entity
+      (name "307")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "VERMA")
+      )
+      (text_content "VERMA")
+    )
+    (entity
+      (name "308")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "XORBI")
+      )
+      (text_content "XORBI")
+    )
+    (entity
+      (name "309")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "PERON")
+      )
+      (text_content "PERON")
+    )
+    (entity
+      (name "310")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MTD")
+      )
+      (text_content "MTD")
+    )
+    (entity
+      (name "319")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "GUBAR")
+      )
+      (text_content "GUBAR")
+    )
+    (entity
+      (name "320")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ALESO")
+      )
+      (text_content "ALESO")
+    )
+    (entity
+      (name "321")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "DIMAL")
+      )
+      (text_content "DIMAL")
+    )
+    (entity
+      (name "322")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "RATUK")
+      )
+      (text_content "RATUK")
+    )
+    (entity
+      (name "323")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "SOVAT")
+      )
+      (text_content "SOVAT")
+    )
+    (entity
+      (name "324")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "BNE")
+      )
+      (text_content "BNE")
+    )
+    (entity
+      (name "325")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "TRACA")
+      )
+      (text_content "TRACA")
+    )
+    (entity
+      (name "326")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "VESAN")
+      )
+      (text_content "VESAN")
+    )
+    (entity
+      (name "327")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ING")
+      )
+      (text_content "ING")
+    )
+    (entity
+      (name "336")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "FERDI")
+      )
+      (text_content "FERDI")
+    )
+    (entity
+      (name "337")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "CMB")
+      )
+      (text_content "CMB")
+    )
+    (entity
+      (name "338")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "DENIN")
+      )
+      (text_content "DENIN")
+    )
+    (entity
+      (name "339")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MEDIL")
+      )
+      (text_content "MEDIL")
+    )
+    (entity
+      (name "340")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ARVOL")
+      )
+      (text_content "ARVOL")
+    )
+    (entity
+      (name "341")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LUMIL")
+      )
+      (text_content "LUMIL")
+    )
+    (entity
+      (name "342")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "TULNI")
+      )
+      (text_content "TULNI")
+    )
+    (entity
+      (name "343")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "AKOVI")
+      )
+      (text_content "AKOVI")
+    )
+    (entity
+      (name "355")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "XERAM")
+      )
+      (text_content "XERAM")
+    )
+    (entity
+      (name "356")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "VEDUS")
+      )
+      (text_content "VEDUS")
+    )
+    (entity
+      (name "357")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "RENSA")
+      )
+      (text_content "RENSA")
+    )
+    (entity
+      (name "358")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ANARU")
+      )
+      (text_content "ANARU")
+    )
+    (entity
+      (name "360")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "KENAP")
+      )
+      (text_content "KENAP")
+    )
+    (entity
+      (name "361")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MATIX")
+      )
+      (text_content "MATIX")
+    )
+    (entity
+      (name "362")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MOPIL")
+      )
+      (text_content "MOPIL")
+    )
+    (entity
+      (name "363")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ROKRO")
+      )
+      (text_content "ROKRO")
+    )
+    (entity
+      (name "364")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "VAKER")
+      )
+      (text_content "VAKER")
+    )
+    (entity
+      (name "372")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "RAPOR")
+      )
+      (text_content "RAPOR")
+    )
+    (entity
+      (name "375")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "IDOSA")
+      )
+      (text_content "IDOSA")
+    )
+    (entity
+      (name "376")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "DIK")
+      )
+      (text_content "DIK")
+    )
+    (entity
+      (name "377")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "VALEK")
+      )
+      (text_content "VALEK")
+    )
+    (entity
+      (name "383")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "RODRI")
+      )
+      (text_content "RODRI")
+    )
+    (entity
+      (name "384")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "CIV")
+      )
+      (text_content "CIV")
+    )
+    (entity
+      (name "385")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "IDOKO")
+      )
+      (text_content "IDOKO")
+    )
+    (entity
+      (name "386")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "DEN")
+      )
+      (text_content "DEN")
+    )
+    (entity
+      (name "388")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LNO")
+      )
+      (text_content "LNO")
+    )
+    (entity
+      (name "400")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MILPA")
+      )
+      (text_content "MILPA")
+    )
+    (entity
+      (name "401")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "BLM")
+      )
+      (text_content "BLM")
+    )
+    (entity
+      (name "402")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MOROK")
+      )
+      (text_content "MOROK")
+    )
+    (entity
+      (name "403")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "TRA")
+      )
+      (text_content "TRA")
+    )
+    (entity
+      (name "404")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LUL")
+      )
+      (text_content "LUL")
+    )
+    (entity
+      (name "406")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "PENDU")
+      )
+      (text_content "PENDU")
+    )
+    (entity
+      (name "410")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LXI")
+      )
+      (text_content "LXI")
+    )
+    (entity
+      (name "415")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MTZ")
+      )
+      (text_content "MTZ")
+    )
+    (entity
+      (name "416")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "GTQ")
+      )
+      (text_content "GTQ")
+    )
+    (entity
+      (name "417")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "GIVOR")
+      )
+      (text_content "GIVOR")
+    )
+    (entity
+      (name "419")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "STR")
+      )
+      (text_content "STR")
+    )
+    (entity
+      (name "426")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "DVR")
+      )
+      (text_content "DVR")
+    )
+    (entity
+      (name "427")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "SANDY")
+      )
+      (text_content "SANDY")
+    )
+    (entity
+      (name "428")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "BIG")
+      )
+      (text_content "BIG")
+    )
+    (entity
+      (name "430")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "HELEN")
+      )
+      (text_content "HELEN")
+    )
+    (entity
+      (name "431")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "NIK")
+      )
+      (text_content "NIK")
+    )
+    (entity
+      (name "433")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 14650 64 -5292  0)
+      )
+      (text_content "TLP")
+    )
+    (entity
+      (name "424")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9515 64 -4090  0)
+      )
+      (text_content "TIS")
+    )
+    (entity
+      (name "380")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4684 64 11201  0)
+      )
+      (text_content "OPALE")
+    )
+    (entity
+      (name "381")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4586 64 12104  0)
+      )
+      (text_content "ABB")
+    )
+    (entity
+      (name "392")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10361 64 6262  0)
+      )
+      (text_content "ARSIL")
+    )
+    (entity
+      (name "394")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11615 64 5135  0)
+      )
+      (text_content "ROTSI")
+    )
+    (entity
+      (name "396")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7556 64 13853  0)
+      )
+      (text_content "LEQ")
+    )
+    (entity
+      (name "397")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8053 64 13256  0)
+      )
+      (text_content "VEKIN")
+    )
+    (entity
+      (name "349")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 21336 64 13000  0)
+      )
+      (text_content "FFM")
+    )
+    (entity
+      (name "350")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10685 64 4477  0)
+      )
+      (text_content "BOLLY")
+    )
+    (entity
+      (name "351")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2910 64 11266  0)
+      )
+      (text_content "DPE")
+    )
+    (entity
+      (name "352")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4674 64 8920  0)
+      )
+      (text_content "MERUE")
+    )
+    (entity
+      (name "353")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3211 64 9499  0)
+      )
+      (text_content "ROU")
+    )
+    (entity
+      (name "354")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 786 64 8880  0)
+      )
+      (text_content "DVL")
+    )
+    (entity
+      (name "367")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3593 64 4103  0)
+      )
+      (text_content "CAD")
+    )
+    (entity
+      (name "370")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9205 64 3919  0)
+      )
+      (text_content "OKRIX")
+    )
+    (entity
+      (name "399")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "MENOX")
+      )
+      (text_content "MENOX")
+    )
+    (entity
+      (name "407")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3922 64 -1986  0)
+      )
+      (text_content "GUSON")
+    )
+    (entity
+      (name "408")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4741 64 -194  0)
+      )
+      (text_content "CTX")
+    )
+    (entity
+      (name "409")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7709 64 -313  0)
+      )
+      (text_content "AV")
+    )
+    (entity
+      (name "411")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10975 64 -2422  0)
+      )
+      (text_content "SN")
+    )
+    (entity
+      (name "413")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "LEMIN")
+      )
+      (text_content "LEMIN")
+    )
+    (entity
+      (name "418")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 12402 64 2520  0)
+      )
+      (text_content "KASON")
+    )
+    (entity
+      (name "422")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10777 64 535  0)
+      )
+      (text_content "CACHI")
+    )
+    (entity
+      (name "432")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 12034 64 -1577  0)
+      )
+      (text_content "AMORO")
+    )
+    (entity
+      (name "379")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 13685 64 -4383  0)
+      )
+      (text_content "LSE")
+    )
+    (entity
+      (name "435")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6609 64 -2299  0)
+      )
+      (text_content "MC")
+    )
+    (entity
+      (name "436")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5996 64 152  0)
+      )
+      (text_content "BRG")
+    )
+    (entity
+      (name "438")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 301 64 14452  0)
+      )
+      (text_content "SFD")
+    )
+    (entity
+      (name "439")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1541 64 10983  0)
+      )
+      (text_content "VEULE")
+    )
+    (entity
+      (name "440")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 407 64 10311  0)
+      )
+      (text_content "ETRAT")
+    )
+    (entity
+      (name "443")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5345 64 6808  0)
+      )
+      (text_content "TSU")
+    )
+    (entity
+      (name "446")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3325 64 3339  0)
+      )
+      (text_content "DOMOD")
+    )
+    (entity
+      (name "449")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 978 64 5349  0)
+      )
+      (text_content "RONAX")
+    )
+    (entity
+      (name "451")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ARDOD")
+      )
+      (text_content "ARDOD")
+    )
+    (entity
+      (name "455")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2184 64 3824  0)
+      )
+      (text_content "KOVAK")
+    )
+    (entity
+      (name "458")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2156 64 5175  0)
+      )
+      (text_content "ROMLO")
+    )
+    (entity
+      (name "459")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "BALOD")
+      )
+      (text_content "BALOD")
+    )
+    (entity
+      (name "460")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "BENAR")
+      )
+      (text_content "BENAR")
+    )
+    (entity
+      (name "461")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1067 64 3609  0)
+      )
+      (text_content "LUMAN")
+    )
+    (entity
+      (name "465")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -640 64 5185  0)
+      )
+      (text_content "PEPON")
+    )
+    (entity
+      (name "469")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1656 64 5752  0)
+      )
+      (text_content "BOBSA")
+    )
+    (entity
+      (name "456")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -647 64 3276  0)
+      )
+      (text_content "SABLE")
+    )
+    (entity
+      (name "475")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -4474 64 4159  0)
+      )
+      (text_content "REN")
+    )
+    (entity
+      (name "453")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -644 64 4098  0)
+      )
+      (text_content "OBATO")
+    )
+    (entity
+      (name "463")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ODRAN")
+      )
+      (text_content "ODRAN")
+    )
+    (entity
+      (name "464")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 521 64 3504  0)
+      )
+      (text_content "TUNAX")
+    )
+    (entity
+      (name "395")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 400 64 6069  0)
+      )
+      (text_content "ROLEN")
+    )
+    (entity
+      (name "447")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -3944 64 2339  0)
+      )
+      (text_content "KURIS")
+    )
+    (entity
+      (name "468")
+      (id_atc "ROUTE CONDITIONNELLE C")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10890 64 10285  0)
+      )
+      (text_content "SOMTU")
+    )
+    (entity
+      (name "472")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8979 64 6761  0)
+      )
+      (text_content "ETNOS")
+    )
+    (entity
+      (name "473")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7854 64 5125  0)
+      )
+      (text_content "MOLEK")
+    )
+    (entity
+      (name "477")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9541 64 5601  0)
+      )
+      (text_content "INKAK")
+    )
+    (entity
+      (name "479")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10302 64 5623  0)
+      )
+      (text_content "IPLAN")
+    )
+    (entity
+      (name "480")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10791 64 5135  0)
+      )
+      (text_content "NANOP")
+    )
+    (entity
+      (name "484")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4519 64 2827  0)
+      )
+      (text_content "GILUX")
+    )
+    (entity
+      (name "485")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5749 64 1381  0)
+      )
+      (text_content "VEROS")
+    )
+    (entity
+      (name "441")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2740 64 -1847  0)
+      )
+      (text_content "BALAN")
+    )
+    (entity
+      (name "442")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1214 64 -1603  0)
+      )
+      (text_content "ABSIE")
+    )
+    (entity
+      (name "486")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -2281 64 -1594  0)
+      )
+      (text_content "LUGEN")
+    )
+    (entity
+      (name "487")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -3683 64 -1515  0)
+      )
+      (text_content "TIRAV")
+    )
+    (entity
+      (name "488")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -3138 64 -603  0)
+      )
+      (text_content "BOBRI")
+    )
+    (entity
+      (name "489")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -5089 64 2524  0)
+      )
+      (text_content "GODAN")
+    )
+    (entity
+      (name "490")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -2426 64 3683  0)
+      )
+      (text_content "TABIL")
+    )
+    (entity
+      (name "491")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -1185 64 3397  0)
+      )
+      (text_content "NAMAR")
+    )
+    (entity
+      (name "492")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -6226 64 -450  0)
+      )
+      (text_content "ERIGA")
+    )
+    (entity
+      (name "448")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5706 64 6619  0)
+      )
+      (text_content "DOPAP")
+    )
+    (entity
+      (name "476")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5385 64 6516  0)
+      )
+      (text_content "DEROL")
+    )
+    (entity
+      (name "500")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4060 64 9421  0)
+      )
+      (text_content "MOKNO")
+    )
+    (entity
+      (name "501")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4118 64 8774  0)
+      )
+      (text_content "KOROM")
+    )
+    (entity
+      (name "502")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2296 64 8952  0)
+      )
+      (text_content "KEREX")
+    )
+    (entity
+      (name "503")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11349 64 4677  0)
+      )
+      (text_content "ERTIP")
+    )
+    (entity
+      (name "504")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -642 64 4837  0)
+      )
+      (text_content "DIDAK")
+    )
+    (entity
+      (name "505")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 2031 64 8793  0)
+      )
+      (text_content "ELBOX")
+    )
+    (entity
+      (name "506")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3309 64 8830  0)
+      )
+      (text_content "SOKMU")
+    )
+    (entity
+      (name "507")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10925 64 9672  0)
+      )
+      (text_content "SONUR")
+    )
+    (entity
+      (name "508")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9832 64 7218  0)
+      )
+      (text_content "KELON")
+    )
+    (entity
+      (name "494")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6080 64 6737  0)
+      )
+      (text_content "OL")
+    )
+    (entity
+      (name "510")
+      (id_atc "TEXTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10405 64 3924  0)
+      )
+      (text_content "GORET")
+      (line_width 1)
+      (line_style "SingleLine")
+      (priority 57)
+      (text_font "1")
+      (fill_visibility 0)
+      (designabilite 0)
+      (foreground_color "Vert salle de bain")
+    )
+    (entity
+      (name "514")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6566 64 2660  0)
+      )
+      (text_content "ABDOS")
+    )
+    (entity
+      (name "515")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5693 64 1296  0)
+      )
+      (text_content "DEPOM")
+    )
+    (entity
+      (name "516")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8118 64 2234  0)
+      )
+      (text_content "OKEKO")
+    )
+    (entity
+      (name "517")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7152 64 4286  0)
+      )
+      (text_content "OKASI")
+    )
+    (entity
+      (name "519")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5479 64 4912  0)
+      )
+      (text_content "EDOXA")
+    )
+    (entity
+      (name "522")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5175 64 4225  0)
+      )
+      (text_content "AGOPA")
+    )
+    (entity
+      (name "523")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5289 64 2498  0)
+      )
+      (text_content "ARKIP")
+    )
+    (entity
+      (name "524")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6084 64 4930  0)
+      )
+      (text_content "LALUX")
+    )
+    (entity
+      (name "525")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6098 64 4270  0)
+      )
+      (text_content "MONOT")
+    )
+    (entity
+      (name "526")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7224 64 5058  0)
+      )
+      (text_content "PEKIM")
+    )
+    (entity
+      (name "527")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7848 64 4312  0)
+      )
+      (text_content "PILUL")
+    )
+    (entity
+      (name "528")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8812 64 2263  0)
+      )
+      (text_content "PIMUP")
+    )
+    (entity
+      (name "529")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8836 64 742  0)
+      )
+      (text_content "OKEPI")
+    )
+    (entity
+      (name "531")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6797 64 3021  0)
+      )
+      (text_content "GIPEX")
+    )
+    (entity
+      (name "532")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7169 64 1146  0)
+      )
+      (text_content "SANCE")
+    )
+    (entity
+      (name "533")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5591 64 6103  0)
+      )
+      (text_content "RESMI")
+    )
+    (entity
+      (name "495")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7624 64 5597  0)
+      )
+      (text_content "AMODO")
+    )
+    (entity
+      (name "497")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4200 64 6359  0)
+      )
+      (text_content "TABOV")
+    )
+    (entity
+      (name "534")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3408 64 6504  0)
+      )
+      (text_content "PIGOP")
+    )
+    (entity
+      (name "518")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6712 64 5040  0)
+      )
+      (text_content "ODEBU")
+    )
+    (entity
+      (name "535")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5004 64 4924  0)
+      )
+      (text_content "ADADA")
+    )
+    (entity
+      (name "536")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9829 64 3922  0)
+      )
+      (text_content "DIVDA")
+    )
+    (entity
+      (name "512")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5825 64 4520  0)
+      )
+      (text_content "PTV")
+    )
+    (entity
+      (name "513")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7138 64 3555  0)
+      )
+      (text_content "POLLY")
+    )
+    (entity
+      (name "511")
+      (id_atc "ROUTE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 5899 64 5014  0)
+      )
+      (text_content "KOTAP")
+    )
+    (entity
+      (name "520")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 13543 64 10471  0)
+      )
+      (text_content "TALUD")
+    )
+    (entity
+      (name "521")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 13949 64 10528  0)
+      )
+      (text_content "TILVI")
+    )
+    (entity
+      (name "530")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 15681 64 10773  0)
+      )
+      (text_content "LIMGO")
+    )
+    (entity
+      (name "481")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -3293 64 4711  0)
+      )
+      (text_content "SAMPO")
+    )
+    (entity
+      (name "482")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6922 64 -2327  0)
+      )
+      (text_content "RISUN")
+    )
+    (entity
+      (name "539")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 11528 64 -3083  0)
+      )
+      (text_content "LEGRI")
+    )
+    (entity
+      (name "540")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 18900 64 7808  0)
+      )
+      (text_content "SAV")
+    )
+    (entity
+      (name "541")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 18059 64 5953  0)
+      )
+      (text_content "BAKIX")
+    )
+    (entity
+      (name "542")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 18881 64 6258  0)
+      )
+      (text_content "ANDLO")
+    )
+    (entity
+      (name "543")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "TITOX")
+      )
+      (text_content "TITOX")
+    )
+    (entity
+      (name "544")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ROMGI")
+      )
+      (text_content "ROMGI")
+    )
+    (entity
+      (name "545")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ATRID")
+      )
+      (text_content "ATRID")
+    )
+    (entity
+      (name "546")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "NEPAP")
+      )
+      (text_content "NEPAP")
+    )
+    (entity
+      (name "547")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "OLIRI")
+      )
+      (text_content "OLIRI")
+    )
+    (entity
+      (name "548")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ARSOM")
+      )
+      (text_content "ARSOM")
+    )
+    (entity
+      (name "550")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "CLM")
+      )
+      (text_content "CLM")
+    )
+    (entity
+      (name "551")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7826 64 599  0)
+      )
+      (text_content "LAMUT")
+    )
+    (entity
+      (name "552")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7333 64 1011  0)
+      )
+      (text_content "KOTIS")
+    )
+    (entity
+      (name "553")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9972 64 2419  0)
+      )
+      (text_content "AVLON")
+    )
+    (entity
+      (name "496")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7193 64 5721  0)
+      )
+      (text_content "MLN")
+    )
+    (entity
+      (name "498")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8711 64 6316  0)
+      )
+      (text_content "OMAKO")
+    )
+    (entity
+      (name "499")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "TUR")
+      )
+      (text_content "TUR")
+    )
+    (entity
+      (name "537")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4794 64 5996  0)
+      )
+      (text_content "VASOL")
+    )
+    (entity
+      (name "554")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4984 64 7322  0)
+      )
+      (text_content "DOMUS")
+    )
+    (entity
+      (name "509")
+      (id_atc "ROUTE CONDITIONNELLE C")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4402 64 10046  0)
+      )
+      (text_content "MATID")
+    )
+    (entity
+      (name "555")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1979 64 12381  0)
+      )
+      (text_content "PETAX")
+    )
+    (entity
+      (name "549")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8672 64 -2326  0)
+      )
+      (text_content "SINPO")
+    )
+    (entity
+      (name "556")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9029 64 -2885  0)
+      )
+      (text_content "PESAN")
+    )
+    (entity
+      (name "557")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 9394 64 -1694  0)
+      )
+      (text_content "BAKNO")
+    )
+    (entity
+      (name "558")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8875 64 -1813  0)
+      )
+      (text_content "NEKEM")
+    )
+    (entity
+      (name "559")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10515 64 14544  0)
+      )
+      (text_content "NIVOR")
+    )
+    (entity
+      (name "560")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 3484 64 10001  0)
+      )
+      (text_content "SONOS")
+    )
+    (entity
+      (name "561")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 7283 64 11611  0)
+      )
+      (text_content "SULEX")
+    )
+    (entity
+      (name "562")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6603 64 10557  0)
+      )
+      (text_content "VENOR")
+    )
+    (entity
+      (name "563")
+      (id_atc "TEXTE BALISE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 6981 64 11592  0)
+      )
+      (text_content "ABY")
+    )
+    (entity
+      (name "564")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8813 64 9700  0)
+      )
+      (text_content "DIVEM")
+    )
+    (entity
+      (name "565")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8205 64 -2397  0)
+      )
+      (text_content "RIVEK")
+    )
+    (entity
+      (name "566")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -2796 64 9979  0)
+      )
+      (text_content "DIKRO")
+    )
+    (entity
+      (name "567")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10005 64 6851  0)
+      )
+      (text_content "ALIMO")
+    )
+    (entity
+      (name "568")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 10177 64 5070  0)
+      )
+      (text_content "TRO")
+    )
+    (entity
+      (name "569")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 14698 64 10396  0)
+      )
+      (text_content "PETAN")
+    )
+    (entity
+      (name "570")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 12874 64 9639  0)
+      )
+      (text_content "MMD")
+    )
+    (entity
+      (name "571")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (point "ATN")
+      )
+      (text_content "ATN")
+    )
+    (entity
+      (name "572")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 1553 64 4250  0)
+      )
+      (text_content "GONEK")
+    )
+    (entity
+      (name "573")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 -625 64 5709  0)
+      )
+      (text_content "LATGO")
+    )
+    (entity
+      (name "574")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 12318 64 -3681  0)
+      )
+      (text_content "TALAR")
+    )
+    (entity
+      (name "575")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 8921 64 13569  0)
+      )
+      (text_content "ROBAL")
+    )
+    (entity
+      (name "576")
+      (id_atc "SYMBOLE")
+      (shape "TextEntity")
+      (geometry
+        (nautical_mile 64 4218 64 6245  0)
+      )
+      (text_content "EPR")
+    )
+  )
+)

@@ -1,0 +1,175 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "TEXTE PREACTIVABLE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Noir")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "TEXTE ZONE MILITAIRE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(map
+  (name "R10")
+  (number 68)
+  (comment "CTL importe de VIDEOMAP")
+  (date 30 03 2006)
+  (heure 12 25 37)
+  (ref_point
+    (name "R101")
+    (comment "")
+    (value
+      (nautical_mile 64 -3042 64 10010)
+    )
+  )
+  (ref_point
+    (name "R102")
+    (comment "")
+    (value
+      (nautical_mile 64 914 64 9586)
+    )
+  )
+  (ref_point
+    (name "R103")
+    (comment "")
+    (value
+      (nautical_mile 64 1152 64 9168)
+    )
+  )
+  (ref_point
+    (name "R104")
+    (comment "")
+    (value
+      (nautical_mile 64 882 64 8423)
+    )
+  )
+  (ref_point
+    (name "R105")
+    (comment "")
+    (value
+      (nautical_mile 64 -1115 64 8667)
+    )
+  )
+  (ref_point
+    (name "R106")
+    (comment "")
+    (value
+      (nautical_mile 64 -3267 64 8802)
+    )
+  )
+  (ref_point
+    (name "R107")
+    (comment "")
+    (value
+      (nautical_mile 64 -3703 64 9260)
+    )
+  )
+  (ref_point
+    (name "R108")
+    (comment "")
+    (value
+      (nautical_mile 64 -3482 64 9613)
+    )
+  )
+  (submap
+    (number 1)
+    (name "R10")
+    (submap_type 4)
+    (keyboard 3)
+    (entity
+      (name "363")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "R101")
+        (point "R102")
+        (point "R103")
+        (point "R104")
+        (point "R105")
+        (point "R106")
+        (point "R107")
+        (point "R108")
+        (point "R101")
+      )
+      (polygone 1)
+    )
+  )
+)
