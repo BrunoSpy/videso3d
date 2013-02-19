@@ -19,16 +19,13 @@ Pour installer Subversive :
   * Cocher _Subversive SVN Team Provider_ dans Collaboration
   * Cliquer sur Next, accepter les licenses et finir.
 
-Il faut ensuite ajouter un connecteur :
-  * Il faut d'abord ajouter le site suivant dans _Install New Softwares_ http://community.polarion.com/projects/subversive/download/eclipse/2.0/galileo-site/  (remplacer galileo par le nom de votre version d'Eclipse)
-  * Dans _Subversive SVN Connectors_, choisir _SVNKit 1.3.0_
+Il faut ensuite ajouter un connecteur. S'il n'est pas proposé automatiquement après le redémarrage d'Eclipse, voici la procédure à suivre : 
+  * Il faut d'abord ajouter un site source, que vous trouverez à l'adresse http://www.polarion.com/products/svn/subversive/download.php
+  * Dans _Subversive SVN Connectors_, choisir _SVNKit_
   * Cliquer sur Next, accepter les licenses et finir.
 
 
 Eclipse est prêt à créer un nouveau projet à partir des sources de Videso3D.
-
-=== Texlipse ===
-Afin de pouvoir modifier la documentation avec Eclipse, il faut aussi ajouter le module Texlipse.
 
 == Récupérer les sources de Videso3D avec Eclipse ==
 Cette section décrit comment créer un nouveau projet dans Eclipse à partir des sources de Videso3D.
@@ -55,5 +52,4 @@ Une fois le projet récupéré, il faut le configurer afin qu'il compile correct
   * Puis aller dans Java Build Path->Libraries
   * Cliquer sur Add Jars
   * Ajouter depuis lib tous les jars présents, ainsi que le jar présent dans le dossier XStream
-  * Dans jogl.jar, configurer _Native library location_ à _Videso3D/lib_ (Workspace, puis choisir lib32 ou lib64 suivant votre système)
   * Enfin, dans Resource, mettre _Text file encoding_ sur _Other->UTF-8_.
