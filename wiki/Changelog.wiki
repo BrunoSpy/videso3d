@@ -1,4 +1,31 @@
+= Version 0.12 =
+
+== 0.12.0 ==
+
+  * IHM
+    * nouvelle gestion des onglets de la fenêtre d'Analyse
+    * nouvelle toolbar d'outils de Dessins (outils disponibles : polygone, ellipsoïde, point)
+    * IHM de gestion des objets créés par l'utilisateur
+    * enregistrement de l'état de l'application à la fermeture
+    * Zoom centré souris
+
+  * KML
+    * amélioration du support expérimental des fichiers KML
+
+  * Divers
+    * amélioration de l'import des bases de données
+
 = Version 0.11 =
+
+== 0.11.6 ==
+
+  * Corrections de bugs :
+    * Annulation d'import de trajectoires corrigé
+    * Balises travers dans les itis affichées
+
+== 0.11.4, 0.11.5 ==
+
+  * Corrections de bugs
 
 == 0.11.3 ==
 
