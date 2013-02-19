@@ -1,25 +1,28 @@
 <launch4jConfig>
   <dontWrapJar>true</dontWrapJar>
   <headerType>console</headerType>
-  <jar>datas\videso3d-win32.jar</jar>
-  <outfile>D:\Projets\Videso3D\jar\videso3d.exe</outfile>
+  <jar>.\datas\videso3d.jar</jar>
+  <outfile>E:\Projets\Videso3D-build\jar\videso3d-win64-debug\videso3d.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
-  <chdir>datas</chdir>
+  <chdir>.\datas</chdir>
   <priority>normal</priority>
   <downloadUrl>http://java.com/download</downloadUrl>
   <supportUrl></supportUrl>
   <customProcName>false</customProcName>
   <stayAlive>false</stayAlive>
   <manifest></manifest>
-  <icon>D:\Projets\Videso3D\src\resources\videso3d.ico</icon>
+  <icon>E:\Projets\Videso3D-build\src\resources\videso3d.ico</icon>
+  <singleInstance>
+    <mutexName>videso3d</mutexName>
+    <windowTitle></windowTitle>
+  </singleInstance>
   <jre>
     <path></path>
-    <minVersion>1.6.0_10</minVersion>
+    <minVersion>1.7.0</minVersion>
     <maxVersion></maxVersion>
     <jdkPreference>preferJre</jdkPreference>
-    <initialHeapSize>256</initialHeapSize>
+    <initialHeapSize>512</initialHeapSize>
     <maxHeapSize>1024</maxHeapSize>
-    <maxHeapPercent>80</maxHeapPercent>
   </jre>
 </launch4jConfig>
