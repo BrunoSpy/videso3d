@@ -84,7 +84,7 @@ import gov.nasa.worldwind.layers.Layer;
 /**
  * Panel de sélection des trajectoires affichées
  * @author Bruno Spyckerelle
- * @version 0.5.1
+ * @version 0.5.2
  */
 public class TrajectoriesView extends JPanel {
 
@@ -124,7 +124,7 @@ public class TrajectoriesView extends JPanel {
 			public void valueChanged(ListSelectionEvent e) {
 				if(!e.getValueIsAdjusting()){
 					if(e.getFirstIndex() != -1){
-						for(int i = e.getFirstIndex(); i <= e.getLastIndex(); i++){
+						for(int i = e.getFirstIndex(); i < e.getLastIndex(); i++){
 							reader.getModel().setSelected(pistes.isRowSelected(i), 
 									(VidesoTrack) ((TracksModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(i)));
 						}
@@ -388,7 +388,7 @@ public class TrajectoriesView extends JPanel {
 		
 		stylePane.setLayout(new GridBagLayout());
 		
-		final JComboBox styles = new JComboBox();
+		final JComboBox<String> styles = new JComboBox<String>();
 		for(Integer style : layer.getStylesAvailable()){
 			switch(style) {
 			case TrajectoriesLayer.STYLE_CURTAIN:
@@ -448,7 +448,7 @@ public class TrajectoriesView extends JPanel {
 	
 	private List<JButton> colorButtons;
 	private List<JTextField> altitudeFields;
-	private void updateStylePane(final JComboBox styles, final JXTaskPane stylePane, List<JButton> colorButton, List<JTextField> altitudeField){
+	private void updateStylePane(final JComboBox<String> styles, final JXTaskPane stylePane, List<JButton> colorButton, List<JTextField> altitudeField){
 		this.colorButtons = colorButton;
 		this.altitudeFields = altitudeField;
 		stylePane.removeAll();
