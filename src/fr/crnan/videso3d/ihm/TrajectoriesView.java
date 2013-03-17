@@ -17,6 +17,7 @@ package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -43,6 +44,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -73,6 +75,7 @@ import fr.crnan.videso3d.formats.opas.OPASReader;
 import fr.crnan.videso3d.formats.plns.PLNSReader;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
 import fr.crnan.videso3d.ihm.components.VXTable;
+import fr.crnan.videso3d.ihm.contextualmenus.TrajectoriesMenu;
 import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
 import fr.crnan.videso3d.trajectography.PolygonsSetFilter;
 import fr.crnan.videso3d.trajectography.TrackContext;
@@ -206,21 +209,11 @@ public class TrajectoriesView extends JPanel {
 					for(int row : pistes.getSelectedRows()){
 						selectedTracks.add((VidesoTrack)((TracksModel)pistes.getModel()).getTrackAt(pistes.convertRowIndexToModel(row)));
 					}
-					final JPopupMenu menu = new JPopupMenu();
-					JMenuItem delete = new JMenuItem("Supprimer les trajectoires sélectionnées...");
-					delete.addActionListener(new ActionListener() {
-						
-						@Override
-						public void actionPerformed(ActionEvent e) {
-							if(JOptionPane.showConfirmDialog(menu, "La suppression des trajectoires est définitive.\n\n Confirmer la suppression des "+(selectedTracks.size())+" trajectoires ?", "Suppression des trajectoires", JOptionPane.OK_CANCEL_OPTION,
-										JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION){
-								for(VidesoTrack track : selectedTracks){
-									reader.getModel().removeTrack(track);
-								}
-							}
-						}
-					});
-					menu.add(delete);
+					JPopupMenu menu = new JPopupMenu(selectedTracks + " trajectoires sélectionnées");
+					JMenu trajMenu = new TrajectoriesMenu(selectedTracks, wwd);
+					for(Component c : trajMenu.getMenuComponents()){
+						menu.add(c);
+					}
 					menu.show(pistes, e.getX(), e.getY());
 				}
 			}

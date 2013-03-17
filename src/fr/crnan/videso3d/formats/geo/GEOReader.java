@@ -34,7 +34,7 @@ import java.util.Vector;
 /**
  * Lecteur de fichiers Elvira GEO.<br />
  * @author Bruno Spyckerelle
- * @version 0.2.
+ * @version 0.2.2
  */
 public class GEOReader extends TrackFilesReader{
 	private boolean importRapide = false;	
@@ -124,7 +124,7 @@ public class GEOReader extends TrackFilesReader{
     		while(sentence.startsWith("!")  || !sentence.startsWith("Voie")){
     			sentence = in.readLine();
     		}
-    		if(!importRapide||(timeFileFilterBegin==null&&timeFileFilterEnd==null)){
+    		if(!importRapide || (timeFileFilterBegin==null && timeFileFilterEnd==null)){
     			while(in.ready() && !isCancel()){
     				sentence = in.readLine();
     				if (sentence != null){
@@ -150,7 +150,7 @@ public class GEOReader extends TrackFilesReader{
     				}
     			}
     		}else{
-    				if(timeFileFilterBegin!=null&&timeFileFilterEnd==null){
+    				if(timeFileFilterBegin!=null && timeFileFilterEnd==null){
     					while(in.ready() && !isCancel()){
     					sentence = in.readLine();
     					if(Double.parseDouble(sentence.split("\t")[3])<timeFileFilterBegin){
@@ -168,7 +168,7 @@ public class GEOReader extends TrackFilesReader{
     							track.addTrackPoint(sentence);
     					}
     				}
-    			}else if(timeFileFilterBegin==null&&timeFileFilterEnd!=null){
+    			}else if(timeFileFilterBegin==null && timeFileFilterEnd!=null){
     				while(in.ready() && !isCancel()){
     					if(Double.parseDouble(sentence.split("\t")[3])>timeFileFilterEnd){
     						if(track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0)
@@ -187,7 +187,7 @@ public class GEOReader extends TrackFilesReader{
     							track.addTrackPoint(sentence);
     					}
     				}
-    			}else if(timeFileFilterBegin!=null&&timeFileFilterEnd!=null){
+    			}else if(timeFileFilterBegin!=null && timeFileFilterEnd!=null){
     				while(in.ready() && !isCancel()){
     					double currentTime = Double.parseDouble(sentence.split("\t")[3]);
     					if(currentTime < timeFileFilterBegin){
