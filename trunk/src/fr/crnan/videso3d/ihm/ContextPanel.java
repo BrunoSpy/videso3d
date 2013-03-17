@@ -34,7 +34,6 @@ import bibliothek.gui.dock.common.mode.ExtendedMode;
 
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.aip.AIP;
 import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.databases.stpv.StpvController;
@@ -42,7 +41,7 @@ import fr.crnan.videso3d.ihm.components.TitledPanel;
 /**
  * Panel d'infos contextuelles
  * @author Bruno Spyckerelle
- * @version 0.4.6
+ * @version 0.4.7
  */
 public class ContextPanel extends JPanel{
 
@@ -148,11 +147,12 @@ public class ContextPanel extends JPanel{
 				if(type == AIP.WPT){
 					this.addTaskpanes(DatasManager.Type.STIP, StipController.BALISES, name);
 					this.addTaskpanes(DatasManager.Type.STPV, StpvController.BALISE, name);
-					this.addTaskpanes(base, type, name);
-				} else {
-					this.addTaskpanes(base, type, name);
+				} else if(type ==  AIP.CTL) {
+					this.addTaskpanes(DatasManager.Type.STIP, StipController.SECTEUR, name);
+					this.addTaskpanes(DatasManager.Type.STPV, StpvController.SECTEUR, name);
+				} else if(type ==  AIP.AWY || type == AIP.PDR) {
+					this.addTaskpanes(DatasManager.Type.STIP, StipController.ROUTES, name.split("-")[0].replaceAll("\\s+", ""));
 				}
-				break;
 			default:
 				this.addTaskpanes(base, type, name);
 			}
