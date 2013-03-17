@@ -33,6 +33,7 @@ import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.databases.aip.AIPController;
 import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.formats.VidesoTrack;
+import fr.crnan.videso3d.geom.LatLonCautra;
 import fr.crnan.videso3d.geom.LatLonUtils;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VidesoObject;
@@ -176,7 +177,8 @@ public class TracksStatsProducer extends ProgressSupport {
 	
 	/**
 	 * Calcul le développé d'une trajectoire par rapport à une altitude de référence.<br />
-	 * Si la trajectoire ne contient pas l'altitude de référence, une régression linéaire est effectuée.
+	 * Si la trajectoire ne contient pas l'altitude de référence, une régression linéaire est effectuée.<br />
+	 * Série (x,y) en (NM, FL).
 	 * @param p
 	 * @param ref altitude de référence, en mètres
 	 * @param departure Si vrai, cherche l'altitude de ref au début de la trajectoire, sinon à la fin.
@@ -223,7 +225,7 @@ public class TracksStatsProducer extends ProgressSupport {
 				}
 			}
 			for(Couple<Double, Double> point : points){
-				series.add(point.getFirst() - translation, point.getSecond());
+				series.add((point.getFirst() - translation)/LatLonCautra.NM, point.getSecond()/30.48);
 			}
 		} else {
 			Couple<Double, Double> lastPoint = null;
@@ -254,7 +256,7 @@ public class TracksStatsProducer extends ProgressSupport {
 			for(Couple<Double, Double> point : points){
 				//TODO ref en dehors de la trajectoire...
 				if(translation != null)
-					series.add(point.getFirst() - translation, point.getSecond());
+					series.add((point.getFirst() - translation)/LatLonCautra.NM, point.getSecond()/30.48);
 			}
 		}
 		return series;

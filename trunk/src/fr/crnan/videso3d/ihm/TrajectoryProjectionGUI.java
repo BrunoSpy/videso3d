@@ -34,7 +34,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 /**
  * IHM de visualisation de projection de trajectoires
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class TrajectoryProjectionGUI extends JFrame{
 
@@ -57,13 +57,14 @@ public class TrajectoryProjectionGUI extends JFrame{
 		}
 		
 		JFreeChart chart = ChartFactory.createXYLineChart("Projection",
-				"Distance",
-				"Altitude (m)",
+				"Distance (NM)",
+				"Altitude (FL)",
 				dataset,
 				PlotOrientation.VERTICAL,
-				true,
+				false,
 				true,
 				false);
+		
 		ChartPanel panel = new ChartPanel(chart);
 		setContentPane(panel);
 		pack();
