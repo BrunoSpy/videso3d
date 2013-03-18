@@ -18,9 +18,13 @@ package fr.crnan.videso3d.ihm.contextualmenus;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.VidesoTrack;
 import fr.crnan.videso3d.ihm.TrajectoryProjectionGUI;
+import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
+import gov.nasa.worldwind.layers.Layer;
+import gov.nasa.worldwind.render.Path;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JMenu;
@@ -48,6 +52,51 @@ public class TrajectoriesMenu extends JMenu {
 		this.add(graph);
 		
 		this.addSeparator();
+		
+		final List<Path> visibles = new ArrayList<Path>();
+		final List<Path> invisibles = new ArrayList<Path>();
+		//find the layer hosting the track
+		for(Layer l : wwd.getModel().getLayers()){
+			if(l instanceof TrajectoriesLayer){
+				for(VidesoTrack t : tracks){
+					Object line = ((TrajectoriesLayer) l).getLine(t);
+					if(line instanceof Path){
+						if(((Path) line).isVisible()){
+							visibles.add((Path) line);
+						} else {
+							invisibles.add((Path) line);
+						}
+					}
+				}
+			}
+		}
+		
+		JMenuItem display =new JMenuItem("Afficher");
+		display.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				for(Path p : invisibles){
+					p.setVisible(true);
+				}
+			}
+		});
+		if(invisibles.size() > 0)
+			this.add(display);
+		
+		JMenuItem hide =new JMenuItem("Cacher");
+		hide.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				for(Path p : visibles){
+					p.setVisible(false);
+				}
+			}
+		});
+		
+		if(visibles.size() > 0)
+			this.add(hide);
 		
 		JMenuItem delete = new JMenuItem("Supprimer");
 		delete.addActionListener(new ActionListener() {

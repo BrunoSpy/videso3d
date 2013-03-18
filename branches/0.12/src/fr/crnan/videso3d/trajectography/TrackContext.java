@@ -40,7 +40,6 @@ import org.jdesktop.swingx.plaf.TaskPaneUI;
 
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.databases.aip.AIP;
