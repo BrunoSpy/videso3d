@@ -32,6 +32,7 @@ import fr.crnan.videso3d.formats.geo.GEOTrack;
 import fr.crnan.videso3d.geom.VPosition;
 import fr.crnan.videso3d.graphics.AltitudeFilterablePath;
 import fr.crnan.videso3d.graphics.VidesoAltitudeFilterablePath;
+import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.layers.AltitudeFilterableLayer;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TracksModelListener;
@@ -50,13 +51,13 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Layer contenant des tracks Elvira GEO et permettant un affichage sélectif.
  * @author Bruno Spyckerelle
- * @version 0.4.4
+ * @version 0.4.5
  */
 public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFilterableLayer{
 		
 	private TracksModel model;
 		
-	protected HashMap<VidesoTrack, AltitudeFilterablePath> lines = new HashMap<VidesoTrack, AltitudeFilterablePath>();
+	protected HashMap<VidesoTrack, VidesoAltitudeFilterablePath> lines = new HashMap<VidesoTrack, VidesoAltitudeFilterablePath>();
 	
 	protected HashMap<AltitudeFilterablePath, VidesoTrack> tracks = new HashMap<AltitudeFilterablePath, VidesoTrack>();
 	
@@ -224,7 +225,7 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 	}
 	
 	@Override
-	public Object getLine(VidesoTrack t){
+	public VidesoObject getLine(VidesoTrack t){
 		return this.lines.get(t);
 	}
 	

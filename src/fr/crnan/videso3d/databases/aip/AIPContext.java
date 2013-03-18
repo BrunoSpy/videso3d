@@ -33,7 +33,6 @@ import org.jdom2.Element;
 import fr.crnan.videso3d.Context;
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.databases.aip.AIP.Altitude;
 import fr.crnan.videso3d.graphics.Route;
@@ -43,7 +42,7 @@ import fr.crnan.videso3d.ihm.ContextPanel;
 /**
  * 
  * @author Bruno Spyckerelle	
- * @version 0.1
+ * @version 0.1.1
  */
 public class AIPContext extends Context {
 
@@ -55,9 +54,9 @@ public class AIPContext extends Context {
 
 	@Override
 	public List<JXTaskPane> getTaskPanes(int type, String name) {
-		if(type<AIP.AWY){
+		if(type < AIP.AWY){
 			return showZoneInfos(type, name);
-		}else if(type>=AIP.AWY && type <AIP.DMEATT){
+		}else if(type >= AIP.AWY && type <AIP.DMEATT){
 			return showRouteInfos(name);
 		}else if(type>=AIP.DMEATT && type<AIP.AERODROME){
 			return showNavFixInfos(type, name);
@@ -72,6 +71,7 @@ public class AIPContext extends Context {
 		String zoneID = AIP.getID(type, name);
 		
 		JXTaskPane infos = new JXTaskPane();
+		boolean hasElements = false;
 		infos.setTitle("Éléments AIP");
 		String classe = getController().getAIP().getZoneAttributeValue(zoneID, "Classe");
 		String hor = getController().getAIP().getZoneAttributeValue(zoneID, "HorTxt");
@@ -79,19 +79,29 @@ public class AIPContext extends Context {
 		String rmq = getController().getAIP().getZoneAttributeValue(zoneID, "Remarque");
 		if(classe != null){
 			infos.add(new JLabel("<html><b>Classe</b> : " + classe+"</html>"));
+			hasElements = true;
 		}
 		if(type == AIP.R){
-			if(getController().getAIP().getZoneAttributeValue(zoneID, "Rtba")!=null)
+			if(getController().getAIP().getZoneAttributeValue(zoneID, "Rtba")!=null) {
 				infos.add(new JLabel("<html><b>RTBA</b></html>"));
+				hasElements = true;
+			}
 		}
 		if(hor != null){
 			infos.add(new JLabel("<html><b>Horaires</b> : " + hor.replaceAll("#", "<br/>")+"</html>"));
+			hasElements = true;
 		}
 		if(act != null){
 			infos.add(new JLabel("<html><b>Activité</b> : " + act.replaceAll("#", "<br/>")+"</html>"));
+			hasElements = true;
 		}
 		if(rmq != null){
 			infos.add(new JLabel("<html><b>Remarques</b> : " + rmq.replaceAll("#", "<br/>")+"</html>"));
+			hasElements = true;
+		}
+		
+		if(!hasElements){
+			infos.add(new JLabel("<html><i>Pas d'éléments AIP</i></html>"));
 		}
 		
 		LinkedList<JXTaskPane> taskPanesList = new LinkedList<JXTaskPane>();
