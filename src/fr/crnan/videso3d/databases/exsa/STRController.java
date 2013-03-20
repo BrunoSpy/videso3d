@@ -513,7 +513,7 @@ public class STRController implements VidesoController {
 					rs = st.executeQuery("select * from centcrvsm where rvsm ='"+rvsm+"'");
 					while(rs.next()){
 						squares.add(new Couple<Integer, Integer>(rs.getInt("carre"), rs.getInt("souscarre")));
-						altitudes.add(new Couple<Double, Double>(285d*30.48, 660d*30.48));
+						altitudes.add(new Couple<Double, Double>(295d*30.48, 660d*30.48));
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
