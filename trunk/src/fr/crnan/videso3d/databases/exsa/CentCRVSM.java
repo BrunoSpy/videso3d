@@ -55,7 +55,6 @@ public class CentCRVSM {
 		} else {
 			throw new ParseException("CENT_CRVSM Parse Error at " + line, 0);
 		}
-		System.out.println("rvsm "+getCarre()+" "+getSousCarre()+ " "+getRVSM());
 	}
 
 	public void setRVSM(String carre, String souscarre){
