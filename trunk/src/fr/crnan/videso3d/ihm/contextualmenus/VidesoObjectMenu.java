@@ -25,6 +25,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.graphics.VidesoAltitudeFilterablePath;
 import fr.crnan.videso3d.graphics.VidesoObject;
 import fr.crnan.videso3d.ihm.components.ChangeAnnotationDialog;
@@ -40,7 +41,7 @@ public class VidesoObjectMenu extends JMenu {
 
 	public VidesoObjectMenu(final VidesoObject object, final VidesoGLCanvas wwd, final MouseEvent event){
 
-		if(!(object instanceof DatabaseVidesoObjectMenu || object instanceof VidesoAltitudeFilterablePath)){
+		if(!(object instanceof DatabaseVidesoObject || object instanceof VidesoAltitudeFilterablePath)){
 			//	ne pas modifier le nom si l'objet est de type DatabaseVidesoObject
 			// idem pour un VidesoPath
 			JMenuItem changeName = new JMenuItem("Renommer...");

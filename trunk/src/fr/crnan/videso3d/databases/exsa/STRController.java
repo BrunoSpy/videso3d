@@ -29,7 +29,6 @@ import java.util.Map.Entry;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -59,7 +58,7 @@ import gov.nasa.worldwind.render.airspaces.BasicAirspaceAttributes;
 /**
  * Contrôle l'affichage des éléments Exsa
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
 public class STRController implements VidesoController {
 
@@ -90,6 +89,7 @@ public class STRController implements VidesoController {
 	public static final int STACK = 6;
 	public static final int TMA_F = 7;
 	public static final int TMA_F_M = 8;
+	public static final int MOSAIQUE_RVSM = 9;
 	
 	public STRController(VidesoGLCanvas wwd){
 		this.wwd = wwd;
@@ -245,6 +245,9 @@ public class STRController implements VidesoController {
 		case TMA_F_M:
 			this.toggleLayer(this.createMosaiqueLayer(type, name), true);
 			break;
+		case MOSAIQUE_RVSM:
+			this.toggleLayer(this.createMosaiqueLayer(type, name), true);
+			break;	
 		default:
 			break;
 		}
@@ -469,7 +472,53 @@ public class STRController implements VidesoController {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-			} 
+			} else if(type == MOSAIQUE_RVSM){
+				annotationTitle = "RVSM : "+name;
+				grille = false;
+				squares = new LinkedList<Couple<Integer,Integer>>();
+				altitudes = new LinkedList<Couple<Double,Double>>();
+				try {
+					Statement st = DatabaseManager.getCurrentExsa();
+					ResultSet rs = st.executeQuery("select * from centmosai where type ='CCR'");
+					origine = LatLonCautra.fromCautra(rs.getDouble("xcautra"), rs.getDouble("ycautra"));
+					width = rs.getInt("colonnes");
+					height = rs.getInt("lignes");
+					size = 32;
+					hSens = MosaiqueLayer.BOTTOM_UP;
+					vSens = MosaiqueLayer.LEFT_RIGHT;
+					numSens = MosaiqueLayer.VERTICAL_FIRST;
+					numbers = false;
+					attr = new BasicShapeAttributes();
+					attr.setInteriorOpacity(0.4);
+					airspaceAttr = new BasicAirspaceAttributes();
+					airspaceAttr.setOpacity(0.4);
+					grille = false;
+					int rvsm = -1;
+					if(name.equals("NON")){
+						rvsm = 0;
+						attr.setInteriorMaterial(Material.RED);
+						attr.setOutlineMaterial(Material.RED);
+						airspaceAttr.setMaterial(Material.RED);
+					} else if(name.equals("OUI")){
+						rvsm  = 1;
+						attr.setInteriorMaterial(Material.YELLOW);
+						attr.setOutlineMaterial(Material.YELLOW);
+						airspaceAttr.setMaterial(Material.YELLOW);
+					} else if(name.equals("OUI_W")){
+						rvsm  = 2;
+						attr.setInteriorMaterial(Material.BLUE);
+						attr.setOutlineMaterial(Material.BLUE);
+						airspaceAttr.setMaterial(Material.BLUE);
+					}
+					rs = st.executeQuery("select * from centcrvsm where rvsm ='"+rvsm+"'");
+					while(rs.next()){
+						squares.add(new Couple<Integer, Integer>(rs.getInt("carre"), rs.getInt("souscarre")));
+						altitudes.add(new Couple<Double, Double>(285d*30.48, 660d*30.48));
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 			MosaiqueLayer mLayer = new MosaiqueLayer(annotationTitle, grille, origine, width, 
 													height, size, hSens, vSens, numSens, squares,
 													altitudes, numbers, attr, airspaceAttr,
@@ -498,7 +547,7 @@ public class STRController implements VidesoController {
 				((Cylinder) renderables.get(type+"-"+name)).setVisible(false);
 				this.renderableLayer.firePropertyChange(AVKey.LAYER, null, this.renderableLayer);
 			}
-		}else {
+		} else {
 			this.toggleLayer(this.mosaiquesLayer.get(type+"-"+name), false);
 		}
 		//synchroniser la vue si l'appel n'a pas été fait par la vue

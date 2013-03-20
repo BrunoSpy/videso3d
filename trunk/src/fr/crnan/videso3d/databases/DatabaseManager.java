@@ -512,6 +512,10 @@ public final class DatabaseManager {
 				"v2 int, " +
 				"v3 int, " +
 				"name varchar(2))");
+		st.executeUpdate("create table centcrvsm (id integer primary key autoincrement, " +
+				"carre int, " +
+				"souscarre int, " +
+				"rvsm int)"); //0: non rvsm; 1: RVSM sauf non corrélés; 2: RVSM même pour les non corrélés
 		st.close();
 		//on ajoute le nom de la base
 		DatabaseManager.addDatabase(name, DatasManager.Type.EXSA, new SimpleDateFormat().format(new Date()));
