@@ -16,7 +16,9 @@
 
 package fr.crnan.videso3d.ihm;
 
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -45,13 +47,16 @@ import gov.nasa.worldwind.avlist.AVKey;
  * @version 0.1
  */
 public class ConfigurationUI extends JFrame {
+	
+	private JPanel all;
+	private final ConfigurationUI thisConfUI;
 
 	public ConfigurationUI(){
 		super();
-		
+		thisConfUI = this;
 		this.setTitle("Configuration Videso 3D");
 		
-		JPanel all = new JPanel();
+		all = new JPanel();
 		all.setLayout(new BoxLayout(all, BoxLayout.Y_AXIS));
 		all.setBorder(null);
 		this.getContentPane().add(all);
@@ -169,7 +174,7 @@ public class ConfigurationUI extends JFrame {
 		hostname.setText(gov.nasa.worldwind.Configuration.getStringValue(AVKey.URL_PROXY_HOST));
 		proxy.add(hostname);
 		proxy.add(new JLabel("Port : "));
-		final JTextField port = new JTextField(5);
+		final JTextField port = new JTextField(7);
 		port.setText(gov.nasa.worldwind.Configuration.getStringValue(AVKey.URL_PROXY_PORT));
 		proxy.add(port);
 		JButton val = new JButton("Valider");
@@ -248,11 +253,110 @@ public class ConfigurationUI extends JFrame {
 		all.add(trajecto2);
 		all.add(trajecto3);
 		
-		all.add(new Box.Filler(new Dimension(0, Short.MAX_VALUE), new Dimension(0, Short.MAX_VALUE), new Dimension(0, Short.MAX_VALUE)));
 		
 		
 		
-		this.setSize(new Dimension(500, 350));
+		TitledPanel svnTitle = new TitledPanel("Dépôts SVN");
+		colorsTitle.setAlignmentY(JComponent.TOP_ALIGNMENT);
+		all.add(svnTitle);
+		String svnRepositories = Configuration.getProperty(Configuration.SVN_REPOSITORIES, "");
+		if(!svnRepositories.isEmpty()){
+			addSVNRepositoriesPanels(svnRepositories,false);
+		}		
+		JPanel svnAddRepository = new JPanel();
+		svnAddRepository.setLayout(new FlowLayout(FlowLayout.TRAILING));
+		JButton addSVNRepositoryButton = new JButton("Ajouter un dépôt");
+		addSVNRepositoryButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				SVNRepositoryParamsUI svnAddRepositoryUI = new SVNRepositoryParamsUI(thisConfUI);
+				svnAddRepositoryUI.setVisible(true);
+			}
+		});
+		svnAddRepository.add(addSVNRepositoryButton);
+		
+		all.add(svnAddRepository);
+		
+		//all.add(new Box.Filler(new Dimension(0, Short.MAX_VALUE), new Dimension(0, Short.MAX_VALUE), new Dimension(0, Short.MAX_VALUE)));
+		this.pack();
+	}
+
+	
+	/**
+	 * 
+	 * @param svnRepositories
+	 * @param secondToLast true si les dépôts doivent être ajoutés en avant dernière position dans le container (utile dans le cas où
+	 * on ajoute un dépôt, celui-ci doit être placé avant le bouton  "Ajouter un dépôt")
+	 */
+	private void addSVNRepositoriesPanels(String svnRepositories, boolean secondToLast) {
+		String[] svnRepos = svnRepositories.split("#");
+		for(String svnRepo : svnRepos){
+			String[] svnRepoParams = svnRepo.split(";");
+			addSVNRepositoryPanel(svnRepoParams[0], svnRepoParams[1], secondToLast);
+		}
+	}
+	
+	public void addSVNRepositoryPanel(String type, final String URL, boolean secondToLast){
+		final JPanel repo = new JPanel();
+		repo.setLayout(new BoxLayout(repo, BoxLayout.LINE_AXIS));
+		JLabel repoLabel = new JLabel("Dépôt "+type +": ");
+		final JTextField repoURL = new JTextField(URL);
+		repoURL.setEditable(false);
+		JButton modify = new JButton("Modifier");
+		modify.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String[] svnRepoParams = Configuration.getRepository(repoURL.getText()).split(";");
+				SVNRepositoryParamsUI svnRepositoryParamsUI = new SVNRepositoryParamsUI(thisConfUI, 
+						svnRepoParams[0],svnRepoParams[1],svnRepoParams[2],svnRepoParams[3], repo);
+				svnRepositoryParamsUI.setVisible(true);
+			}
+		});
+		JButton delete = new JButton("Supprimer");
+		delete.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Configuration.removeSVNRepository(URL);
+				all.remove(repo);
+				getContentPane().revalidate();
+			}
+		});
+		repo.add(repoLabel);
+		repo.add(repoURL);
+		repo.add(Box.createHorizontalGlue());
+		repo.add(modify);
+		repo.add(delete);
+		if(secondToLast){
+			all.add(repo, all.getComponentCount()-1);
+		}else
+			all.add(repo);
+		
+		this.getContentPane().revalidate();
+		this.pack();
+	}
+
+
+	public void updateRepository(JPanel repoPanel, String newType, String newURL) {
+		for(Component c : repoPanel.getComponents()){
+			if(c.getClass().equals(JLabel.class)){
+				((JLabel)c).setText("Dépôt "+newType+" : ");
+			}
+			if(c.getClass().equals(JTextField.class)){
+				((JTextField) c).setText(newURL);
+				break;
+			}
+		}
+		getContentPane().revalidate();
+	}
+	
+	
+	@Override
+	public Dimension getSize(){
+		return new Dimension(500,(int) super.getSize().getHeight());
+	}
+	@Override
+	public Dimension getPreferredSize(){
+		return new Dimension(500,(int) super.getPreferredSize().getHeight());
 	}
 	
 }

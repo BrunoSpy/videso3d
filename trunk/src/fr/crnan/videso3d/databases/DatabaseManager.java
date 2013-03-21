@@ -29,8 +29,6 @@ import gov.nasa.worldwind.util.Logging;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -1115,13 +1113,12 @@ public final class DatabaseManager {
 		if(type.compareTo(DatasManager.Type.SkyView) != 0 && name != null) {
 			File file = new File(name);
 			if(file.exists() && !file.delete()) {	
-				try {
-					//on vide le fichier si on arrive pas à le supprimer
-					//c'est moche, mais c'est comme ça sous windows
-					FileWriter out = new FileWriter(file);
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+				//on vide le fichier si on arrive pas à le supprimer
+				//c'est moche, mais c'est comme ça sous windows
+				String[] subFiles = file.list();
+				for(String subFile : subFiles){
+					File deleteFile = new File(subFile);
+					deleteFile.delete();
 				}
 			}
 		}
@@ -1400,7 +1397,6 @@ public final class DatabaseManager {
 		ResultSet rs = st.executeQuery("select radio.path from radio");
 		while (rs.next()) {
 		    pathTab.add(rs.getString(1));
-			// System.out.println("(databaseManager /  getCurrentRadioCovPath) "+ rs.getString(1)+ "///" + rs.getString(2));
 		}
 		return pathTab;
 	}
