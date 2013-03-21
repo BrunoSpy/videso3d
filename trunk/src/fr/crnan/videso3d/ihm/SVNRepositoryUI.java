@@ -64,6 +64,7 @@ public class SVNRepositoryUI extends JDialog{
 					}
 					svnPath = svnPath.substring(1);
 					SVNManager.getDatabase(svnPath, -1);
+					setVisible(false);
 				}
 			}
 		});
