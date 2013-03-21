@@ -104,10 +104,7 @@ public class FileManager {
 	public static void removeTempFiles(){
 		for(File f : new File("").getAbsoluteFile().listFiles()){
 			if(f.isDirectory() && f.getName().startsWith("temp")){
-				for(File d : f.listFiles()){
-					d.delete();
-				}
-				f.delete();
+				deleteFile(f);
 			}
 		}
 	}
