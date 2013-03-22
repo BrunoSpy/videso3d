@@ -362,8 +362,8 @@ public class Stpv extends FileParser{
 		PreparedStatement insert = this.conn.prepareStatement("insert into sect (nom, freq) " +
 		"values (?, ?)");
 		insert.setString(1, line.substring(8, 12).trim());
-		if(line.length() > 25) {
-			insert.setString(2, line.substring(20, 26).trim());
+		if(line.length() > 24) {
+			insert.setString(2, line.substring(20).trim());
 		} else {
 			insert.setString(2, "0");
 		}

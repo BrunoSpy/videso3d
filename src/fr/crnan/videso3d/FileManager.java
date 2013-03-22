@@ -102,6 +102,7 @@ public class FileManager {
 	 * Remove temp files created by untar, unzip or gunzip
 	 */
 	public static void removeTempFiles(){
+		System.gc();
 		for(File f : new File("").getAbsoluteFile().listFiles()){
 			if(f.isDirectory() && f.getName().startsWith("temp")){
 				deleteFile(f);
