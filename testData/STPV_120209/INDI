@@ -1,0 +1,1265 @@
+             *******************************************
+             *                                         *                    
+             * INDICATIF D'APPEL RADIO / TRIGRAMME     *                    
+             *                                         *            
+             *******************************************  22/11/2007
+                                                                            
+INDI 10 AAC   ARMY AIR
+INDI 10 AAF   AIGLE AZUR                                                    
+INDI 10 AAG   ATLANTIC                                                      
+INDI 10 AAL   AMERICAN                                                      
+INDI 10 AAR   ASIANA                                                        
+INDI 10 AAT   AUSTRIAN CHARTER
+INDI 10 AAW   AFRIQUIYA
+INDI 10 AAX   AFREX
+INDI 10 ABB   AIR BELGIUM
+INDI 10 ABD   ATLANTA
+INDI 10 ABH   AIR BALEAR
+INDI 10 ABP   BAIR
+INDI 10 ABR   CONTRACT 
+INDI 10 ABW   AIRBRIDGE CARGO                                                      
+INDI 10 ABX   ABEX       
+INDI 10 ACA   AIR CANADA
+INDI 10 ACG   AIR PARTNER
+INDI 10 ACJ   FLY BUSINESS
+INDI 10 ACL   ITALI
+INDI 10 ACW   AIR CADET                                                     
+INDI 10 ADB   ANTONOV BUREAU
+INDI 10 ADE   ADA AIR
+INDI 10 ADH   HERON                                                       
+INDI 10 ADI   AUDELI                                                        
+INDI 10 ADK   ADCO                                                          
+INDI 10 ADL   SPACE COTSWOLD                                                
+INDI 10 ADN   AERODIENST                                                    
+INDI 10 ADR   ADRIA                                                         
+INDI 10 ADU   AIR DEAL
+INDI 10 AEA   EUROPA                                                        
+INDI 10 AEE   AEGEAN
+INDI 10 AEF   AERO LLOYD                                                    
+INDI 10 AEI   POLISH BIRD
+INDI 10 AEL   AIR EUROPE                                                    
+INDI 10 AEN   AIR ENTREPRISE
+INDI 10 AEU   FLYSTAR
+INDI 10 AEW   AERO SVIT
+INDI 10 AEY   AIR ITALY
+INDI 10 AFA   BLUE ALFA  
+INDI 10 AFF   BENIN CHARTERS                                                        
+INDI 10 AFG   ARIANA                                                        
+INDI 10 AFI   AFRICA WORLD
+INDI 10 AFJ   JAMBO
+INDI 10 AFL   AEROFLOT                                                      
+INDI 10 AFM   AFRO                                                          
+INDI 10 AFP   PORTUGUESE FORCE                                              
+INDI 10 AFR   AIR FRANCE              AF                                    
+INDI 10 AGH   ALTAGNA
+INDI 10 AGK   TAG UKRAINE
+INDI 10 AGN   AIR GABON                                                     
+INDI 10 AGP   AIR TARA
+INDI 10 AGV   AIR GLACIERS                                                  
+INDI 10 AGX   GENEX
+INDI 10 AHH   AIR HOLD
+INDI 10 AHK   AIR HONG KONG
+INDI 10 AHR   ADRIATIC                                                 
+INDI 10 AHU   ABC HUNGARY
+INDI 10 AHY   AZAL                                                 
+INDI 10 AIA   AVIES
+INDI 10 AIB   AIRBUS INDUSTRIE                                              
+INDI 10 AIC   AIR INDIA                                                     
+INDI 10 AID   CENTURY AIRBIRD
+INDI 10 AIK   AFRICAN AIRLINES                                               
+INDI 10 AIN   FLY CARGO                                                     
+INDI 10 AIZ   ARKIA                                                         
+INDI 10 AJA   AJ SERVICES
+INDI 10 AJK   BAMBI
+INDI 10 AJM   AIR JAMAICA
+INDI 10 AJU   AIR JETSUL
+INDI 10 AKH   ARAL
+INDI 10 AKT   AVIA KARAT
+INDI 10 AKY   YAK SERVICE
+INDI 10 ALF   ACEFORCE                                                      
+INDI 10 ALK   SRI LANKAN 
+INDI 10 ALS   AERALP                                                   
+INDI 10 ALX   ALL CONGO                                                     
+INDI 10 AMB   CIVIL AIR AMBULANCE                                           
+INDI 10 AMC   AIR MALTA                                                     
+INDI 10 AME   AIRMIL                                                        
+INDI 10 AMH   MANN
+INDI 10 AMI   AIR MALDIVES                                                          
+INDI 10 AMK   AMER AIR
+INDI 10 AML   MALAWI                                                        
+INDI 10 AMQ   LIFE LINE                                                     
+INDI 10 AMT   AMTRAN                                                        
+INDI 10 AMX   AEROMEXICO                                                    
+INDI 10 ANA   ALL NIPPON                                                    
+INDI 10 ANB   AIR NAV   
+INDI 10 ANE   NOSTRU AIR                                                  
+INDI 10 ANI   NIG ATLANTIC
+INDI 10 ANZ   NEW ZEALAND                                                   
+INDI 10 AOC   AERO AVCOM
+INDI 10 AOJ   ASTERIX
+INDI 10 AON   AERO ENTREPRISE
+INDI 10 AOV   AERO VISION
+INDI 10 APN   AIR POLONIA                                                      
+INDI 10 APW   BIG A
+INDI 10 APY   APA INTERNACIONAL
+INDI 10 ARD   AERO CONDOR
+INDI 10 ARF   AERO FOX
+INDI 10 ARG   ARGENTINA                                                     
+INDI 10 ARL   AIRLEC                                                        
+INDI 10 ARV   ARAVCO                                                                                                              
+INDI 10 ASG   AFRICAN STAR
+INDI 10 ASY   AUSSIE                                                        
+INDI 10 ATC   TANZANIA                                                      
+INDI 10 ATJ   SNOOPY
+INDI 10 ATN   AIR TRANSPORT                                                        
+INDI 10 ATT   AERTURAS
+INDI 10 ATV   AVANTI AIR                                                      
+INDI 10 ATX   AIRTAX                                                        
+INDI 10 AUA   AUSTRIAN                                                      
+INDI 10 AUB   AUGSBOURG AIR
+INDI 10 AUF   AUGUSTA
+INDI 10 AUI   UKRAINE INTERNATIONAL
+INDI 10 AUJ   AUSTROJET
+INDI 10 AUR   AYLINE                                                        
+INDI 10 AUY   AOUSA
+INDI 10 AVA   AVIANCA                                                       
+INDI 10 AVB   BEAUPAIR                                                      
+INDI 10 AVE   AVE                                                       
+INDI 10 AVH   AVISER                                                        
+INDI 10 AVI   ELYSAIR                                                        
+INDI 10 AVP   AVCORP                                                        
+INDI 10 AVS   ARTAC
+INDI 10 AVU   AVIASUD
+INDI 10 AVW   AVIATOR
+INDI 10 AVX   PASLAUGA
+INDI 10 AWC   ZAP                                                           
+INDI 10 AWE   CACTUS                                                        
+INDI 10 AWW   RED DRAGON                                                        
+INDI 10 AXL   EXEL COMMUTER
+INDI 10 AXN   ALEXANDROS
+INDI 10 AXP   ATLAS EXPRESS
+INDI 10 AXV   AXAVIA
+INDI 10 AXX   IMPEX
+INDI 10 AXY   AXIS
+INDI 10 AYB   BELGIAN ARMY
+INDI 10 AYC   AVIACO                                                        
+INDI 10 AYP   AUSTRIA LLOYD
+INDI 10 AYR   CYGNET                                                        
+INDI 10 AYZ   ATLANT SOYOUZ
+INDI 10 AZA   ALITALIA                                                      
+INDI 10 AZE   ARCUS AIR                                                         
+INDI 10 AZI   AZZURA
+INDI 10 AZQ   SILK LINE
+INDI 10 AZS   ZITO TRANS                                                    
+INDI 10 AZV   AZOV AVIA
+INDI 10 AZW   AIR ZIWBABWE                                                  
+INDI 10 AZZ   AZZA TRANSPORT
+INDI 10 BAF   BELGIAN AIR FORCE
+INDI 10 BAG   SPEEDWAY                                                      
+INDI 10 BAH   BAHRAIN                                                       
+INDI 10 BAL   BRITANNIA                                                     
+INDI 10 BAT   BALLISTIC
+INDI 10 BAW   SPEEDBIRD               BA                                    
+INDI 10 BBA   BANAIR
+INDI 10 BBC   BANGLADESH   
+INDI 10 BBD   BLUE CARGO
+INDI 10 BBG   ALISEA                                                 
+INDI 10 BBL   BLUE
+INDI 10 BBO   BABOO
+INDI 10 BCA   BRASMEX                                                          
+INDI 10 BCI   BLUE ISLAND                                                          
+INDI 10 BCS   EUROTRANS                                                     
+INDI 10 BCY   CITY IRELAND
+INDI 10 BDI   BIRDIE
+INDI 10 BDN   GAUNTLET
+INDI 10 BDY   BEL BIRD
+INDI 10 BEE   JERSEY                                                        
+INDI 10 BEL   BEE LINE  
+INDI 10 BER   AIR BERLIN                                                    
+INDI 10 BES   BIRD EXPRESS
+INDI 10 BFD   MEDIA JET
+INDI 10 BFR   BURK LINES
+INDI 10 BGA   BELOUGA
+INDI 10 BGH   BALKAN HOLIDAYS
+INDI 10 BGS   PIROL                                                         
+INDI 10 BHL   BRISTOW
+INDI 10 BHP   BELAIR
+INDI 10 BHT   BRIGHT AIR
+INDI 10 BID   BINAIR
+INDI 10 BIE   MEDITERRANEE                                                 
+INDI 10 BIL   BILL AIR
+INDI 10 BIM   BINTER                                                        
+INDI 10 BKS   AVIA CRUISE
+INDI 10 BLA   ALL CHARTER                                                   
+INDI 10 BLE   BLUE BERRY
+INDI 10 BLF   BLUEFIN
+INDI 10 BLI   BLUE LINE
+INDI 10 BLV   BELL VIEW
+INDI 10 BLX   BLUE SCAN
+INDI 10 BMA   MIDLAND                                                       
+INDI 10 BMD   BRITISH MEDICAL
+INDI 10 BMI   BABY
+INDI 10 BMK   MURAT
+INDI 10 BMM   ATLAS BLUE
+INDI 10 BMW   BMW FLIGHT
+INDI 10 BND   BOND
+INDI 10 BOB   BOB
+INDI 10 BOE   BOEING                                                        
+INDI 10 BON   AIR BOSNA
+INDI 10 BOO   BOOKAJET                                                        
+INDI 10 BOS   MISTRAL
+INDI 10 BPA   BLUE PANORAMA
+INDI 10 BPS   BAISE
+INDI 10 BPT   BONUS
+INDI 10 BRB   BRA TRANSPAEREOS                                                     
+INDI 10 BRI   AIR BOR
+INDI 10 BRO   COAST RIDER
+INDI 10 BRQ   BURAQAIR
+INDI 10 BRS   BRAZIL AIR FORCE                                              
+INDI 10 BRT   BRITISH
+INDI 10 BRU   BELARUS AVIA
+INDI 10 BRW   BRIGHT SERVICES
+INDI 10 BRZ   BERIOZA
+INDI 10 BSI   BRASAIR
+INDI 10 BSK   BISCAYNE
+INDI 10 BSS   AERO NEGOCIOS
+INDI 10 BTC   BASHKIRIAN
+INDI 10 BTI   AIR BALTIC
+INDI 10 BTU   ROLLS                                                         
+INDI 10 BUC   BULGARIAN CHARTER
+INDI 10 BUL   BLUE AIRLINES
+INDI 10 BVR   BAVARIAN
+INDI 10 BWA   WEST INDIAN                                                   
+INDI 10 BWG   BLUE WINGS                                                    
+INDI 10 BWL   BRIT WORLD
+INDI 10 BWY   BROADWAY  
+INDI 10 BXA   BEXAIR                                                  
+INDI 10 BXI   XENIA                                                    
+INDI 10 BZA   BERLIN BEAR
+INDI 10 BZF   BIZ FLEET
+INDI 10 BZH   BRITAIR
+INDI 10 CAI   CORENDON
+INDI 10 CAJ   CAR LINE                                                        
+INDI 10 CAT   AIRCAT                                                        
+INDI 10 CAX   CENTRAL EXPRESS                                                        
+INDI 10 CAZ   EUROCAT
+INDI 10 CBB   CARGO BEE
+INDI 10 CBI   CABI
+INDI 10 CBR   CABAIR                                                        
+INDI 10 CCA   AIR CHINA                                                     
+INDI 10 CCF   TOMCAT                                                        
+INDI 10 CCL   CONTICAL
+INDI 10 CCM   CORSICA                                                       
+INDI 10 CDE   COMEX                                                      
+INDI 10 CDN   CANADIAN                                                      
+INDI 10 CEF   TCHEQUE AIR FORCE
+INDI 10 CEG   CEGA                                                          
+INDI 10 CES   CHINA EASTERN                                                 
+INDI 10 CEV   CENTEV                                                        
+INDI 10 CFC   CANFORCE                                                      
+INDI 10 CFE   FLYER                                                         
+INDI 10 CFG   CONDOR                                                        
+INDI 10 CFU   MINAIR
+INDI 10 CGL   SEAGLE
+INDI 10 CGP   CAPGROUP                                                        
+INDI 10 CHW   CHARTER VIENNE
+INDI 10 CIB   CONDOR BERLIN
+INDI 10 CIE   TCHEQUIA
+INDI 10 CIL   CECILE
+INDI 10 CIM   CIMBER
+INDI 10 CIT   CITY VIENNA 
+INDI 10 CIU   CIELOS                                                    
+INDI 10 CKK   CARGO KING
+INDI 10 CKM   COSMOS                                                        
+INDI 10 CKS   CONNIE                                                        
+INDI 10 CLA   COM LUX
+INDI 10 CLB   CALIBRATOR
+INDI 10 CLC   CLASSIC AIR                                                   
+INDI 10 CLD   CLOWES
+INDI 10 CLF   CLIFTON                                                       
+INDI 10 CLG   CHALLAIR                                                      
+INDI 10 CLI   CLICKJET                                                      
+INDI 10 CLS   AIRISTO     
+INDI 10 CLU   CAROLUS
+INDI 10 CLW   CENTRALWINGS
+INDI 10 CLX   CARGOLUX                                                      
+INDI 10 CMM   CAMALI 
+INDI 10 CNB   CITYHUN                                                     
+INDI 10 CNM   CANARIAS AIR
+INDI 10 CNO   SCANOR                                               
+INDI 10 CNT   CNET                                                          
+INDI 10 COA   CONTINENTAL                                                   
+INDI 10 COE   COMTEL AIR
+INDI 10 COH   COLT
+INDI 10 COS   CONCORS
+INDI 10 CPA   CATHAY                                                        
+INDI 10 CPI   AIR CAI
+INDI 10 CRG   WHITE PELICAN                                                       
+INDI 10 CRL   CORSAIR                                                       
+INDI 10 CSA   CSA                                                         
+INDI 10 CSE   OXFORD                                                        
+INDI 10 CSF   CALEDONIAN
+INDI 10 CSN   CHINA SOUTHERN
+INDI 10 CST   COAST CENTER                                                  
+INDI 10 CTB   DREAM FLIGHT                                                  
+INDI 10 CTM   COTAM                                                         
+INDI 10 CTN   CROATIA                                                       
+INDI 10 CUB   CUBANA                                                        
+INDI 10 CVC   AVIA CENTRE                                                      
+INDI 10 CVF   CLOVER LEAF                                                      
+INDI 10 CWC   CHALLENGE CARGO                                               
+INDI 10 CWE   CELTIC
+INDI 10 CWL   CRANWELL                                                      
+INDI 10 CYP   CYPRUS                                                        
+INDI 10 DAF   DANISH AIR FORCE
+INDI 10 DAH   AIR ALGERIE                                                   
+INDI 10 DAL   DELTA                                                         
+INDI 10 DAN   MAERSK AIR
+INDI 10 DAO   DALO AIR LINES
+INDI 10 DAR   DANISH ARMY
+INDI 10 DAZ   DAS AIR
+INDI 10 DBK   DUBROVNIK AIR
+INDI 10 DBR   DUTCH BIRD
+INDI 10 DCE   DUTCH CARIBBEAN
+INDI 10 DCS   TWIN STAR
+INDI 10 DEA   JET SERVICE
+INDI 10 DEF   TIRPA
+INDI 10 DFL   DANFLY
+INDI 10 DGX   DASNA 
+INDI 10 DHC   DE HAVILLAND
+INDI 10 DHL   DHL
+INDI 10 DHX   DILMUN
+INDI 10 DIX   DIXFLIGHT
+INDI 10 DJA   ANTINEA
+INDI 10 DJC   DYNAMIC JET TRAVEL
+INDI 10 DJU   AIR DJIB
+INDI 10 DKE   DUKE
+INDI 10 DLA   DOLOMITI                                                      
+INDI 10 DLH   LUFTHANSA                                                     
+INDI 10 DLY   DAILY                                                     
+INDI 10 DMO   DOMODEDOVO
+INDI 10 DNC   FLYING OLIVE
+INDI 10 DNM   DENIM
+INDI 10 DNV   DONAVIA
+INDI 10 DOA   DOMINICANA                                                    
+INDI 10 DOB   DOBROLET
+INDI 10 DOC   HELIDOC
+INDI 10 DOR   DORNIER
+INDI 10 DRD   ALADA AIR
+INDI 10 DRI   MADRID                                                       
+INDI 10 DRT   DARTA                                                         
+INDI 10 DSO   DASSAULT                                                         
+INDI 10 DSR   DAIRAIR                                                       
+INDI 10 DTA   ANGOLA                                                        
+INDI 10 DTR   DANISH
+INDI 10 DUB   DUBAI                                                         
+INDI 10 DUK   LION KING
+INDI 10 DUO   FLY DUO
+INDI 10 DWA   DUCOR WORLD
+INDI 10 DWT   DARWIN
+INDI 10 DYE   DYNAMIC                                
+INDI 10 EAB   SWISS EAGLE                                                   
+INDI 10 EAF   EURO CHARTER
+INDI 10 EAL   STAR WING
+INDI 10 EAP   AERO PYRENNEES
+INDI 10 EAT   TRANS EUROPE
+INDI 10 EAX   EASTEX                                                        
+INDI 10 EBF   SKY RUNNER
+INDI 10 EBJ   SKY ELITE
+INDI 10 ECA   EUROCYPRIA                                                    
+INDI 10 ECF   EUROCOPTER                                                    
+INDI 10 ECN   EURO CONTINENTAL                                              
+INDI 10 ECS   ECHO
+INDI 10 EDC   SALTIRE
+INDI 10 EDW   EDELWEISS
+INDI 10 EEU   EUROFLY
+INDI 10 EEX   EURO EXPRESS
+INDI 10 EEZ   EFLY   
+INDI 10 EFC   FLIGHT TAXI
+INDI 10 EFD   EVER FLIGHT
+INDI 10 EFF   EMERALD
+INDI 10 EGL   PRESTIGE
+INDI 10 EGN   FRENCH EAGLE
+INDI 10 EIA   EVERGREEN                                                     
+INDI 10 EIN   SHAMROCK
+INDI 10 EIR   EIR JET
+INDI 10 EIS   COOL
+INDI 10 EJM   JET SPEED
+INDI 10 ELG   ALPI EAGLES
+INDI 10 ELK   ELKA
+INDI 10 ELL   ESTONIAN
+INDI 10 ELY   ELAL                                                          
+INDI 10 EMB   EMBRAER                                                          
+INDI 10 EMX   EUROMANX
+INDI 10 ENA   ENA
+INDI 10 ENI   ENIMEX
+INDI 10 ENK   ENKOR
+INDI 10 ENW   AERONOR
+INDI 10 EOL   EOLE
+INDI 10 EPC   ESPACE
+INDI 10 EQC   ECUA CARGO
+INDI 10 ERG   AVIA ENERGO
+INDI 10 ERJ   JET ITALIA
+INDI 10 ERO   ECHO ROMEO
+INDI 10 ERT   ERITREAN
+INDI 10 ERV   YEREVAN AVIA
+INDI 10 ESK   RELAX
+INDI 10 ETD   ETIHAD
+INDI 10 ETH   ETHOPIAN                                                      
+INDI 10 ETP   TESTER                                                        
+INDI 10 ETV   EURO EXEC                                                        
+INDI 10 EUA   GOLDEN ANGEL
+INDI 10 EUJ   UNION JET
+INDI 10 EUK   SNOW BIRD
+INDI 10 EUP   EUROSTAR
+INDI 10 EUY   EURO AIRWAYS
+INDI 10 EVA   EVA AIR
+INDI 10 EVE   SUNBEAM                                                       
+INDI 10 EVN   EURAVIATION
+INDI 10 EWF   SHARK
+INDI 10 EWG   EUROWINGS
+INDI 10 EWW   EMERY                                                         
+INDI 10 EXC   ECHO EXPRESS
+INDI 10 EXH   BATMAN 
+INDI 10 EXM   EXAM
+INDI 10 EXN   EXIN                                                          
+INDI 10 EXS   CHANNEX                                                       
+INDI 10 EXT   EXECUTIVE
+INDI 10 EXU   SACIR
+INDI 10 EZE   EAST FLIGHT
+INDI 10 EZS   TOP SWISS
+INDI 10 EZY   EASY
+INDI 10 FAF   FRENCH AIR FORCE                                              
+INDI 10 FAG   FUAER
+INDI 10 FAH   BLUE STRIP
+INDI 10 FAT   FARNER                                                        
+INDI 10 FBL   FOOD                                                          
+INDI 10 FBN   AFRIQUE BENIN
+INDI 10 FCA   JET SET
+INDI 10 FCN   FALCON
+INDI 10 FLW   QUICK FLOW                                     
+INDI 10 FDO   FRENCH CUSTOMS
+INDI 10 FDX   FEDEX
+INDI 10 FFC   FAIROAKS
+INDI 10 FFD   FIRST FLIGHT
+INDI 10 FFG   WITCH CRAFT
+INDI 10 FFP   FLYING FISH                                                  
+INDI 10 FFR   FISHER
+INDI 10 FGL   APPLEWOOD                                               
+INDI 10 FGN   FRANCE GENDARME                                               
+INDI 10 FHE   FLY HELLO
+INDI 10 FHY   FREE BIRD
+INDI 10 FIF   AIR FINLAND
+INDI 10 FII   FLIGHT CHECKER
+INDI 10 FIN   FINNAIR
+INDI 10 FIX   AIR FIX
+INDI 10 FJC   FALCONJET 
+INDI 10 FJE   ENVOY                                                    
+INDI 10 FKS   FOCUS                                                    
+INDI 10 FLI   FAROELINE
+INDI 10 FLJ   FLY NOR JET
+INDI 10 FLM   FLY WORLD                                                    
+INDI 10 FLT   FLIGHTLINE
+INDI 10 FLU   YELLOW FLYER                                                    
+INDI 10 FLY   FLY BIRD                                                    
+INDI 10 FMC   CLAESSENS
+INDI 10 FMN   FRENCH NAVY
+INDI 10 FMY   FRENCH ARMY
+INDI 10 FNE   FARNAIR EUROPE 
+INDI 10 FNF   FINN FORCE                                                    
+INDI 10 FNY   FRENCH NAVY
+INDI 10 FOB   FORDAIR                                                       
+INDI 10 FOP   FOKKER FLIGHT
+INDI 10 FOR   FORMULA
+INDI 10 FPC   FINN POWER
+INDI 10 FPG   TAG AVIATION
+INDI 10 FPO   FRENCH POST                                                   
+INDI 10 FRA   RUSHTON
+INDI 10 FRC   FRANCHE COMTE
+INDI 10 FRD   FORD
+INDI 10 FRN   FARNED
+INDI 10 FRS   FLANDRAIR                                                     
+INDI 10 FRT   AEROFREIGHT
+INDI 10 FSD   FLUG SERVICE 
+INDI 10 FSH   FLASH
+INDI 10 FSL   FLIGHT SAFETY
+INDI 10 FSW   FASO
+INDI 10 FTL   FLIGHT AVIA
+INDI 10 FTR   FINISTAIR                                                     
+INDI 10 FTY   FLY TYROL
+INDI 10 FUA   FUTURA                                                        
+INDI 10 FUP   FOX AIR
+INDI 10 FVG   RAYMOND
+INDI 10 FWA   FREEWAY AIR
+INDI 10 FWI   FRENCH WEST
+INDI 10 FWK   FLIGHT WORKS                                                      
+INDI 10 FWL   FLOWEST
+INDI 10 FXR   WILD FOX 
+INDI 10 FYA   FLYANT
+INDI 10 FYG   FLYING GROUP
+INDI 10 FYN   FLYNN
+INDI 10 GAF   GERMAN AIR FORCE                                              
+INDI 10 GAH   GAM HELICO                                              
+INDI 10 GAM   GERMAN ARMY                                                   
+INDI 10 GAO   GOLDEN
+INDI 10 GBJ   GLOBAL JET
+INDI 10 GBK   GABON AIRLINES
+INDI 10 GBL   GEE BEE                                                       
+INDI 10 GBU   TRANSBISSAU                                                   
+INDI 10 GCB   LINA CONGO                                                    
+INDI 10 GCC   GECAS
+INDI 10 GCL   GREEN CLOSE
+INDI 10 GCO   GEMINI
+INDI 10 GCR   SPEEDCAT
+INDI 10 GDA   GOLD AIR
+INDI 10 GDK   GOLDEK FLUG
+INDI 10 GEC   LUFTHANSA CARGO                                                                    
+INDI 10 GEG   DEMOURI
+INDI 10 GEO   GEORGIA
+INDI 10 GES   GESTAIR
+INDI 10 GEV   GESTAVI
+INDI 10 GFA   GULF AIR                                                      
+INDI 10 GFD   KITE
+INDI 10 GGF   JORGIAN AFRICA
+INDI 10 GHA   GHANA
+INDI 10 GHB   GHANA AIRLINES                                                         
+INDI 10 GHN   AIR GHANA
+INDI 10 GIA   INDONESIA                                                     
+INDI 10 GIB   AIR GUINEE
+INDI 10 GIV   GRIVCO
+INDI 10 GJT   BANJET
+INDI 10 GLD   GOLDEN STAR
+INDI 10 GLJ   GLOBAL AUSTRIA                                                   
+INDI 10 GLP   GLOBUS
+INDI 10 GMA   GAMA                                                          
+INDI 10 GMI   GERMANIA  
+INDI 10 GNF   GANDALF                                                   
+INDI 10 GNR   GAMBIA INTERNATIONAL
+INDI 10 GNS   GENESIS
+INDI 10 GNY   GERMAN NAVY                                                   
+INDI 10 GOI   SWISS HAWK                                                         
+INDI 10 GOJ   GOJET                                                         
+INDI 10 GOM   GOMEL                                                         
+INDI 10 GOT   GOTHIC
+INDI 10 GRE   GREECE AIRWAYS
+INDI 10 GRL   GREENLAND AIR
+INDI 10 GRR   AGROAR
+INDI 10 GSM   GLOBESPAN
+INDI 10 GSW   ARROWJET
+INDI 10 GTI   GIANT
+INDI 10 GTS   GATS AIR
+INDI 10 GUI   GREEN BIRD
+INDI 10 GWI   GERMAN WINGS 
+INDI 10 GWX   GWADEX
+INDI 10 GXL   STARDUST
+INDI 10 GZA   EXCELLENT AIR
+INDI 10 GZP   GAZ PROM
+INDI 10 HAF   HELLENIC AIR FORCE                                            
+INDI 10 HAL   HAWAIIAN                                                      
+INDI 10 HAT   TAXI BIRD  
+INDI 10 HAX   SCOOP
+INDI 10 HCY   HELIOS
+INDI 10 HEA   HELI AVIA
+INDI 10 HEJ   HELLAS JET
+INDI 10 HER   HEXAIRLINE                                                    
+INDI 10 HFR   HELIFRANCE                                                    
+INDI 10 HGR   HANG                                                    
+INDI 10 HHI   HAMBOURG JET
+INDI 10 HHN   ROOSTER
+INDI 10 HJL   BIZJET
+INDI 10 HLA   HEAVYLIFT                                                     
+INDI 10 HLF   HAPAG LLOYD                                                   
+INDI 10 HLI   HELI SAINT TROPEZ
+INDI 10 HLK   HELI LINK
+INDI 10 HLR   HELI BULGARIA
+INDI 10 HLX   YELLOW CAB
+INDI 10 HMS   HEMUS AIR
+INDI 10 HOA   HOLA
+INDI 10 HOR   HORIZON
+INDI 10 HSA   DUMA
+INDI 10 HSE   HELI SURESTE
+INDI 10 HSK   MATRA
+INDI 10 HSS   TAS HELICOPTEROS
+INDI 10 HSU   HELIS
+INDI 10 HTG   GROSSMANN
+INDI 10 HTM   HELITRAVEL
+INDI 10 HTR   HOLSTEN
+INDI 10 HTT   AIR TCHAD
+INDI 10 HUK   BIG BIRD
+INDI 10 HVN   VIETNAM
+INDI 10 HWD   SUN SEEKER
+INDI 10 HXL   HOLLAND EXCELL
+INDI 10 HYC   HYDRO CARGO
+INDI 10 HYR   HIGH FLYER
+INDI 10 IAC   INDAIR                                                        
+INDI 10 IAG   EPAG
+INDI 10 IAW   IRAQI                                                         
+INDI 10 IAX   INTER AIR SERVICES
+INDI 10 IAY   IASON
+INDI 10 IBE   IBERIA                                                        
+INDI 10 IBJ   IBERTAXI                                                       
+INDI 10 IBT   IBER TRANS
+INDI 10 IBZ   INTERBIZ                                                      
+INDI 10 ICA   ICARE FLY
+INDI 10 ICB   ICE BIRD
+INDI 10 ICC   CARTO
+INDI 10 ICE   ICEAIR                                                        
+INDI 10 ICJ   ICEJET
+INDI 10 ICL   CAL
+INDI 10 IDG   INDIGO
+INDI 10 IEA   INTERMED
+INDI 10 IFA   FRANKEN AIR                                                
+INDI 10 IFS   RIVIERA 
+INDI 10 IFT   INTER FLIGHT
+INDI 10 IJM   JET MANAGEMENT
+INDI 10 IKR   IKAROS 
+INDI 10 IME   AIRTIME                                                       
+INDI 10 IMG   IMPERIAL
+INDI 10 IMX   ZIMEX                                                         
+INDI 10 INF   INTER FIN
+INDI 10 INJ   INJET
+INDI 10 INR   INTER AIR
+INDI 10 INV   INVER                                                         
+INDI 10 INX   INTER EURO                                                         
+INDI 10 IOS   SCILLONIA
+INDI 10 IPM   SHIPEX
+INDI 10 IPR   AIR ICAR
+INDI 10 IRA   IRANAIR                                                       
+INDI 10 IRH   ATLAS AVIA                                                       
+INDI 10 IRL   IRISH
+INDI 10 ISG   CLUB AIR
+INDI 10 ISK   INTER SKY
+INDI 10 ISR   ISAIR                                                        
+INDI 10 ISS   MERAIR                                                        
+INDI 10 IST   ISTANBUL                                                      
+INDI 10 ITL   ITALFLIGHT
+INDI 10 ITN   TITAN LUX
+INDI 10 ITT   INTER TRANS AIR
+INDI 10 IVE   COMPANY EXEC
+INDI 10 IVW   IVOIRE AIRWAYS
+INDI 10 IWD   IBERWORLD
+INDI 10 IXR   X BIRD
+INDI 10 IYE   YEMENI
+INDI 10 JAE   JADE CARGO
+INDI 10 JAF   BEAUTY
+INDI 10 JAG   JET ALLIANCE
+INDI 10 JAL   JAPANAIR                                                      
+INDI 10 JAR   AIR LINK
+INDI 10 JAS   AIR SYSTEM                                                    
+INDI 10 JAT   JAT                                                         
+INDI 10 JAV   JORDAN AVIATION
+INDI 10 JBR   JOBAIR
+INDI 10 JBU   JET BLUE
+INDI 10 JCB   JAYSEEBEE                                                     
+INDI 10 JCS   JET CLUB
+INDI 10 JCX   JET CONNECT
+INDI 10 JDI   JEDI
+INDI 10 JDP   RED PELICAN
+INDI 10 JEF   JET FLITE
+INDI 10 JEI   JET EXECUTIVE
+INDI 10 JEK   JET OPS
+INDI 10 JEM   GEMSTONE
+INDI 10 JEP   JEP PERSONALES
+INDI 10 JET   GHIBLI
+INDI 10 JFU   ARGAN
+INDI 10 JGD   JET GEE AND DEE
+INDI 10 JIM   SARK
+INDI 10 JKK   SPANAIR
+INDI 10 JLN   JET LINE
+INDI 10 JMC   JAY EM SI
+INDI 10 JMG   JET MAGIC
+INDI 10 JNL   JETNETHERLANDS
+INDI 10 JNV   JET NOVA
+INDI 10 JON   JOHNSON AIR
+INDI 10 JOR   BLUE TRANSPORT
+INDI 10 JTG   JETTIME
+INDI 10 JTR   JESTER
+INDI 10 JTT   MOSCOU JET
+INDI 10 JTV   JUNIOR
+INDI 10 JWT   JETWAY TEAM
+INDI 10 JXX   JET BIRD
+INDI 10 KAC   KUWAITI                                                       
+INDI 10 KAI   KAISER
+INDI 10 KAL   KOREANAIR
+INDI 10 KAJ   KARTHAGO
+INDI 10 KBR   KORAL BLUE                                                     
+INDI 10 KBV   SWED COAST
+INDI 10 KFS   KALLITA
+INDI 10 KGA   KYRGHYZ
+INDI 10 KGC   GOLD CREST
+INDI 10 KGL   KOGALYM
+INDI 10 KHO   AIR COMPANY KHORS
+INDI 10 KIE   TWEETY
+INDI 10 KIL   AIR KUBAN
+INDI 10 KIP   KINNARPS
+INDI 10 KIS   CONTACTAIR                                                    
+INDI 10 KJA   AVISTAR                                                       
+INDI 10 KJC   KRASNO YARSK
+INDI 10 KKK   ATLASJET
+INDI 10 KLA   KAUNAS
+INDI 10 KLC   CITY                                                          
+INDI 10 KLG   KARLOG                                                          
+INDI 10 KLM   KLM                                                         
+INDI 10 KMV   KOMI INTER
+INDI 10 KNI   KALILINGRAD AIR
+INDI 10 KOR   AIR KORYO
+INDI 10 KQA   KENYA                                                         
+INDI 10 KRF   KITTY HAWK
+INDI 10 KRL   CITADEL
+INDI 10 KRP   KARPATAIR
+INDI 10 KYB   SKY AIROPS
+INDI 10 KYV   KIBRIS
+INDI 10 KZK   AIR KAZAKHSTAN
+INDI 10 KZU   KUZU CARGO
+INDI 10 LAA   LIBAIR                                                        
+INDI 10 LAJ   BEE MED
+INDI 10 LAK   LENNOX                                                        
+INDI 10 LAM   MOZAMBIQUE                                                    
+INDI 10 LAN   LAN CHILE                                                     
+INDI 10 LAP   PARAGUAYA                                                     
+INDI 10 LAV   AEROPOSTAL                                                    
+INDI 10 LAZ   BALKAN                                                        
+INDI 10 LBC   ALBANIAN
+INDI 10 LBR   MOTION
+INDI 10 LBT   NOUVEL AIR                           
+INDI 10 LCG   CONGOLAISE
+INDI 10 LCO   LAN CARGO
+INDI 10 LCT   STELLAIR
+INDI 10 LDA   LAUDA AIR                                                     
+INDI 10 LDE   LADE                                                          
+INDI 10 LDI   LAUDA ITALY
+INDI 10 LEA   LEADAIR
+INDI 10 LEU   LIONS AIR
+INDI 10 LFA   AIR ALFA
+INDI 10 LFE   LUX EXPRESS
+INDI 10 LGL   LUXAIR
+INDI 10 LGW   WALTER
+INDI 10 LHN   LONG HORN
+INDI 10 LIL   LITHUANIA                                                     
+INDI 10 LIM   LIMO
+INDI 10 LIN   LINAIR
+INDI 10 LIZ   MY LITE
+INDI 10 LKR   LAKER
+INDI 10 LMJ   MASTERJET
+INDI 10 LNX   LONEX
+INDI 10 LOT   LOT                                                           
+INDI 10 LOV   LOVEAIR
+INDI 10 LPV   AIR ALPS
+INDI 10 LRR   LORRAINE
+INDI 10 LSK   AURELA                                                        
+INDI 10 LSR   ALSAIR                                                        
+INDI 10 LTB   SKY BEL
+INDI 10 LTC   LAT CHARTER
+INDI 10 LTE   FUN JET                                                       
+INDI 10 LTF   GARFIELD                                                      
+INDI 10 LTP   LAT PASS
+INDI 10 LTU   LTU                                                           
+INDI 10 LUC   ALBINATI
+INDI 10 LUV   LUX RESCUE
+INDI 10 LVG   LIVINGSTON
+INDI 10 LVN   ALIVEN
+INDI 10 LWA   LIBERIAN WORLD                                                
+INDI 10 LXA   RED LION
+INDI 10 LXJ   FLEX JET
+INDI 10 LXR   AIR LUXOR
+INDI 10 LYD   LYDD AIR
+INDI 10 LZB   FLYING BULGARIA
+INDI 10 MAH   MALEV                                                         
+INDI 10 MAK   MAKAVIO
+INDI 10 MAL   MORNING STAR
+INDI 10 MAQ   MAC AVIATION                                                         
+INDI 10 MAS   MALAYSIAN                                                     
+INDI 10 MAU   AIR MAURITIUS                                                 
+INDI 10 MBE   MARTIN
+INDI 10 MCD   AIR MED
+INDI 10 MCE   MARSHALL
+INDI 10 MCS   MAC AIR
+INDI 10 MDA   MANDARIN
+INDI 10 MDG   MADAGASCAR
+INDI 10 MDI   DELTA ICE
+INDI 10 MDJ   JARO
+INDI 10 MDT   MIDNIGHT
+INDI 10 MDV   MOLDAVIA
+INDI 10 MEA   CEDAR JET                                                     
+INDI 10 MEJ   MED JET
+INDI 10 MEM   MERIDIAN CHERRY
+INDI 10 MET   MET MAN
+INDI 10 MGR   MAGNA AIR
+INDI 10 MGX   MONTAIR
+INDI 10 MHN   MANHATTAN
+INDI 10 MHS   AIR MEMPHIS
+INDI 10 MIK   MEER BLICK
+INDI 10 MJB   MAGIC BLUE
+INDI 10 MJL   MOLDJET
+INDI 10 MJN   MAJAN                                                         
+INDI 10 MKA   KRUGER AIR
+INDI 10 MLD   AIR MOLDAVA
+INDI 10 MLI   AIR MALI
+INDI 10 MMA   MONDAIR
+INDI 10 MMD   MER MAID
+INDI 10 MMM   AVIA MERIDIAN
+INDI 10 MMZ   EURO ATLANTIC
+INDI 10 MNB   BLACK SEA                                                     
+INDI 10 MND   GUGAT
+INDI 10 MNJ   MENAJET
+INDI 10 MNL   MINILINER                                                     
+INDI 10 MNX   MANX                                                          
+INDI 10 MON   MONARCH 
+INDI 10 MOV   MOV AIR                                                      
+INDI 10 MPD   RED COMET
+INDI 10 MPH   MARTINAIR
+INDI 10 MPJ   MAP JET
+INDI 10 MPS   METRO REGIONAL                                                     
+INDI 10 MQT   MUSKETEER                                                   
+INDI 10 MRG   MANAGER
+INDI 10 MRN   MARIANNE
+INDI 10 MRT   MAURITANIA                                                       
+INDI 10 MSA   AIR MERCI
+INDI 10 MSC   AIR CAIRO
+INDI 10 MSR   EGYPTAIR                                                      
+INDI 10 MSX   EGYPTAIR CARGO                                                      
+INDI 10 MTL   MITAVIA
+INDI 10 MTW   MAURITANIA AIRWAYS
+INDI 10 MTY   MONTY
+INDI 10 MUK   MUKAIR  
+INDI 10 MVD   AIR MINDOVY                      
+INDI 10 MXL   MAX AIR
+INDI 10 MXX   MERCHANT
+INDI 10 MYL   MY LITE
+INDI 10 MYO   MAYORAL
+INDI 10 MYT   KESTREL
+INDI 10 MYW   FRANKY
+INDI 10 NAF   NETHERLAND AIR FORCE                                          
+INDI 10 NAO   NORTH AM                                                      
+INDI 10 NAW   NEWDAN                                                        
+INDI 10 NAX   NOR SHUTTLE                                                        
+INDI 10 NAY   NAYSA                                                         
+INDI 10 NCH   CHAN CHANGI
+INDI 10 NCM   AIR BANE
+INDI 10 NDC   NORDIC
+INDI 10 NEF   NORDEX
+INDI 10 NEX   NEATAX                                                        
+INDI 10 NFA   NORTH FLYING
+INDI 10 NGA   NIGERIA                                                       
+INDI 10 NHA   AIR NOVE
+INDI 10 NJE   FRACTION
+INDI 10 NLS   PANDER
+INDI 10 NLY   FLY NIKI
+INDI 10 NMB   NAMIBIA                                                       
+INDI 10 NOF   FONNA                                                         
+INDI 10 NOS   MOON FLOWER
+INDI 10 NOW   NORWEGIAN                                                     
+INDI 10 NOY   NOY AVIATION                                                     
+INDI 10 NPT   NEPTUNE                                                     
+INDI 10 NRC   NORTH SEA
+INDI 10 NRD   NORTH RIDER
+INDI 10 NRN   NETHERLAND NAVY                                               
+INDI 10 NRO   AERO MASTER
+INDI 10 NRT   NORESTAIR
+INDI 10 NSA   NILE SAFARIS                                                  
+INDI 10 NSF   NORTON
+INDI 10 NTL   ANATOLIA
+INDI 10 NTR   NITRO
+INDI 10 NTW   NATIONWIDE
+INDI 10 NVD   NORDVIND
+INDI 10 NVR   NAVIGATOR
+INDI 10 NVY   NAVY                                                          
+INDI 10 NWA   NORTHWEST
+INDI 10 NWD   NEW WORLD
+INDI 10 NXS   NEXUS AVIATION                                                     
+INDI 10 NYB   BELGIAN NAVY
+INDI 10 OAC   ORIENTAL AIR                                                  
+INDI 10 OAE   OMNI EXPRESS                                                  
+INDI 10 OAF   AUSTRIAN AMBULANCE
+INDI 10 OAL   OLYMPIC
+INDI 10 OAV   OMNI                                                       
+INDI 10 OAW   HELVETIC                                                       
+INDI 10 OBM   OBSHEMASH
+INDI 10 OCF   EXPLORER
+INDI 10 OCO   AIR COLLEGE
+INDI 10 OCS   OCEANSKY
+INDI 10 OCT   OCCIDENTAL
+INDI 10 ODS   ODESSA AIR
+INDI 10 OGE   ATLAS JET
+INDI 10 OHK   OASIS
+INDI 10 OHY   ONUR AIR
+INDI 10 OKJ   OKADA AIR                                                     
+INDI 10 OKT   SOKO AIR 
+INDI 10 OLT   OLTRA                                                         
+INDI 10 OMA   KHANJAR
+INDI 10 ONG   SONNIG
+INDI 10 OOM   ZOOM
+INDI 10 OPE   PONTOISAIR                                                    
+INDI 10 ORB   ORENBURG
+INDI 10 ORF   OMAN                                                          
+INDI 10 ORO   CAPRI
+INDI 10 ORZ   ZOREX
+INDI 10 OSY   OPEN SKIES
+INDI 10 OTO   OTO
+INDI 10 OVA   AERO NOVA
+INDI 10 OXE   OXOE
+INDI 10 PAC   POLAR
+INDI 10 PAJ   ALI PARMA
+INDI 10 PAL   PHILIPPINE                                                    
+INDI 10 PAM   PHOENIX                                                       
+INDI 10 PAP   PRO FLIGHT
+INDI 10 PCH   PILATUS WINGS
+INDI 10 PDG   OSPREY
+INDI 10 PGA   PORTUGALIA                                                    
+INDI 10 PGL   PREMIERE                                                    
+INDI 10 PGT   SUNTURKP                                                      
+INDI 10 PHI   PHIL AIR
+INDI 10 PHR   PHARAON
+INDI 10 PHV   NEW BIRD
+INDI 10 PIA   PAKISTAN                                                      
+INDI 10 PIE   PIRATE
+INDI 10 PJS   JETAVIATION                                                   
+INDI 10 PLF   POLISH FORCE
+INDI 10 PLI   AERO PEROU
+INDI 10 PLK   POULKOVO
+INDI 10 PLM   PULLMANTUR
+INDI 10 PMU   PREMIUM
+INDI 10 PNR   SKYJET                                                        
+INDI 10 POD   FREIGHT DOGS
+INDI 10 POF   AIRPOL
+INDI 10 PON   PORTUGUESE NAVY                                               
+INDI 10 POT   POLET
+INDI 10 PRJ   PRONAIR
+INDI 10 PRP   PRONTO
+INDI 10 PRX   PAREX
+INDI 10 PSW   PSKOVAVIA
+INDI 10 PTG   PRIVAT JET
+INDI 10 PTH   PROTEUS
+INDI 10 PTI   PRIVATAIR
+INDI 10 PUA   PLUNA                                                         
+INDI 10 PUB   AERO PUBLIC
+INDI 10 PVG   PRIVILEGE
+INDI 10 PVO   PROVOST
+INDI 10 PVV   CONTAIR
+INDI 10 PWF   PRIVATE WINGS
+INDI 10 QAF   AMIRI                                                         
+INDI 10 QAH   QUICK                                                         
+INDI 10 QAJ   DAGOBERT
+INDI 10 QGA   QUADRIGA
+INDI 10 QFA   QANTAS                                                        
+INDI 10 QID   QUID                                                        
+INDI 10 QNK   KABO                                                          
+INDI 10 QSC   ZEBRA                                                         
+INDI 10 QTR   QATARI
+INDI 10 RAE   REGIONAL EUROPE            
+INDI 10 RAM   ROYAL AIR MAROC                                               
+INDI 10 RAN   RENAN
+INDI 10 RAQ   RATH AVIATION
+INDI 10 RAZ   RIJNMOND                                                      
+INDI 10 RBA   BRUNEI                                                        
+INDI 10 RBB   RABBIT
+INDI 10 RBU   CORVETTE                                                        
+INDI 10 RCC   RACER
+INDI 10 RCH   REACH
+INDI 10 RCN   SPEED CARGO
+INDI 10 RCU   AIR COURIER
+INDI 10 RDA   RED AIR GAMBIA
+INDI 10 RDE   FLIGHT RED
+INDI 10 RDK   IRISH TRANS
+INDI 10 REA   AER ARANN                                                     
+INDI 10 RED   RED CROSS                                                     
+INDI 10 REU   REUNION
+INDI 10 RFL   IN FLY
+INDI 10 RFR   RAFAIR
+INDI 10 RGM   RANGE MILE
+INDI 10 RGN   CYGNUS AIR
+INDI 10 RHC   REDAIR
+INDI 10 RIA   RICHAIR                                                       
+INDI 10 RIG   RIGA LINER
+INDI 10 RJA   JORDANIAN                                                     
+INDI 10 RJZ   JORDAN AIR FORCE                                              
+INDI 10 RLA   AIRLINAIR               RL
+INDI 10 RLR   RATTLER                                                     
+INDI 10 RLV   REAL
+INDI 10 RLZ   ALIZE
+INDI 10 RMC   READY MIX
+INDI 10 RME   ARMENIAN
+INDI 10 RMN   ROMAN                                                         
+INDI 10 RMV   AEROMAVIA                                                     
+INDI 10 RNA   ROYAL NEPAL
+INDI 10 RNV   ARMAVIA                                                   
+INDI 10 ROJ   ROYAL JET
+INDI 10 ROL   AERO EL
+INDI 10 ROS   CATCHER
+INDI 10 ROT   TAROM                                                         
+INDI 10 ROY   ROYAL
+INDI 10 RPA   AIR PASS                                                      
+INDI 10 RPX   RAPEX
+INDI 10 RRF   KITTY
+INDI 10 RRM   AIR ROMANIA
+INDI 10 RRR   ASCOTT
+INDI 10 RTL   RHEINTAL
+INDI 10 RUS   CIRRUS AIR
+INDI 10 RVL   AIR VALLEE                                                    
+INDI 10 RVR   RAVEN                                                         
+INDI 10 RWL   RHEIN TRAINER
+INDI 10 RWD   RWANDAIR                                                      
+INDI 10 RYR   RYANAIR                                                       
+INDI 10 RZO   AIR AZORES
+INDI 10 SAA   SPRINGBOCK                                                    
+INDI 10 SAG   MEDICAL AIR
+INDI 10 SAH   SAYARAT
+INDI 10 SAK   RED ARROWS                                                    
+INDI 10 SAS   SCANDINAVIAN                                                  
+INDI 10 SAY   SUCKLING                                                      
+INDI 10 SAZ   SWISS AMBULANCE                                               
+INDI 10 SBA   STA MALI
+INDI 10 SBI   SIBERIA
+INDI 10 SBY   BRANDY
+INDI 10 SBZ   SCIBE AIRLIFT
+INDI 10 SCH   SCHREINER                                                     
+INDI 10 SCK   SKYCAM                                                     
+INDI 10 SCJ   SCAN JET                                                      
+INDI 10 SCT   SAAB CRAFT
+INDI 10 SCW   SCANWINGS                                                     
+INDI 10 SCX   SUN COUNTRY 
+INDI 10 SCY   AIR SCAN                                                   
+INDI 10 SDJ   SPACEJET
+INDI 10 SDL   SKYDRIFT
+INDI 10 SDM   RUSSIA
+INDI 10 SDR   SWEDE STAR
+INDI 10 SEN   SENEX
+INDI 10 SEY   SEYCHELLES                                                    
+INDI 10 SFA   SEFA                                                         
+INDI 10 SFB   AIR SOFIA
+INDI 10 SFR   CARGO                                                         
+INDI 10 SGF   STAC 
+INDI 10 SGL   SENAIR                                                        
+INDI 10 SHE   SHELL                                                         
+INDI 10 SHF   VORTEX
+INDI 10 SHJ   SHARJAH                                                       
+INDI 10 SHK   SHOROUK
+INDI 10 SHP   SAF   
+INDI 10 SHY   ANTALYA BIRD                                                        
+INDI 10 SIA   SINGAPORE                                                     
+INDI 10 SIB   SIBAVIA
+INDI 10 SIG   SIGNATURE
+INDI 10 SIH   BLUE JET
+INDI 10 SIO   SIRIO
+INDI 10 SJT   SWISS JET
+INDI 10 SKS   SKY SERVICE                                                   
+INDI 10 SKT   STAR JET
+INDI 10 SKX   SKY EXPRESS                                                   
+INDI 10 SLA   SELAIR
+INDI 10 SLD   SOLID
+INDI 10 SLL   SLOV LINE
+INDI 10 SLR   SOBELAIR                                                      
+INDI 10 SMB   SIMBAIR
+INDI 10 SMJ   AVAVIA
+INDI 10 SMX   ALIEXPRESS
+INDI 10 SNA   SENATOR
+INDI 10 SNB   STERLING
+INDI 10 SNG   AIR SENEGAL
+INDI 10 SNM   SERVIZI
+INDI 10 SOP   SOLINAIR
+INDI 10 SOX   SOLIDAIR
+INDI 10 SPN   AIR SKORPIO
+INDI 10 SPW   SPEED WING                                                    
+INDI 10 SQC   SING CARGO
+INDI 10 SQF   SLOVAK AIR FORCE
+INDI 10 SRK   SKYFOX
+INDI 10 SRR   WHITESTAR                                                     
+INDI 10 SSG   SLOVAK GOVERNMENT
+INDI 10 SSP   STARSPEED
+INDI 10 SSV   SKY TOUR
+INDI 10 SSW   STREAMLINE
+INDI 10 STC   STADIUM
+INDI 10 STE   SEMI TRANS
+INDI 10 STJ   STELLAVIA
+INDI 10 STL   STAPLEFORD
+INDI 10 STY   STYRIAN
+INDI 10 SUA   AIR SILESIA
+INDI 10 SUD   SUDANAIR                                                      
+INDI 10 SUI   SWISS AIR FORCE
+INDI 10 SUS   SUN SCAN                                                      
+INDI 10 SUZ   SUZY
+INDI 10 SVA   SAUDIA                                                        
+INDI 10 SVF   SWEDE FORCE
+INDI 10 SVH   SILVER
+INDI 10 SVK   SLOVAKIA
+INDI 10 SVR   SVERDLOVSK
+INDI 10 SVW   SILVER ARROWS
+INDI 10 SVY   SURVEYOR
+INDI 10 SWL   TRANSJET
+INDI 10 SWN   AIR SWEDEN                                                   
+INDI 10 SWR   SWISS                   SW                                    
+INDI 10 SWT   SWIFT
+INDI 10 SWZ   SWISS BIRD
+INDI 10 SXS   SUN EXPRESS
+INDI 10 SYG   SYNERGY
+INDI 10 SYR   SYRIANAIR
+INDI 10 TAG   TAG YOU ESS
+INDI 10 TAM   TAM 
+INDI 10 TAP   AIR PORTUGAL                                                  
+INDI 10 TAQ   TAUNUS AIR
+INDI 10 TAR   TUNAIR                                                        
+INDI 10 TAS   LOTUS FLOWER
+INDI 10 TAX   TRAVELAIR
+INDI 10 TAY   QUALITY
+INDI 10 TBA   TRANSBRASIL                                                   
+INDI 10 TCJ   CHARTER BRAZIL
+INDI 10 TCN   TRANSCON
+INDI 10 TCO   TRANS COLOMBIA
+INDI 10 TCV   CABO VERDE                                                    
+INDI 10 TCW   THOMAS COOK
+INDI 10 TCX   KESTREL
+INDI 10 TDC   TADAIR
+INDI 10 TDX   TRADEWINDS EXPRESS
+INDI 10 TDR   TRADE AIR
+INDI 10 TEX   CATEX                                                         
+INDI 10 TFG   TRAFALGAR
+INDI 10 TFL   ARKEFLY
+INDI 10 TFS   FAST TRANSPORT
+INDI 10 TGA   AIR TOGO
+INDI 10 TGC   THANET
+INDI 10 TGE   TASA                                                          
+INDI 10 TGM   TAG ESPANA                                                          
+INDI 10 TGT   TARGET
+INDI 10 TGZ   TAMAZI
+INDI 10 THA   THAI                                                          
+INDI 10 THF   TOURAINE HELICO
+INDI 10 THT   TAHITI AIRLINES
+INDI 10 THY   TURKAIR                                                       
+INDI 10 THZ   HELIJET
+INDI 10 TIE   TIME AIR
+INDI 10 TIF   INTERCARAIBES
+INDI 10 TII   AIR ATI
+INDI 10 TIS   TESIS
+INDI 10 TJK   TAJIK AIR
+INDI 10 TJS   TYROLJET
+INDI 10 TJT   TWIN JET
+INDI 10 TKE   ISLAND BIRD
+INDI 10 TLA   TRANSLIFT
+INDI 10 TLB   TRIPLE A
+INDI 10 TLP   TULIP AIR                                                     
+INDI 10 TLY   TOP FLY
+INDI 10 TMN   TIOUMAVI
+INDI 10 TNI   TRANS INTER
+INDI 10 TOB   TOBRUK AIR
+INDI 10 TOM   THOMSON
+INDI 10 TOP   AIR TOP
+INDI 10 TPA   TAMPA                                                         
+INDI 10 TPI   TOP AIR
+INDI 10 TPK   TCHAD HORIZON
+INDI 10 TPQ   TROPICWEST
+INDI 10 TQF   RAINBOW                                                       
+INDI 10 TRA   TRANSAVIA                                                     
+INDI 10 TRF   TAXIJET
+INDI 10 TRJ   HIGH TIDE
+INDI 10 TRK   AIR TRACK                                                     
+INDI 10 TRQ   HUNTER
+INDI 10 TRT   TRANS ARABIAN                                                 
+INDI 10 TSA   AIRTRAF                                                       
+INDI 10 TSC   TRANSAT                                                       
+INDI 10 TSI   TRANSPORT AIR
+INDI 10 TSO   TRANS SOVIET
+INDI 10 TSW   SWISS TRANS
+INDI 10 TSY   TRIPLE STAR                                                     
+INDI 10 TUA   TURKMENISTAN
+INDI 10 TVL   TRAVEL SERVICE
+INDI 10 TUS   TOURISMO
+INDI 10 TVF   FRANCE SOLEIL
+INDI 10 TVR   TAVREY
+INDI 10 TVS   SKY TRAVEL
+INDI 10 TVT   TRANS AVIATION
+INDI 10 TXC   TRANS EXPORT
+INDI 10 TYM   AIR TIOUMEN
+INDI 10 TYR   TYROLEAN                                                      
+INDI 10 TYW   TYROL AMBULANCE                                                      
+INDI 10 UAB   UNITED ARABIAN
+INDI 10 UAE   EMIRATES                                                      
+INDI 10 UAF   UNIFORCE                                                      
+INDI 10 UAL   UNITED                  UA                                    
+INDI 10 UAP   AIR TRACKER
+INDI 10 UCR   CHARTER UKRAINE
+INDI 10 UDD   DON BASS
+INDI 10 UDN   DNIEPRO
+INDI 10 UGA   UGANDA 
+INDI 10 UGC   URGEMER                        
+INDI 10 UJT   UNI JET                             
+INDI 10 UKA   UKAY                                                          
+INDI 10 UKL   UKRAINE ALLIANCE
+INDI 10 UKM   UKRAINE MEDITERRANEE
+INDI 10 UKR   AIR UKRAINE
+INDI 10 UKS   CARGO TRANS
+INDI 10 UKT   CLOUD
+INDI 10 UKW   UKRAINE WEST
+INDI 10 UMK   YOUZ MASH
+INDI 10 UNY   UNIVERSITY 
+INDI 10 UPS   UPS                                                         
+INDI 10 URG   URGA
+INDI 10 USA   US AIR                                                       
+INDI 10 UTT   ARABIAN TRANSPORT
+INDI 10 UYC   CAM AIR                                                       
+INDI 10 UZB   OUZBECK
+INDI 10 VAS   ATRAN                                                         
+INDI 10 VAZ   REMONT AIR
+INDI 10 VBA   VEE BEE
+INDI 10 VBC   AIR VICTOR
+INDI 10 VBW   BURKINA
+INDI 10 VCN   AVCON                                                     
+INDI 10 VCX   OCEAN CARGO
+INDI 10 VDA   VOLGA DNIEPR                                                  
+INDI 10 VEA   VEGA AIRLINES
+INDI 10 VEI   GREEN ISLE
+INDI 10 VEX   VIRGIN EXPRESS
+INDI 10 VGN   VIRGIN NIGERIA
+INDI 10 VHM   EARLY BIRD
+INDI 10 VIB   VITUS
+INDI 10 VIK   SWED JET
+INDI 10 VIN   VINAIR
+INDI 10 VIP   VESTAL
+INDI 10 VIR   VIRGIN                                                        
+INDI 10 VIZ   AEROVIZ
+INDI 10 VJS   VISTA JET
+INDI 10 VKG   VIKING                                                        
+INDI 10 VLE   VOLA                                                        
+INDI 10 VLF   VOLANTE
+INDI 10 VLG   VUELING
+INDI 10 VLJ   VALJET
+INDI 10 VLK   VLADAIR
+INDI 10 VLM   RUBENS
+INDI 10 VLO   VELOG
+INDI 10 VMP   VAMPIRE
+INDI 10 VOL   BLUE SPEED
+INDI 10 VPB   VETERAN
+INDI 10 VRE   UKRAINE VOLARE
+INDI 10 VRN   VARIG
+INDI 10 VSB   VICKERS
+INDI 10 VSG   VISIG
+INDI 10 VSO   VASO
+INDI 10 VSP   VASP                                                          
+INDI 10 VTR   VITEK                                                         
+INDI 10 VUE   FLIGHT VUE
+INDI 10 VUN   AIR IVOIRE
+INDI 10 VVF   WORLDFOCUS
+INDI 10 VYT   ANGLESEY                                                      
+INDI 10 WAN   WANE
+INDI 10 WAX   CARGO BIRD
+INDI 10 WAY   GARONNE
+INDI 10 WDG   WATCH DOG
+INDI 10 WDL   WDL                                                         
+INDI 10 WEA   WHITE EAGLE
+INDI 10 WGP   GRAND PRIX
+INDI 10 WGT   WORLD GATE
+INDI 10 WIF   WIDEROE                                                       
+INDI 10 WLC   WELCOME
+INDI 10 WLR   AIR WALSER
+INDI 10 WLX   WEST LUX
+INDI 10 WNR   WONDAIR
+INDI 10 WOA   WORLD                                                         
+INDI 10 WTA   WEST TOGO                     
+INDI 10 WTN   TARNISH
+INDI 10 WZZ   WIZZ AIR
+INDI 10 XGO   PASTIS
+INDI 10 XJC   EXCLUSIVE JET                                                      
+INDI 10 XLA   EXPO                                                      
+INDI 10 XLF   STARWAY                                                      
+INDI 10 XPE   EXPERT
+INDI 10 YRG   YUGAIR
+INDI 10 YSS   YOUNGSKY

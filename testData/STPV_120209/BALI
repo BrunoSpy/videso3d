@@ -1,0 +1,2279 @@
+BALI 4  ABB   IMPTR ORL
+BALI 4B ABB   IMPTR LILE
+BALI 51 ABB                  VD
+BALI 52 ABB                  VD
+BALI 53 ABB                  VD
+BALI 54 ABB            NP    VD
+BALI 50 ABB1  NIMPT
+BALI 51 ABB1           NP    VD
+BALI 52 ABB1           NP    VD
+BALI 51 ABDOS                VD
+BALI 52 ABDOS                VD
+BALI 53 ABDOS                VD
+BALI 54 ABDOS                VD
+BALI 55 ABDOS                VD
+BALI 56 ABDOS                VD
+BALI 51 ABNUR          NP    VD
+BALI 52 ABNUR          NP    VD
+BALI 53 ABNUR          NP    VD
+BALI 54 ABNUR          NP    VD
+BALI 51 ABSIE                VD                                             
+BALI 51 ABSUD          NP    VD                                             
+BALI 52 ABSUD          NP    VD                                             
+BALI 53 ABSUD          NP    VD                                             
+BALI 54 ABSUD          NP    VD
+BALI 4  ABUDA IMPTR LILE                                             
+BALI 51 ABUDA                VD                                             
+BALI 52 ABUDA                VD                                             
+BALI 53 ABUDA                VD                                             
+BALI 54 ABUDA                VD       
+BALI 4  ABY   IMPTR LILE  
+BALI 51 ABY                  VD                                             
+BALI 52 ABY                  VD                                             
+BALI 53 ABY                  VD                                             
+BALI 54 ABY            NP    VD
+BALI 50 ADADA NIMPT
+BALI 51 ADADA                VD                                             
+BALI 52 ADADA    ST          VD                                             
+BALI 53 ADADA    ST          VD                                             
+BALI 54 ADADA    ST          VD
+BALI 55 ADADA                VD                   
+BALI 51 ADEKA          
+BALI 52 ADEKA          
+BALI 53 ADEKA                VD                                             
+BALI 54 ADEKA                VD                                             
+BALI 55 ADEKA                VD                                          
+BALI 4  ADG   IMPTR CDG                         
+BALI 51 ADG            NP    VD                        
+BALI 52 ADG            NP    VD                      
+BALI 53 ADG            NP    VD                       
+BALI 54 ADG            NP    VD                 
+BALI 4  ADUTO IMPTR LILE                                      
+BALI 51 ADUTO                VD                                             
+BALI 52 ADUTO                VD                                             
+BALI 53 ADUTO                VD                                             
+BALI 54 ADUTO          NP    VD                                             
+BALI 50 AELDG NIMPT
+BALI 51 AELDG          NP    VD
+BALI 52 AELDG          NP    VD
+BALI 53 AELDG          NP    VD
+BALI 4  AGOPA IMPTR ORL                                                     
+BALI 4B AGOPA IMPTR CDG                                                     
+BALI 51 AGOPA                VD                                             
+BALI 52 AGOPA    ST          VD                                             
+BALI 53 AGOPA    ST          VD                                             
+BALI 54 AGOPA    ST          VD                                             
+BALI 55 AGOPA                VD
+BALI 56 AGOPA                VD
+BALI 51 AJO            NP    VD                                             
+BALI 52 AJO            NP    VD                                               
+BALI 53 AJO            NP    VD                                               
+BALI 54 AJO            NP    VD                                             
+BALI 51 AKUTI          NP    VD                                             
+BALI 52 AKUTI          NP    VD                                               
+BALI 53 AKUTI          NP    VD                                               
+BALI 54 AKUTI          NP    VD                                             
+BALI 51 ALARO                VD
+BALI 52 ALARO                VD
+BALI 51 ALBIX          NP    VD                                               
+BALI 51 ALESO          NP    VD                                             
+BALI 4  ALIMO IMPTR CDG
+BALI 51 ALIMO                VD                                             
+BALI 52 ALIMO                VD                                             
+BALI 53 ALIMO                VD                                             
+BALI 51 ALURA                VD                                             
+BALI 52 ALURA                VD                                             
+BALI 53 ALURA                VD                                             
+BALI 54 ALURA                VD                                             
+BALI 51 AMB                  VD                                             
+BALI 52 AMB                  VD                                             
+BALI 53 AMB                  VD
+BALI 54 AMB                  VD
+BALI 51 AMGEL          NP    VD                                             
+BALI 52 AMGEL          NP    VD                                               
+BALI 53 AMGEL          NP    VD                                               
+BALI 54 AMGEL          NP    VD                                               
+BALI 55 AMGEL          NP    VD                                               
+BALI 51 AMIKO          NP    VD                                             
+BALI 52 AMIKO          NP    VD                                               
+BALI 53 AMIKO          NP    VD                                            
+BALI 51 AMODO                VD                                             
+BALI 52 AMODO                VD                                             
+BALI 53 AMODO                VD
+BALI 51 AMORO                VD                                             
+BALI 52 AMORO                VD                                             
+BALI 53 AMORO                VD                                             
+BALI 54 AMORO                VD                                             
+BALI 51 ANARU                VD
+BALI 52 ANARU                VD
+BALI 53 ANARU                VD
+BALI 54 ANARU                VD
+BALI 55 ANARU                VD
+BALI 51 AOSU1          NP    VD                                             
+BALI 52 AOSU1          NP    VD                                               
+BALI 53 AOSU1          NP    VD
+BALI 51 ARDEN                VD
+BALI 52 ARDEN                VD
+BALI 53 ARDEN                VD
+BALI 54 ARDEN                VD
+BALI 55 ARDEN                VD
+BALI 51 ARDOL                VD
+BALI 52 ARDOL                VD
+BALI 53 ARDOL                VD
+BALI 54 ARDOL                VD
+BALI 51 ARGED          NP    VD
+BALI 52 ARGED          NP    VD
+BALI 53 ARGED          NP    VD
+BALI 51 ARKIP                VD
+BALI 52 ARKIP                VD
+BALI 53 ARKIP    ST          VD
+BALI 54 ARKIP    ST          VD                                             
+BALI 55 ARKIP                VD
+BALI 51 ARMAL                VD                                             
+BALI 52 ARMAL    ST          VD                                             
+BALI 53 ARMAL    ST          VD                                             
+BALI 54 ARMAL                VD                                             
+BALI 55 ARMAL                VD                                             
+BALI 4  ARSIL IMPTR ORL                                                     
+BALI 4B ARSIL IMPTR CDG                                                     
+BALI 51 ARSIL                VD                                             
+BALI 52 ARSIL                VD                                             
+BALI 53 ARSIL                VD                                             
+BALI 51 ARSOM                VD                                             
+BALI 52 ARSOM                VD                                             
+BALI 51 ARSU1          NP    VD                                             
+BALI 52 ARSU1          NP    VD                                
+BALI 53 ARSU1          NP    VD
+BALI 51 ARTAX                VD                                             
+BALI 52 ARTAX                VD                                             
+BALI 53 ARTAX                VD                                             
+BALI 54 ARTAX                VD                                             
+BALI 55 ARTAX                VD                                             
+BALI 56 ARTAX                VD  
+BALI 51 ARVOL                VD                                             
+BALI 52 ARVOL                VD                                             
+BALI 53 ARVOL                VD
+BALI 54 ARVOL          NP    VD                                         
+BALI 51 AS                   VD                                             
+BALI 52 AS                   VD
+BALI 53 AS                   VD                                             
+BALI 51 ASIE1          NP    VD
+BALI 52 ASIE1          NP    VD
+BALI 53 ASIE1          NP    VD
+BALI 51 ASIE2          NP    VD
+BALI 52 ASIE2          NP    VD
+BALI 53 ASIE2          NP    VD               
+BALI 4  ATN   IMPTR CDG                                                     
+BALI 51 ATN                  VD                                             
+BALI 52 ATN                  VD                                             
+BALI 53 ATN                  VD      
+BALI 54 ATN                  VD      
+BALI 4  ATREX IMPTR ORL                                                     
+BALI 4B ATREX IMPTR CDG
+BALI 4B ATREX IMPTR LILE                                                  
+BALI 51 ATREX                VD                                             
+BALI 52 ATREX                VD                                             
+BALI 53 ATREX                VD
+BALI 54 ATREX                VD
+BALI 51 ATRID                VD                                             
+BALI 52 ATRID                VD                                             
+BALI 51 AULON                VD                                             
+BALI 52 AULON                VD                                             
+BALI 53 AULON                VD                                             
+BALI 51 AV                   VD                                             
+BALI 52 AV                   VD
+BALI 53 AV             NP    VD                                            
+BALI 54 AV             NP    VD                                            
+BALI 51 AVLON                VD                                             
+BALI 52 AVLON                VD                                             
+BALI 53 AVLON                VD
+BALI 54 AVLON                VD
+BALI 50 AVREX NIMPT                                                
+BALI 51 AVREX          NP    VD                                             
+BALI 52 AVREX          NP    VD                                             
+BALI 53 AVREX          NP    VD
+BALI 50 AVR1  NIMPT
+BALI 51 AVR1           NP    VD
+BALI 52 AVR1           NP    VD
+BALI 51 AX                   VD                                             
+BALI 52 AX                   VD                                             
+BALI 53 AX                   VD                            
+BALI 54 AX                   VD
+BALI 51 AZR            NP    VD                                             
+BALI 52 AZR            NP    VD                                             
+BALI 53 AZR            NP    VD
+BALI 51 BAGBI                VD
+BALI 52 BAGBI                VD
+BALI 53 BAGBI                VD
+BALI 54 BAGBI                VD
+BALI 51 BAKNO                VD
+BALI 52 BAKNO                VD
+BALI 53 BAKNO                VD
+BALI 51 BALAN                VD
+BALI 52 BALAN                VD
+BALI 53 BALAN                VD
+BALI 54 BALAN                VD
+BALI 55 BALAN                VD
+BALI 56 BALAN                VD                                             
+BALI 4  BALOD IMPTR CDG
+BALI 4B BALOD IMPTR ORL
+BALI 51 BALOD                VD                                             
+BALI 52 BALOD                VD
+BALI 51 BALSI          NP    VD                                             
+BALI 52 BALSI          NP    VD                                             
+BALI 53 BALSI          NP    VD
+BALI 54 BALSI          NP    VD                                            
+BALI 51 BAMES                VD
+BALI 52 BAMES                VD
+BALI 53 BAMES    ST          VD
+BALI 54 BAMES    ST          VD
+BALI 4  BANGI IMPTR LILE
+BALI 51 BANGI                VD
+BALI 52 BANGI                VD
+BALI 53 BANGI                VD
+BALI 54 BANGI          NP    VD
+BALI 4  BARLI IMPTR LILE
+BALI 51 BARLI          NP    VD                                             
+BALI 52 BARLI          NP    VD                                             
+BALI 53 BARLI          NP    VD
+BALI 54 BARLI          NP    VD
+BALI 51 BARL1          NP    VD                                             
+BALI 52 BARL1          NP    VD                                             
+BALI 53 BARL1          NP    VD
+BALI 54 BARL1          NP    VD
+BALI 50 BATAG NIMPT
+BALI 51 BATAG                VD
+BALI 52 BATAG                VD
+BALI 53 BATAG                VD
+BALI 54 BATAG                VD
+BALI 55 BATAG                VD
+BALI 4  BAXIR IMPTR ORL
+BALI 4B BAXIR IMPTR CDG
+BALI 51 BAXIR                VD
+BALI 52 BAXIR                VD
+BALI 53 BAXIR                VD
+BALI 51 BELDI                VD
+BALI 52 BELDI                VD
+BALI 53 BELDI          NP    VD
+BALI 51 BELD2          NP    VD
+BALI 52 BELD2          NP    VD
+BALI 53 BELD2          NP    VD
+BALI 51 BENAR                VD
+BALI 52 BENAR                VD
+BALI 53 BENAR                VD
+BALI 51 BERNO          NP    VD                                             
+BALI 52 BERNO          NP    VD                                             
+BALI 53 BERNO          NP    VD
+BALI 54 BERNO          NP    VD
+BALI 51 BEVOL                VD
+BALI 52 BEVOL                VD
+BALI 53 BEVOL                VD
+BALI 54 BEVOL                VD
+BALI 50 BGW   NIMPT                                                         
+BALI 51 BGW            NP    VD                                    
+BALI 51 BIBOT                VD
+BALI 52 BIBOT                VD
+BALI 53 BIBOT                VD
+BALI 54 BIBOT                VD
+BALI 55 BIBOT                VD
+BALI 4  BILGO IMPTR LILE                                                    
+BALI 51 BILGO                VD
+BALI 52 BILGO                VD
+BALI 53 BILGO                VD
+BALI 54 BILGO          NP    VD
+BALI 4  BILGO IMPTR LILE                                                     
+BALI 51 BITBU          NP    VD
+BALI 52 BITBU          NP    VD
+BALI 4  BNE   IMPTR CDG                                                     
+BALI 4B BNE   IMPTR ORL                                                     
+BALI 4B BNE   IMPTR LILE                                                    
+BALI 51 BNE                  VD                                             
+BALI 52 BNE                  VD                                             
+BALI 53 BNE                  VD
+BALI 54 BNE            NP    VD
+BALI 51 BOBSA                VD
+BALI 52 BOBSA                VD
+BALI 53 BOBSA                VD
+BALI 51 BOKNO                VD
+BALI 52 BOKNO                VD
+BALI 53 BOKNO                VD
+BALI 54 BOKNO                VD
+BALI 55 BOKNO                VD
+BALI 51 BOLLY                VD
+BALI 51 BORDI          NP    VD 
+BALI 52 BORDI          NP    VD
+BALI 53 BORDI          NP    VD
+BALI 54 BORDI          NP    VD
+BALI 55 BORDI          NP    VD
+BALI 51 BRIVE          NP    VD 
+BALI 52 BRIVE          NP    VD
+BALI 53 BRIVE          NP    VD
+BALI 4  BRY   IMPTR ORL                                                     
+BALI 4B BRY   IMPTR CDG                                                     
+BALI 51 BRY                  VD                                             
+BALI 52 BRY                  VD                                             
+BALI 53 BRY                  VD
+BALI 54 BRY                  VD
+BALI 4  BSN   IMPTR CDG                                                     
+BALI 4B BSN   IMPTR ORL
+BALI 51 BSN      ST          VD
+BALI 52 BSN      ST          VD
+BALI 53 BSN      ST          VD
+BALI 54 BSN                  VD
+BALI 55 BSN                  VD
+BALI 50 BSN2  NIMPT                                                         
+BALI 51 BSN2           NP    VD
+BALI 52 BSN2           NP    VD                                             
+BALI 50 BT    NIMPT
+BALI 51 BTA            NP    VD                                             
+BALI 52 BTA            NP    VD                                             
+BALI 53 BTA            NP    VD
+BALI 54 BTA            NP    VD  
+BALI 4  BT1   IMPTR ORL
+BALI 51 BT1            NP    VD                                             
+BALI 52 BT1            NP    VD                                             
+BALI 4  BUBLI IMPTR ORL                                                     
+BALI 4B BUBLI IMPTR CDG                                                     
+BALI 51 BUBLI                VD
+BALI 52 BUBLI                VD
+BALI 53 BUBLI                VD
+BALI 51 BULOX          NP    VD
+BALI 52 BULOX          NP    VD
+BALI 53 BULOX          NP    VD
+BALI 4  BVP   IMPTR ORL                                                     
+BALI 4B BVP   IMPTR CDG                                                     
+BALI 51 BVP                  VD                                             
+BALI 52 BVP            NP    VD
+BALI 53 BVP                  VD
+BALI 54 BVP            NP    VD                                            
+BALI 4  BVS   IMPTR ORL                                                     
+BALI 50 BVS   NIMPT                                                         
+BALI 51 BVS            NP    VD                                             
+BALI 52 BVS            NP    VD                                             
+BALI 53 BVS            NP    VD
+BALI 4  BVS1  IMPTR ORL                                                         
+BALI 51 BVS1           NP    VD                                             
+BALI 52 BVS1           NP    VD                                             
+BALI 51 CACHI                VD                                             
+BALI 52 CACHI          NP    VD                                             
+BALI 53 CACHI          NP    VD                                             
+BALI 54 CACHI          NP    VD                                             
+BALI 51 CAD                  VD                                             
+BALI 52 CAD                  VD                                             
+BALI 53 CAD                  VD                                             
+BALI 54 CAD                  VD
+BALI 4  CAN   IMPTR ORL                                                     
+BALI 4B CAN   IMPTR CDG                                                     
+BALI 51 CAN                  VD                                             
+BALI 52 CAN                  VD                                             
+BALI 4  CAV   IMPTR CDG                                                     
+BALI 51 CAV                  VD
+BALI 52 CAV                  VD
+BALI 53 CAV                  VD
+BALI 51 CBY            NP    VD                                             
+BALI 52 CBY            NP    VD                                             
+BALI 53 CBY            NP    VD
+BALI 54 CBY            NP    VD                                             
+BALI 55 CBY            NP    VD                                             
+BALI 56 CBY            NP    VD
+BALI 51 CGN            NP    VD
+BALI 51 CHABY                VD
+BALI 52 CHABY                VD
+BALI 53 CHABY                VD
+BALI 51 CHW                  VD                                             
+BALI 52 CHW                  VD                                             
+BALI 53 CHW      ST          VD
+BALI 54 CHW      ST          VD
+BALI 4  CIV   IMPTR ORL                                                     
+BALI 4B CIV   IMPTR CDG                                                     
+BALI 4B CIV   IMPTR LILE                                                    
+BALI 51 CIV                  VD                                             
+BALI 52 CIV                  VD
+BALI 51 CLM                  VD
+BALI 52 CLM                  VD
+BALI 53 CLM                  VD
+BALI 54 CLM                  VD
+BALI 55 CLM                  VD
+BALI 50 CLMEE NIMPT
+BALI 51 CLMEE          NP    VD
+BALI 52 CLMEE          NP    VD
+BALI 50 CLMWW NIMPT
+BALI 51 CLMWW          NP    VD
+BALI 52 CLMWW          NP    VD
+BALI 51 CLM2           NP    VD
+BALI 52 CLM2           NP    VD
+BALI 4  CMB   IMPTR ORL                                                     
+BALI 4B CMB   IMPTR CDG                                                     
+BALI 4B CMB   IMPTR LILE
+BALI 51 CMB                  VD
+BALI 52 CMB                  VD
+BALI 53 CMB                  VD
+BALI 54 CMB            NP    VD
+BALI 51 CMB2           NP    VD
+BALI 52 CMB2           NP    VD
+BALI 53 CMB2           NP    VD
+BALI 54 CMB2           NP    VD
+BALI 51 COLLO          NP    VD
+BALI 52 COLLO          NP    VD        
+BALI 53 COLLO          NP    VD
+BALI 51 CORSI          NP    VD                 
+BALI 52 CORSI          NP    VD        
+BALI 53 CORSI          NP    VD
+BALI 54 CORSI          NP    VD                                             
+BALI 50 CRL   NIMPT        
+BALI 51 CRL                  VD     
+BALI 52 CRL                  VD     
+BALI 53 CRL                  VD     
+BALI 54 CRL                  VD     
+BALI 55 CRL                  VD       
+BALI 4  CTL   IMPTR ORL                                                     
+BALI 4B CTL   IMPTR CDG                                                     
+BALI 50 CTL   NIMPT
+BALI 51 CTL                  VD
+BALI 52 CTL                  VD
+BALI 53 CTL                  VD
+BALI 54 CTL                  VD
+BALI 55 CTL                  VD
+BALI 51 CTL1           NP    VD                 
+BALI 52 CTL1           NP    VD        
+BALI 51 CTL2           NP    VD
+BALI 52 CTL2           NP    VD
+BALI 53 CTL2                 VD
+BALI 54 CTL2                 VD
+BALI 55 CTL2                 VD
+BALI 51 CTX                  VD                      
+BALI 52 CTX                  VD                          
+BALI 53 CTX                  VD                                             
+BALI 54 CTX                  VD                      
+BALI 55 CTX                  VD                          
+BALI 56 CTX                  VD                                             
+BALI 51 DEKOD                VD
+BALI 52 DEKOD                VD
+BALI 53 DEKOD                VD
+BALI 54 DEKOD                VD
+BALI 55 DEKOD                VD
+BALI 56 DEKOD                VD
+BALI 57 DEKOD                VD
+BALI 51 DELOM          NP    VD
+BALI 52 DELOM          NP    VD
+BALI 53 DELOM          NP    VD
+BALI 54 DELOM          NP    VD
+BALI 55 DELOM          NP    VD
+BALI 4  DENIN IMPTR LILE                                                    
+BALI 51 DENIN          NP    VD                                             
+BALI 52 DENIN          NP    VD                                             
+BALI 53 DENIN          NP    VD                                             
+BALI 54 DENIN          NP    VD
+BALI 51 DEPOM                VD                                             
+BALI 52 DEPOM                VD                                             
+BALI 53 DEPOM                VD                                             
+BALI 54 DEPOM                VD                                             
+BALI 55 DEPOM                VD                                             
+BALI 51 DERAK
+BALI 52 DERAK
+BALI 51 DEREM                VD
+BALI 52 DEREM          NP    VD
+BALI 53 DEREM          NP    VD
+BALI 54 DEREM          NP    VD
+BALI 55 DEREM          NP    VD
+BALI 51 DETUR                VD                                             
+BALI 52 DETUR                VD                                             
+BALI 53 DETUR                VD
+BALI 54 DETUR                VD
+BALI 51 DEVRO                VD
+BALI 52 DEVRO                VD
+BALI 53 DEVRO                VD
+BALI 54 DEVRO                VD
+BALI 55 DEVRO                VD
+BALI 51 DGUZ1          NP    VD
+BALI 52 DGUZ1          NP    VD
+BALI 53 DGUZ1          NP    VD
+BALI 54 DGUZ1          NP    VD
+BALI 51 DIBES                VD
+BALI 52 DIBES                VD
+BALI 53 DIBES                VD
+BALI 54 DIBES                VD
+BALI 55 DIBES                VD
+BALI 51 DIDAK                VD
+BALI 52 DIDAK                VD
+BALI 53 DIDAK                VD
+BALI 51 DIDOR                VD
+BALI 52 DIDOR                VD
+BALI 53 DIDOR                VD
+BALI 54 DIDOR                VD
+BALI 55 DIDOR                VD
+BALI 51 DIJPO          NP    VD
+BALI 52 DIJPO          NP    VD
+BALI 51 DIK            NP    VD                                             
+BALI 52 DIK                                 
+BALI 4  DIKOL IMPTR ORL
+BALI 4B DIKOL IMPTR CDG
+BALI 51 DIKOL                VD
+BALI 52 DIKOL                VD
+BALI 51 DIKRO
+BALI 51 DIMAL                VD                                             
+BALI 52 DIMAL                VD                                             
+BALI 53 DIMAL                VD
+BALI 54 DIMAL          NP    VD
+BALI 51 DINAN                VD
+BALI 52 DINAN                VD
+BALI 53 DINAN                VD
+BALI 54 DINAN                VD
+BALI 55 DINAN                VD
+BALI 4  DIPER IMPTR LILE
+BALI 51 DIPER          NP    VD                                             
+BALI 52 DIPER          NP    VD                                             
+BALI 53 DIPER          NP    VD                                             
+BALI 54 DIPER          NP    VD                                             
+BALI 51 DIRMO                VD                                             
+BALI 52 DIRMO                VD                                             
+BALI 53 DIRMO                VD
+BALI 54 DIRMO                VD
+BALI 55 DIRMO                VD
+BALI 51 DISAK                VD                                             
+BALI 52 DISAK                VD                                             
+BALI 53 DISAK                VD                                             
+BALI 54 DISAK                VD                                             
+BALI 55 DISAK                VD                                             
+BALI 56 DISAK                VD                                             
+BALI 51 DITAL                VD
+BALI 52 DITAL                VD
+BALI 53 DITAL                VD
+BALI 54 DITAL                VD
+BALI 55 DITAL                VD
+BALI 56 DITAL                VD
+BALI 51 DIVDA                VD                                             
+BALI 52 DIVDA                VD                                             
+BALI 53 DIVDA          NP    VD                                             
+BALI 54 DIVDA          NP    VD
+BALI 4  DJL   IMPTR CDG                                                     
+BALI 51 DJL                  VD                                             
+BALI 52 DJL                  VD                                             
+BALI 4  DJN   IMPTR ORL                                                     
+BALI 4B DJN   IMPTR CDG                                                     
+BALI 51 DJN            NP    VD                                             
+BALI 52 DJN            NP    VD
+BALI 51 DOMOD                VD
+BALI 52 DOMOD                VD                       
+BALI 4  DORDI IMPTR ORL
+BALI 4B DORDI IMPTR CDG
+BALI 51 DORDI                VD
+BALI 52 DORDI                VD
+BALI 53 DORDI                VD
+BALI 54 DORDI                VD
+BALI 51 DOUB1          NP    VD
+BALI 4  DPE   IMPTR ORL                                                     
+BALI 4B DPE   IMPTR CDG
+BALI 4B DPE   IMPTR LILE                                               
+BALI 51 DPE                  VD                                             
+BALI 52 DPE                  VD
+BALI 51 DVL                  VD                                             
+BALI 52 DVL                  VD                                             
+BALI 53 DVL                  VD
+BALI 54 DVL                  VD
+BALI 4  DVR   IMPTR LILE                                                    
+BALI 51 DVR                  VD                                             
+BALI 50 EDG   NIMPT                                                         
+BALI 50 EDOXA NIMPT
+BALI 51 EDOXA                VD                                             
+BALI 52 EDOXA    ST          VD                                             
+BALI 53 EDOXA    ST          VD                                             
+BALI 54 EDOXA                VD
+BALI 55 EDOXA                VD                                             
+BALI 52 ELBOX                VD
+BALI 53 ELBOX                VD
+BALI 54 ELBOX                VD
+BALI 51 ELLX           NP    VD
+BALI 51 ENOBA          NP    VD
+BALI 52 ENOBA          NP    VD
+BALI 50 EPB   NIMPT
+BALI 51 EPB            NP    VD
+BALI 4  EPL   IMPTR CDG
+BALI 50 EPO   NIMPT
+BALI 50 EPV1  NIMPT
+BALI 51 EPV1           NP    VD
+BALI 50 EPV2  NIMPT                                                         
+BALI 51 EPV2           NP    VD
+BALI 52 EPV2           NP    VD
+BALI 4  ERIXU IMPTR ORL                                                     
+BALI 4B ERIXU IMPTR CDG                                                     
+BALI 51 ERIXU                VD                                             
+BALI 52 ERIXU                VD                                             
+BALI 53 ERIXU    ST          VD                                             
+BALI 54 ERIXU    ST          VD                                             
+BALI 55 ERIXU                VD                                             
+BALI 56 ERIXU                VD                                             
+BALI 52 ERTIP                VD
+BALI 51 ERTOK                VD                                             
+BALI 52 ERTOK                VD                                             
+BALI 53 ERTOK          NP    VD                                             
+BALI 54 ERTOK          NP    VD                                             
+BALI 55 ERTOK          NP    VD                                             
+BALI 56 ERTOK          NP    VD                                             
+BALI 51 ETAMO                VD                                             
+BALI 52 ETAMO                VD                                             
+BALI 53 ETAMO                VD                                             
+BALI 54 ETAMO                VD                                             
+BALI 55 ETAMO                VD                                             
+BALI 51 ETNOS                VD                                             
+BALI 51 ETRAT                VD                                             
+BALI 52 ETRAT                VD                                             
+BALI 53 ETRAT                VD
+BALI 54 ETRAT                VD
+BALI 51 EVIRI          NP    VD
+BALI 52 EVIRI          NP    VD
+BALI 53 EVIRI          NP    VD
+BALI 51 EVRUK                VD
+BALI 52 EVRUK                VD
+BALI 4  EVX   IMPTR ORL                                                     
+BALI 4B EVX   IMPTR CDG                                                     
+BALI 51 EVX                  VD                                             
+BALI 52 EVX                  VD                                             
+BALI 53 EVX                  VD                                             
+BALI 54 EVX                  VD
+BALI 51 EVX1           NP    VD
+BALI 52 EVX1           NP    VD
+BALI 53 EVX1           NP    VD
+BALI 51 EVX2           NP    VD
+BALI 52 EVX2           NP    VD
+BALI 53 EVX2           NP    VD
+BALI 54 EVX2           NP    VD
+BALI 51 FAMEN          NP    VD
+BALI 52 FAMEN                VD
+BALI 53 FAMEN                VD
+BALI 54 FAMEN                VD
+BALI 55 FAMEN                VD
+BALI 51 FERDI                VD                                             
+BALI 52 FERDI                VD                                             
+BALI 51 FERTE                VD                                             
+BALI 52 FERTE                VD                                             
+BALI 51 FOUCO                VD                                             
+BALI 52 FOUCO                VD                                             
+BALI 51 FRSE           NP    VD
+BALI 51 FRSW           NP    VD
+BALI 51 FRWW           NP    VD
+BALI 51 GALBI                VD
+BALI 52 GALBI                VD
+BALI 53 GALBI                VD
+BALI 54 GALBI                VD
+BALI 55 GALBI                VD
+BALI 51 GALBO    ST          VD
+BALI 52 GALBO    ST          VD
+BALI 53 GALBO    ST          VD
+BALI 51 GELTA    ST          VD
+BALI 52 GELTA    ST          VD
+BALI 53 GELTA    ST          VD
+BALI 51 GEN            NP    VD
+BALI 52 GEN            NP    VD
+BALI 51 GESLO          NP    VD
+BALI 52 GESLO          NP    VD
+BALI 51 GIMER                VD
+BALI 52 GIMER                VD
+BALI 53 GIMER                VD
+BALI 54 GIMER                VD
+BALI 55 GIMER                VD
+BALI 51 GINON                VD                                             
+BALI 52 GINON                VD                                             
+BALI 53 GINON                VD                                             
+BALI 54 GINON                VD                                             
+BALI 55 GINON                VD                                             
+BALI 56 GINON                VD                                             
+BALI 51 GIPEX                VD                                             
+BALI 52 GIPEX                VD                                             
+BALI 53 GIPEX          NP    VD
+BALI 54 GIPEX          NP    VD
+BALI 55 GIPEX                VD
+BALI 56 GIPEX                VD
+BALI 51 GIRAG          NP    VD
+BALI 52 GIRAG          NP    VD
+BALI 53 GIRAG          NP    VD
+BALI 54 GIRAG          NP    VD
+BALI 51 GISOR                VD
+BALI 51 GITAN                VD
+BALI 52 GITAN                VD
+BALI 53 GITAN                VD        
+BALI 54 GITAN                VD
+BALI 55 GITAN                VD
+BALI 51 GODIX                VD
+BALI 52 GODIX                VD
+BALI 53 GODIX                VD
+BALI 54 GODIX                VD
+BALI 51 GONEK                VD
+BALI 52 GONEK                VD
+BALI 53 GONEK                VD
+BALI 51 GORET                VD
+BALI 52 GORET                VD
+BALI 53 GORET          NP    VD
+BALI 54 GORET          NP    VD
+BALI 4  GUBAR IMPTR LILE
+BALI 51 GUBAR                VD                                             
+BALI 52 GUBAR                VD                                             
+BALI 53 GUBAR                VD
+BALI 54 GUBAR          NP    VD                                             
+BALI 51 GUERE          NP
+BALI 52 GUERE                VD                                             
+BALI 53 GUERE                VD                                             
+BALI 54 GUERE                VD                                             
+BALI 55 GUERE                VD                                             
+BALI 56 GUERE                VD
+BALI 51 GUNPI          NP    VD                                             
+BALI 52 GUNPI          NP    VD                                             
+BALI 53 GUNPI          NP    VD                                             
+BALI 54 GUNPI          NP    VD
+BALI 51 GURLU          NP    VD                                             
+BALI 51 GUSON                VD                                             
+BALI 52 GUSON                VD                                             
+BALI 53 GUSON                VD                                             
+BALI 54 GUSON                VD                                             
+BALI 55 GUSON                VD                                             
+BALI 56 GUSON                VD                                             
+BALI 50 HEL1  NIMPT
+BALI 51 HEL1           NP    VD
+BALI 50 HEL2  NIMPT
+BALI 51 HEL2           NP    VD
+BALI 51 HOL                  VD                                             
+BALI 51 IBABA                VD                                             
+BALI 52 IBABA                VD
+BALI 4  IBERU IMPTR LILE
+BALI 51 IBERU                VD                                             
+BALI 52 IBERU          NP    VD
+BALI 53 IBERU          NP    VD
+BALI 54 IBERU          NP    VD
+BALI 51 IBER0          NP    VD                                         
+BALI 52 IBER0          NP    VD                                             
+BALI 53 IBER0          NP    VD                                             
+BALI 54 IBER0          NP    VD 
+BALI 51 IDOKO                VD                                             
+BALI 52 IDOKO                VD                                             
+BALI 53 IDOKO                VD                                             
+BALI 51 IDOSA                VD
+BALI 52 IDOSA                VD
+BALI 4  ING   IMPTR LILE
+BALI 51 ING                  VD                                             
+BALI 52 ING                  VD                                             
+BALI 53 ING                  VD
+BALI 54 ING            NP    VD
+BALI 51 INKAK                VD
+BALI 52 INKAK                VD
+BALI 53 INKAK                VD
+BALI 51 IPLAN                VD
+BALI 52 IPLAN                VD
+BALI 51 JSJU           NP    VD                                             
+BALI 52 JSJU           NP    VD                                             
+BALI 53 JSJU           NP    VD                                             
+BALI 51 KASON                VD                                             
+BALI 52 KASON                VD                                             
+BALI 51 KELON                VD
+BALI 52 KELON                VD
+BALI 53 KELON                VD
+BALI 51 KELUD          NP    VD
+BALI 51 KELUK                VD
+BALI 52 KELUK                VD
+BALI 53 KELUK                VD
+BALI 54 KELUK                VD
+BALI 55 KELUK                VD
+BALI 51 KENAP                VD
+BALI 52 KENAP                VD
+BALI 53 KENAP                VD        
+BALI 54 KENAP                VD
+BALI 55 KENAP                VD
+BALI 51 KENUM          NP    VD                                               
+BALI 52 KENUM          NP    VD  
+BALI 51 KEPER                VD                                             
+BALI 52 KEPER                VD                                             
+BALI 53 KEPER                VD                             
+BALI 51 KEREX                VD                                             
+BALI 52 KEREX                VD                                             
+BALI 53 KEREX          NP    VD                               
+BALI 51 KETEX                VD
+BALI 52 KETEX                VD
+BALI 53 KETEX    ST          VD
+BALI 54 KETEX    ST          VD
+BALI 55 KETEX                VD
+BALI 56 KETEX                VD
+BALI 51 KETE1          NP
+BALI 52 KETE1          NP
+BALI 53 KETE1          NP
+BALI 54 KETE1          NP
+BALI 55 KETE1          NP
+BALI 56 KETE1          NP
+BALI 57 KETE1          NP
+BALI 51 KODOK          NP    VD                                             
+BALI 52 KODOK          NP    VD                                             
+BALI 4  KOK   IMPTR LILE                                                    
+BALI 50 KOK   NIMPT                                                         
+BALI 51 KOK                  VD                                             
+BALI 52 KOK                  VD                                             
+BALI 53 KOK                  VD
+BALI 54 KOK            NP    VD
+BALI 51 KOKOS                VD                                             
+BALI 52 KOKOS                VD                                             
+BALI 51 KOMEL          NP    VD                                             
+BALI 52 KOMEL          NP    VD                                             
+BALI 53 KOMEL          NP    VD                                             
+BALI 51 KOPOR    ST          VD
+BALI 52 KOPOR    ST          VD
+BALI 53 KOPOR          NP    VD
+BALI 4  KOROM IMPTR CDG                                                     
+BALI 51 KOROM                VD
+BALI 51 KOTAP                VD                                             
+BALI 52 KOTAP                VD                                             
+BALI 53 KOTAP                VD                                             
+BALI 54 KOTAP                VD                                             
+BALI 55 KOTAP                VD                                             
+BALI 56 KOTAP                VD                                             
+BALI 57 KOTAP                VD                                             
+BALI 51 KOTIS                VD                                             
+BALI 52 KOTIS                VD                                             
+BALI 53 KOTIS                VD                                             
+BALI 54 KOTIS                VD                                             
+BALI 51 KOTUN                VD
+BALI 52 KOTUN                VD
+BALI 53 KOTUN                VD
+BALI 51 KOVAK                VD
+BALI 52 KOVAK                VD
+BALI 51 KOVIN                VD
+BALI 52 KOVIN                VD
+BALI 53 KOVIN                VD        
+BALI 54 KOVIN                VD
+BALI 55 KOVIN                VD
+BALI 51 KOV1N                VD
+BALI 52 KOV1N                VD
+BALI 53 KOV1N                VD        
+BALI 54 KOV1N                VD
+BALI 55 KOV1N                VD
+BALI 51 KUDIN          NP    VD
+BALI 52 KUDIN          NP    VD
+BALI 53 KUDIN                VD        
+BALI 54 KUDIN                VD
+BALI 55 KUDIN                VD
+BALI 51 KUKOR                VD                                             
+BALI 52 KUKOR                VD                                             
+BALI 53 KUKOR                VD                                             
+BALI 54 KUKOR                VD                                             
+BALI 51 KUKO1          NP    
+BALI 52 KUKO1          NP 
+BALI 53 KUKO1          NP 
+BALI 54 KUKO1          NP 
+BALI 51 KUSEK                VD                                             
+BALI 52 KUSEK                VD                                             
+BALI 53 KUSEK                VD                                             
+BALI 54 KUSEK                VD                                             
+BALI 55 KUSEK                VD                                             
+BALI 56 KUSEK                VD                                             
+BALI 51 KUTAN                VD
+BALI 52 KUTAN                VD 
+BALI 53 KUTAN                VD 
+BALI 54 KUTAN                VD
+BALI 51 LAGEN          NP    VD
+BALI 52 LAGEN          NP    VD
+BALI 51 LAKOB                VD                                             
+BALI 52 LAKOB                VD                                             
+BALI 53 LAKOB    ST          VD                                             
+BALI 54 LAKOB    ST          VD                                             
+BALI 50 LALUX NIMPT
+BALI 51 LALUX                VD                                             
+BALI 52 LALUX    ST          VD                                             
+BALI 53 LALUX    ST          VD                                             
+BALI 54 LALUX                VD
+BALI 55 LALUX                VD                                             
+BALI 51 LAMUT    ST          VD                                             
+BALI 52 LAMUT    ST          VD                                             
+BALI 53 LAMUT    ST          VD                                             
+BALI 54 LAMUT    ST          VD                                             
+BALI 4  LANVI IMPTR CDG                                                     
+BALI 51 LANVI    ST          VD
+BALI 52 LANVI    ST          VD
+BALI 51 LARON                VD                                             
+BALI 52 LARON          NP    VD                                             
+BALI 53 LARON          NP    VD                                             
+BALI 54 LARON          NP    VD                                             
+BALI 55 LARON          NP    VD                                             
+BALI 56 LARON          NP    VD                                             
+BALI 50 LASIV NIMPT
+BALI 51 LASIV                VD
+BALI 52 LASIV                VD
+BALI 53 LASIV                VD
+BALI 51 LATGO                VD
+BALI 52 LATGO                VD
+BALI 53 LATGO                VD
+BALI 4  LATRA IMPTR ORL                                                     
+BALI 4B LATRA IMPTR CDG                                                     
+BALI 51 LATRA                VD                                             
+BALI 52 LATRA                VD                                             
+BALI 53 LATRA    ST          VD                                             
+BALI 54 LATRA    ST          VD                                             
+BALI 55 LATRA                VD                                             
+BALI 56 LATRA                VD                                             
+BALI 51 LAULY                VD
+BALI 52 LAULY                VD
+BALI 53 LAULY                VD
+BALI 50 LAURA NIMPT
+BALI 51 LAURA                VD
+BALI 52 LAURA                VD
+BALI 53 LAURA                VD        
+BALI 54 LAURA                VD
+BALI 55 LAURA                VD
+BALI 51 LCA      ST          VD                                             
+BALI 52 LCA      ST          VD                                             
+BALI 53 LCA                  VD                                             
+BALI 54 LCA                  VD                                             
+BALI 55 LCA                  VD                                             
+BALI 51 LEMIN                VD                                             
+BALI 52 LEMIN                VD
+BALI 53 LEMIN          NP    VD                                             
+BALI 54 LEMIN          NP    VD                                             
+BALI 4  LEQ   IMPTR LILE                                                    
+BALI 51 LEQ                  VD                                             
+BALI 52 LEQ                  VD                                             
+BALI 53 LEQ                  VD
+BALI 54 LEQ            NP    VD
+BALI 51 LEQ1                 VD                                               
+BALI 52 LEQ1                 VD                                             
+BALI 53 LEQ1           NP    VD                                             
+BALI 54 LEQ1           NP    VD
+BALI 51 LERGA          
+BALI 52 LERGA                VD                                             
+BALI 53 LERGA                VD                                             
+BALI 54 LERGA                VD
+BALI 51 LESDO                VD
+BALI 52 LESDO                VD
+BALI 53 LESDO                VD        
+BALI 54 LESDO                VD
+BALI 55 LESDO                VD
+BALI 56 LESDO                VD
+BALI 4  LESDO IMPTR LILE                                                    
+BALI 51 LESPI                VD                                             
+BALI 52 LESPI                VD                                             
+BALI 53 LESPI                VD                                             
+BALI 54 LESPI                VD                                             
+BALI 51 LFAB                 VD                                             
+BALI 52 LFAB                 VD
+BALI 51 LFAG           NP    VD                
+BALI 51 LFAT                 VD                                             
+BALI 52 LFAT                 VD                                             
+BALI 53 LFAT                 VD
+BALI 54 LFAT           NP    VD
+BALI 51 LFAV                 VD                                             
+BALI 52 LFAV           NP    VD                                             
+BALI 4  LFAY  IMPTR LILE
+BALI 51 LFAY                 VD
+BALI 52 LFAY                 VD
+BALI 53 LFAY           NP    VD    
+BALI 51 LFBI                 VD                                             
+BALI 52 LFBI           NP    VD                                             
+BALI 53 LFBI           NP    VD   
+BALI 54 LFBI           NP    VD   
+BALI 55 LFBI           NP    VD  
+BALI 56 LFBI           NP    VD  
+BALI 51 LFBL                 VD   
+BALI 52 LFBL                 VD
+BALI 53 LFBL           NP    VD
+BALI 54 LFBL           NP    VD
+BALI 55 LFBL           NP    VD
+BALI 51 LFCI           NP    VD                                             
+BALI 52 LFCI           NP    VD                                             
+BALI 51 LFEI                 VD                                             
+BALI 52 LFEI                 VD                                             
+BALI 53 LFEI                                                                
+BALI 51 LFJM                 VD
+BALI 52 LFJM                 VD
+BALI 53 LFJM                 VD
+BALI 54 LFJM                 VD
+BALI 51 LFJR                 VD
+BALI 52 LFJR                 VD
+BALI 53 LFJR                 VD
+BALI 51 LFLA                 VD
+BALI 52 LFLA                 VD
+BALI 53 LFLA                 VD
+BALI 54 LFLA                 VD
+BALI 51 LFLN                 VD                                             
+BALI 51 LFOA                 VD                                             
+BALI 52 LFOA                 VD                                             
+BALI 53 LFOA                 VD                                             
+BALI 54 LFOA                 VD                                             
+BALI 51 LFOC                 VD                                             
+BALI 52 LFOC                 VD
+BALI 51 LFOD                 VD
+BALI 52 LFOD                 VD
+BALI 51 LFQI                 VD
+BALI 52 LFQI                 VD
+BALI 53 LFQI                 VD
+BALI 54 LFQI           NP    VD
+BALI 51 LFRG                 VD                                             
+BALI 51 LFRK                 VD                                             
+BALI 51 LFRM                 VD                                             
+BALI 52 LFRM                 VD                                             
+BALI 51 LFSN                 VD                                             
+BALI 52 LFSN           NP    VD                                               
+BALI 51 LFSR           NP                                                   
+BALI 52 LFSR           NP    VD                                             
+BALI 51 LFSRF          NP
+BALI 51 LGG            NP    VD
+BALI 52 LGG            NP    VD
+BALI 53 LGG            NP    VD
+BALI 54 LGG            NP    VD
+BALI 55 LGG            NP    VD
+BALI 4  LGL   IMPTR ORL
+BALI 4B LGL   IMPTR CDG
+BALI 51 LGL                  VD
+BALI 52 LGL                  VD
+BALI 53 LGL                  VD
+BALI 54 LGL                  VD
+BALI 4  LGLN  IMPTR ORL
+BALI 4B LGLN  IMPTR CDG
+BALI 51 LGLN                 VD
+BALI 52 LGLN                 VD
+BALI 53 LGLN                 VD
+BALI 54 LGLN                 VD
+BALI 4  LGLS  IMPTR ORL
+BALI 4B LGLS  IMPTR CDG
+BALI 51 LGLS                 VD
+BALI 52 LGLS                 VD
+BALI 53 LGLS                 VD
+BALI 54 LGLS                 VD
+BALI 50 LGL1  NIMPT
+BALI 51 LGL1           NP    VD
+BALI 52 LGL1           NP    VD
+BALI 53 LGL1           NP    VD
+BALI 54 LGL1           NP    VD
+BALI 51 LHO                  VD
+BALI 52 LHO                  VD
+BALI 53 LHO                  VD
+BALI 54 LHO                  VD
+BALI 51 LIGUR          NP    VD
+BALI 52 LIGUR          NP    VD
+BALI 53 LIGUR          NP    VD
+BALI 54 LIGUR          NP    VD 
+BALI 51 LIMGO                VD
+BALI 52 LIMGO                VD
+BALI 53 LIMGO                VD
+BALI 51 LIPNI          NP    VD
+BALI 52 LIPNI          NP    VD
+BALI 53 LIPNI          NP    VD
+BALI 54 LIPNI          NP    VD
+BALI 51 LISEU          NP    VD
+BALI 52 LISEU          NP    VD
+BALI 53 LISEU                VD
+BALI 54 LISEU                VD
+BALI 51 LJL                  VD
+BALI 51 LJL1           NP    VD
+BALI 52 LJL1           NP    VD
+BALI 51 LM                   VD
+BALI 52 LM                   VD
+BALI 51 LMG                  VD
+BALI 52 LMG                  VD
+BALI 53 LMG                  VD
+BALI 54 LMG                  VD
+BALI 55 LMG                  VD
+BALI 56 LMG                  VD
+BALI 51 LNO                  VD
+BALI 52 LNO                  VD
+BALI 51 LOB                  VD
+BALI 52 LOB                  VD
+BALI 53 LOB            NP    VD
+BALI 51 LOE            NP    VD
+BALI 52 LOE            NP    VD
+BALI 53 LOE            NP    VD
+BALI 54 LOE            NP    VD
+BALI 55 LOE            NP    VD
+BALI 56 LOE            NP    VD
+BALI 51 LOGNI                VD
+BALI 52 LOGNI                VD
+BALI 53 LOGNI                VD
+BALI 54 LOGNI                VD
+BALI 51 LOJ                  VD
+BALI 51 LOP                  VD
+BALI 52 LOP                  VD
+BALI 53 LOP                  VD
+BALI 4  LORTA IMPTR CDG
+BALI 51 LORTA          NP    VD
+BALI 51 LOU            NP
+BALI 52 LOU            NP
+BALI 53 LOU            NP
+BALI 51 LPB                  VD                                             
+BALI 51 LPC                  VD                                             
+BALI 52 LPC                  VD                                             
+BALI 51 LPD                  VD                                             
+BALI 52 LPD                  VD                                             
+BALI 53 LPD                  VD                                             
+BALI 54 LPD            NP    VD                                             
+BALI 55 LPD            NP    VD                                             
+BALI 56 LPD            NP    VD                                             
+BALI 50 LPG   NIMPT                                                         
+BALI 51 LPG                  VD                                             
+BALI 51 LPM                  VD                                             
+BALI 52 LPM                  VD                                             
+BALI 53 LPM                  VD                                             
+BALI 50 LPO   NIMPT                                                         
+BALI 51 LPO                  VD
+BALI 51 LPT                  VD
+BALI 52 LPT                  VD
+BALI 51 LPV                  VD
+BALI 51 LSE                  VD                                             
+BALI 52 LSE                  VD                                             
+BALI 53 LSE                  VD     
+BALI 54 LSE                  VD     
+BALI 55 LSE                  VD     
+BALI 51 LSF                  VD
+BALI 51 LUMAN                VD
+BALI 52 LUMAN                VD
+BALI 53 LUMAN                VD
+BALI 51 LUMIL                VD
+BALI 52 LUMIL                VD
+BALI 53 LUMIL                VD
+BALI 54 LUMIL          NP    VD                                        
+BALI 51 LUREN                VD                                             
+BALI 52 LUREN                VD                                             
+BALI 53 LUREN                VD                                             
+BALI 54 LUREN                VD
+BALI 51 LUSAR                VD
+BALI 52 LUSAR                VD
+BALI 53 LUSAR                VD
+BALI 54 LUSAR                VD
+BALI 51 LUTAX          NP    VD                                             
+BALI 52 LUTAX          NP    VD                                             
+BALI 53 LUTAX          NP    VD
+BALI 54 LUTAX          NP    VD                                          
+BALI 51 LUTIL                VD                                             
+BALI 52 LUTIL                VD
+BALI 53 LUTIL                VD
+BALI 4  LUVAL IMPTR CDG
+BALI 51 LUVAL    ST          VD
+BALI 52 LUVAL          NP    VD
+BALI 53 LUVAL          NP    VD
+BALI 51 LYS                  VD
+BALI 52 LYS                  VD
+BALI 53 LYS                  VD
+BALI 54 LYS                  VD
+BALI 55 LYS                  VD
+BALI 51 MANAG                VD
+BALI 52 MANAG                VD
+BALI 53 MANAG                VD
+BALI 51 MATID                VD                                             
+BALI 52 MATID                VD                                             
+BALI 53 MATID                VD
+BALI 54 MATID          NP    VD
+BALI 51 MATIX                VD                                             
+BALI 52 MATIX                VD                                             
+BALI 53 MATIX                VD
+BALI 4  MATIX IMPTR LILE                                                     
+BALI 51 MBY                  VD                                             
+BALI 52 MBY                  VD
+BALI 51 MEDAM          NP    VD
+BALI 52 MEDAM          NP    VD
+BALI 53 MEDAM          NP    VD        
+BALI 54 MEDAM          NP    VD
+BALI 55 MEDAM          NP    VD
+BALI 56 MEDAM          NP    VD
+BALI 51 MEDIL                VD
+BALI 52 MEDIL                VD
+BALI 53 MEDIL                VD        
+BALI 54 MEDIL                VD
+BALI 55 MEDIL                VD
+BALI 51 MEDOX                VD
+BALI 52 MEDOX                VD
+BALI 53 MEDOX                VD        
+BALI 54 MEDOX                VD
+BALI 55 MEDOX                VD
+BALI 51 MELKO    ST          VD
+BALI 52 MELKO    ST          VD
+BALI 53 MELKO                VD
+BALI 54 MELKO                VD
+BALI 51 MENOX                VD                                             
+BALI 52 MENOX          NP    VD
+BALI 53 MENOX          NP    VD                                             
+BALI 54 MENOX          NP    VD                                             
+BALI 4  MERUE IMPTR CDG                                                     
+BALI 51 MERUE                VD                                             
+BALI 51 MET                  VD
+BALI 51 MIKRU          NP    VD
+BALI 52 MIKRU          NP    VD
+BALI 53 MIKRU          NP    VD                                             
+BALI 54 MIKRU          NP    VD                                             
+BALI 51 MILNO          NP    VD
+BALI 52 MILNO          NP    VD
+BALI 53 MILNO          NP    VD                                             
+BALI 54 MILNO          NP    VD                                             
+BALI 51 MILPA                VD
+BALI 52 MILPA                VD
+BALI 53 MILPA                VD                                             
+BALI 54 MILPA                VD                                             
+BALI 55 MILPA                VD
+BALI 51 MINKA          NP    VD                                             
+BALI 4  MK    IMPTR LILE
+BALI 51 MK                   VD                                               
+BALI 52 MK                   VD                                             
+BALI 53 MK             NP    VD                                             
+BALI 54 MK             NP    VD
+BALI 4  MLN   IMPTR ORL                                                     
+BALI 51 MLN                  VD                                             
+BALI 52 MLN            NP    VD                                             
+BALI 51 MLN1           NP    VD                                             
+BALI 52 MLN1           NP    VD                                             
+BALI 4  MLO   IMPTR ORL                                                     
+BALI 4B MLO   IMPTR CDG                                                     
+BALI 51 MLO            NP    VD                                               
+BALI 52 MLO            NP    VD
+BALI 51 MMD                  VD
+BALI 52 MMD                  VD
+BALI 53 MMD                  VD        
+BALI 54 MMD                  VD
+BALI 55 MMD                  VD
+BALI 51 MMD1                 VD                                             
+BALI 52 MMD1                 VD
+BALI 51 MOBLO          NP    VD                                             
+BALI 51 MOKDI          NP    VD                                               
+BALI 52 MOKDI          NP    VD                                               
+BALI 53 MOKDI          NP    VD                                               
+BALI 51 MOKIP                VD
+BALI 52 MOKIP                VD
+BALI 53 MOKIP                VD
+BALI 54 MOKIP                VD
+BALI 4  MOKNO IMPTR CDG                                                     
+BALI 51 MOKNO                VD                                               
+BALI 4  MOLEK IMPTR ORL
+BALI 51 MOLEK                VD
+BALI 52 MOLEK                VD
+BALI 53 MOLEK                VD
+BALI 51 MOLUS                VD
+BALI 51 MOMIL                VD
+BALI 52 MOMIL                VD
+BALI 53 MOMIL                VD
+BALI 54 MOMIL                VD
+BALI 4  MONOT IMPTR ORL                                                     
+BALI 4B MONOT IMPTR CDG                                                     
+BALI 51 MONOT                VD                                             
+BALI 52 MONOT                VD                                             
+BALI 53 MONOT                VD                                             
+BALI 54 MONOT                VD                                             
+BALI 55 MONOT                VD
+BALI 56 MONOT                VD
+BALI 51 MOPIL                VD
+BALI 52 MOPIL                VD
+BALI 53 MOPIL                VD        
+BALI 54 MOPIL                VD
+BALI 55 MOPIL                VD
+BALI 51 MOSET          NP    VD                                             
+BALI 52 MOSET                VD                                             
+BALI 53 MOSET                VD                                             
+BALI 51 MOTAL                VD                                             
+BALI 52 MOTAL                VD                                             
+BALI 53 MOTAL                VD                                             
+BALI 4  MOU   IMPTR CDG                                                     
+BALI 4B MOU   IMPTR ORL                                                     
+BALI 51 MOU                  VD                                             
+BALI 52 MOU                  VD                                             
+BALI 53 MOU                  VD                                             
+BALI 54 MOU                  VD                                             
+BALI 4  MRV   IMPTR LILE                                                    
+BALI 51 MRV                  VD                                             
+BALI 52 MRV                  VD                                             
+BALI 53 MRV                  VD
+BALI 54 MRV            NP    VD
+BALI 51 MRV1                 VD                                               
+BALI 52 MRV1                 VD                                             
+BALI 53 MRV1           NP    VD                                             
+BALI 54 MRV1           NP    VD
+BALI 4  MTD   IMPTR ORL                                                     
+BALI 4B MTD   IMPTR CDG                                                     
+BALI 4B MTD   IMPTR LILE                                                    
+BALI 50 MTD   NIMPT
+BALI 51 MTD                  VD                                             
+BALI 52 MTD                  VD                                             
+BALI 53 MTD            NP    VD
+BALI 50 MTD2  NIMPT                                                         
+BALI 51 MTD2           NP    VD                                             
+BALI 52 MTD2           NP    VD                                             
+BALI 53 MTD2           NP    VD
+BALI 4  MV    IMPTR ORL
+BALI 51 MV                   VD                                             
+BALI 52 MV                   VD
+BALI 53 MV                   VD
+BALI 51 NANOP                VD
+BALI 52 NANOP                VD
+BALI 50 NAPIX NIMPT
+BALI 51 NAPIX          NP    VD
+BALI 52 NAPIX          NP    VD
+BALI 53 NAPIX                VD        
+BALI 54 NAPIX                VD
+BALI 55 NAPIX                VD
+BALI 51 NATS           NP    VD    
+BALI 52 NATS           NP    VD    
+BALI 53 NATS           NP    VD
+BALI 51 NATS1          NP    VD
+BALI 52 NATS1          NP    VD
+BALI 53 NATS1          NP    VD
+BALI 51 NAY                  VD 
+BALI 4  NEBRU IMPTR LILE                                        
+BALI 51 NEBRU                VD                                             
+BALI 52 NEBRU                VD                                             
+BALI 53 NEBRU                VD
+BALI 54 NEBRU          NP    VD
+BALI 51 NEKEM                VD
+BALI 52 NEKEM                VD
+BALI 53 NEKEM                VD        
+BALI 51 NEPAP                VD                                             
+BALI 52 NEPAP                VD
+BALI 51 NERAS          NP    VD
+BALI 52 NERAS          NP    VD
+BALI 53 NERAS          NP    VD        
+BALI 54 NERAS          NP    VD
+BALI 55 NERAS          NP    VD                    
+BALI 4  NEV   IMPTR ORL                                                     
+BALI 4B NEV   IMPTR CDG                                                     
+BALI 51 NEV                  VD                                             
+BALI 52 NEV      ST          VD
+BALI 53 NEV      ST          VD
+BALI 54 NEV      ST          VD
+BALI 51 NILEM          NP    VD
+BALI 52 NILEM          NP    VD
+BALI 53 NILEM          NP    VD        
+BALI 54 NILEM                VD
+BALI 55 NILEM                VD 
+BALI 56 NILEM                VD
+BALI 51 NIMER                VD                                             
+BALI 52 NIMER                VD                                             
+BALI 53 NIMER                VD                                             
+BALI 54 NIMER                VD                                             
+BALI 4  NIPN  IMPTR ORL                                                     
+BALI 4B NIPN  IMPTR CDG
+BALI 51 NIPN           NP    VD
+BALI 52 NIPN           NP    VD
+BALI 53 NIPN           NP    VD        
+BALI 54 NIPN           NP    VD
+BALI 55 NIPN           NP    VD 
+BALI 4  NIPOE IMPTR CDG                                                     
+BALI 51 NIPOE          NP    VD                                             
+BALI 52 NIPOE          NP    VD    
+BALI 4  NIPOR IMPTR ORL                                                     
+BALI 4B NIPOR IMPTR CDG
+BALI 51 NIPOR                VD
+BALI 52 NIPOR                VD
+BALI 53 NIPOR                VD        
+BALI 54 NIPOR                VD
+BALI 55 NIPOR                VD 
+BALI 4  NIPOW IMPTR CDG                                                     
+BALI 51 NIPOW          NP    VD                                             
+BALI 52 NIPOW          NP    VD
+BALI 51 NIPO1          NP    VD                                             
+BALI 52 NIPO1          NP    VD                                             
+BALI 53 NIPO1                VD        
+BALI 4  NIPS  IMPTR ORL                                                     
+BALI 4B NIPS  IMPTR CDG
+BALI 51 NIPS           NP    VD
+BALI 52 NIPS           NP    VD
+BALI 53 NIPS           NP    VD
+BALI 54 NIPS           NP    VD
+BALI 55 NIPS           NP    VD
+BALI 51 NITAR                VD                                             
+BALI 52 NITAR                VD                                             
+BALI 53 NITAR          NP    VD
+BALI 51 NITEP          NP    VD                                             
+BALI 52 NITEP          NP    VD   
+BALI 53 NITEP          NP    VD                                             
+BALI 54 NITEP          NP    VD                                        
+BALI 4  NIVOR IMPTR ORL
+BALI 51 NIVOR                VD                                               
+BALI 52 NIVOR                VD
+BALI 50 NOR   NIMPT                                                         
+BALI 51 NOR            NP    VD                                               
+BALI 52 NOR            NP    VD                                               
+BALI 4  NRNAV IMPTR ORL
+BALI 50 NRNAV NIMPT
+BALI 51 NR04           NP    VD 
+BALI 50 NTM   NIMPT                                                         
+BALI 51 NTM            NP    VD                                               
+BALI 52 NTM            NP    VD                                             
+BALI 4  NURMO IMPTR ORL 
+BALI 4B NURMO IMPTR CDG 
+BALI 4B NURMO IMPTR LILE
+BALI 50 NURMO NIMPT                                                         
+BALI 51 NURMO                VD                                             
+BALI 52 NURMO                VD                                             
+BALI 53 NURMO                VD  
+BALI 54 NURMO          NP    VD                                           
+BALI 51 OAN                  VD 
+BALI 51 OBATO    ST          VD
+BALI 51 OBUBA                VD                                             
+BALI 52 OBUBA                VD                                             
+BALI 53 OBUBA                VD                                             
+BALI 54 OBUBA                VD                                             
+BALI 55 OBUBA                VD                                             
+BALI 56 OBUBA                VD                                             
+BALI 51 OBURO                VD                                             
+BALI 52 OBURO                VD                                             
+BALI 53 OBURO                VD
+BALI 51 OB601          NP    VD
+BALI 50 OB602 NIMPT
+BALI 51 OB602          NP    VD
+BALI 50 OB603 NIMPT
+BALI 51 OB603          NP    VD
+BALI 51 OB701          NP    VD
+BALI 52 OB701          NP    VD
+BALI 50 OB703 NIMPT
+BALI 51 OB703          NP    VD
+BALI 52 OB703          NP    VD
+BALI 50 ODEBU NIMPT
+BALI 51 ODEBU                VD                                             
+BALI 52 ODEBU    ST          VD                                             
+BALI 53 ODEBU                VD                                             
+BALI 54 ODEBU                VD                                             
+BALI 55 ODEBU                VD                                             
+BALI 56 ODEBU                VD
+BALI 50 ODEDG NIMPT
+BALI 51 ODEDG          NP    VD
+BALI 52 ODEDG          NP    VD
+BALI 53 ODEDG          NP    VD
+BALI 4  ODRAN IMPTR ORL
+BALI 51 ODRAN                VD
+BALI 52 ODRAN                VD
+BALI 51 ODRSK          NP    
+BALI 51 OD03H          NP    VD 
+BALI 52 OD03H          NP    VD 
+BALI 53 OD03H          NP    VD 
+BALI 54 OD03H          NP    VD 
+BALI 55 OD03H          NP    VD 
+BALI 51 OD03P          NP    VD 
+BALI 52 OD03P          NP    VD 
+BALI 53 OD03P          NP    VD 
+BALI 54 OD03P          NP    VD 
+BALI 55 OD03P          NP    VD 
+BALI 51 OD04H          NP    VD
+BALI 52 OD04H          NP    VD
+BALI 53 OD04H          NP    VD
+BALI 54 OD04H          NP    VD 
+BALI 51 OD04P          NP    VD 
+BALI 52 OD04P          NP    VD 
+BALI 53 OD04P          NP    VD 
+BALI 54 OD04P          NP    VD 
+BALI 55 OD04P          NP    VD 
+BALI 51 OEUZ           NP    VD
+BALI 52 OEUZ           NP    VD
+BALI 53 OEUZ           NP    VD
+BALI 54 OEUZ           NP    VD
+BALI 55 OEUZ           NP    VD
+BALI 56 OEUZ           NP    VD
+BALI 51 OGULO          NP    VD
+BALI 52 OGULO          NP    VD
+BALI 53 OGULO          NP    VD
+BALI 54 OGULO          NP    VD
+BALI 55 OGULO          NP    VD
+BALI 56 OGULO          NP    VD
+BALI 57 OGULO          NP    VD
+BALI 58 OGULO          NP    VD
+BALI 4  OKASI IMPTR ORL                                                     
+BALI 4B OKASI IMPTR CDG                                                     
+BALI 51 OKASI                VD                                             
+BALI 52 OKASI                VD                                             
+BALI 53 OKASI    ST          VD                                             
+BALI 54 OKASI    ST                                                         
+BALI 55 OKASI                                                               
+BALI 56 OKASI
+BALI 51 OKEKO          NP 
+BALI 52 OKEKO          NP                      
+BALI 53 OKEKO          NP                          
+BALI 54 OKEKO          NP                                        
+BALI 55 OKEKO          NP                           
+BALI 56 OKEKO          NP        
+BALI 51 OKEPI                VD
+BALI 52 OKEPI    ST    NP    VD
+BALI 53 OKEPI          NP    VD
+BALI 54 OKEPI          NP    VD
+BALI 51 OKIRA                VD
+BALI 52 OKIRA          NP    VD
+BALI 53 OKIRA          NP    VD
+BALI 54 OKIRA          NP    VD                     
+BALI 51 OKRIX                VD
+BALI 52 OKRIX                VD
+BALI 53 OKRIX                VD
+BALI 54 OKRIX                VD
+BALI 50 OL    NIMPT
+BALI 51 OL             NP    VD                                             
+BALI 52 OL                   VD                                             
+BALI 53 OL                   VD                                             
+BALI 51 OLINO          NP    VD
+BALI 52 OLINO          NP    VD
+BALI 53 OLINO          NP    VD
+BALI 54 OLINO          NP    VD
+BALI 55 OLINO          NP    VD
+BALI 56 OLINO          NP    VD
+BALI 51 OLIRI                VD
+BALI 52 OLIRI                VD
+BALI 51 OLMES                VD
+BALI 52 OLMES                VD
+BALI 53 OLMES                VD
+BALI 50 OLS   NIMPT                                                         
+BALI 51 OLS            NP    VD                                               
+BALI 51 OL1            NP    VD                                             
+BALI 4  OMAKO IMPTR ORL                                                     
+BALI 4B OMAKO IMPTR CDG                                                     
+BALI 51 OMAKO                VD
+BALI 51 OMANI                VD     
+BALI 52 OMANI                VD
+BALI 53 OMANI                VD
+BALI 54 OMANI                VD
+BALI 51 OMARI                VD                                             
+BALI 52 OMARI                VD                                             
+BALI 53 OMARI                VD                                             
+BALI 54 OMARI                VD                                             
+BALI 55 OMARI                VD                                             
+BALI 56 OMARI                VD                                             
+BALI 4  OPALE IMPTR ORL                                                     
+BALI 4B OPALE IMPTR CDG
+BALI 4B OPALE IMPTR LILE                                                  
+BALI 51 OPALE                VD                                             
+BALI 52 OPALE                VD                                             
+BALI 53 OPALE                VD 
+BALI 54 OPALE          NP    VD                                         
+BALI 51 OSKIN                VD
+BALI 52 OSKIN                VD
+BALI 53 OSKIN                VD
+BALI 54 OSKIN                VD
+BALI 51 PAS            NP    VD
+BALI 52 PAS            NP    VD
+BALI 53 PAS            NP    VD
+BALI 54 PAS            NP    VD
+BALI 55 PAS            NP    VD
+BALI 51 PBNR           NP    VD
+BALI 52 PBNR           NP    VD                                             
+BALI 51 PBNWH          NP    VD
+BALI 52 PBNWH          NP    VD 
+BALI 51 PBNWR          NP    VD
+BALI 52 PBNWR          NP    VD                                             
+BALI 51 PBOMA          NP    VD
+BALI 51 PBSE           NP    VD
+BALI 52 PBSE           NP    VD
+BALI 51 PBSW           NP    VD
+BALI 52 PBSW           NP    VD
+BALI 51 PB093          NP    VD
+BALI 51 PB094          NP    VD
+BALI 51 PB096          NP    VD
+BALI 52 PB096          NP    VD
+BALI 51 PB098          NP    VD
+BALI 51 PB253          NP    VD
+BALI 51 PB254          NP    VD
+BALI 51 PB256          NP    VD
+BALI 50 PC    NIMPT
+BALI 51 PC                   VD
+BALI 52 PC                   VD
+BALI 50 PCDC  NIMPT
+BALI 51 PCDC           NP
+BALI 50 PCRD  NIMPT
+BALI 51 PCRD           NP
+BALI 51 PC089          NP    VD
+BALI 51 PC289          NP    VD
+BALI 50 PEKDG NIMPT
+BALI 51 PEKDG          NP    VD
+BALI 52 PEKDG          NP    VD
+BALI 53 PEKDG          NP    VD
+BALI 50 PEKIM NIMPT
+BALI 51 PEKIM                VD                                             
+BALI 52 PEKIM    ST          VD                                             
+BALI 53 PEKIM    ST          VD                                             
+BALI 54 PEKIM                VD                                             
+BALI 55 PEKIM                VD                                             
+BALI 56 PEKIM                VD
+BALI 51 PENDU                VD
+BALI 52 PENDU                VD
+BALI 53 PENDU                VD
+BALI 51 PEPAL                VD                                             
+BALI 52 PEPAL          NP    VD                                             
+BALI 51 PEPAX                VD
+BALI 52 PEPAX                VD
+BALI 53 PEPAX                VD
+BALI 54 PEPAX                VD
+BALI 51 PEPON                VD
+BALI 52 PEPON                VD
+BALI 53 PEPON                VD
+BALI 4  PERON IMPTR LILE
+BALI 51 PERON                VD
+BALI 52 PERON                VD
+BALI 53 PERON          NP    VD
+BALI 51 PESAN                VD
+BALI 52 PESAN                VD
+BALI 53 PESAN                VD
+BALI 51 PETAN                VD
+BALI 52 PETAN                VD
+BALI 53 PETAN                VD
+BALI 51 PETAX          NP
+BALI 52 PETAX          NP
+BALI 51 PGNEH          NP    VD
+BALI 52 PGNEH          NP    VD                                             
+BALI 51 PGNER          NP    VD
+BALI 52 PGNER          NP    VD
+BALI 51 PGNR           NP    VD
+BALI 52 PGNR           NP    VD                                             
+BALI 51 PGNWH          NP    VD
+BALI 52 PGNWH          NP    VD                                             
+BALI 51 PGNWR          NP    VD
+BALI 52 PGNWR          NP    VD                                             
+BALI 4  PGS   IMPTR ORL
+BALI 51 PGS            NP    VD
+BALI 52 PGS            NP    VD
+BALI 51 PGSE           NP    VD
+BALI 52 PGSE           NP    VD                                             
+BALI 51 PGSW           NP    VD
+BALI 52 PGSW           NP    VD                            
+BALI 51 PG082          NP    VD
+BALI 51 PG088          NP    VD
+BALI 51 PG089          NP    VD
+BALI 51 PG092          NP    VD
+BALI 51 PG094          NP    VD
+BALI 50 PG101 NIMPT
+BALI 51 PG101          NP    VD
+BALI 51 PG102          NP    VD                              
+BALI 51 PG264          NP    VD                              
+BALI 51 PG265          NP    VD                              
+BALI 51 PG267          NP    VD                              
+BALI 51 PG274          NP    VD                              
+BALI 51 PG276          NP    VD                              
+BALI 50 PG278 NIMPT                                                         
+BALI 51 PG278          NP    VD
+BALI 52 PG278          NP    VD
+BALI 51 PG286          NP    VD
+BALI 51 PG288          NP    VD
+BALI 51 PG289          NP    VD
+BALI 51 PIGOP                VD                                             
+BALI 52 PIGOP                VD                                             
+BALI 53 PIGOP                VD                                             
+BALI 54 PIGOP                VD                                             
+BALI 55 PIGOP                VD                                             
+BALI 56 PIGOP                VD                                             
+BALI 4  PILUL IMPTR ORL                                                     
+BALI 4B PILUL IMPTR CDG                                                     
+BALI 51 PILUL                VD                                             
+BALI 52 PILUL                VD                                             
+BALI 53 PILUL    ST          VD                                             
+BALI 54 PILUL    ST          VD                                             
+BALI 55 PILUL                VD                                             
+BALI 56 PILUL                VD                                             
+BALI 51 PIMUP                VD                                             
+BALI 52 PIMUP                VD                                             
+BALI 53 PIMUP          NP    VD                                             
+BALI 54 PIMUP          NP    VD                                             
+BALI 55 PIMUP          NP    VD
+BALI 51 PIVER          NP    VD
+BALI 52 PIVER          NP    VD
+BALI 51 PIXIS                VD                                             
+BALI 52 PIXIS                VD                                             
+BALI 53 PIXIS                VD                                             
+BALI 54 PIXIS                VD                                             
+BALI 50 PN072 NIMPT
+BALI 51 PN072          NP    VD
+BALI 51 PO             NP    VD                                               
+BALI 52 PO             NP    VD                                               
+BALI 51 PODEM                VD                    
+BALI 52 PODEM                VD                       
+BALI 53 PODEM                VD                     
+BALI 54 PODEM                VD                                       
+BALI 51 PODEP          NP    VD                    
+BALI 52 PODEP          NP    VD                       
+BALI 53 PODEP          NP    VD
+BALI 54 PODEP          NP    VD
+BALI 51 PODUK                VD
+BALI 52 PODUK                VD
+BALI 53 PODUK                VD        
+BALI 54 PODUK                VD
+BALI 55 PODUK                VD 
+BALI 51 POI                  VD                                             
+BALI 52 POI                  VD                                             
+BALI 53 POI                  VD                                             
+BALI 54 POI                  VD                                             
+BALI 55 POI                  VD                                             
+BALI 56 POI                  VD                                             
+BALI 51 POLLY                VD                                             
+BALI 52 POLLY                VD                                             
+BALI 53 POLLY          NP    VD                                             
+BALI 55 POLLY          NP    VD
+BALI 56 POLLY          NP    VD
+BALI 4  PON   IMPTR CDG                                                     
+BALI 51 PON                  VD                                             
+BALI 52 PON                  VD                                             
+BALI 53 PON                  VD                                             
+BALI 54 PON                  VD
+BALI 4  PON1  IMPTR ORL                                                         
+BALI 51 PON1           NP    VD                                             
+BALI 52 PON1           NP    VD                                             
+BALI 51 POWX3          NP    VD                                               
+BALI 50 POXX3 NIMPT
+BALI 51 POXX3          NP    VD                                               
+BALI 52 POXX3          NP    VD                                               
+BALI 50 PO082 NIMPT
+BALI 51 PO082          NP
+BALI 50 PO083 NIMPT
+BALI 51 PO083          NP
+BALI 50 PO084 NIMPT
+BALI 51 PO084          NP
+BALI 51 PO085          NP    VD
+BALI 50 PO086 NIMPT
+BALI 51 PO086          NP
+BALI 50 PO088 NIMPT
+BALI 51 PO088          NP
+BALI 50 PO090 NIMPT
+BALI 51 PO090          NP    VD
+BALI 52 PO090          NP    VD
+BALI 50 PO092 NIMPT
+BALI 51 PO092          NP
+BALI 50 PO094 NIMPT
+BALI 51 PO094          NP    VD
+BALI 52 PO094          NP    VD
+BALI 51 PO244          NP    VD
+BALI 50 PO253 NIMPT
+BALI 51 PO253          NP    
+BALI 50 PO255 NIMPT
+BALI 51 PO255          NP    
+BALI 50 PO258 NIMPT
+BALI 51 PO258          NP    VD
+BALI 50 PO260 NIMPT
+BALI 51 PO260          NP    VD
+BALI 52 PO260          NP    VD
+BALI 50 PO262 NIMPT
+BALI 51 PO262          NP    VD
+BALI 50 PO290 NIMPT
+BALI 51 PO290          NP    
+BALI 50 PO300 NIMPT
+BALI 51 PO300          NP    
+BALI 50 PO302 NIMPT
+BALI 51 PO302          NP    
+BALI 50 PO304 NIMPT
+BALI 51 PO304          NP    
+BALI 50 PO306 NIMPT
+BALI 51 PO306          NP                                               
+BALI 51 PT                   VD                                             
+BALI 52 PT             NP    VD                                               
+BALI 51 PTNWH          NP    VD
+BALI 52 PTNWH          NP    VD
+BALI 51 PTNWR          NP    VD
+BALI 52 PTNWR          NP    VD
+BALI 50 PTRD  NIMPT
+BALI 51 PTRD           NP
+BALI 4  PTV   IMPTR ORL                                                     
+BALI 4B PTV   IMPTR CDG                                                     
+BALI 51 PTV                  VD                                             
+BALI 52 PTV                  VD                                             
+BALI 53 PTV                  VD                                             
+BALI 54 PTV                  VD                                             
+BALI 55 PTV                  VD                                             
+BALI 56 PTV                  VD                                             
+BALI 57 PTV                  VD 
+BALI 50 PTV1  NIMPT                                                    
+BALI 51 PTV1           NP    VD                                             
+BALI 52 PTV1           NP    VD                                             
+BALI 53 PTV1           NP    VD                                               
+BALI 51 PTV2           NP    VD                                       
+BALI 52 PTV2           NP    VD                                       
+BALI 53 PTV2           NP                           
+BALI 51 PV                   VD                                             
+BALI 52 PV             NP    VD                                               
+BALI 51 RALAM          NP    VD
+BALI 52 RALAM          NP    VD
+BALI 51 RANES          NP    VD                                             
+BALI 52 RANES          NP    VD
+BALI 4  RANN  IMPTR ORL                                                     
+BALI 4B RANN  IMPTR CDG
+BALI 51 RANN           NP    VD
+BALI 52 RANN           NP    VD
+BALI 53 RANN           NP    VD
+BALI 54 RANN           NP    VD
+BALI 55 RANN           NP    VD
+BALI 4  RANS  IMPTR ORL                                                     
+BALI 4B RANS  IMPTR CDG
+BALI 51 RANS           NP    VD
+BALI 52 RANS           NP    VD
+BALI 53 RANS           NP    VD
+BALI 54 RANS           NP    VD
+BALI 55 RANS           NP    VD
+BALI 4  RANUX IMPTR ORL
+BALI 4B RANUX IMPTR CDG
+BALI 51 RANUX                VD
+BALI 52 RANUX                VD
+BALI 53 RANUX                VD        
+BALI 54 RANUX                VD
+BALI 55 RANUX                VD
+BALI 51 RAN1           NP    VD
+BALI 52 RAN1           NP    VD
+BALI 53 RAN1                 VD 
+BALI 51 RAPOR                VD
+BALI 52 RAPOR                VD
+BALI 53 RAPOR                VD        
+BALI 54 RAPOR                VD
+BALI 55 RAPOR                VD 
+BALI 4  RATUK IMPTR LILE                
+BALI 51 RATUK                VD
+BALI 52 RATUK                VD
+BALI 53 RATUK                VD
+BALI 54 RATUK          NP    VD
+BALI 51 RBT2           NP                                            
+BALI 50 RD01H NIMPT
+BALI 51 RD01H          NP    VD                                             
+BALI 52 RD01H          NP    VD                                             
+BALI 50 RD01R NIMPT
+BALI 51 RD01R          NP    VD                                             
+BALI 52 RD01R          NP    VD
+BALI 4  REM   IMPTR ORL                                                     
+BALI 4B REM   IMPTR CDG
+BALI 4B REM   IMPTR LILE
+BALI 51 REM                  VD
+BALI 52 REM                  VD
+BALI 53 REM                  VD        
+BALI 54 REM                  VD
+BALI 55 REM                  VD
+BALI 51 REMGO                VD
+BALI 52 REMGO                VD
+BALI 53 REMGO                VD
+BALI 54 REMGO                VD
+BALI 55 REMGO                VD
+BALI 56 REMGO                VD
+BALI 51 RENSA                VD
+BALI 52 RENSA                VD
+BALI 53 RENSA                VD        
+BALI 54 RENSA                VD
+BALI 55 RENSA                VD 
+BALI 51 RESMI                VD
+BALI 52 RESMI                VD
+BALI 53 RESMI                VD
+BALI 54 RESMI                VD
+BALI 55 RESMI                VD
+BALI 56 RESMI                VD
+BALI 51 RESPO                VD
+BALI 52 RESPO                VD
+BALI 53 RESPO                VD
+BALI 51 RISUN                VD                                             
+BALI 52 RISUN                VD                                             
+BALI 53 RISUN                VD                                             
+BALI 54 RISUN                VD                                             
+BALI 55 RISUN                VD
+BALI 51 RIVEK                VD  
+BALI 52 RIVEK                VD 
+BALI 4  RLP   IMPTR CDG                                                     
+BALI 51 RLP                  VD                                             
+BALI 52 RLP                  VD                                             
+BALI 53 RLP                  VD
+BALI 51 RLP1           NP    VD
+BALI 52 RLP1           NP    VD                                             
+BALI 4  RODRI IMPTR ORL
+BALI 51 RODRI                VD
+BALI 51 ROKRO          NP    VD                                             
+BALI 52 ROKRO          NP    VD
+BALI 51 ROLEN                VD
+BALI 52 ROLEN                VD
+BALI 53 ROLEN                VD
+BALI 54 ROLEN                VD
+BALI 55 ROLEN                VD  
+BALI 51 ROMGI                VD
+BALI 52 ROMGI                VD
+BALI 51 ROMLO                VD
+BALI 52 ROMLO                VD
+BALI 51 ROMTA          NP    VD
+BALI 52 ROMTA                VD
+BALI 51 RONAX                VD
+BALI 52 RONAX                VD
+BALI 53 RONAX                VD
+BALI 54 RONAX                VD
+BALI 55 RONAX                VD
+BALI 51 ROTSI                VD
+BALI 52 ROTSI                VD
+BALI 53 ROTSI                VD
+BALI 50 ROU   NIMPT
+BALI 51 ROU                  VD
+BALI 52 ROU                  VD
+BALI 53 ROU            NP    VD
+BALI 54 ROU            NP    VD 
+BALI 51 ROU2           NP    VD
+BALI 50 RR10  NIMPT                                                         
+BALI 51 RR10           NP    VD                                             
+BALI 52 RR10           NP    VD                                             
+BALI 53 RR10           NP    VD
+BALI 50 RR7   NIMPT                                                         
+BALI 51 RR7            NP    VD                                             
+BALI 52 RR7            NP    VD                                             
+BALI 53 RR7            NP    VD
+BALI 51 RTN            NP    VD
+BALI 52 RTN            NP    VD
+BALI 51 RUBIX          NP    VD
+BALI 52 RUBIX          NP    VD
+BALI 53 RUBIX          NP    VD
+BALI 51 SABLE                VD                                             
+BALI 52 SABLE                VD                                             
+BALI 53 SABLE                VD                                             
+BALI 54 SABLE                VD
+BALI 55 SABLE                VD
+BALI 56 SABLE                VD
+BALI 51 SALEV          NP    VD
+BALI 52 SALEV          NP    VD                                               
+BALI 53 SALEV          NP    VD                                         
+BALI 51 SANCE                VD
+BALI 52 SANCE          NP    VD                                               
+BALI 53 SANCE          NP    VD                                               
+BALI 54 SANCE          NP    VD
+BALI 51 SAUNI          NP    VD
+BALI 52 SAUNI          NP    VD
+BALI 53 SAUNI          NP    VD
+BALI 54 SAUNI          NP    VD
+BALI 55 SAUNI          NP    VD
+BALI 51 SAURG          NP    VD
+BALI 52 SAURG          NP    VD                                               
+BALI 53 SAURG          NP    VD                                               
+BALI 54 SAURG          NP    VD                                               
+BALI 51 SDI                  VD                                             
+BALI 52 SDI                  VD                                             
+BALI 53 SDI                  VD 
+BALI 51 SIROD                VD                                             
+BALI 52 SIROD                VD                                             
+BALI 53 SIROD                VD                                             
+BALI 54 SIROD                VD   
+BALI 55 SIROD                VD                                            
+BALI 51 SITET          NP    VD                                               
+BALI 52 SITET          NP    VD                                             
+BALI 4  SOKMU IMPTR CDG                                                     
+BALI 51 SOKMU                VD 
+BALI 51 SOLBA    ST          VD 
+BALI 51 SOMDA                VD
+BALI 52 SOMDA                VD
+BALI 53 SOMDA                VD
+BALI 51 SOMED                VD
+BALI 52 SOMED                VD
+BALI 53 SOMED                VD
+BALI 54 SOMED                VD
+BALI 55 SOMED                VD
+BALI 51 SOMIL                VD                                             
+BALI 52 SOMIL                VD                                             
+BALI 53 SOMIL                VD                                             
+BALI 54 SOMIL          NP    VD
+BALI 51 SOMTU                VD                                             
+BALI 52 SOMTU                VD                                             
+BALI 51 SONOS                VD
+BALI 52 SONOS                VD
+BALI 53 SONOS                VD
+BALI 54 SONOS          NP    VD
+BALI 51 SONUR                VD                                             
+BALI 52 SONUR                VD 
+BALI 51 SOPIL                VD
+BALI 52 SOPIL          NP    VD
+BALI 53 SOPIL          NP    VD
+BALI 54 SOPIL          NP    VD
+BALI 55 SOPIL          NP    VD
+BALI 56 SOPIL          NP    VD
+BALI 51 SORAP                VD
+BALI 52 SORAP                VD
+BALI 53 SORAP                VD
+BALI 54 SORAP                VD
+BALI 51 SOTUS                VD
+BALI 52 SOTUS                VD
+BALI 53 SOTUS                VD        
+BALI 54 SOTUS                VD
+BALI 55 SOTUS                VD 
+BALI 51 SOVAT          NP    VD
+BALI 51 SR                   VD
+BALI 52 SR                   VD
+BALI 53 SR                   VD
+BALI 51 SRN            NP
+BALI 51 SUDAS          NP    VD
+BALI 52 SUDAS          NP    VD
+BALI 53 SUDAS          NP    VD
+BALI 54 SUDAS          NP    VD
+BALI 4  SUIPE IMPTR ORL 
+BALI 4B SUIPE IMPTR CDG
+BALI 51 SUIPE                VD 
+BALI 52 SUIPE                VD
+BALI 53 SUIPE                VD        
+BALI 54 SUIPE                VD
+BALI 55 SUIPE                VD 
+BALI 4  SULEX IMPTR LILE
+BALI 51 SULEX                VD 
+BALI 52 SULEX                VD
+BALI 53 SULEX                VD        
+BALI 54 SULEX          NP    VD
+BALI 51 TABOV                VD
+BALI 52 TABOV                VD
+BALI 53 TABOV                VD
+BALI 54 TABOV                VD
+BALI 55 TABOV                VD
+BALI 51 TALUD          NP    VD 
+BALI 52 TALUD          NP    VD 
+BALI 53 TALUD          NP    VD 
+BALI 54 TALUD          NP    VD
+BALI 55 TALUD                VD  
+BALI 51 TANCA                VD                                             
+BALI 52 TANCA          NP    VD                                               
+BALI 53 TANCA          NP    VD
+BALI 51 TD06R          NP    VD 
+BALI 52 TD06R          NP    VD 
+BALI 53 TD06R          NP    VD 
+BALI 54 TD06R          NP    VD 
+BALI 51 TD07R          NP    VD 
+BALI 52 TD07R          NP    VD 
+BALI 53 TD07R          NP    VD 
+BALI 54 TD07R          NP    VD 
+BALI 51 TD11X          NP    VD 
+BALI 52 TD11X          NP    VD 
+BALI 53 TD11X          NP    VD 
+BALI 54 TD11X          NP    VD 
+BALI 55 TD11X          NP    VD 
+BALI 51 TD12X          NP  
+BALI 52 TD12X          NP 
+BALI 53 TD12X          NP
+BALI 54 TD12X          NP 
+BALI 55 TD12X          NP 
+BALI 51 TEPRI                VD
+BALI 52 TEPRI                VD
+BALI 53 TEPRI                VD
+BALI 54 TEPRI                VD
+BALI 55 TEPRI                VD
+BALI 56 TEPRI                VD
+BALI 51 TILVI                VD
+BALI 52 TILVI                VD
+BALI 53 TILVI                VD
+BALI 51 TIMBA          NP    VD
+BALI 51 TIS                                                             
+BALI 52 TIS                                                                  
+BALI 53 TIS                                                                   
+BALI 51 TITOX                VD
+BALI 52 TITOX                VD
+BALI 51 TL1            NP    VD                                             
+BALI 52 TL1            NP    VD                                             
+BALI 53 TL1            NP    VD                                             
+BALI 54 TL1            NP    VD
+BALI 55 TL1            NP    VD   
+BALI 51 TL2            NP    VD                                             
+BALI 52 TL2            NP    VD                                             
+BALI 53 TL2            NP    VD                                             
+BALI 54 TL2            NP    VD
+BALI 55 TL2            NP    VD   
+BALI 51 TM1            NP    VD                                             
+BALI 52 TM1            NP    VD                                             
+BALI 53 TM1            NP    VD                                             
+BALI 54 TM1            NP    VD
+BALI 55 TM1            NP    VD   
+BALI 51 TN1            NP    VD                                             
+BALI 52 TN1            NP    VD                                             
+BALI 53 TN1            NP    VD                                             
+BALI 54 TN1            NP    VD
+BALI 55 TN1            NP    VD
+BALI 51 TOLVU          NP    VD                                             
+BALI 52 TOLVU          NP    VD                                             
+BALI 53 TOLVU          NP    VD                                             
+BALI 54 TOLVU          NP    VD                                             
+BALI 55 TOLVU          NP    VD
+BALI 51 TOP            NP    VD                                             
+BALI 52 TOP            NP    VD
+BALI 51 TORTU          NP    VD                                             
+BALI 52 TORTU          NP    VD                                             
+BALI 53 TORTU          NP    VD                                             
+BALI 54 TORTU          NP    VD                                     
+BALI 4  TRACA IMPTR LILE                                                    
+BALI 51 TRACA                VD                                             
+BALI 52 TRACA          NP    VD                                             
+BALI 53 TRACA          NP    VD
+BALI 54 TRACA          NP    VD
+BALI 4  TRO   IMPTR CDG
+BALI 51 TRO                  VD
+BALI 52 TRO                  VD
+BALI 51 TRO1           NP    VD                                             
+BALI 52 TRO1           NP    VD                                            
+BALI 50 TSU   NIMPT                                                         
+BALI 51 TSU                  VD                                             
+BALI 52 TSU                  VD                                             
+BALI 53 TSU                  VD                                             
+BALI 54 TSU                  VD
+BALI 55 TSU                  VD                                             
+BALI 51 TULNI                VD                                             
+BALI 52 TULNI                VD                                             
+BALI 53 TULNI                VD
+BALI 51 TUNAX                VD
+BALI 52 TUNAX                VD
+BALI 51 TUNOR                VD
+BALI 52 TUNOR                VD
+BALI 53 TUNOR                VD
+BALI 51 TUR                  VD                                             
+BALI 52 TUR                  VD                                             
+BALI 51 TUROM          NP    VD
+BALI 52 TUROM          NP    VD
+BALI 53 TUROM          NP    VD
+BALI 54 TUROM          NP    VD
+BALI 55 TUROM          NP    VD
+BALI 51 TUSU           NP    VD 
+BALI 52 TUSU           NP    VD
+BALI 53 TUSU           NP    VD
+BALI 54 TUSU           NP    VD
+BALI 51 TUTAX                VD
+BALI 52 TUTAX                VD
+BALI 50 UFKF1 NIMPT
+BALI 51 UFKF1          NP
+BALI 52 UFKF1          NP
+BALI 53 UFKF1          NP
+BALI 51 UKTH           NP    VD
+BALI 52 UKTH           NP    VD
+BALI 53 UKTH           NP    VD
+BALI 51 UNITA          NP    VD
+BALI 52 UNITA          NP    VD
+BALI 51 UNTB1          NP    VD
+BALI 52 UNTB1          NP    VD
+BALI 53 UNTB1          NP    VD
+BALI 54 UNTB1          NP    VD
+BALI 51 UNUB1          NP
+BALI 52 UNUB1          NP
+BALI 53 UNUB1          NP
+BALI 54 UNUB1          NP
+BALI 52 UTELA          NP    VD
+BALI 53 UTELA                VD
+BALI 54 UTELA                VD
+BALI 55 UTELA                VD   
+BALI 51 VADOM                VD
+BALI 52 VADOM    ST          VD
+BALI 53 VADOM                VD
+BALI 54 VADOM                VD
+BALI 51 VAKER                VD
+BALI 52 VAKER                VD
+BALI 51 VALEK                VD
+BALI 52 VALEK                VD
+BALI 53 VALEK                VD
+BALI 54 VALEK                VD
+BALI 51 VALKU          NP
+BALI 52 VALKU          NP
+BALI 53 VALKU                VD                                             
+BALI 54 VALKU                VD                                             
+BALI 55 VALKU                VD                                             
+BALI 51 VALNU                VD                                             
+BALI 52 VALNU                VD                                             
+BALI 53 VALNU                VD 
+BALI 51 VANAD                VD
+BALI 52 VANAD                VD
+BALI 53 VANAD                VD
+BALI 54 VANAD                VD
+BALI 51 VANAS          NP    VD
+BALI 52 VANAS          NP    VD
+BALI 53 VANAS          NP    VD
+BALI 54 VANAS          NP    VD
+BALI 55 VANAS          NP    VD
+BALI 56 VANAS          NP    VD
+BALI 51 VAORL          NP    VD
+BALI 52 VAORL          NP    VD
+BALI 53 VAORL          NP    VD
+BALI 54 VAORL          NP    VD
+BALI 55 VAORL          NP    VD
+BALI 4  VATRI IMPTR ORL
+BALI 4B VATRI IMPTR CDG
+BALI 51 VATRI                VD                                             
+BALI 52 VATRI                VD                                             
+BALI 53 VATRI                VD
+BALI 51 VEDUS                VD                                             
+BALI 52 VEDUS                VD                                             
+BALI 53 VEDUS                VD
+BALI 54 VEDUS                VD
+BALI 55 VEDUS                VD                                                
+BALI 51 VEKIN                VD                                             
+BALI 52 VEKIN                VD                                             
+BALI 53 VEKIN                VD                                             
+BALI 54 VEKIN          NP    VD
+BALI 4  VELER IMPTR CDG                                                     
+BALI 4B VELER IMPTR ORL                                                     
+BALI 51 VELER                VD                                             
+BALI 51 VELIN          NP    VD                                               
+BALI 52 VELIN          NP    VD                                               
+BALI 53 VELIN          NP    VD                                               
+BALI 54 VELIN          NP    VD
+BALI 4  VENOR IMPTR LILE
+BALI 51 VENOR                VD                                               
+BALI 52 VENOR                VD                                               
+BALI 53 VENOR                VD                                               
+BALI 54 VENOR          NP    VD
+BALI 4  VERMA IMPTR LILE
+BALI 50 VERMA NIMPT
+BALI 51 VERMA                VD                                             
+BALI 52 VERMA                VD 
+BALI 53 VERMA          NP    VD                                              
+BALI 51 VEROS                VD                                             
+BALI 52 VEROS          NP    VD                                               
+BALI 53 VEROS          NP    VD
+BALI 54 VEROS          NP    VD
+BALI 55 VEROS          NP    VD
+BALI 4  VESAN IMPTR LILE
+BALI 53 VESAN                VD
+BALI 54 VESAN          NP    VD
+BALI 51 VEULE                VD                                             
+BALI 52 VEULE                VD                                             
+BALI 53 VEULE                VD                                             
+BALI 54 VEULE                VD
+BALI 51 VIRIE          NP    VD                                             
+BALI 52 VIRIE          NP    VD                                               
+BALI 53 VIRIE          NP    VD
+BALI 54 VIRIE          NP    VD
+BALI 55 VIRIE          NP    VD
+BALI 56 VIRIE          NP    VD 
+BALI 50 VPAW  NIMPT
+BALI 51 VPAW           NP    VD
+BALI 50 WDG   NIMPT
+BALI 51 WIL            NP    VD
+BALI 51 WPB            NP    VD
+BALI 50 WPO   NIMPT
+BALI 51 XAMAB          NP    VD
+BALI 52 XAMAB          NP    VD
+BALI 51 XAMO           NP
+BALI 52 XAMO           NP
+BALI 53 XAMO           NP
+BALI 51 XAPEL                VD                                             
+BALI 52 XAPEL          NP    VD                                             
+BALI 53 XAPEL          NP    VD
+BALI 51 XCTX           NP    VD
+BALI 52 XCTX           NP    VD
+BALI 53 XCTX           NP    VD
+BALI 54 XCTX           NP    VD
+BALI 55 XCTX           NP    VD
+BALI 51 XERAM                VD
+BALI 52 XERAM                VD
+BALI 53 XERAM                VD
+BALI 54 XERAM                VD
+BALI 55 XERAM                VD                                                
+BALI 51 XIDIL          NP    VD
+BALI 51 XMU            NP    VD
+BALI 50 XNE   NIMPT
+BALI 51 XNE            NP    VD 
+BALI 4  XORBI IMPTR LILE                                   
+BALI 51 XORBI                VD
+BALI 52 XORBI                VD
+BALI 53 XORBI                VD
+BALI 54 XORBI          NP    VD
+BALI 4  ZOA   IMPTR CDG                                                     
+BALI 51 ZOA            NP    VD                                               
+BALI 52 ZOA            NP    VD                                               
+BALI 51 ZOA2           NP    VD                                               
+BALI 52 ZOA2           NP    VD                                               
+BALI 4  ZOD   IMPTR ORL                                                     
+BALI 4B ZOD   IMPTR CDG                                                     
+BALI 51 ZOD            NP    VD                                               
+BALI 52 ZOD            NP    VD                                               
+BALI 50 ZOL   NIMPT                                                         
+BALI 51 ZOL            NP    VD                                         
+BALI 52 ZOL            NP    VD                                        
+BALI 4  ZRA   IMPTR CDG        
+BALI 51 ZRA            NP    VD                                      
+BALI 52 ZRA            NP    VD
+BALI 4  ZRC   IMPTR CDG                                                     
+BALI 50 ZRC   NIMPT
+BALI 51 ZRC            NP    VD                                               
+BALI 52 ZRC            NP    VD
+BALI 4  ZRD   IMPTR CDG                                                     
+BALI 50 ZRD   NIMPT
+BALI 51 ZRD            NP    VD                                               
+BALI 52 ZRD            NP    VD                                               
+BALI 50 ZR2   NIMPT                                                         
+BALI 51 ZR2            NP    VD                                               
+BALI 52 ZR2            NP    VD                                 
+BALI 50 Z19   NIMPT                                                         
+BALI 51 Z19            NP    VD                                              
+BALI 52 Z19            NP    VD                                               
+BALI 50 Z2    NIMPT                                                         
+BALI 51 Z2             NP    VD
+BALI 51 Z20            NP    VD                                              
+BALI 50 Z21   NIMPT                                                         
+BALI 51 Z21            NP    VD                                             
+BALI 50 Z22   NIMPT                                                         
+BALI 51 Z22            NP    VD                                       
+BALI 50 Z26   NIMPT                                                         
+BALI 51 Z26            NP    VD                                             
+BALI 50 Z27   NIMPT                                                         
+BALI 51 Z27            NP    VD
+BALI 51 4G             NP    VD         
+BALI 52 4G             NP    VD

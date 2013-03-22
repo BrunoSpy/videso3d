@@ -1,0 +1,581 @@
+      **************** Grilles de Niveaux ****************
+
+GRIL 10 CDG   APP   DTP                  40                                 
+GRIL 11               80        140                                         
+GRIL 12             70       130     190                                    
+GRIL 13           60      120     180                                       
+GRIL 14         50     110      170                                                  
+GRIL 15     4000    100      160                                            
+GRIL 16 3000      90      150                                               
+                                                                            
+GRIL 10 CDG   APP   DTP                  50                                 
+GRIL 11               80        140                                         
+GRIL 12             70       130     190                                    
+GRIL 13           60      120     180                                       
+GRIL 14                110      170                                                  
+GRIL 15     4000    100      160                                            
+GRIL 16 3000      90      150                                               
+                                                                            
+GRIL 10 CDG   APP   DTP                  60                                 
+GRIL 11               80        140                                         
+GRIL 12             70       130     190                                    
+GRIL 13                   120     180                                       
+GRIL 14                110      170                                                  
+GRIL 15     4000    100      160                                            
+GRIL 16 3000      90      150                                               
+  
+
+GRIL 10 CDG   APP   TRANS                                                   
+GRIL 11               80        140                                         
+GRIL 12             70       130     190                                    
+GRIL 13                   120     180                                       
+GRIL 14                110      170                                                  
+GRIL 15     4000    100      160                                            
+GRIL 16 3000      90      150                                               
+  
+
+GRIL 10 CDG   APP   DTS                                                     
+GRIL 11                                                                     
+GRIL 12                                                
+GRIL 13                                                                     
+GRIL 14                                                                     
+GRIL 15     4000                                                            
+GRIL 16 3000    
+                                                                            
+GRIL 10 CDG   APP   ATP                  40                                 
+GRIL 11                 150 160 170 180                                     
+GRIL 12 110 120 130 140                                                     
+GRIL 13                                                                     
+GRIL 14 100                                                                 
+GRIL 15    90 80 70 60 50                                                   
+GRIL 16                  4000 3000 2000                                     
+                                                                            
+GRIL 10 CDG   APP   ATP                  50                                 
+GRIL 11                 150 160 170 180                                     
+GRIL 12 110 120 130 140                                                     
+GRIL 13                                                                     
+GRIL 14 100                                                                 
+GRIL 15    90 80 70 60                                                      
+GRIL 16                  4000 3000 2000                                     
+                                                                            
+GRIL 10 CDG   APP   ATP                  60                                 
+GRIL 11                 150 160 170 180                                     
+GRIL 12 110 120 130 140                                                     
+GRIL 13                                                                     
+GRIL 14 100                                                                 
+GRIL 15    90 80 70                                                         
+GRIL 16                  4000 3000 2000                                     
+ 
+GRIL 10 CDG   APP   ATS                                                     
+GRIL 11                 150 160 170 180                                     
+GRIL 12 110 120 130 140                                                     
+GRIL 13                                                                     
+GRIL 14 100                                                                 
+GRIL 15    90 80 70                                                         
+GRIL 16                  4000 3000 2000                                     
+
+                                                                            
+GRIL 10 ORL   APP   DTP                  40                                 
+GRIL 11             80      130  190                                        
+GRIL 12           70     120                                                
+GRIL 13         60    110                                                   
+GRIL 14       50   100      150                                             
+GRIL 15   4000    90     140                                                
+GRIL 16   3000            BRET/SEUIL                                        
+                                                                            
+GRIL 10 ORL   APP   DTP                  50                                 
+GRIL 11             90      140  190                                        
+GRIL 12           80     130                                                
+GRIL 13         70    120                                                   
+GRIL 14       60   110      160                                             
+GRIL 15   4000   100     150                                                
+GRIL 16   3000            BRET/SEUIL                                        
+                                                                            
+GRIL 10 ORL   APP   DTP                  60                                 
+GRIL 11            100      150  190                                        
+GRIL 12           90     140                                                
+GRIL 13         80    130                                                   
+GRIL 14       70   120      170                                             
+GRIL 15   4000   110     160                                                
+GRIL 16   3000            BRET/SEUIL                                        
+ 
+GRIL 10 ORL   APP   DTS                                                     
+GRIL 11             80      130  190                                        
+GRIL 12           70     120                                                
+GRIL 13         60    110                                                   
+GRIL 14            100      150                                             
+GRIL 15   4000    90     140                                                
+GRIL 16   3000                                                              
+ 
+
+GRIL 10 ORL   APP   TRANS                                                   
+GRIL 11             80      130  190                                        
+GRIL 12           70     120                                                
+GRIL 13         60    110                                                   
+GRIL 14            100      150                                             
+GRIL 15   4000    90     140                                                
+GRIL 16   3000                                                              
+                                                                            
+GRIL 10 ORL   APP   ATP                  40                                 
+GRIL 11             120 130 140                                             
+GRIL 12     100 110                                                         
+GRIL 13   90                                                                
+GRIL 14      80 70                                                          
+GRIL 15            60 50 4000 3000                                          
+GRIL 16                        2000                                         
+                                                                            
+GRIL 10 ORL   APP   ATP                  50                                 
+GRIL 11             130 140 150                                             
+GRIL 12     110 120                                                         
+GRIL 13  100                                                                
+GRIL 14      90 80                                                          
+GRIL 15            70 60 4000 3000                                          
+GRIL 16                        2000                                         
+                                                                            
+GRIL 10 ORL   APP   ATP                  60                                 
+GRIL 11             140 150 160                                             
+GRIL 12     120 130                                                         
+GRIL 13  110                                                                
+GRIL 14     100 90                                                          
+GRIL 15            80 70 4000 3000                                          
+GRIL 16                        2000                                         
+   
+
+GRIL 10 ORL   APP   ATS                                                     
+GRIL 11             130 140 150                                             
+GRIL 12     110 120                                                         
+GRIL 13  100                                                                
+GRIL 14      90 80                                                          
+GRIL 15            70 60      4000 3000                                     
+GRIL 16                             2000                                    
+ 
+                                                                            
+GRIL 10 ORL   A+V   DP+AP                45    55                           
+GRIL 11                                                                     
+GRIL 12                                                                     
+GRIL 13                                                                     
+GRIL 14                                                                     
+GRIL 15                                                                     
+GRIL 16                                                                     
+ 
+ 
+GRIL 10 ORL   VDE   TRANS                                                   
+GRIL 11             80      130  190                                        
+GRIL 12           70     120                                                
+GRIL 13         60    110                                                   
+GRIL 14            100      150                                             
+GRIL 15   4000    90     140                                                
+GRIL 16   3000                                                              
+ 
+ 
+GRIL 10 ORL   VDE   ATS                                                     
+GRIL 11             130 140 150                                             
+GRIL 12     110 120                                                         
+GRIL 13  100                                                                
+GRIL 14      90 80                                                          
+GRIL 15            70 60      4000 3000                                     
+GRIL 16                             2000                                    
+ 
+ 
+GRIL 10 ORL   VDE   DTS                                                     
+GRIL 11             80      130  190                                        
+GRIL 12           70     120                                                
+GRIL 13         60    110                                                   
+GRIL 14            100      150                                             
+GRIL 15   4000    90     140                                                
+GRIL 16   3000                                                              
+ 
+GRIL 10 ORL   VAR   TRANS                                                   
+GRIL 11             80      130  190                                        
+GRIL 12           70     120                                                
+GRIL 13         60    110                                                   
+GRIL 14            100      150                                             
+GRIL 15   4000    90     140                                                
+GRIL 16   3000                                                              
+ 
+ 
+GRIL 10 ORL   VAR   ATS                                                     
+GRIL 11             130 140 150                                             
+GRIL 12     110 120                                                         
+GRIL 13  100                                                                
+GRIL 14      90 80                                                          
+GRIL 15            70 60      4000 3000                                     
+GRIL 16                             2000                                    
+ 
+ 
+GRIL 10 ORL   VAR   DTS                                                     
+GRIL 11             80      130  190                                        
+GRIL 12           70     120                                                
+GRIL 13         60    110                                                   
+GRIL 14            100      150                                             
+GRIL 15   4000    90     140                                                
+GRIL 16   3000                                                              
+                                                                            
+GRIL 10 ORL   VDE   DTP                  40    50    60                     
+GRIL 11                                                                     
+GRIL 12                                                                     
+GRIL 13                                                                     
+GRIL 14                                                                     
+GRIL 15                                                                     
+GRIL 16                   BRET/SEUIL                                        
+ 
+GRIL 10 ORL   VAR   DP+AP                40    50    60                     
+GRIL 11                                                                     
+GRIL 12                                                                     
+GRIL 13                                                                     
+GRIL 14                                                                     
+GRIL 15                                                                     
+GRIL 16                                                                     
+                                                                            
+GRIL 10 ORL   VDE   ATP                  40    50    60                     
+GRIL 11                                                                     
+GRIL 12                                                                     
+GRIL 13                                                                     
+GRIL 14                                                                     
+GRIL 15                                                                     
+GRIL 16                                                                     
+                                                                            
+GRIL 10 CDG   APP   DP+AP                45                                 
+GRIL 11                                                                     
+GRIL 12                                                                     
+GRIL 13                                                                     
+GRIL 14                                                                     
+GRIL 15                                                                     
+GRIL 16                                                                     
+ 
+                                                                            
+GRIL 10 CDG   APP   DP+AP                55                                 
+GRIL 11                                                                     
+GRIL 12                                                                     
+GRIL 13                                                                     
+GRIL 14                                                                     
+GRIL 15                                                                     
+GRIL 16                                                                     
+ 
+ 
+ 
+ 
+GRIL 10 LILE  A+V   ATP                  30    35    45    55    60
+GRIL 11                     
+GRIL 12               
+GRIL 13          
+GRIL 14     
+GRIL 15          
+GRIL 16                     
+ 
+GRIL 10 LILE  A+V   ATP                  50                                 
+GRIL 11                 70    110  120 
+GRIL 12            60      100
+GRIL 13       50        90
+GRIL 14 4000         80
+GRIL 15       3000
+GRIL 16             2000    
+ 
+ 
+GRIL 10 LILE  A+V   ATP                  40                                 
+GRIL 11                 70    110  120
+GRIL 12            60      100
+GRIL 13       50        90 
+GRIL 14 40           80  
+GRIL 15           3000
+GRIL 16                 2000
+
+  
+GRIL 10 LILE  A+V   ATS                                                     
+GRIL 11                    120
+GRIL 12               
+GRIL 13           
+GRIL 14          
+GRIL 15           3000
+GRIL 16                 2000
+ 
+GRIL 10 LILE  A+V   DTP                  30    40    50                     
+GRIL 11                                                                     
+GRIL 12
+GRIL 13         70   80   90   100   110                                                                              
+GRIL 14  30   40   50   60
+GRIL 15                                                                     
+GRIL 16                                                                     
+ 
+GRIL 10 LILE  A+V   DTP                  35    45    55                     
+GRIL 11                                                                     
+GRIL 12
+GRIL 13                                                                     
+GRIL 14                     
+GRIL 15                                                                     
+GRIL 16                                                                     
+  
+GRIL 10 LILE  A+V   DTP                  60                                 
+GRIL 11                                                                     
+GRIL 12
+GRIL 13         70   80   90   100   110                                                                     
+GRIL 14  3000  40   50   60
+GRIL 15                                                                     
+GRIL 16                                                                     
+ 
+GRIL 10 LILE  A+V   DTS                                                     
+GRIL 11                                                                     
+GRIL 12
+GRIL 13         70   80   90   100   110                                                                     
+GRIL 14  3000  40   50   60                 
+GRIL 15                                                                     
+GRIL 16                                                                     
+ 
+GRIL 10 LILE  A+V   TRANS                                                   
+GRIL 11                                                                     
+GRIL 12
+GRIL 13                                                                     
+GRIL 14 
+GRIL 15                                                                     
+GRIL 16                                                                     
+
+GRIL 10 CDG   VAR   ATP   LFPG           40    45    50    55    60  
+GRIL 11                                                         
+GRIL 12 S9 S7 S6 **        ** S3 S2 S1               
+GRIL 13               AA                  
+GRIL 14              AAAA 
+GRIL 15             AAAAAA                       
+GRIL 16            AA    AA
+ 
+GRIL 10 CDG   VAR   ATP   LFPB           40    45    50    55    60         
+GRIL 11        AA                                                           
+GRIL 12       AAAA
+GRIL 13      AA  AA                                                         
+GRIL 14     AAAAAAAA
+GRIL 15    AA      AA                                                       
+GRIL 16   AA        AA                                                      
+ 
+GRIL 10 CDG   VAR   DTP                  40    45    50    55    60         
+GRIL 11                                                                     
+GRIL 12
+GRIL 13                                                                     
+GRIL 14
+GRIL 15                                                                     
+GRIL 16                                                                     
+ 
+GRIL 10 CDG   VAR   DTS                                                     
+GRIL 11                                                                     
+GRIL 12
+GRIL 13                                                                     
+GRIL 14
+GRIL 15                                                                     
+GRIL 16   
+ 
+GRIL 10 CDG   VAR   ATS                                                     
+GRIL 11                                                                     
+GRIL 12
+GRIL 13                                                                     
+GRIL 14
+GRIL 15                                                                     
+GRIL 16   
+ 
+GRIL 10 CDG   VAR   TRANS                                                   
+GRIL 11                                                                     
+GRIL 12
+GRIL 13                                                                     
+GRIL 14
+GRIL 15                                                                     
+GRIL 16   
+
+ 
+GRIL 10 CDG   VDE   DTP   LFPG           40    45    50    55    60         
+GRIL 11                                   
+GRIL 12 Y3  K1 K2 K3        K6  K7  Y11 
+GRIL 13                                    
+GRIL 14           
+GRIL 15 W10  W9  S6         S3  S2  S1
+GRIL 16
+
+GRIL 10 CDG   VDE   DTP   LFPB           40    45    50    55    60         
+GRIL 11                                                                     
+GRIL 12
+GRIL 13                                                                     
+GRIL 14
+GRIL 15                                                                     
+GRIL 16   
+ 
+GRIL 10 CDG   VDE   DTS                                                     
+GRIL 11                                                                     
+GRIL 12
+GRIL 13                                                                     
+GRIL 14
+GRIL 15                                                                     
+GRIL 16                                                                     
+ 
+GRIL 10 CDG   VDE   ATS                                                     
+GRIL 11                                                                     
+GRIL 12
+GRIL 13                                                                     
+GRIL 14
+GRIL 15                                                                     
+GRIL 16   
+
+GRIL 10 CDG   VDE   ATP   LFPG           40    45    50    55    60         
+GRIL 11                                                                     
+GRIL 12
+GRIL 13                                                                     
+GRIL 14
+GRIL 15                                                                     
+GRIL 16   
+
+GRIL 10 CDG   VDE   ATP   LFPB           40    45    50    55    60         
+GRIL 11                                                                     
+GRIL 12
+GRIL 13                                                                     
+GRIL 14
+GRIL 15                                                                     
+GRIL 16   
+ 
+GRIL 10 CDG   VDE   TRANS                                                   
+GRIL 11                                                                     
+GRIL 12
+GRIL 13                                                                     
+GRIL 14
+GRIL 15                                                                     
+GRIL 16   
+
+      **************** Grilles de Voies d'acces ****************
+
+GRIL 20 LFPG  DEPART
+GRIL 21
+GRIL 22  QFU DEC NON CONNU
+GRIL 23
+GRIL 24  VOIE A PRECISER
+GRIL 25
+GRIL 26
+
+GRIL 20 LFPG  DEPART 27L
+GRIL 21
+GRIL 22
+GRIL 23        K7    Y11    Y12
+GRIL 24
+GRIL 25  K6                        Y13
+GRIL 26
+
+GRIL 20 LFPG  DEPART 09L
+GRIL 21
+GRIL 22
+GRIL 23      Z1        Z2
+GRIL 24
+GRIL 25                          Z3
+GRIL 26
+
+GRIL 20 LFPG  DEPART 27R
+GRIL 21
+GRIL 22                Z7        Z8
+GRIL 23
+GRIL 24
+GRIL 25      Z6
+GRIL 26
+
+GRIL 20 LFPG  DEPART 09R
+GRIL 21
+GRIL 22
+GRIL 23              Y3   K1
+GRIL 24
+GRIL 25    Y1   Y2             K2   K3
+GRIL 26
+
+GRIL 20 LFPG  DEPART 26R
+GRIL 21
+GRIL 22
+GRIL 23        W11    W10    W9
+GRIL 24
+GRIL 25    W12                     S6
+GRIL 26
+
+GRIL 20 LFPG  DEPART 26L
+GRIL 21
+GRIL 22
+GRIL 23       V9        V7
+GRIL 24
+GRIL 25                           V6
+GRIL 26
+
+GRIL 20 LFPG  DEPART 08L
+GRIL 21
+GRIL 22
+GRIL 23          S2    S1
+GRIL 24
+GRIL 25    S3                WB    WA
+GRIL 26
+
+GRIL 20 LFPG  DEPART 08R
+GRIL 21
+GRIL 22
+GRIL 23                V2        V1
+GRIL 24
+GRIL 25      V3
+GRIL 26
+
+GRIL 20 LFPG  ARRIVE
+GRIL 21
+GRIL 22     AA    QFU ATT NON CONNU
+GRIL 23    A  A
+GRIL 24   AAAAAA  VOIE A PRECISER
+GRIL 25  AA    AA
+GRIL 26
+
+GRIL 20 LFPG  ARRIVE 27L
+GRIL 21
+GRIL 22     AA
+GRIL 23    A  A
+GRIL 24   AAAAAA   I N T E R I E U R E
+GRIL 25  AA    AA
+GRIL 26
+
+GRIL 20 LFPG  ARRIVE 09L
+GRIL 21
+GRIL 22     AA
+GRIL 23    A  A
+GRIL 24   AAAAAA    **   K6   K7   K8
+GRIL 25  AA    AA
+GRIL 26
+
+GRIL 20 LFPG  ARRIVE 27R
+GRIL 21
+GRIL 22     AA
+GRIL 23    A  A                     
+GRIL 24   AAAAAA    K1   K2   K3
+GRIL 25  AA    AA                   
+GRIL 26
+
+GRIL 20 LFPG  ARRIVE 09R
+GRIL 21
+GRIL 22     AA
+GRIL 23    A  A
+GRIL 24   AAAAAA   I N T E R I E U R E
+GRIL 25  AA    AA
+GRIL 26
+
+GRIL 20 LFPG  ARRIVE 26R
+GRIL 21
+GRIL 22     AA
+GRIL 23    A  A
+GRIL 24   AAAAAA   I N T E R I E U R E
+GRIL 25  AA    AA
+GRIL 26
+
+GRIL 20 LFPG  ARRIVE 26L
+GRIL 21
+GRIL 22     AA
+GRIL 23    A  A
+GRIL 24   AAAAAA    **   S3   S2   S1
+GRIL 25  AA    AA
+GRIL 26
+
+GRIL 20 LFPG  ARRIVE 08L
+GRIL 21
+GRIL 22     AA
+GRIL 23    A  A
+GRIL 24   AAAAAA   I N T E R I E U R E
+GRIL 25  AA    AA
+GRIL 26
+
+GRIL 20 LFPG  ARRIVE 08R
+GRIL 21
+GRIL 22     AA
+GRIL 23    A  A
+GRIL 24   AAAAAA    S9   S7   S6   **
+GRIL 25  AA    AA
+GRIL 26
