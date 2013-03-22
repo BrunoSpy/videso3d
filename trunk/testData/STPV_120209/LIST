@@ -1,0 +1,137 @@
+LIST 10 EVCCR COMPA 01/04 EVECR                                             
+                                                                            
+LIST 10 EVACT COMPA 01/04 EVACT                                             
+                                                                            
+LIST 10 VPSCR COMPA       VPCCR                                             
+LIST 11 VPSCR                         MAS   MPSA                            
+LIST 12 VPSCR                                                               
+                                                                            
+LIST 10 VCECR COMPA       VPCCR                                             
+LIST 11 VCECR             MAE   MPS                                         
+LIST 12 VCECR                                                               
+                                                                            
+LIST 10 VCDTP COMPA       VCDTP                                             
+LIST 11 VCDTP             MAE         MAS                                   
+LIST 12 VCDTP                                                               
+
+LIST 10 VCDPL COMPA       VCDPL
+LIST 11 VCDPL             MAE         MAS
+LIST 12 VCDPL
+
+LIST 10 VCDC1 COMPA       VCDTR                                             
+LIST 11 VCDC1             MAE                                               
+LIST 12 VCDC1                                                               
+                                                                            
+LIST 10 VCDC2 COMPA       VCDTR                                             
+LIST 11 VCDC2                   MPS   MAS   MPSA                            
+LIST 12 VCDC2                                                               
+                                                                            
+LIST 10 EVDTP COMPA       EVDTP                                             
+
+LIST 10 EVLCT COMPA       EVLCT
+LIST 10 VCCTL COMPA       VCDTR
+LIST 11 VCCTL             MAE   MPS   MAS   MPSA
+LIST 12 VCCTL
+                                                                            
+LIST 10 ATT   COMPA       ATT                                               
+                                                                            
+
+LIST 10 EVDPL COMPA       EVDPL
+
+LIST 21 EVE   EVCCR 01/04                                           DIGIT   
+LIST 21 VCO   VCECR 01/02 VPSCR 03/02                               DIGIT   
+LIST 21 EVTS  EVCCR 01/04                                           DIGIT   
+LIST 21 EVAR  EVACT 01/04                                           DIGIT   
+LIST 21 VCTP  VCDTP 01/04                                           DIGIT   
+LIST 21 VCCT  VCDC1 01/02 VCDC2 03/02                               DIGIT   
+
+                    **************************                              
+                    * CHAPITRE CLAVIER ECRAN *  21-05-2007
+                    **************************                              
+                                                                            
+LIST 22 VPVLR EVDPL 01/01/01    VCDPL 02/41/45                      CLECR   
+LIST 22 VPVLO EVDPL 01/01/01    VCDPL 02/41/45                      CLECR   
+LIST 22 VPVLB EVDPL 01/01/01    VCDPL 02/41/45                      CLECR   
+
+LIST 22 LILVG EVDTP 01/01/01    EVLCT 02/21/37    VCCTL 03/41/64    CLECR
+                                                                            
+LIST 3  CV1   EVE   EVE       1 PREFE VCO   VCO       9       DIGIT         
+LIST 3  CV2   VCO   VCO       9 PREFE EVE   EVE       1       DIGIT         
+LIST 3  CVAR  EVAR  EVAR      1 PREFE                         DIGIT         
+LIST 3  CVER  EVAR  EVAR      1 PREFE EVTS  EVTS      9       DIGIT         
+LIST 3  CVCT  VCCT  VCCT      1 PREFE EVTS  EVTS      9       DIGIT         
+LIST 3  CVTP  VCTP  VCTP      1 PREFE VCCT  VCCT      9       DIGIT         
+LIST 3S CVTP  EVTS  EVTS     11                               DIGIT         
+LIST 3  CVVR  EVAR  EVAR      1 PREFE VCCT  VCCT      9       DIGIT         
+LIST 3S CVVR  EVTS  EVTS     11                               DIGIT         
+LIST 3  CVDC  EVTS  EVTS      1 PREFE VCCT  VCCT      9       DIGIT         
+LIST 3  CVCER VPVLR                                           CLECR         
+LIST 3  CVCEO VPVLO                                           CLECR         
+LIST 3  CVCEB VPVLB                                           CLECR         
+LIST 3  CVLIL LILVG                                           CLECR         
+                                                                            
+LIST 4  DEPFI                                                               
+LIST 4  DEPO  WPO   WPV   EPV   EPO   LPV    
+LIST 4  PBOMA PBOMA
+LIST 4  PBBAL PBSW
+LIST 4  OMAKO OMAKO                                                                                                                                  
+LIST 4  NWNE  MERUE MOKNO LORTA VELER
+LIST 4  BALOD BALOD
+LIST 4  NE    LORTA VELER                                                          
+LIST 4  ARDIR LPO   LPV   MLO                                         
+LIST 4  PONTO LPT                                                           
+LIST 4  CREIL LPC                                                           
+LIST 4  BEAUV BVP                                                           
+LIST 4  DEDIR ADG   LPV                                                     
+LIST 4  MOLEK MOLEK
+LIST 4  ODRAN ODRAN                                                                            
+LIST 4  ARDIO LPG   LPB   ADG                                               
+LIST 4  VILLA LPV                                                           
+LIST 4  DEMEL MLO                                                           
+LIST 4  BRETI
+                                                         
+LIST 5  ARRIV NWNE  01/01 BALOD 02/01 OMAKO 03/01 ARDIR 04/01 EVACT HPASS   
+LIST 5  ARRO  MOLEK 01/01 ODRAN 02/03                         EVACT HPASS
+LIST 5  ARPB  PBOMA 01/01 PBBAL 02/03                         EVACT HPASS
+LIST 5  DEPTS PONTO 01/01 CREIL 02/01 BEAUV 03/01 DEDIR 04/01 EVCCR HPASS   
+LIST 5  DPTS  VILLA 01/02 DEMEL 03/01 BRETI 04/01             EVCCR HPASS   
+LIST 5  DEPSI DEPO  01/01 DEPFI 02/03                         EVCCR HPASS
+
+LIST 6  SO    DEPSI
+LIST 6  SR    DEPSI
+LIST 6  SL    DEPSI
+LIST 6  SJ    DEPSI
+LIST 6  SK    DEPSI
+LIST 6  RD    DEPTS                                                         
+LIST 6  RC    DEPTS                                                         
+LIST 6  DC    DEPTS                                                         
+LIST 6  RA    ARRIV DEPTS                                                   
+LIST 6  RB    ARRIV DEPTS                                                   
+LIST 6  OD    DPTS  ARPB
+LIST 6  OA    ARRO  ARPB
+LIST 6  AC    DEPTS
+                                                                            
+                    ***********************                                 
+                    *  OPERATEURS LISTES  *                         
+                    ***********************  21-05-2007
+
+LIST 7  SIR   CV2
+LIST 7  SKR   CV2
+LIST 7  SJR   CV2
+LIST 7  XDR   CV2
+
+
+LIST 7  K1    CVCT                                                          
+LIST 7  K2    CVCT
+LIST 7  RA    CVER
+LIST 7  RB    CVER
+                                                                            
+LIST 7  VDCE  CVCEO                                                         
+LIST 7  GDCE  CVCER                                                         
+LIST 7  BDCE  CVCEB                                                         
+
+LIST 7  OLIVG CVLIL
+
+LIST 7  MIL   CVCT
+                                                                            
+LIST 8  VISUA PARI  ORL   CDG   LILE                                        
