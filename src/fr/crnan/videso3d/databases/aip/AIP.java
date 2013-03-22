@@ -49,7 +49,7 @@ import fr.crnan.videso3d.graphics.Route;
  */
 public class AIP extends FileParser{
 
-	private final Integer numberFiles = 22;
+	private final Integer numberFiles = 23;
 
 	/**
 	 * Le nom de la base de données.
@@ -139,7 +139,6 @@ public class AIP extends FileParser{
 		this.Vols = new ArrayList<Couple<Integer,String>>();
 		this.Bals = new ArrayList<Couple<Integer,String>>();
 		this.TrPlas = new ArrayList<Couple<Integer,String>>();
-
 		final SAXBuilder sxb = new SAXBuilder();
 		try {
 			this.name = DatabaseManager.getCurrentName(DatasManager.Type.AIP);
@@ -328,10 +327,46 @@ public class AIP extends FileParser{
 		this.setFile("Navigation Fix");
 		this.setProgress(progress++);
 		this.getBalises();
+		this.setFile("Fréquences");
+		this.setProgress(progress++);
+		this.getFrequences();
 		this.setProgress(progress++);
 	}
 
 	
+	private void getFrequences() {
+		try{
+			Element racineFrequenceS = getDocumentRoot().getChild("FrequenceS");
+			List<Element> frequences = racineFrequenceS.getChildren();
+			for(Element freq : frequences){
+				Element secteur = freq.getChild("SecteurSituation");
+				if(secteur!=null){
+					String frequence = freq.getChildText("Frequence");
+					if(frequence.startsWith("1"))
+						insertFrequence(secteur.getText(),frequence);
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private void insertFrequence(String secteur, String frequence) {
+		String[] secteurs = secteur.split("/");
+		for(String sect : secteurs){
+			PreparedStatement ps;
+			try {
+				ps = this.conn.prepareStatement("insert into frequences (nom, frequence) VALUES (?, ?)");
+			
+			ps.setString(1, sect);
+			ps.setString(2, frequence);
+			ps.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	private void getAerodromes() throws SQLException{
 		try{
 		Element racineAds = getDocumentRoot().getChild("AdS");

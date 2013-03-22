@@ -1025,6 +1025,10 @@ public final class DatabaseManager {
 				"lon2 double,"+
 				"FOREIGN KEY (pk_ad) references aerodromes(pk)"+
 				")");
+		st.executeUpdate("create table frequences (id integer primary key,"+
+				"nom varchar(2),"+
+				"frequence varchar(7)"+
+				")");
 		st.close();
 		
 		PreparedStatement insertClef = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
@@ -1116,9 +1120,11 @@ public final class DatabaseManager {
 				//on vide le fichier si on arrive pas à le supprimer
 				//c'est moche, mais c'est comme ça sous windows
 				String[] subFiles = file.list();
-				for(String subFile : subFiles){
-					File deleteFile = new File(subFile);
-					deleteFile.delete();
+				if(subFiles!=null){
+					for(String subFile : subFiles){
+						File deleteFile = new File(subFile);
+						deleteFile.delete();
+					}
 				}
 			}
 		}

@@ -581,11 +581,13 @@ public class ProjectManager extends ProgressSupport {
 		File objectsFile = new File(databases, suffix);
 		ObjectInputStream ois = null;
 		try {
-			ois = new ObjectInputStream(new FileInputStream(objectsFile));
-			HashMap<Integer, List<String>> objects = (HashMap<Integer, List<String>>) ois.readObject();
-			for(Integer i : objects.keySet()){
-				for(String n : objects.get(i)){
-					DatasManager.getController(type).showObject(i, n);
+			if(objectsFile.exists()){
+				ois = new ObjectInputStream(new FileInputStream(objectsFile));
+				HashMap<Integer, List<String>> objects = (HashMap<Integer, List<String>>) ois.readObject();
+				for(Integer i : objects.keySet()){
+					for(String n : objects.get(i)){
+						DatasManager.getController(type).showObject(i, n);
+					}
 				}
 			}
 		} catch (FileNotFoundException e) {
