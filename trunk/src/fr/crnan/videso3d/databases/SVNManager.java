@@ -105,7 +105,10 @@ public class SVNManager {
 					fichier.createNewFile();
 				ByteArrayOutputStream baos = new ByteArrayOutputStream( );
 				instance.repository.getFile(nomFichier, rev , fileProperties , baos );
-				baos.writeTo(new FileOutputStream(fichier));
+				FileOutputStream fos = new FileOutputStream(fichier);
+				baos.writeTo(fos);
+				baos.close();
+				fos.close();
 			}
 			instance.dbmUI.processSelectedFiles(new File[]{tempData}, true, instance.dataType);
 		} catch (SVNException ex1) {
