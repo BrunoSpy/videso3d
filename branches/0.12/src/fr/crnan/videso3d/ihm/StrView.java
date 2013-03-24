@@ -33,7 +33,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.databases.exsa.STRController;
 import fr.crnan.videso3d.ihm.components.DataView;
@@ -41,7 +40,7 @@ import fr.crnan.videso3d.ihm.components.TitleTwoButtons;
 /**
  * Sélecteur de données STR
  * @author Bruno Spyckerelle
- * @version 0.2.8
+ * @version 0.2.9
  */
 @SuppressWarnings("serial")
 public class StrView extends JPanel implements DataView{
@@ -66,6 +65,10 @@ public class StrView extends JPanel implements DataView{
 	 * VVF
 	 */
 	private JPanel vvf = new JPanel();
+	/**
+	 * RVSM
+	 */
+	private JPanel rvsm = new JPanel();
 	/**
 	 * Radars
 	 */
@@ -103,6 +106,7 @@ public class StrView extends JPanel implements DataView{
 		dyn.setBorder(BorderFactory.createTitledBorder("Filtrage dynamique"));
 		zocc.setBorder(BorderFactory.createTitledBorder("Zones d'occultation"));
 		vvf.setBorder(BorderFactory.createTitledBorder("VVF"));
+		rvsm.setBorder(BorderFactory.createTitledBorder("RVSM"));
 		radars.setBorder(BorderFactory.createTitledBorder("Portées radars"));
 		stacks.setBorder(BorderFactory.createTitledBorder("Stacks"));
 		tmaF.setBorder(BorderFactory.createTitledBorder("TMA Filet"));
@@ -139,6 +143,10 @@ public class StrView extends JPanel implements DataView{
 					container.add(panel);
 				
 				panel = this.buildPanel(vvf, "select name from centflvvf");
+				if(panel != null)
+					container.add(panel);
+				
+				panel = this.buildPanel(rvsm, "select DISTINCT rvsm from centcrvsm");
 				if(panel != null)
 					container.add(panel);
 				
@@ -197,6 +205,32 @@ public class StrView extends JPanel implements DataView{
 						panel.add(chk);	
 						hasElement = true;
 					}
+				} else if(panel.equals(rvsm)) { //TODO encore un truc moche...
+					switch (rs.getInt(1)) {
+					case 0:
+						JCheckBox chk = new JCheckBox("NON");
+						chk.addItemListener(itemCheckListener);
+						checkBoxList.add(chk);
+						panel.add(chk);	
+						hasElement = true;
+						break;
+					case 1:
+						chk = new JCheckBox("OUI");
+						chk.addItemListener(itemCheckListener);
+						checkBoxList.add(chk);
+						panel.add(chk);	
+						hasElement = true;
+						break;
+					case 2:
+						chk = new JCheckBox("OUI_W");
+						chk.addItemListener(itemCheckListener);
+						checkBoxList.add(chk);
+						panel.add(chk);	
+						hasElement = true;
+						break;
+					default:
+						break;
+					}
 				} else {
 					JCheckBox chk = new JCheckBox(rs.getString(1));
 					chk.addItemListener(itemCheckListener);
@@ -240,10 +274,12 @@ public class StrView extends JPanel implements DataView{
 					getController().showObject(STRController.MOSAIQUE_CAPA, ((JCheckBox)e.getSource()).getText());
 				} else if (dyn.equals(parent)){
 					getController().showObject(STRController.MOSAIQUE_DYN, ((JCheckBox)e.getSource()).getText());
-				}else if (zocc.equals(parent)){
+				} else if (zocc.equals(parent)){
 					getController().showObject(STRController.MOSAIQUE_ZOCC, ((JCheckBox)e.getSource()).getText());
-				}else if (vvf.equals(parent)){
+				} else if (vvf.equals(parent)){
 					getController().showObject(STRController.MOSAIQUE_VVF, ((JCheckBox)e.getSource()).getText());
+				} else if(rvsm.equals(parent)){
+					getController().showObject(STRController.MOSAIQUE_RVSM, ((JCheckBox)e.getSource()).getText());
 				} else if(radars.equals(parent)){
 					getController().showObject(STRController.RADAR,((JCheckBox)e.getSource()).getText());
 				} else if(stacks.equals(parent)){
@@ -260,10 +296,12 @@ public class StrView extends JPanel implements DataView{
 					getController().hideObject(STRController.MOSAIQUE_CAPA, ((JCheckBox)e.getSource()).getText());
 				} else if (dyn.equals(parent)){
 					getController().hideObject(STRController.MOSAIQUE_DYN, ((JCheckBox)e.getSource()).getText());
-				}else if (zocc.equals(parent)){
+				} else if (zocc.equals(parent)){
 					getController().hideObject(STRController.MOSAIQUE_ZOCC, ((JCheckBox)e.getSource()).getText());
-				}else if (vvf.equals(parent)){
+				} else if (vvf.equals(parent)){
 					getController().hideObject(STRController.MOSAIQUE_VVF, ((JCheckBox)e.getSource()).getText());
+				} else if(rvsm.equals(parent)){
+					getController().hideObject(STRController.MOSAIQUE_RVSM, ((JCheckBox)e.getSource()).getText());
 				} else if(radars.equals(parent)){
 					getController().hideObject(STRController.RADAR, ((JCheckBox)e.getSource()).getText());
 				} else if(stacks.equals(parent)){

@@ -61,7 +61,8 @@ public class Videso3D {
 
 					}
 				}
-
+				UIManager.put("Button.defaultButtonFollowsFocus", true);
+				
 				Logging.logger().setLevel(Level.ALL);
 
 				if(args.length > 0) {

@@ -16,7 +16,6 @@
 package fr.crnan.videso3d.databases;
 
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 
 
 /**

@@ -27,7 +27,6 @@ import java.util.Map.Entry;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.VidesoController;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.databases.DatabaseManager;

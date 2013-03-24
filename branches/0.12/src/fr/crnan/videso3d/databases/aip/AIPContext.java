@@ -69,7 +69,6 @@ public class AIPContext extends Context {
 	
 	public List<JXTaskPane> showZoneInfos(int type, String name) {
 		String zoneID = AIP.getID(type, name);
-		
 		JXTaskPane infos = new JXTaskPane();
 		boolean hasElements = false;
 		infos.setTitle("Éléments AIP");
@@ -99,7 +98,20 @@ public class AIPContext extends Context {
 			infos.add(new JLabel("<html><b>Remarques</b> : " + rmq.replaceAll("#", "<br/>")+"</html>"));
 			hasElements = true;
 		}
-		
+		if(type==AIP.CTL){
+			String nomSect = name.split(" ")[0].trim();
+			try {
+				PreparedStatement ps = DatabaseManager.prepareStatement(DatasManager.Type.AIP, "select frequence from frequences where nom=?");
+				ps.setString(1, nomSect);
+				ResultSet rs = ps.executeQuery();
+				if(rs.next()){
+					infos.add(new JLabel("<html><b>Fréquence : </b>"+rs.getString(1)+"</html>"));
+					hasElements = true;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 		if(!hasElements){
 			infos.add(new JLabel("<html><i>Pas d'éléments AIP</i></html>"));
 		}
@@ -310,8 +322,10 @@ public class AIPContext extends Context {
 			ps.setString(1, name);
 			ps.setString(2, AIP.type2String(type));
 			ResultSet rs = ps.executeQuery();
-			latitude = rs.getFloat(1);
-			longitude = rs.getFloat(2);
+			if(rs.next()){
+				latitude = rs.getFloat(1);
+				longitude = rs.getFloat(2);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
@@ -327,8 +341,8 @@ public class AIPContext extends Context {
 		}else{
 			estOuest = "W";
 		}
-		infosNavFix.add(new JLabel("<html><b>Position</b> :"+latitude+"°"+nordSud+", "+longitude+"°"+estOuest));
-	//	if(type != AIP.WPT && type != AIP.VFR && type != AIP.PNP){
+		if(latitude!=0||longitude!=0){
+			infosNavFix.add(new JLabel("<html><b>Position</b> :"+latitude+"°"+nordSud+", "+longitude+"°"+estOuest));
 
 			Element navFixXML = aip.findNavFixInfosByName(name);
 			if(navFixXML != null){
@@ -397,7 +411,9 @@ public class AIPContext extends Context {
 				if(couverture != null){
 					infosNavFix.add(new JLabel("<html><b>Couverture</b> : " + couverture+"</html>"));
 				}
-		//	}
+			}
+		}else{
+			infosNavFix.add(new JLabel("<html><i>Pas d'éléments AIP</i></html>"));
 		}
 		taskPanesList.add(infosNavFix);
 		return taskPanesList;

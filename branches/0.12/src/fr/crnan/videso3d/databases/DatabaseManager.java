@@ -29,8 +29,6 @@ import gov.nasa.worldwind.util.Logging;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -512,6 +510,10 @@ public final class DatabaseManager {
 				"v2 int, " +
 				"v3 int, " +
 				"name varchar(2))");
+		st.executeUpdate("create table centcrvsm (id integer primary key autoincrement, " +
+				"carre int, " +
+				"souscarre int, " +
+				"rvsm int)"); //0: non rvsm; 1: RVSM sauf non corrélés; 2: RVSM même pour les non corrélés
 		st.close();
 		//on ajoute le nom de la base
 		DatabaseManager.addDatabase(name, DatasManager.Type.EXSA, new SimpleDateFormat().format(new Date()));
@@ -1023,6 +1025,10 @@ public final class DatabaseManager {
 				"lon2 double,"+
 				"FOREIGN KEY (pk_ad) references aerodromes(pk)"+
 				")");
+		st.executeUpdate("create table frequences (id integer primary key,"+
+				"nom varchar(2),"+
+				"frequence varchar(7)"+
+				")");
 		st.close();
 		
 		PreparedStatement insertClef = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
@@ -1111,13 +1117,14 @@ public final class DatabaseManager {
 		if(type.compareTo(DatasManager.Type.SkyView) != 0 && name != null) {
 			File file = new File(name);
 			if(file.exists() && !file.delete()) {	
-				try {
-					//on vide le fichier si on arrive pas à le supprimer
-					//c'est moche, mais c'est comme ça sous windows
-					FileWriter out = new FileWriter(file);
-					out.close();
-				} catch (IOException e) {
-					e.printStackTrace();
+				//on vide le fichier si on arrive pas à le supprimer
+				//c'est moche, mais c'est comme ça sous windows
+				String[] subFiles = file.list();
+				if(subFiles!=null){
+					for(String subFile : subFiles){
+						File deleteFile = new File(subFile);
+						deleteFile.delete();
+					}
 				}
 			}
 		}
@@ -1396,7 +1403,6 @@ public final class DatabaseManager {
 		ResultSet rs = st.executeQuery("select radio.path from radio");
 		while (rs.next()) {
 		    pathTab.add(rs.getString(1));
-			// System.out.println("(databaseManager /  getCurrentRadioCovPath) "+ rs.getString(1)+ "///" + rs.getString(2));
 		}
 		return pathTab;
 	}

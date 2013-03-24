@@ -37,7 +37,7 @@ import gov.nasa.worldwind.util.Logging;
  * Lecteur de fichiers EXSA<br />
  * Détecte automatiquement le type de fichier (formaté ou non).
  * @author Bruno Spyckerelle
- * @version 0.4.5
+ * @version 0.4.6
  */
 public class Exsa extends FileParser {
 	/**
@@ -279,7 +279,7 @@ public class Exsa extends FileParser {
 							"values (?, ?, ?, ?, ?, ?)");
 					this.setCentScTma(line, formated);
 				} else if (line.startsWith(formated ? "CENT_SCZOC" : "CENT.SCZOC")) {
-					this.setFile("CENT_SCZOC.");
+					this.setFile("CENT_SCZOC");
 					this.setProgress(10);
 					insert = this.conn.prepareStatement("insert into centsczoc (carre, souscarre, zone, plafond) " +
 							"values (?, ?, ?, ?)");
@@ -287,9 +287,13 @@ public class Exsa extends FileParser {
 					insert.executeBatch();
 				} /*else if (line.startsWith("CENT_ARVSM")) {
 
-				} else if (line.startsWith("CENT_CRVSM")) {
-
-				} else if (line.startsWith("CENT_ZONEV")) {
+				} */ else if (line.startsWith(formated ? "CENT_CRVSM" : "CENT.CRVSM")) {
+					this.setFile("CENT_CRVSM");
+					this.setProgress(11);
+					insert = this.conn.prepareStatement("insert into centcrvsm (carre, souscarre, rvsm) " +
+							"values (?, ?, ?)");
+					this.setCentCRVSM(line, formated);
+				} /* else if (line.startsWith("CENT_ZONEV")) {
 
 				} else if (line.startsWith("CENT_ZPOUR")) {
 
@@ -333,14 +337,14 @@ public class Exsa extends FileParser {
 
 				}*/ else if (line.startsWith(formated ? "RADR_GENER" : "RADR.GENER")) {
 					this.setFile("RADR_GENER.");
-					this.setProgress(11);
+					this.setProgress(12);
 					insert = this.conn.prepareStatement("insert into radrgener (name, numero, type, nommosaique, latitude, longitude, xcautra, ycautra, " +
 							"ecart, radarrelation, typerelation, typeplots, typeradar, codepays, coderadar, militaire) " +
 							"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )");
 					this.setRadrGener(line, formated);
 				} else if (line.startsWith(formated ? "RADR_TECHN" : "RADR.TECHN")) {
 					this.setFile("RADR_TECHN");
-					this.setProgress(12);
+					this.setProgress(13);
 					insert = this.conn.prepareStatement("insert into radrtechn (name, vitesse, hauteur, portee, deport) " +
 							"values (?, ?, ?, ?, ?)");
 					this.setRadrTechn(line, formated);
@@ -535,6 +539,14 @@ public class Exsa extends FileParser {
 		}
 	}
 
+	private void setCentCRVSM(String line, boolean formated) throws ParseException, SQLException{
+		CentCRVSM centCRVSM = new CentCRVSM(line, formated);
+		insert.setInt(1, centCRVSM.getCarre());
+		insert.setInt(2, centCRVSM.getSousCarre());
+		insert.setInt(3, centCRVSM.getRVSM());
+		insert.executeUpdate();
+	}
+	
 	private void setCentScTma(String line, Boolean formated) throws SQLException, ParseException {
 		CentScTma centSctma = new CentScTma(line, formated);
 		//on n'insère sque les lignes utiles
