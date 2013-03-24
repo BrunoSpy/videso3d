@@ -219,13 +219,17 @@ public class ProjectManager extends ProgressSupport {
 							File baseCopy = new File(databases, currentName+"."+type);
 							baseCopy.createNewFile();
 
-							FileChannel source = new FileInputStream(new File(currentName)).getChannel();
-							FileChannel destination = new FileOutputStream(baseCopy).getChannel();
+							FileInputStream sourceStream = new FileInputStream(new File(currentName));
+							FileChannel source = sourceStream.getChannel();
+							FileOutputStream destStream = new FileOutputStream(baseCopy);
+							FileChannel destination = destStream.getChannel();
 
 							destination.transferFrom(source, 0, source.size());
 
 							source.close();
+							sourceStream.close();
 							destination.close();
+							destStream.close();
 
 							//save the keys
 							List<String[]> clefs = new ArrayList<String[]>();
@@ -253,14 +257,17 @@ public class ProjectManager extends ProgressSupport {
 									File copy = new File(baseFiles, f.getName());
 									copy.createNewFile();
 
-									source = new FileInputStream(f).getChannel();
-									destination = new FileOutputStream(copy).getChannel();
+									sourceStream = new FileInputStream(f);
+									source = sourceStream.getChannel();
+									destStream = new FileOutputStream(copy);
+									destination = destStream.getChannel();
 
 									destination.transferFrom(source, 0, source.size());
 
 									source.close();
+									sourceStream.close();
 									destination.close();
-
+									destStream.close();
 								}
 							}
 						}

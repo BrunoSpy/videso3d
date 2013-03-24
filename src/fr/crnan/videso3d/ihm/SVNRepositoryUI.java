@@ -16,11 +16,10 @@
 package fr.crnan.videso3d.ihm;
 
 import javax.swing.JDialog;
-import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 
-import fr.crnan.videso3d.databases.SVNManager;
 import fr.crnan.videso3d.ihm.components.TitledPanel;
 
 import java.awt.Color;
@@ -33,27 +32,34 @@ import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.BorderLayout;
 
 /**
  * Fenêtre affichant l'arboresence du dépôt SVN sélectionné
  * @author Adrien Vidal
- *
+ * @author Bruno SPyckerelle
  */
 public class SVNRepositoryUI extends JDialog{
 	
 	private static final long serialVersionUID = -2707712944901661771L;
 	private Color background = new Color(230,230,230);
 
-	public SVNRepositoryUI(String repository, DatabaseManagerUI parent){
-		super(parent,"SVN");
-		SVNManager.initialize(repository, parent);
+	private String path = "";
+	
+	int result = JOptionPane.CANCEL_OPTION;
+	
+	public SVNRepositoryUI(DefaultTreeModel svnTreeModel){
+		this.setTitle("SVN");
+		
+		this.setModal(true);
 		
 		TitledPanel title = new TitledPanel("Arborescence du dépôt");
 		getContentPane().add(title, BorderLayout.NORTH);
 		
-		final JTree tree = new JTree(SVNManager.listEntries());
+		final JTree tree = new JTree(svnTreeModel);
+				
 		tree.setRootVisible(false);
 		DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer(){
 			@Override 
@@ -79,7 +85,8 @@ public class SVNRepositoryUI extends JDialog{
 						svnPath+="/"+o;
 					}
 					svnPath = svnPath.substring(1);
-					SVNManager.getDatabase(svnPath, -1);
+					SVNRepositoryUI.this.path = svnPath;
+					result = JOptionPane.OK_OPTION;
 					setVisible(false);
 				}
 			}
@@ -118,7 +125,19 @@ public class SVNRepositoryUI extends JDialog{
 
 		this.setPreferredSize(new Dimension(250,300));
 		this.pack();	
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+	}
+	
+	
+	
+	public int showDialog(Component parent){
+		this.setLocationRelativeTo(parent);
+
+		this.setVisible(true);
+		return result;
+	}
+	
+	public String getSVNPath(){
+		return this.path;
 	}
 }

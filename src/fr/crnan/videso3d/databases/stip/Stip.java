@@ -36,7 +36,6 @@ import java.util.List;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.FileParser;
 import fr.crnan.videso3d.databases.DatabaseManager;
@@ -79,8 +78,9 @@ public class Stip extends FileParser{
 		super();
 	}
 
-	public Stip(String path) {
+	public Stip(String path, String name) {
 		super(path);
+		this.name = name;
 	}
 
 	public static boolean containsStipFiles(Collection<File> files) {
@@ -148,10 +148,12 @@ public class Stip extends FileParser{
 	 * @throws IOException 
 	 */
 	private void createName() throws IOException{
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path + "/REF")));
-		String line = in.readLine();
-		this.name = "STIP_"+line.substring(33,41) + "." + line.substring(55,63);
-		in.close();
+		if(name == null){
+			BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(this.path + "/REF")));
+			String line = in.readLine();
+			this.name = "STIP_"+line.substring(33,41) + "." + line.substring(55,63);
+			in.close();
+		}
 	}
 	
 	@Override
