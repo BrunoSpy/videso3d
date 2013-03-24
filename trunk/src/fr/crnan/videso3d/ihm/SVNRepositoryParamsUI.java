@@ -18,7 +18,6 @@ package fr.crnan.videso3d.ihm;
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-import javax.swing.BoxLayout;
 import javax.swing.SwingUtilities;
 
 import fr.crnan.videso3d.Configuration;
@@ -26,114 +25,137 @@ import fr.crnan.videso3d.ihm.components.TitledPanel;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 /**
  * Fenêtre d'ajout ou de modification d'un dépôt SVN
- * @author vidal
- *
+ * @author Adrien Vidal
+ * @author Bruno Spyckerelle
  */
 public class SVNRepositoryParamsUI extends JDialog implements ActionListener{
 	private JTextField urlField;
 	private JTextField idField;
 	private JTextField pwdField;
-	private JTextField typeField;
 	private JButton add_modButton;
 	private JButton cancelButton;
 	private boolean mod;
 	private String oldURL;
 	private JPanel repoPanel;
-	private ConfigurationUI configurationUI;
+	private ConfigurationUI configurationUI;	
 	
 	/**
 	 * 
 	 * @param confUI
 	 * @param mod true pour modifier un dépôt existant. 
-	 * @wbp.parser.constructor
 	 */
 	public SVNRepositoryParamsUI(ConfigurationUI confUI, boolean mod) {
 		configurationUI = confUI;
 		this.mod = mod;
 		setTitle(mod?"Modification d'un dépôt":"Ajout d'un dépôt");
-		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+		
+		this.setModal(true);
+		
+		this.setPreferredSize(new Dimension(490, 200));
 		
 		TitledPanel titlePanel = new TitledPanel("Dépôt SVN");
-		getContentPane().add(titlePanel);
+		getContentPane().add(titlePanel, BorderLayout.NORTH);
 		
-		JPanel typePanel = new JPanel();
-		getContentPane().add(typePanel);
-		typePanel.setLayout(new BoxLayout(typePanel, BoxLayout.X_AXIS));
-		
-		JLabel lblNewLabel = new JLabel("Type de dépôt (ex. STIP, STPV...) : ");
-		typePanel.add(lblNewLabel);
-		
-		typeField = new JTextField();
-		typePanel.add(typeField);
-		typeField.setColumns(10);
-		JPanel urlPanel = new JPanel();
-		getContentPane().add(urlPanel);
-		urlPanel.setLayout(new BoxLayout(urlPanel, BoxLayout.X_AXIS));
+		JPanel contentPanel = new JPanel();
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		
 		JLabel urlLabel = new JLabel("URL du dépôt : ");
-		urlPanel.add(urlLabel);
 		
 		urlField = new JTextField();
-		urlPanel.add(urlField);
 		urlField.setColumns(10);
 		
-		JPanel identificationPanel = new JPanel();
-		getContentPane().add(identificationPanel);
-		identificationPanel.setLayout(new BoxLayout(identificationPanel, BoxLayout.X_AXIS));
-		
 		JLabel idLabel = new JLabel("Identifiant : ");
-		identificationPanel.add(idLabel);
 		
 		idField = new JTextField();
-		idField.setText("");
-		identificationPanel.add(idField);
 		idField.setColumns(10);
 		
 		JLabel pwdLabel = new JLabel("Mot de passe : ");
-		identificationPanel.add(pwdLabel);
 		
 		pwdField = new JTextField();
-		identificationPanel.add(pwdField);
 		pwdField.setColumns(10);
-		
-		JPanel addPanel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) addPanel.getLayout();
-		flowLayout.setAlignment(FlowLayout.TRAILING);
-		getContentPane().add(addPanel);
-		
-		add_modButton = new JButton(mod?"Modifier le dépôt":"Ajouter le dépôt");
-		add_modButton.addActionListener(this);
-		addPanel.add(add_modButton);
 		
 		cancelButton = new JButton("Annuler");
 		cancelButton.addActionListener(this);
-		addPanel.add(cancelButton);
+		
+		add_modButton = new JButton(mod?"Modifier le dépôt":"Ajouter le dépôt");
+		add_modButton.addActionListener(this);
+		
+		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
+		gl_contentPanel.setHorizontalGroup(
+			gl_contentPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(urlLabel)
+								.addComponent(idLabel)
+								.addComponent(pwdLabel))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+								.addComponent(idField, GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
+								.addComponent(urlField, GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)
+								.addComponent(pwdField, GroupLayout.DEFAULT_SIZE, 366, Short.MAX_VALUE)))
+						.addGroup(Alignment.TRAILING, gl_contentPanel.createSequentialGroup()
+							.addComponent(add_modButton)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(cancelButton)))
+					.addContainerGap())
+		);
+		gl_contentPanel.setVerticalGroup(
+			gl_contentPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(urlLabel)
+						.addComponent(urlField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(idLabel)
+						.addComponent(idField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(pwdLabel)
+						.addComponent(pwdField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(cancelButton)
+						.addComponent(add_modButton))
+					.addContainerGap(49, Short.MAX_VALUE))
+		);
+		contentPanel.setLayout(gl_contentPanel);
 		
 		this.getRootPane().setDefaultButton(add_modButton);
 		this.pack();
 	}
 	
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public SVNRepositoryParamsUI(ConfigurationUI confUI){
 		this(confUI, false);
 	}
 	
-	public SVNRepositoryParamsUI(ConfigurationUI confUI, final String type, final String url, final String id, final String pwd, 
+	public SVNRepositoryParamsUI(ConfigurationUI confUI, final String url, final String id, final String pwd, 
 			JPanel repositoryPanel){
 		this(confUI, true);
 		repoPanel = repositoryPanel;
 		oldURL = url;
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				typeField.setText(type);
 				urlField.setText(url);
 				idField.setText(id);
 				pwdField.setText(pwd);
@@ -144,28 +166,23 @@ public class SVNRepositoryParamsUI extends JDialog implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource().equals(add_modButton)){
-			String type = typeField.getText();
 			String url = urlField.getText();
-			if(type.isEmpty()||url.isEmpty()){
-				if(type.isEmpty()){
-					typeField.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
-				}
+			if(url.isEmpty()){
 				if(url.isEmpty()){
 					urlField.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
 				}
 			}else{
 				if(mod){
 					Configuration.removeSVNRepository(oldURL);
-					configurationUI.updateRepository(repoPanel, type, url);
+					configurationUI.updateRepository(repoPanel, url);
 				}else{
-					configurationUI.addSVNRepositoryPanel(type, url, true);
+					configurationUI.addSVNRepositoryPanel(url, true);
 				}
-				Configuration.addSVNRepository(type, url, idField.getText(), pwdField.getText());
+				Configuration.addSVNRepository(url, idField.getText(), pwdField.getText());
 				dispose();
 			}
 		}else if(e.getSource().equals(cancelButton)){
 			dispose();
 		}
 	}
-
 }

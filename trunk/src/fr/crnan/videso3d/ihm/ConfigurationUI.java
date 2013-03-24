@@ -292,14 +292,14 @@ public class ConfigurationUI extends JFrame {
 		String[] svnRepos = svnRepositories.split("#");
 		for(String svnRepo : svnRepos){
 			String[] svnRepoParams = svnRepo.split(";");
-			addSVNRepositoryPanel(svnRepoParams[0], svnRepoParams[1], secondToLast);
+			addSVNRepositoryPanel(svnRepoParams[0], secondToLast);
 		}
 	}
 	
-	public void addSVNRepositoryPanel(String type, final String URL, boolean secondToLast){
+	public void addSVNRepositoryPanel(final String URL, boolean secondToLast){
 		final JPanel repo = new JPanel();
 		repo.setLayout(new BoxLayout(repo, BoxLayout.LINE_AXIS));
-		JLabel repoLabel = new JLabel("Dépôt "+type +": ");
+		JLabel repoLabel = new JLabel("Dépôt "+": ");
 		final JTextField repoURL = new JTextField(URL);
 		repoURL.setEditable(false);
 		JButton modify = new JButton("Modifier");
@@ -308,7 +308,10 @@ public class ConfigurationUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String[] svnRepoParams = Configuration.getRepository(repoURL.getText()).split(";");
 				SVNRepositoryParamsUI svnRepositoryParamsUI = new SVNRepositoryParamsUI(thisConfUI, 
-						svnRepoParams[0],svnRepoParams[1],svnRepoParams[2],svnRepoParams[3], repo);
+						svnRepoParams[0],
+						svnRepoParams.length > 1 ? svnRepoParams[1] : "",
+						svnRepoParams.length > 2 ? svnRepoParams[2] : "",
+						repo);
 				svnRepositoryParamsUI.setVisible(true);
 			}
 		});
@@ -336,10 +339,10 @@ public class ConfigurationUI extends JFrame {
 	}
 
 
-	public void updateRepository(JPanel repoPanel, String newType, String newURL) {
+	public void updateRepository(JPanel repoPanel, String newURL) {
 		for(Component c : repoPanel.getComponents()){
 			if(c.getClass().equals(JLabel.class)){
-				((JLabel)c).setText("Dépôt "+newType+" : ");
+				((JLabel)c).setText("Dépôt "+" : ");
 			}
 			if(c.getClass().equals(JTextField.class)){
 				((JTextField) c).setText(newURL);

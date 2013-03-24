@@ -17,12 +17,14 @@ package fr.crnan.videso3d.ihm;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JDialog;
-import javax.swing.BoxLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import java.awt.FlowLayout;
+
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -30,68 +32,88 @@ import java.util.HashMap;
 import javax.swing.JButton;
 
 import fr.crnan.videso3d.Configuration;
+import fr.crnan.videso3d.ihm.components.TitledPanel;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
 /**
  * 
  * @author Adrien Vidal
  * @version 0.1.0
  */
 public class SVNRepositoryChoiceUI extends JDialog implements ActionListener {
-	private JTextField repoField;
 	private JComboBox<String> repoCombobox;
 	private JButton okButton;
 	private JButton cancelButton;
-	private DatabaseManagerUI dbmUI;
 	/**
-	 * La clé de la hashmap est le type, la valeur est la chaîne de caractères "type;url;id;password"
+	 * La clé de la hashmap est l'url, la valeur est la chaîne de caractères "url;id;password"
 	 */
 	private HashMap<String,String> svnRepositoryMap = new HashMap<String, String>();
 	
+	private int result = JOptionPane.CANCEL_OPTION;
 	
-	public SVNRepositoryChoiceUI(DatabaseManagerUI parent) {
-		super(parent);
-		this.dbmUI = parent;
+	public SVNRepositoryChoiceUI() {
+		super();
+
+		this.setModal(true);
+		
 		getRepositories();
 		setTitle("Choix du dépôt SVN");
-		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		
-		JPanel repoChoicePanel = new JPanel();
-		getContentPane().add(repoChoicePanel);
+		getContentPane().add(new TitledPanel("Choix du dépot à parcourir : "), BorderLayout.NORTH);
+		
+		JPanel contentPanel = new JPanel();
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		
 		JLabel repoChoiceLabel = new JLabel("Choisir un dépôt : ");
-		repoChoicePanel.add(repoChoiceLabel);
 		
 		repoCombobox = new JComboBox<String>();
 		DefaultComboBoxModel<String> comboboxModel = new DefaultComboBoxModel<String>(svnRepositoryMap.keySet().toArray(new String[0]));
 		repoCombobox.setModel(comboboxModel);
 		repoCombobox.addActionListener(this);
-		repoChoicePanel.add(repoCombobox);
-		
-		JPanel repoDisplayPanel = new JPanel();
-		getContentPane().add(repoDisplayPanel);
-		
-		repoField = new JTextField();
-		repoField.setText((String) repoCombobox.getSelectedItem());
-		repoField.setEditable(false);
-		repoField.setAlignmentX(JTextField.CENTER_ALIGNMENT);
-		repoField.setColumns(20);
-		repoDisplayPanel.add(repoField);
-		
-		JPanel buttonsPanel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) buttonsPanel.getLayout();
-		flowLayout.setAlignment(FlowLayout.TRAILING);
-		getContentPane().add(buttonsPanel);
-		
-		okButton = new JButton("OK");
-		okButton.addActionListener(this);
-		buttonsPanel.add(okButton);
 		
 		cancelButton = new JButton("Annuler");
 		cancelButton.addActionListener(this);
-		buttonsPanel.add(cancelButton);
+		
+		okButton = new JButton("OK");
+		okButton.addActionListener(this);
+		
+		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
+		gl_contentPanel.setHorizontalGroup(
+			gl_contentPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPanel.createSequentialGroup()
+							.addComponent(repoChoiceLabel)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(repoCombobox, 0, 278, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, gl_contentPanel.createSequentialGroup()
+							.addComponent(okButton)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(cancelButton)))
+					.addContainerGap())
+		);
+		gl_contentPanel.setVerticalGroup(
+			gl_contentPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPanel.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(repoChoiceLabel)
+						.addComponent(repoCombobox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPanel.createParallelGroup(Alignment.BASELINE)
+						.addComponent(cancelButton)
+						.addComponent(okButton))
+					.addContainerGap(74, Short.MAX_VALUE))
+		);
+		contentPanel.setLayout(gl_contentPanel);
+		
+		this.setPreferredSize(new Dimension(400, 140));
 		
 		this.getRootPane().setDefaultButton(okButton);
 		this.pack();
-		this.setAlwaysOnTop(true);
+
 	}
 	
 	
@@ -102,18 +124,24 @@ public class SVNRepositoryChoiceUI extends JDialog implements ActionListener {
 		}
 	}
 
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource().equals(repoCombobox)){
-			repoField.setText((String)((JComboBox<String>)e.getSource()).getSelectedItem());
-		}else if(e.getSource().equals(okButton)){
-			new SVNRepositoryUI(svnRepositoryMap.get(repoField.getText()), dbmUI).setVisible(true);
-			dispose();
-		}else if(e.getSource().equals(cancelButton)){
-			dispose();
-		}
+	public int showDialog(Component parent){
+		this.setLocationRelativeTo(parent);
+		this.setVisible(true);
+		return result;
 	}
 
+	public String getSelectedRepo(){
+		return svnRepositoryMap.get(repoCombobox.getSelectedItem());
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource().equals(okButton)){
+			this.result = JOptionPane.OK_OPTION;
+			this.setVisible(false);
+		}else if(e.getSource().equals(cancelButton)){
+			this.result = JOptionPane.CANCEL_OPTION;
+			this.setVisible(false);
+		}
+	}
 }

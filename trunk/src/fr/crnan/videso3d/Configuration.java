@@ -44,7 +44,7 @@ public final class Configuration {
 	public static final String DEFAULT_REP = "fr.crnan.videso3d.files.defaultrep";
 	
 	/**
-	 * Un dépôt SVN est décrit par son type, son URL, son identifiant et son mot de passe. 
+	 * Un dépôt SVN est décrit par son URL, son identifiant et son mot de passe. 
 	 * Ces chaînes de caractères doivent être séparées par des points-virgules. 
 	 * Les différents dépôts SVN doivent être séparés par des #. 
 	 */
@@ -126,10 +126,10 @@ public final class Configuration {
 		instance.changes.removePropertyChangeListener(listener);
 	}
 	
-	public static void addSVNRepository(String type, String URL, String id, String pwd){
+	public static void addSVNRepository(String URL, String id, String pwd){
 		String oldSvnRepositoriesString = Configuration.getProperty(Configuration.SVN_REPOSITORIES, "");
 		String newSvnRepositoriesString = oldSvnRepositoriesString.isEmpty()?"":oldSvnRepositoriesString+"#";
-		newSvnRepositoriesString += type+";"+URL+";"+id+";"+pwd;
+		newSvnRepositoriesString += URL+";"+id+";"+pwd;
 		Configuration.setProperty(Configuration.SVN_REPOSITORIES, newSvnRepositoriesString);
 	}
 	

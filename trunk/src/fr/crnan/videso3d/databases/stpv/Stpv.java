@@ -91,7 +91,7 @@ public class Stpv extends FileParser{
 		Iterator<File> iterator = files.iterator();
 		while (iterator.hasNext()) {
 			File file = (File) iterator.next();
-			if(file.getName().equalsIgnoreCase("resultat") || file.getName().equalsIgnoreCase("resultat.txt")){
+			if(file.getName().equalsIgnoreCase("lieu") || file.getName().equalsIgnoreCase("lieu.txt")){
 				return true;
 			}
 		}
@@ -413,7 +413,7 @@ public class Stpv extends FileParser{
 	 * @throws IOException 
 	 */
 	private void createName() throws IOException{
-		if(name==null){
+		if(name == null){
 			BufferedReader in = null;
 			Boolean nameFound = false;
 			try {

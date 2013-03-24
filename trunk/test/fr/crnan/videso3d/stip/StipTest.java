@@ -42,7 +42,7 @@ public class StipTest {
 	
 	@BeforeClass
 	public static void setUp(){
-		stip = new Stip("testData/SATIN_1006v2");
+		stip = new Stip("testData/SATIN_1006v2", null);
 		stip.addPropertyChangeListener(new PropertyChangeListener() {
 			
 			@Override
