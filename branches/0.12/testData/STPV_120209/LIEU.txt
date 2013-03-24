@@ -1,0 +1,2164 @@
+                   *************************                                 
+                 * DEFINITION DES        *                                  
+                 *  SERVICES DE L'ESCALE *  12-11-96                        
+                 *************************                                  
+                                                                            
+LIEU 10 CAPEG LFPGYKCX                                                      
+                                                                            
+                    *********************                                   
+                    * INTERFACES        *                                   
+                    *   CENTRE / LIEUX  *                                   
+                    *********************  17-01-08
+
+                  * 127 elements maximum dans cette table *
+                                                                           
+LIEU 20 EBAW                                                                
+LIEU 26 EBAW  MEDIL 240                                                                                                                  
+                                                                            
+LIEU 20 EBBR                                                                
+LIEU 26 EBBR  MEDIL 240                                                     
+                                                                            
+LIEU 20 EBCI                                                                
+LIEU 26 EBCI  MEDIL 210                                                     
+ 
+LIEU 20 EBCV
+LIEU 26 EBCV  MEDIL 240
+                                                                            
+LIEU 20 EBFN  RSFTA                                                         
+LIEU 21 EBFN  SGDPA SGARA LFQQZPZX                                          
+LIEU 22 EBFN  DOUBL NEJEC                                                   
+LIEU 23 EBFN  PARI  LILE                                                    
+LIEU 24 EBFN  ALL                                                            
+                                                                            
+LIEU 20 EBKT  RSFTA                                                         
+LIEU 21 EBKT  SGDPA SGARA LFQQZPZX                                          
+LIEU 22 EBKT  DOUBL NEJEC                                                   
+LIEU 23 EBKT  PARI  LILE                                                    
+LIEU 24 EBKT  ALL                                                           
+                                                                            
+LIEU 20 EBLG                                                                
+LIEU 26 EBLG  MEDIL 240                                                     
+
+LIEU 20 EBMB                                                                
+LIEU 26 EBMB  MEDIL 240                                                     
+
+LIEU 20 EBOS  RSFTA                                                         
+LIEU 21 EBOS  SGDPA SGARA LFQQZPZX                                          
+LIEU 22 EBOS  DOUBL NEJEC                                                   
+LIEU 23 EBOS  PARI  LILE                                                    
+LIEU 24 EBOS  ALL                                                           
+LIEU 26 EBOS  MEDIL 240                                                                                                        
+
+LIEU 20 EDDF
+LIEU 26 EDDF  NITEP 310                                                    
+
+LIEU 20 EDDH                                                  
+
+LIEU 20 EDDK
+LIEU 26 EDDK  NITEP 310                                               
+
+LIEU 20 EDDL
+LIEU 26 EDDL  NITEP 310                                                   
+
+LIEU 20 EDDR                                                     
+LIEU 26 EDDR  RAPOR 260
+LIEU 26BEDDR  TILVI 120                                               
+LIEU 27 EDDR  RAPOR 310
+ 
+LIEU 20 EDDV                                                     
+
+LIEU 20 EDFH 
+LIEU 26 EDFH  NITEP 310                                                                                                    
+
+LIEU 20 EDFM
+
+LIEU 20 EDLN
+LIEU 26 EDLN  NITEP 310                                                                                                     
+
+LIEU 20 EDRS                                                     
+LIEU 26 EDRS  RAPOR 080
+
+LIEU 20 EDRZ
+LIEU 26 EDRZ  NITEP 310                                                
+
+
+LIEU 20 EDSB
+
+LIEU 20 EDTL
+
+LIEU 20 EFHK
+
+LIEU 20 EGGW
+LIEU 26 EGGW  ETRAT 270
+LIEU 27 EGGW  ETRAT 290
+LIEU 26BEGGW  VEULE 270
+LIEU 27BEGGW  VEULE 290
+
+LIEU 20 EGHI
+LIEU 26 EGHI  ETRAT 270
+LIEU 27 EGHI  ETRAT 290
+LIEU 26BEGHI  VEULE 270
+LIEU 27BEGHI  VEULE 290
+
+LIEU 20 EGHL
+LIEU 26 EGHL  ETRAT 270
+LIEU 27 EGHL  ETRAT 290
+LIEU 26BEGHL  VEULE 270
+LIEU 27BEGHL  VEULE 290
+
+LIEU 20 EGKA
+LIEU 26 EGKA  ETRAT 270
+LIEU 27 EGKA  ETRAT 290
+LIEU 26BEGKA  VEULE 270
+LIEU 27BEGKA  VEULE 290
+
+LIEU 20 EGKB
+LIEU 26 EGKB  ETRAT 270
+LIEU 27 EGKB  ETRAT 290
+LIEU 26BEGKB  VEULE 270
+LIEU 27BEGKB  VEULE 290
+
+LIEU 20 EGKK
+LIEU 26 EGKK  ETRAT 270
+LIEU 27 EGKK  ETRAT 290
+LIEU 26BEGKK  VEULE 270
+LIEU 27BEGKK  VEULE 290
+
+LIEU 20 EGLC
+LIEU 26 EGLC  ETRAT 270
+LIEU 27 EGLC  ETRAT 290
+LIEU 26BEGLC  VEULE 270
+LIEU 27BEGLC  VEULE 290
+
+LIEU 20 EGLL
+LIEU 26 EGLL  ETRAT 270
+LIEU 27 EGLL  ETRAT 290
+LIEU 26BEGLL  VEULE 270
+LIEU 27BEGLL  VEULE 290
+
+LIEU 20 EGMC
+LIEU 26 EGMC  ETRAT 270
+LIEU 27 EGMC  ETRAT 290
+LIEU 26BEGMC  VEULE 270
+LIEU 27BEGMC  VEULE 290
+
+LIEU 20 EGMD
+
+LIEU 20 EGMH 
+            
+LIEU 20 EGSC
+LIEU 26 EGSC  ETRAT 270
+LIEU 27 EGSC  ETRAT 290
+LIEU 26BEGSC  VEULE 270
+LIEU 27BEGSC  VEULE 290
+
+LIEU 20 EGSS
+LIEU 26 EGSS  ETRAT 270
+LIEU 27 EGSS  ETRAT 290
+LIEU 26BEGSS  VEULE 270
+LIEU 27BEGSS  VEULE 290
+
+LIEU 20 EGTO
+LIEU 26 EGTO  ETRAT 270
+LIEU 27 EGTO  ETRAT 290
+LIEU 26BEGTO  VEULE 270
+LIEU 27BEGTO  VEULE 290
+
+LIEU 20 EGWU
+LIEU 26 EGWU  ETRAT 270
+LIEU 27 EGWU  ETRAT 290
+LIEU 26BEGWU  VEULE 270
+LIEU 27BEGWU  VEULE 290
+
+LIEU 20 EHAM
+
+LIEU 20 EHBK
+LIEU 26 EHBK  NITEP 310
+
+LIEU 20 EHWO
+ 
+LIEU 20 EKBI
+
+LIEU 20 EKCH
+
+LIEU 20 ELLX                                                      
+LIEU 26 ELLX  TILVI 120                                               
+
+LIEU 20 ETAD
+LIEU 26 ETAD  RAPOR 260
+LIEU 27 ETAD  RAPOR 310
+
+LIEU 20 ETAR
+LIEU 26 ETAR  NITEP 310  
+
+LIEU 20 ETSB
+LIEU 26 ETSB  RAPOR 260
+LIEU 27 ETSB  RAPOR 310
+                                                             
+                                                                            
+LIEU 20 LFAC  RSFTA             ALSSR                                       
+LIEU 21 LFAC  SGDPA SGARA LFQQZPZX    LFACZTZX                              
+LIEU 22 LFAC  DOUBL NEJEC                                                   
+LIEU 23 LFAC  PARI  LILE                                                    
+LIEU 24 LFAC  ALL                                                           
+LIEU 26 LFAC  ALL   110   ACTAU
+LIEU 27 LFAC  CIV   100
+
+LIEU 20 LFAD  RSFTA             ALSSR                   TVACT                    
+LIEU 21 LFAD              LFADZPZX    LFPCZTZX
+LIEU 23 LFAD  CDG   PARI                                                    
+LIEU 24 LFAD  ALL                                                           
+LIEU 25 LFAD  SSRDP SSRAR
+
+             * ACAP N≥07/11 CA080117 Terrain fictif Gestion de l'UL161 *  
+LIEU 20 LFAP
+LIEU 28 LFAP  W     E                                               EXTER   
+LIEU 28SLFAP  W
+LIEU 28SLFAP  E
+
+LIEU 20 LFAQ  RSFTA             ALSSR                                       
+LIEU 21 LFAQ  SGDPA SGARA LFAQZPZX    LFAQZPST    LFQQZPZX                  
+LIEU 23 LFAQ  PARI  LILE                                                    
+LIEU 24 LFAQ  ALL                                                           
+LIEU 26 LFAQ  ALL   110   ACTAU
+LIEU 27 LFAQ  CIV   100
+                                                                           
+LIEU 20 LFAT  RSFTA             ALSSR                                       
+LIEU 21 LFAT  SGDPA SGARA LFATZPZX    LFATZPST    LFQQZPZX                  
+LIEU 23 LFAT  PARI  LILE                                                    
+LIEU 24 LFAT  ALL                                                           
+LIEU 26 LFAT  ALL   110   ACTAU
+LIEU 27 LFAT  CIV   100
+                                                                            
+LIEU 20 LFAV  RSFTA             ALSSR                                       
+LIEU 21 LFAV  SGDPA SGARA LFAVZPZX    LFQQZPZX                              
+LIEU 22 LFAV  DOUBL NEJEC                                                   
+LIEU 23 LFAV  PARI  LILE                                                    
+LIEU 24 LFAV  ALL                                                           
+LIEU 26 LFAV  ALL   110   ACTAU
+LIEU 27 LFAV  CIV   100
+
+LIEU 20 LFAY  RSFTA             ALSSR
+LIEU 21 LFAY  SGDPA SGARA LFAQZPZX    LFAQZPST                              
+                                                                    
+LIEU 20 LFBK                                                                
+LIEU 20 LFBL                                                                
+
+LIEU 20 LFEI  RSFTA             ALSSR                                       
+LIEU 26 LFEI  ALL   070                                                                                                                    
+                                                                            
+LIEU 20 LFGM  RSFTA                                                         
+LIEU 21 LFGM  SGDPA SGARA LFLNZPZX                                          
+LIEU 23 LFGM  PARI                                                          
+LIEU 24 LFGM  ALL                                                           
+                                                                            
+LIEU 20 LFHY  RSFTA             ALSSR                                       
+LIEU 21 LFHY  SGDPA SGARA LFLNZPZX                                          
+LIEU 22 LFHY  DOUBL NEJEC                                                   
+LIEU 23 LFHY  PARI                                                          
+LIEU 24 LFHY  ALL                                                           
+                                                                            
+LIEU 20 LFJL  RSFTA             ALSSR                                       
+LIEU 21 LFJL  SGDPA SGARA LFSFYXYX    LFJLZTZX    LFJLZPST                  
+LIEU 22 LFJL  NDOUB NEJEC                                                   
+LIEU 23 LFJL  PARI                                                          
+LIEU 24 LFJL  ALL                                                           
+LIEU 26 LFJL  MMD   510                                                     
+                                                                           
+LIEU 20 LFJM
+LIEU 26 LFJM  ALL   080                                                     
+
+LIEU 20 LFJR  RSFTA             ALSSR                         119.0                                            
+LIEU 21 LFJR  SGDPA SGARA LFJRZPZX                                          
+LIEU 23 LFJR  PARI                                                          
+LIEU 24 LFJR  ALL                                                           
+LIEU 26 LFJR  ALL   070                              
+
+LIEU 20 LFLA  RSFTA             ALSSR                                       
+LIEU 21 LFLA  SGDPA SGARA LFLAZPZX                                          
+LIEU 23 LFLA  PARI                                                          
+LIEU 24 LFLA  ALL                                                           
+LIEU 26 LFLA  ALL   110                                                     
+                                                                            
+LIEU 20 LFLB  RSFTA                                                         
+LIEU 21 LFLB  SGDPA SGARA LFLBZPZX                                          
+LIEU 23 LFLB  PARI                                                          
+LIEU 24 LFLB  ALL                                                           
+LIEU 26 LFLB  DJL   260                                                     
+LIEU 26BLFLB  ATN   220                                                     
+LIEU 26BLFLB  MOMIL 220                                                     
+LIEU 26BLFLB  ARDOL 220                                                     
+
+LIEU 20 LFLC                                                                
+LIEU 26 LFLC  ALL   510         RERFL                                                     
+                                                                            
+LIEU 20 LFLD  RSFTA             ALSSR                                       
+LIEU 21 LFLD  SGDPA SGARA LFLDZPZX    LFBLZTZX    LFOAZTZX                  
+LIEU 23 LFLD  PARI                                                          
+LIEU 24 LFLD  ALL                                                           
+LIEU 26 LFLD  ALL   090
+                                                                            
+LIEU 20 LFLH                                                                
+LIEU 26 LFLH  ALL   510                                                     
+                                                                            
+LIEU 20 LFLI                                                                
+                                                                            
+LIEU 20 LFLJ                                                                
+                                                                            
+LIEU 20 LFLL                                                                
+LIEU 26 LFLL  ATN   220                                                     
+LIEU 26BLFLL  MOMIL 220
+LIEU 26BLFLL  ARDOL 220
+                                                                            
+LIEU 20 LFLM  RSFTA                                                         
+LIEU 21 LFLM  SGDPA SGARA LFLMZPZX    LFLLZPZX    LFLNZPZX                  
+LIEU 23 LFLM  PARI                                                          
+LIEU 24 LFLM  ALL                                                           
+LIEU 26 LFLM  ALL   510                                                     
+                                                                            
+LIEU 20 LFLN  RSFTA             ALSSR                         123.4                                       
+LIEU 21 LFLN  SGDPA SGARA LFLNZPZX                                          
+LIEU 22 LFLN  DOUBL NEJEC                                                   
+LIEU 23 LFLN  PARI                                                          
+LIEU 24 LFLN  ALL                                                           
+LIEU 26 LFLN  ALL   090                                                     
+LIEU 28 LFLN  W     E                                               EXTER
+                                                                            
+LIEU 20 LFLO  RSFTA             ALSSR                                       
+LIEU 21 LFLO  SGDPA SGARA LFLOZPZX    LFLNZPZX                              
+LIEU 22 LFLO  DOUBL NEJEC                                                   
+LIEU 23 LFLO  PARI                                                          
+LIEU 24 LFLO  ALL                                                           
+LIEU 26 LFLO  ALL   090                                   
+                                                                            
+LIEU 20 LFLP  RSFTA                                                                
+LIEU 21 LFLP  SGDPA SGARA LFLPZPZX                                          
+LIEU 23 LFLP  PARI                                                    
+LIEU 24 LFLP  ALL                                                          
+LIEU 26 LFLP  ATN   220                                                          
+LIEU 26BLFLP  MOMIL 220                                                          
+LIEU 26BLFLP  ARDOL 220                                                          
+                                                                           
+LIEU 20 LFLS                                                                                                                   
+LIEU 26 LFLS  ATN   220                                                     
+LIEU 26BLFLS  MOMIL 220
+LIEU 26BLFLS  ARDOL 220
+                                                                            
+LIEU 20 LFLU                                                                
+                                                                            
+LIEU 20 LFLV                                                                
+LIEU 26 LFLV  ALL   510         RERFL                                                     
+                                                                            
+LIEU 20 LFLX  RSFTA             ALSSR                                       
+LIEU 21 LFLX  SGDPA SGARA LFLXZPZX                                          
+LIEU 24 LFLX  ALL                                                           
+LIEU 26 LFLX  ALL   070                                                     
+                                                                            
+LIEU 20 LFLY                                                                
+LIEU 26 LFLY  ATN   220                                                     
+LIEU 26BLFLY  MOMIL 220
+LIEU 26BLFLY  ARDOL 220
+
+LIEU 20 LFMH                                                                
+                                                                            
+LIEU 20 LFOA  RSFTA             ALSSR                         119.7                                         
+LIEU 21 LFOA  SGDPA SGARA LFOAZTZX
+LIEU 26 LFOA  ALL   090                                                     
+                                                                            
+LIEU 20 LFOB  RSFTA             ALSSR                         119.9                                       
+LIEU 21 LFOB  SGDPA SGARA LFOBZPST                                         
+LIEU 23 LFOB  PARI  CDG                                                     
+LIEU 24 LFOB  ALL                                                           
+LIEU 25 LFOB  SSRDP SSRAR                                                   
+LIEU 26 LFOB  ALL   010                                                     
+LIEU 26BLFOB  LOB   050                                                     
+LIEU 27 LFOB  RUBIX 320                                                     
+LIEU 27BLFOB  GALBO 320
+LIEU 27BLFOB  ARGED 320
+                                                  
+LIEU 28 LFOB                                                  LFOB  LOCAL
+                                                                           
+LIEU 20 LFOC                    ALSSR                         122.7                                       
+LIEU 26 LFOC  ALL   080                                                     
+                                                                            
+LIEU 20 LFOE                    ALSSR                         118.125              
+LIEU 26 LFOE  ALL   050                                                     
+                                                                            
+LIEU 20 LFOH  RSFTA             ALSSR                   TVACT 120.350              
+LIEU 21 LFOH  SGDPA SGARA LFRGZTZX    LFOHZPZX                              
+LIEU 23 LFOH  PARI                                                          
+LIEU 24 LFOH  ALL                                                           
+LIEU 26 LFOH  ALL   090                                                     
+LIEU 28 LFOH                                                  LFRG  LOCAL
+                                                                            
+LIEU 20 LFOJ  RSFTA             ALSSR                         122.7                                       
+LIEU 21 LFOJ  SGDPA SGARA LFOJZTZX
+LIEU 26 LFOJ  ALL   110                                                     
+                                                                            
+LIEU 20 LFOK  RSFTA             ALSSR                                                
+LIEU 21 LFOK  SGDPA SGARA LFOKZTZX    LFPMZTZX                                      
+LIEU 23 LFOK  PARI                                                          
+LIEU 24 LFOK  ALL                                                           
+LIEU 26 LFOK  CAV   110                                                     
+LIEU 28 LFOK                                                  LFOK  LOCAL
+                                                                  
+LIEU 20 LFOP  RSFTA             ALSSR                         118.575                                                
+LIEU 21 LFOP  SGDPA SGARA LFOPZPZX                                          
+LIEU 23 LFOP  PARI                                                          
+LIEU 24 LFOP  ALL                                                           
+LIEU 26 LFOP  ALL   050                                                     
+                                                                            
+LIEU 20 LFOT  RSFTA             ALSSR                         121.0                                       
+LIEU 21 LFOT  SGDPA SGARA LFOTZTZX
+LIEU 23 LFOT  PARI
+LIEU 24 LFOT  ALL
+LIEU 26 LFOT  ALL   070
+LIEU 27 LFOT  ABUDA 260
+
+LIEU 20 LFOZ  RSFTA             ALSSR
+LIEU 21 LFOZ  SGDPA SGARA LFOZZPZX    LFOJZPZX
+LIEU 22 LFOZ  DOUBL NEJEC
+LIEU 23 LFOZ  PARI
+LIEU 24 LFOZ  ALL
+LIEU 26 LFOZ  ALL   110
+                                                                      
+LIEU 20 LFPB  RSFTA                                     TVACT                    
+LIEU 21 LFPB  SGDPA SGARA LFPBZPST    LFPGYKCX    LFPOZPZX       
+LIEU 23 LFPB  CDG                                                           
+LIEU 25 LFPB  SSRDP SSRAR                                                   
+LIEU 26 LFPB  ALL   010         RERFL                                                     
+LIEU 27 LFPB  RUBIX 320                                                     
+LIEU 27BLFPB  ABUDA 260                                                     
+LIEU 27BLFPB  GALBO 320                                                     
+LIEU 27BLFPB  NATS1 260                                                    
+LIEU 27BLFPB  ASIE2 260                                                    
+LIEU 27BLFPB  TERPO 290
+LIEU 27BLFPB  UNUB1 290
+LIEU 27BLFPB  ASIE4 310
+LIEU 27BLFPB  ASIE5 310
+LIEU 27BLFPB  ARGED 320
+LIEU 28 LFPB  W     E                                         LFPB  LOCAL   
+LIEU 28SLFPB  W     MOKNO   150 OMAKO   140 BALOD   180 VELER    90
+LIEU 28SLFPB  E     MERUE   100 OMAKO   190 BALOD   110 VELER   170 
+LIEU 29 LFPB  MSTG
+                                                                            
+LIEU 20 LFPC  RSFTA             ALSSR                                       
+LIEU 21 LFPC  SGDPA SGARA LFPCZPZX
+LIEU 23 LFPC  CDG                                                           
+LIEU 25 LFPC  SSRDP SSRAR                                                   
+LIEU 26 LFPC  ALL   010                                                     
+LIEU 27 LFPC  RUBIX 320                                                     
+LIEU 27BLFPC  GALBO 320                                                     
+LIEU 27BLFPC  ARGED 320
+LIEU 28 LFPC                                                  LFPC  LOCAL
+                                                                            
+LIEU 20 LFPG  RSFTA                                                    
+LIEU 21 LFPG  SGDPA SGARA LFPGZAZX                                          
+LIEU 23 LFPG  CDG                                                           
+LIEU 25 LFPG  SSRDP SSRAR                                                   
+LIEU 26 LFPG  ALL   010         RERFL                                                     
+LIEU 27 LFPG  RUBIX 320                                                     
+LIEU 27BLFPG  ABUDA 260
+LIEU 27BLFPG  GALBO 320
+LIEU 27BLFPG  NATS1 260
+LIEU 27BLFPG  ASIE2 260
+LIEU 27BLFPG  TERPO 290
+LIEU 27BLFPG  UNUB1 290
+LIEU 27BLFPG  ASIE4 310
+LIEU 27BLFPG  ASIE5 310
+LIEU 27BLFPG  ARGED 320
+LIEU 28 LFPG  W     E                                         LFPG  EXTER   
+LIEU 28SLFPG  W     MERUE   150 OMAKO   140 BALOD   180 LORTA   100
+LIEU 28SLFPG  E     MERUE   100 OMAKO   190 BALOD   110 LORTA   170
+LIEU 29 LFPG  MSTG
+                                                                           
+LIEU 20 LFPM  RSFTA             ALSSR                                       
+LIEU 21 LFPM  SGDPA SGARA LFPMZPZX                                          
+LIEU 23 LFPM  PARI  ORL                                                     
+LIEU 24 LFPM  ALL                                                           
+LIEU 26 LFPM  ALL   030                                                     
+LIEU 27 LFPM  UNUB1 290
+              
+LIEU 20 LFPN  RSFTA             ALSSR                   TVACT                                       
+           LFFFLFPN = ADRESSE COLLECTIVE DESSERVANT LFPNZPZX,      
+                      LFPOZAZF (Orly parking) LFPOXJAX (Orly assistance)
+                      et LFPV via ANTINEA METZ (syst…me militaire)                                          
+LIEU 21 LFPN  SGDPA SGARA LFFFLFPN    LFPVZSZX    LFPOZPZX    
+LIEU 23 LFPN  ORL   PARI  CDG                                               
+LIEU 24 LFPN  ALL                                                           
+LIEU 25 LFPN  SSRDP SSRAR                                                   
+LIEU 26 LFPN  ALL   010         RERFL                                                     
+LIEU 28 LFPN                                                  LFPV  LOCAL
+LIEU 29 LFPN  MSTO
+                                                                            
+LIEU 20 LFPO  RSFTA                                     TVACT                    
+LIEU 21 LFPO  SGDPA SGARA LFPOZPZX                                              
+LIEU 23 LFPO  ORL                                                           
+LIEU 25 LFPO  SSRDP SSRAR                                                   
+LIEU 26 LFPO  ALL   010         RERFL                                                     
+LIEU 27 LFPO  ABUDA 260                                                     
+LIEU 27BLFPO  GALBO 320                                                     
+LIEU 27BLFPO  NATS1 260                                                     
+LIEU 27BLFPO  ASIE2 260                                                     
+LIEU 27BLFPO  TERPO 290  
+LIEU 27BLFPO  RUBIX 320  
+LIEU 27BLFPO  UNUB1 290
+LIEU 27BLFPO  ASIE4 310
+LIEU 27BLFPO  ASIE5 310
+LIEU 27BLFPO  ARGED 320
+LIEU 28 LFPO  W     E                                         LFPO  EXTER   
+LIEU 28SLFPO  W     ODRAN   180 MOLEK    94                      
+LIEU 28SLFPO  E     ODRAN    79 MOLEK   120                     
+LIEU 29 LFPO  MSTO                                                          
+                                                                            
+LIEU 20 LFPT  RSFTA             ALSSR                                       
+LIEU 21 LFPT  SGDPA SGARA LFPTZPZX                                          
+LIEU 23 LFPT  CDG   PARI                                                    
+LIEU 24 LFPT  ALL                                                           
+LIEU 25 LFPT  SSRDP SSRAR                                                   
+LIEU 26 LFPT  ALL   030   ACTAU RERFL                                             
+LIEU 27 LFPT  RUBIX 320                                                     
+LIEU 27BLFPT  GALBO 320                                                     
+LIEU 27BLFPT  ABUDA 260                                                     
+LIEU 27BLFPT  GALBO 300                                                     
+LIEU 27BLFPT  ARGED 320
+LIEU 28 LFPT                                                  LFPT  LOCAL
+                                                                         
+LIEU 20 LFPV  RSFTA             ALSSR                   TVACT                    
+LIEU 21 LFPV  SGDPA SGARA LFPVZPZX    LFPVZSZX    LFPOZPZX
+LIEU 23 LFPV  ORL   PARI                                                    
+LIEU 24 LFPV  ALL                                                           
+LIEU 25 LFPV  SSRDP SSRAR                                                   
+LIEU 26 LFPV  ALL   010         RERFL                                                     
+LIEU 26BLFPV  LGL   060                                                     
+LIEU 26BLFPV  CAD   050                                                     
+LIEU 27BLFPV  NATS1 260
+LIEU 27BLFPV  ASIE2 260
+LIEU 27BLFPV  TERPO 290
+LIEU 27BLFPV  RUBIX 320
+LIEU 27BLFPV  GALBO 320
+LIEU 27BLFPV  UNUB1 290
+LIEU 27BLFPV  ARGED 320
+LIEU 28 LFPV  W     E                                         LFPV  LOCAL   
+LIEU 28SLFPV  W     ODRAN   180 MOLEK    94                      
+LIEU 28SLFPV  E     ODRAN    79 MOLEK   120                      
+LIEU 29 LFPV  MSTO
+                                                                            
+LIEU 20 LFPY                    ALSSR                                       
+LIEU 25 LFPY  SSRDP SSRAR                                                   
+LIEU 26 LFPY  ALL   050                                                     
+                                                                            
+LIEU 20 LFQB  RSFTA             ALSSR                                       
+LIEU 21 LFQB  SGDPA SGARA LFQBZTZX    LFPMZTZX                              
+LIEU 23 LFQB  PARI                                                          
+LIEU 24 LFQB  ALL                                                           
+LIEU 26 LFQB  ALL   110                                                     
+                                                                            
+LIEU 20 LFQE  RSFTA             ALSSR                   TVACT               
+LIEU 21 LFQE  SGDPA SGARA LFQEZXXA    LFSFZPZX    LFJLZTZX
+                                                                            
+LIEU 20 LFQF                                                                
+LIEU 26 LFQF  ALL   090                                                     
+                                                                            
+LIEU 20 LFQG  RSFTA             ALSSR                                       
+LIEU 21 LFQG  SGDPA SGARA LFQGZPZX  
+LIEU 23 LFQG  PARI                                                          
+LIEU 24 LFQG  ALL                                                           
+LIEU 26 LFQG  ALL   090                                                     
+                                                                            
+LIEU 20 LFQI  RSFTA             ALSSR                         119.7                                       
+LIEU 21 LFQI  SGDPA SGARA LFQQZPZX
+LIEU 22 LFQI  DOUB  NEJEC
+LIEU 23 LFQI  PARI  LILE
+LIEU 24 LFQI  ALL
+                                                                            
+LIEU 20 LFQQ  RSFTA             ALSSR                                       
+LIEU 21 LFQQ  SGDPA SGARA LFQQZPZX                                          
+LIEU 22 LFQQ  DOUBL NEJEC                                                   
+LIEU 23 LFQQ  PARI  LILE                                                    
+LIEU 24 LFQQ  ALL                                                           
+LIEU 26 LFQQ  TRACA 110   ACTAU                                             
+LIEU 26BLFQQ  DENIN 110   ACTAU 
+LIEU 26BLFQQ  IBER0 110   ACTAU                                  
+LIEU 26BLFQQ  IBERU 110   ACTAU                                            
+LIEU 26BLFQQ  CMB   110   ACTAU                                        
+LIEU 26BLFQQ  EVX   280
+LIEU 26BLFQQ  ABB   110
+LIEU 27 LFQQ  CIV   100
+LIEU 28 LFQQ  W     E                                               LOCAL                                                                            
+LIEU 27BLFQQ  BNE   240
+
+LIEU 20 LFQS                                                                
+                                                                           
+LIEU 20 LFQT  RSFTA             ALSSR                                       
+LIEU 21 LFQT  SGDPA SGARA LFQTZPZX    LFQQZPZX                              
+LIEU 22 LFQT  DOUBL NEJEC                                                   
+LIEU 23 LFQT  PARI  LILE                                                    
+LIEU 24 LFQT  ALL                                                           
+LIEU 26 LFQT  TRACA 110   ACTAU                                             
+LIEU 26BLFQT  DENIN 110   ACTAU                                            5
+LIEU 26BLFQT  CMB   110   ACTAU                                            5
+LIEU 26BLFQT  BNE   110   ACTAU                                            5
+LIEU 26BLFQT  IBER0 110   ACTAU                                            
+LIEU 26BLFQT  IBERU 110   ACTAU
+LIEU 26BLFQT  ABB   110
+LIEU 27 LFQT  CIV   100
+LIEU 27BLFQT  MATIX 120
+LIEU 27BLFQT  CMB   120
+LIEU 27BLFQT  ABB   120
+
+LIEU 20 LFQV 
+                                                                            
+LIEU 20 LFRD                                                                
+LIEU 26 LFRD  ALL   510         RERFL                                       
+                                                                            
+LIEU 20 LFRG  RSFTA             ALSSR                   TVACT 120.350                                       
+LIEU 21 LFRG  SGDPA SGARA LFRGZTZX                                          
+LIEU 23 LFRG  PARI                                                          
+LIEU 24 LFRG  ALL                                                           
+LIEU 26 LFRG  ALL   090         RERFL                                       
+LIEU 28 LFRG  W     E                                         LFRG  EXTER                                                                            
+
+LIEU 20 LFRK  RSFTA             ALSSR                   TVACT 125.5                                       
+LIEU 21 LFRK  SGDPA SGARA LFRGZTZX    LFRKZPZX                              
+LIEU 23 LFRK  PARI                                                          
+LIEU 24 LFRK  ALL                                                           
+LIEU 26 LFRK  ALL   070         RERFL                                       
+                                                                            
+LIEU 20 LFRM  RSFTA       BRST  ALSSR                         125.9                                           
+LIEU 21 LFRM  SGDPA SGARA LFRMZPZX                                          
+LIEU 23 LFRM  PARI                                                          
+LIEU 24 LFRM  ALL 
+
+LIEU 20 LFRN                                                                
+LIEU 26 LFRN  OBATO 250                                                     
+LIEU 26BLFRN  GALBO 250                                                     
+
+LIEU 20 LFRS                                                                
+LIEU 26 LFRS  OBATO 250                                                     
+
+LIEU 20 LFRZ                                                                
+LIEU 26 LFRZ  OBATO 250                                                     
+                                                                            
+LIEU 20 LFSB                                                                
+                                                                            
+     20 LFSC                                                                
+                                                                            
+LIEU 20 LFSD                                                                
+LIEU 26 LFSD  ALL   510                                                     
+                                                                            
+LIEU 20 LFSF  RSFTA             ALSSR                         119.125                                       
+LIEU 21 LFSF  SDGPA SGARA LFSFZPZX    LFJLZTZX    LFJLZPST                                         
+LIEU 23 LFSF  PARI                                                          
+LIEU 24 LFSF  ALL                                                           
+LIEU 26 LFSF  ALL   090                                                     
+                                                                            
+LIEU 20 LFSI                                                  134.775                                                                
+LIEU 26 LFSI  ALL   090                                                     
+                                                                            
+LIEU 20 LFSL                                                                
+LIEU 26 LFSL  ALL   510                                                     
+                                                                            
+LIEU 20 LFSN  RSFTA             ALSSR                                       
+LIEU 21 LFSN  SDGPA SGARA LFSNZPZX                                          
+LIEU 23 LFSN  PARI                                                          
+LIEU 24 LFSN  ALL                                                           
+                                                                            
+LIEU 20 LFSO  RSFTA             ALSSR                                       
+LIEU 21 LFSO  SDGPA SGARA LFSOZPZX                                          
+LIEU 23 LFSO  PARI                                                          
+LIEU 24 LFSO  ALL                                                           
+LIEU 26 LFSO  ALL   510                                                     
+                                                                            
+LIEU 20 LFSR                    ALSSR                                                                
+          * CA080117 Configuration de piste fictive *
+LIEU 28 LFSR  W     E                                               EXTER   
+LIEU 28SLFSR  W
+LIEU 28SLFSR  E
+
+LIEU 20 LFSX                                                            
+                                                                            
+LIEU 20 LSGG                                                                
+LIEU 26 LSGG  DJL   240
+LIEU 26BLSGG  IBABA 240
+LIEU 28 LSGG  W     E                                               EXTER   
+LIEU 28SLSGG  W
+LIEU 28SLSGG  E
+
+LIEU 20 LSGS
+LIEU 26 LSGS  DJL   240                                                     
+LIEU 26BLSGS  IBABA 240
+                                                                
+LIEU 20 LSZB                                                                
+LIEU 26 LSZB  DJL   240                                                     
+LIEU 26BLSZB  IBABA 240
+                                                                           
+                                                                            
+                    *********************                                   
+                    * TERRAINS ASSOCIES *                                   
+                    *********************  10-05-2007                         
+                                                                            
+LIEU 30 LFPO  LFPV  LFPN  LFPY                                              
+LIEU 30 LFPG  LFOB  LFPT  LFPB  LFPC                                        
+LIEU 30 LFLL  LFLY  LFLS  LFLU  LFLN  LFSB  LFLB  LFLP  LFLI    
+LIEU 30 LFLL  LFLJ                                                          
+LIEU 30 LFQQ  LFAC  LFAT  LFAV  LFQT  LFAQ  LFAY
+
+                ***************************                                 
+                * TERRAINS PRINCIPAUX     *                                 
+                ***************************  25-10-2007
+                                                                            
+LIEU 40 LFPO  ORL                              10   600     0  -180   105   
+LIEU 40SLFPO  ORL   LPO   NEVES ACES  REES  QFES  DPEV        TRDTP         
+LIEU 40TLFPO  NEVAR NQTAR NQTAD NREVA                                   1
+LIEU 41 LFPO  P     24    26
+LIEU 41 LFPO  Q     20
+LIEU 41 LFPO  S     24    26
+LIEU 41 LFPO  T     20
+LIEU 41 LFPO  V     08    06    02
+LIEU 41 LFPO  X     08    06    02
+LIEU 42 LFPO        A00   A02   A04   A06
+LIEU 42 LFPO        B04   B08   B10   B15   B17   B19
+LIEU 42 LFPO        C02   C04   C05   C06   C08   C10   C12   C14   C16
+LIEU 42 LFPO        C18   C22   C2A   C24   C26   C8A   C8B
+LIEU 42 LFPO        D00   D01   D02   D03   D04   D05   D06   D08   D0A
+LIEU 42 LFPO        D0B   D12   D20   D22   D24   D2A   D2B  
+LIEU 42 LFPO        E01   E02   E03   E04   E05   E06   E07   E08   E09
+LIEU 42 LFPO        E0A   E0B   E12   E13   E14   E15   E16   E17   E18
+LIEU 42 LFPO        E19   ENA   ENB   EN1   EN2   EN3   EN4   EN9
+LIEU 42 LFPO        F04   F10   F20   F30   
+LIEU 42 LFPO        G03   G04   G05   G06   G07   G12   G13   G14   G30
+LIEU 42 LFPO        G40   G50   G60   G70   G73   G74   G75
+LIEU 42 LFPO        K01   K03   K04   K05   K06   K07   K10   K11   K12
+LIEU 42 LFPO        K13   K14   K15   K18   K19   K20   K30   K31   K32
+LIEU 42 LFPO        K32B  K33   K40   K41   K51   K52   K53
+LIEU 42 LFPO        M01   M02   M03   M04   M05   M06   M10   M20   M30
+LIEU 42 LFPO        M40   M50   M60
+LIEU 42 LFPO        N01   N02   N03   N04   N05   N06   N10   N11   N12
+LIEU 42 LFPO        N20   N22   N30   N33   N34   N40   N44   N50   N55
+LIEU 42 LFPO        N56   N60   N66
+LIEU 42 LFPO        P01   P02   P03   P04   P10   P11   P12   P13   P14
+LIEU 42 LFPO        P41   P42
+LIEU 42 LFPO        R01   R22
+LIEU 42 LFPO        S04   S24   S25   S26
+LIEU 42 LFPO        T03   T07   T26   T27   T28   T29   T30   T31
+LIEU 42 LFPO        U04   U05   U35
+LIEU 42 LFPO        V01   V02   V03   V06   V07   V7A   V08   V37   V38
+LIEU 42 LFPO        V39
+LIEU 42 LFPO        X01   X02   X03
+LIEU 42 LFPO        Y10   Y11   Y12   Y13   Y14   Y15   Y16   Y21   Y22
+LIEU 42 LFPO        Y23
+LIEU 43 LFPO     40    60    40
+
+LIEU 40 LFPG  CDG   CAPEG                      09   540     0  -180    90   
+LIEU 40SLFPG  CDG   LPG   NEVES ACES  REES  QFES  DPEV  SOAR  TRDTP DAS     
+LIEU 40TLFPG  NEVAR NQTAR NQTAD NREVA       SOVA      1    10           1
+
+LIEU 41 LFPG  A     27L   27R   26L   26R
+LIEU 41 LFPG  B     26L   26R   27L   27R
+LIEU 41 LFPG  D     27L   27R   26L   26R
+LIEU 41 LFPG  E     26L   26R   27L   27R
+LIEU 41 LFPG  G     09L   09R   08R   08L
+LIEU 41 LFPG  H     08R   08L   09L   09R
+LIEU 41 LFPG  K     09L   09R   08R   08L
+LIEU 41 LFPG  L     08R   08L   09L   09R
+LIEU 41 LFPG  Y     27L   27R   26L   26R
+LIEU 41 LFPG  *     09L   09R   08R   08L   27L   27R   26L   26R
+
+LIEU 42 LFPG  A//16 T01   T02   T03   W01   W02   W03   Z01   Z02   Z03
+LIEU 42 LFPG  A//16 Z08   U01   U02   U03   X01   X02   X03   V01   V02
+LIEU 42 LFPG  A//16 V03   Y01   Y02   Y03
+LIEU 42 LFPG  A//1  T04
+LIEU 42 LFPG  A//2  T05
+LIEU 42 LFPG  A//3  T06   T07   T08   U04
+LIEU 42 LFPG  A//4  U05
+LIEU 42 LFPG  A//5  U06   U07   U08   V04
+LIEU 42 LFPG  A//6  V05
+LIEU 42 LFPG  A//12 Y05
+LIEU 42 LFPG  A//13 Z04   Y06   Y07   Y08
+LIEU 42 LFPG  A//14 Z05
+LIEU 42 LFPG  A//15 Z06   Z07
+LIEU 42 LFPG  A//15BZ09      
+LIEU 42 LFPG  7     W04   V06   V07   V08
+LIEU 42 LFPG  8     W05
+LIEU 42 LFPG  9     W06   W07   W08   X04
+LIEU 42 LFPG  10    X05
+LIEU 42 LFPG  11    X06   X07   X08   Y04
+LIEU 42 LFPG  GE1   B01   B02   B03   B04   B05   B06   B07   B08   B09
+LIEU 42 LFPG  GE1   B10   B11   B12   B13   B14   B16   B18   B20                 
+LIEU 42 LFPG  GE2   D03   D04   D05   D06   D07   D08   D09   D10   D11
+LIEU 42 LFPG  GE2   D12   D13   D14   D15   D16   D17   D18   D19   D01
+LIEU 42 LFPG  GE2   D02   D20   D22   D24
+LIEU 42 LFPG  GE3/5 F02   F04   F06   F08   F10   F12   F14   F16   F18
+LIEU 42 LFPG  GE3/5 F20   F22   F24   F26   F28   F30   F32   F34
+LIEU 42 LFPG  GE4/5 F66   F68   F70   F72   F74   F76   F78   F80   F82
+LIEU 42 LFPG  GE4/5 F84
+LIEU 42 LFPG  GNORTHF86   F88   F90   F92
+LIEU 42 LFPG  E0    F01   F03   F05   F07   F09   F11   F13   F15   F96
+LIEU 42 LFPG  RP3   E10   E12   E14 
+LIEU 42 LFPG  RP3/4 E16   E18   E20   E22   E24   E26   E28   E30   E32
+LIEU 42 LFPG  RP3/4 E34
+LIEU 42 LFPG  RP3/4 E01   E05   E09   E13   E17   E21   E25   E29
+LIEU 42 LFPG  BQ5   H01   H02   H03   H04   H05   H06   H07   H08   H09
+LIEU 42 LFPG  BQ5   H10   H11   H12   H20   H21   H22   H30   H34   H40
+LIEU 42 LFPG  BQ5   H50   H55   H60   H65   H70   H80   H87
+LIEU 42 LFPG  P2    J01   J02   J03   J04   J05   J06   J10   J11   J12
+LIEU 42 LFPG  P2    J13   J14   J15   J16   J17   J18   J19   J20   J21
+LIEU 42 LFPG  P2    J30   J31   J32   J33   J34   J35   J36   J37   J38
+LIEU 42 LFPG  P2    J39   J40   J41
+LIEU 42 LFPG        S11   S12   S13   S14   S15   S16   S17   S18   S19
+LIEU 42 LFPG        S20   S21   S22   S23   S24   S25   S26   S27   S28
+LIEU 42 LFPG        S29   S30   S31
+LIEU 42 LFPG        R01   R02   R03   R04   R05   R06   R07   R08   R09
+LIEU 42 LFPG        R10   R11   R12   R13   R14
+LIEU 42 LFPG        Q01   Q02   Q03   Q04   Q05   Q06   Q07   Q08   Q09
+LIEU 42 LFPG        Q10   Q11   Q12   Q13   Q14   Q15   Q16   Q17   Q18
+LIEU 42 LFPG        Q19   Q20   Q21
+LIEU 42 LFPG  G1W   G10   G11   G12   G13   G14
+LIEU 42 LFPG  G2W   G20   G21   G22   G23   G24
+LIEU 42 LFPG  G2W   G30   G31   G32   G33   G34   G35
+LIEU 42 LFPG  RP1/2 A01   A02   A03   A04   A05   A06   A07   A08   A09
+LIEU 42 LFPG  RP1/2 A10   A12   A14   A18   A20
+LIEU 42 LFPG        A30   A32   A34   A36   A38
+LIEU 42 LFPG  RP1/2 C02   C03   C04   C05   C06   C07   C08   C10   C12
+LIEU 42 LFPG        M06   M07   M08   M09   M10   M11   M12   M13   M14
+LIEU 42 LFPG        M15   M16   M17   M20   M21   M22   M23   M24   M26
+LIEU 42 LFPG        M28   M30   M32   M34
+LIEU 42 LFPG        N01   N02   N03   N31   N33   N04   N41   N43   N05
+LIEU 42 LFPG        N51   N53   N08   N09   N10   N11   N06   N60   N61
+LIEU 42 LFPG        N63   N65   N66   N67   N68   N69   N70   N71   N72
+LIEU 42 LFPG        N73   N76   N77   N78   N79
+LIEU 42 LFPG        P70   P71   P72   P73   P74   P75   P76   P80   P81  
+LIEU 42 LFPG        P82   P83   P84   P85   P86   P92   P93   P94
+LIEU 42 LFPG  SPOT MI20   I21   I22   I23   I24   I25   I26   I27   I30
+LIEU 42 LFPG  SPOT MI31   I32   I33   I34   I41   I42   I43   I44   I45
+LIEU 42 LFPG  SPOT MI46   I47   I48   I49   I52   I80   I81   I82   I83
+LIEU 42 LFPG  SPOT MI84   I85   I86   I87   I88   I89   I90   I91 
+LIEU 42 LFPG  E1    K01   K05   K09   K13   K17   K21
+LIEU 42 LFPG  E1    K27   K33   K39   K45
+LIEU 42 LFPG  E3    K61   K67   K73   K79
+LIEU 42 LFPG  RP6   L01   L03   L05   L07   L09   L11   L13   L15   L17
+LIEU 42 LFPG  RP6   L19   L21   L23
+LIEU 42 LFPG  KL3   L61   L67   L73
+LIEU 43 LFPG     40    60    40
+ 
+LIEU 40 LFPB  CDG                              09   540     0  -180    90   
+LIEU 40SLFPB  CDG   LPB                                                     
+LIEU 40TLFPB  NEVAR NQTAR NQTAD NREVA                                   1
+LIEU 41 LFPB  C     25    21
+LIEU 41 LFPB  F     25    21
+LIEU 41 LFPB  J     09    07    03
+LIEU 41 LFPB  M     09    07    03
+LIEU 42 LFPB        A     B     C     D     E     FN    FS    G     H   
+LIEU 42 LFPB        H5    HDA   HK1   I     J     K     L     M     N
+LIEU 42 LFPB        T
+LIEU 43 LFPB     40    60    40
+
+LIEU 40 LFQQ  LILE                             04   060    60   180    60
+LIEU 40SLFQQ  LILE  LEQ
+LIEU 40TLFQQ  NEVAR NQTAR NQTAD NREVA                                   2
+LIEU 41 LFQQ  E     08 
+LIEU 41 LFQQ  S     26
+LIEU 41 LFQQ  T     26
+LIEU 41 LFQQ  W     26
+LIEU 41 LFQQ  X     26
+LIEU 41 LFQQ  Y     26
+LIEU 41 LFQQ  Z     26
+LIEU 43 LFQQ     30    60    40
+
+                ***************************                                 
+                * TERRAINS ASSOCIES       *                                 
+                *  ETRANGERS              *  05-08-04                               
+                ***************************                                 
+                                                                            
+LIEU 50 LFP9                                                                
+LIEU 51 BK99
+LIEU 51 LF99
+LIEU 51 LE99
+LIEU 51 LI99
+LIEU 51 LM99
+LIEU 51 LS99
+LIEU 51 LP99
+LIEU 51 LX99
+LIEU 52 D999
+LIEU 52 F999
+LIEU 52 G999
+LIEU 52 H999
+LIEU 52 S999
+LIEU 52 T999
+                                                           
+                                                                            
+                *******************************                             
+                * TERRAINS "ARRIVEE PROCHE DU *                             
+                * CENTRE" ET XFL ASSOCIE      *                             
+                *******************************  06-09-04                   
+
+LIEU 6  EBC   CMB     120 MMD     190 MEDOX   190 ARVOL   180
+LIEU 6  EBAW  ARVOL   180 TULNI   180
+LIEU 6  EBBR  ARVOL   180 TULNI   180      
+LIEU 6  EBCI  ARVOL   160
+LIEU 6  EBFN  ARVOL   180 TULNI   180
+LIEU 6  EBKT  CMB     120
+LIEU 6  EBLG  CMB     220 MEDOX   190
+LIEU 6  EBMB  ARVOL   180 TULNI   180
+LIEU 6  EBOS  VEKIN   180 
+LIEU 6  EDDR  MMD     130
+LIEU 6  EHBK  MMD     190 CMB     220 MEDOX   190
+LIEU 6  EHWO  ADUTO   180
+LIEU 6  ELLX  MMD     130
+
+LIEU 6  LFAC  ABB     120 BNE     120 TRACA   120
+LIEU 6  LFAQ  CMB     120
+LIEU 6  LFAT  ABB     120 BNE     120 TRACA   120  
+LIEU 6  LFAV  DENIN   120 BNE     120 IBERU   120 CMB     120               
+LIEU 6  LFBH  ROLEN   230
+LIEU 6  LFEY  ROLEN   230
+LIEU 6  LFLB  ATN     230 
+LIEU 6  LFLC  OLIRI   130
+LIEU 6  LFLI  ATN     230
+LIEU 6  LFLJ  ATN     230
+LIEU 6  LFLP  ATN     230
+LIEU 6  LFLV  MENOX   130 MOU     130                                                       
+LIEU 6  LFJL  MMD     110
+LIEU 6  LFHM  ATN     200                                    
+LIEU 6  LFOU  ROLEN   230
+LIEU 6  LFQQ  DENIN   120 BNE     120 ABB     120 CMB     120               
+LIEU 6  LFQT  DENIN   120 BNE     120 ABB     120 CMB     120               
+LIEU 6  LFRI  ROLEN   250
+LIEU 6  LFRN  LGL     230
+LIEU 6  LFRS  ROLEN   250
+LIEU 6  LFRZ  ROLEN   250
+LIEU 6  LFSB  GELTA   310
+LIEU 6  LFSF  MMD     110
+
+                                                                            
+                ***********************                                     
+                * BALISES ASSOCIEES A *                                     
+                * UNE BALISE XFL      *                                     
+                *********************** 13-11-01                            
+                                                                            
+LIEU 7  ATN   ATN       1                                                   
+LIEU 7  CMB   CMB       1
+LIEU 7  DENIN DENIN     1                                                   
+LIEU 7  MEDOX MEDOX     1
+LIEU 7  MENOX MENOX     1                                                   
+LIEU 7  MMD   MMD       1
+LIEU 7  MOU   MOU       1                                                   
+LIEU 7  TRACA TRACA     1
+LIEU 7  ARVOL ARVOL     1
+LIEU 7  TULNI TULNI     1
+
+
+         ***Correction du profil des vols LFRS LFJL*****
+
+LIEU 8  LFRS  LFJL    300
+
+
+               *************************
+               * DESCRIPTION DES STARS * 20-12-2007
+               *************************
+
+
+LIEU 90 LFOB  DPE   DPE   SONOS                                     OOOO
+LIEU 901LFOB  DPE         DPE6T
+LIEU 90 LFOB  DVL   DVL   MATID                                     OOOO
+LIEU 901LFOB  DVL         DVL6T
+LIEU 90 LFOB  CAN   CAN   MATID                                     OOOO
+LIEU 901LFOB  CAN         CAN6T
+LIEU 90 LFOB  LGL   LGL   MATID                                     OOOO
+LIEU 901LFOB  LGL         LGL6T
+LIEU 90 LFOB  CMB   CMB   MTD   BVS                                 OOOO
+LIEU 901LFOB  CMB         CMB6T
+LIEU 90 LFOB  SOLBA SOLBA VELER                                     OOOO
+LIEU 901LFOB  SOLBA       VELER6T
+LIEU 90 LFOB  BAXIR BAXIR CTL                                       OOOO
+LIEU 901LFOB  BAXIR       CTL6T  
+ 
+LIEU 90 LFOK  TRO   TRO   KELON                                     OOOO
+LIEU 901LFOK  TRO         TRO1A
+LIEU 90 LFOK  DIKOL DIKOL KELON                                     OOOO
+LIEU 901LFOK  DIKOL       DIKOL1W
+
+LIEU 90 LFPB  KEPER KEPER LUMAN ROMLO BALOD                         NONO
+LIEU 901LFPB  KEPER E     KEPER4E
+LIEU 901LFPB  KEPER W     KEPER4W
+LIEU 90 LFPB  KEPER KEPER LUMAN ROMLO BALOD                         ONNO
+LIEU 901LFPB  KEPER E     KEPER4H
+LIEU 901LFPB  KEPER W     KEPER4W
+LIEU 90 LFPB  KOVAK KOVAK BENAR ROMLO BALOD                         NOON
+LIEU 901LFPB  KOVAK E     KOVAK4E
+LIEU 901LFPB  KOVAK W     KOVAK4W
+LIEU 90 LFPB  KOVAK KOVAK BENAR ROMLO BALOD                         ONON
+LIEU 901LFPB  KOVAK E     KOVAK4H
+LIEU 901LFPB  KOVAK W     KOVAK4W
+LIEU 90 LFPB  SABLE SABLE LUMAN ROMLO BALOD                         NOON
+LIEU 901LFPB  SABLE E     SABLE4E
+LIEU 901LFPB  SABLE W     SABLE4W
+LIEU 90 LFPB  SABLE SABLE LUMAN ROMLO BALOD                         ONON
+LIEU 901LFPB  SABLE E     SABLE4H
+LIEU 901LFPB  SABLE W     SABLE4W
+LIEU 90 LFPB  DPE   DPE   SOKMU KOROM MERUE PBNWR                   NOOO
+LIEU 901LFPB  DPE   E     DPE4E
+LIEU 90 LFPB  DPE   DPE   MOKNO PBNWR                               NOOO
+LIEU 901LFPB  DPE   W     DPE4P
+LIEU 90 LFPB  DPE   DPE   KOROM MERUE PBNWH                         ONOO
+LIEU 901LFPB  DPE   E     DPE4H
+LIEU 90 LFPB  DPE   DPE   MOKNO PBNWH                               ONOO
+LIEU 901LFPB  DPE   W     DPE4P
+LIEU 90 LFPB  CAN   CAN   ELBOX SOKMU KOROM MERUE PBNWR             NOON
+LIEU 901LFPB  CAN   E     CAN4E
+LIEU 90 LFPB  CAN   CAN   ELBOX KEREX ROU   MOKNO PBNWR             NOON
+LIEU 901LFPB  CAN   W     CAN4P
+LIEU 90 LFPB  CAN   CAN   ELBOX SOKMU KOROM MERUE PBNWH             ONON
+LIEU 901LFPB  CAN   E     CAN4H
+LIEU 90 LFPB  CAN   CAN   ELBOX KEREX ROU   MOKNO PBNWH             ONON
+LIEU 901LFPB  CAN   W     CAN4P
+LIEU 90 LFPB  DVL   DVL   SOKMU MERUE PBNWR                         NONO
+LIEU 901LFPB  DVL   E     DVL4E
+LIEU 90 LFPB  DVL   DVL   MOKNO PBNWR                               NONO
+LIEU 901LFPB  DVL   W     DVL4P
+LIEU 90 LFPB  DVL   DVL   SOKMU MERUE PBNWH                         ONNO
+LIEU 901LFPB  DVL   E     DVL4H
+LIEU 90 LFPB  DVL   DVL   KEREX ROU   MOKNO PBNWH                   ONNO
+LIEU 901LFPB  DVL   W     DVL4P
+LIEU 90 LFPB  MOPIL MOPIL SOTUS SOLBA VELER                         OONO
+LIEU 901LFPB  MOPIL E     MOPIL4E
+LIEU 901LFPB  MOPIL W     MOPIL4W
+LIEU 90 LFPB  RLP   RLP   TRO   OMAKO                               NOON
+LIEU 901LFPB  RLP   E     RLP5E
+LIEU 901LFPB  RLP   W     RLP5W
+LIEU 90 LFPB  RLP   RLP   TRO   OMAKO                               ONON
+LIEU 901LFPB  RLP   E     RLP5H
+LIEU 901LFPB  RLP   W     RLP5P
+LIEU 90 LFPB  EPL   EPL   TRO   OMAKO                               NONO
+LIEU 901LFPB  EPL   E     EPL5E
+LIEU 901LFPB  EPL   W     EPL5W
+LIEU 90 LFPB  EPL   EPL   TRO   OMAKO                               ONNO
+LIEU 901LFPB  EPL   E     EPL5H
+LIEU 901LFPB  EPL   W     EPL5P
+LIEU 90 LFPB  TINIL TINIL NANOP IPLAN INKAK OMAKO                   NONO
+LIEU 901LFPB  TINIL E     TINIL5E
+LIEU 901LFPB  TINIL W     TINIL5W
+LIEU 90 LFPB  MOU   MOU   TRO   OMAKO                               NOON
+LIEU 901LFPB  MOU   E     MOU5E
+LIEU 901LFPB  MOU   W     MOU5W
+LIEU 90 LFPB  MOU   MOU   TRO   OMAKO                               ONON
+LIEU 901LFPB  MOU   E     MOU5H
+LIEU 901LFPB  MOU   W     MOU5P
+LIEU 90 LFPB  DJL   DJL   TRO   OMAKO                               NOOO
+LIEU 901LFPB  DJL   E     DJL5E
+LIEU 901LFPB  DJL   W     DJL5W
+LIEU 90 LFPB  DJL   DJL   TRO   OMAKO                               ONOO
+LIEU 901LFPB  DJL   E     DJL5H
+LIEU 901LFPB  DJL   W     DJL5P
+LIEU 90 LFPB  ATN   ATN   AVLON TRO   OMAKO                         NOON
+LIEU 901LFPB  ATN   E     ATN5E
+LIEU 901LFPB  ATN   W     ATN5W
+LIEU 90 LFPB  ATN   ATN   AVLON TRO   OMAKO                         ONON
+LIEU 901LFPB  ATN   E     ATN5H
+LIEU 901LFPB  ATN   W     ATN5P
+LIEU 90 LFPB  MMD   MMD   SUIPE REM   SOLBA VELER                   OOON
+LIEU 901LFPB  MMD   E     MMD4E
+LIEU 901LFPB  MMD   W     MMD4W
+LIEU 90 LFPB  MATIX MATIX GITAN SOLBA VELER                         OOON
+LIEU 901LFPB  MATIX E     MATIX4E
+LIEU 901LFPB  MATIX W     MATIX4W
+LIEU 90 LFPB  RENSA RENSA SOLBA VELER                               OOOO
+LIEU 901LFPB  RENSA E     RENSA4E
+LIEU 901LFPB  RENSA W     RENSA4W
+
+LIEU 90 LFPC  DPE   DPE   KOROM MERUE                               OOOO
+LIEU 901LFPC  DPE         DPE6T
+LIEU 90 LFPC  DVL   DVL   SOKMU MERUE                               OONO
+LIEU 901LFPC  DVL         DVL6T
+LIEU 90 LFPC  CAN   CAN   SOKMU MERUE                               OOON
+LIEU 901LFPC  CAN         CAN6T
+LIEU 90 LFPC  LGL   LGL   ELBOX SOKMU MERUE                         OOON
+LIEU 901LFPC  LGL         LGL6T
+LIEU 90 LFPC  CTL   CTL   VELER                                     OOOO
+LIEU 901LFPC  CTL         CTL6T
+
+LIEU 90 LFPG  RLP   RLP   TRO   OMAKO                               NOON
+LIEU 901LFPG  RLP   E     RLP5E
+LIEU 901LFPG  RLP   W     RLP5W
+LIEU 90 LFPG  RLP   RLP   TRO   OMAKO                               ONON
+LIEU 901LFPG  RLP   E     RLP5H
+LIEU 901LFPG  RLP   W     RLP5P
+LIEU 90 LFPG  EPL   EPL   TRO   OMAKO                               NONO
+LIEU 901LFPG  EPL   E     EPL5E
+LIEU 901LFPG  EPL   W     EPL5W
+LIEU 90 LFPG  EPL   EPL   TRO   OMAKO                               ONNO
+LIEU 901LFPG  EPL   E     EPL5H
+LIEU 901LFPG  EPL   W     EPL5P
+LIEU 90 LFPG  TINIL TINIL NANOP IPLAN INKAK OMAKO                   NONO
+LIEU 901LFPG  TINIL E     TINIL5E
+LIEU 901LFPG  TINIL W     TINIL5W
+LIEU 90 LFPG  MOU   MOU   TRO   OMAKO                               NOON
+LIEU 901LFPG  MOU   E     MOU5E
+LIEU 901LFPG  MOU   W     MOU5W
+LIEU 90 LFPG  MOU   MOU   TRO   OMAKO                               ONON
+LIEU 901LFPG  MOU   E     MOU5H
+LIEU 901LFPG  MOU   W     MOU5P
+LIEU 90 LFPG  DJL   DJL   TRO   OMAKO                               NOOO
+LIEU 901LFPG  DJL   E     DJL5E
+LIEU 901LFPG  DJL   W     DJL5W
+LIEU 90 LFPG  DJL   DJL   TRO   OMAKO                               ONOO
+LIEU 901LFPG  DJL   E     DJL5H
+LIEU 901LFPG  DJL   W     DJL5P
+LIEU 90 LFPG  ATN   ATN   AVLON TRO   OMAKO                         NOON
+LIEU 901LFPG  ATN   E     ATN5E
+LIEU 901LFPG  ATN   W     ATN5W
+LIEU 90 LFPG  ATN   ATN   AVLON TRO   OMAKO                         ONON
+LIEU 901LFPG  ATN   E     ATN5H
+LIEU 901LFPG  ATN   W     ATN5P
+LIEU 90 LFPG  DPE   DPE   SOKMU KOROM MERUE PGNWR                   NOOO
+LIEU 901LFPG  DPE   E     DPE4E
+LIEU 901LFPG  DPE   W     DPE4W
+LIEU 90 LFPG  DPE   DPE   KOROM MERUE PGNWH                         ONOO
+LIEU 901LFPG  DPE   E     DPE4H
+LIEU 90 LFPG  DPE   DPE   MOKNO PGNWH                               ONOO
+LIEU 901LFPG  DPE   W     DPE4P
+LIEU 90 LFPG  CAN   CAN   SOKMU MERUE PGNWR                         NOON
+LIEU 901LFPG  CAN   E     CAN4E
+LIEU 901LFPG  CAN   W     CAN4W
+LIEU 90 LFPG  CAN   CAN   SOKMU MERUE PGNWH                         ONON
+LIEU 901LFPG  CAN   E     CAN4H
+LIEU 90 LFPG  CAN   CAN   ELBOX KEREX ROU   MOKNO PGNWH             ONON
+LIEU 901LFPG  CAN   W     CAN4P
+LIEU 90 LFPG  DVL   DVL   SOKMU MERUE PGNWR                         NONO
+LIEU 901LFPG  DVL   E     DVL4E
+LIEU 901LFPG  DVL   W     DVL4W
+LIEU 90 LFPG  DVL   DVL   SOKMU MERUE PGNWH                         ONNO
+LIEU 901LFPG  DVL   E     DVL4H
+LIEU 90 LFPG  DVL   DVL   KEREX ROU   MOKNO PGNWH                   ONNO
+LIEU 901LFPG  DVL   W     DVL4P
+LIEU 90 LFPG  MOPIL MOPIL XERAM ANARU LORTA                         NONO
+LIEU 901LFPG  MOPIL E     MOPIL4E
+LIEU 901LFPG  MOPIL W     MOPIL4W
+LIEU 90 LFPG  MOPIL MOPIL SOTUS SOLBA VELER                         ONNO
+LIEU 901LFPG  MOPIL E     MOPIL4H
+LIEU 901LFPG  MOPIL W     MOPIL4P
+LIEU 90 LFPG  KEPER KEPER LUMAN ROMLO BALOD                         NONO
+LIEU 901LFPG  KEPER E     KEPER4E
+LIEU 901LFPG  KEPER W     KEPER4W
+LIEU 90 LFPG  KEPER KEPER LUMAN ROMLO BALOD                         ONNO
+LIEU 901LFPG  KEPER E     KEPER4H
+LIEU 901LFPG  KEPER W     KEPER4W
+LIEU 90 LFPG  KOVAK KOVAK BENAR ROMLO BALOD                         NOON
+LIEU 901LFPG  KOVAK E     KOVAK4E
+LIEU 901LFPG  KOVAK W     KOVAK4W
+LIEU 90 LFPG  KOVAK KOVAK BENAR ROMLO BALOD                         ONON
+LIEU 901LFPG  KOVAK E     KOVAK4H
+LIEU 901LFPG  KOVAK W     KOVAK4W
+LIEU 90 LFPG  SABLE SABLE LUMAN ROMLO BALOD                         NOON
+LIEU 901LFPG  SABLE E     SABLE4E
+LIEU 901LFPG  SABLE W     SABLE4W
+LIEU 90 LFPG  SABLE SABLE LUMAN ROMLO BALOD                         ONON
+LIEU 901LFPG  SABLE E     SABLE4H
+LIEU 901LFPG  SABLE W     SABLE4W
+LIEU 90 LFPG  MMD   MMD   SUIPE REM   SOLBA VELER                   ONON
+LIEU 901LFPG  MMD   E     MMD4H
+LIEU 901LFPG  MMD   W     MMD4P
+LIEU 90 LFPG  MATIX MATIX VAKER ANARU LORTA                         NOON
+LIEU 901LFPG  MATIX E     MATIX4E
+LIEU 901LFPG  MATIX W     MATIX4W
+LIEU 90 LFPG  MATIX MATIX GITAN SOLBA VELER                         ONON
+LIEU 901LFPG  MATIX E     MATIX4H
+LIEU 901LFPG  MATIX W     MATIX4P
+LIEU 90 LFPG  VEDUS VEDUS XERAM ANARU LORTA                         NONO
+LIEU 901LFPG  VEDUS E     VEDUS4E
+LIEU 901LFPG  VEDUS W     VEDUS4W
+LIEU 90 LFPG  SONUR SONUR XERAM ANARU LORTA                         NOON
+LIEU 901LFPG  SONUR E     SONUR4E
+LIEU 901LFPG  SONUR W     SONUR4W
+LIEU 90 LFPG  RENSA RENSA SOLBA VELER                               ONOO
+LIEU 901LFPG  RENSA E     RENSA4H
+LIEU 901LFPG  RENSA W     RENSA4P
+LIEU 90 LFPG  DINAN DINAN REMGO XERAM ANARU LORTA                   NONO
+LIEU 901LFPG  DINAN E     DINAN4E
+LIEU 901LFPG  DINAN W     DINAN4W
+LIEU 90 LFPG  LATGO LATGO GONEK ROMLO BALOD                         NONO
+LIEU 901LFPG  LATGO E     LATGO4E
+LIEU 901LFPG  LATGO W     LATGO4W
+
+LIEU 90 LFPO  TUTAX TUTAX OKRIX MOLEK                               NONO
+LIEU 901LFPO  TUTAX E     TUTAX6E
+LIEU 901LFPO  TUTAX W     TUTAX6W
+LIEU 90 LFPO  TUTAX TUTAX OKRIX MOLEK                               ONNO
+LIEU 901LFPO  TUTAX E     TUTAX6H
+LIEU 901LFPO  TUTAX W     TUTAX6P
+LIEU 90 LFPO  MATIX MATIX GITAN SOLBA                               OOON
+LIEU 901LFPO  MATIX E     MATIX4E
+LIEU 901LFPO  MATIX W     MATIX4W
+LIEU 90 LFPO  MOPIL MOPIL SOTUS SOLBA                               OONO
+LIEU 901LFPO  MOPIL E     MOPIL4E
+LIEU 901LFPO  MOPIL W     MOPIL4W
+LIEU 90 LFPO  RENSA RENSA SOLBA                                     OOOO
+LIEU 901LFPO  RENSA E     RENSA4E
+LIEU 901LFPO  RENSA W     RENSA4W
+LIEU 90 LFPO  MMD   MMD   SUIPE REM   SOLBA                         OOON
+LIEU 901LFPO  MMD   E     MMD4E
+LIEU 901LFPO  MMD   W     MMD4W
+LIEU 90 LFPO  EPL   EPL   LUVAL OKRIX MOLEK                         NONO
+LIEU 901LFPO  EPL   E     EPL6E
+LIEU 901LFPO  EPL   W     EPL6W
+LIEU 90 LFPO  EPL   EPL   LUVAL OKRIX MOLEK                         ONNO
+LIEU 901LFPO  EPL   E     EPL6H
+LIEU 901LFPO  EPL   W     EPL6P
+LIEU 90 LFPO  RLP   RLP   OKRIX MOLEK                               NOON
+LIEU 901LFPO  RLP   E     RLP6E
+LIEU 901LFPO  RLP   W     RLP6W
+LIEU 90 LFPO  RLP   RLP   OKRIX MOLEK                               ONON
+LIEU 901LFPO  RLP   E     RLP6H
+LIEU 901LFPO  RLP   W     RLP6P
+LIEU 90 LFPO  KUTAN KUTAN GORET OKRIX MOLEK                         NOON
+LIEU 901LFPO  KUTAN E     KUTAN6E
+LIEU 901LFPO  KUTAN W     KUTAN6W
+LIEU 90 LFPO  KUTAN KUTAN GORET OKRIX MOLEK                         ONON
+LIEU 901LFPO  KUTAN E     KUTAN6H
+LIEU 901LFPO  KUTAN W     KUTAN6P
+LIEU 90 LFPO  DJL   DJL   TUNOR OKRIX MOLEK                         NONO
+LIEU 901LFPO  DJL   E     DJL6E
+LIEU 901LFPO  DJL   W     DJL6W
+LIEU 90 LFPO  DJL   DJL   TUNOR OKRIX MOLEK                         ONNO
+LIEU 901LFPO  DJL   E     DJL6H
+LIEU 901LFPO  DJL   W     DJL6P
+LIEU 90 LFPO  ARDOL ARDOL CHABY OKRIX MOLEK                         NONO
+LIEU 901LFPO  ARDOL E     ARDOL6E
+LIEU 901LFPO  ARDOL W     ARDOL6W
+LIEU 90 LFPO  ARDOL ARDOL CHABY OKRIX MOLEK                         ONNO
+LIEU 901LFPO  ARDOL E     ARDOL6H
+LIEU 901LFPO  ARDOL W     ARDOL6P
+LIEU 90 LFPO  ATN   ATN   OKRIX MOLEK                               NOOO
+LIEU 901LFPO  ATN   E     ATN6E
+LIEU 901LFPO  ATN   W     ATN6W
+LIEU 90 LFPO  ATN   ATN   OKRIX MOLEK                               ONOO
+LIEU 901LFPO  ATN   E     ATN6H
+LIEU 901LFPO  ATN   W     ATN6P
+LIEU 90 LFPO  MOU   MOU   AVLON OKRIX MOLEK                         NOON
+LIEU 901LFPO  MOU   E     MOU6E
+LIEU 901LFPO  MOU   W     MOU6W
+LIEU 90 LFPO  MOU   MOU   AVLON OKRIX MOLEK                         ONON
+LIEU 901LFPO  MOU   E     MOU6H
+LIEU 901LFPO  MOU   W     MOU6P
+LIEU 90 LFPO  NIMER NIMER SOMED CAD   ODRAN                         OONO
+LIEU 901LFPO  NIMER E     NIMER4E 
+LIEU 901LFPO  NIMER W     NIMER4W
+LIEU 90 LFPO  AMB   AMB   CAD   ODRAN                               OOOO
+LIEU 901LFPO  AMB   E     AMB4E
+LIEU 901LFPO  AMB   W     AMB4W
+LIEU 90 LFPO  LUMAN LUMAN KOVAK CAD   ODRAN                         OOON
+LIEU 901LFPO  LUMAN E     LUMAN4E
+LIEU 901LFPO  LUMAN W     LUMAN4W
+LIEU 90 LFPO  BOBSA BOBSA BENAR CAD   ODRAN                         OOOO
+LIEU 901LFPO  BOBSA E     BOBSA4E
+LIEU 901LFPO  BOBSA W     BOBSA4W
+
+LIEU 90 LFPT  DPE   DPE   KOROM MERUE                               OOOO
+LIEU 901LFPT  DPE         DPE6T
+LIEU 90 LFPT  DVL   DVL   SOKMU MERUE                               OONO
+LIEU 901LFPT  DVL         DVL6T
+LIEU 90 LFPT  CAN   CAN   SOKMU MERUE                               OOON
+LIEU 901LFPT  CAN         CAN6T
+LIEU 90 LFPT  LGL   LGL   ELBOX SOKMU MERUE                         OOON
+LIEU 901LFPT  LGL         LGL6T
+LIEU 90 LFPT  CTL   CTL   VELER                                     OOOO
+LIEU 901LFPT  CTL         CTL6T
+
+LIEU 90 LFPV  TUTAX TUTAX OKRIX MOLEK                               NONO
+LIEU 901LFPV  TUTAX E     TUTAX6E
+LIEU 901LFPV  TUTAX W     TUTAX6W
+LIEU 90 LFPV  TUTAX TUTAX OKRIX MOLEK                               ONNO
+LIEU 901LFPV  TUTAX E     TUTAX6H
+LIEU 901LFPV  TUTAX W     TUTAX6P
+LIEU 90 LFPV  MATIX MATIX GITAN SOLBA                               OOON
+LIEU 901LFPV  MATIX E     MATIX4E
+LIEU 901LFPV  MATIX W     MATIX4W
+LIEU 90 LFPV  MOPIL MOPIL SOTUS SOLBA                               OONO
+LIEU 901LFPV  MOPIL E     MOPIL4E
+LIEU 901LFPV  MOPIL W     MOPIL4W
+LIEU 90 LFPV  RENSA RENSA SOLBA                                     OOOO
+LIEU 901LFPV  RENSA E     RENSA4E
+LIEU 901LFPV  RENSA W     RENSA4W
+LIEU 90 LFPV  MMD   MMD   SUIPE REM   SOLBA                         OOON
+LIEU 901LFPV  MMD   E     MMD4E
+LIEU 901LFPV  MMD   W     MMD4W
+LIEU 90 LFPV  EPL   EPL   LUVAL OKRIX MOLEK                         NONO
+LIEU 901LFPV  EPL   E     EPL6E
+LIEU 901LFPV  EPL   W     EPL6W
+LIEU 90 LFPV  EPL   EPL   LUVAL OKRIX MOLEK                         ONNO
+LIEU 901LFPV  EPL   E     EPL6H
+LIEU 901LFPV  EPL   W     EPL6P
+LIEU 90 LFPV  RLP   RLP   OKRIX MOLEK                               NOON
+LIEU 901LFPV  RLP   E     RLP6E
+LIEU 901LFPV  RLP   W     RLP6W
+LIEU 90 LFPV  RLP   RLP   OKRIX MOLEK                               ONON
+LIEU 901LFPV  RLP   E     RLP6H
+LIEU 901LFPV  RLP   W     RLP6P
+LIEU 90 LFPV  KUTAN KUTAN GORET OKRIX MOLEK                         NOON
+LIEU 901LFPV  KUTAN E     KUTAN6E
+LIEU 901LFPV  KUTAN W     KUTAN6W
+LIEU 90 LFPV  KUTAN KUTAN GORET OKRIX MOLEK                         ONON
+LIEU 901LFPV  KUTAN E     KUTAN6H
+LIEU 901LFPV  KUTAN W     KUTAN6P
+LIEU 90 LFPV  DJL   DJL   TUNOR OKRIX MOLEK                         NONO
+LIEU 901LFPV  DJL   E     DJL6E
+LIEU 901LFPV  DJL   W     DJL6W
+LIEU 90 LFPV  DJL   DJL   TUNOR OKRIX MOLEK                         ONNO
+LIEU 901LFPV  DJL   E     DJL6H
+LIEU 901LFPV  DJL   W     DJL6P
+LIEU 90 LFPV  ARDOL ARDOL CHABY OKRIX MOLEK                         NONO
+LIEU 901LFPV  ARDOL E     ARDOL6E
+LIEU 901LFPV  ARDOL W     ARDOL6W
+LIEU 90 LFPV  ARDOL ARDOL CHABY OKRIX MOLEK                         ONNO
+LIEU 901LFPV  ARDOL E     ARDOL6H
+LIEU 901LFPV  ARDOL W     ARDOL6P
+LIEU 90 LFPV  ATN   ATN   OKRIX MOLEK                               NOOO
+LIEU 901LFPV  ATN   E     ATN6E
+LIEU 901LFPV  ATN   W     ATN6W
+LIEU 90 LFPV  ATN   ATN   OKRIX MOLEK                               ONOO
+LIEU 901LFPV  ATN   E     ATN6H
+LIEU 901LFPV  ATN   W     ATN6P
+LIEU 90 LFPV  MOU   MOU   AVLON OKRIX MOLEK                         NOON
+LIEU 901LFPV  MOU   E     MOU6E
+LIEU 901LFPV  MOU   W     MOU6W
+LIEU 90 LFPV  MOU   MOU   AVLON OKRIX MOLEK                         ONON
+LIEU 901LFPV  MOU   E     MOU6H
+LIEU 901LFPV  MOU   W     MOU6P
+LIEU 90 LFPV  NIMER NIMER SOMED CAD   ODRAN                         OONO
+LIEU 901LFPV  NIMER E     NIMER4T
+LIEU 901LFPV  NIMER W     NIMER4T
+LIEU 90 LFPV  AMB   AMB   CAD   ODRAN                               OOOO
+LIEU 901LFPV  AMB   E     AMB4T
+LIEU 901LFPV  AMB   W     AMB4T
+LIEU 90 LFPV  LUMAN LUMAN KOVAK CAD   ODRAN                         OOON
+LIEU 901LFPV  LUMAN E     LUMAN4T
+LIEU 901LFPV  LUMAN W     LUMAN4T
+LIEU 90 LFPV  BOBSA BOBSA BENAR CAD   ODRAN                         OOOO
+LIEU 901LFPV  BOBSA E     BOBSA4T
+LIEU 901LFPV  BOBSA W     BOBSA4T
+
+LIEU 90 LFRG  CAN   CAN   LFRG                                      OOOO
+LIEU 901LFRG  CAN   W     FRQINFO
+LIEU 901LFRG  CAN   E     LFRG
+LIEU 90 LFRG  DVL   DVL   LFRG                                      OOOO
+LIEU 901LFRG  DVL   W     FRQINFO
+LIEU 901LFRG  DVL   E     LFRG
+
+LIEU 90 LFRG  DVL   DVL   LFOH                                      OOOO
+LIEU 901LFRG  DVL   W     FRQINFO
+LIEU 901LFRG  DVL   E     LFRG
+
+LIEU 90 LFRG  LHO   LHO   LFOH                                      OOOO
+LIEU 901LFRG  LHO   W     FRQINFO
+LIEU 901LFRG  LHO   E     LFRG
+
+LIEU 90 LFRG  TANCA TANCA LFOH                                      OOOO
+LIEU 901LFRG  TANCA W     FRQINFO
+LIEU 901LFRG  TANCA E     LFRG
+
+               ***************************
+               * DESCRIPTION NIVEAUX TFL * 21-05-2007
+               ***************************
+        *** LIEU 91 : CLASSEMENT PAR TERRAIN, PUIS PAR TYPE DEP SUIVI DE ARR
+        ***  PUIS PAR COUPLE DE SECTEURS ET ENFIN COUPLE DE BALISES
+        ***
+
+LIEU 91 E     DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 E     DEP   SK    OT    ALL   ALL   ALL   ALL     110
+LIEU 91 E     DEP   SK    RT    ALL   ALL   ALL   ALL     110
+LIEU 91 E     DEP   TU    HP    ALL   ALL   ALL   ALL     340
+LIEU 91 E     DEP   HP    PU    ALL   ALL   ALL   ALL     350
+LIEU 91 E     DEP   HP    TU    ALL   ALL   ALL   ALL     350 
+LIEU 91 E     DEP   PU    HP    ALL   ALL   ALL   ALL     340
+LIEU 91 E     DEP   UP    PU    ALL   ALL   ALL   ALL     310
+LIEU 91 E     DEP   TB    UR    ALL   ALL   ALL   ALL     260 
+LIEU 91 E     DEP   TE    UR    ALL   ALL   ALL   ALL     260
+LIEU 91 E     DEP   TE    AP    ALL   ALL   ALL   ALL     260 
+LIEU 91 E     DEP   UK    XS    ALL   ALL   ALL   ALL     280 
+LIEU 91 E     DEP   US    SU    ALL   ALL   ALL   ALL     340
+LIEU 91 E     DEP   UZ    ZS    ALL   ALL   ALL   ALL     280 
+LIEU 91 E     DEP   RT    UZ    ALL   ALL   ALL   ALL     240 
+LIEU 91 E     DEP   TH    UZ    ALL   ALL   ALL   ALL     240
+LIEU 91 E     DEP   SU    US    ALL   ALL   ALL   ALL     350
+LIEU 91 E     DEP   OM    UZ    ALL   ALL   ALL   ALL     270
+LIEU 91 E     ARR   SU    US    ALL   ALL   ALL   ALL     350
+LIEU 91 E     ARR   US    SU    ALL   ALL   ALL   ALL     340
+LIEU 91 E     ARR   TN    EG    ALL   ALL   ALL   ALL     260 
+LIEU 91 E     ARR   UK    TH    ALL   ALL   ALL   ALL     250 
+LIEU 91 E     ARR   UZ    TH    ALL   ALL   ALL   ALL     250 
+LIEU 91 E     ARR   UZ    TN    ALL   ALL   ALL   ALL     260
+LIEU 91 E     ARR   OT    SK    ALL   ALL   ALL   ALL     120 
+LIEU 91 E     ARR   RT    SK    ALL   ALL   ALL   ALL     120
+LIEU 91 E     ARR   TU    HP    ALL   ALL   ALL   ALL     340 
+LIEU 91 E     ARR   HP    TU    ALL   ALL   ALL   ALL     350
+
+
+LIEU 91 EB    ARR   TN    TB    ALL   ALL   ALL   ALL     200
+LIEU 91 EB    ARR   US    UR    ALL   ALL   ALL   ALL     300
+LIEU 91 EBLG  ARR   AP    TM    ALL   ALL   ALL   ALL     270
+LIEU 91 EBLG  ARR   TM    BR    MMD   ALL   ALL   ALL     190
+LIEU 91 EDDF  DEP   1P    AP    ALL   ALL   ALL   ALL     310
+LIEU 91 EDDF  DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 EDDF  ARR   TM    BR    ALL   ALL         ALL     230
+LIEU 91 EDDK  DEP   1P    AP    ALL   ALL   ALL   ALL     310
+LIEU 91 EDDK  DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 EDDK  ARR   AP    EY    RANUX MEDOX ALL   ALL     310
+LIEU 91 EDDK  ARR   AP    EY    ARDEN ALL   ALL   ALL     300
+LIEU 91 EDDL  DEP   1P    AP    ALL   ALL   ALL   ALL     310
+LIEU 91 EDDL  DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 EDDR  ARR   AP    TM    ALL   ALL   ALL   ALL     270
+LIEU 91 EDDR  ARR   TM    BR    ALL   ALL         ALL     190
+LIEU 91 EDFH  DEP   1P    AP    ALL   ALL   ALL   ALL     310
+LIEU 91 EDFH  DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 EDFH  ARR   AP    TM    ALL   ALL   ALL   ALL     270      
+LIEU 91 EDFH  ARR   TM    BR    ALL   ALL         ALL     190
+LIEU 91 EDFH  ARR   UJ    UF    ALL   ALL         ALL     280
+LIEU 91 EDFM  ARR   UJ    UF    ALL   ALL         ALL     280
+LIEU 91 EDLN  DEP   1P    AP    ALL   ALL   ALL   ALL     310
+LIEU 91 EDLN  DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 EDLN  ARR   AP    TM    ALL   ALL   ALL   ALL     270
+LIEU 91 EDLN  ARR   TM    BR    ALL   ALL         ALL     190
+LIEU 91 EDRZ  DEP   1P    AP    ALL   ALL   ALL   ALL     310
+LIEU 91 EDRZ  DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 EDRZ  ARR   TM    BR    ALL   ALL         ALL     190
+LIEU 91 EDRZ  ARR   UJ    UF    ALL   ALL         ALL     280
+LIEU 91 EDSB  ARR   TM    BR    ALL   ALL         ALL     190
+LIEU 91 EDSB  ARR   UJ    UF    ALL   ALL         ALL     280
+LIEU 91 EDTL  ARR   UJ    UF    ALL   ALL         ALL     280
+LIEU 91 ELLX  ARR   AP    TM    ALL   ALL   ALL   ALL     270
+LIEU 91 ETAD  ARR   AP    TM    ALL   ALL   ALL   ALL     270
+LIEU 91 ETAD  ARR   TM    BR    ALL   ALL         ALL     190
+LIEU 91 ETAD  ARR   TM    EY    ALL   ALL   ALL   ALL     190
+LIEU 91 ETAR  DEP   1P    AP    ALL   ALL   ALL   ALL     310
+LIEU 91 ETAR  DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 ETAR  ARR   AP    TM    ALL   ALL         ALL     270
+LIEU 91 ETAR  ARR   TM    BR    ALL   ALL         ALL     190
+LIEU 91 ETAR  ARR   UJ    UF    ALL   ALL         ALL     280
+LIEU 91 ETSB  ARR   AP    TM    ALL   ALL   ALL   ALL     270
+LIEU 91 ETSB  ARR   TM    BR    ALL   ALL   ALL   ALL     190
+LIEU 91 ETSB  ARR   TM    EY    ALL   ALL   ALL   ALL     190
+LIEU 91 EGKA  ARR   TN    EG    ALL   ALL         ALL     200
+LIEU 91 EGKB  ARR   TN    EG    ALL   ALL         ALL     190       
+LIEU 91 EGLC  ARR   TN    EG    ALL   ALL         ALL     190
+LIEU 91 EGMC  ARR   TN    EG    ALL   ALL         ALL     190
+LIEU 91 EGMD  ARR   TN    EG    ALL   ALL         ALL     190
+LIEU 91 EGMH  ARR   TN    EG    ALL   ALL         ALL     190
+LIEU 91 EHWO  ARR   US    UR    ALL   ALL   ALL   ALL     300
+LIEU 91 EHBK  DEP   1P    AP    ALL   ALL   ALL   ALL     310
+LIEU 91 EHBK  DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 EHBK  ARR   AP    TM    ALL   ALL   ALL   ALL     270 
+LIEU 91 EHBK  ARR   US    UR    ALL   ALL   ALL   ALL     300 
+
+
+LIEU 91 L     DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 L     DEP   SK    OT    ALL   ALL   ALL   ALL     110
+LIEU 91 L     DEP   SK    RT    ALL   ALL   ALL   ALL     110
+LIEU 91 L     DEP   HP    PU    ALL   ALL   ALL   ALL     350
+LIEU 91 L     DEP   HP    TU    ALL   ALL   ALL   ALL     350
+LIEU 91 L     DEP   S     AO    ALL   ALL   ALL   ALL     190 
+LIEU 91 L     DEP   AO    US    ALL   ALL   ALL   ALL     280 
+LIEU 91 L     DEP   S     P1    ALL   ALL   ALL   ALL     190 
+LIEU 91 L     DEP   UP    PU    ALL   ALL   ALL   ALL     310 
+LIEU 91 L     DEP   US    SU    ALL   ALL   ALL   ALL     340
+LIEU 91 L     DEP   UT    TU    ALL   ALL   ALL   ALL     310 
+LIEU 91 L     DEP   TL    UF    ALL   ALL   ALL   ALL     260 
+LIEU 91 L     DEP   TM    UR    ALL   ALL   ALL   ALL     260 
+LIEU 91 L     DEP   TB    UR    ALL   ALL   ALL   ALL     260
+LIEU 91 L     DEP   TE    AP    ALL   ALL   ALL   ALL     260 
+LIEU 91 L     DEP   TE    UR    ALL   ALL   ALL   ALL     260 
+LIEU 91 L     DEP   UK    XS    ALL   ALL   ALL   ALL     280 
+LIEU 91 L     DEP   UZ    ZS    ALL   ALL   ALL   ALL     280 
+LIEU 91 L     DEP   UK    JS    ALL   ALL   ALL   ALL     280 
+LIEU 91 L     DEP   UZ    AO    ALL   ALL   ALL   ALL     270 
+LIEU 91 L     DEP   RT    UZ    ALL   ALL   ALL   ALL     240 
+LIEU 91 L     DEP   TH    UZ    ALL   ALL   ALL   ALL     240 
+LIEU 91 L     DEP   OD    DS    OD03P ALL   ALL   HEL     110 
+LIEU 91 L     DEP   OD    DS    OD04P ALL   ALL   HEL     110 
+LIEU 91 L     DEP   OD    DS    HEL1  ALL   ALL   HEL     110
+LIEU 91 L     DEP   OD    DS    HEL2  ALL   ALL   HEL     110
+LIEU 91 L     DEP   OD    SJ    OL    PTV   ALL   HEL     070 
+LIEU 91 L     DEP   OD    SJ    POXX3 PTV   ALL   HEL     070 
+LIEU 91 L     DEP   OD    SJ    WPV   PTV   ALL   HEL     070 
+LIEU 91 L     DEP   OD    SJ    WPO   PTV   ALL   HEL     070 
+LIEU 91 L     DEP   OD    SJ    EPO   PTV   ALL   HEL     070 
+LIEU 91 L     DEP   OD    SJ    EPV   PTV   ALL   HEL     070 
+LIEU 91 L     DEP   OD    SJ    MLN   DORDI ALL   ALL     030 
+LIEU 91 L     DEP   OD    SJ    OL    MONOT ALL   HEL     070 
+LIEU 91 L     DEP   OD    SJ    POXX3 MONOT ALL   HEL     070 
+LIEU 91 L     DEP   OD    SJ    WPV   MONOT ALL   HEL     070 
+LIEU 91 L     DEP   OD    SJ    WPO   MONOT ALL   HEL     070 
+LIEU 91 L     DEP   OD    SJ    EPO   MONOT ALL   HEL     070 
+LIEU 91 L     DEP   OD    SJ    OL    DORDI ALL   ALL     050 
+LIEU 91 L     DEP   DS    DO    ALL   ALL   ALL   HEL     190
+LIEU 91 L     DEP   SU    US    ALL   ALL   ALL   ALL     350
+LIEU 91 L     DEP   TU    HP    ALL   ALL   ALL   ALL     340
+LIEU 91 L     ARR   SU    US    ALL   ALL   ALL   ALL     350
+LIEU 91 L     ARR   DO    S     ALL   ALL   ALL   ALL     200
+LIEU 91 L     ARR   TU    UT    ALL   ALL   ALL   ALL     320 
+LIEU 91 L     ARR   UK    TH    ALL   ALL   ALL   ALL     250 
+LIEU 91 L     ARR   UZ    TH    ALL   ALL   ALL   ALL     250 
+LIEU 91 L     ARR   UK    TP    ALL   ALL   ALL   ALL     250 
+LIEU 91 L     ARR   UZ    TN    ALL   ALL   ALL   ALL     250 
+LIEU 91 L     ARR   TN    QW    ALL   ALL   ALL   ALL     120 
+LIEU 91 L     ARR   AR    SR    ALL   ALL   ALL   ALL     120 
+LIEU 91 L     ARR   UT    AO    ALL   ALL   ALL   ALL     280 
+LIEU 91 L     ARR   PU    UP    ALL   ALL   ALL   ALL     320 
+LIEU 91 L     ARR   US    AO    ALL   ALL   ALL   ALL     290
+LIEU 91 L     ARR   US    SU    ALL   ALL   ALL   ALL     340
+LIEU 91 L     ARR   AO    UR    ALL   ALL   ALL   ALL     280 
+LIEU 91 L     ARR   AO    UZ    ALL   ALL   ALL   ALL     280 
+LIEU 91 L     ARR   AO    SO    ALL   ALL   ALL   ALL     120 
+LIEU 91 L     ARR   OT    LM    ALL   ALL   ALL   ALL     190 
+LIEU 91 L     ARR   UP    LO    ALL   ALL   ALL   ALL     200 
+LIEU 91 L     ARR   HP    TU    ALL   ALL   ALL   ALL     350
+LIEU 91 L     ARR   HP    PU    ALL   ALL   ALL   ALL     350
+LIEU 91 L     ARR   OT    SK    ALL   ALL   ALL   ALL     120
+LIEU 91 L     ARR   RT    SK    ALL   ALL   ALL   ALL     120
+LIEU 91 L     ARR   PU    HP    ALL   ALL   ALL   ALL     340
+LIEU 91 L     ARR   TU    HP    ALL   ALL   ALL   ALL     340
+
+LIEU 91 LF    ARR   RT    NA    ALL   ALL   ALL   ALL     120
+LIEU 91 LF    ARR   RT    SK    KOVAK AMB   ALL   ALL     090
+LIEU 91 LF    ARR   RT    SK    KOVAK DOMOD ALL   ALL     090
+LIEU 91 LF    ARR   S     SJ    ALL   ALL   ALL   ALL     120
+
+LIEU 91 LFAC  ARR   TB    QW    ALL   ALL         ALL     120
+LIEU 91 LFAC  ARR   TB    QE    ALL   ALL         ALL     120
+
+LIEU 91 LFAQ  DEP   QW    TN    BANGI ALL         ALL     070
+LIEU 91 LFAQ  ARR   TB    QW    ALL   ALL         ALL     120
+LIEU 91 LFAQ  ARR   TB    QE    ALL   ALL         ALL     120
+LIEU 91 LFAQ  ARR   LN    QW    DPE   ALL         ALL     080
+
+LIEU 91 LFAT  ARR   TB    QW    ALL   ALL         ALL     120
+LIEU 91 LFAT  ARR   TB    QE    ALL   ALL         ALL     120
+
+LIEU 91 LFAY  DEP   QW    TN    BANGI ALL         ALL     070
+LIEU 91 LFAY  ARR   TB    QW    ALL   ALL         ALL     120
+LIEU 91 LFAY  ARR   TB    QE    ALL   ALL         ALL     120
+LIEU 91 LFAY  ARR   LN    QW    DPE   ALL         ALL     080
+
+LIEU 91 LFBK  ARR   S     BL    ALL   ALL         ALL     110
+
+LIEU 91 LFJL  ARR   AP    TM    ALL   ALL   ALL   ALL     270
+LIEU 91 LFJR  DEP   UZ    UP    ALL   ALL   ALL   ALL     270
+
+LIEU 91 LFL   ARR   UT    IG    ATN   ALL   ALL   ALL     230
+
+LIEU 91 LFLA  ARR   UJ    AO    ALL   ALL         ALL     270
+
+LIEU 91 LFLB  DEP   UT    US    ALL   ALL         ALL     300 
+LIEU 91 LFLB  ARR   UP    UT    ALL   ALL   ALL   ALL     270 
+
+LIEU 91 LFLC  ARR   S     CF    ALL   ALL   ALL   ALL     130
+
+LIEU 91 LFLI  DEP   UT    US    ALL   ALL         ALL     300 
+LIEU 91 LFLI  ARR   UP    UT    ALL   ALL         ALL     270
+
+LIEU 91 LFLJ  ARR   UP    UT    ALL   ALL         ALL     270
+
+LIEU 91 LFLL  DEP   UT    US    ALL   ALL         ALL     300 
+LIEU 91 LFLL  ARR   S     LO    ALL   ALL         ALL     190 
+
+LIEU 91 LFLP  DEP   UT    US    ALL   ALL         ALL     300 
+LIEU 91 LFLP  ARR   UP    UT    ALL   ALL         ALL     270
+
+LIEU 91 LFLS  DEP   UT    US    ALL   ALL         ALL     300 
+
+LIEU 91 LFLU  DEP   UT    US    ALL   ALL         ALL     300 
+
+LIEU 91 LFLY  DEP   UT    US    ALL   ALL         ALL     300 
+
+LIEU 91 LFO   DEP   UZ    UP    ALL   ALL   ALL   ALL     270 
+
+LIEU 91 LFOB  DEP   AP    XR    ALL   ALL         ALL     310
+LIEU 91 LFOB  DEP   PU    HP    ALL   ALL         ALL     340
+LIEU 91 LFOB  DEP   LN    TH    ALL   ALL         ALL     140 
+LIEU 91 LFOB  DEP   RD    TL    LASIV ALL         JET     110
+LIEU 91SLFOB  LFPG  E     LFPO  W
+LIEU 91 LFOB  DEP   RD    TL    LASIV ALL         JET     190
+LIEU 91 LFOB  DEP   RD    TL    BATAG ALL         JET     110
+LIEU 91SLFOB  LFPG  E     LFPO  W
+LIEU 91 LFOB  DEP   RD    TL    BATAG ALL         JET     190
+LIEU 91 LFOB  DEP   RD    TL    BATAG ALL         HEL     070
+LIEU 91SLFOB  LFPG  E
+LIEU 91 LFOB  DEP   RD    TL    BATAG ALL         HEL     130
+LIEU 91SLFOB  LFPG  W
+LIEU 91 LFOB  DEP   RD    TM    ALL   ALL         JET     190
+LIEU 91 LFOB  DEP   RD    TM    NAPIX ALL         HEL     070 
+LIEU 91SLFOB  LFPG  E
+LIEU 91 LFOB  DEP   RD    TM    NAPIX ALL         HEL     130 
+LIEU 91SLFOB  LFPG  W
+LIEU 91 LFOB  DEP   RD    DG    ALL   ALL         JET     190 
+LIEU 91 LFOB  DEP   OD    DO    ALL   ALL         JET     130
+LIEU 91 LFOB  DEP   TB    UN    ALL   ALL         ALL     260 
+LIEU 91 LFOB  DEP   TB    UB    ALL   ALL         ALL     260 
+LIEU 91 LFOB  DEP   TH    UK    ALL   ALL         ALL     240 
+LIEU 91 LFOB  DEP   TL    UF    ALL   ALL         ALL     260
+LIEU 91 LFOB  DEP   TM    AP    ALL   ALL         ALL     260
+LIEU 91 LFOB  DEP   TM    UR    ALL   ALL         ALL     260 
+LIEU 91 LFOB  DEP   TN    UN    ALL   ALL         ALL     260 
+LIEU 91 LFOB  DEP   DO    P1    ALL   ALL         ALL     250
+LIEU 91 LFOB  DEP   DO    UP    ALL   ALL         ALL     250 
+LIEU 91 LFOB  DEP   UK    JS    ALL   ALL         ALL     280
+LIEU 91 LFOB  DEP   UK    XS    ALL   ALL         ALL     280
+LIEU 91 LFOB  DEP   UP    PU    ALL   ALL         ALL     310
+LIEU 91 LFOB  DEP   DG    P1    ALL   ALL         ALL     260
+LIEU 91 LFOB  DEP   DG    UP    ALL   ALL         ALL     260
+LIEU 91 LFOB  ARR   AR    AR    ALL   ALL         ALL     120
+LIEU 91 LFOB  ARR   UJ    AR    ALL   ALL         ALL     240
+LIEU 91 LFOB  ARR   SL    RB    ALL   ALL         ALL     060
+LIEU 91 LFOB  ARR   AP    TE    ALL   ALL   ALL   ALL     270
+
+LIEU 91 LFOE  DEP   UZ    P1    ALL   ALL         ALL     270 
+LIEU 91 LFOE  ARR   AO    UZ    ALL   ALL         ALL     280 
+LIEU 91 LFOE  ARR   US    AO    ALL   ALL         ALL     290
+LIEU 91 LFOE  ARR   DG    RT    ALL   ALL         ALL     240 
+LIEU 91 LFOE  ARR   UZ    DG    ALL   ALL         ALL     270 
+
+LIEU 91 LFOH  DEP   UZ    P1    ALL   ALL         ALL     270
+LIEU 91 LFOH  ARR   AO    UZ    ALL   ALL         ALL     280
+LIEU 91 LFOH  ARR   US    AO    ALL   ALL         ALL     290
+LIEU 91 LFOH  ARR   DG    RT    ALL   ALL         ALL     240 
+LIEU 91 LFOH  ARR   UZ    DG    ALL   ALL         ALL     270
+LIEU 91 LFOH  ARR   DG    UZ    ALL   ALL         ALL     260 
+LIEU 91 LFOH  ARR   UZ    TH    ALL   ALL         ALL     250 
+
+LIEU 91 LFOJ  DEP   SK    OT    DOMOD ALL         ALL     080
+LIEU 91 LFOJ  DEP   DO    P1    ALL   ALL         ALL     250
+LIEU 91 LFOJ  ARR   OT    SJ    DOMOD ALL         ALL     060
+LIEU 91 LFOJ  ARR   S     SJ    ALL   ALL         ALL     120
+
+LIEU 91 LFOK  DEP   AO    UP    ALL   ALL         ALL     230 
+LIEU 91 LFOK  DEP   UP    P1    ALL   ALL         ALL     230 
+LIEU 91 LFOK  ARR   TM    SL    ALL   ALL         ALL     070 
+LIEU 91 LFOK  ARR   TL    SL    ALL   ALL         ALL     120
+LIEU 91 LFOK  ARR   TL    SL    DIKOL BAXIR       ALL     070
+
+LIEU 91 LFOP  DEP   UZ    P1    ALL   ALL         ALL     270
+LIEU 91 LFOP  ARR   AO    UZ    ALL   ALL         ALL     280 
+LIEU 91 LFOP  ARR   US    AO    ALL   ALL         ALL     290
+LIEU 91 LFOP  ARR   DG    RT    ALL   ALL         ALL     240 
+LIEU 91 LFOP  ARR   UZ    DG    ALL   ALL         ALL     270
+LIEU 91 LFOP  ARR   DG    UZ    ALL   ALL         ALL     260 
+LIEU 91 LFOP  ARR   UZ    TH    ALL   ALL         ALL     250
+
+LIEU 91 LFOT  DEP   SK    OT    AMB   DOMOD       ALL     110
+LIEU 91 LFOT  DEP   OT    BI    BALAN ALL         ALL     110
+LIEU 91 LFOT  DEP   OT    BI    OMARI ALL         ALL     110
+LIEU 91 LFOT  ARR   OT          ALL   ALL         ALL     060
+LIEU 91 LFOT  ARR   OT    SK    KOVAK AMB         ALL     090
+
+LIEU 91 LFOZ  DEP   SK    OT    DOMOD ALL         ALL     080
+LIEU 91 LFOZ  ARR   OT    SJ    DOMOD ALL         ALL     060
+LIEU 91 LFOZ  ARR   S     SJ    ALL   ALL         ALL     120
+
+LIEU 91 LFP   DEP   TM    BR    ALL   ALL   ALL   ALL     230 
+
+LIEU 91 LFPB  DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 LFPB  DEP   PU    HP    ALL   ALL   ALL   ALL     340
+LIEU 91 LFPB  DEP   LN    TH    ALL   ALL   ALL   ALL     140 
+LIEU 91 LFPB  DEP   RC    LN    ALL   ALL   ALL   ALL     110 
+LIEU 91 LFPB  DEP   RC    TB    ALL   ALL   ALL   JET     180
+LIEU 91 LFPB  DEP   RC    TB    ALL   ALL   ALL   HEL     100
+LIEU 91 LFPB  DEP   RC    TH    ALL   ALL   ALL   JET     180 
+LIEU 91 LFPB  DEP   RC    TH    ALL   ALL   ALL   HEL     110
+LIEU 91 LFPB  DEP   RC    TL    LASIV ALL   ALL   JET     110
+LIEU 91SLFPB  LFPG  E     LFPO  W
+LIEU 91 LFPB  DEP   RC    TL    LASIV ALL   ALL   JET     190
+LIEU 91 LFPB  DEP   RC    TL    BATAG ALL   ALL   JET     110
+LIEU 91SLFPB  LFPG  E     LFPO  W
+LIEU 91 LFPB  DEP   RC    TL    BATAG ALL   ALL   JET     190        
+LIEU 91 LFPB  DEP   RC    TL    BATAG ALL   ALL   HEL     070
+LIEU 91SLFPB  LFPG  E  
+LIEU 91 LFPB  DEP   RC    TL    BATAG ALL   ALL   HEL     130
+LIEU 91SLFPB  LFPG  W           
+LIEU 91 LFPB  DEP   RC    TM    ALL   ALL   ALL   JET     190
+LIEU 91 LFPB  DEP   RC    TM    NAPIX ALL   E     HEL     070
+LIEU 91 LFPB  DEP   RC    TM    NAPIX ALL   W     HEL     130
+LIEU 91 LFPB  DEP   RC    TN    ALL   ALL   ALL   JET     180
+LIEU 91 LFPB  DEP   RC    TN    ALL   ALL   ALL   HEL     100
+LIEU 91 LFPB  DEP   RC    DG    ALL   ALL   ALL   JET     190 
+LIEU 91 LFPB  DEP   OD    DO    ALL   ALL   ALL   JET     130
+LIEU 91 LFPB  DEP   TB    UN    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPB  DEP   TB    UB    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPB  DEP   TH    UK    ALL   ALL   ALL   ALL     240 
+LIEU 91 LFPB  DEP   TL    UF    ALL   ALL   ALL   ALL     260
+LIEU 91 LFPB  DEP   TM    AP    ALL   ALL   ALL   ALL     260
+LIEU 91 LFPB  DEP   TM    UR    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPB  DEP   TN    UN    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPB  DEP   DO    P1    ALL   ALL   ALL   ALL     250
+LIEU 91 LFPB  DEP   DO    UP    ALL   ALL   ALL   ALL     250  
+LIEU 91 LFPB  DEP   UK    JS    ALL   ALL   ALL   ALL     280
+LIEU 91 LFPB  DEP   UK    XS    ALL   ALL   ALL   ALL     280
+LIEU 91 LFPB  DEP   UP    PU    ALL   ALL   ALL   ALL     310 
+LIEU 91 LFPB  DEP   DG    P1    ALL   ALL   ALL   ALL     260  
+LIEU 91 LFPB  DEP   DG    UP    ALL   ALL   ALL   ALL     260
+
+LIEU 91 LFPB  ARR   AP    TE    ALL   ALL   ALL   ALL     270
+LIEU 91 LFPB  ARR   RT    OA    BALOD ALL   W     ALL     060 
+LIEU 91 LFPB  ARR   RT    OD    BALOD ALL   W     ALL     060 
+LIEU 91 LFPB  ARR   RT    RA    BALOD ALL   E     HEL     090 
+LIEU 91 LFPB  ARR   RT    RA    BALOD ALL   E     JET     100 
+LIEU 91 LFPB  ARR   AR    RA    ALL   ALL   ALL   HEL     060 
+LIEU 91 LFPB  ARR   AR    RA    ALL   ALL   ALL   JET     070 
+LIEU 91 LFPB  ARR   TE    RB    VELER ALL   W     ALL     080 
+LIEU 91 LFPB  ARR   TE    RB    VELER ALL   E     ALL     110 
+LIEU 91 LFPB  ARR   TP    RB    MOKNO ALL   W     ALL     060 
+LIEU 91 LFPB  ARR   TP    RB    KOROM MERUE E     JET     090 
+LIEU 91 LFPB  ARR   TP    RB    KOROM MERUE E     HEL     060 
+LIEU 91 LFPB  ARR   UJ    AR    ALL   ALL   ALL   ALL     280 
+LIEU 91 LFPB  ARR   OG    RT    ALL   ALL   ALL   ALL     200 
+
+LIEU 91 LFPC  DEP   AP    XR    ALL   ALL         ALL     310
+LIEU 91 LFPC  DEP   PU    HP    ALL   ALL         ALL     340
+LIEU 91 LFPC  DEP   LN    TH    ALL   ALL         ALL     140 
+LIEU 91 LFPC  DEP   RD    TL    LASIV ALL         JET     110
+LIEU 91SLFPC  LFPG  E     LFPO  W
+LIEU 91 LFPC  DEP   RD    TL    LASIV ALL         JET     190
+LIEU 91 LFPC  DEP   RD    TL    BATAG ALL         JET     110
+LIEU 91SLFPC  LFPG  E     LFPO  W
+LIEU 91 LFPC  DEP   RD    TL    BATAG ALL         JET     190
+LIEU 91 LFPC  DEP   RD    TL    BATAG ALL         HEL     070
+LIEU 91SLFPC  LFPG  E 
+LIEU 91 LFPC  DEP   RD    TL    BATAG ALL         HEL     130
+LIEU 91SLFPC  LFPG  W
+LIEU 91 LFPC  DEP   RD    TM    ALL   ALL         JET     190
+LIEU 91 LFPC  DEP   RD    TM    NAPIX ALL         HEL     070 
+LIEU 91SLFPC  LFPG  E 
+LIEU 91 LFPC  DEP   RD    TM    NAPIX ALL         HEL     130 
+LIEU 91SLFPC  LFPG  W
+LIEU 91 LFPC  DEP   OD    DO    ALL   ALL         JET     130
+LIEU 91 LFPC  DEP   RD    DG    ALL   ALL         JET     190
+LIEU 91 LFPC  DEP   TB    UN    ALL   ALL         ALL     260 
+LIEU 91 LFPC  DEP   TB    UB    ALL   ALL         ALL     260 
+LIEU 91 LFPC  DEP   TH    UK    ALL   ALL         ALL     240 
+LIEU 91 LFPC  DEP   TL    UF    ALL   ALL         ALL     260
+LIEU 91 LFPC  DEP   TM    AP    ALL   ALL         ALL     260 
+LIEU 91 LFPC  DEP   TM    UR    ALL   ALL         ALL     260 
+LIEU 91 LFPC  DEP   TN    UN    ALL   ALL         ALL     260 
+LIEU 91 LFPC  DEP   DO    P1    ALL   ALL         ALL     250
+LIEU 91 LFPC  DEP   DO    UP    ALL   ALL         ALL     250 
+LIEU 91 LFPC  DEP   UK    JS    ALL   ALL         ALL     280
+LIEU 91 LFPC  DEP   UK    XS    ALL   ALL         ALL     280
+LIEU 91 LFPC  DEP   UP    PU    ALL   ALL         ALL     310
+LIEU 91 LFPC  DEP   DG    P1    ALL   ALL   ALL   ALL     260  
+LIEU 91 LFPC  DEP   DG    UP    ALL   ALL   ALL   ALL     260
+LIEU 91 LFPC  ARR   UJ    AR    ALL   ALL         ALL     240
+LIEU 91 LFPC  ARR   AR    SR    ALL   ALL         ALL     120
+LIEU 91 LFPC  ARR   SL    RB    ALL   ALL         ALL     060
+LIEU 91 LFPC  ARR   AP    TE    ALL   ALL         ALL     270
+
+
+LIEU 91 LFPG  DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 LFPG  DEP   LN    TH    ALL   ALL   ALL   ALL     140
+LIEU 91 LFPG  DEP   PU    HP    ALL   ALL   ALL   ALL     340 
+LIEU 91 LFPG  DEP   RD    LN    ALL   ALL   ALL   ALL     110 
+LIEU 91 LFPG  DEP   RC    LN    ALL   ALL   ALL   ALL     110 
+LIEU 91 LFPG  DEP   RD    TB    ALL   ALL   ALL   JET     180
+LIEU 91 LFPG  DEP   RD    TB    ALL   ALL   ALL   HEL     100
+LIEU 91 LFPG  DEP   RD    TH    ALL   ALL   ALL   JET     180 
+LIEU 91 LFPG  DEP   RD    TH    ALL   ALL   ALL   HEL     110
+LIEU 91 LFPG  DEP   RC    TH    ALL   ALL   ALL   JET     180 
+LIEU 91 LFPG  DEP   RC    TH    ALL   ALL   ALL   HEL     110
+LIEU 91 LFPG  DEP   RC    TL    LASIV ALL   E     JET     110
+LIEU 91SLFPG  LFPO  W
+LIEU 91 LFPG  DEP   RC    TL    LASIV ALL   W     JET     190
+LIEU 91SLFPG  LFPO  W
+LIEU 91 LFPG  DEP   RC    TL    LASIV ALL   ALL   JET     190
+LIEU 91SLFPG  LFPO  E
+LIEU 91 LFPG  DEP   RC    TL    BATAG ALL   E     JET     110
+LIEU 91SLFPG  LFPO  W
+LIEU 91 LFPG  DEP   RC    TL    BATAG ALL   W     JET     190
+LIEU 91SLFPG  LFPO  W
+LIEU 91 LFPG  DEP   RC    TL    BATAG ALL   ALL   JET     190
+LIEU 91SLFPG  LFPO  E
+LIEU 91 LFPG  DEP   RC    TL    BATAG ALL   E     HEL     070
+LIEU 91 LFPG  DEP   RC    TL    BATAG ALL   W     HEL     130
+LIEU 91 LFPG  DEP   RD    TM    ALL   ALL   ALL   JET     190
+LIEU 91 LFPG  DEP   RD    TM    NAPIX ALL   E     HEL     070
+LIEU 91 LFPG  DEP   RD    TM    NAPIX ALL   W     HEL     130
+LIEU 91 LFPG  DEP   RD    TN    ALL   ALL   ALL   JET     180
+LIEU 91 LFPG  DEP   RD    TN    ALL   ALL   ALL   HEL     100
+LIEU 91 LFPG  DEP   RC    DG    ALL   ALL   ALL   JET     190
+LIEU 91 LFPG  DEP   TB    UN    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPG  DEP   TB    UB    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPG  DEP   TH    UK    ALL   ALL   ALL   ALL     240 
+LIEU 91 LFPG  DEP   TL    UF    ALL   ALL   ALL   ALL     260
+LIEU 91 LFPG  DEP   TM    AP    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPG  DEP   TM    UR    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPG  DEP   TN    UN    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPG  DEP   DO    P1    ALL   ALL   ALL   ALL     250
+LIEU 91 LFPG  DEP   DO    UP    ALL   ALL   ALL   ALL     250 
+LIEU 91 LFPG  DEP   UK    JS    ALL   ALL   ALL   ALL     280
+LIEU 91 LFPG  DEP   UK    XS    ALL   ALL   ALL   ALL     280
+LIEU 91 LFPG  DEP   UP    PU    ALL   ALL   ALL   ALL     310
+LIEU 91 LFPG  DEP   OD    DO    ALL   ALL   ALL   JET     130
+LIEU 91 LFPG  DEP   DG    P1    ALL   ALL   ALL   ALL     260  
+LIEU 91 LFPG  DEP   DG    UP    ALL   ALL   ALL   ALL     260
+
+LIEU 91 LFPG  ARR   AP    TE    ALL   ALL   ALL   ALL     270
+LIEU 91 LFPG  ARR   RT    RA    BALOD ALL   W     ALL     140 
+LIEU 91 LFPG  ARR   RT    RA    BALOD ALL   E     HEL     090 
+LIEU 91 LFPG  ARR   RT    RA    BALOD ALL   E     JET     100 
+LIEU 91 LFPG  ARR   AR    RA    ALL   ALL   W     HEL     060 
+LIEU 91 LFPG  ARR   AR    RA    ALL   ALL   W     JET     100 
+LIEU 91 LFPG  ARR   AR    RA    ALL   ALL   E     HEL     060 
+LIEU 91 LFPG  ARR   AR    RA    ALL   ALL   E     JET     140 
+LIEU 91 LFPG  ARR   TE    RB    LORTA ALL   W     JET     110 
+LIEU 91 LFPG  ARR   TE    RB    LORTA ALL   E     JET     140 
+LIEU 91 LFPG  ARR   TE    RB    VELER ALL   W     HEL     080 
+LIEU 91 LFPG  ARR   TE    RB    VELER ALL   E     HEL     110 
+LIEU 91 LFPG  ARR   TP    RB    KOROM MERUE W     JET     110 
+LIEU 91 LFPG  ARR   TP    RB    KOROM MERUE E     JET     090 
+LIEU 91 LFPG  ARR   TP    RB    KOROM MERUE E     HEL     060 
+LIEU 91 LFPG  ARR   TP    RB    MOKNO ALL   W     HEL     060 
+LIEU 91 LFPG  ARR   UJ    AR    ALL   ALL   ALL   ALL     280
+LIEU 91 LFPG  ARR   OG    RT    ALL   ALL   ALL   ALL     200
+LIEU 91 LFPG  ARR   TH    RT    GALBO ROMLO ALL   ALL     150
+LIEU 91 LFPG  ARR   TH    RT    GONEK ALL   ALL   ALL     190
+
+LIEU 91 LFPM  DEP   DO    P1    ALL   ALL         ALL     250
+LIEU 91 LFPM  DEP   SK    OT    DOMOD AMB   ALL   ALL     110
+LIEU 91 LFPM  DEP   SK    RT    DOMOD KOVAK ALL   ALL     080
+LIEU 91 LFPM  ARR   AO    SO    ALL   ALL         ALL     120 
+LIEU 91 LFPM  ARR   AR    SR    ALL   ALL         ALL     120 
+LIEU 91 LFPM  ARR   OT    SJ    DOMOD ALL         ALL     060
+LIEU 91 LFPM  ARR   US    AO    ALL   ALL         ALL     290 
+LIEU 91 LFPM  ARR   TU    UT    ALL   ALL         ALL     320 
+LIEU 91 LFPM  ARR   UJ    AO    ALL   ALL         ALL     270 
+LIEU 91 LFPM  ARR   UT    AO    ALL   ALL         ALL     280 
+LIEU 91 LFPM  ARR   UZ    DG    RESMI ALL         ALL     270 
+LIEU 91 LFPM  ARR   HP    TU    ALL   ALL         ALL     350
+
+LIEU 91 LFPN  DEP   AP    XR    ALL   ALL         ALL     310
+LIEU 91 LFPN  DEP   LN    TH    ALL   ALL         ALL     140
+LIEU 91 LFPN  DEP   OD    RC    NURMO ALL         ALL     130
+LIEU 91SLFPN  LFPG  E     LFPO  E 
+LIEU 91 LFPN  DEP   OD    RC    NURMO ALL         ALL     120
+LIEU 91SLFPN  LFPG  E     LFPO  W
+LIEU 91 LFPN  DEP   OD    RC    NURMO ALL         ALL     070
+LIEU 91SLFPN  LFPG  W     LFPO  E
+LIEU 91 LFPN  DEP   OD    RC    NURMO ALL         ALL     070
+LIEU 91SLFPN  LFPG  W     LFPO  W
+LIEU 91 LFPN  DEP   OD    RC    OPALE ALL         ALL     130
+LIEU 91SLFPN  LFPG  E     LFPO  E
+LIEU 91 LFPN  DEP   OD    RC    OPALE ALL         ALL     120
+LIEU 91SLFPN  LFPG  E     LFPO  W
+LIEU 91 LFPN  DEP   OD    RC    OPALE ALL         ALL     070
+LIEU 91SLFPN  LFPG  W     LFPO  E
+LIEU 91 LFPN  DEP   OD    RC    OPALE ALL         ALL     070
+LIEU 91SLFPN  LFPG  W     LFPO  W
+LIEU 91 LFPN  DEP   OD    RC    ATREX ALL         ALL     130
+LIEU 91SLFPN  LFPG  E     LFPO  E
+LIEU 91 LFPN  DEP   OD    RC    ATREX ALL         ALL     120
+LIEU 91SLFPN  LFPG  E     LFPO  W
+LIEU 91 LFPN  DEP   OD    RC    ATREX ALL         ALL     070
+LIEU 91SLFPN  LFPG  W     LFPO  E
+LIEU 91 LFPN  DEP   OD    RC    ATREX ALL         ALL     070
+LIEU 91SLFPN  LFPG  W     LFPO  W
+LIEU 91 LFPN  DEP   OD    TL    BATAG ALL         JET     090
+LIEU 91SLFPN  LFPG  E     LFPO  E
+LIEU 91 LFPN  DEP   OD    TL    BATAG ALL         JET     130
+LIEU 91SLFPN  LFPG  E     LFPO  W
+LIEU 91 LFPN  DEP   OD    TL    BATAG ALL         JET     120
+LIEU 91 LFPN  DEP   OD    TL    BATAG ALL         HEL     080
+LIEU 91SLFPN  LFPG  E     LFPO  E
+LIEU 91 LFPN  DEP   OD    TL    BATAG ALL         HEL     120
+LIEU 91SLFPN  LFPG  E     LFPO  W
+LIEU 91 LFPN  DEP   OD    TL    BATAG ALL         HEL     110
+LIEU 91 LFPN  DEP   OD    DO    ALL   ALL         JET     130
+LIEU 91 LFPN  DEP   PU    HP    ALL   ALL         ALL     340 
+LIEU 91 LFPN  DEP   RC    TB    ALL   ALL         HEL     140
+LIEU 91 LFPN  DEP   RC    TB    ALL   ALL         JET     180
+LIEU 91 LFPN  DEP   RC    TN    ALL   ALL         HEL     140
+LIEU 91 LFPN  DEP   RC    TN    ALL   ALL         JET     180
+LIEU 91 LFPN  DEP   TB    UN    ALL   ALL         ALL     260 
+LIEU 91 LFPN  DEP   TB    UB    ALL   ALL         ALL     260 
+LIEU 91 LFPN  DEP   TH    UK    ALL   ALL         ALL     240 
+LIEU 91 LFPN  DEP   TL    UF    ALL   ALL         ALL     260
+LIEU 91 LFPN  DEP   TM    AP    ALL   ALL         ALL     260 
+LIEU 91 LFPN  DEP   TM    UR    ALL   ALL         ALL     260 
+LIEU 91 LFPN  DEP   TN    UN    ALL   ALL         ALL     260 
+LIEU 91 LFPN  DEP   UK    JS    ALL   ALL         ALL     280
+LIEU 91 LFPN  DEP   UK    XS    ALL   ALL         ALL     280
+LIEU 91 LFPN  DEP   UP    PU    ALL   ALL         ALL     310
+LIEU 91 LFPN  DEP   DO    P1    ALL   ALL   ALL   ALL     250
+LIEU 91 LFPN  DEP   DO    UP    ALL   ALL         ALL     250 
+LIEU 91 LFPN  DEP   DG    P1    ALL   ALL   ALL   ALL     260
+LIEU 91 LFPN  DEP   DG    UP    ALL   ALL   ALL   ALL     260
+LIEU 91 LFPN  DEP   TL    TM    ALL   ALL         JET     170
+LIEU 91 LFPN  DEP   TL    TM    ALL   ALL         HEL     150
+
+LIEU 91 LFPN  ARR   AP    TE    ALL   ALL         ALL     270
+LIEU 91 LFPN  ARR   AO    OA    ALL   ALL         ALL     060 
+LIEU 91 LFPN  ARR   TE    RB    SOLBA ALL         ALL     110
+LIEU 91SLFPN  LFPG  E     LFPO  E 
+LIEU 91 LFPN  ARR   TE    RB    SOLBA ALL         ALL     090
+LIEU 91 LFPN  ARR   OT    OA    ODRAN ALL         ALL     060 
+LIEU 91 LFPN  ARR   TU    UT    ALL   ALL         ALL     320 
+LIEU 91 LFPN  ARR   US    AO    ALL   ALL         ALL     290 
+LIEU 91 LFPN  ARR   UJ    AO    ALL   ALL         ALL     270 
+LIEU 91 LFPN  ARR   UT    AO    ALL   ALL         ALL     280 
+LIEU 91 LFPN  ARR   OY    OT    ALL   ALL         ALL     200 
+LIEU 91 LFPN  ARR   HP    TU    ALL   ALL         ALL     350
+
+
+LIEU 91 LFPO  DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 LFPO  DEP   LN    TH    ALL   ALL   ALL   ALL     140
+LIEU 91 LFPO  DEP   OD    RC    NURMO ALL   E     ALL     130
+LIEU 91SLFPO  LFPG  E
+LIEU 91 LFPO  DEP   OD    RC    NURMO ALL   W     ALL     120
+LIEU 91SLFPO  LFPG  E
+LIEU 91 LFPO  DEP   OD    RC    NURMO ALL   ALL   ALL     070
+LIEU 91SLFPO  LFPG  W
+LIEU 91 LFPO  DEP   OD    RC    OPALE ALL   E     ALL     130
+LIEU 91SLFPO  LFPG  E
+LIEU 91 LFPO  DEP   OD    RC    OPALE ALL   W     ALL     120
+LIEU 91SLFPO  LFPG  E
+LIEU 91 LFPO  DEP   OD    RC    OPALE ALL   ALL   ALL     070
+LIEU 91SLFPO  LFPG  W
+LIEU 91 LFPO  DEP   OD    RC    ATREX ALL   E     ALL     130
+LIEU 91SLFPO  LFPG  E
+LIEU 91 LFPO  DEP   OD    RC    ATREX ALL   W     ALL     120
+LIEU 91SLFPO  LFPG  E
+LIEU 91 LFPO  DEP   OD    RC    ATREX ALL   ALL   ALL     070
+LIEU 91SLFPO  LFPG  W
+LIEU 91 LFPO  DEP   OD    LN    EVX1  ALL   ALL   HEL     080
+LIEU 91 LFPO  DEP   OD    LN    LGL   ALL   W     HEL     070
+LIEU 91SLFPO  LFPG  E
+LIEU 91 LFPO  DEP   OD    LN    LGL   ALL   ALL   HEL     080
+LIEU 91 LFPO  DEP   OD    TH    LGL   ALL   E     JET     150
+LIEU 91SLFPO  LFPG  E
+LIEU 91 LFPO  DEP   OD    TH    LGL   ALL   W     JET     080
+LIEU 91SLFPO  LFPG  E        
+LIEU 91 LFPO  DEP   OD    TH    LGL   ALL   ALL   JET     120
+LIEU 91 LFPO  DEP   OD    TH    LGL   ALL   W     HEL     070
+LIEU 91SLFPO  LFPG  E  
+LIEU 91 LFPO  DEP   OD    TH    LGL   ALL   ALL   HEL     080
+LIEU 91 LFPO  DEP   OD    TL    BATAG ALL   E     JET     090
+LIEU 91SLFPO  LFPG  E
+LIEU 91 LFPO  DEP   OD    TL    BATAG ALL   W     JET     130 
+LIEU 91SLFPO  LFPG  E       
+LIEU 91 LFPO  DEP   OD    TL    BATAG ALL   ALL   JET     120
+LIEU 91 LFPO  DEP   OD    TL    BATAG ALL   E     HEL     080
+LIEU 91SLFPO  LFPG  E
+LIEU 91 LFPO  DEP   OD    TL    BATAG ALL   W     HEL     120 
+LIEU 91SLFPO  LFPG  E       
+LIEU 91 LFPO  DEP   OD    TL    BATAG ALL   ALL   HEL     110
+LIEU 91 LFPO  DEP   OD    DO    ALL   ALL   ALL   JET     130
+LIEU 91 LFPO  DEP   PU    HP    ALL   ALL   ALL   ALL     340 
+LIEU 91 LFPO  DEP   RC    TB    ALL   ALL   ALL   JET     180
+LIEU 91 LFPO  DEP   RC    TB    ALL   ALL   ALL   HEL     140
+LIEU 91 LFPO  DEP   RC    TN    ALL   ALL   ALL   JET     180
+LIEU 91 LFPO  DEP   RC    TN    ALL   ALL   ALL   HEL     140
+LIEU 91 LFPO  DEP   TB    UN    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPO  DEP   TB    UB    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPO  DEP   TH    UK    ALL   ALL   ALL   ALL     240
+LIEU 91 LFPO  DEP   TL    UF    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPO  DEP   TM    UR    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPO  DEP   TN    UN    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPO  DEP   UK    JS    ALL   ALL   ALL   ALL     280
+LIEU 91 LFPO  DEP   UK    XS    ALL   ALL   ALL   ALL     280
+LIEU 91 LFPO  DEP   UP    PU    ALL   ALL   ALL   ALL     310
+LIEU 91 LFPO  DEP   DO    P1    ALL   ALL   ALL   ALL     250
+LIEU 91 LFPO  DEP   DO    UP    ALL   ALL   ALL   ALL     250 
+LIEU 91 LFPO  DEP   DG    P1    ALL   ALL   ALL   ALL     260
+LIEU 91 LFPO  DEP   DG    UP    ALL   ALL   ALL   ALL     260
+LIEU 91 LFPO  DEP   TL    TM    ALL   ALL   ALL   JET     170
+LIEU 91 LFPO  DEP   TL    TM    ALL   ALL   ALL   HEL     150
+LIEU 91 LFPO  DEP   TM    AP    ALL   ALL   ALL   ALL     260
+
+LIEU 91 LFPO  ARR   AP    TE    ALL   ALL   ALL   ALL     270
+LIEU 91 LFPO  ARR   AO    OA    ALL   ALL   ALL   ALL     100 
+LIEU 91 LFPO  ARR   OT    OA    ODRAN ALL   W     ALL     110 
+LIEU 91 LFPO  ARR   OT    OA    ODRAN ALL   E     ALL     090
+LIEU 91 LFPO  ARR   TE    RB    SOLBA ALL   E     ALL     110
+LIEU 91SLFPO  LFPG  E  
+LIEU 91 LFPO  ARR   TE    RB    SOLBA ALL   ALL   ALL     090
+LIEU 91 LFPO  ARR   US    AO    ALL   ALL   ALL   ALL     290
+LIEU 91 LFPO  ARR   TU    UT    ALL   ALL   ALL   ALL     320
+LIEU 91 LFPO  ARR   UJ    AO    ALL   ALL   ALL   ALL     270
+LIEU 91 LFPO  ARR   UT    AO    ALL   ALL   ALL   ALL     280
+LIEU 91 LFPO  ARR   OY    OT    ALL   ALL   ALL   ALL     200
+LIEU 91 LFPO  ARR   HP    TU    ALL   ALL   ALL   ALL     350
+
+LIEU 91 LFPT  DEP   AP    XR    ALL   ALL         ALL     310
+LIEU 91 LFPT  DEP   LN    TH    ALL   ALL         ALL     140
+LIEU 91 LFPT  DEP   PU    HP    ALL   ALL   ALL   ALL     340 
+LIEU 91 LFPT  DEP   RD    TL    LASIV ALL         JET     110
+LIEU 91SLFPT  LFPG  E     LFPO  W 
+LIEU 91 LFPT  DEP   RD    TL    LASIV ALL         JET     190
+LIEU 91 LFPT  DEP   RD    TL    BATAG ALL         JET     110
+LIEU 91SLFPT  LFPG  E     LFPO  W 
+LIEU 91 LFPT  DEP   RD    TL    BATAG ALL         JET     190
+LIEU 91 LFPT  DEP   RD    TL    BATAG ALL         HEL     070
+LIEU 91SLFPT  LFPG  E
+LIEU 91 LFPT  DEP   RD    TL    BATAG ALL         HEL     130
+LIEU 91SLFPT  LFPG  W
+LIEU 91 LFPT  DEP   RD    TM    ALL   ALL         JET     190
+LIEU 91 LFPT  DEP   RD    TM    NAPIX ALL         HEL     070 
+LIEU 91SLFPT  LFPG  E
+LIEU 91 LFPT  DEP   RD    TM    NAPIX ALL         HEL     130 
+LIEU 91SLFPT  LFPG  W
+LIEU 91 LFPT  DEP   OD    DO    ALL   ALL         JET     130
+LIEU 91 LFPT  DEP   RD    DG    ALL   ALL         JET     190
+LIEU 91 LFPT  DEP   TB    UN    ALL   ALL         ALL     260 
+LIEU 91 LFPT  DEP   TB    UB    ALL   ALL         ALL     260 
+LIEU 91 LFPT  DEP   TH    UK    ALL   ALL         ALL     240 
+LIEU 91 LFPT  DEP   TL    UF    ALL   ALL         ALL     260
+LIEU 91 LFPT  DEP   TM    AP    ALL   ALL         ALL     260 
+LIEU 91 LFPT  DEP   TM    UR    ALL   ALL         ALL     260 
+LIEU 91 LFPT  DEP   TN    UN    ALL   ALL         ALL     260 
+LIEU 91 LFPT  DEP   DO    P1    ALL   ALL         ALL     250
+LIEU 91 LFPT  DEP   DO    UP    ALL   ALL         ALL     250
+LIEU 91 LFPT  DEP   UK    JS    ALL   ALL         ALL     280
+LIEU 91 LFPT  DEP   UK    XS    ALL   ALL         ALL     280
+LIEU 91 LFPT  DEP   UP    PU    ALL   ALL         ALL     310
+LIEU 91 LFPT  ARR   UJ    AR    ALL   ALL         ALL     240
+LIEU 91 LFPT  ARR   AR    SR    ALL   ALL         ALL     120
+LIEU 91 LFPT  ARR   SL    RB    ALL   ALL         ALL     060
+LIEU 91 LFPT  ARR   AP    TE    ALL   ALL         ALL     270
+
+
+LIEU 91 LFPV  DEP   AP    XR    ALL   ALL   ALL   ALL     310
+LIEU 91 LFPV  DEP   LN    TH    ALL   ALL   ALL   ALL     140
+LIEU 91 LFPV  DEP   PU    HP    ALL   ALL   ALL   ALL     340 
+LIEU 91 LFPV  DEP   OD    RC    NURMO ALL   ALL   ALL     130
+LIEU 91SLFPV  LFPG  E     LFPO  E 
+LIEU 91 LFPV  DEP   OD    RC    NURMO ALL   ALL   ALL     120
+LIEU 91SLFPV  LFPG  E     LFPO  W
+LIEU 91 LFPV  DEP   OD    RC    NURMO ALL   ALL   ALL     070
+LIEU 91SLFPV  LFPG  W     LFPO  E
+LIEU 91 LFPV  DEP   OD    RC    NURMO ALL   ALL   ALL     070
+LIEU 91SLFPV  LFPG  W     LFPO  W
+LIEU 91 LFPV  DEP   OD    RC    OPALE ALL   ALL   ALL     130
+LIEU 91SLFPV  LFPG  E     LFPO  E
+LIEU 91 LFPV  DEP   OD    RC    OPALE ALL   ALL   ALL     120
+LIEU 91SLFPV  LFPG  E     LFPO  W
+LIEU 91 LFPV  DEP   OD    RC    OPALE ALL   ALL   ALL     070
+LIEU 91SLFPV  LFPG  W     LFPO  E
+LIEU 91 LFPV  DEP   OD    RC    OPALE ALL   ALL   ALL     070
+LIEU 91SLFPV  LFPG  W     LFPO  W
+LIEU 91 LFPV  DEP   OD    RC    ATREX ALL   ALL   ALL     130
+LIEU 91SLFPV  LFPG  E     LFPO  E
+LIEU 91 LFPV  DEP   OD    RC    ATREX ALL   ALL   ALL     120
+LIEU 91SLFPV  LFPG  E     LFPO  W
+LIEU 91 LFPV  DEP   OD    RC    ATREX ALL   ALL   ALL     070
+LIEU 91SLFPV  LFPG  W     LFPO  E
+LIEU 91 LFPV  DEP   OD    RC    ATREX ALL   ALL   ALL     070
+LIEU 91SLFPV  LFPG  W     LFPO  W
+LIEU 91 LFPV  DEP   OD    TL    BATAG ALL   ALL   JET     090
+LIEU 91SLFPV  LFPG  E     LFPO  E
+LIEU 91 LFPV  DEP   OD    TL    BATAG ALL   ALL   JET     130
+LIEU 91SLFPV  LFPG  E     LFPO  W        
+LIEU 91 LFPV  DEP   OD    TL    BATAG ALL   ALL   JET     120
+LIEU 91 LFPV  DEP   OD    TL    BATAG ALL   ALL   HEL     080
+LIEU 91SLFPV  LFPG  E     LFPO  E
+LIEU 91 LFPV  DEP   OD    TL    BATAG ALL   ALL   HEL     120
+LIEU 91SLFPV  LFPG  E     LFPO  W 
+LIEU 91 LFPV  DEP   OD    TL    BATAG ALL   ALL   HEL     110
+LIEU 91 LFPV  DEP   OD    DO    ALL   ALL   ALL   JET     130 
+LIEU 91 LFPV  DEP   RC    TB    ALL   ALL   ALL   HEL     140
+LIEU 91 LFPV  DEP   RC    TB    ALL   ALL   ALL   JET     180
+LIEU 91 LFPV  DEP   RC    TN    ALL   ALL   ALL   HEL     140
+LIEU 91 LFPV  DEP   RC    TN    ALL   ALL   ALL   JET     180
+LIEU 91 LFPV  DEP   TB    UN    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPV  DEP   TB    UB    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPV  DEP   TH    UK    ALL   ALL   ALL   ALL     240 
+LIEU 91 LFPV  DEP   TL    UF    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPV  DEP   TM    UR    ALL   ALL   ALL   ALL     260
+LIEU 91 LFPV  DEP   TM    AP    ALL   ALL   ALL   ALL     260
+LIEU 91 LFPV  DEP   TN    UN    ALL   ALL   ALL   ALL     260 
+LIEU 91 LFPV  DEP   UK    JS    ALL   ALL   ALL   ALL     280
+LIEU 91 LFPV  DEP   UK    XS    ALL   ALL   ALL   ALL     280
+LIEU 91 LFPV  DEP   UP    PU    ALL   ALL   ALL   ALL     310
+LIEU 91 LFPV  DEP   DO    P1    ALL   ALL   ALL   ALL     250
+LIEU 91 LFPV  DEP   DO    UP    ALL   ALL   ALL   ALL     250 
+LIEU 91 LFPV  DEP   DG    P1    ALL   ALL   ALL   ALL     260
+LIEU 91 LFPV  DEP   DG    UP    ALL   ALL   ALL   ALL     260
+LIEU 91 LFPV  DEP   TL    TM    ALL   ALL   ALL   JET     170
+LIEU 91 LFPV  DEP   TL    TM    ALL   ALL   ALL   HEL     150
+
+LIEU 91 LFPV  ARR   AP    TE    ALL   ALL   ALL   ALL     270
+LIEU 91 LFPV  ARR   AO    OA    ALL   ALL   ALL   ALL     060
+LIEU 91 LFPV  ARR   HP    TU    ALL   ALL   ALL   ALL     350  
+LIEU 91 LFPV  ARR   TE    RB    SOLBA ALL   ALL   ALL     110
+LIEU 91SLFPV  LFPG  E     LFPO  E 
+LIEU 91 LFPV  ARR   TE    RB    SOLBA ALL   ALL   ALL     090
+LIEU 91 LFPV  ARR   OT    OA    ODRAN ALL   ALL   ALL     060
+LIEU 91 LFPV  ARR   US    AO    ALL   ALL   ALL   ALL     290
+LIEU 91 LFPV  ARR   TU    UT    ALL   ALL   ALL   ALL     320
+LIEU 91 LFPV  ARR   UJ    AO    ALL   ALL   ALL   ALL     270
+LIEU 91 LFPV  ARR   UT    AO    ALL   ALL   ALL   ALL     280
+LIEU 91 LFPV  ARR   OY    OT    ALL   ALL   ALL   ALL     200
+
+LIEU 91 LFPY  ARR   OT    SJ    DOMOD ALL   ALL   ALL     060
+
+LIEU 91 LFQI  ARR   UZ    TN    ALL   ALL         ALL     250
+LIEU 91 LFQI  ARR   TN    TB    ALL   ALL         ALL     200
+LIEU 91 LFQI  ARR   TB    QW    ALL   ALL         ALL     120
+LIEU 91 LFQI  ARR   TB    QE    ALL   ALL         ALL     120
+
+LIEU 91 LFQQ  ARR   AO    UR    ALL   ALL   ALL   ALL     280
+LIEU 91 LFQQ  ARR   US    AO    ALL   ALL   ALL   ALL     290
+LIEU 91 LFQQ  ARR   UZ    TN    ALL   ALL   ALL   ALL     250
+LIEU 91 LFQQ  ARR   TN    TB    ALL   ALL   ALL   ALL     200
+
+LIEU 91 LFQS  ARR   TB    QW    ALL   ALL         ALL     120
+LIEU 91 LFQS  ARR   TB    QE    ALL   ALL         ALL     120
+
+LIEU 91 LFQT  ARR   TN    TB    ALL   ALL         ALL     200 
+LIEU 91 LFQT  ARR   AO    UR    ALL   ALL         ALL     280
+LIEU 91 LFQT  ARR   US    AO    ALL   ALL         ALL     290
+LIEU 91 LFQT  ARR   UZ    TN    ALL   ALL         ALL     250
+
+LIEU 91 LFRG  DEP   UZ    P1    ALL   ALL   ALL   ALL     270
+LIEU 91 LFRG  DEP   UZ    UP    ALL   ALL   ALL   ALL     270
+LIEU 91 LFRG  ARR   US    AO    ALL   ALL   ALL   ALL     290
+LIEU 91 LFRG  ARR   DG    RT    ALL   ALL   ALL   ALL     240 
+LIEU 91 LFRG  ARR   UZ    DG    ALL   ALL   ALL   ALL     270
+LIEU 91 LFRG  ARR   DG    UZ    ALL   ALL   ALL   ALL     260 
+
+LIEU 91 LFRK  DEP   UZ    P1    ALL   ALL         ALL     270 
+LIEU 91 LFRK  DEP   UZ    UP    ALL   ALL         ALL     270 
+LIEU 91 LFRK  ARR   US    AO    ALL   ALL         ALL     290
+LIEU 91 LFRK  ARR   DG    RT    ALL   ALL         ALL     240 
+LIEU 91 LFRK  ARR   UZ    DG    ALL   ALL         ALL     270 
+LIEU 91 LFRK  ARR   DG    UZ    ALL   ALL         ALL     260 
+
+LIEU 91 LFRM  DEP   UZ    UP    ALL   ALL   ALL   ALL     270
+LIEU 91 LFRM  ARR   US    AO    ALL   ALL         ALL     290
+
+LIEU 91 LFRN  DEP   UK    XS    ALL   ALL         ALL     280
+LIEU 91 LFRN  ARR   TH    ID    ALL   ALL         ALL     230
+
+LIEU 91 LFRS  DEP   UK    XS    ALL   ALL         ALL     280
+LIEU 91 LFRS  ARR   UK    IN    ALL   ALL         ALL     250
+
+LIEU 91 LFRZ  DEP   UK    XS    ALL   ALL         ALL     280
+
+LIEU 91 LFSF  ARR   AP    TM    ALL   ALL   ALL   ALL     270
+
+LIEU 91 LFSX  ARR   UJ    SE    ALL   ALL         ALL     200
+
+LIEU 91 LS    DEP   UJ    US    ALL   ALL   ALL   ALL     310
+LIEU 91 LS    ARR   UP    UT    ALL   ALL   ALL   ALL     270
+LIEU 91 LS    ARR   UT    IG    ATN   ALL   ALL   ALL     230
+LIEU 91 LS    ARR   HP    PU    ALL   ALL   ALL   ALL     350
+LIEU 91 LS    ARR   PU    UP    ALL   ALL   ALL   ALL     320
+
+LIEU 91 P     ARR   AP    EY    ALL   ALL   ALL   ALL     310
+LIEU 91 R     ARR   AP    EY    ALL   ALL   ALL   ALL     310
+LIEU 91 V     ARR   AP    EY    ALL   ALL   ALL   ALL     310
+LIEU 91 Z     ARR   AP    EY    ALL   ALL   ALL   ALL     310
+LIEU 91 W     ARR   AP    EY    ALL   ALL   ALL   ALL     310
+
+
+LIEU 91 U     DEP   TB    UR    ALL   ALL   ALL   ALL     260
+
+LIEU 91 U     DEP   TE    AP    ALL   ALL   ALL   ALL     260
+LIEU 91 U     DEP   TE    UR    ALL   ALL   ALL   ALL     260 
+LIEU 91 U     ARR   UK    TH    ALL   ALL   ALL   ALL     250
+LIEU 91 U     ARR   UZ    TH    ALL   ALL   ALL   ALL     250

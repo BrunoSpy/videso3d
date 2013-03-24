@@ -1,0 +1,310 @@
+                    ************************                                
+                    * IDENTIFICATION       *                                
+                    *          GENERALITES *                                
+                    ************************  03-11-2003
+                                                                            
+CENT 10 BORD      1 11    CREXT B                 CAUT4 ADJAC               
+CENT 13 BORD  PLN07 IPL04 COO04 SUP01
+CENT 10 AIX       2 10    CREXT A                 CAUT4 ADJAC               
+CENT 13 AIX   PLN07 IPL04 COO04 SUP01                                                        
+CENT 10 BALE      4 FF    CTEXT BA                CAUT4                     
+CENT 13 BALE  PLN07 IPL04 COO04
+CENT 10 MONT      5 FF    CTEXT                   CAUT4                     
+CENT 13 MONT  PLN07 IPL04 COO04
+CENT 10 EGGG      6 35          L                 ETRAN                     
+CENT 10SEGGG  EGGG
+CENT 13 EGGG  ETG00
+CENT 10 NICE      7 FF    CTEXT                   CAUT4                     
+CENT 13 NICE  PLN07 IPL04 COO04
+CENT 10 BRST      8 2D    CREXT T                 CAUT4 ADJAC               
+CENT 13 BRST  PLN07 IPL04 COO04 SUP01                                                        
+CENT 10 STIP      9 36                            CAUT4 ADJAC               
+CENT 13 STIP  PLN07 IPL04 MFI05 RET01              
+CENT 10 REIM     10 3D    CREXT E                 CAUT4 ADJAC               
+CENT 13 REIM  PLN07 IPL04 COO04 SUP01         
+CENT 10 GNEV     11 27          SG                ETRAN                     
+CENT 10SGNEV  GNEV
+CENT 13 GNEV  ETG01
+CENT 10 LYON     12 FF    CTEXT                   CAUT4                     
+CENT 13 LYON  PLN07 IPL04 COO04
+CENT 10 MARS     15 FF    CTEXT R                 CAUT4                     
+CENT 13 MARS  PLN07 IPL04 COO04
+CENT 10 ZURI     17 28          SZ                ETRAN                     
+CENT 10SZURI  ZURI
+CENT 10 JERS     18 FF          J                 ETRAN                     
+CENT 10SJERS  JERS
+CENT 10 ETRG     20 FF                            ETRAN                     
+CENT 10SETRG  ETRG 
+CENT 10 TOUL     21 FF    CTEXT                   CAUT4                     
+CENT 13 TOUL  PLN07 IPL04 COO04
+CENT 10 MADR     22 FF                            ETRAN                     
+CENT 10SMADR  MADR
+CENT 10 NANT     23 FF    CTEXT                   CAUT4                     
+CENT 13 NANT  PLN07 IPL04 COO04
+CENT 10 BARC     24 FF                            ETRAN                     
+CENT 10SBARC  BARC
+CENT 10 EIRE     25 FF                            ETRAN                     
+CENT 10SEIRE  EIRE 
+CENT 10 PALM     26 FF                            ETRAN                     
+CENT 10SPALM  PALM
+CENT 10 EBBR     27 4B          BC                ETRAN       NDIFF
+CENT 10SEBBR  EBBR
+CENT 13 EBBR  ETG01
+CENT 10 KLSR     29 FF                            ETRAN
+CENT 10SKLSR  KLSR
+CENT 10 FFOR     30 FF                            ETRAN
+CENT 10SFFOR  FFOR
+CENT 10 STUG     31 FF                            ETRAN
+CENT 10SSTUG  STUG
+CENT 10 ROME     32 FF                            ETRAN
+CENT 10SROME  ROME
+CENT 10 MLAN     33 FF                            ETRAN
+CENT 10SMLAN  MLAN
+CENT 10 SWIK     34 FF                            ETRAN
+CENT 10SSWIK  SWIK
+CENT 10 MERI     28 FF    CTEXT                   CAUT4
+CENT 13 MERI  PLN07 IPL04 COO04
+CENT 10 EDDY     35 1B          MC                ETRAN
+CENT 10SEDDY  EDDY
+CENT 13 EDDY  ETG01
+CENT 10 STBG     37 FF    CTEXT                   CAUT4
+CENT 13 STBG  PLN07 IPL04 COO04
+CENT 10 PYRN     38 FF    CTEXT                   CAUT4
+CENT 13 PYRN  PLN07 IPL04 COO04
+CENT 10 CORS     39 FF    CTEXT                   CAUT4                     
+CENT 13 CORS  PLN07 IPL04 COO04
+CENT 10 ELLX     40 FF          LUX               ETRAN
+CENT 10SELLX  ELLX
+CENT 13 ELLX  ETG01
+CENT 10 RENN     41 FF    CTEXT                   CAUT4
+CENT 13 RENN  PLN07 IPL04 COO04
+CENT 10 ALGR     42 FF                            ETRAN
+CENT 10SALGR  ALGR
+
+                                                                            
+                   **********************
+                   **   S.L.  PARIS    **
+                   ********************** 25-12-2003
+                                                                            
+CENT 10 PARI      3 13    CROUT P                 CAUT4                     
+CENT 10SPARI  PARI
+CENT 11 PARI    240          30 RVSM              AFLMEXAFLMIPLFFFZQRN
+CENT 11SSSUR        ISCDG
+CENT 12 PARI                 15   120 FICHE                                 
+
+              *** CENT 13 : d≈finit le format des messages en sortie
+CENT 13 PARI  PLN07 IPL04 COO04 AIN11                                                  
+
+              *** CENT 14 : definit format des messages en entr≈e
+CENT 14 PARI  PLN07 IPL04 COO04 AIN11 SUP00 SUP01                                             
+                                                                            
+                    **********************                                  
+                    * CLAVIER NIVEAUX    *                                  
+                    *   NIVEAUX TABULES  *                                  
+                    **********************  05-03-91                        
+                                                                            
+CENT 2  PARI  F       130   130   130                                       
+CENT 2  PARI  I       250   250   250                                       
+CENT 2  PARI  U       300   300   300                                       
+CENT 2  PARI  F+I     160   160   160                                       
+CENT 2  PARI  F+U     250   250   250                                       
+CENT 2  PARI  I+U     290   290   290                                       
+CENT 2  PARI  F+I+U   250   250   250                                       
+                                                                            
+                  *********************************                         
+                  *  DONNEES DE COORDINATION      *                         
+                  *********************************                         
+                                                                            
+CENT 30 PARI                    NVS1S   -20    60     1          00    30   
+CENT 31 PARI        SBLC  IMPIR CONCA NBR1P       ISEVE       VLEVE         
+
+                                                                            
+                    *****************************                           
+                    * CARACTERISTIQUES          *                           
+                    *   D'IMPRESSION DES STRIPS *                           
+                    *****************************  13-02-97                 
+                                                                            
+CENT 4  PARI        INFO  OPT2  DEPFI       BASUI             CRECO STPAH   
+                                                                            
+                    *************************                               
+                    * PARAMETRES DIGITATRON *                               
+                    *************************  23-01-2003                     
+                                                                            
+CENT 50 PARI  OPT1     30    90     4    10    10                           
+CENT 51 PARI  LFQQ  LFPO  LFPG  LFPB  LFOB  LFLL  EBBR  EGLL  LFML  LFRS    
+CENT 51SPARI  EDDF  EGKK  EHAM
+                                                                            
+                    **************************                              
+                    * PRESENTATION DES       *                              
+                    *   COMMANDES DIGITATRON *                              
+                    **************************  20-03-96                    
+                                                                            
+CENT 61 PARI        RIP06                                                   
+CENT 62 PARI  ACT02 CNL03 RIP06 RET07                                       
+CENT 63 PARI  ACT02 RIP06 CNL03 RET07                                       
+CENT 64 PARI  MOH11 MOD05 CNL03 MVT02 RIP06 RET07                           
+CENT 65 PARI  MOH11 MOD05 CNL03 RIP06                                       
+CENT 66 PARI  MOH11 RIP06 MOD05                                             
+        PARI  MOH11 MOD05 CNL06 RIP03                                       
+                    **********************************                      
+                    * PARAMETRES FICHE EXPLICITE     *                      
+                    ********************************** 15-02-07                      
+                                                                            
+CENT 80 PARI  IU    2FL                                                     
+CENT 81 PARI  A310  A320  A342  BA11  FA10  FA20  BE20  BE9L  N262  AT43    
+CENT 82 PARI  MD83  DC87  DC91  DC10  F100  H25A  B733  B742  B752  B762    
+CENT 83 PARI  AMB   ATN   BRY   CDN   CIV   ETRAT DJL   DPE   LEQ   CAD     
+CENT 83S      VLP   MOU   MEDIL PTV   TRACA VEULE                           
+CENT 84 PARI  AMB   ATN   BRY   CDN   CIV   ETRAT DJL   DPE   LEQ   CAD     
+CENT 84S      VLP   MOU   MEDIL PTV   TRACA VEULE                           
+CENT 85 PARI  AMB   ATN   BRY   CDN   CIV   ETRAT DJL   DPE   LEQ   CAD     
+CENT 85S      VLP   MOU   MEDIL PTV   TRACA VEULE                           
+                                                                            
+        *******************************************
+        ** SYSTEME LOGIQUE CENTRE TERMINAL ORLY  **
+        *******************************************  22/11/2004
+    
+CENT 10 ORL      13 FF    CTERM O                 CAUT4                     
+CENT 10SORL   ORL
+CENT 12 ORL                   0   180 FICHE     7                           
+CENT 13 ORL   PLN07 IPL04 COO04 AIN11                                                   
+CENT 30 ORL                     NVS1S     0    25     2          40    25   
+                                                                            
+                    INDICATIFS NON IMPRIMABLES TANT QUE PAS D ESD           
+                            !                                               
+CENT 31 ORL         SBLC  IMPIR CONCA BR1PT NICRO NISEV       VLEVE         
+CENT 41 ORL         SIDB2 LASTHBOPRMK  
+CENT 61 ORL         RIP07                                                   
+CENT 62 ORL   ACT02 RET08 RIP10 CNL11 ATT04 ATI05                                       
+CENT 63 ORL   ACT02 RET04 CNL06 RIP08                                       
+CENT 64 ORL   MVT01 RET04 MOD05 RIP07 CNL11                                 
+CENT 65 ORL   RET04 MOD05 RIP07 CNL11                                       
+CENT 66 ORL   MVT01 MOD05 RIP07 CNL11                                       
+CENT 67 ORL   MOD05 RIP07 CNL11                                             
+CENT 68 ORL   MVT01 RIP07 CNL11                                             
+CENT 69 ORL   CNL11 RIP07                                                   
+CENT 6A ORL   ACT02 RET04 RIP07 CNL11                                       
+CENT 6B ORL   RET04 MVT01 RIP07 CNL11                                       
+CENT 6C ORL   MVT01 RIP07 CNL11                                             
+CENT 6D ORL   RET04 RIP07 CNL11                                             
+CENT 6E ORL   CNL11 RIP07                                                   
+CENT 6F ORL   ACT02 RIP07                                                   
+CENT 6G ORL   MOD05 RIP07                                                   
+CENT 6H ORL   ACT02 RET08 RIP10 CNL11                                       
+CENT 6I ORL   CNL11 RIP07                                                   
+CENT 6J ORL   MVT01 RET04 MOD05 RIP07 CNL11                                 
+CENT 6K ORL   MVT01 MOD05 RIP07 CNL11                                       
+CENT 6L ORL   MOD05 RIP07 CNL11  
+CENT 70 ORL   IDCAU MVT                  00          06 QFUIM STR   
+CENT 71 ORL   NRVMD RVRAD
+                                                                            
+                    **********************************                      
+                    * PARAMETRES FICHE EXPLICITE ORL * 22/11/2004                     
+                    **********************************                      
+                                                                            
+CENT 80 ORL   IU                                                            
+CENT 81 ORL   A30B  A319  A320  A321  AT45  AT72  B190  B721  B733  B742    
+CENT 82 ORL   B752  B762  BE20  CRJ2  DC10  E120  F70   F100  MD83  SF34    
+CENT 83 ORL   LPO   LPV                                                     
+CENT 84 ORL   LPO   LPV                                                     
+CENT 85 ORL   LPO   LPV                                                     
+CENT 86 ORL   LPO     120   120   120   250                                 
+CENT 87 ORL   AGOPA ERIXU LATRA OKASI PILUL PTV   MONOT DORDI
+CENT 87S      LGL   EVX   OPALE ATREX NURMO NIPOR BUBLI BAXIR        
+                                                          
+                                                                            
+        *******************************************************
+        **  SYSTEME LOGIQUE CENTRE TERMINAL ROISSY C. D. G.  **
+        ******************************************************* 22/11/2004
+
+CENT 10 CDG      14 FF    CTERM C                 CAUT4                     
+CENT 10SCDG   CDG
+CENT 12 CDG                   0   180 FICHE    30                           
+CENT 13 CDG   PLN07 IPL04 COO04 AIN11                                                   
+CENT 30 CDG                     NVS1S     0    25     2          40    25   
+                                                                            
+            INDICATIFS NON IMPRIMABLES TANT QUE PAS D ESD                   
+                            !                                               
+CENT 31 CDG         SBLC  IMPIR CONCA BR1PT NICRO NISEV       VLEVE         
+CENT 41 CDG   QFUH  SIDB2 LASTHBOPRMK                 
+CENT 61 CDG         RIP07                                                   
+CENT 62 CDG   ACT02 RET08 RIP10 CNL11 ATT04 ATI05                                       
+CENT 63 CDG   ACT02 RET04 CNL06 RIP08                                       
+CENT 64 CDG   MOD05 MVT01 RET04 RIP07 CNL11                                 
+CENT 65 CDG   RET04 MOD05 RIP07 CNL11                                       
+CENT 66 CDG   MOD05 MVT01 RIP07 CNL11                                       
+CENT 67 CDG   MOD05 RIP07 CNL11                                             
+CENT 68 CDG   MVT01 RIP07 CNL11                                             
+CENT 69 CDG   CNL11 RIP07                                                   
+CENT 6A CDG   ACT02 RET04 RIP07 CNL11                                       
+CENT 6B CDG   RET04 MVT01 RIP07 CNL11                                       
+CENT 6C CDG   MVT01 RIP07 CNL11                                             
+CENT 6D CDG   RET04 RIP07 CNL11                                             
+CENT 6E CDG   CNL11 RIP07                                                   
+CENT 6F CDG   ACT02 RIP07                                                   
+CENT 6G CDG   MOD05 RIP07                                                   
+CENT 6H CDG   ACT02 RET08 RIP10 CNL11                                       
+CENT 6I CDG   CNL11 RIP07                                                   
+CENT 6J CDG   MVT01 RET04 MOD05 RIP07 CNL11                                 
+CENT 6K CDG   MVT01 MOD05 RIP07 CNL11                                       
+CENT 6L CDG   MOD05 RIP07 CNL11
+CENT 70 CDG   IDCAU MVT                  00          08 QFUIM STR   
+CENT 71 CDG   NRVMD RVRAD
+                                                                            
+                    **********************************                      
+                    * PARAMETRES FICHE EXPLICITE CDG * 22/11/2004                     
+                    **********************************                      
+                                                                            
+CENT 80 CDG   IU                                                            
+CENT 81 CDG   AT43  B733  B735  B742  B744  B752  B762  DC91  DC10          
+CENT 82 CDG   A300  A310  A320  A342  F28   F100  F70   MD83  MD11  SF34    
+CENT 83 CDG   LPG   LPB   LPT                                               
+CENT 84 CDG   LPG   LPB   LPT                                               
+CENT 85 CDG   LPG   LPB   LPT                                               
+CENT 86 CDG   LPG     040   100   100   250                                 
+CENT 87 CDG   AGOPA ERIXU LATRA OKASI PILUL PTV   MONOT DORDI
+CENT 87S      LGL   EVX   OPALE ATREX NURMO NIPOR LANVI BUBLI BAXIR        
+
+
+        *********************************************
+        **  SYSTEME LOGIQUE CENTRE TERMINAL LILLE  **
+        *********************************************  02-10-03
+
+CENT 10 LILE     36 FF    CTERM                   CAUT4                     
+CENT 10SLILE  LILE 
+CENT 12 LILE                 15   090 FICHE                                 
+CENT 13 LILE  PLN07 IPL04 COO04 AIN11                                                   
+
+CENT 30 LILE                    NVS1S     0    60     1   010    40    30   
+CENT 31 LILE        SPFL  IMPIR NCONC BR1PT ICROG ISEVE       VLEVE         
+CENT 41 LILE        SIDB2       OPRMK
+CENT 61 LILE        RIP06                                                   
+CENT 62 LILE  ACT02 CNL03 RIP06 RET07 ATT04 ATI05                           
+CENT 63 LILE  ACT02 CNL03 RIP06 RET07                                       
+CENT 64 LILE  MVT08 RET07 MOD05 RIP06 CNL03                                 
+CENT 65 LILE  RET07 MOD05 RIP06 CNL03                                       
+CENT 66 LILE  MVT08 MOD05 RIP06 CNL03                                       
+CENT 67 LILE  MOD05 RIP06 CNL03                                             
+CENT 68 LILE  MVT01 MOD05 RIP06 CNL03
+CENT 69 LILE  MOD05 CNL03 RIP06
+CENT 6A LILE  ACT02 RET07 RIP06 CNL03                                       
+CENT 6B LILE  MVT08 RET07 MOD05 RIP06 CNL03
+CENT 6C LILE  MVT08 MOD05 RIP06 CNL03
+CENT 6D LILE  RET07 MOD05 RIP06 CNL03
+CENT 6E LILE  MOD05 CNL03 RIP06
+CENT 6F LILE  ACT02 RIP06                                                   
+CENT 6G LILE  MOD05 RIP06                                                   
+CENT 6H LILE  ACT02 RET07 RIP06 CNL03                                       
+CENT 6I LILE  CNL03 RIP06                                                   
+CENT 6J LILE  MVT08 RET07 MOD05 RIP06 CNL03                                 
+CENT 6K LILE  MVT01 MOD05 RIP06 CNL03                                       
+CENT 6L LILE  MOD05 CNL03 RIP06
+CENT 70 LILE  IDCAU AUTO                 00          00   
+CENT 71 LILE  RVMOD RVRAD
+                                                                            
+                       ****************************                         
+                       * DECLARATION S.L. MAESTRO *                         
+                       **************************** 27-02-08                
+                                                                            
+CENT 90 MSTO      1             NEVCE           1     1                     
+CENT 90 MSTG      2             EVCE            1     1                     
