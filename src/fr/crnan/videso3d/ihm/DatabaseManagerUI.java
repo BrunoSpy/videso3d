@@ -49,14 +49,18 @@ import javax.swing.SwingWorker;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.tree.DefaultTreeModel;
 
 import org.jdesktop.swingx.JXTable;
 
 import eu.medsea.mimeutil.MimeUtil;
+import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.FileParser;
+import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.databases.DatabaseManager;
+import fr.crnan.videso3d.databases.SVNManager;
 import fr.crnan.videso3d.databases.aip.AIP;
 import fr.crnan.videso3d.databases.edimap.Cartes;
 import fr.crnan.videso3d.databases.exsa.Exsa;
@@ -90,7 +94,7 @@ public class DatabaseManagerUI extends JDialog {
 		
 		this.setPreferredSize(new Dimension(500, 300));
 		
-		this.setLayout(new BorderLayout());
+		getContentPane().setLayout(new BorderLayout());
 		
 		this.build();	
 				
@@ -102,6 +106,8 @@ public class DatabaseManagerUI extends JDialog {
 	
 	private void build(){
 		
+		databases = new HashMap<FileParser, File[]>();
+		
 		progressMonitor2 = new DoubleProgressMonitor(this, "Import des fichiers sélectionnés", "", 0, 100);
 		progressMonitor2.setAlwaysOnTop(true);
 		
@@ -111,6 +117,8 @@ public class DatabaseManagerUI extends JDialog {
 		table.setColumnControlVisible(true);
 		table.getColumnExt("id").setVisible(false);
 		table.getColumnExt("Commentaire").setEditable(true);
+		table.getColumnExt("Nom").setMinWidth(100);
+		table.getColumnExt("Type").setMaxWidth(40);
 		this.getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
 		
 		JPanel buttons = new JPanel();
@@ -144,44 +152,92 @@ public class DatabaseManagerUI extends JDialog {
 				fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 				fileChooser.setMultiSelectionEnabled(true);
 				if(fileChooser.showOpenDialog(add) == JFileChooser.APPROVE_OPTION) {
-					databases = new HashMap<FileParser, File[]>();
-
-					new SwingWorker<Integer, Integer>() {
-
-						boolean databaseFound = false;
-
-						@Override
-						protected Integer doInBackground() throws Exception {
-
-							progressMonitor2.setCancelled(false);
-							progressMonitor2.getMainProgressBar().setIndeterminate(true);
-							progressMonitor2.getSecondaryProgressBar().setIndeterminate(true);
-							progressMonitor2.setVisible(true);
-							progressMonitor2.setMainNote("Recherche des bases de données...");
-
-							databaseFound = processFiles(fileChooser.getSelectedFiles());
-
-							return null;
-						}
-
-						@Override
-						protected void done() {
-							if(!progressMonitor2.isCanceled()){
-								if(!databaseFound){
-									progressMonitor2.setVisible(false);
-									JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
-											"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
-									Logging.logger().warning("Pas de fichier de base de données trouvé");
-								} else {
-									importDatabases();
-								}
-							}
-						}
-
-					}.execute();
+					processSelectedFiles(fileChooser.getSelectedFiles());
 				}
 			}
 		});
+		
+		
+		if(!Configuration.getProperty(Configuration.SVN_REPOSITORIES, "").isEmpty()){
+			btnSvn = new JButton("SVN");
+			btnSvn.addActionListener(new ActionListener() {
+				
+				String svnRepositories;
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					svnRepositories = Configuration.getProperty(Configuration.SVN_REPOSITORIES, "");
+					
+					//s'il y a plusieurs dépôt, on affiche la fenêtre de choix du dépôt
+					if(svnRepositories.split("#").length>1){
+						SVNRepositoryChoiceUI svnChoiceUI = new SVNRepositoryChoiceUI();
+						if(svnChoiceUI.showDialog(DatabaseManagerUI.this) == JOptionPane.OK_OPTION){
+							svnRepositories = svnChoiceUI.getSelectedRepo();
+						} else {
+							svnRepositories = null;
+						}
+					}
+					//on a maintenant plus qu'un dépôt, on passe à la fenêtre du dépôt en question
+					if(svnRepositories != null){
+						new SwingWorker<Void, Void>(){
+							SVNRepositoryUI svnRepoUI = null;
+							SVNManager svnManager = new SVNManager();
+							DefaultTreeModel svnModel;
+							ProgressMonitor monitor = new ProgressMonitor(DatabaseManagerUI.this,
+										"Import de la structure du dépot",
+										"Connection au dépot...", 0, 100, false, true, true);
+								
+							PropertyChangeListener progressListener;
+							
+							@Override
+							protected Void doInBackground() throws Exception {
+								monitor.setMillisToDecideToPopup(0);
+								monitor.setMillisToPopup(0);
+								
+								progressListener = new PropertyChangeListener() {
+									
+									@Override
+									public void propertyChange(PropertyChangeEvent evt) {
+										if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
+											monitor.setNote((String) evt.getNewValue());
+										}  else if(evt.getPropertyName().equals(ProgressSupport.TASK_ENDS)){
+											monitor.close();
+										} else if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
+											monitor.setProgress(1); //force display of the monitor
+										}
+										
+									}
+								};
+			
+								svnManager.addPropertyChangeListener(progressListener);
+								svnManager.initialize(svnRepositories);
+								svnManager.setMonitor(monitor);
+								svnModel = svnManager.listEntries();
+								
+								return null;
+							}
+
+							@Override
+							protected void done() {
+								svnManager.removePropertyChangeListener(progressListener);
+								if(!monitor.isCanceled()){
+									svnRepoUI = new SVNRepositoryUI(svnModel);
+									if(svnRepoUI.showDialog(DatabaseManagerUI.this) == JOptionPane.OK_OPTION){
+										processSVN(svnManager, svnRepoUI.getSVNPath());
+									}
+									
+								}
+							}
+							
+						}.execute();
+					}
+				}
+			});
+			buttons.add(btnSvn);
+		}
+		
+		
 		buttons.add(add);
 		
 		delete = new JButton("Supprimer");
@@ -191,11 +247,103 @@ public class DatabaseManagerUI extends JDialog {
 	}
 	
 	/**
+	 * Télécharge les données d'un dépôt SVN puis importe la base de données
+	 * @param svnManager
+	 * @param path Path to download and import
+	 */
+	public void processSVN(final SVNManager svnManager, final String path){
+		new SwingWorker<Integer, Integer>() {
+			boolean databaseFound = false;
+			@Override
+			protected Integer doInBackground() throws Exception {
+				progressMonitor2.setCancelled(false);
+				progressMonitor2.getMainProgressBar().setIndeterminate(true);
+				progressMonitor2.getSecondaryProgressBar().setIndeterminate(false);
+				progressMonitor2.setVisible(true);
+				progressMonitor2.setMainNote("Téléchargement des données...");
+
+				//mise à jour du progressmonitor en fonction de l'avancement du téléchargement des données
+				svnManager.addPropertyChangeListener(new PropertyChangeListener() {
+
+					@Override
+					public void propertyChange(PropertyChangeEvent evt) {
+						if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
+							progressMonitor2.setSecondNote((String) evt.getNewValue());
+						} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
+							progressMonitor2.getSecondaryProgressBar().setValue((Integer) evt.getNewValue());
+						} else if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
+							progressMonitor2.getSecondaryProgressBar().setMaximum((Integer) evt.getNewValue());
+						}
+					}
+				});
+
+				File tempData = svnManager.getDatabase(path, -1);
+
+				databaseFound = processFiles(new File[]{tempData}, true);
+				return null;
+			}
+			@Override
+			protected void done() {
+				if(!progressMonitor2.isCanceled()){
+					if(!databaseFound){
+						progressMonitor2.setVisible(false);
+						JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
+								"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+						Logging.logger().warning("Pas de fichier de base de données trouvé");
+					} else {
+						importDatabases();
+					}
+				}
+			}
+		}.execute();
+	}
+	
+	/**
+	 * Traite une sélection de fichier pour déterminer de quel type de base il s'agit si le type n'est pas passé en paramètre, 
+	 * et met à jour la liste des bases puis lance l'import proprement dit.
+	 * @param selectedFiles les fichiers à traiter
+	 */
+	public void processSelectedFiles(final File[] selectedFiles){
+		
+		new SwingWorker<Integer, Integer>() {
+			boolean databaseFound = false;
+			@Override
+			protected Integer doInBackground() throws Exception {
+
+				progressMonitor2.setCancelled(false);
+				progressMonitor2.getMainProgressBar().setIndeterminate(true);
+				progressMonitor2.getSecondaryProgressBar().setIndeterminate(true);
+				progressMonitor2.setVisible(true);
+				progressMonitor2.setMainNote("Recherche des bases de données...");
+				
+				databaseFound = processFiles(selectedFiles, false);
+				//TODO impossible d'annuler le parcours d'un gros dossier
+				return null;
+			}
+			@Override
+			protected void done() {
+				if(!progressMonitor2.isCanceled()){
+					if(!databaseFound){
+						progressMonitor2.setVisible(false);
+						JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
+								"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+						Logging.logger().warning("Pas de fichier de base de données trouvé");
+					} else {
+						importDatabases();
+					}
+				}
+			}
+		}.execute();
+	}
+	
+	
+	/**
 	 * Determine how many databases to add and call the addDatabase() method for each one
 	 * @param files Files selected
+	 * @param svn True if datas downloaded from svn
 	 * @return True if at least a database has been imported
 	 */
-	private boolean processFiles(File[] filesSelected){
+	private boolean processFiles(File[] filesSelected, boolean svn){
 			
 		boolean baseImported = false;
 		TreeSet<File> files = new TreeSet<File>();
@@ -207,31 +355,31 @@ public class DatabaseManagerUI extends JDialog {
 		while(files.size() > 0){
 			File file = files.first();
 			if(file.isDirectory()){
-				boolean temp = processFiles(file.listFiles());
+				boolean temp = processFiles(file.listFiles(), svn);
 				baseImported = baseImported || temp;
 			} else {
 				if(MimeUtil.getMimeTypes(file).contains("application/zip")){
-					boolean temp = processFiles(FileManager.unzip(file).toArray(new File[]{}));
+					boolean temp = processFiles(FileManager.unzip(file).toArray(new File[]{}), svn);
 					baseImported = baseImported || temp;
 				} else if(MimeUtil.getMimeTypes(file).contains("application/x-gzip")){
-					boolean temp = processFiles(new File[]{FileManager.gunzip(file)});
+					boolean temp = processFiles(new File[]{FileManager.gunzip(file)}, svn);
 					baseImported = baseImported || temp;
 				} else if(MimeUtil.getMimeTypes(file).contains("application/x-tar")){
-					boolean temp = processFiles(FileManager.untar(file).toArray(new File[]{}));
+					boolean temp = processFiles(FileManager.untar(file).toArray(new File[]{}), svn);
 					baseImported = baseImported || temp;
 				} else { //file not zipped
 					if(AIP.isAIPFile(file)){
 						baseImported = true;
-						addDatabase(DatasManager.Type.AIP, file);
+						addDatabase(DatasManager.Type.AIP, file, svn);
 					} else if(Exsa.isExsaFile(file)){
 						baseImported = true;
-						addDatabase(DatasManager.Type.EXSA, file);
+						addDatabase(DatasManager.Type.EXSA, file, svn);
 					} else if(SkyView.isSkyViewFile(file)){
 						baseImported = true;
-						addDatabase(DatasManager.Type.SkyView, file);
+						addDatabase(DatasManager.Type.SkyView, file, svn);
 					} else if(Stpv.containsSTPVFiles(files)){
 						baseImported = true;
-						//remove RESULTAT file in order to avoid a new detection of STPV files
+						//remove LIEU file in order to avoid a new detection of STPV files
 						Iterator<File> iterator = files.iterator();
 						while(iterator.hasNext()){
 							File currentFile = iterator.next();
@@ -239,7 +387,7 @@ public class DatabaseManagerUI extends JDialog {
 								iterator.remove();
 							}
 						}
-						addDatabase(DatasManager.Type.STPV, file.getParentFile());
+						addDatabase(DatasManager.Type.STPV, file.getParentFile(), svn);
 					} else if(Cartes.containsCartes(files)){
 						baseImported = true;
 						//assuming there's only one set of maps in a directory
@@ -253,7 +401,7 @@ public class DatabaseManagerUI extends JDialog {
 								iterator.remove();
 							}
 						}
-						addDatabase(DatasManager.Type.Edimap, file.getParentFile());
+						addDatabase(DatasManager.Type.Edimap, file.getParentFile(), svn);
 					} else if(RadioDataManager.containsRadioDatas(files)){
 						baseImported = true;
 						//remove radioCoverageXSL.xsl file in order to avoid a new detection of radio files
@@ -264,7 +412,7 @@ public class DatabaseManagerUI extends JDialog {
 								iterator.remove();
 							}
 						}
-						addDatabase(DatasManager.Type.RadioCov, file.getParentFile());
+						addDatabase(DatasManager.Type.RadioCov, file.getParentFile(), svn);
 					} else if(Stip.containsStipFiles(files)){
 						baseImported = true;
 						//remove LIEUX file in order to avoid a new detection of stip files
@@ -275,7 +423,7 @@ public class DatabaseManagerUI extends JDialog {
 								iterator.remove();
 							}
 						}
-						addDatabase(DatasManager.Type.STIP, file.getParentFile());
+						addDatabase(DatasManager.Type.STIP, file.getParentFile(), svn);
 					} else if(Pays.containsPaysFiles(files)){
 						baseImported = true;
 						//remove PAYS file in order to avoid a new detection of pays files
@@ -286,7 +434,7 @@ public class DatabaseManagerUI extends JDialog {
 								iterator.remove();
 							}
 						}
-						addDatabase(DatasManager.Type.PAYS, file.getParentFile());
+						addDatabase(DatasManager.Type.PAYS, file.getParentFile(), svn);
 					}
 				}
 			}
@@ -295,7 +443,13 @@ public class DatabaseManagerUI extends JDialog {
 		return baseImported;
 	}
 	
-	private void addDatabase(DatasManager.Type type, File file){
+	/**
+	 * 
+	 * @param type
+	 * @param file
+	 * @param svn We need to know if datas are from SVN, because some SVN repos don't have all required files
+	 */
+	private void addDatabase(DatasManager.Type type, File file, boolean svn){
 		switch (type) {
 		case AIP:
 			AIP aip = new AIP(file.getAbsolutePath());
@@ -320,7 +474,7 @@ public class DatabaseManagerUI extends JDialog {
 			((DBTableModel)table.getModel()).update();
 			break;
 		case STPV:
-			Stpv stpv = new Stpv(file.getAbsolutePath());
+			Stpv stpv = new Stpv(file.getAbsolutePath(), svn ? "STPV"+file.getName().substring(4) : null);
 			databases.put(stpv, file.listFiles());
 			break;
 		case RadioCov:
@@ -328,7 +482,7 @@ public class DatabaseManagerUI extends JDialog {
 			databases.put(radioDataManager, new File[]{});
 		    break;
 		case STIP:
-			Stip stip = new Stip(file.getAbsolutePath());
+			Stip stip = new Stip(file.getAbsolutePath(), svn ? "STIP"+ file.getName().substring(4) : null);
 			databases.put(stip, file.listFiles());
 			break;
 		case PAYS:
@@ -338,11 +492,12 @@ public class DatabaseManagerUI extends JDialog {
 			break;
 		}
 	}
-
+	
 	private Entry<FileParser, File[]> current = null;
 	private Iterator<Entry<FileParser, File[]>> iterator = null;
 	private HashSet<DatasManager.Type> types = null;
 	private int done = 0;
+	private JButton btnSvn;
 	
 	private void importDatabases(){
 		int max = 0;

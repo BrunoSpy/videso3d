@@ -104,10 +104,7 @@ public class FileManager {
 	public static void removeTempFiles(){
 		for(File f : new File("").getAbsoluteFile().listFiles()){
 			if(f.isDirectory() && f.getName().startsWith("temp")){
-				for(File d : f.listFiles()){
-					d.delete();
-				}
-				f.delete();
+				deleteFile(f);
 			}
 		}
 	}
@@ -300,7 +297,7 @@ public class FileManager {
 	
 	
 	/**
-	 * Recherche le fichier correspondant au chemin en essayant les différentes casses possibles.
+	 * Recherche le fichier correspondant au chemin en essayant les différentes casses possibles.<br />
 	 * Essaye aussi de trouver le fichier en ajoutant l'extension ".txt"
 	 * @param path
 	 * @return modified path

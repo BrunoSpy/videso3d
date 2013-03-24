@@ -43,6 +43,14 @@ public final class Configuration {
 	public static final String NETWORK_PROXY_PORT = "fr.crnan.videso3d.network.proxy_port";
 	public static final String DEFAULT_REP = "fr.crnan.videso3d.files.defaultrep";
 	
+	/**
+	 * Un dépôt SVN est décrit par son URL, son identifiant et son mot de passe. 
+	 * Ces chaînes de caractères doivent être séparées par des points-virgules. 
+	 * Les différents dépôts SVN doivent être séparés par des #. 
+	 */
+	public static final String SVN_REPOSITORIES = "fr.crnan.videso3d.svn.repositories";
+	
+	
 	public static final String TRAJECTOGRAPHIE_SEUIL = "fr.crnan.videso3d.trajectographie.seuil";
 	public static final String TRAJECTOGRAPHIE_SEUIL_PRECISION = "fr.crnan.videso3d.trajectographie.seuilprecision";
 	public static final String TRAJECTOGRAPHIE_PRECISION = "fr.crnan.videso3d.trajectographie.precision";
@@ -116,5 +124,35 @@ public final class Configuration {
 	
 	public static void removePropertyChangeListener(PropertyChangeListener listener){
 		instance.changes.removePropertyChangeListener(listener);
+	}
+	
+	public static void addSVNRepository(String URL, String id, String pwd){
+		String oldSvnRepositoriesString = Configuration.getProperty(Configuration.SVN_REPOSITORIES, "");
+		String newSvnRepositoriesString = oldSvnRepositoriesString.isEmpty()?"":oldSvnRepositoriesString+"#";
+		newSvnRepositoriesString += URL+";"+id+";"+pwd;
+		Configuration.setProperty(Configuration.SVN_REPOSITORIES, newSvnRepositoriesString);
+	}
+	
+	public static void removeSVNRepository(String url){
+		String SVNRepositories = Configuration.getProperty(Configuration.SVN_REPOSITORIES, "");
+		String[] SVNReposArray = SVNRepositories.split("#");
+		String newSVNRepositoriesString = "";
+		for(String SVNRepo : SVNReposArray){
+			if(!SVNRepo.contains(url)){
+				newSVNRepositoriesString+="#"+SVNRepo;
+			}
+		}
+		Configuration.setProperty(Configuration.SVN_REPOSITORIES, newSVNRepositoriesString.isEmpty()?"":newSVNRepositoriesString.substring(1));
+	}
+	
+	public static String getRepository(String url){
+		String SVNRepositories = Configuration.getProperty(Configuration.SVN_REPOSITORIES, "");
+		String[] SVNReposArray = SVNRepositories.split("#");
+		for(String SVNRepo : SVNReposArray){
+			if(SVNRepo.contains(url)){
+				return SVNRepo;
+			}
+		}
+		return "";
 	}
 }

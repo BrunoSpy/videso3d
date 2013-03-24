@@ -58,6 +58,10 @@ public class Stpv extends FileParser{
 	
 	private final String[] fileNames = {"LIEU", "RADR", "SECT", "BALI", "CODE"};
 	
+	/**
+	 * Indique si la base de données provient d'un dépôt SVN
+	 */
+	
 	public Stpv(){
 		super();
 	}
@@ -72,12 +76,22 @@ public class Stpv extends FileParser{
 		super(path);
 	}
 	
+	/**
+	 * Construit la bdd à partir des fichiers dans path et lui donne le nom name
+	 * @param path Chemin vers le répertoire contenant la BDS
+	 * @param name Le nom à donner à cette base de données
+	 */
+	public Stpv(String path, String name){
+		super(path);
+		this.name = name;
+	}
+	
 
 	public static boolean containsSTPVFiles(TreeSet<File> files) {
 		Iterator<File> iterator = files.iterator();
 		while (iterator.hasNext()) {
 			File file = (File) iterator.next();
-			if(file.getName().equalsIgnoreCase("resultat") || file.getName().equalsIgnoreCase("resultat.txt")){
+			if(file.getName().equalsIgnoreCase("lieu") || file.getName().equalsIgnoreCase("lieu.txt")){
 				return true;
 			}
 		}
@@ -87,11 +101,11 @@ public class Stpv extends FileParser{
 	@Override
 	public Integer doInBackground() {
 		try {
-			this.createName();
+			this.createName();	
 			//si la base de données n'existe pas
 			if(!DatabaseManager.databaseExists(DatasManager.Type.STPV, this.name)){
 				//on crée la connection à la db
-				this.conn = DatabaseManager.selectDB(DatasManager.Type.STPV, this.name);
+				this.conn = DatabaseManager.selectDB(DatasManager.Type.STPV, this.name.trim());
 				this.conn.setAutoCommit(false);
 				//puis la structure de la base de donnée
 				DatabaseManager.createSTPV(this.name, this.path);
@@ -348,8 +362,8 @@ public class Stpv extends FileParser{
 		PreparedStatement insert = this.conn.prepareStatement("insert into sect (nom, freq) " +
 		"values (?, ?)");
 		insert.setString(1, line.substring(8, 12).trim());
-		if(line.length() > 25) {
-			insert.setString(2, line.substring(20, 26).trim());
+		if(line.length() > 24) {
+			insert.setString(2, line.substring(20).trim());
 		} else {
 			insert.setString(2, "0");
 		}
@@ -399,29 +413,31 @@ public class Stpv extends FileParser{
 	 * @throws IOException 
 	 */
 	private void createName() throws IOException{
-		BufferedReader in = null;
-		Boolean nameFound = false;
-		try {
-			in = new BufferedReader(new InputStreamReader(new FileInputStream(FileManager.getFile(path+"/RESULTAT"))));
-			Pattern pattern = Pattern.compile(".*STPV - CAUTRA IV - CA:.*");
-			while (in.ready() && !nameFound){
-				String line = in.readLine();
-				if (pattern.matcher(line).matches()){
-					int pos = line.indexOf(":");
-					this.name = "STPV_"+line.substring(pos+1, pos+10).trim()+"."+line.substring(pos+51, pos+60).trim();
-					nameFound = true;
+		if(name == null){
+			BufferedReader in = null;
+			Boolean nameFound = false;
+			try {
+				in = new BufferedReader(new InputStreamReader(new FileInputStream(FileManager.getFile(path+"/RESULTAT"))));
+				Pattern pattern = Pattern.compile(".*STPV - CAUTRA IV - CA:.*");
+				while (in.ready() && !nameFound){
+					String line = in.readLine();
+					if (pattern.matcher(line).matches()){
+						int pos = line.indexOf(":");
+						this.name = "STPV_"+line.substring(pos+1, pos+10).trim()+"."+line.substring(pos+51, pos+60).trim();
+						nameFound = true;
+					}
+				}
+			} catch(IOException e){
+				//rethrow exception to cancel data import
+				throw e;
+			} finally {
+				if(in != null){
+					in.close();
 				}
 			}
-		} catch(IOException e){
-			//rethrow exception to cancel data import
-			throw e;
-		} finally {
-			if(in != null){
-				in.close();
+			if(nameFound == false){
+				throw new IOException("Format of the file RESULTAT unknown");
 			}
-		}
-		if(nameFound == false){
-			throw new IOException("Format of the file RESULTAT unknown");
 		}
 	}
 
