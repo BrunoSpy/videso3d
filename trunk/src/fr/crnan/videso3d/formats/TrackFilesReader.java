@@ -16,9 +16,9 @@
 
 package fr.crnan.videso3d.formats;
 
+import fr.crnan.videso3d.Cancelable;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.databases.stip.PointNotFoundException;
-import fr.crnan.videso3d.ihm.ProgressMonitor;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
@@ -40,9 +40,9 @@ import javax.swing.SwingWorker;
  * Lecteur de fichiers trace radar<br/>
  * Envoie la progression de la lecture des fichiers avec une valeur comprise entre 0 et 100.
  * @author Bruno Spyckerelle
- * @version 0.6.1
+ * @version 0.6.2
  */
-public abstract class TrackFilesReader extends ProgressSupport{
+public abstract class TrackFilesReader extends ProgressSupport implements Cancelable{
 
 	private String name;
 		
@@ -55,8 +55,6 @@ public abstract class TrackFilesReader extends ProgressSupport{
 	protected int numberFiles = 0;
 	
 	private TracksModel model;
-	
-	private ProgressMonitor monitor = null;
 	
 	public TrackFilesReader(){}
 
@@ -81,7 +79,7 @@ public abstract class TrackFilesReader extends ProgressSupport{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if(isCancel())
+		if(isCanceled())
 			fireTaskProgress(100);
 	}
 	
@@ -119,7 +117,7 @@ public abstract class TrackFilesReader extends ProgressSupport{
 	public void doRead() throws PointNotFoundException {
 		this.fireTaskStarts(100);
 		for(File f : selectedFiles){
-			if(!isCancel()){
+			if(!isCanceled()){
 				try {
 					this.files.add(f);
 					this.readFile(f.getAbsolutePath());
@@ -130,18 +128,6 @@ public abstract class TrackFilesReader extends ProgressSupport{
 		}
 	}
 
-	/**
-	 * If the reader is monitored by a {@link ProgressMonitor},
-	 * calling this setter will allow the reader to cancel the task if {@link ProgressMonitor#isCanceled()};
-	 * @param monitor
-	 */
-	public void setProgressMonitor(ProgressMonitor monitor){
-		this.monitor = monitor;
-	}
-	
-	protected ProgressMonitor getProgressMonitor(){
-		return this.monitor;
-	}
 	
 	/**
 	 * @param path
@@ -208,8 +194,8 @@ public abstract class TrackFilesReader extends ProgressSupport{
 	 * 
 	 * @return True if reading has been cancelled
 	 */
-	public boolean isCancel(){
-		return this.getProgressMonitor() != null ? (this.getProgressMonitor().isCanceled() || this.cancelled) : this.cancelled;
+	public boolean isCanceled(){
+		return this.cancelled;
 	}
 	
 	protected abstract boolean isTrackValid(VidesoTrack track);

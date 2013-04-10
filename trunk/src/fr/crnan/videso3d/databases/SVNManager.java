@@ -52,23 +52,23 @@ import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.io.diff.SVNDiffWindow;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 
+import fr.crnan.videso3d.Cancelable;
 import fr.crnan.videso3d.ProgressSupport;
-import fr.crnan.videso3d.ihm.ProgressMonitor;
 import gov.nasa.worldwind.util.Logging;
 /**
  * 
  * @author Adrien Vidal
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
-public class SVNManager extends ProgressSupport {
+public class SVNManager extends ProgressSupport implements Cancelable{
 	
 	private SVNRepository repository=null;
 	private String url;
 	private String name;
 	private String pass;
 		
-	private ProgressMonitor monitor;
+	private boolean cancel = false;
 	
 	public SVNManager(){
 		super();
@@ -77,6 +77,17 @@ public class SVNManager extends ProgressSupport {
 	public SVNManager(String repository){
 		super();
 		this.initialize(repository);
+	}
+	
+
+	@Override
+	public void cancel() {
+		this.cancel = true;
+	}
+
+	@Override
+	public boolean isCanceled() {
+		return this.cancel;
 	}
 	
 	public void initialize(String repository){
@@ -100,14 +111,6 @@ public class SVNManager extends ProgressSupport {
 		} catch (SVNException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Sets a link to a monitor to allow cancellation of the task
-	 * @param monitor
-	 */
-	public void setMonitor(ProgressMonitor monitor){
-		this.monitor = monitor;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -196,7 +199,7 @@ public class SVNManager extends ProgressSupport {
 		DefaultTreeModel treeModel = new DefaultTreeModel(root);
 		
 		fillTree(treeModel, root, "");
-		if(!monitor.isCanceled())
+		if(!isCanceled())
 			fireTaskEnds(); //don't send TASK_ENDS if cancelled
 		return treeModel;
     }
@@ -303,7 +306,7 @@ public class SVNManager extends ProgressSupport {
 		}
 
 		public void addDir(String path, String copyFromPath, long copyFromRevision) throws SVNException {
-			if(monitor.isCanceled()){
+			if(isCanceled()){
 				throw new SVNCancelException();
 			}
 			String absoluteDirPath = "/" + path;
@@ -340,5 +343,6 @@ public class SVNManager extends ProgressSupport {
 		}
 
 	}
+
 	
 }
