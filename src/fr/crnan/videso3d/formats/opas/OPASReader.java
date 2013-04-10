@@ -107,7 +107,7 @@ public class OPASReader extends TrackFilesReader{
         try
         {
         	OPASTrack track = null;
-        	while(in.ready()){
+        	while(in.ready() && !isCanceled()){
         		sentence = in.readLine();
 
         		if (sentence != null)

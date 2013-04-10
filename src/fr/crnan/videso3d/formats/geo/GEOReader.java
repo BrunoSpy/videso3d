@@ -125,7 +125,7 @@ public class GEOReader extends TrackFilesReader{
     			sentence = in.readLine();
     		}
     		if(!importRapide || (timeFileFilterBegin==null && timeFileFilterEnd==null)){
-    			while(in.ready() && !isCancel()){
+    			while(in.ready() && !isCanceled()){
     				sentence = in.readLine();
     				if (sentence != null){
     					if(track == null || track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0){
@@ -151,7 +151,7 @@ public class GEOReader extends TrackFilesReader{
     			}
     		}else{
     				if(timeFileFilterBegin!=null && timeFileFilterEnd==null){
-    					while(in.ready() && !isCancel()){
+    					while(in.ready() && !isCanceled()){
     					sentence = in.readLine();
     					if(Double.parseDouble(sentence.split("\t")[3])<timeFileFilterBegin){
     						for(int i=0;i<30;i++)
@@ -169,7 +169,7 @@ public class GEOReader extends TrackFilesReader{
     					}
     				}
     			}else if(timeFileFilterBegin==null && timeFileFilterEnd!=null){
-    				while(in.ready() && !isCancel()){
+    				while(in.ready() && !isCanceled()){
     					if(Double.parseDouble(sentence.split("\t")[3])>timeFileFilterEnd){
     						if(track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0)
     							break;
@@ -188,7 +188,7 @@ public class GEOReader extends TrackFilesReader{
     					}
     				}
     			}else if(timeFileFilterBegin!=null && timeFileFilterEnd!=null){
-    				while(in.ready() && !isCancel()){
+    				while(in.ready() && !isCanceled()){
     					double currentTime = Double.parseDouble(sentence.split("\t")[3]);
     					if(currentTime < timeFileFilterBegin){
     						for(int i=0;i<30;i++)

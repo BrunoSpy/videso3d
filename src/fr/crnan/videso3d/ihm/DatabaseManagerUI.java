@@ -184,9 +184,9 @@ public class DatabaseManagerUI extends JDialog {
 							SVNRepositoryUI svnRepoUI = null;
 							SVNManager svnManager = new SVNManager();
 							DefaultTreeModel svnModel;
-							ProgressMonitor monitor = new ProgressMonitor(DatabaseManagerUI.this,
+							ProgressMonitorCanceller monitor = new ProgressMonitorCanceller(DatabaseManagerUI.this,
 										"Import de la structure du dépot",
-										"Connection au dépot...", 0, 100, false, true, true);
+										"Connection au dépot...", 0, 100, false, true, true, svnManager);
 								
 							PropertyChangeListener progressListener;
 							
@@ -212,7 +212,6 @@ public class DatabaseManagerUI extends JDialog {
 			
 								svnManager.addPropertyChangeListener(progressListener);
 								svnManager.initialize(svnRepositories);
-								svnManager.setMonitor(monitor);
 								svnModel = svnManager.listEntries();
 								
 								return null;

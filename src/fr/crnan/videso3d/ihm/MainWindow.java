@@ -56,9 +56,7 @@ import bibliothek.gui.dock.common.action.predefined.CCloseAction;
 import bibliothek.gui.dock.common.group.CGroupBehavior;
 import bibliothek.gui.dock.common.intern.CDockable;
 import bibliothek.gui.dock.common.mode.ExtendedMode;
-import bibliothek.gui.dock.common.theme.CEclipseTheme;
 import bibliothek.gui.dock.common.theme.ThemeMap;
-import bibliothek.gui.dock.util.Priority;
 
 import fr.crnan.videso3d.AirspaceListener;
 import fr.crnan.videso3d.ProgressSupport;
@@ -94,10 +92,6 @@ import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
 import fr.crnan.videso3d.util.VidesoStatusBar;
 
-import glass.eclipse.theme.CGlassEclipseTabPainter;
-import glass.eclipse.theme.CGlassStationPaint;
-import glass.eclipse.theme.CMiniPreviewMovingImageFactory;
-import glass.eclipse.theme.EclipseThemeExtension;
 import gov.nasa.worldwind.BasicModel;
 import gov.nasa.worldwind.util.Logging;
 
@@ -275,13 +269,8 @@ public class MainWindow extends JFrame {
 		//Panneau contextuel
 		context = new ContextPanel();
 		control = new CControl(this);
-		control.setTheme(ThemeMap.KEY_ECLIPSE_THEME);
+		control.getThemes().select(ThemeMap.KEY_ECLIPSE_THEME);
 		control.putProperty(EclipseTheme.THEME_CONNECTOR, new VDefaultEclipseThemConnector());
-		//glass l&f
-		control.putProperty(EclipseThemeExtension.GLASS_FACTORY, null);
-		control.putProperty(EclipseTheme.TAB_PAINTER, CGlassEclipseTabPainter.FACTORY);
-		((CEclipseTheme)control.intern().getController().getTheme()).intern().setMovingImageFactory(new CMiniPreviewMovingImageFactory(128), Priority.CLIENT);
-	     ((CEclipseTheme)control.intern().getController().getTheme()).intern().setPaint(new CGlassStationPaint(), Priority.CLIENT);
 		
 		control.setGroupBehavior(CGroupBehavior.TOPMOST);
 		control.getContentArea().setBorder(null);
@@ -532,7 +521,7 @@ public class MainWindow extends JFrame {
 	//nombre de fichiers importés
 	int current = -1;
 	public void addTrajectoriesViews(File[] filesT, final List<TrajectoryFileFilter> filters, final boolean disjunctive, final boolean importRapide){
-		final ProgressMonitor progressMonitorT = new ProgressMonitor(this, "Import des trajectoires", "", 0, 100, false, true, false);
+		final ProgressMonitorCanceller progressMonitorT = new ProgressMonitorCanceller(this, "Import des trajectoires", "", 0, 100, false, true, false);
 		progressMonitorT.setMillisToDecideToPopup(0);
 		progressMonitorT.setMillisToPopup(0);
 		progressMonitorT.setNote("Extraction des fichiers compressés...");
@@ -600,9 +589,9 @@ public class MainWindow extends JFrame {
 						//lecture et création des tracks à la volée
 						OPASReader reader = new OPASReader(opasFile, layer.getModel());
 						reader.addPropertyChangeListener(readerListener);
-						reader.setProgressMonitor(progressMonitorT);
+						progressMonitorT.setCancelable(reader);
 						reader.doRead();
-						if(reader.getModel().getAllTracks().size() > 0 && !reader.isCancel()){
+						if(reader.getModel().getAllTracks().size() > 0 && !reader.isCanceled()){
 							//changement du style en fonction de la conf
 							if(reader.getModel().getAllTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
 								layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
@@ -628,9 +617,9 @@ public class MainWindow extends JFrame {
 						//lecture et création des tracks à la volée
 						GEOReader reader = new GEOReader(geoFile, layer.getModel(), filters, disjunctive, importRapide);
 						reader.addPropertyChangeListener(readerListener);
-						reader.setProgressMonitor(progressMonitorT);
+						progressMonitorT.setCancelable(reader);
 						reader.doRead();
-						if(reader.getModel().getAllTracks().size() > 0 && !reader.isCancel()){
+						if(reader.getModel().getAllTracks().size() > 0 && !reader.isCanceled()){
 							//changement du style en fonction de la conf
 							if(reader.getModel().getAllTracks().size()< Integer.parseInt(Configuration.getProperty(Configuration.TRAJECTOGRAPHIE_SEUIL, "20"))){
 								layer.setStyle(TrajectoriesLayer.STYLE_CURTAIN);
@@ -655,10 +644,10 @@ public class MainWindow extends JFrame {
 						LPLNTracksLayer layer = new LPLNTracksLayer(new TracksModel());
 						LPLNReader reader = new LPLNReader(lplnFile, layer.getModel());
 						reader.addPropertyChangeListener(readerListener);
-						reader.setProgressMonitor(progressMonitorT);
+						progressMonitorT.setCancelable(reader);
 						reader.doRead();
 						MainWindow.this.wwd.toggleLayer(layer, true);
-						if(reader.getModel().getAllTracks().size() > 0 && !reader.isCancel()){
+						if(reader.getModel().getAllTracks().size() > 0 && !reader.isCanceled()){
 							MainWindow.this.addTrajectoriesView(reader, layer);
 						} else {
 							lplnFile.clear();
@@ -678,7 +667,7 @@ public class MainWindow extends JFrame {
 						FPLTracksLayer layer = new FPLTracksLayer(new TracksModel());
 						FPLReader fplR = new FPLReader(fplFile, layer.getModel());
 						fplR.addPropertyChangeListener(readerListener);
-						fplR.setProgressMonitor(progressMonitorT);
+						progressMonitorT.setCancelable(fplR);
 						fplR.doRead();
 						MainWindow.this.wwd.toggleLayer(layer, true);
 						String msgErreur = fplR.getErrorMessage();
