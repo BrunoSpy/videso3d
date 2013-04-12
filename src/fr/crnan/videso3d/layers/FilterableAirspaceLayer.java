@@ -22,7 +22,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 import gov.nasa.worldwind.avlist.AVKey;
-import gov.nasa.worldwind.layers.AbstractLayer;
+import gov.nasa.worldwind.layers.AirspaceLayer;
 import gov.nasa.worldwind.render.DrawContext;
 import gov.nasa.worldwind.render.airspaces.Airspace;
 import gov.nasa.worldwind.render.airspaces.AirspaceRenderer;
@@ -31,9 +31,9 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Airspace layer whose elements are filterable depending on max and min altitudes.
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @version 0.2.2
  */
-public class FilterableAirspaceLayer extends AbstractLayer implements AltitudeFilterableLayer{
+public class FilterableAirspaceLayer extends AirspaceLayer implements AltitudeFilterableLayer{
 
 	private double maxAltitude = 800.0*30.47;
 	
