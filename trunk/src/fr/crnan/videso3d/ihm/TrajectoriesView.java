@@ -940,7 +940,7 @@ public class TrajectoriesView extends JPanel {
 					layer.getModel().addFilter(TracksModel.FIELD_TYPE_AVION, typeField.getText());
 				}
 				if(!modeAField.getText().isEmpty()){
-					layer.getModel().addFilter(TracksModel.FIELD_TYPE_MODE_A, modeAField.getText());
+					layer.getModel().addFilter(TracksModel.FIELD_MODE_A, modeAField.getText());
 				}
 				layer.getModel().applyFilters();
 				trackContext.updateLayerPane();

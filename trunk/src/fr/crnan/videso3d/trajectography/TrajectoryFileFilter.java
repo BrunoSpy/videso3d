@@ -14,15 +14,19 @@
  * along with ViDESO.  If not, see <http://www.gnu.org/licenses/>.
  */
 package fr.crnan.videso3d.trajectography;
+
+import fr.crnan.videso3d.graphics.PolygonAnnotation;
+
 /**
  * Filter for a trajectory file
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.2.0
  */
 public class TrajectoryFileFilter {
 
 	private int field;
 	private String regexp;
+	private PolygonAnnotation polygon;
 	
 	/**
 	 * 
@@ -34,6 +38,17 @@ public class TrajectoryFileFilter {
 		this.regexp = regexp;
 	}
 
+	/**
+	 * 
+	 * @param field A value between {@link TracksModel#FIELD_ADEP}, {@link TracksModel#FIELD_ADEST}, {@link TracksModel#FIELD_INDICATIF}, ...
+	 * @param regexp
+	 */
+	public TrajectoryFileFilter(int field, PolygonAnnotation polygon){
+		if(field == TracksModel.FIELD_POLYGON){
+			this.polygon = polygon;
+		}
+	}
+	
 	/**
 	 * @return the field
 	 */
@@ -48,6 +63,8 @@ public class TrajectoryFileFilter {
 		return regexp;
 	}
 	
-	
+	public PolygonAnnotation getPolygon(){
+		return this.polygon;
+	}
 	
 }

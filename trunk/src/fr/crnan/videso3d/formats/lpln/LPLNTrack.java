@@ -136,7 +136,7 @@ public class LPLNTrack implements VidesoTrack {
 			return true;
 		case TracksModel.FIELD_TYPE_AVION:
 			return true;
-		case TracksModel.FIELD_TYPE_MODE_A:
+		case TracksModel.FIELD_MODE_A:
 			return false;
 		default:
 			return false;
