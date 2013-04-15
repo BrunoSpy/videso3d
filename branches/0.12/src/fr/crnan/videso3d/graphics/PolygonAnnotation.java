@@ -67,6 +67,11 @@ public class PolygonAnnotation extends VPolygon implements VidesoObject{
 	}
 	
 	@Override
+	public String toString(){
+		return this.getName();
+	}
+	
+	@Override
 	public String getName() {
 		return this.name;
 	}

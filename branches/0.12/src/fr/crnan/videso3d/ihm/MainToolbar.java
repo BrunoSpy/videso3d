@@ -284,7 +284,7 @@ public class MainToolbar extends JToolBar {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new TrajectoriesImportUI(mainWindow).setVisible(true);
+				new TrajectoriesImportUI(mainWindow, wwd).setVisible(true);
 			}
 		});
 

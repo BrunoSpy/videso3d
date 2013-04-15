@@ -29,6 +29,7 @@ import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.databases.aip.AIPController;
 import fr.crnan.videso3d.databases.stip.StipController;
+import fr.crnan.videso3d.graphics.PolygonAnnotation;
 import fr.crnan.videso3d.graphics.Secteur3D;
 import fr.crnan.videso3d.graphics.VPolygon;
 import fr.crnan.videso3d.graphics.VidesoObject;
@@ -162,11 +163,12 @@ public class AirspaceMenu extends JMenu {
 						@Override
 						public void actionPerformed(ActionEvent arg0) {
 							if(airspace instanceof Secteur3D){
-								VPolygon polygon = new VPolygon(((Polygon)airspace).getLocations());
+								PolygonAnnotation polygon = new PolygonAnnotation(((Polygon)airspace).getLocations());
 								polygon.setAltitudes(((Polygon)airspace).getAltitudes()[0],((Polygon)airspace).getAltitudes()[1] );
 								polygon.setAttributes(airspace.getAttributes());
+								polygon.setName(((Secteur3D) airspace).getName()+" modifié");
 								wwd.delete(airspace);
-								DatasManager.getUserObjectsController(wwd).addObject(airspace);
+								DatasManager.getUserObjectsController(wwd).addObject(polygon);
 								PolygonEditorsManager.editAirspace(polygon);
 							} else {
 								PolygonEditorsManager.editAirspace((Polygon) airspace);

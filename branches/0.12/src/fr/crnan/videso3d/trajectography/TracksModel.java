@@ -22,6 +22,7 @@ import fr.crnan.videso3d.graphics.VPolygon;
 import gov.nasa.worldwind.tracks.Track;
 import gov.nasa.worldwind.tracks.TrackPoint;
 import gov.nasa.worldwind.util.Logging;
+
 /**
  * Represents a set of tracks
  * @author Bruno Spyckerelle
@@ -37,9 +38,10 @@ public class TracksModel extends AbstractTableModel {
 	public static final int FIELD_IAF = 3;
 	public static final int FIELD_INDICATIF = 4;
 	public static final int FIELD_TYPE_AVION = 5;
-	public static final int FIELD_TYPE_MODE_A = 6;
-	public static final int FIELD_TYPE_TIME_BEGIN = 7;
-	public static final int FIELD_TYPE_TIME_END= 8;
+	public static final int FIELD_MODE_A = 6;
+	public static final int FIELD_TIME_BEGIN = 7;
+	public static final int FIELD_TIME_END= 8;
+	public static final int FIELD_POLYGON = 0;
 	
 	private String[] columnNames = {"Indicatif", "Départ", "Arrivée", "IAF", "Type", "Mode A", "Affiché"};
 
@@ -618,9 +620,9 @@ public class TracksModel extends AbstractTableModel {
 					}
 				}
 				break;
-			case FIELD_TYPE_MODE_A:
+			case FIELD_MODE_A:
 				for(VidesoTrack track : this.getAllTracks()){
-					if(track.isFieldAvailable(FIELD_TYPE_MODE_A)){
+					if(track.isFieldAvailable(FIELD_MODE_A)){
 						if(track.getModeA().toString().matches(filter.getValue())){
 							//keep this track if disjunctive filter
 							if(this.isFilterDisjunctive()){
@@ -873,7 +875,7 @@ public class TracksModel extends AbstractTableModel {
 		} else if("Type avion".equals(type)){
 			return FIELD_TYPE_AVION;
 		} else if("Mode A".equals(type)){
-			return FIELD_TYPE_MODE_A;
+			return FIELD_MODE_A;
 		}
 		return 0;
 	}
@@ -889,7 +891,7 @@ public class TracksModel extends AbstractTableModel {
 			return "Indicatif";
 		} else if (type == FIELD_TYPE_AVION){
 			return "Type avion";
-		} else if(type == FIELD_TYPE_MODE_A){
+		} else if(type == FIELD_MODE_A){
 			return "Mode A";
 		}
 		return null;

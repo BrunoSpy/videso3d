@@ -21,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
 import fr.crnan.videso3d.VidesoGLCanvas;
+import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.ihm.components.MovePositionDialog;
 import gov.nasa.worldwind.Movable;
 
@@ -30,25 +31,31 @@ import javax.swing.JOptionPane;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.1.0 
+ * @version 0.1.1
  */
 public class MovableMenu extends JMenu {
 
 	public MovableMenu(final Movable object, final VidesoGLCanvas wwd, final MouseEvent mouseEvent) {
-		JMenuItem changePos = new JMenuItem("Modifier les coordonnées");
-		changePos.addActionListener(new ActionListener() {
-			
-				
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				MovePositionDialog dialog = new MovePositionDialog(object.getReferencePosition());
-				if(dialog.showDialog(mouseEvent)== JOptionPane.OK_OPTION){
-					object.moveTo(dialog.getPosition());
-					wwd.redraw();
+		
+		if(!(object instanceof DatabaseVidesoObject)) {
+			//certains DatabaseVidesoObject sont Movable
+			//il ne doivent pourtant pas être bougés
+
+			JMenuItem changePos = new JMenuItem("Modifier les coordonnées");
+			changePos.addActionListener(new ActionListener() {
+
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					MovePositionDialog dialog = new MovePositionDialog(object.getReferencePosition());
+					if(dialog.showDialog(mouseEvent)== JOptionPane.OK_OPTION){
+						object.moveTo(dialog.getPosition());
+						wwd.redraw();
+					}
 				}
-			}
-		});
-		this.add(changePos);
+			});
+			this.add(changePos);
+		}
 	}
 	
 }
