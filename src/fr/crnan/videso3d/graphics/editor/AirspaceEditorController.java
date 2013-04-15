@@ -46,14 +46,18 @@ public class AirspaceEditorController extends gov.nasa.worldwind.render.airspace
 		if(e.getButton() == MouseEvent.BUTTON3){
 			AirspaceControlPoint controlPoint = this.getTopOwnedControlPointAtCurrentPosition();
 			if(controlPoint != null){
-				Position oldPos = this.getWorldWindow().getModel().getGlobe().computePositionFromPoint(controlPoint.getPoint());
-				MovePositionDialog dialog = new MovePositionDialog(this.getWorldWindow().getModel().getGlobe().computePositionFromPoint(controlPoint.getPoint()));
+				Position oldPos = this.getWorldWindow().getModel().getGlobe().computePositionFromPoint(controlPoint.getPoint());			
+				//do not forget to take the vertical exaggeration before
+				double ve = this.getWorldWindow().getSceneController().getVerticalExaggeration();
+				Position tempPos = new Position(oldPos, oldPos.getElevation()/ve);
+				
+				MovePositionDialog dialog = new MovePositionDialog(tempPos);
 				if(dialog.showDialog(e) == JOptionPane.OK_OPTION){
 					Position newPosition = dialog.getPosition();
 					if(newPosition.getAltitude() != oldPos.getAltitude()){
-						((PolygonEditor)this.getEditor()).doResizeAtControlPoint(this.getWorldWindow(), controlPoint, newPosition, oldPos);
+						((PolygonEditor)this.getEditor()).doResizeAtControlPoint(this.getWorldWindow(), controlPoint, newPosition, tempPos);
 					}
-					((PolygonEditor)this.getEditor()).doMoveControlPoint(this.getWorldWindow(), controlPoint, newPosition, oldPos);
+					((PolygonEditor)this.getEditor()).doMoveControlPoint(this.getWorldWindow(), controlPoint, newPosition, tempPos);
 				} 
 			}
         }

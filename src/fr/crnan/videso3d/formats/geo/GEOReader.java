@@ -18,6 +18,7 @@ package fr.crnan.videso3d.formats.geo;
 import fr.crnan.videso3d.databases.stip.PointNotFoundException;
 import fr.crnan.videso3d.formats.TrackFilesReader;
 import fr.crnan.videso3d.formats.VidesoTrack;
+import fr.crnan.videso3d.graphics.PolygonAnnotation;
 import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TrajectoryFileFilter;
@@ -28,6 +29,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -38,6 +40,7 @@ import java.util.Vector;
  */
 public class GEOReader extends TrackFilesReader{
 	private boolean importRapide = false;	
+	private PolygonAnnotation polygon;
 	
 	public GEOReader(Vector<File> files) throws PointNotFoundException {
 		super(files);
@@ -105,10 +108,10 @@ public class GEOReader extends TrackFilesReader{
         //Find if a Time filter is set
         if(filters != null && filters.size() != 0){
         	for(TrajectoryFileFilter f : filters){
-        		if(f.getField() == TracksModel.FIELD_TYPE_TIME_BEGIN){
+        		if(f.getField() == TracksModel.FIELD_TIME_BEGIN){
         			String[] time = f.getRegexp().split(":");
         			timeFileFilterBegin = (double) ((new Integer(time[0])*3600)+(new Integer(time[1])*60)+(new Integer(time[2])));
-        		} else if(f.getField() == TracksModel.FIELD_TYPE_TIME_END){
+        		} else if(f.getField() == TracksModel.FIELD_TIME_END){
         			String[] time = f.getRegexp().split(":");
         			timeFileFilterEnd = (double) ((new Integer(time[0])*3600)+(new Integer(time[1])*60)+(new Integer(time[2])));
         		}
@@ -135,13 +138,15 @@ public class GEOReader extends TrackFilesReader{
     								if(Double.parseDouble(sentence.split("\t")[3])>timeFileFilterEnd)
     									break;
     							}
-    							if(trackValid && track.getNumPoints()>1) this.getModel().addTrack(track);
+    							if(trackValid && track.getNumPoints()>1) this.addTrackToModel(track, trackValid);
     						}
     						track = new GEOTrack(sentence);
     						trackValid = this.isTrackValid(track);
     					} 
     					if(trackValid){
-    						GEOTrackPoint point = new GEOTrackPoint(sentence);
+    						GEOTrackPoint point = new GEOTrackPoint(sentence);	
+    						//si filtres horaires
+    						//on ne garde que les points compris dans la période filtrée
     						if((timeFileFilterBegin == null || (timeFileFilterBegin != null && point.getDecimalTime() > timeFileFilterBegin))
     								&& (timeFileFilterEnd == null || (timeFileFilterEnd != null && point.getDecimalTime() < timeFileFilterEnd))){
     							track.addTrackPoint(sentence);
@@ -149,8 +154,8 @@ public class GEOReader extends TrackFilesReader{
     					}
     				}
     			}
-    		}else{
-    				if(timeFileFilterBegin!=null && timeFileFilterEnd==null){
+    		} else {
+    			if(timeFileFilterBegin!=null && timeFileFilterEnd==null){
     					while(in.ready() && !isCancel()){
     					sentence = in.readLine();
     					if(Double.parseDouble(sentence.split("\t")[3])<timeFileFilterBegin){
@@ -201,7 +206,7 @@ public class GEOReader extends TrackFilesReader{
     					}else{
     						if(track == null || track.getNumTraj().compareTo(new Integer(sentence.split("\t")[1]))!=0){
     							if(track != null) {
-    								if(trackValid && track.getNumPoints()>1) this.getModel().addTrack(track);
+    								if(trackValid && track.getNumPoints()>1) this.addTrackToModel(track, trackValid);
     							}
     							track = new GEOTrack(sentence);
     							trackValid = this.isTrackValid(track);
@@ -216,8 +221,7 @@ public class GEOReader extends TrackFilesReader{
 
     		//last Track
     		if(track != null){
-    			//if layer is set, create immediately the track instead of memorizing it
-    			if(trackValid && track.getNumPoints()>1) this.getModel().addTrack(track);
+    			this.addTrackToModel(track, trackValid);
     		}
         } catch (IOException e) {
         	e.printStackTrace();
@@ -233,46 +237,115 @@ public class GEOReader extends TrackFilesReader{
 		}
     }
 
+    private void addTrackToModel(GEOTrack track, boolean trackValid){
+    	if(track.getNumPoints() <= 1)
+    		return;
+    	
+    	if(!hasFilters() && !hasPolygonFilter())
+    		this.getModel().addTrack(track);
+
+    	if(this.disjunctive){
+    		if((hasFilters() ? trackValid : false) || (hasPolygonFilter() ? isInsidePolygon(track) : false))
+    			this.getModel().addTrack(track);
+    	} else {
+    		if((hasFilters() ? trackValid : true) && (hasPolygonFilter() ? isInsidePolygon(track) : true))
+    			this.getModel().addTrack(track);
+    	}
+    }
     
-	@Override
-	protected boolean isTrackValid(VidesoTrack track) {
-		if(filters == null)
-			return true;
-		
-		int count = 0;
-		for(TrajectoryFileFilter f : filters){
-			if(f.getField() == TracksModel.FIELD_ADEP ||
-					f.getField() == TracksModel.FIELD_ADEST ||
-					f.getField() == TracksModel.FIELD_TYPE_MODE_A){
-				count++;
-			}
-		}
-		if(count == 0) //no usable filter
-			return true;
-		
-		boolean result = !this.disjunctive;
-		for(TrajectoryFileFilter f : filters){
-			switch (f.getField()) {
-			case TracksModel.FIELD_ADEP:
-				result = this.disjunctive
-						 ? result || track.getDepart().matches(f.getRegexp())
-						 : result && track.getDepart().matches(f.getRegexp());
-				break;
-			case TracksModel.FIELD_ADEST:
-				result = this.disjunctive
-							? result || track.getArrivee().matches(f.getRegexp())
-							: result && track.getArrivee().matches(f.getRegexp());
-				break;
-			case TracksModel.FIELD_TYPE_MODE_A:
-				result = this.disjunctive
-				? result || track.getModeA().toString().matches(f.getRegexp())
-				: result && track.getModeA().toString().matches(f.getRegexp());
-				break;
-			default:
-				break;
-			}
-		}
-		return result;
-	}
-	
+    private boolean isInsidePolygon(GEOTrack track){
+    	if(this.polygon != null) {
+    		Iterator<GEOTrackPoint> iterator = track.getTrackPoints().iterator();
+    		boolean pointInside = false;
+    		while(iterator.hasNext() && !pointInside){
+    			GEOTrackPoint point = iterator.next();
+    			pointInside = pointInside || this.polygon.contains(point.getPosition());
+    		}
+    		return pointInside;
+    	} else {
+    		return true;
+    	}
+    }
+    
+    private Boolean hasFilter = null;
+    /**
+     * 
+     * @return <code>true</code> if at least one filter is set, except a polygon filter
+     */
+    private boolean hasFilters(){
+    	if(hasFilter == null){
+    		if(filters == null){
+    			hasFilter = false;
+    		} else {
+    			int count = 0;
+    			for(TrajectoryFileFilter f : filters){
+    				if(f.getField() == TracksModel.FIELD_ADEP ||
+    						f.getField() == TracksModel.FIELD_ADEST ||
+    						f.getField() == TracksModel.FIELD_MODE_A ){
+    					count++;
+    				}
+    			}
+    			hasFilter = count > 0;
+    		}
+    	}
+    	return hasFilter;
+    }
+
+    private Boolean hasPolygon = null; //store calculation
+    /**
+     * Save the polygon
+     * @return true if one was found
+     */
+    private boolean hasPolygonFilter(){
+    	if(hasPolygon == null){
+    		if(filters == null){
+    			hasPolygon = false;
+    		} else {
+    			int count = 0;
+    			for(TrajectoryFileFilter f : filters){
+    				if(f.getField() == TracksModel.FIELD_POLYGON && f.getPolygon() != null ){
+    					count++;
+    					this.polygon = f.getPolygon();
+    				}
+    			}
+    			hasPolygon = count > 0;
+    		}
+    	}
+    	return hasPolygon;
+    }
+
+    @Override
+    protected boolean isTrackValid(VidesoTrack track) {
+    	if(filters == null)
+    		return true;
+
+    	if(!hasFilters())
+    		return true;
+
+    	boolean result = !this.disjunctive;
+    	for(TrajectoryFileFilter f : filters){
+    		switch (f.getField()) {
+    		case TracksModel.FIELD_ADEP:
+    			result = this.disjunctive
+    			? result || track.getDepart().matches(f.getRegexp())
+    					: result && track.getDepart().matches(f.getRegexp());
+    			break;
+    		case TracksModel.FIELD_ADEST:
+    			result = this.disjunctive
+    			? result || track.getArrivee().matches(f.getRegexp())
+    					: result && track.getArrivee().matches(f.getRegexp());
+    			break;
+    		case TracksModel.FIELD_MODE_A:
+    			result = this.disjunctive
+    			? result || track.getModeA().toString().matches(f.getRegexp())
+    					: result && track.getModeA().toString().matches(f.getRegexp());
+    			break;
+    		default:
+    			break;
+    		}
+    	}
+    	return result;
+
+    }
+
 }
