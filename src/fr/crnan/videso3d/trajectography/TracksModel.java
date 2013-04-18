@@ -91,6 +91,8 @@ public class TracksModel extends AbstractTableModel {
 		this.tracks = tracks;
 	}
 	
+	
+	
 	/**
 	 * If <code>isChanging</code> is True, events are fired when it is set to False
 	 * @return the isChanging
@@ -321,6 +323,24 @@ public class TracksModel extends AbstractTableModel {
 		}
 	}
 	
+	/**
+	 * Very expensive, prefer {@link #setVisible(<code>false</code>, VidesoTrack)}
+	 * @param b
+	 * @param numTraj {@link VidesoTrack#getNumTraj()}
+	 */
+	public void hideTracks(List<Integer> numTraj){
+
+		//find if a hidden track has the correct numTraj
+		this.setChanging(true);
+		for(VidesoTrack track : this.visibleTracks){
+			if(numTraj.contains(track.getNumTraj())){
+				this.setVisible(false, track);
+			}
+		}
+		this.setChanging(false);
+
+	}
+	
 	public Object getTrackAt(int row){
 		return tracks.get(row);
 	}
@@ -484,6 +504,10 @@ public class TracksModel extends AbstractTableModel {
 				return null;
 			}
 		}.execute();
+	}
+	
+	public HashMap<Integer, String> getRegexFilters(){
+		return this.filters;
 	}
 	
 	/**

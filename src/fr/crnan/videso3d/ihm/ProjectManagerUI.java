@@ -17,7 +17,6 @@ package fr.crnan.videso3d.ihm;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -57,7 +56,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * IHM to choose which objects to save
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class ProjectManagerUI extends JDialog {
 	
@@ -69,7 +68,7 @@ public class ProjectManagerUI extends JDialog {
 	
 	private VidesoGLCanvas wwd;
 	
-	public ProjectManagerUI(Window parent, VidesoGLCanvas wwd){
+	public ProjectManagerUI(MainWindow parent, VidesoGLCanvas wwd){
 		super(parent);
 			
 		this.wwd = wwd;
@@ -81,7 +80,7 @@ public class ProjectManagerUI extends JDialog {
 		imageList = new HashSet<String>();
 		trajectories = new HashSet<String>();
 		
-		if(projectManager.getTypes().isEmpty() && !projectManager.hasImages() && !projectManager.isOtherObjects()){
+		if(projectManager.getTypes().isEmpty() && !projectManager.hasImages() && !projectManager.isOtherObjects() && !projectManager.isTrajectories()){
 			error();
 		} else {
 

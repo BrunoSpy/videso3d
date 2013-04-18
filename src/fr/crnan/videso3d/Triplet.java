@@ -16,14 +16,16 @@
 
 package fr.crnan.videso3d;
 
+import java.io.Serializable;
+
 /**
  * triplet de données
- * @version 1.0
+ * @version 1.1
  * @param <T>
  * @param <U>
  * @param <V>
  */
-public class Triplet<T,U,V> {
+public class Triplet<T,U,V> implements Serializable {
 
 	private T first;
 	private U second;
