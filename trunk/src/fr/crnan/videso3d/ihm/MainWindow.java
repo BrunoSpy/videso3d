@@ -308,7 +308,7 @@ public class MainWindow extends JFrame {
 		dockableContext.setExtendedMode(ExtendedMode.MINIMIZED);
 
 		//save location of future panel
-		locationDatas = dockableDatas.getBaseLocation().aside();
+		locationDatas = dockableDatas.getBaseLocation();
 
 		for(DatasManager.Type type : DatabaseManager.getSelectedDatabases()){
 			this.updateDockables(type);
@@ -451,38 +451,6 @@ public class MainWindow extends JFrame {
 		statusBar.setEventSource(wwd);
 		return statusBar;
 	}
-
-//	/**
-//	 * Adds a KMLView to the data explorer
-//	 * @param view
-//	 */
-//	public void addKMLView(final KMLView view){
-//		if(!(view instanceof Component))
-//			return;
-//		
-//		int i = 0;
-//		if(control.getSingleDockable(view.getTitle()) != null){
-//			do{
-//				i++;
-//			} while (control.getSingleDockable(view.getTitle()+"-"+i) != null);
-//		}
-//
-//		DefaultSingleCDockable dockable = new DefaultSingleCDockable(i==0?view.getTitle():view.getTitle()+"-"+i,
-//				view.getTitle(),
-//				(Component) view,
-//				new CCloseAction(control){
-//
-//					@Override
-//					public void close(CDockable dockable) {
-//						super.close(dockable);
-//						control.removeDockable((SingleCDockable) dockable);
-//						wwd.removeLayer(view.getLayer());
-//					}
-//		
-//		});
-//		
-//		this.addDockable(dockable);
-//	}
 	
 	/**
 	 * Get the UserObjectView and create it if needed
@@ -770,6 +738,8 @@ public class MainWindow extends JFrame {
 	public void addTrajectoriesView(final TrackFilesReader reader, final TrajectoriesLayer layer){
 		
 		final TrajectoriesView content = new TrajectoriesView(wwd, reader, layer, context);
+		//register view
+		DatasManager.addTrajectory(layer.getModel(), content);
 		this.wwd.toggleLayer(layer, true);
 		int i = 0;
 		if(control.getSingleDockable(reader.getName()) != null){
@@ -786,6 +756,8 @@ public class MainWindow extends JFrame {
 				@Override
 				public void close(CDockable dockable) {
 					super.close(dockable);
+					//unregister view
+					DatasManager.removeTrajectory(layer.getModel());
 					wwd.removeLayer(layer);
 					control.removeDockable((SingleCDockable) dockable);
 					//force close instead of just changing the visibility
@@ -813,6 +785,7 @@ public class MainWindow extends JFrame {
 		control.addDockable(dockable);
 		dockable.setVisible(true);
 	}
+	
 	
 	/**
 	 * 

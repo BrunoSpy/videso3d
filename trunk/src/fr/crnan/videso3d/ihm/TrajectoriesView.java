@@ -32,7 +32,9 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -93,7 +95,7 @@ public class TrajectoriesView extends JPanel {
 
 	private JXTaskPaneContainer content = new JXTaskPaneContainer();
 	
-	private List<Triplet<String, String, Color>> colorFilters;
+	private TrajectoriesColorsDialog colorsDialog;
 	
 	private VidesoGLCanvas wwd;
 	
@@ -102,6 +104,14 @@ public class TrajectoriesView extends JPanel {
 	private TrackContext trackContext;
 	
 	private TrajectoriesLayer layer;
+	
+	//fields for regex filters
+	private JTextField aDepField;
+	private JTextField indicField;
+	private JTextField aDestField;
+	private JTextField iafField;
+	private JTextField typeField;
+	private JTextField modeAField; 
 	
 	public TrajectoriesView(final VidesoGLCanvas wwd, final TrackFilesReader reader, TrajectoriesLayer l, final ContextPanel contxt){
 		this.context = contxt;
@@ -309,6 +319,97 @@ public class TrajectoriesView extends JPanel {
 		}
 
 
+	}
+	
+	public List<Triplet<String, String, Color>> getColorFilters(){
+		return this.colorsDialog.getColors();
+	}
+	
+	public void setColorFilters(List<Triplet<String, String, Color>> colors){
+		this.colorsDialog.setColors(colors);
+	}
+	
+	public HashMap<Integer, String> getFilters(){		
+		return this.layer.getModel().getRegexFilters();
+		
+	}
+	
+	public void setRegexFilters(HashMap<Integer, String> filters){
+		indicField.setText("");
+		aDepField.setText("");
+		aDestField.setText("");
+		iafField.setText("");
+		typeField.setText("");
+		modeAField.setText("");
+		for(Entry<Integer, String> filter : filters.entrySet()){
+			switch (filter.getKey()) {
+			case TracksModel.FIELD_ADEP:
+				aDepField.setText(filter.getValue());
+				break;
+			case TracksModel.FIELD_ADEST:
+				aDestField.setText(filter.getValue());
+				break;
+			case TracksModel.FIELD_IAF:
+				iafField.setText(filter.getValue());
+				break;
+			case TracksModel.FIELD_MODE_A:
+				modeAField.setText(filter.getValue());
+				break;
+			case TracksModel.FIELD_TYPE_AVION:
+				typeField.setText(filter.getValue());
+				break;
+			case TracksModel.FIELD_INDICATIF:
+				indicField.setText(filter.getValue());
+				break;
+			default:
+				break;
+			}
+		}
+		this.applyRegexFilters();
+	}
+	
+	public void removeRegexFilters(){
+		indicField.setText("");
+		aDepField.setText("");
+		aDestField.setText("");
+		iafField.setText("");
+		typeField.setText("");
+		modeAField.setText("");
+		layer.getModel().removeFilter();
+		layer.getModel().applyFilters();
+		trackContext.updateLayerPane();
+	}
+	
+	public void applyRegexFilters(){
+		layer.getModel().removeFilter();
+		if(!indicField.getText().isEmpty()){
+			layer.getModel().addFilter(TracksModel.FIELD_INDICATIF, indicField.getText());
+		}
+		if(!aDepField.getText().isEmpty()){
+			layer.getModel().addFilter(TracksModel.FIELD_ADEP, aDepField.getText());
+		}
+		if(!aDestField.getText().isEmpty()){
+			layer.getModel().addFilter(TracksModel.FIELD_ADEST, aDestField.getText());
+		}
+		if(!iafField.getText().isEmpty()){
+			layer.getModel().addFilter(TracksModel.FIELD_IAF, iafField.getText());
+		}
+		if(!typeField.getText().isEmpty()){
+			layer.getModel().addFilter(TracksModel.FIELD_TYPE_AVION, typeField.getText());
+		}
+		if(!modeAField.getText().isEmpty()){
+			layer.getModel().addFilter(TracksModel.FIELD_MODE_A, modeAField.getText());
+		}
+		layer.getModel().applyFilters();
+		trackContext.updateLayerPane();
+	}
+	
+	/**
+	 * Hide trajectories based on their numTraj id
+	 * @param numTraj
+	 */
+	public void hideTrajectories(List<Integer> numTraj){
+		this.layer.getModel().hideTracks(numTraj);
 	}
 	
 	private JXTaskPane createPolygonFilterPane(){
@@ -822,8 +923,8 @@ public class TrajectoriesView extends JPanel {
 		colorFilterPane.setCollapsed(true);
 		
 		//Gestion des couleurs
-		final TrajectoriesColorsDialog colors = new TrajectoriesColorsDialog(colorFilters);
-		colors.addPropertyChangeListener("valuesChanged", new PropertyChangeListener() {
+		colorsDialog = new TrajectoriesColorsDialog();
+		colorsDialog.addPropertyChangeListener("valuesChanged", new PropertyChangeListener() {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent p) {
@@ -835,7 +936,7 @@ public class TrajectoriesView extends JPanel {
 				}
 			}
 		});
-		colorFilterPane.add(colors);
+		colorFilterPane.add(colorsDialog);
 		
 		return colorFilterPane;
 	}
@@ -852,7 +953,7 @@ public class TrajectoriesView extends JPanel {
 		JPanel indicatif = new JPanel();
 		indicatif.setLayout(new BoxLayout(indicatif, BoxLayout.X_AXIS));
 		JLabel indicLabel = new JLabel("Indicatif : ");
-		final JTextField indicField = new JTextField(10);
+		indicField = new JTextField(10);
 		indicField.setMaximumSize(new Dimension(100, 30));
 		indicatif.add(indicLabel);
 		indicatif.add(Box.createHorizontalGlue());
@@ -863,7 +964,7 @@ public class TrajectoriesView extends JPanel {
 		JPanel aDep = new JPanel();
 		aDep.setLayout(new BoxLayout(aDep, BoxLayout.X_AXIS));
 		JLabel aDepLabel = new JLabel("Aéroport départ : ");
-		final JTextField aDepField = new JTextField(10);
+		aDepField = new JTextField(10);
 		aDepField.setMaximumSize(new Dimension(100, 30));
 		aDep.add(aDepLabel);
 		aDep.add(Box.createHorizontalGlue());
@@ -874,7 +975,7 @@ public class TrajectoriesView extends JPanel {
 		JPanel aDest = new JPanel();
 		aDest.setLayout(new BoxLayout(aDest, BoxLayout.X_AXIS));
 		JLabel aDestLabel = new JLabel("Aéroport arrivée : ");
-		final JTextField aDestField = new JTextField(10);
+		aDestField = new JTextField(10);
 		aDestField.setMaximumSize(new Dimension(100, 30));
 		aDest.add(aDestLabel);
 		aDest.add(Box.createHorizontalGlue());
@@ -885,7 +986,7 @@ public class TrajectoriesView extends JPanel {
 		JPanel iaf = new JPanel();
 		iaf.setLayout(new BoxLayout(iaf, BoxLayout.X_AXIS));
 		JLabel iafLabel = new JLabel("IAF : ");
-		final JTextField iafField = new JTextField(10);
+		iafField = new JTextField(10);
 		iafField.setMaximumSize(new Dimension(100, 30));
 		iaf.add(iafLabel);
 		iaf.add(Box.createHorizontalGlue());
@@ -896,7 +997,7 @@ public class TrajectoriesView extends JPanel {
 		JPanel type = new JPanel();
 		type.setLayout(new BoxLayout(type, BoxLayout.X_AXIS));
 		JLabel typeLabel = new JLabel("Type avion : ");
-		final JTextField typeField = new JTextField(10);
+		typeField = new JTextField(10);
 		typeField.setMaximumSize(new Dimension(100, 30));
 		type.add(typeLabel);
 		type.add(Box.createHorizontalGlue());
@@ -907,7 +1008,7 @@ public class TrajectoriesView extends JPanel {
 		JPanel modeA = new JPanel();
 		modeA.setLayout(new BoxLayout(modeA, BoxLayout.X_AXIS));
 		JLabel modeALbl = new JLabel("Mode A : ");
-		final JTextField modeAField = new JTextField(10);
+		modeAField = new JTextField(10);
 		modeAField.setMaximumSize(new Dimension(100, 30));
 		modeA.add(modeALbl);
 		modeA.add(Box.createHorizontalGlue());
@@ -923,27 +1024,7 @@ public class TrajectoriesView extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				layer.getModel().removeFilter();
-				if(!indicField.getText().isEmpty()){
-					layer.getModel().addFilter(TracksModel.FIELD_INDICATIF, indicField.getText());
-				}
-				if(!aDepField.getText().isEmpty()){
-					layer.getModel().addFilter(TracksModel.FIELD_ADEP, aDepField.getText());
-				}
-				if(!aDestField.getText().isEmpty()){
-					layer.getModel().addFilter(TracksModel.FIELD_ADEST, aDestField.getText());
-				}
-				if(!iafField.getText().isEmpty()){
-					layer.getModel().addFilter(TracksModel.FIELD_IAF, iafField.getText());
-				}
-				if(!typeField.getText().isEmpty()){
-					layer.getModel().addFilter(TracksModel.FIELD_TYPE_AVION, typeField.getText());
-				}
-				if(!modeAField.getText().isEmpty()){
-					layer.getModel().addFilter(TracksModel.FIELD_MODE_A, modeAField.getText());
-				}
-				layer.getModel().applyFilters();
-				trackContext.updateLayerPane();
+				applyRegexFilters();
 			}
 		});
 		JButton cancel = new JButton("Effacer");
@@ -951,15 +1032,7 @@ public class TrajectoriesView extends JPanel {
 		cancel.addActionListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				indicField.setText("");
-				aDepField.setText("");
-				aDestField.setText("");
-				iafField.setText("");
-				typeField.setText("");
-				modeAField.setText("");
-				layer.getModel().removeFilter();
-				layer.getModel().applyFilters();
-				trackContext.updateLayerPane();
+				removeRegexFilters();
 			}
 		});
 		filtres.add(validate);

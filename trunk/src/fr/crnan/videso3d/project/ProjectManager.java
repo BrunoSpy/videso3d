@@ -15,6 +15,7 @@
  */
 package fr.crnan.videso3d.project;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -44,6 +45,7 @@ import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.ProgressSupport;
+import fr.crnan.videso3d.Triplet;
 import fr.crnan.videso3d.UserObjectsController;
 import fr.crnan.videso3d.Videso3D;
 import fr.crnan.videso3d.VidesoGLCanvas;
@@ -55,6 +57,7 @@ import fr.crnan.videso3d.formats.images.EditableSurfaceImage;
 import fr.crnan.videso3d.formats.images.ImageUtils;
 import fr.crnan.videso3d.graphics.DatabaseVidesoObject;
 import fr.crnan.videso3d.ihm.MainWindow;
+import fr.crnan.videso3d.ihm.TrajectoriesView;
 import fr.crnan.videso3d.layers.tracks.GEOTracksLayer;
 import fr.crnan.videso3d.layers.tracks.TrajectoriesLayer;
 import gov.nasa.worldwind.Restorable;
@@ -81,12 +84,14 @@ import gov.nasa.worldwind.layers.Layer;
  * <li>one file per controller</li></ul>
  * </li>
  * <li> (R) trajectory : all displayed trajectories</li>
+ * <ul><li> (F) one .geo file for each trajectory view</li>
+ * <li> one file for each for each properties of each trajectory view</li></ul>
  * <li> (F) globe.xml : parameters of the globe (camera, ...)</li>
  * </ul>
  * <li>
  * </ul>
  * @author Bruno Spyckerelle
- * @version 0.1.0
+ * @version 0.1.1
  */
 public class ProjectManager extends ProgressSupport {
 
@@ -306,12 +311,49 @@ public class ProjectManager extends ProgressSupport {
 		File trajectoDir = new File(main, "trajectory");
 		trajectoDir.mkdirs();
 		for(Layer l : wwd.getModel().getLayers()){
-			if(l instanceof GEOTracksLayer && trajectories.contains(l.getName())){
+			if(l instanceof GEOTracksLayer && trajectories != null && trajectories.contains(l.getName())){
 				GEOWriter geoWriter = new GEOWriter(trajectoDir.getAbsolutePath()+"/"+l.getName(), true);
-				for(VidesoTrack track : ((GEOTracksLayer) l).getModel().getVisibleTracks()){
+				//hidden trajectories
+				List<Integer> hiddenTraj = new ArrayList<Integer>();
+				for(VidesoTrack track : ((GEOTracksLayer) l).getModel().getAllTracks()){
 					geoWriter.writeTrack((GEOTrack) track);
+					if(!((GEOTracksLayer) l).getModel().isVisible(track))
+						hiddenTraj.add(track.getNumTraj());
 				}
 				geoWriter.close();
+				//save properties
+				TrajectoriesView view = DatasManager.getTrajectoryView(((GEOTracksLayer) l).getModel());
+				//filtres couleurs
+				ObjectOutputStream oos = null;
+				try{
+					oos = new ObjectOutputStream(new FileOutputStream(new File(trajectoDir.getAbsolutePath(), l.getName()+"_colors")));
+					oos.writeObject(view.getColorFilters());
+				} catch(IOException e){
+					e.printStackTrace();
+				} finally{
+					if(oos != null)
+						oos.close();
+				}
+				//filtres
+				try{
+					oos = new ObjectOutputStream(new FileOutputStream(new File(trajectoDir.getAbsolutePath(), l.getName()+"_filters")));
+					oos.writeObject(view.getFilters());
+				} catch(IOException e){
+					e.printStackTrace();
+				} finally{
+					if(oos != null)
+						oos.close();
+				}
+				//hidden trajectories
+				try{
+					oos = new ObjectOutputStream(new FileOutputStream(new File(trajectoDir.getAbsolutePath(), l.getName()+"_hidden")));
+					oos.writeObject(hiddenTraj);
+				} catch(IOException e){
+					e.printStackTrace();
+				} finally{
+					if(oos != null)
+						oos.close();
+				}
 			}
 		}
 
@@ -546,11 +588,80 @@ public class ProjectManager extends ProgressSupport {
 		}
 
 		//trajectories
-		File trajectoDir = new File(path, "trajectory");
+		final File trajectoDir = new File(path, "trajectory");
 		if(trajectoDir.exists() && trajectoDir.isDirectory()){
-			for(File t : trajectoDir.listFiles()){
+			for(final File t : trajectoDir.listFiles()){
 				this.fireTaskProgress(progress++);
-				window.addTrajectoriesViews(new File[]{t});
+				if(t.getName().endsWith("Geo")){
+					DatasManager.addPropertyChangeListener("new trajectory view", new PropertyChangeListener() {
+
+						@Override
+						public void propertyChange(PropertyChangeEvent evt) {
+							TrajectoriesView view = (TrajectoriesView) evt.getNewValue();
+							ObjectInputStream ois = null;
+							//colors
+							File propFile = new File(trajectoDir, t.getName()+"_colors");
+							try{
+								ois = new ObjectInputStream(new FileInputStream(propFile));
+								List<Triplet<String, String, Color>> colorsProperties = (List<Triplet<String, String, Color>>) ois.readObject();
+								if(colorsProperties != null){
+									view.setColorFilters(colorsProperties);
+								}
+							
+							} catch(IOException | ClassNotFoundException e){
+								e.printStackTrace();
+							} finally{
+								if(ois != null)
+									try {
+										ois.close();
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+							}
+							//regex filters
+							propFile = new File(trajectoDir, t.getName()+"_filters");
+							try{
+								ois = new ObjectInputStream(new FileInputStream(propFile));
+								HashMap<Integer, String> filterProperties = (HashMap<Integer, String>) ois.readObject();
+								if(filterProperties != null){
+									view.setRegexFilters(filterProperties);
+								}
+							
+							} catch(IOException | ClassNotFoundException e){
+								e.printStackTrace();
+							} finally{
+								if(ois != null)
+									try {
+										ois.close();
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+							}
+							//hidden trajectories
+							propFile = new File(trajectoDir, t.getName()+"_hidden");
+							try{
+								ois = new ObjectInputStream(new FileInputStream(propFile));
+								List<Integer> hidden = (List<Integer>) ois.readObject();
+								if(hidden != null){
+									view.hideTrajectories(hidden);
+								}
+							
+							} catch(IOException | ClassNotFoundException e){
+								e.printStackTrace();
+							} finally{
+								if(ois != null)
+									try {
+										ois.close();
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+							}
+							//unregister myself once job is done
+							DatasManager.removePropertyChangeListener(this);
+						}
+					});
+					window.addTrajectoriesViews(new File[]{t});
+				}
 			}
 		}
 		
@@ -578,7 +689,7 @@ public class ProjectManager extends ProgressSupport {
 			
 		}
 		//remove temp files
-		FileManager.removeTempFiles();
+	//	FileManager.removeTempFiles(); //can't remove temp files : trajectory views are done in a swingworker. this will be done when app is closed
 		this.fireTaskProgress(max);
 		
 		return project;
