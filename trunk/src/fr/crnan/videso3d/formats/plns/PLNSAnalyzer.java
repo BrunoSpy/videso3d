@@ -84,8 +84,14 @@ public class PLNSAnalyzer extends ProgressSupport{
 				if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
 					database = fileChooser.getSelectedFile();
 					try{
-						
-						new PLNSReader(new File[]{new File(path)},
+						String[] fileNames = path.split(";");
+						File[] files = new File[fileNames.length];
+						int i = 0;
+						for(String s : fileNames){
+							files[i] = new File(s);
+							i++;
+						}
+						new PLNSReader(files,
 								database, 
 								null,
 								new PropertyChangeListener() {
