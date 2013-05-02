@@ -24,9 +24,6 @@ import java.util.List;
 import javax.swing.SwingWorker;
 import javax.swing.event.EventListenerList;
 
-import fr.crnan.videso3d.DatasManager.Type;
-
-
 /**
  * Importe les données de fichiers et les stocke en base de données
  * L'import des données doit être fait dans la méthode doInBackground() afin d'être fait dans un thread secondaire.

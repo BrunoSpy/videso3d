@@ -613,11 +613,16 @@ public class StipController extends ProgressSupport implements VidesoController 
 			ArrayList<LatLon> pos = new ArrayList<LatLon>();
 			while(rs.next()){
 				balises.add(rs.getString("balise"));
-				sens.add(Route3D.LEG_AUTHORIZED);
 			}
 			for(String balise : balises){
-				rs = st.executeQuery("select * from balises where name ='"+balise+"'");
-				pos.add(LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
+				rs = st.executeQuery("select * from balises, balitis where balitis.balid = balises.id" +
+																			" and balises.name ='"+balise+"'" +
+																			" and balitis.appartient = 1" +
+																			" and balitis.iditi ='"+id+"'");
+				if(rs.next()){
+					pos.add(LatLon.fromDegrees(rs.getDouble("latitude"), rs.getDouble("longitude")));
+					sens.add(Route3D.LEG_AUTHORIZED);
+				}
 			}
 			iti.setLocations(pos, sens);
 			iti.setBalises(balises);

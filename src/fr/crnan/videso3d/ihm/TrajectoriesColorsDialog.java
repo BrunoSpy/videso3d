@@ -48,6 +48,10 @@ public class TrajectoriesColorsDialog extends JPanel {
 		
 	private JPanel container = new JPanel();
 		
+	public TrajectoriesColorsDialog(){
+		this(null);
+	}
+	
 	public TrajectoriesColorsDialog(List<Triplet<String, String, Color>> param){
 		this.setLayout(new BorderLayout());
 
@@ -124,22 +128,38 @@ public class TrajectoriesColorsDialog extends JPanel {
 //		this.pack();
 	}
 
-	public void valuesChanged(){
+	public void setColors(List<Triplet<String, String, Color>> colors){
+		this.container.removeAll();
+		this.results.clear();
+		for(Triplet<String, String, Color> t : colors){
+			FiltrePanel filtre = new FiltrePanel(t);
+			results.add(filtre);
+			this.container.add(filtre);
+		}
+		container.validate();
+		this.valuesChanged();
+	}
+	
+	public List<Triplet<String, String, Color>> getColors(){
 		List<Triplet<String, String, Color>> params = new LinkedList<Triplet<String,String,Color>>();
 		for(FiltrePanel p : results){
 			params.add(p.getResult());
 		}
-		this.firePropertyChange("valuesChanged", null, params);
+		return params;
+	}
+	
+	public void valuesChanged(){
+		this.firePropertyChange("valuesChanged", null, getColors());
 	}
 	
 	/**
 	 * Panel de choix d'un filtre
 	 * @author Bruno Spyckerelle
-	 * @version 0.2
+	 * @version 0.2.1
 	 */
 	private class FiltrePanel extends JPanel {
 		
-		private JComboBox champs;
+		private JComboBox<String> champs;
 		private JTextField regexp;
 		private JButton changeColor;
 		
@@ -150,7 +170,7 @@ public class TrajectoriesColorsDialog extends JPanel {
 		public FiltrePanel(Triplet<String, String, Color> param){
 			this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 
-			champs = new JComboBox();
+			champs = new JComboBox<String>();
 			for(int i=1;i<6;i++){
 				champs.addItem(TracksModel.type2string(i));
 			}
