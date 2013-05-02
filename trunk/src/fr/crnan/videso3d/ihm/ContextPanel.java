@@ -127,10 +127,12 @@ public class ContextPanel extends JPanel{
 				case StipController.SECTEUR:
 					this.addTaskpanes(DatasManager.Type.STIP, type, name);
 					this.addTaskpanes(DatasManager.Type.STPV, StpvController.SECTEUR, name);
+					this.addTaskpanes(DatasManager.Type.AIP, AIP.CTL, name);
 					break;
 				case StipController.BALISES:
 					this.addTaskpanes(DatasManager.Type.STIP, type, name);
 					this.addTaskpanes(DatasManager.Type.STPV, StpvController.BALISE, name);
+					this.addTaskpanes(DatasManager.Type.AIP, AIP.WPT, name);
 					break;
 				case StipController.ITI:
 					this.addTaskpanes(DatasManager.Type.STIP, type, name);
