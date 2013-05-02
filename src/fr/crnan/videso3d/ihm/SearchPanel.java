@@ -37,6 +37,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -185,10 +186,15 @@ public class SearchPanel extends JPanel {
 				// TODO Auto-generated method stub
 				VFileChooser file = new VFileChooser();
 				file.setFileSelectionMode(JFileChooser.FILES_ONLY);
-				file.setMultiSelectionEnabled(false);
+				file.setMultiSelectionEnabled(true);
 				file.addChoosableFileFilter(new PLNSFileFilter());
 				if(file.showOpenDialog(null) == VFileChooser.APPROVE_OPTION){
-					choosePLNS.setText(file.getSelectedFile().getAbsolutePath());
+					String choosePLNSText = "";
+					for(File f : file.getSelectedFiles()){
+						choosePLNSText+=";"+f.getAbsolutePath();
+					}
+					choosePLNSText = choosePLNSText.substring(1);
+					choosePLNS.setText(choosePLNSText);
 				}
 			}
 		});
