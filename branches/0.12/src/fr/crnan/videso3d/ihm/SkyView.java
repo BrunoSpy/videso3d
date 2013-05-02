@@ -78,8 +78,7 @@ public class SkyView extends FilteredMultiTreeTableView {
 	@Override
 	public void addTableTree(final FilteredTreeTableModel model, String title, JPanel titlePanel){
 
-		super.models.add(model);	
-System.out.println("addtt overridden");
+		super.models.add(model);
 		//éléments de l'IHM
 		JPanel tablePanel = new JPanel();
 		tablePanel.setLayout(new BorderLayout());

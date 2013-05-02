@@ -32,7 +32,6 @@ import org.jdom2.Element;
 
 import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.MultiValueMap;
 import fr.crnan.videso3d.Pallet;
 import fr.crnan.videso3d.ProgressSupport;

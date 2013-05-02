@@ -31,7 +31,6 @@ import javax.swing.SwingWorker;
 import com.mxgraph.model.mxCell;
 
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.databases.stip.StipController;
 /**
@@ -100,12 +99,19 @@ public class RoutePanel extends ResultGraphPanel {
 							count++;
 							//ajout des sorties à la dernière route
 							if(idRoute != 0){
-								ResultSet rsSorties = DatabaseManager.getCurrentStip().executeQuery("select routesorties.sortie, routes.id from routes, routesorties where routes.id = routesorties.routeid and routes.id = '"+idRoute+"'");
-								while(rsSorties.next()){
-									mxCell sortie = (mxCell) graph.insertVertex(route, null, rsSorties.getString(1), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTravers);
-									graph.insertEdge(route, null, "", first, sortie, GraphStyle.edgeRouteSensUnique);
+								ResultSet rsExtFin = DatabaseManager.getCurrentStip().executeQuery("select routeextfin.typeext, routeextfin.extension, routes.id from routes, routeextfin where routes.id = routeextfin.routeid and routes.id = '"+idRoute+"'");
+								while(rsExtFin.next()){
+									String fleche = "";
+									if(rsExtFin.getString(1).compareTo("EN")==0)
+										fleche = GraphStyle.edgeRouteSensUniqueInverse;
+									else if (rsExtFin.getString(1).compareTo("ES")==0)
+										fleche = GraphStyle.edgeRoute;
+									else if(rsExtFin.getString(1).compareTo("SO")==0)
+										fleche = GraphStyle.edgeRouteSensUnique;
+									mxCell sortie = (mxCell) graph.insertVertex(route, null, rsExtFin.getString(2), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTravers);
+									graph.insertEdge(route, null, "", first, sortie, fleche);
 								}
-								rsSorties.close();
+								rsExtFin.close();
 							}
 							
 							idRoute = rs.getInt(1);
@@ -118,13 +124,20 @@ public class RoutePanel extends ResultGraphPanel {
 										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
 							first = (mxCell) graph.insertVertex(route, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							first.setConnectable(false);
-							//insertion des entrees
-							ResultSet rsEntrees = DatabaseManager.getCurrentStip().executeQuery("select routeentrees.entree, routes.id from routes, routeentrees where routes.id = routeentrees.routeid and routes.id = '"+idRoute+"'");
-							while(rsEntrees.next()){
-								mxCell entree = (mxCell) graph.insertVertex(route, null, rsEntrees.getString(1), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTravers);
-								graph.insertEdge(route, null, "", entree, first, GraphStyle.edgeRouteSensUnique);
+							//insertion des extensions début
+							ResultSet rsExtDebut = DatabaseManager.getCurrentStip().executeQuery("select routeextdebut.typeext, routeextdebut.extension, routes.id from routes, routeextdebut where routes.id = routeextdebut.routeid and routes.id = '"+idRoute+"'");
+							while(rsExtDebut.next()){
+								String fleche = "";
+								if(rsExtDebut.getString(1).compareTo("EN")==0)
+									fleche = GraphStyle.edgeRouteSensUnique;
+								else if (rsExtDebut.getString(1).compareTo("ES")==0)
+									fleche = GraphStyle.edgeRoute;
+								else if(rsExtDebut.getString(1).compareTo("SO")==0)
+									fleche = GraphStyle.edgeRouteSensUniqueInverse;
+								mxCell entree = (mxCell) graph.insertVertex(route, null, rsExtDebut.getString(2), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTravers);
+								graph.insertEdge(route, null, "", entree, first, fleche);
 							}
-							rsEntrees.close();
+							rsExtDebut.close();
 							sens = rs.getString(6);
 						} else {
 							String style = rs.getBoolean(5) ? 
@@ -150,12 +163,19 @@ public class RoutePanel extends ResultGraphPanel {
 
 					//ajout des sorties à la dernière route
 					if(idRoute != 0){
-						ResultSet rsSorties = DatabaseManager.getCurrentStip().executeQuery("select routesorties.sortie, routes.id from routes, routesorties where routes.id = routesorties.routeid and routes.id = '"+idRoute+"'");
-						while(rsSorties.next()){
-							mxCell sortie = (mxCell) graph.insertVertex(route, null, rsSorties.getString(1), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTravers);
-							graph.insertEdge(route, null, "", first, sortie, GraphStyle.edgeRouteSensUnique);
+						ResultSet rsExtFin = DatabaseManager.getCurrentStip().executeQuery("select routeextfin.typeext, routeextfin.extension, routes.id from routes, routeextfin where routes.id = routeextfin.routeid and routes.id = '"+idRoute+"'");
+						while(rsExtFin.next()){
+							String fleche = "";
+							if(rsExtFin.getString(1).compareTo("EN")==0)
+								fleche = GraphStyle.edgeRouteSensUniqueInverse;
+							else if (rsExtFin.getString(1).compareTo("ES")==0)
+								fleche = GraphStyle.edgeRoute;
+							else if(rsExtFin.getString(1).compareTo("SO")==0)
+								fleche = GraphStyle.edgeRouteSensUnique;
+							mxCell sortie = (mxCell) graph.insertVertex(route, null, rsExtFin.getString(2), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseTravers);
+							graph.insertEdge(route, null, "", first, sortie, fleche);
 						}
-						rsSorties.close();
+						rsExtFin.close();
 					}
 					
 					fireNumberResults(count);

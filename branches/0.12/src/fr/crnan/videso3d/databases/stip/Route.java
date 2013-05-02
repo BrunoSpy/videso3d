@@ -38,13 +38,15 @@ public class Route {
 	 */
 	private List<String> sens = new LinkedList<String>();
 	/**
-	 * Entrées
+	 * Extensions début
 	 */
-	private List<String> entrees = new LinkedList<String>();
+	private String typeExtDebut;
+	private List<String> extDebut = new LinkedList<String>();
 	/**
-	 * Sorties
+	 * Extensions fin
 	 */
-	private List<String> sorties = new LinkedList<String>();	
+	private String typeExtFin;
+	private List<String> extFin = new LinkedList<String>();	
 	/**
 	 * Sens de parcours d'une route entre deux balises
 	 * @author Bruno Spyckerelle
@@ -68,15 +70,18 @@ public class Route {
 		this.setName(name);
 	}
 	
-	public void addEntrees(String line){
-		for(String e : line.split("\\s+")){
-			entrees.add(e);
-		}
-	}
 	
-	public void addSorties(String line){
-		for(String s : line.split("\\s+")){
-			sorties.add(s);
+	public void addExtensions(String extensions, String typeExt, boolean firstLine){
+		if(firstLine){
+			typeExtDebut = typeExt;
+			for(String s : extensions.split("\\s+")){
+				extDebut.add(s);
+			}
+		}else{
+			typeExtFin = typeExt;
+			for(String s : extensions.split("\\s+")){
+				extFin.add(s);
+			}
 		}
 	}
 	
@@ -152,16 +157,28 @@ public class Route {
 		this.name = name;
 	}
 	/**
-	 * @return entrees
+	 * @return extDebut
 	 */
-	public List<String> getEntrees() {
-		return entrees;
+	public List<String> getExtDebut() {
+		return extDebut;
 	}
 	/**
-	 * @return sorties
+	 * @return typeExtDebut
 	 */
-	public List<String> getSorties() {
-		return sorties;
+	public String getTypeExtDebut(){
+		return typeExtDebut;
+	}
+	/**
+	 * @return extFin
+	 */
+	public List<String> getExtFin() {
+		return extFin;
+	}
+	/**
+	 * @return typeExtFin
+	 */
+	public String getTypeExtFin(){
+		return typeExtFin;
 	}
 	
 }

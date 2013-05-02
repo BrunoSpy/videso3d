@@ -16,6 +16,8 @@
 
 package fr.crnan.videso3d;
 
+import java.io.Serializable;
+
 /**
  * Classe utilitaire représentant un couple ordonné de données
  * @author Bruno Spyckerelle
@@ -23,7 +25,7 @@ package fr.crnan.videso3d;
  * @param <T>
  * @param <U>
  */
-public class Couple<T,U> {
+public class Couple<T,U> implements Serializable {
 
 	private T first;
 	private U second;

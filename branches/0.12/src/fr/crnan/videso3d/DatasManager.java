@@ -41,8 +41,10 @@ import fr.crnan.videso3d.ihm.SkyView;
 import fr.crnan.videso3d.ihm.StipView;
 import fr.crnan.videso3d.ihm.StpvView;
 import fr.crnan.videso3d.ihm.StrView;
+import fr.crnan.videso3d.ihm.TrajectoriesView;
 import fr.crnan.videso3d.ihm.UserObjectsView;
 import fr.crnan.videso3d.ihm.components.DataView;
+import fr.crnan.videso3d.trajectography.TracksModel;
 import gov.nasa.worldwind.util.Logging;
 
 /**
@@ -50,7 +52,7 @@ import gov.nasa.worldwind.util.Logging;
  * Enregistre les controleurs, les contexts de façon à partager ces éléments avec<br />
  * les parties de l'application qui en ont besoin.
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.1.4
  */
 public final class DatasManager {
 
@@ -67,11 +69,26 @@ public final class DatasManager {
 	
 	private HashMap<DatasManager.Type, DataView> views = new HashMap<DatasManager.Type, DataView>();
 		
+	private HashMap<TracksModel, TrajectoriesView> trajectories = new HashMap<TracksModel, TrajectoriesView>();
+	
 	private PropertyChangeSupport support;
 	
 	private DatasManager(){
 		super();
 		support = new PropertyChangeSupport(this);
+	}
+	
+	public static void addTrajectory(TracksModel model, TrajectoriesView view){
+		instance.trajectories.put(model, view);
+		instance.support.firePropertyChange("new trajectory view", null, view);
+	}
+	
+	public static void removeTrajectory(TracksModel model){
+		instance.trajectories.remove(model);
+	}
+	
+	public static TrajectoriesView getTrajectoryView(TracksModel model){
+		return instance.trajectories.get(model);
 	}
 	
 	private static void addDatas(DatasManager.Type type, VidesoController controller, Context context, DataView view){

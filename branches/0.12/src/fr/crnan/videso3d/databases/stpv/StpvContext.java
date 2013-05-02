@@ -53,7 +53,9 @@ public class StpvContext extends Context {
 					Statement st2 = DatabaseManager.getCurrentStpv();
 					ResultSet rs2 = st2.executeQuery("select freq from sect where nom = '"+name+"'");
 					if(rs2.next()){
-						taskpane.add(new JLabel("<html><b>Fréquence : </b>"+rs2.getString(1)+"</html>"));
+						String frequence = rs2.getString(1);
+						if(!frequence.equals("0"))
+							taskpane.add(new JLabel("<html><b>Fréquence : </b>"+frequence+"</html>"));
 					}
 					st2.close();
 				}
