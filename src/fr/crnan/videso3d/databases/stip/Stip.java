@@ -507,6 +507,7 @@ public class Stip extends FileParser{
 		BufferedReader in = null;
 		try {
 			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+			boolean firstLine = true;
 			while (in.ready()){
 				String line = in.readLine();
 				if(!line.startsWith("FORMAT") && line.length()>9){
@@ -520,17 +521,16 @@ public class Stip extends FileParser{
 						}
 						name = line.substring(0, 7).trim();
 						route = new Route(name);
+						firstLine = true;
 					}
-
 					String typeLigne  = line.substring(7, 9);
 					if(typeLigne.compareTo("RO") == 0){
 						route.setEspace(line.substring(11, 12));
 						route.addBalises(line.substring(15, 80));
-					} else if(typeLigne.compareTo("ES") == 0) {
-						route.addEntrees(line.substring(15, 80));
-					} else if(typeLigne.compareTo("SO") == 0) {
-						route.addSorties(line.substring(15, 80));
+					} else if(typeLigne.matches("(SO)|(E[NS])")) {
+						route.addExtensions(line.substring(15, 80), typeLigne, firstLine);
 					}
+					firstLine = false;
 				}
 			}
 		} catch (IOException e){
@@ -584,27 +584,29 @@ public class Stip extends FileParser{
 		}
 		insert.executeBatch();
 		insert.close();
-		//insertion des entrees
-		if(!route.getEntrees().isEmpty()){
-			insert = this.conn.prepareStatement("insert into routeentrees (route, routeid, entree) " +
-					"values (?, ?, ?)");
+		//insertion des extensions
+		if(!route.getExtDebut().isEmpty()){
+			insert = this.conn.prepareStatement("insert into routeextdebut (route, routeid, typeExt, extension) " +
+					"values (?, ?, ?, ?)");
 			insert.setString(1, route.getName());
 			insert.setInt(2, id);
-			for(String e : route.getEntrees()){
-				insert.setString(3, e);
+			insert.setString(3, route.getTypeExtDebut());
+			for(String e : route.getExtDebut()){
+				insert.setString(4, e);
 				insert.addBatch();
 			}
 			insert.executeBatch();
 			insert.close();
 		}
 		//insertion des sorties
-		if(!route.getSorties().isEmpty()){
-			insert = this.conn.prepareStatement("insert into routesorties (route, routeid, sortie) " +
-					"values (?, ?, ?)");
+		if(!route.getExtFin().isEmpty()){
+			insert = this.conn.prepareStatement("insert into routeextfin (route, routeid, typeExt, extension) " +
+					"values (?, ?, ?, ?)");
 			insert.setString(1, route.getName());
 			insert.setInt(2, id);
-			for(String e : route.getSorties()){
-				insert.setString(3, e);
+			insert.setString(3, route.getTypeExtFin());
+			for(String e : route.getExtFin()){
+				insert.setString(4, e);
 				insert.addBatch();
 			}
 			insert.executeBatch();

@@ -309,28 +309,28 @@ public class StipContext extends Context {
 			ResultSet rs = st.executeQuery("select * from routes where id='"+id+"'");		
 			taskpane1.add(new JLabel("<html><b>Espace</b> : "+(rs.getString(3).equals("U")?"UIR":"FIR")+"</html>"));
 
-			rs = st.executeQuery("select entree from routeentrees where routeid = '"+id+"'");
-			String entrees = "";
+			rs = st.executeQuery("select typeext, extension from routeextdebut where routeid = '"+id+"'");
+			String extDebut = "";
 			if(rs.next()){
-				entrees = "<html><b>Entrées</b> : "+rs.getString(1);
+				extDebut = "<html><b>Ext Début "+rs.getString(1)+"</b> : "+rs.getString(2);
 			}
 			while(rs.next()){
-				entrees += " "+rs.getString(1);
+				extDebut += " "+rs.getString(2);
 			}
-			if(!entrees.isEmpty()){
-				taskpane1.add(new JLabel(entrees));
+			if(!extDebut.isEmpty()){
+				taskpane1.add(new JLabel(extDebut));
 			}
 
-			rs = st.executeQuery("select sortie from routesorties where routeid = '"+id+"'");
-			String sorties = "";
+			rs = st.executeQuery("select typeext, extension from routeextfin where routeid = '"+id+"'");
+			String extFin = "";
 			if(rs.next()){
-				sorties = "<html><b>Sorties</b> : "+rs.getString(1);
+				extFin = "<html><b>Ext Fin "+rs.getString(1)+"</b> : "+rs.getString(2);
 			}
 			while(rs.next()){
-				sorties += " "+rs.getString(1);
+				extFin += " "+rs.getString(2);
 			}
-			if(!sorties.isEmpty()){
-				taskpane1.add(new JLabel(sorties));
+			if(!extFin.isEmpty()){
+				taskpane1.add(new JLabel(extFin));
 			}
 
 			taskpane1.add(new AbstractAction() {
