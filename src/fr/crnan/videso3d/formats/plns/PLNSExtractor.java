@@ -43,6 +43,7 @@ import fr.crnan.videso3d.ihm.components.ProgressInputStream;
 
 /**
  * Extrait les données d'un ou plusieurs fichiers PLNS et les insère dans une base de données SQLite<br />
+ * Ne fonctionne qu'avec des PLNS provenant de STPV V25 et V26.
  * Peut prendre en entrée des fichiers PLNS zippés.
  * @author Bruno Spyckerelle
  * @author Clovis Hamel
@@ -50,6 +51,8 @@ import fr.crnan.videso3d.ihm.components.ProgressInputStream;
  */
 public class PLNSExtractor extends ProgressSupport{
 
+	private enum Version {V25, V26};
+	
 	private final int buf = 1024;
 	private File trm;
 	private File bal;
@@ -57,6 +60,7 @@ public class PLNSExtractor extends ProgressSupport{
 	private File sec;
 	private File typ;
 	private File cdv;
+	private Version version;
 	
 	private int nbFile;
 	private List<File> files;	
@@ -133,6 +137,8 @@ public class PLNSExtractor extends ProgressSupport{
 				});
 				extractFiles(in);
 				connectDatabase(database);
+				determineVersion();
+				System.out.println("version "+version.toString());
 				readFiles();
 			}  catch (FileNotFoundException e1) {
 				e1.printStackTrace();
@@ -149,6 +155,38 @@ public class PLNSExtractor extends ProgressSupport{
 			nbFile++;
 		}
 		this.fireTaskProgress((files.size()*2)*100);
+	}
+	
+	private void determineVersion(){
+		FileInputStream trmR = null;
+		try {
+			trmR = new FileInputStream(trm);
+			
+			int longBuf = 3072*2;
+			byte[] pln = new byte[longBuf];
+			
+			if(trmR.read(pln, 0, longBuf) == longBuf){
+				int annee = ord(pln[0]);
+				
+				if(annee < 100) {
+					//si V25, année codée à partir de 2000, donc annee < 100
+					version  = Version.V25;
+				} else {
+					version = Version.V26;
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if(trmR != null)
+				try {
+					trmR.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
 	}
 	
 	private void connectDatabase(Connection database){
@@ -203,6 +241,7 @@ public class PLNSExtractor extends ProgressSupport{
 	}
 	
 	private void readFiles() throws IOException, SQLException{
+				
 		Statement st = this.database.createStatement();
 		boolean stop = false;
 		ProgressInputStream trmR = new ProgressInputStream(new FileInputStream(trm));
@@ -219,7 +258,12 @@ public class PLNSExtractor extends ProgressSupport{
 		RandomAccessFile typR = new RandomAccessFile(typ, "r");
 		RandomAccessFile cdvR = new RandomAccessFile(cdv, "r");
 		
-		int longBuf = 3072*2;
+		int longBuf;
+		if(version.equals(Version.V25)){
+			longBuf = 3072*2;
+		} else {
+			longBuf = 11264*2;
+		}
 		byte[] pln = new byte[longBuf];
 		int enTete = 6;
 		
@@ -228,14 +272,18 @@ public class PLNSExtractor extends ProgressSupport{
 			    String plnString = new String(pln, "ISO-8859-1");
 				
 				int nbJour = ord(pln[1])*256 + ord(pln[2]);
+				
 				int annee = ord(pln[0]);
-
 				Calendar calendar = new GregorianCalendar();
-				calendar.set(20*10+annee, 1, 1);
+				
+				if(version.equals(Version.V25)){
+					calendar.set(20*10+annee, 1, 1);
+				} else {
+					calendar.set(19*10+annee, 1, 1);
+				}
 				calendar.add(Calendar.DAY_OF_MONTH, nbJour-1);
 				SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yy");
 				String date = formatDate.format(calendar.getTime());
-				
 				//récupération des index des champs
 				int indexRensGen = ord(pln[6])*256 + ord(pln[7]);
 				int indexChampRoute = ord(pln[8])*256 + ord(pln[9]);
@@ -245,7 +293,6 @@ public class PLNSExtractor extends ProgressSupport{
 				int indexChampCautra3 = ord(pln[16])*256 + ord(pln[17]);
 				int indexChampCOOR = ord(pln[18])*256 + ord(pln[19]);
 				int indexChampGestINT = ord(pln[20])*256 + ord(pln[21]);
-				
 				// Renseignements généraux
                 String indicatif = plnString.substring(9+enTete+indexRensGen, 9+enTete+indexRensGen+7);
                 int numeroCAUTRA = ord(pln[7+enTete+indexRensGen])*256 + ord(pln[8+enTete+indexRensGen]);
@@ -253,7 +300,6 @@ public class PLNSExtractor extends ProgressSupport{
 
                 // On récupère le rang du type de l'avion dans le fichier type
                 // Et ensuite, on extrait le type de l'avion du fichier type
-
                 int rangTypeAvion = ord(pln[19+enTete+indexRensGen])*256+ord(pln[20+enTete+indexRensGen]);
                 typR.seek(5+(rangTypeAvion-1)*10-1);
                 byte[] typeAvion = new byte[4];
@@ -264,7 +310,6 @@ public class PLNSExtractor extends ProgressSupport{
                 String adest = plnString.substring(25+enTete+indexRensGen, 25+enTete+indexRensGen+4);
                 
                 int rfl = ord(pln[29+enTete+indexRensGen])*256+ord(pln[30+enTete+indexRensGen]);
-                
                 int heureDepMin = ord(pln[31+enTete+indexRensGen])*256 + ord(pln[32+enTete+indexRensGen]);
                 if(heureDepMin >= 24*60)
                 	heureDepMin = heureDepMin -24*60;
@@ -383,12 +428,19 @@ public class PLNSExtractor extends ProgressSupport{
                 			lp = -1;
                 		
                 		//catégorie de vol
-                		int[] cat = bin(ord(pln[enTete+indexChampArchivInt+pointeur+3]));
-                		int rangCategorieVol = cat[2]*32 + cat[3]*16 + cat[4]*8 + cat[5]*4 + cat[6]*2 + cat[7];
-                		cdvR.seek((rangCategorieVol-1)*4);
-                		byte[] cdvByte = new byte[4];
-                		cdvR.read(cdvByte, 0, 4);
-                		cv = new String(cdvByte, "ISO-8859-1");
+                		int rangCategorieVol = -1;
+                		try{
+                			int[] cat = bin(ord(pln[enTete+indexChampArchivInt+pointeur+3]));
+                			rangCategorieVol = cat[2]*32 + cat[3]*16 + cat[4]*8 + cat[5]*4 + cat[6]*2 + cat[7];
+                			cdvR.seek((rangCategorieVol-1)*4);
+                			byte[] cdvByte = new byte[4];
+                			cdvR.read(cdvByte, 0, 4);
+                			cv = new String(cdvByte, "ISO-8859-1");
+                		} catch(IOException e){
+                			System.out.println("rgCat : "+rangCategorieVol);
+                			e.printStackTrace();
+                			cv = "";
+                		}
                 	}
                 	
                 	if(xvaflag == 0){
