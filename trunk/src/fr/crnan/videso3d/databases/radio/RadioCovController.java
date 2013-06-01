@@ -135,6 +135,15 @@ public class RadioCovController implements VidesoController {
 		DatasManager.getView(Type.RadioCov).hideObject(type, name);
 	}
 
+	public void hideAllRadioCovLayers() {
+		radioCovLayer.hideAllRadioCovLayers();
+	}
+	
+	public void displayAllRadioCovLayers() {
+		radioCovLayer.displayAllRadioCovLayers();
+	}
+	
+	
 	@Override
 	public int string2type(String type) {
 		// TODO Auto-generated method stub

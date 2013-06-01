@@ -96,7 +96,7 @@ public class RadioCovView extends JPanel implements DataView {
 	private static final float RIGHT_ALIGNEMENT = 0;
 	private JPanel topPanel = new JPanel();	
 //	private JPanel jPanel1 = new JPanel();
-	private Boolean visionMode = false; // 2D:TRUE, 3D:FALSE
+	private Boolean visionMode = false; // Mode 3D par défaut (2D=TRUE, 3D=FALSE)
 	private TitleTwoButtons frequencyTitledPanel = new TitleTwoButtons("Mode", "2D", "3D", visionMode);
 	private TitleTwoButtons antennaTitledPanel = new TitleTwoButtons("Mode", "2D", "3D", visionMode);		
 	private JPanel frequencyPanel = new JPanel();
@@ -112,7 +112,8 @@ public class RadioCovView extends JPanel implements DataView {
 	private Box hBoxRdoButton = Box.createHorizontalBox();
 	private Box vBoxA = Box.createVerticalBox();
 	private Box vBoxB = Box.createVerticalBox();
-	private List<JCheckBox> checkboxes = new LinkedList<JCheckBox>();	
+	private List<JCheckBox> checkboxes = new LinkedList<JCheckBox>();
+	private JCheckBox check; // correction d'un problème de portée sur la checkBox
 	private VBiSlider biSlider;	
 	private JCheckBox[] jCheckBox = new JCheckBox[4];
 	
@@ -130,6 +131,7 @@ public class RadioCovView extends JPanel implements DataView {
 	private ItemBiSliderFrequencyListener itemBiSliderFrequencyListener = new ItemBiSliderFrequencyListener();
 	private RadioButtonListener titleTwoButtonsListener = new RadioButtonListener();
 	private SliderListener sliderListener = new SliderListener();
+	private FrequencySliderListener frequencySliderListener = new FrequencySliderListener();
 	
 	private FilterableAirspaceLayer radioCovAirspaces;
 	private Object[] tabRadioCov;	
@@ -308,7 +310,7 @@ public class RadioCovView extends JPanel implements DataView {
 			freqJSlider[i].setMaximumSize(new java.awt.Dimension(120,40));
 			freqJSlider[i].setMinimumSize(new java.awt.Dimension(120,40));
 			freqJSlider[i].setName("");	
-			freqJSlider[i].addChangeListener(sliderListener);
+			freqJSlider[i].addChangeListener(frequencySliderListener);
 			
 			
 			jCheckBox[i] = new JCheckBox();		
@@ -352,14 +354,20 @@ public class RadioCovView extends JPanel implements DataView {
 				break;
 			}					
 		}					
+		// listener de la comboBox des fréquences
 		comboFreq.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
 				//System.out.println("sélection dans la combobox");
-				reset();
+				
+				// Lors d'une nouvelle sélection de fréquence : Reset de toutes les fréquences du mode de sélection FREQUENCES ainsi que du mode ANTENNES
+				
 				String string = (String)comboFreq.getSelectedItem();				
+				System.out.println("le selected item est "+string);
+				/*reset();*/
 				matchFrequency(string);   /* Initialise le texte des checkBox (methode setText, ainsi que celui des biSliders */				
 				/*sur la page des fréquences , récupération des noms  */				
 				// display.setText((String)comboFreq.getSelectedItem());
+				
 			}				
 		});	
 		
@@ -395,7 +403,7 @@ public class RadioCovView extends JPanel implements DataView {
 			if ((airspace  instanceof RadioCovPolygon)) {
 				currentAirspace = airspace;																		
 				tabRadioCov = ((RadioCovPolygon) currentAirspace).getCurtains().toArray();					
-				JCheckBox check = new JCheckBox(((RadioCovPolygon) airspace).getName()); //new jCheckBox(String)
+				check = new JCheckBox(((RadioCovPolygon) airspace).getName()); //new jCheckBox(String)
 				check.setName(((RadioCovPolygon)airspace).getName());
 				System.out.println("Nom de la checkBox "+check.getName());		
 				
@@ -635,7 +643,7 @@ public class RadioCovView extends JPanel implements DataView {
 	}
 			
 	/**
-	 * Listener du biSlider des fréquences=
+	 * Listener du biSlider des fréquences
 	 * */
 	public class ItemBiSliderFrequencyListener implements BiSliderListener {
 
@@ -662,7 +670,7 @@ public class RadioCovView extends JPanel implements DataView {
 		// TODO Auto-generated method stub		
 		}
 
-		@Override
+		@Override /*New Values sert pour les biSliders uniquement. Sinon voir pour le JSlider*/
 		public void newValues(BiSliderEvent BiSliderEvent_Arg) {
 			
 			String antennaName = ((VBiSlider)BiSliderEvent_Arg.getSource()).getName();
@@ -684,27 +692,30 @@ public class RadioCovView extends JPanel implements DataView {
 							}
 						}
 					}					
-				}					
+				}														
 			}
 		}		
 	}		
 		
 	@Override
+	/** 
+	 * Lors d'une nouvelle sélection de fréquence : Reset de toutes les fréquences 
+	 * du mode de sélection FREQUENCES ainsi que du mode ANTENNES
+	 */
 	public void reset() {
+				
 		getController().hideAllRadioCovLayers();
 		getController().redrawNow();
 		for (int i=0;i<4;i++) {
-			//if (jCheckBox[i].isSelected())
+			//if (jCheckBox[i].isSelected())			
 			jCheckBox[i].setSelected(false);
 		}
 		for(JCheckBox check : checkboxes){
-		//	if(check.isSelected()){
+		//	if(check.isSelected()){			
 			check.setSelected(false);
 		//	}
-		}
-		
-	}		
-		
+		}		
+	}				
 	/**
 	 * A voir pour une éventuelle factorisation*/
 	/**
@@ -725,16 +736,17 @@ public class RadioCovView extends JPanel implements DataView {
 		});		
 		return titlePanel; 
 	}
-
 	/**
 	 * Listener checkBox des couvertures pour la page des antennes et des fréquences.
 	 */		
 	public class ItemAntennaListener implements ItemListener {
 		public void itemStateChanged(ItemEvent e) {									
 			String antennaName= ((JCheckBox)e.getSource()).getText();			
+			// etat de la checkBox : SELECTIONNEE
 			if (e.getStateChange() == ItemEvent.SELECTED) {				
-				/* VisionMode a false : */
-				if (visionMode==false) {
+				/* VisionMode a false : */ // 2D:TRUE, 3D:FALSE
+				if (visionMode==false) { // MODE 2D
+				
 					/*Gestion des biSliders de la page des antennes*/
 					// biSlider visible
 					for(VBiSlider b : biSliders){ 
@@ -744,7 +756,7 @@ public class RadioCovView extends JPanel implements DataView {
 							if (jCheckBox[i].getName().equals(antennaName)&&(!jCheckBox[i].isSelected())) {jCheckBox[i].setSelected(true);}
 						}
 					}	
-					for(int i=0;i<4;i++){															
+					for(int i=0;i<4;i++){																					
 						if ( freqBiSlider[i].getName()!=null && freqBiSlider[i].getName().equals(antennaName)) {freqBiSlider[i].setHighlighted();}					
 					}
 					// 	Affichage de l'objet sélectionné
@@ -752,17 +764,31 @@ public class RadioCovView extends JPanel implements DataView {
 					// on envoit le visionMode au controleur pour commander l'affichage de la couverture en mode 3D ou 2D.
 					getController().setVisionMode(false);
 				}
-				if (visionMode==true) {
+				if (visionMode==true) { 
+					
 					// on envoit le visionMode au controleur pour commander l'affichage de la couverture en mode 3D ou 2D.
 					getController().setVisionMode(true);
 					getController().showObject(RadioCovController.ANTENNE, antennaName);	
+					
+					for(VBiSlider b : biSliders){ 
+						if ( b.getName().equals(antennaName)) {b.setHighlighted();}
+						// si la checkBox est sélectionnée dans le tableau des antennes, on la sélectionne aussi dans le tableau des fréquences :
+						for (int i=0;i<4;i++) {
+							if (jCheckBox[i].getName().equals(antennaName)&&(!jCheckBox[i].isSelected())) {jCheckBox[i].setSelected(true);}
+						}
+					}	
+					for(int i=0;i<4;i++){																					
+						if ( freqBiSlider[i].getName()!=null && freqBiSlider[i].getName().equals(antennaName)) {freqBiSlider[i].setHighlighted();}					
+					}
+															
 					// TODO : code a mettre en place ici pour afficher l'objet en 2D ou en 3D !!!
 					switch2D3DVision();				
 				}
 			}
-			else {
+			else { // ETAT DE LA CHECKBOX : DESELECTIONNEE
 				if (visionMode == false) {				
 					// BiSlider non visible		
+					System.out.println("Mode désélectionné Mode 2D");
 					for(VBiSlider b : biSliders){
 						if ( b.getName().equals(antennaName)) {b.setUnhighlighted();}
 						// si la checkBox est désélectionnée dans le tableau des antennes, on la désélectionne aussi dans le tableau des fréquences :
@@ -778,8 +804,23 @@ public class RadioCovView extends JPanel implements DataView {
 					}
 					getController().hideObject(RadioCovController.ANTENNE, antennaName);												
 				}
-				if (visionMode==true) {
+				if (visionMode==true) { // mode 2d en fait
+					System.out.println("mode 3d unselected");
 					// on envoit le visionMode au controleur pour commander l'affichage de la couverture en mode 3D ou 2D.
+										
+					for(VBiSlider b : biSliders){
+						if ( b.getName().equals(antennaName)) {b.setUnhighlighted();}
+						// si la checkBox est désélectionnée dans le tableau des antennes, on la désélectionne aussi dans le tableau des fréquences :
+						for (int i=0;i<4;i++) {
+							if (jCheckBox[i].getName().equals(antennaName)&&(jCheckBox[i].isSelected())) {jCheckBox[i].setSelected(false);}
+						}
+					}				
+					// 	Objet désélectionné effacé
+					for(int i=0;i<4;i++){					
+						if ( freqBiSlider[i].getName()!=null && freqBiSlider[i].getName().equals(antennaName)) {						
+							freqBiSlider[i].setUnhighlighted();												
+						}
+					}																			
 					getController().setVisionMode(true);
 					getController().hideObject(RadioCovController.ANTENNE, antennaName);	
 				}			
@@ -787,18 +828,24 @@ public class RadioCovView extends JPanel implements DataView {
 		}
 	}	
 	/**
-	 * Listener JSlider
+	 * Listener JSlider (Listener pour le slider de la page des antennes)
 	 * */
 	public class SliderListener implements ChangeListener {
 		@Override
 		public void stateChanged(ChangeEvent e) {			
-			JSlider currentFreqJSlider,currentAntennaJSlider; // référence du jSlider de fréquence et d'antennes courant. Permet de faire des modifs dessus sans nouvelle recherche
-			String antennaName= ((JSlider)e.getSource()).getName();	
+			JSlider currentFreqJSlider = null,currentAntennaJSlider = null; // référence du jSlider de fréquence et d'antennes courant. Permet de faire des modifs dessus sans nouvelle recherche
+			//java.lang.reflect.Type t = e.getSource().getClass();							
+			String antennaName= ((JSlider)e.getSource()).getName();							
 			Object[] tabRadioCov;
 			RadioCovPolygon radioCov;
+			
 			for(JSlider s : sliders){
-				if(s.getName().equals(antennaName)){
+				if(s.getName().equals(antennaName)){									
 					currentAntennaJSlider = s;
+					for (int i=0;i<4;i++) {
+						if (s.getName().equals(freqJSlider[i].getName())) {currentFreqJSlider=freqJSlider[i];}
+					}
+					
 					for (Airspace airspace : radioCovAirspaces.getAirspaces()) {
 						if ((airspace  instanceof RadioCovPolygon)) {			
 							if (((RadioCovPolygon)airspace).getName().equals(antennaName)) {	
@@ -808,6 +855,10 @@ public class RadioCovView extends JPanel implements DataView {
 								// Tout ce qui est au-dessus du FL est invisible.
 								//32.5 est le rapport 19500/FL600 pour passer des niveaux de vol aux Flight Level
 								double currentAlt = (s.getValue()*32.5);
+								// Dans la ligne suivante : Le Jslider correspondant pour la page des fréquences se met à jour par rapport à celui des antenne 
+								// Il faut cependant ajouter une condition : Est ce que la fréquence qu'on exploite dans le panel antennes est bien présente dans le panel fréquence exploité.
+								if (currentFreqJSlider !=null) {currentFreqJSlider.setValue(s.getValue());}
+								
 								double[] alt = new double[tabRadioCov.length]; 								
 									int i =0;
 									List<Curtain> list = radioCov.getCurtains();									
@@ -830,6 +881,14 @@ public class RadioCovView extends JPanel implements DataView {
 									radioCov.setVisible(indice,true);																
 									break;
 								}
+								for (int j=0;i<4;j++) {																		
+									if (freqJSlider[j]!=null ) {
+											if ( freqJSlider[j].getName().equals(s.getName())) {
+												freqJSlider[j].setValue(s.getValue());
+											}
+									}
+								}	
+								
 								/*
 								switch(s.getValue()) {
 								case 0:
@@ -845,114 +904,192 @@ public class RadioCovView extends JPanel implements DataView {
 								}
 								*/
 								// on met à jour le biSlider de la page des fréquences
-								getController().redrawNow();
+							getController().redrawNow();
 							}
 						}
-					}													
+					}
+				
+				
+				
+					}
+					
 				}
-			}				
-			for (int i=0;i<4;i++) {
-				double currentAlt = 0;
-				if(freqJSlider[i].getName().equals(antennaName)){	
-				 currentAlt = (freqJSlider[i].getValue()*32.5);
-				 currentFreqJSlider = freqJSlider[i];		
-				 for (Airspace airspace : radioCovAirspaces.getAirspaces()) {
-					 if ((airspace  instanceof RadioCovPolygon)) {			
-						 if (((RadioCovPolygon)airspace).getName().equals(antennaName)) {	
-							 radioCov = (RadioCovPolygon)airspace;
-							 tabRadioCov = radioCov.getCurtains().toArray();						
-							 currentAlt = (freqJSlider[i].getValue()*32.5);
-							 double[] alt = new double[tabRadioCov.length]; 								
-							 int j =0;
-							 List<Curtain> list = radioCov.getCurtains();									
-							 for (Curtain c : list) {
-								 double[] alti = c.getAltitudes();
-								 alt[i] = alti [0];
-								 j++;
-							 }																						
-							 int indice = altSearch(alt,currentAlt,0,tabRadioCov.length-1);								
-							 switch(indice) {
-							 	case -1 : 
-							 		radioCov.setVisible(0,tabRadioCov.length, false);
-							 		break;
-							 	case 0 :	
-							 		radioCov.setVisible(0,tabRadioCov.length, false);
-							 		radioCov.setVisible(0,true);									
-							 	default :
-							 		radioCov.setVisible(0,tabRadioCov.length, false);
-							 		radioCov.setVisible(indice,true);																
-							 		break;
-							 }	
-						 }
-					 }				
+			}							
 				}
+			
+	/**
+	 * Listener JSlider (Listener pour le slider de la page des fréquences)
+	 * */
+	public class FrequencySliderListener implements ChangeListener {
+		@Override
+		public void stateChanged(ChangeEvent e) {			
+			JSlider currentFreqJSlider,currentAntennaJSlider = null; // référence du jSlider de fréquence et d'antennes courant. Permet de faire des modifs dessus sans nouvelle recherche
+			//java.lang.reflect.Type t = e.getSource().getClass();
+			
+			String antennaName= ((JSlider)e.getSource()).getName();							
+			Object[] tabRadioCov;
+			RadioCovPolygon radioCov;
+			for(int j=0;j<4;j++){
+//			System.out.println("freqJSlider "+"["+j+"] "+freqJSlider[j].getName());
+
+				if(freqJSlider[j].getName().equals(antennaName) && (freqJSlider[j]!=null)){									
+					System.out.println("-------------"+freqJSlider[j]+"------------");
+					currentFreqJSlider = freqJSlider[j];								
+					for (JSlider s : sliders) {
+						if (currentFreqJSlider.getName().equals(s.getName())) {
+							// s.setValue(freqJSlider[j].getValue());							
+							currentAntennaJSlider = s;
+						}
+					}
+					
+					for (Airspace airspace : radioCovAirspaces.getAirspaces()) {
+						if ((airspace  instanceof RadioCovPolygon)) {			
+							if (((RadioCovPolygon)airspace).getName().equals(antennaName)) {	
+								radioCov = (RadioCovPolygon)airspace;
+								tabRadioCov = radioCov.getCurtains().toArray();
+								// traitement : Tout ce qui est en-dessous dedu FL est invisible
+								// Tout ce qui est au-dessus du FL est invisible.
+								//32.5 est le rapport 19500/FL600 pour passer des niveaux de vol aux Flight Level
+								double currentAlt = (freqJSlider[j].getValue()*32.5);								
+								// Dans la ligne suivante : Le Jslider correspondant pour la page des fréquences se mets à jour par rapport à celui des antennes.
+								currentAntennaJSlider.setValue(currentFreqJSlider.getValue());
+								double[] alt = new double[tabRadioCov.length]; 								
+									int i =0;
+									List<Curtain> list = radioCov.getCurtains();									
+									for (Curtain c : list) {
+										double[] alti = c.getAltitudes();
+										alt[i] = alti [0];
+										i++;
+									}																
+								// Double[] tableau, double val, int deb, int fin
+								int indice = altSearch(alt,currentAlt,0,tabRadioCov.length-1);								
+								switch(indice) {
+								case -1 : 
+									radioCov.setVisible(0,tabRadioCov.length, false);
+									break;
+								case 0 :	
+									radioCov.setVisible(0,tabRadioCov.length, false);
+									radioCov.setVisible(0,true);									
+								default :
+									radioCov.setVisible(0,tabRadioCov.length, false);
+									radioCov.setVisible(indice,true);																
+									break;
+								}								
+								// on met à jour le biSlider de la page des fréquences
+							getController().redrawNow();
+							}
+						}
+					}
+				
 				}
-			}		
-		}	
-	}
+				
+					}
+					
+				}
+			}									
+
 	
 	/**
 	 * @param freq
 	 * Initialise les checkBox et BiSliders de la page des fréquences après sélection d'une fréquence dans la comboBox.
 	 */
 	public void matchFrequency(String freq) {	
-		for (Frequency f : freqList.getFrequencies()) {			
-			if (f.getSectorName() == freq) {
-				frequency = f;					
-				f.setColors();				
-				/*Liste des CheckBox */
-				for (int i=0;i<4;i++) {				
-					if (f.getVolumes()[i]==null) {
-						jCheckBox[i].setEnabled(false); 
-						jCheckBox[i].setSelected(false);
-						jCheckBox[i].setText("");
-						freqBiSlider[i].setName("");
-						freqBiSlider[i].setVisible(false);
-						freqJSlider[i].setVisible(false);
-						freqJSlider[i].setName("");
-					}				
-					else {					
-							// System.out.println("volume "+i+" "+frequency.getVolumes()[i].getName());						
-							jCheckBox[i].setEnabled(true); 
-						// seules les couvertures normales sont sélectionnées par défaut //  
-						if ((i==0) || (i==2)) {
-							jCheckBox[i].setSelected(true);		
+	
+		System.out.println("Affichage du matchFrequency");
+		if (freq!=null) {
+//			if (visionMode==false) {
+	
+				/*---------  Nettoyage correctif ( pour les resélections )-----------*/
+				// On reforce la suppression des couvertures d'antennes à chaque nouvelle sélection de fréquence
+				//	getController().hideAllRadioCovLayers();			
+				for (int i=0;i<4;i++) {							    			    	
+			    	jCheckBox[i].setSelected(false);
+			    	if (visionMode==false) {freqJSlider[i].setVisible(false);}
+			    	if (visionMode ==true) {freqBiSlider[i].setVisible(false);}
+				}						
+				for (Frequency f : freqList.getFrequencies()) {			
+					if (f.getSectorName() == freq) {
+						frequency = f;					
+						f.setColors();				
+						/*Liste des CheckBox */
+						for (int i=0;i<4;i++) {				
+							if (f.getVolumes()[i]==null) {
+								jCheckBox[i].setEnabled(false); 
+								jCheckBox[i].setSelected(false);
+								jCheckBox[i].setText("");
+								if (visionMode==false) {
+									freqBiSlider[i].setName("");
+									freqBiSlider[i].setVisible(false);		
+									
+									
+								}
+								if (visionMode==true) {
+									freqJSlider[i].setName("");
+									freqJSlider[i].setVisible(false);
+								}
+								
+							}		
+							if ((f.getVolumes()[i]!=null)) {
+								jCheckBox[i].setEnabled(true);
+								jCheckBox[i].setText(frequency.getVolumes()[i].getName()); // Lors de la sélection de la fréquence le nom de la checkBox est initialisé
+								jCheckBox[i].setName(frequency.getVolumes()[i].getName());
+								if (visionMode==false) freqBiSlider[i].setVisible(true);
+								
+								/*A corriger de nouveau*/
+								if (visionMode==false) {freqBiSlider[i].setName(frequency.getVolumes()[i].getName());
+														freqJSlider[i].setName(frequency.getVolumes()[i].getName());														
+														}
+								if (visionMode==true) {
+														freqJSlider[i].setName(frequency.getVolumes()[i].getName());
+														freqBiSlider[i].setName(frequency.getVolumes()[i].getName());														
+														}
+							}																																																	
+						}			
+						/*couverture normale 1*/
+						if (f.getVolumes()[0]!=null) {
+							jCheckBox[0].setSelected(true);							
+							if (visionMode==false) {freqBiSlider[0].setVisible(true);}
+							// if (visionMode==true) {freqJSlider[0].setVisible(true);}
+							getController().showObject(RadioCovController.ANTENNE, frequency.getVolumes()[0].getName());
 						}
-						if ((i==1) || (i==3)) {
-							jCheckBox[i].setSelected(false);
-							freqBiSlider[i].setUnhighlighted();
-							// Force l'effacement de l'objet affiché (Une couverture secours pouvait etre une couverture normale précédemment.)
+						/*couverture normale 2*/
+						if (f.getVolumes()[2]!=null) {
+							jCheckBox[2].setSelected(true);
+							freqBiSlider[2].setVisible(true);
+							if (visionMode==true) {
+								freqBiSlider[2].setVisible(false);
+								freqJSlider[2].setVisible(true);
+							}
+							if (visionMode==false) {
+								freqBiSlider[2].setVisible(true);
+								freqJSlider[2].setVisible(false);								
+							}
+							getController().showObject(RadioCovController.ANTENNE, frequency.getVolumes()[2].getName());
 						}
-// 	TODO				Rechercher le radioCovPolygon qui correspond au name et ensuite utiliser la ligne écrite ci-dessous.				
-// 	!!!      			biSlider.setName(((RadioCovPolygon) airspace).getName());
-						freqBiSlider[i].setName(frequency.getVolumes()[i].getName()); // Utilisé pour définir un nom au biSlider quand sélection de la fréquence => Permet au itemAntennaListener de retrouver le'objet sur lequel biSlider bosse.
-						freqJSlider[i].setName(frequency.getVolumes()[i].getName());
-						jCheckBox[i].setText(frequency.getVolumes()[i].getName()); // Lors de la sélection de la fréquence le nom de la checkBox est initialisé
-						jCheckBox[i].setName(frequency.getVolumes()[i].getName());
-//						freqBiSlider[i].setName(frequency.getVolumes()[i].getName());
-//						biSlider1.setMinMaxValue((Object)frequency.getVolumes()[0]);	
-/*
-						if (visionMode==true) {
-							freqBiSlider[i].setVisible(true);
+					
+						for (int i=0;i<4;i++) {
+							// on reforce les couvertures secours en mode désélection pour correction d'un bug d'affichage
+							// (La couverture secours 1 restai sélectionnée)
+							if (i==1 || i==3) {jCheckBox[i].setSelected(false);}
+							//Ensuite :
+							if (jCheckBox[i].isSelected()) {							
+								// pour mettre en surbrillance les biSliders qui ont leurs checkBox de sélectionnée pour le mode visu 3D
+								if (visionMode==false) {freqBiSlider[i].setHighlighted();}
+							}
+					}																								
+// 								déclencher l'affichage de la couverture radio de la checkBox sélectionnée
+									// 	enregistrer dans un attribut antennaName
+	
+//								getController().showObject(RadioCovController.ANTENNE, frequency.getVolumes()[i].getName());
+																										
 						}
-						if (visionMode==false) {
-							freqJSlider[i].setVisible(true);
-						}
-*/						
-						if (jCheckBox[i].isSelected()) {							
-							// pour mettre en surbrillance les biSliders qui ont leurs checkBox de sélectionnée pour le mode visu 3D
-							if (visionMode==false) {freqBiSlider[i].setHighlighted();}
-							
-							// déclencher l'affichage de la couverture radio de la checkBox sélectionnée
-							// frequency.getVolumes[i].getName = antennaName
-							
-							//getController().showObject(RadioCovController.ANTENNE, frequency.getVolumes()[i].getName());
-						}																			
-					}
-				}
-			}	
+					}					
+			}			
 		}
-	}
+//		}
+		// freq == null
+		
+	//}
 
 	@Override
 	public RadioCovController getController() {
@@ -1041,13 +1178,15 @@ public class RadioCovView extends JPanel implements DataView {
 		*/
 		
 		if (visionMode == false) {
-			// passage au mode 3d												
-			// on scanne de nouveau les éléments pour afficher tous les segments du volume
-			System.out.println("On est dans le mode 3d");
+//			 passage au mode 3d												
+// 			on scanne de nouveau les éléments pour afficher tous les segments du volume
+// 			System.out.println("On est dans le mode 3d");
 			
 			for (JCheckBox check : checkboxes)	{
 				if (check.isSelected()) {					
 					antennaName = check.getName();
+					/*Dans la ligne ci-dessous*/
+					
 //					System.out.println(antennaName);
 					for (Airspace airspace : radioCovAirspaces.getAirspaces()) {
 					if ((airspace  instanceof RadioCovPolygon && ((RadioCovPolygon)airspace).getName().equals(antennaName))) {																														
@@ -1057,9 +1196,7 @@ public class RadioCovView extends JPanel implements DataView {
 							double[] alt = new double[tabRadioCov.length]; 								
 							alt = radioObjectAltitudes(radioCov);
 							int indiceMin = altSearch(alt,currentMinAlt,0,tabRadioCov.length);
-							int indiceMax = altSearch(alt,currentMaxAlt,0,tabRadioCov.length);														
-//							System.out.println("indice min :"+indiceMin);
-//							System.out.println("indice max :"+indiceMax);							
+							int indiceMax = altSearch(alt,currentMaxAlt,0,tabRadioCov.length);																				
 							radioCov.setVisible(0,tabRadioCov.length, false);
 							radioCov.setVisible(indiceMin,indiceMax,true);																																				
 							getController().showObject(RadioCovController.ANTENNE, antennaName);					
