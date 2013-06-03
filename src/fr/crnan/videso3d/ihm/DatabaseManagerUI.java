@@ -65,7 +65,6 @@ import fr.crnan.videso3d.databases.aip.AIP;
 import fr.crnan.videso3d.databases.edimap.Cartes;
 import fr.crnan.videso3d.databases.exsa.Exsa;
 import fr.crnan.videso3d.databases.pays.Pays;
-import fr.crnan.videso3d.databases.radio.RadioDataManager;
 import fr.crnan.videso3d.databases.stip.Stip;
 import fr.crnan.videso3d.databases.stpv.Stpv;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
@@ -402,7 +401,7 @@ public class DatabaseManagerUI extends JDialog {
 							}
 						}
 						addDatabase(DatasManager.Type.Edimap, file.getParentFile(), svn);
-					} else if(RadioDataManager.containsRadioDatas(files)){
+					}/* else if(RadioDataManager.containsRadioDatas(files)){
 						baseImported = true;
 						//remove radioCoverageXSL.xsl file in order to avoid a new detection of radio files
 						Iterator<File> iterator = files.iterator();
@@ -413,7 +412,7 @@ public class DatabaseManagerUI extends JDialog {
 							}
 						}
 						addDatabase(DatasManager.Type.RadioCov, file.getParentFile(), svn);
-					} else if(Stip.containsStipFiles(files)){
+					}*/ else if(Stip.containsStipFiles(files)){
 						baseImported = true;
 						//remove LIEUX file in order to avoid a new detection of stip files
 						Iterator<File> iterator = files.iterator();
@@ -477,10 +476,10 @@ public class DatabaseManagerUI extends JDialog {
 			Stpv stpv = new Stpv(file.getAbsolutePath(), svn ? "STPV"+file.getName().substring(4) : null);
 			databases.put(stpv, file.listFiles());
 			break;
-		case RadioCov:
+		/*case RadioCov:
 			RadioDataManager radioDataManager = new RadioDataManager(new File(System.getProperty("user.dir")).toURI().relativize(new File(file.getAbsolutePath()).toURI()).getPath());
 			databases.put(radioDataManager, new File[]{});
-		    break;
+		    break;*/
 		case STIP:
 			Stip stip = new Stip(file.getAbsolutePath(), svn ? "STIP"+ file.getName().substring(4) : null);
 			databases.put(stip, file.listFiles());
