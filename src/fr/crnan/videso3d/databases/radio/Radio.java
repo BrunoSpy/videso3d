@@ -16,10 +16,16 @@
 
 package fr.crnan.videso3d.databases.radio;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+
+import org.jdom2.Document;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.DatasManager.Type;
@@ -38,11 +44,13 @@ public class Radio extends FileParser {
 	 */
 	private String name="radio";
 	private String path;
-	/**
-	 * Connection à la base de données
-	 */
-	private Connection conn;	
+	private Document document=null;
 	
+	/**
+	 * Connexion à la base de données
+	 */
+
+	private Connection conn;		
 	public Radio(){
 		super();
 	}
@@ -50,6 +58,16 @@ public class Radio extends FileParser {
 	public Radio(String path) {
 		super(path);
 		this.path=path;
+		
+		SAXBuilder sxb = new SAXBuilder();
+		try {
+			document = sxb.build(new File(path));
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
+		
 		// nombre de fichiers à gérer
 		
 	//	RadioDataManager radioDataManager = new RadioDataManager(path);
@@ -69,9 +87,7 @@ public class Radio extends FileParser {
 	public Integer doInBackground() {
 		
 		try {
-			// System.out.println("(Radio.java / Appel méthode doInBackground())");
-			
-			//création de la connection à la base de données
+			//création de la connexion à la base de données
 			this.conn = DatabaseManager.selectDB(DatasManager.Type.RadioCov, this.name);
 			this.conn.setAutoCommit(false); //fixes performance issue
 		
