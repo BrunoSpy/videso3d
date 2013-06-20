@@ -273,14 +273,17 @@ public class Stpv extends FileParser{
 			ArrayList<String> currentLines = new ArrayList<String>();
 			while (in.ready()){
 				String line = in.readLine();
-				String name = (line.length()>12 ? line.substring(8, 13) : line.substring(8));
-				if(!name.equals(currentName)){
-					insertBali(currentLines, currentName.trim());
-					currentLines.clear();
-					currentName = name;
-				}
-				if(line.startsWith("BALI 4") || line.startsWith("BALI 5")){
-					currentLines.add(line);
+				//line can be empty
+				if(line.trim().length()>0){
+					String name = (line.length()>12 ? line.substring(8, 13) : line.substring(8));
+					if(!name.equals(currentName)){
+						insertBali(currentLines, currentName.trim());
+						currentLines.clear();
+						currentName = name;
+					}
+					if(line.startsWith("BALI 4") || line.startsWith("BALI 5")){
+						currentLines.add(line);
+					}
 				}
 			}
 			insertBali(currentLines, currentName.trim());
