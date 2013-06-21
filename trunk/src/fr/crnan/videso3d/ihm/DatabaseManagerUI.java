@@ -287,7 +287,7 @@ public class DatabaseManagerUI extends JDialog {
 					if(!databaseFound){
 						progressMonitor2.setVisible(false);
 						JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
-								"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+								"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge ou que le dossier contient bien tous les fichiers requis.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
 						Logging.logger().warning("Pas de fichier de base de données trouvé");
 					} else {
 						importDatabases();
@@ -325,7 +325,7 @@ public class DatabaseManagerUI extends JDialog {
 					if(!databaseFound){
 						progressMonitor2.setVisible(false);
 						JOptionPane.showMessageDialog(null, "<html><b>Problème :</b><br />Aucune base de donnée trouvée.<br /><br />" +
-								"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
+								"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge ou que le dossier contient bien tous les fichiers requis.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
 						Logging.logger().warning("Pas de fichier de base de données trouvé");
 					} else {
 						importDatabases();

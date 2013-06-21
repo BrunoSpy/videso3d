@@ -42,7 +42,7 @@ import fr.crnan.videso3d.databases.stip.Stip;
 /**
  * Lecteur de BDS Stpv
  * @author Bruno Spyckerelle
- * @version 0.1.3
+ * @version 0.1.4
  */
 public class Stpv extends FileParser{
 
@@ -56,7 +56,7 @@ public class Stpv extends FileParser{
 	 */
 	private Connection conn;
 	
-	private final String[] fileNames = {"LIEU", "RADR", "SECT", "BALI", "CODE"};
+	private final static String[] fileNames = {"LIEU", "RADR", "SECT", "BALI", "CODE", "CONF", "COOR"};
 	
 	/**
 	 * Indique si la base de données provient d'un dépôt SVN
@@ -89,13 +89,16 @@ public class Stpv extends FileParser{
 
 	public static boolean containsSTPVFiles(TreeSet<File> files) {
 		Iterator<File> iterator = files.iterator();
+		int count = 0;
 		while (iterator.hasNext()) {
-			File file = (File) iterator.next();
-			if(file.getName().equalsIgnoreCase("lieu") || file.getName().equalsIgnoreCase("lieu.txt")){
-				return true;
+			String file = ((File) iterator.next()).getName();
+			for(String filename : fileNames){
+				if(file.equalsIgnoreCase(filename) || file.equalsIgnoreCase(filename+".txt")){
+					count++;
+				}
 			}
 		}
-		return false;
+		return count == fileNames.length;
 	}
 	
 	@Override
@@ -149,24 +152,31 @@ public class Stpv extends FileParser{
 		this.setFile("LIEU");
 		this.setProgress(0);
 		this.setLieu(FileManager.getFile(path + "/LIEU"));
+		System.out.println("lieu");
 		this.setFile("RADR");
 		this.setProgress(1);
 		this.setRadr(FileManager.getFile(path + "/RADR"));
+		System.out.println("radr");
 		this.setFile("SECT");
 		this.setProgress(2);
 		this.setSect(FileManager.getFile(path + "/SECT"));
+		System.out.println("sect");
 		this.setFile("BALI");
 		this.setProgress(3);
 		this.setBali(FileManager.getFile(path + "/BALI"));
+		System.out.println("bali");
 		this.setProgress(4);
 		this.setFile("CODE");
 		this.setCode(FileManager.getFile(path+ "/CODE"));
+		System.out.println("code");
 		this.setProgress(5);
 		this.setFile("CONF");
 		this.setConf(FileManager.getFile(path+ "/CONF"));
+		System.out.println("conf");
 		this.setProgress(6);
 		this.setFile("COOR");
 		this.setCoor(FileManager.getFile(path+ "/COOR"));
+		System.out.println("coor");
 		this.setProgress(7);
 	}
 
@@ -715,6 +725,7 @@ public class Stpv extends FileParser{
 	private void insertConf12D(String line_) {
 		String line = line_.trim();
 		//si la ligne est trop longue, on enlève le numéro de ligne en trop
+		System.out.println(line + " : "+line.length());
 		if(line.length() >= 80)
 			line = line.substring(0, line.length()-3).trim();
 		try{
