@@ -1264,7 +1264,8 @@ public final class DatabaseManager {
 	 */
 	public static Statement getCurrent(DatasManager.Type type) throws SQLException{
 		if(type.equals(DatasManager.Type.Databases)){
-			return DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
+			Connection con = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases");
+			return con == null ? null : con.createStatement();
 		} else {
 			Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
 			ResultSet result = st.executeQuery("select name from databases where selected = 1 and type = '"+type.toString()+"'");
@@ -1274,7 +1275,15 @@ public final class DatabaseManager {
 			} 
 			result.close();
 			st.close();
-			return connectionName == null ? null : DatabaseManager.selectDB(type, connectionName).createStatement();
+			Connection con = null;
+			try{
+				con = DatabaseManager.selectDB(type, connectionName);
+			} catch(SQLException e){
+				e.printStackTrace();
+				Logging.logger().severe("Erreur de connection à la base "+type.toString()+", base de données ignorée et déselectionnée.");
+				unselectDatabase(type);
+			}
+			return connectionName == null || con == null ? null : con.createStatement();
 		}
 	}
 	

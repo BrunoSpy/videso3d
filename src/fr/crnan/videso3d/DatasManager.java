@@ -17,6 +17,7 @@ package fr.crnan.videso3d;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 import fr.crnan.videso3d.databases.DatabaseManager;
@@ -56,7 +57,7 @@ public final class DatasManager {
 	/**
 	 * Types de base de données possibles
 	 */
-	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, RadioCov, SkyView, AIP, Databases, UserObject}
+	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, RadioCov, SkyView, AIP, Databases, UserObject};
 
 	private static DatasManager instance = new DatasManager();
 	
@@ -111,49 +112,64 @@ public final class DatasManager {
 	 * @param type
 	 * @throws Exception 
 	 */
-	public static void createDatas(DatasManager.Type type, VidesoGLCanvas wwd) throws Exception{
+	public static void createDatas(DatasManager.Type type, VidesoGLCanvas wwd) throws UnknownDatabaseTypeException{
 		deleteDatas(type);
-		if(DatabaseManager.getCurrent(type) != null || type.equals(Type.UserObject)){
-			switch (type) {
-			case STIP:
-				DatasManager.addDatas(type, new StipController(wwd), new StipContext(), new StipView());
-				break;
-			case STPV:
-				DatasManager.addDatas(type, new StpvController(wwd), new StpvContext(), new StpvView());
-				break;
-			case EXSA:
-				DatasManager.addDatas(type, new STRController(wwd), new STRContext(), new StrView());
-				break;
-			case Edimap:
-				DatasManager.addDatas(type, new EdimapController(wwd), new EdimapContext(), new EdimapView());
-				break;
-			case AIP:
-				DatasManager.addDatas(type, new AIPController(wwd), new AIPContext(), new AIPView());
-				break;
-			/*case RadioCov:
-				//la vue radio a besoin du controlleur ...
-				//d'où obligation d'enregistrer le controleur
-				instance.controllers.put(type, new RadioCovController(wwd));
-				instance.contexts.put(type, new RadioCovContext());
-				instance.views.put(type, new RadioCovView());
-				break;*/
-			case SkyView:
-				DatasManager.addDatas(type, new SkyViewController(wwd), new SkyViewContext(), new SkyView());
-				break;
-			case UserObject:
-				//le controleur a besoin de la vue
-				UserObjectsView view = new UserObjectsView();
-				instance.views.put(type, view);
-				instance.controllers.put(type, new UserObjectsController(wwd, view));
-				instance.contexts.put(type, null);
-				break;
-			default:
-				Logging.logger().severe("Type "+type+" inconnu");
-				throw new Exception("Type "+type+" inconnu");
+		boolean error = false;
+		try {
+			if(DatabaseManager.getCurrent(type) != null || type.equals(Type.UserObject)){
+				switch (type) {
+				case STIP:
+					DatasManager.addDatas(type, new StipController(wwd), new StipContext(), new StipView());
+					break;
+				case STPV:
+					DatasManager.addDatas(type, new StpvController(wwd), new StpvContext(), new StpvView());
+					break;
+				case EXSA:
+					DatasManager.addDatas(type, new STRController(wwd), new STRContext(), new StrView());
+					break;
+				case Edimap:
+					DatasManager.addDatas(type, new EdimapController(wwd), new EdimapContext(), new EdimapView());
+					break;
+				case AIP:
+					DatasManager.addDatas(type, new AIPController(wwd), new AIPContext(), new AIPView());
+					break;
+	/*			case RadioCov:
+					//la vue radio a besoin du controlleur ...
+					//d'où obligation d'enregistrer le controleur
+					instance.controllers.put(type, new RadioCovController(wwd));
+					instance.contexts.put(type, new RadioCovContext());
+					instance.views.put(type, new RadioCovView());
+					break;*/
+				case SkyView:
+					DatasManager.addDatas(type, new SkyViewController(wwd), new SkyViewContext(), new SkyView());
+					break;
+				case UserObject:
+					//le controleur a besoin de la vue
+					UserObjectsView view = new UserObjectsView();
+					instance.views.put(type, view);
+					instance.controllers.put(type, new UserObjectsController(wwd, view));
+					instance.contexts.put(type, null);
+					break;
+				default:
+					Logging.logger().severe("Type "+type+" inconnu");
+					throw new UnknownDatabaseTypeException("Type "+type+" inconnu");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			error = true;
+			Logging.logger().severe("Impossible de créer les données "+type+", données ignorées.");
+			deleteDatas(type);
+			try {
+				DatabaseManager.unselectDatabase(type);
+			} catch (SQLException e1) {
+				e1.printStackTrace();
 			}
 		}
-		instance.support.firePropertyChange("done", null, true);
-		instance.support.firePropertyChange("new datas", null, type);
+		if(!error){
+			instance.support.firePropertyChange("done", null, true);
+			instance.support.firePropertyChange("new datas", null, type);
+		}
 	}
 	
 	public static void deleteDatas(DatasManager.Type type){
