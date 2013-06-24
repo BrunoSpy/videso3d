@@ -68,8 +68,7 @@ public class RadioDataManager extends FileParser {
 	 * @param string
 	 * @param airspaceType : (nom générique pour radioCovname="radioCov"))
 	 */	
-	public RadioDataManager(String path) {
-		
+	public RadioDataManager(String path) {		
 // TODO test-----------------------------				
 		super(path);
 // TODO fin test-----------------------------
@@ -120,7 +119,10 @@ public class RadioDataManager extends FileParser {
 			}
 			if (new File(outputXmlFilePath).exists()) {			
 			System.out.println("Debut de désérialisation");
-			PolygonDeserializer polygonDeserializer = new PolygonDeserializer();			
+// ------------------------------------------------------------------------------------------------------------------  c'est ici que ca se passe !!!! ------------------------------------------------------------------------------------------------------------------
+			PolygonDeserializer polygonDeserializer = new PolygonDeserializer();					
+			// suppression de la deserialisation XML et remplacement par le builder sax.									
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 			this.airspaces= polygonDeserializer.Deserialize(outputXmlFilePath);
 			for (Airspace airspace : airspaces){
 				((DatabaseVidesoObject)airspace).setDatabaseType(DatasManager.Type.RadioCov);
@@ -142,6 +144,10 @@ public class RadioDataManager extends FileParser {
 	 * 1) Parsing de l'arborecence,
 	 * 2) génération du xml dans tous les reps (Vérifier si radioCoverage.xml existe (cf pattern)), 
 	 * 3) concaténation de toutes les données et écriture du fichier de sortie dans le root directory.
+	
+	*Modifs : On retire la génaration du xml dans tous les reps (génération avec XStream)
+	*On se contente de concaténer l'ensemble des fichiers xml des sous repertoires dans le rep principal.
+	*
 	**/		
 	public void computeXSL() {
 		if (directory.isDirectory()) {				
@@ -174,13 +180,15 @@ public class RadioDataManager extends FileParser {
 			for (int i=0;i<dirs.length;i++) {				
 				
 				String XML_in = dirs[i].getAbsolutePath()+File.separator+"radioCoverage.xml";								
-				String XML_temp_out = dirs[i].getAbsolutePath()+File.separator+"tempRadioOutput.xml";
-				
+				String XML_temp_out = dirs[i].getAbsolutePath()+File.separator+"tempRadioOutput.xml";			
 				try {							
-					SaxonFactory.SaxonJob(XSL, XML_in, XML_temp_out);					
-					this.setProgress(currentProgress++);
+//					SaxonFactory.SaxonJob(XSL, XML_in, XML_temp_out);					
+//					this.setProgress(currentProgress++);
 					// concaténation des chaines des fichiers XML temporaires de chaque répertoire dans  XML_outTemp
-					XmlFile.copy (XML_temp_out,XML_out);
+					
+//					XmlFile.copy (XML_temp_out,XML_out);
+					// Le fichier radioCoverage.xml créé dans chaque répertoire (qui contient les données xml de "base" est ensuite copié dans un fichier principal à la racine du répertoireé
+					XmlFile.copy (XML_in,XML_out);
 					
 				
 //					SaxonFactory.SaxonJobWithParam(XSL3,XML_Temp_In,XML_out, XML_temp_out);
