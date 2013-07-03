@@ -106,7 +106,7 @@ public class CentCRVSM {
 	 * @param souscarré the souscarré to set
 	 */
 	public void setSouscarre(String souscarre) {
-		if(souscarre.isEmpty() || souscarre.equals("##")){
+		if(souscarre.isEmpty() || souscarre.startsWith("##")){
 			this.souscarre = 0;
 		} else {
 			this.souscarre = new Integer(souscarre);
