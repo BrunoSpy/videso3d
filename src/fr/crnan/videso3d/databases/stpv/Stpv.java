@@ -718,7 +718,6 @@ public class Stpv extends FileParser{
 	private void insertConf12D(String line_) {
 		String line = line_.trim();
 		//si la ligne est trop longue, on enlève le numéro de ligne en trop
-		System.out.println(line + " : "+line.length());
 		if(line.length() >= 80)
 			line = line.substring(0, line.length()-3).trim();
 		try{

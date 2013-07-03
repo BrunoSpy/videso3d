@@ -106,8 +106,6 @@ public class DatabaseManagerUI extends JDialog {
 	
 	private void build(){
 		
-		databases = new HashMap<FileParser, File[]>();
-		
 		progressMonitor2 = new DoubleProgressMonitor(this, "Import des fichiers sélectionnés", "", 0, 100);
 		progressMonitor2.setAlwaysOnTop(true);
 		
@@ -255,30 +253,34 @@ public class DatabaseManagerUI extends JDialog {
 			boolean databaseFound = false;
 			@Override
 			protected Integer doInBackground() throws Exception {
-				progressMonitor2.setCancelled(false);
-				progressMonitor2.getMainProgressBar().setIndeterminate(true);
-				progressMonitor2.getSecondaryProgressBar().setIndeterminate(false);
-				progressMonitor2.setVisible(true);
-				progressMonitor2.setMainNote("Téléchargement des données...");
+				try {	
+					progressMonitor2.setCancelled(false);
+					progressMonitor2.getMainProgressBar().setIndeterminate(true);
+					progressMonitor2.getSecondaryProgressBar().setIndeterminate(false);
+					progressMonitor2.setVisible(true);
+					progressMonitor2.setMainNote("Téléchargement des données...");
 
-				//mise à jour du progressmonitor en fonction de l'avancement du téléchargement des données
-				svnManager.addPropertyChangeListener(new PropertyChangeListener() {
+					//mise à jour du progressmonitor en fonction de l'avancement du téléchargement des données
+					svnManager.addPropertyChangeListener(new PropertyChangeListener() {
 
-					@Override
-					public void propertyChange(PropertyChangeEvent evt) {
-						if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
-							progressMonitor2.setSecondNote((String) evt.getNewValue());
-						} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
-							progressMonitor2.getSecondaryProgressBar().setValue((Integer) evt.getNewValue());
-						} else if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
-							progressMonitor2.getSecondaryProgressBar().setMaximum((Integer) evt.getNewValue());
+						@Override
+						public void propertyChange(PropertyChangeEvent evt) {
+							if(evt.getPropertyName().equals(ProgressSupport.TASK_INFO)){
+								progressMonitor2.setSecondNote((String) evt.getNewValue());
+							} else if(evt.getPropertyName().equals(ProgressSupport.TASK_PROGRESS)){
+								progressMonitor2.getSecondaryProgressBar().setValue((Integer) evt.getNewValue());
+							} else if(evt.getPropertyName().equals(ProgressSupport.TASK_STARTS)){
+								progressMonitor2.getSecondaryProgressBar().setMaximum((Integer) evt.getNewValue());
+							}
 						}
-					}
-				});
+					});
 
-				File tempData = svnManager.getDatabase(path, -1);
+					File tempData = svnManager.getDatabase(path, -1);
 
-				databaseFound = processFiles(new File[]{tempData}, true);
+					databaseFound = processFiles(new File[]{tempData}, true);
+				} catch(Exception e){
+					Logging.logger().severe(e.getMessage());
+				}
 				return null;
 			}
 			@Override
@@ -290,7 +292,11 @@ public class DatabaseManagerUI extends JDialog {
 								"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge ou que le dossier contient bien tous les fichiers requis.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
 						Logging.logger().warning("Pas de fichier de base de données trouvé");
 					} else {
-						importDatabases();
+						try {
+							importDatabases();
+						} catch(Exception e){
+							Logging.logger().severe(e.getMessage());
+						}
 					}
 				}
 			}
@@ -328,7 +334,11 @@ public class DatabaseManagerUI extends JDialog {
 								"<b>Solution :</b><br />Vérifiez que le fichier sélectionné est bien pris en charge ou que le dossier contient bien tous les fichiers requis.</html>", "Erreur", JOptionPane.INFORMATION_MESSAGE);
 						Logging.logger().warning("Pas de fichier de base de données trouvé");
 					} else {
-						importDatabases();
+						try {
+							importDatabases();
+						} catch(Exception e){
+							Logging.logger().severe(e.getMessage());
+						}
 					}
 				}
 			}
@@ -345,6 +355,8 @@ public class DatabaseManagerUI extends JDialog {
 	private boolean processFiles(File[] filesSelected, boolean svn){
 			
 		boolean baseImported = false;
+		databases = new HashMap<FileParser, File[]>();
+		
 		TreeSet<File> files = new TreeSet<File>();
 		for(File f : filesSelected){
 			files.add(f);
@@ -499,12 +511,18 @@ public class DatabaseManagerUI extends JDialog {
 	private JButton btnSvn;
 	
 	private void importDatabases(){
+
+		current = null;
+		iterator = null;
+		types = null;
+		done = 0;
+		
 		int max = 0;
 		for(FileParser fileParser : databases.keySet()){
 			max += fileParser.numberFiles();
 		}
 		
-		done = 0;
+		
 		
 		progressMonitor2.getMainProgressBar().setMaximum(max);
 		progressMonitor2.getMainProgressBar().setIndeterminate(false);
@@ -593,6 +611,7 @@ public class DatabaseManagerUI extends JDialog {
 	}
 	
 	private void importDatabase(Entry<FileParser, File[]> entry, PropertyChangeListener listener){
+	
 		current = entry;
 		current.getKey().addPropertyChangeListener(listener);
 		progressMonitor2.setMainNote("Base "+current.getKey().getClass().getSimpleName());
