@@ -242,7 +242,7 @@ public class MainWindow extends JFrame {
 					}
 					wwd.firePropertyChange("step", "", "Création de l'interface");
 				} catch (Exception e) {
-					e.printStackTrace();
+					Logging.logger().severe(e.getMessage());
 				}
 				return null;
 			}
@@ -253,7 +253,7 @@ public class MainWindow extends JFrame {
 				try {
 					launchVideso3D();
 				} catch (Exception e) {
-					e.printStackTrace();
+					Logging.logger().severe(e.getMessage());
 				}	
 			}
 		}.execute();
@@ -376,17 +376,19 @@ public class MainWindow extends JFrame {
 						progressMonitor.setProgress(0);
 						try { 
 							progressMonitor.setNote(evt.getNewValue().toString());
+
+							DatasManager.Type type = (DatasManager.Type) evt.getNewValue();
+							DatasManager.createDatas(type, wwd);
+							omniBox.addDatabase(type, DatabaseManager.getAllVisibleObjects(type, omniBox), true);
 						} catch (Exception e){
-							e.printStackTrace();
+							Logging.logger().severe(e.getMessage());
 						}
-						DatasManager.Type type = (DatasManager.Type) evt.getNewValue();
-						DatasManager.createDatas(type, wwd);
-						omniBox.addDatabase(type, DatabaseManager.getAllVisibleObjects(type, omniBox), true);
 						return null;
 					}
 
 					@Override
 					protected void done() {
+						try{
 						DatasManager.Type type = (DatasManager.Type) evt.getNewValue();
 							if(DatasManager.getView(type) != null){
 								updateDockables(type);
@@ -395,6 +397,9 @@ public class MainWindow extends JFrame {
 								AnalyzeUI.updateSearchBoxes();
 							}
 						progressMonitor.close();
+						} catch(Exception e){
+							Logging.logger().severe(e.getMessage());
+						}
 					}
 				}.execute();
 			}
@@ -444,7 +449,7 @@ public class MainWindow extends JFrame {
 				try {
 					DatabaseManager.unselectDatabase(type);
 				} catch (SQLException e) {
-					e.printStackTrace();
+					Logging.logger().severe(e.getMessage());
 				}
 			}
 
@@ -472,7 +477,7 @@ public class MainWindow extends JFrame {
 				try {
 					DatasManager.createDatas(DatasManager.Type.UserObject, wwd);
 				} catch (Exception e) {
-					e.printStackTrace();
+					Logging.logger().severe(e.getMessage());
 				}
 			}
 			DefaultSingleCDockable dockable = new DefaultSingleCDockable(DatasManager.Type.UserObject.toString(), DatasManager.Type.UserObject.toString(), 
@@ -585,7 +590,7 @@ public class MainWindow extends JFrame {
 							layer.dispose();
 						}
 					} catch (PointNotFoundException e) {
-						e.printStackTrace();
+						Logging.logger().severe(e.getMessage());
 					}
 				}
 				if(geoFile.size()>0){
@@ -615,7 +620,7 @@ public class MainWindow extends JFrame {
 							
 						}
 					} catch (PointNotFoundException e) {
-						e.printStackTrace();
+						Logging.logger().severe(e.getMessage());
 					}
 				}
 				if(lplnFile.size()>0){
