@@ -185,8 +185,17 @@ public class AIP extends FileParser{
 	 * @param file
 	 * @return <code>true</code> if it is an AIP xml database
 	 */
-	public static boolean isAIPFile(File file) {
-		return file.getName().endsWith("n.xml");
+	public  static boolean isAIPFile(File file) {
+		SAXBuilder sxb = new SAXBuilder();
+		boolean isAIP = false;
+		try {
+			isAIP = sxb.build(file).getRootElement().getName().equals("SiaExport");
+		} catch (JDOMException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return isAIP;
 	}
 	
 	@Override
