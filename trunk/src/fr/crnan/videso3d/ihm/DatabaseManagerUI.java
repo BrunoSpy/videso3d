@@ -379,7 +379,7 @@ public class DatabaseManagerUI extends JDialog {
 					boolean temp = processFiles(FileManager.untar(file).toArray(new File[]{}), svn);
 					baseImported = baseImported || temp;
 				} else { //file not zipped
-					if(AIP.isAIPFile(file)){
+					if(MimeUtil.getMimeTypes(file).contains("text/xml") && AIP.isAIPFile(file)){
 						baseImported = true;
 						addDatabase(DatasManager.Type.AIP, file, svn);
 					} else if(Exsa.isExsaFile(file)){
