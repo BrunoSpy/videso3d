@@ -20,7 +20,8 @@ package fr.crnan.videso3d.geom;
 /**
  * Représentation d'une longitude
  * @author Bruno Spyckerelle
- * @version 0.2.1
+ * @author David Granado
+ * @version 0.2.2
  */
 public class Longitude extends Coordonnee {
 
@@ -39,13 +40,12 @@ public class Longitude extends Coordonnee {
 		this.sens = sens;
 	}
 	
-	public Longitude(String longitude){
-		String[] words = longitude.split(":");
+	public Longitude(String longitude){ //argument de la forme "dd:mm:ss S" avec éventuellement des espaces à la place des ":" - DG
+		String[] words = longitude.trim().split("[(( *):( *))( +)]");
 		this.degres = new Integer(words[0]);
 		this.minutes = new Integer(words[1]);
-		Integer length = words[2].length();
-		this.secondes = new Integer(words[2].substring(0,length -1));
-		this.sens = words[2].substring(length-1, length);
+		this.secondes = new Integer(words[2]);
+		this.sens = words[3];
 	}
 
 	public Longitude(Double y) {
