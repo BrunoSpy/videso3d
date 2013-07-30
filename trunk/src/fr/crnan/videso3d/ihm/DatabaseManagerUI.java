@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -68,6 +69,7 @@ import fr.crnan.videso3d.databases.pays.Pays;
 import fr.crnan.videso3d.databases.radio.RadioDataManager;
 import fr.crnan.videso3d.databases.stip.Stip;
 import fr.crnan.videso3d.databases.stpv.Stpv;
+import fr.crnan.videso3d.databases.terrainsoaci.TerrainsOaci;
 import fr.crnan.videso3d.ihm.components.VFileChooser;
 import gov.nasa.worldwind.util.Logging;
 
@@ -351,8 +353,9 @@ public class DatabaseManagerUI extends JDialog {
 	 * @param files Files selected
 	 * @param svn True if datas downloaded from svn
 	 * @return True if at least a database has been imported
+	 * @throws IOException 
 	 */
-	private boolean processFiles(File[] filesSelected, boolean svn){
+	private boolean processFiles(File[] filesSelected, boolean svn) {
 			
 		boolean baseImported = false;
 		databases = new HashMap<FileParser, File[]>();
@@ -446,6 +449,9 @@ public class DatabaseManagerUI extends JDialog {
 							}
 						}
 						addDatabase(DatasManager.Type.PAYS, file.getParentFile(), svn);
+					} else if(TerrainsOaci.isTerrainsOACIFile(file)) {
+						baseImported = true;
+						addDatabase(DatasManager.Type.TerrainsOACI, file, svn);
 					}
 				}
 			}
@@ -465,6 +471,10 @@ public class DatabaseManagerUI extends JDialog {
 		case AIP:
 			AIP aip = new AIP(file.getAbsolutePath());
 			databases.put(aip, new File[]{file});
+			break;
+		case TerrainsOACI:
+			TerrainsOaci terr = new TerrainsOaci(file.getAbsolutePath());
+			databases.put(terr, new File[]{file});
 			break;
 		case EXSA:
 			Exsa exsa = new Exsa(file.getAbsolutePath());

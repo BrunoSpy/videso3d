@@ -35,6 +35,8 @@ import fr.crnan.videso3d.databases.stip.StipContext;
 import fr.crnan.videso3d.databases.stip.StipController;
 import fr.crnan.videso3d.databases.stpv.StpvContext;
 import fr.crnan.videso3d.databases.stpv.StpvController;
+import fr.crnan.videso3d.databases.terrainsoaci.TerrainsOaciContext;
+import fr.crnan.videso3d.databases.terrainsoaci.TerrainsOaciController;
 import fr.crnan.videso3d.ihm.AIPView;
 import fr.crnan.videso3d.ihm.EdimapView;
 import fr.crnan.videso3d.ihm.RadioCovView;
@@ -42,6 +44,7 @@ import fr.crnan.videso3d.ihm.SkyView;
 import fr.crnan.videso3d.ihm.StipView;
 import fr.crnan.videso3d.ihm.StpvView;
 import fr.crnan.videso3d.ihm.StrView;
+import fr.crnan.videso3d.ihm.TerrainsOACIView;
 import fr.crnan.videso3d.ihm.TrajectoriesView;
 import fr.crnan.videso3d.ihm.UserObjectsView;
 import fr.crnan.videso3d.ihm.components.DataView;
@@ -60,7 +63,7 @@ public final class DatasManager {
 	/**
 	 * Types de base de données possibles
 	 */
-	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, RadioCov, SkyView, AIP, Databases, UserObject};
+	public static enum Type {PAYS, STIP, STPV, Edimap, EXSA, Ods, RadioCov, SkyView, AIP, TerrainsOACI, Databases, UserObject};
 
 	private static DatasManager instance = new DatasManager();
 	
@@ -136,6 +139,9 @@ public final class DatasManager {
 				case AIP:
 					DatasManager.addDatas(type, new AIPController(wwd), new AIPContext(), new AIPView());
 					break;
+				case TerrainsOACI:
+					DatasManager.addDatas(type, new TerrainsOaciController(wwd), new TerrainsOaciContext(), new TerrainsOACIView());
+					break;
 				case RadioCov:
 					//la vue radio a besoin du controlleur ...
 					//d'où obligation d'enregistrer le controleur
@@ -196,6 +202,8 @@ public final class DatasManager {
 			return SkyViewController.getNumberInitSteps();
 		case AIP:
 			return AIPController.getNumberInitSteps();
+		case TerrainsOACI:
+			return TerrainsOaciController.getNumberInitSteps();
 		case STPV:
 			return StpvController.getNumberInitSteps();
 		case RadioCov:

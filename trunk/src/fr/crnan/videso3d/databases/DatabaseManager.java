@@ -99,6 +99,10 @@ public final class DatabaseManager {
 	 */
 	private Connection currentAIP;
 	/**
+	 * Base Terrains OACI
+	 */
+	private Connection currentTerrainsOACI;
+	/**
 	 * Base KML
 	 */
 	private Connection databases;
@@ -284,6 +288,17 @@ public final class DatabaseManager {
 				}
 			}
 			return instance.currentAIP;
+		case TerrainsOACI:
+			if(instance.currentTerrainsOACI == null) {
+				instance.currentTerrainsOACI = DriverManager.getConnection("jdbc:sqlite:"+name);
+			} else {
+				if(!instance.currentTerrainsOACI.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
+					//changement de base de données
+					instance.currentTerrainsOACI.close();
+					instance.currentTerrainsOACI = DriverManager.getConnection("jdbc:sqlite:"+name);
+				}
+			}
+			return instance.currentTerrainsOACI;
 		default:
 			return null;
 		}
@@ -1043,6 +1058,23 @@ public final class DatabaseManager {
 		//on référence la base de données
 		DatabaseManager.addDatabase(name, DatasManager.Type.AIP, new SimpleDateFormat().format(new Date()));
 	}
+
+	/**
+	 * Crée la structure de la table des Terrains OACI
+	 * @param name Nom de la base recevant la table
+	 * @throws SQLException 
+	 */
+	public static void createTerrainsOaci(String name) throws SQLException {
+		Statement st = DatabaseManager.selectDB(DatasManager.Type.TerrainsOACI, name).createStatement();
+		st.executeUpdate("create table terrainsoaci (id integer primary key autoincrement," +
+				"idoaci varchar(4), " +
+				"latitude float, " +
+				"longitude float, " +
+				"name varchar(30))");
+		st.close();
+		//on référence la base de données
+		DatabaseManager.addDatabase(name, DatasManager.Type.TerrainsOACI, new SimpleDateFormat().format(new Date()));
+	}
 	
 	/**
 	 * Supprimer une base de donnees
@@ -1109,6 +1141,12 @@ public final class DatabaseManager {
 			if (instance.currentAIP != null && instance.currentAIP.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
 				instance.currentAIP.close();
 				instance.currentAIP = null;
+			}
+			break;
+		case TerrainsOACI:
+			if (instance.currentTerrainsOACI != null && instance.currentTerrainsOACI.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
+				instance.currentTerrainsOACI.close();
+				instance.currentTerrainsOACI = null;
 			}
 			break;
 		default:
@@ -1436,6 +1474,15 @@ public final class DatabaseManager {
 		return DatabaseManager.getCurrent(DatasManager.Type.AIP);
 	}
 	
+	/**
+	 * Renvoit une connection vers la base TerrainsOACI sélectionnée
+	 * @return {@link Statement}
+	 * @throws SQLException
+	 */
+	public static Statement getCurrentTerrainsOACI() throws SQLException {
+		return DatabaseManager.getCurrent(DatasManager.Type.TerrainsOACI);
+	}
+	
 	public static void closeAll(){
 			try {
 				if(instance.currentPays != null) { instance.currentPays.close(); instance.currentPays = null;}
@@ -1447,6 +1494,7 @@ public final class DatabaseManager {
 				if(instance.currentRadioCov != null) { instance.currentRadioCov.close();instance.currentRadioCov = null;}
 				if(instance.currentSkyView != null) {instance.currentSkyView.close(); instance.currentSkyView = null;}
 				if(instance.currentAIP!=null) {instance.currentAIP.close(); instance.currentAIP = null;}
+				if(instance.currentTerrainsOACI!=null) {instance.currentTerrainsOACI.close(); instance.currentTerrainsOACI = null;}
 				if(instance.databases != null) { instance.databases.close(); instance.databases = null;}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -1494,6 +1542,8 @@ public final class DatabaseManager {
 			return DatasManager.Type.SkyView;
 		} else if(type.equalsIgnoreCase("AIP")){
 			return DatasManager.Type.AIP;
+		} else if(type.equalsIgnoreCase("TerrainsOACI")){
+			return DatasManager.Type.TerrainsOACI;
 		} //else if(type.equalsIgnoreCase("KML")){
 //				return Type.KML;
 //		}		
@@ -1559,6 +1609,15 @@ public final class DatabaseManager {
 					}catch(Exception e){
 						e.printStackTrace();
 					}
+				}
+			}
+			return items;
+		case TerrainsOACI:	
+			st = DatabaseManager.getCurrentTerrainsOACI();
+			if(st != null){
+				rs = st.executeQuery("select idoaci from terrainsoaci");
+				while(rs.next()){
+					items.add(new ItemCouple(controller, new Couple<Integer,String>(0, rs.getString(1))));
 				}
 			}
 			return items;
