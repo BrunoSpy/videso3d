@@ -720,6 +720,7 @@ public final class DatabaseManager {
 		st.executeUpdate("create table balises (id integer primary key autoincrement," +
 				"name varchar(5), " +
 				"publicated boolean, " +
+				"etrg boolean, " +
 				"latitude float, " +
 				"longitude float, " +
 				"centre varchar(3), " +
