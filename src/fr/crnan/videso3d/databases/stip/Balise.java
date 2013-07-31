@@ -25,7 +25,7 @@ import fr.crnan.videso3d.geom.Longitude;
 /**
  * 
  * @author Bruno Spyckerelle
- * @version 0.4
+ * @version 0.5
  */
 public class Balise {
 	/**
@@ -36,6 +36,11 @@ public class Balise {
 	 * Indicatif de la balise
 	 */
 	private String indicatif;
+	/**
+	 * ETRG (balise étrangère - permet un traitement spécifique par le STIP.
+	 * NB : toutes les balises étrangères ne sont pas nécessairement ETRG
+	 */
+	private Boolean etrg = false;
 	/**
 	 * Latitude
 	 */
@@ -109,6 +114,7 @@ public class Balise {
 	public void setLigne1(String line){
 	    this.setIndicatif(line.substring(2, 7).trim());
 	    this.setPublication(!line.substring(20, 23).equalsIgnoreCase("PNP"));
+	    this.setEtrg(line.substring(32,36).equalsIgnoreCase("ETRG"));
 	}
 	/**
 	 * Ajoute les données de la carte 2
@@ -238,6 +244,14 @@ public class Balise {
 	}
 	public void setPublication(Boolean publication) {
 		this.publication = publication;
+	}
+	
+	public Boolean getEtrg() {
+		return etrg;
+	}
+	
+	public void setEtrg(Boolean etrg) {
+		this.etrg = etrg;
 	}
 
 	public String getCentre() {

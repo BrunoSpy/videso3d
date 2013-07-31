@@ -843,8 +843,8 @@ public class Stip extends FileParser{
 			balisePath += "/balise";
 		}
 
-		PreparedStatement insert = this.conn.prepareStatement("insert into balises (name, publicated, latitude, longitude, centre, definition, sccag, sect1, limit1, sect2, limit2, sect3, limit3, sect4, limit4, sect5, limit5, sect6, limit6, sect7, limit7, sect8, limit8, sect9, limit9) " +
-		"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		PreparedStatement insert = this.conn.prepareStatement("insert into balises (name, publicated, etrg, latitude, longitude, centre, definition, sccag, sect1, limit1, sect2, limit2, sect3, limit3, sect4, limit4, sect5, limit5, sect6, limit6, sect7, limit7, sect8, limit8, sect9, limit9) " +
+		"values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		BufferedReader in = null;
 		try {
 			in = new BufferedReader(new InputStreamReader(new FileInputStream(balisePath)));
@@ -891,14 +891,15 @@ public class Stip extends FileParser{
 	private void insertBalise(Balise balise, PreparedStatement insert) throws SQLException {
 		insert.setString(1, balise.getIndicatif());
 		insert.setBoolean(2, balise.getPublication());
-		insert.setDouble(3, balise.getLatitude().toDecimal());
-		insert.setDouble(4, balise.getLongitude().toDecimal());
-		insert.setString(5, balise.getCentre());
-		insert.setString(6, balise.getDefinition());
-		insert.setString(7, balise.getSccag());
+		insert.setBoolean(3, balise.getEtrg());
+		insert.setDouble(4, balise.getLatitude().toDecimal());
+		insert.setDouble(5, balise.getLongitude().toDecimal());
+		insert.setString(6, balise.getCentre());
+		insert.setString(7, balise.getDefinition());
+		insert.setString(8, balise.getSccag());
 		LinkedList<Couple<String, Integer>> secteurs = balise.getSecteurs();
 		Iterator<Couple<String, Integer>> iterator = secteurs.listIterator();
-		Integer compteur = 8;
+		Integer compteur = 9;
 		while(iterator.hasNext()){
 			Couple<String, Integer> secteur = (Couple<String, Integer>) iterator.next();
 			insert.setString(compteur, secteur.getFirst());
@@ -907,7 +908,7 @@ public class Stip extends FileParser{
 			compteur++;
 		}
 		//on remplit les derniers champs secteurs
-		for (Integer i = compteur; i<=25; i++){
+		for (Integer i = compteur; i<=26; i++){ //il y a 26 champs dans la table
 			insert.setString(i, "");
 			i++;
 			insert.setInt(i, -1);
@@ -1246,64 +1247,72 @@ public class Stip extends FileParser{
 			}
 			balise+="1 "+name;
 			if(!rs.getBoolean(3)){
-				balise+="            PNP";
+				if(rs.getBoolean(4)) {
+					balise+="            PNP         ETRG";
+				} else {
+					balise+="            PNP";
+				}
+			} else {
+				if(rs.getBoolean(4)) {
+					balise+="                        ETRG";
+				}
 			}
 			balise+="\n";
-			Latitude lat = new Latitude(rs.getDouble(4));
-			Longitude lon = new Longitude(rs.getDouble(5));
+			Latitude lat = new Latitude(rs.getDouble(5));
+			Longitude lon = new Longitude(rs.getDouble(6));
 			String line2 = "2 "+name+
 					String.format(lat.getDegres().toString(), "%2.0d")+
 					String.format(lat.getMinutes().toString(), "%2.0d")+
 					String.format(lon.getDegres().toString(), "%2.0d")+
 					String.format(lon.getMinutes().toString(), "%2.0d")+
 					lon.getSens()+" "+
-					rs.getString(6)+" "+
-					rs.getString(7);
+					rs.getString(7)+" "+
+					rs.getString(8);
 			size = line2.length();
 			for(int i = 60;i>size;i--){
 				line2+=" ";
 			}
-			line2 += rs.getString(8)+"\n";
+			line2 += rs.getString(9)+"\n";
 			balise += line2;
 			
 			balise += "3 "+name;
 			boolean stop = false;
 			for(int i=1;i<=6;i+=2){
-				if(rs.getInt(i+9) == -1){
+				if(rs.getInt(i+10) == -1){
 					stop = true;
 					break;
 				}
-				int fl = rs.getInt(i+9);
+				int fl = rs.getInt(i+10);
 				balise+= fl == 660 ? "*** " : String.format("%03d",fl)+" ";
-				balise+= rs.getString(i+8)+"                  ";
+				balise+= rs.getString(i+9)+"                  ";
 			}
 			balise+="\n";
 			if(!stop){
-				if(rs.getInt(16) != -1){
+				if(rs.getInt(17) != -1){
 					balise +="31"+name;
 					for(int i=1;i<=5;i+=2){
-						if(rs.getInt(i+15) == -1){
+						if(rs.getInt(i+16) == -1){
 							stop = true;
 							break;
 						}
-						int fl = rs.getInt(i+15);
+						int fl = rs.getInt(i+16);
 						balise+= fl == 660 ? "*** " : String.format("%03d", fl)+" ";
-						balise+= rs.getString(i+14)+"                  ";
+						balise+= rs.getString(i+15)+"                  ";
 					}
 				balise += "\n";
 				} else
 					stop = true;
 			}
 			if(!stop){
-				if(rs.getInt(22) != -1){
+				if(rs.getInt(23) != -1){
 					balise +="32"+name;
 					for(int i=1;i<=6;i+=2){
-						if(rs.getInt(i+21) == -1){
+						if(rs.getInt(i+22) == -1){
 							break;
 						}
-						int fl = rs.getInt(i+21);
+						int fl = rs.getInt(i+22);
 						balise+= fl == 660 ? "*** " : String.format("%03d", fl)+" ";
-						balise+= rs.getString(i+20)+"                  ";
+						balise+= rs.getString(i+21)+"                  ";
 					}
 				}
 			}
@@ -1418,7 +1427,7 @@ public class Stip extends FileParser{
 	
 	/**
 	 * Complète par des espaces les noms des routes pour avoir 6 caractères.
-	 * @param balise
+	 * @param route
 	 * @return
 	 */
 	public static String completerRoute(String route){
