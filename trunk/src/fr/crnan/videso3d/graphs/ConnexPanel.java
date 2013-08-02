@@ -32,7 +32,6 @@ import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxEvent;
 
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
 import fr.crnan.videso3d.databases.DatabaseManager;
 import fr.crnan.videso3d.databases.stip.StipController;
 
@@ -93,7 +92,6 @@ public class ConnexPanel extends ResultGraphPanel {
 				try {
 					Statement st = DatabaseManager.getCurrentStip();
 					ResultSet rs = st.executeQuery("select * from connexions, balconnexions where connexions.id = balconnexions.idconn and idconn in ("+findConnex(balise1, balise2)+")");
-
 					progressBar.setValue(1);
 
 					//ensemble des connexions (conteneurs)
@@ -115,15 +113,18 @@ public class ConnexPanel extends ResultGraphPanel {
 					String terrain = "";
 					String type = "";
 					int id = 0;
+					int lastConnexbalid = 0;
 					int count = 0;
 					graph.getModel().beginUpdate();
 					while(rs.next()){
-						String name = rs.getString(12);
-						if(id != rs.getInt(11)) {
+						String name = rs.getString(13);
+						int balid = rs.getInt(14);	
+						int connexbalid = rs.getInt(4);
+						if(id != rs.getInt(12)) {
 							count++;
 							if(id != 0){//on termine l'iti précédent si il existe
 								if(type.equals("D")){
-									mxCell balConnex = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, 0, connexion), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
+									mxCell balConnex = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, lastConnexbalid, connexion), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
 									graph.insertEdge(connex, null, "", first, balConnex, GraphStyle.edgeStyle);
 								}
 								
@@ -131,7 +132,7 @@ public class ConnexPanel extends ResultGraphPanel {
 //								balisesByItis.put(id, balises);
 							}
 							//nouvelle connexion
-							id = rs.getInt(11);
+							id = rs.getInt(12);
 							balises = new HashMap<Integer, mxCell>();			
 							// Swimlane
 							if(!terrain.equals(rs.getString(2))){
@@ -141,36 +142,37 @@ public class ConnexPanel extends ResultGraphPanel {
 								connexionsRoot.add(connexRoot);
 								terrain = rs.getString(2);
 							}
-							connex = (mxCell) graph.insertVertex(connexRoot, null, new CellContent(DatasManager.Type.STIP, StipController.CONNEXION, id, rs.getString(6)+"->"+rs.getString(7)), 0, 0, 80, 50, GraphStyle.groupStyle);
+							connex = (mxCell) graph.insertVertex(connexRoot, null, new CellContent(DatasManager.Type.STIP, StipController.CONNEXION, id, rs.getString(7)+"->"+rs.getString(8)), 0, 0, 80, 50, GraphStyle.groupStyle);
 							connex.setConnectable(false);
 							connexions.add(connex);							
 							
-							String style = rs.getBoolean(14) ? 
+							String style = rs.getBoolean(15) ? 
 									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
 										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
-							first = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
+							first = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, balid, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							first.setConnectable(false);
-							balises.put(rs.getInt(13), first);
+							balises.put(rs.getInt(14), first);
 							
-							if(rs.getString(4).equals("A")){
+							if(rs.getString(5).equals("A")){
 								connexion = rs.getString(3);
-								mxCell balConnex = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, 0, connexion), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
+								mxCell balConnex = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, connexbalid, connexion), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
 								graph.insertEdge(connex, null, "", balConnex, first, GraphStyle.edgeStyle);
 							}
 							
 						} else {
-							String style = rs.getBoolean(14) ? 
+							String style = rs.getBoolean(15) ? 
 									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
 										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
-							mxCell bal = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, 0, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
+							mxCell bal = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, balid, name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							bal.setConnectable(false);
 							graph.insertEdge(connex, null, "", first, bal, GraphStyle.edgeStyle);
-							balises.put(rs.getInt(13), bal);
+							balises.put(rs.getInt(14), bal);
 							first  = bal;
 						}
 						//on enregistre le nom de la balise de connexion pour pouvoir fermer la connexion en cas de type D
 						connexion = rs.getString(3);
-						type = rs.getString(4);
+						type = rs.getString(5);
+						lastConnexbalid = connexbalid;
 					}
 
 					fireNumberResults(count);
@@ -180,7 +182,7 @@ public class ConnexPanel extends ResultGraphPanel {
 					//on termine le dernier iti si il existe
 					if(connex != null){
 						if(type.equals("D")){
-							mxCell balConnex = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, 0, connexion), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
+							mxCell balConnex = (mxCell) graph.insertVertex(connex, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, lastConnexbalid, connexion), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, GraphStyle.baliseDefault);
 							graph.insertEdge(connex, null, "", first, balConnex, GraphStyle.edgeStyle);
 						}
 //						first.setStyle(GraphStyle.baliseDefault);

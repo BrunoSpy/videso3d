@@ -224,16 +224,17 @@ public class Stip extends FileParser{
 		int previousId = this.previousConnexion(connexion);
 		PreparedStatement insert;
 		if(previousId == -1){
-			insert = this.conn.prepareStatement("insert into connexions (terrain, connexion, type, perfo, flinf, flsup, vitessesigne, vitesse) " +
-			"values (?, ?, ?, ?, ?, ?, ?, ?)");
+			insert = this.conn.prepareStatement("insert into connexions (terrain, connexion, connexbalid, type, perfo, flinf, flsup, vitessesigne, vitesse) " +
+			"values (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 			insert.setString(1, connexion.getTerrain());
 			insert.setString(2, connexion.getConnexion());
-			insert.setString(3, connexion.getType());
-			insert.setString(4, connexion.getPerfo());
-			insert.setInt(5, connexion.getFlinf());
-			insert.setInt(6, connexion.getFlsup());
-			insert.setString(7, connexion.getVitesseCompar());
-			insert.setInt(8, connexion.getVitesseValue());
+			insert.setInt(3, balises.get(connexion.getConnexion()));
+			insert.setString(4, connexion.getType());
+			insert.setString(5, connexion.getPerfo());
+			insert.setInt(6, connexion.getFlinf());
+			insert.setInt(7, connexion.getFlsup());
+			insert.setString(8, connexion.getVitesseCompar());
+			insert.setInt(9, connexion.getVitesseValue());
 			insert.executeUpdate();
 			previousId = insert.getGeneratedKeys().getInt(1);
 		}
@@ -562,14 +563,14 @@ public class Stip extends FileParser{
 		insert.close();
 		int id = insert.getGeneratedKeys().getInt(1);
 		//puis insertion des balises
-		insert = this.conn.prepareStatement("insert into routebalise (route, routeid, balise, appartient, sens) " +
-		"values (?, ?, ?, ?, ?)");
-		Iterator<Couple<String, Boolean>> balises = route.getBalises().iterator();
+		insert = this.conn.prepareStatement("insert into routebalise (route, routeid, balise, balid, appartient, sens) " +
+		"values (?, ?, ?, ?, ?, ?)");
+		Iterator<Couple<String, Boolean>> balisesRoute = route.getBalises().iterator();
 		Iterator<String> sens = route.getSens().iterator();
 		insert.setString(1, route.getName());
 		insert.setInt(2, id);
-		while(balises.hasNext()){
-			Couple<String, Boolean> balise = balises.next();
+		while(balisesRoute.hasNext()){
+			Couple<String, Boolean> balise = balisesRoute.next();
 			String sensTr;
 			if(sens.hasNext()){
 				sensTr = sens.next();
@@ -578,8 +579,9 @@ public class Stip extends FileParser{
 				sensTr = "";
 			}
 			insert.setString(3, balise.getFirst());
-			insert.setBoolean(4, balise.getSecond());
-			insert.setString(5, sensTr);
+			insert.setInt(4, balises.get(balise.getFirst()));
+			insert.setBoolean(5, balise.getSecond());
+			insert.setString(6, sensTr);
 			insert.addBatch();
 		}
 		insert.executeBatch();

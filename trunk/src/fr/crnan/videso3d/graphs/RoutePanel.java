@@ -80,7 +80,7 @@ public class RoutePanel extends ResultGraphPanel {
 
 				try {
 					Statement st = DatabaseManager.getCurrentStip();
-					ResultSet rs = st.executeQuery("select routebalise.routeid, routebalise.route, routebalise.id as balid, balise, appartient, sens, espace from routes, routebalise where routes.id = routebalise.routeid and routes.id in ("+findRoute(balise1, balise2)+") order by balid");
+					ResultSet rs = st.executeQuery("select routebalise.routeid, routebalise.route, routebalise.id as routebalid, balise, routebalise.balid, appartient, sens, espace from routes, routebalise where routes.id = routebalise.routeid and routes.id in ("+findRoute(balise1, balise2)+") order by routebalid");
 
 					progressBar.setValue(1);
 
@@ -119,10 +119,10 @@ public class RoutePanel extends ResultGraphPanel {
 							route = (mxCell) graph.insertVertex(graph.getDefaultParent(), null, new CellContent(DatasManager.Type.STIP, StipController.ROUTES, idRoute, rs.getString(2)), 0, 0, 80, 50, GraphStyle.groupStyleHorizontal);
 							route.setConnectable(false);
 							routes.add(route);
-							String style = rs.getBoolean(5) ? 
+							String style = rs.getBoolean(6) ? 
 									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
 										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
-							first = (mxCell) graph.insertVertex(route, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
+							first = (mxCell) graph.insertVertex(route, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, rs.getInt(5), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							first.setConnectable(false);
 							//insertion des extensions début
 							ResultSet rsExtDebut = DatabaseManager.getCurrentStip().executeQuery("select routeextdebut.typeext, routeextdebut.extension, routes.id from routes, routeextdebut where routes.id = routeextdebut.routeid and routes.id = '"+idRoute+"'");
@@ -138,12 +138,12 @@ public class RoutePanel extends ResultGraphPanel {
 								graph.insertEdge(route, null, "", entree, first, fleche);
 							}
 							rsExtDebut.close();
-							sens = rs.getString(6);
+							sens = rs.getString(7);
 						} else {
-							String style = rs.getBoolean(5) ? 
+							String style = rs.getBoolean(6) ? 
 									((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseHighlight : GraphStyle.baliseStyle) : 
 										((nameMatch(balise1, name) || nameMatch(balise2,name)) ? GraphStyle.baliseTraversHighlight : GraphStyle.baliseTravers);
-							mxCell second = (mxCell) graph.insertVertex(route, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, rs.getInt(3), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
+							mxCell second = (mxCell) graph.insertVertex(route, null, new CellContent(DatasManager.Type.STIP, StipController.BALISES, rs.getInt(5), name), 0, 0, GraphStyle.baliseSize, GraphStyle.baliseSize, style);
 							second.setConnectable(false);
 							style = "";
 							if(sens.equals("=")){
@@ -156,7 +156,7 @@ public class RoutePanel extends ResultGraphPanel {
 								style = GraphStyle.edgeRouteSensInterdit;
 							}
 							graph.insertEdge(route, null, "", first, second, style);
-							sens = rs.getString(6);
+							sens = rs.getString(7);
 							first = second;
 						}
 					}
