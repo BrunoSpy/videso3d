@@ -172,7 +172,7 @@ public class StipContext extends Context {
 								final String tSecteur = secteur;
 								taskpane1.add(new AbstractAction() {
 									{
-										putValue(Action.NAME, "\nDu "+tPlafond+" au "+tPlancher+" : "+tSecteur);
+										putValue(Action.NAME, "\nDu "+tPlancher+" au "+tPlafond+" : "+tSecteur);
 									}
 									@Override
 									public void actionPerformed(ActionEvent e) {
@@ -189,7 +189,7 @@ public class StipContext extends Context {
 						final String tSecteur = secteur;
 						taskpane1.add(new AbstractAction() {
 							{
-								putValue(Action.NAME, "\nDu "+tPlafond+" au 0 : "+tSecteur);
+								putValue(Action.NAME, "\nDu 0 au "+tPlafond+" : "+tSecteur);
 							}
 							@Override
 							public void actionPerformed(ActionEvent e) {
