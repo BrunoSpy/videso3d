@@ -1,11 +1,34 @@
 #summary Visualiser l'AIP
 
-= Comment visualiser les données de l'AIP France ? =
+= Visualiser les données de l'AIP France =
 
 Pour visualiser en 3D les données de l'AIP France, il faut [BDD ajouter] le fichier au format XML dans les bases de données.
 
 La plupart des données de l'AIP sont alors accessibles via le sélecteur de données.
 
-= Exemple : SIV, TSA et CBA dans l'espace français =
+<b>Exemple :</b> SIV, TSA et CBA dans l'espace français
 
 [http://videso3d.googlecode.com/svn/wiki/img/aip_siv_tsa.png]
+
+
+= Visualiser les terrains OACI =
+
+Depuis sa version 13, Videso3D offre la possibilité de visualiser les terrains OACI du monde ainsi que diverses informations les concernant.
+
+
+== Editer le fichier XML ==
+
+Le fichier permettant de créer la base des terrains OACI dans Videso3D et un fichier XML. Celui-ci est une concaténation de plusieurs fichiers fournis par Eurocontrol sur leur base de donnée en ligne EAD (European AIS Database). Une version de ce fichier est téléchargeable dans la rubrique [[http://code.google.com/p/videso3d/downloads/list|Downloads]]. Nous détaillons toutefois ci-dessous comment générer un nouveau fichier au cas où celui-ci ne serait pas à jour.
+
+
+
+
+== Créer la base dans Videso3D ==
+
+  * nom du terrain
+  * code OACI
+  * code IATA
+  * type de terrain (aérodrome, héliport, etc.)
+  * pays d'appartenance
+  * ville desservie
+  * coordonnées géographiques
