@@ -20,12 +20,24 @@ Depuis sa version 13, Videso3D offre la possibilité de visualiser les terrains 
 
 == Editer le fichier XML ==
 
-Le fichier permettant de créer la base des terrains OACI dans Videso3D et un fichier XML. Celui-ci est une concaténation de plusieurs fichiers fournis par Eurocontrol sur leur base de donnée en ligne EAD (European AIS Database). Une version de ce fichier est téléchargeable dans la rubrique [downloads  Downloads]. Nous détaillons toutefois ci-dessous comment générer un nouveau fichier au cas où celui-ci ne serait pas à jour.
+Le fichier permettant de créer la base des terrains OACI dans Videso3D est un fichier XML. Celui-ci est une concaténation de plusieurs fichiers fournis par Eurocontrol sur leur base de donnée en ligne EAD (European AIS Database). Une version de ce fichier est téléchargeable dans la rubrique [http://code.google.com/p/videso3d/downloads/list  Downloads]. Nous détaillons toutefois ci-dessous comment générer un nouveau fichier au cas où celui-ci ne serait pas à jour.
 
-Eurocontrol diffuse 4 fichiers XML décrivant les terrains de 4 régions du monde ("Afrique", "Europe et Groenland", "Amériques du Nord et du Sud et Pacifique", et "Russie, Asie et Australie").Pour obtenir le fichier XML comportant tous les terrains OACI du monde
+Eurocontrol diffuse 4 fichiers XML décrivant les terrains de 4 régions du monde ("Afrique", "Europe et Groenland", "Amériques du Nord et du Sud et Pacifique", et "Russie, Asie et Australie") qu'il faudra concaténer. Pour générer ces fichier, connectez-vous sur [http://www.ead.eurocontrol.int/publicuser/public/pu/login.do EAD] avec vos identifiant et mot de passe (si vous n'en avez pas, la création d'un compte est gratuite ; cliquez sur "Free Registration" et suivez les étapes). Une fois connecté, cliquez sur "Enter Applications" : le lancement de l'application prends alors quelques minutes (!).
+
+Lorsque l'interface apparaît, double-cliquez sur "Generate Report" dans le bandeau gauche, puis dans la liste "Report Name", sélectionnez par exemple "S-Aerodrome/Heliport in Africa". Cliquez sur "Parameters", puis dans l'onglet "Report Style" de la fenêtre qui apparaît sélectionnez "No Style (plain XML output)" et mettez les données "latitude/longitude" au format "DDMMSS.ssX", avec 0 décimale, puis validez.
+
+Cliquez sur Generate, re-cliquez sur Generate dans la fenêtre récapitulative qui apparaît, et attendez la génération du fichier (qui se fait normalement dans un nouvel onglet du navigateur). Enfin copiez-collez le texte généré dans un éditeur comme Notepad++.
+
+Répétez ces actions pour les autres raports (Europe/Greenland, etc.) en créant à chaque fois un nouveau fichier dans votre éditeur.
+
+Pour obtenir le fichier XML comportant tous les terrains OACI du monde, dans un des quatre fichiers ainsi créés, copiez-collez les objets aéroports (les objets entre balises Record et /Record) des trois autres fichiers dans celui-ci, là où se trouvent également les objets aéroports. Pour finir, enregistrer ce fichier au format XML.
 
 
-== Créer la base dans Videso3D ==
+== Créer et visualiser la base dans Videso3D ==
+
+Pour créer la base dans Videso3D, il vous suffit simplement d'importer le fichier XML que vous avez créé ou téléchargé.
+
+Vous aurez ainsi accès, pour chaque terrain possédant un code OACI, aux données suivantes (si toutefois elles figurent dans le fichier XML) :
 
   * nom du terrain
   * code OACI
@@ -34,5 +46,7 @@ Eurocontrol diffuse 4 fichiers XML décrivant les terrains de 4 régions du mond
   * pays d'appartenance
   * ville desservie
   * coordonnées géographiques
+  
+  L'affichage d'un terrain peut se faire soit via le bandeau gauche, soit par la recherche de son code OACI dans le champ recherche.
 
 [http://videso3d.googlecode.com/svn/wiki/img/terrOaci.png]
