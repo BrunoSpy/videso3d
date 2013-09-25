@@ -231,13 +231,13 @@ public class AIP extends FileParser{
 		return document.getRootElement().getChild("Situation");
 	}
 
+	/**
+	 * Crée le nom de la base : AIP_date d'entrée en vigueur
+	 */
 	private void createName(){
 		this.name = "AIP_"+document.getRootElement().getChild("Situation").getAttributeValue("effDate");
 	}
 
-	/**
-	 * Crée le nom de la base : AIP_date d'entrée en vigueur
-	 */
 	@Override
 	public String getName() {
 		return this.name;

@@ -1071,9 +1071,13 @@ public final class DatabaseManager {
 		Statement st = DatabaseManager.selectDB(DatasManager.Type.TerrainsOACI, name).createStatement();
 		st.executeUpdate("create table terrainsoaci (id integer primary key autoincrement," +
 				"idoaci varchar(4), " +
+				"idiata varchar(3), " +
+				"name varchar(30), " +
+				"type varchar(2), " +
+				"country varchar(30), " +
+				"city varchar(30), " +
 				"latitude float, " +
-				"longitude float, " +
-				"name varchar(30))");
+				"longitude float)");
 		st.close();
 		//on référence la base de données
 		DatabaseManager.addDatabase(name, DatasManager.Type.TerrainsOACI, new SimpleDateFormat().format(new Date()));

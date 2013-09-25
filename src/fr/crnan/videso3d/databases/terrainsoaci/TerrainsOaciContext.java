@@ -61,6 +61,19 @@ public class TerrainsOaciContext extends Context {
 				final String latitude = lat.getDegres()+"°"+lat.getMinutes()+"\'"+lat.getSecondes()+"\""+ lat.getSens();
 				final String longitude = Math.abs(lon.getDegres())+"°"+lon.getMinutes()+"\'"+lon.getSecondes()+"\""+ lon.getSens();
 				taskpane.add(new JLabel("<html><b>Nom</b> : "+ rs.getString("name")+"</html>"));
+				taskpane.add(new JLabel("<html><b>Code OACI</b> : "+ rs.getString("idoaci")+"</html>"));
+				taskpane.add(new JLabel("<html><b>Code IATA</b> : "+ (rs.getString("idiata")==null ? "Non renseigné" : rs.getString("idiata"))+"</html>"));
+				String tertyp = rs.getString("type");
+				switch (tertyp) {
+				case "AD": tertyp = "Aérodrome"; break;
+				case "HP": tertyp = "Héliport"; break;
+				case "AH": tertyp = "Aérodrome avec zone hélicoptère"; break;
+				case "LS": tertyp = "Zone d'atterrissage"; break;
+				default : tertyp = "Non renseigné"; break;
+				}
+				taskpane.add(new JLabel("<html><b>Type</b> : "+ tertyp+"</html>"));
+				taskpane.add(new JLabel("<html><b>Pays</b> : "+ rs.getString("country")+"</html>"));
+				taskpane.add(new JLabel("<html><b>Ville desservie</b> : "+ (rs.getString("city")==null ? "Non renseignée" : rs.getString("city"))+"</html>"));
 				taskpane.add(new JLabel("<html><b>Cooordonnées</b> :</html>"));
 				taskpane.add(new AbstractAction() {
 					{
