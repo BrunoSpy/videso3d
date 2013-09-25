@@ -44,7 +44,6 @@ public class TerrainsOACIView extends FilteredMultiTreeTableView {
 	public TerrainsOACIView() {
 		try {
 			if(DatabaseManager.getCurrentTerrainsOACI() != null) { //si pas de bdd, ne pas créer la vue
-				//Balises
 				DefaultMutableTreeNode terrainsRoot = new DefaultMutableTreeNode("root");
 				this.fillTerrainsRootNode(terrainsRoot);
 				this.terrainsModel = new FilteredTreeTableModel(terrainsRoot);
@@ -64,17 +63,37 @@ public class TerrainsOACIView extends FilteredMultiTreeTableView {
 	private void fillTerrainsRootNode(DefaultMutableTreeNode root){
 		try{
 			Statement st = DatabaseManager.getCurrentTerrainsOACI();
-			
-			DefaultMutableTreeNode terr = new DefaultMutableTreeNode(new FilteredTreeTableNode("Terrains OACI", false));
-			root.add(terr);
-			ResultSet rs = st.executeQuery("select idoaci from terrainsoaci order by idoaci");
+			ResultSet rs = st.executeQuery("select distinct country from terrainsoaci order by country");
 			while(rs.next()){
-				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new FilteredTreeTableNode(rs.getString(1), false));
-				terrains.put(rs.getString(1), node);
-				terr.add(node);
+				DefaultMutableTreeNode country = new DefaultMutableTreeNode(new FilteredTreeTableNode(rs.getString("country"), false));
+				try {
+					Statement st2 = DatabaseManager.getCurrentTerrainsOACI();
+					ResultSet rs2 = st2.executeQuery("select * from terrainsoaci where country='" + rs.getString("country") + "'order by idoaci");
+					while(rs2.next()){
+						DefaultMutableTreeNode node = new DefaultMutableTreeNode(new FilteredTreeTableNode(rs2.getString("idoaci"), false));
+						this.terrains.put(rs2.getString("idoaci"), node);
+						country.add(node);
+					}
+					rs2.close();
+					st2.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				root.add(country);
 			}
 			rs.close();
 			st.close();
+//			Ci dessous, le code qui permettait d'utiliser l'ancien format de fichier terrain OACI
+//			DefaultMutableTreeNode terr = new DefaultMutableTreeNode(new FilteredTreeTableNode("Terrains OACI", false));
+//			root.add(terr);
+//			ResultSet rs = st.executeQuery("select idoaci from terrainsoaci order by idoaci");
+//			while(rs.next()){
+//				DefaultMutableTreeNode node = new DefaultMutableTreeNode(new FilteredTreeTableNode(rs.getString(1), false));
+//				terrains.put(rs.getString(1), node);
+//				terr.add(node);
+//			}
+//			rs.close();
+//			st.close();
 		} catch (SQLException e){
 			e.printStackTrace();
 		}
