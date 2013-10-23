@@ -132,8 +132,10 @@ public class StipContext extends Context {
 					final String latitude = lat.getDegres()+"°"+lat.getMinutes()+"\'"+lat.getSecondes()+"\" N";
 					final String longitude = Math.abs(lon.getDegres())+"°"+lon.getMinutes()+"\'"+lon.getSecondes()+"\""+ lon.getSens();
 
-					final boolean pub = rs.getBoolean(3);
+					final boolean pub = rs.getBoolean("publicated");
 					taskpane1.add(new JLabel("<html><b>Publiée</b> : "+(pub?"oui":"non")+"</html>"));
+					final boolean etrg = rs.getBoolean("etrg");
+					taskpane1.add(new JLabel("<html><b>ETRG</b> : "+(etrg?"oui":"non")+"</html>"));
 					taskpane1.add(new JLabel("<html><b>Commentaires</b> : "+ rs.getString("definition")+"</html>"));
 					taskpane1.add(new JLabel("<html><b>Cooordonnées</b> :</html>"));
 					taskpane1.add(new AbstractAction() {
@@ -170,7 +172,7 @@ public class StipContext extends Context {
 								final String tSecteur = secteur;
 								taskpane1.add(new AbstractAction() {
 									{
-										putValue(Action.NAME, "\nDu "+tPlafond+" au "+tPlancher+" : "+tSecteur);
+										putValue(Action.NAME, "\nDu "+tPlancher+" au "+tPlafond+" : "+tSecteur);
 									}
 									@Override
 									public void actionPerformed(ActionEvent e) {
@@ -187,7 +189,7 @@ public class StipContext extends Context {
 						final String tSecteur = secteur;
 						taskpane1.add(new AbstractAction() {
 							{
-								putValue(Action.NAME, "\nDu "+tPlafond+" au 0 : "+tSecteur);
+								putValue(Action.NAME, "\nDu 0 au "+tPlafond+" : "+tSecteur);
 							}
 							@Override
 							public void actionPerformed(ActionEvent e) {
