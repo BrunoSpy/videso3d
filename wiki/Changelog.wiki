@@ -1,5 +1,15 @@
 = Version 0.12 =
 
+== 0.12.1 ==
+
+  * STIP
+    * Extraction des informations ETRG des balises
+
+  * IHM
+    * Les balises "travers" ne sont plus incluses dans l'affichage des itis
+
+  * Corrections de bugs
+
 == 0.12.0 ==
 
   * IHM
@@ -11,6 +21,12 @@
 
   * KML
     * amélioration du support expérimental des fichiers KML
+
+  * SVN
+    * Import de bases de données depuis un serveur SVN
+
+  * STR
+    * Affichage des cartes RVSM
 
   * Divers
     * amélioration de l'import des bases de données
