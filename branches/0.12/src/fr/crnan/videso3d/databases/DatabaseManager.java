@@ -705,6 +705,7 @@ public final class DatabaseManager {
 		st.executeUpdate("create table balises (id integer primary key autoincrement," +
 				"name varchar(5), " +
 				"publicated boolean, " +
+				"etrg boolean, " +
 				"latitude float, " +
 				"longitude float, " +
 				"centre varchar(3), " +
@@ -771,8 +772,9 @@ public final class DatabaseManager {
 				"route varchar(7), " +
 				"routeid int, " +
 				"balise varchar(10), " +
+				"balid int, " +
 				"appartient boolean, " +
-		"sens varchar(1))");
+				"sens varchar(1))");
 		//table contenant les extensions de début des routes
 		st.executeUpdate("create table routeextdebut (id integer primary key autoincrement, " +
 				"route varchar(7), " +
@@ -874,6 +876,7 @@ public final class DatabaseManager {
 		st.executeUpdate("create table connexions (id integer primary key autoincrement, " +
 				"terrain varchar(4), " +
 				"connexion varchar(5), " +
+				"connexbalid int, " +
 				"type varchar(1), " +
 				"perfo varchar(1), " +
 				"flinf int, " +
