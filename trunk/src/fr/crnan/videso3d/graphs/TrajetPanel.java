@@ -49,13 +49,13 @@ public class TrajetPanel extends ResultGraphPanel {
 
 	private String findTrajets(String balise1, String balise2){
 		if(balise2.isEmpty()){
-			return "select idtrajet as id from baltrajets where balise "+forgeSql(balise1);
+			return "select idtrajet as id from baltrajets where balise "+forgeSqlTravers(balise1);
 		} else if(balise1.isEmpty()){
-			return "select idtrajet as id from baltrajets where balise "+forgeSql(balise2);
+			return "select idtrajet as id from baltrajets where balise "+forgeSqlTravers(balise2);
 		} else {
-			return "select idtrajet as id from baltrajets where balise "+forgeSql(balise1)+ 
+			return "select idtrajet as id from baltrajets where balise "+forgeSqlTravers(balise1)+ 
 				   " INTERSECT "+ 
-				   "select idtrajet as id from baltrajets where balise "+forgeSql(balise2);
+				   "select idtrajet as id from baltrajets where balise "+forgeSqlTravers(balise2);
 		}
 	}
 	
