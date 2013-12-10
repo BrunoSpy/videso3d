@@ -50,18 +50,18 @@ public class ConnexPanel extends ResultGraphPanel {
 
 	private String findConnex(String balise1, String balise2){
 		if(balise2.isEmpty() && !balise1.isEmpty()){
-			return "select idconn from balconnexions where balise "+forgeSql(balise1)+ 
+			return "select idconn from balconnexions where balise "+forgeSqlTravers(balise1)+ 
 			" UNION select id as idconn from connexions where connexion "+forgeSql(balise1) +" or terrain "+forgeSql(balise1);
 		} else if(balise1.isEmpty() && !balise2.isEmpty()){
-			return "select idconn from balconnexions where balise "+forgeSql(balise2);
+			return "select idconn from balconnexions where balise "+forgeSqlTravers(balise2);
 		} else if(balise1.isEmpty() && balise2.isEmpty()){
 			//cas impossible normalement
 			return "";
 		} else {
-			return "select idconn from (select idconn from balconnexions where balise "+forgeSql(balise1)+ 
+			return "select idconn from (select idconn from balconnexions where balise "+forgeSqlTravers(balise1)+ 
 			" UNION select id as idconn from connexions where connexion "+forgeSql(balise1)+" or terrain "+forgeSql(balise1)+") as ab"+ 
 			" INTERSECT "+ 
-			"select idconn from (select idconn from balconnexions where balise "+forgeSql(balise2)+ 
+			"select idconn from (select idconn from balconnexions where balise "+forgeSqlTravers(balise2)+ 
 			" UNION select id as idconn from connexions where connexion "+forgeSql(balise2)+" or terrain "+forgeSql(balise2)+") as cd";
 		}
 	}

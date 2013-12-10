@@ -113,7 +113,7 @@ public class ItiPanel extends ResultGraphPanel {
 			
 			for(int i=9;i<9+nbBalises;i++){
 				if(!criteria[i].trim().isEmpty())
-					sql.add("select iditi from balitis where balise "+forgeSql(criteria[i].trim()));
+					sql.add("select iditi from balitis where balise "+forgeSqlTravers(criteria[i].trim()));
 			}
 			String sqlQuery = "";
 			for(int i=0;i<sql.size();i++){
@@ -134,19 +134,19 @@ public class ItiPanel extends ResultGraphPanel {
 			String balise1 = criteria[0];
 			String balise2 = criteria[1];
 			if(balise2.isEmpty() && !balise1.isEmpty()){
-				return "select iditi from balitis where balise "+forgeSql(balise1)+ 
+				return "select iditi from balitis where balise "+forgeSqlTravers(balise1)+ 
 						" UNION select id as iditi from itis where entree "+forgeSql(balise1);
 			} else if(balise1.isEmpty() && !balise2.isEmpty()){
-				return "select iditi from balitis where balise "+forgeSql(balise2)+ 
+				return "select iditi from balitis where balise "+forgeSqlTravers(balise2)+ 
 						" UNION select id as iditi from itis where sortie "+forgeSql(balise2);
 			} else if(balise1.isEmpty() && balise2.isEmpty()){
 				//cas impossible normalement
 				return "";
 			} else {
-				return "select iditi from (select iditi from balitis where balise "+forgeSql(balise1)+ 
-						" UNION select id as iditi from itis where entree "+forgeSql(balise1)+") as ab"+ 
+				return "select iditi from (select iditi from balitis where balise "+forgeSqlTravers(balise1)+ 
+						" UNION select id as iditi from itis where entree "+forgeSql(balise1)+")  ab"+ 
 						" INTERSECT "+ 
-						"select iditi from (select iditi from balitis where balise "+forgeSql(balise2)+ 
+						"select iditi from (select iditi from balitis where balise "+forgeSqlTravers(balise2)+ 
 						" UNION select id as iditi from itis where sortie "+forgeSql(balise2)+") as cd";
 			}
 		}
@@ -173,10 +173,7 @@ public class ItiPanel extends ResultGraphPanel {
 	 * @see fr.crnan.videso3d.graphs.ResultGraphPanel#createGraphComponent(java.lang.String)
 	 */
 	@Override
-	protected void createGraphComponent(final boolean advanced, final String... criteria){
-
-		
-		
+	protected void createGraphComponent(final boolean advanced, final String... criteria){		
 		progressBar.setMinimum(0);
 		progressBar.setMaximum(8);
 		progressBar.setVisible(true);

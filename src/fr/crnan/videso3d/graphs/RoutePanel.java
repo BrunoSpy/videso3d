@@ -48,11 +48,11 @@ public class RoutePanel extends ResultGraphPanel {
 
 	private String findRoute(String balise1, String balise2){
 		if(balise2.isEmpty()){
-			return "select routeid as id from routebalise where balise "+forgeSql(balise1)+" UNION select id from routes where name "+forgeSql(balise1);
+			return "select routeid as id from routebalise where balise "+forgeSqlTravers(balise1)+" UNION select id from routes where name "+forgeSql(balise1);
 		} else if(balise1.isEmpty()){
-			return "select routeid as id from routebalise where balise "+forgeSql(balise2)+" UNION select id from routes where name "+forgeSql(balise2);
+			return "select routeid as id from routebalise where balise "+forgeSqlTravers(balise2)+" UNION select id from routes where name "+forgeSql(balise2);
 		} else {
-			return "select routeid as id from routebalise where balise "+forgeSql(balise1)+" INTERSECT select routeid as id from routebalise where balise "+forgeSql(balise2);
+			return "select routeid as id from routebalise where balise "+forgeSqlTravers(balise1)+" INTERSECT select routeid as id from routebalise where balise "+forgeSqlTravers(balise2);
 		}
 	}
 	
