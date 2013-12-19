@@ -288,15 +288,27 @@ public class SearchPanel extends JPanel {
 					searchField2.setToolTipText("Sans objet.");
 				} else if(item.equals("iti")){
 					searchField1.setToolTipText("<html>Première balise recherchée.<br />Recherche aussi dans les entrées des itis." +
-							"<br /><i>Astuce : </i>Pour rechercher tous les itis qui contiennent une balise commençant par OM, mettre OM*.</html>");
+							"<br /><i>Astuces : </i><br />- Pour rechercher tous les itis qui contiennent une balise commençant par OM, mettre OM*." +
+							"<br />- Pour rechercher les itis contenant un travers BALISE, taper BALISE/" +
+							"<br />- Pour chercher uniquement les itis contenant une balise non travers, taper BALISE\\</html>");
 					searchField2.setToolTipText("<html>Deuxième balise recherchée.<br />Recherche aussi dans les sorties des itis.</html>");
 				} else if(item.equals("trajet")){
 					searchField1.setToolTipText("<html>Première balise recherchée." +
-							"<br /><i>Astuce : </i>Pour rechercher tous les trajets qui contiennent une balise commençant par OM, mettre OM*.</html>");
+							"<br /><i>Astuces : </i><br />- Pour rechercher tous les trajets qui contiennent une balise commençant par OM, mettre OM*." +
+							"<br />- Pour rechercher les trajets contenant un travers BALISE, taper BALISE/" +
+							"<br />- Pour chercher uniquement les trajets contenant une balise non travers, taper BALISE\\</html>");
 					searchField2.setToolTipText("<html>Deuxième balise recherchée.</html>");
 				} else if(item.equals("route")){
-					searchField1.setToolTipText("<html>Première balise recherchée.<br />Recherche aussi dnas les nom de route si il n'y a pas de deuxième balise recherchée.<br />" +
-							"<br /><i>Astuce : </i>Pour rechercher toutes les routes qui contiennent une balise commençant par OM, mettre OM*.</html>");
+					searchField1.setToolTipText("<html>Première balise recherchée.<br />Recherche aussi dans les noms de route si il n'y a pas de deuxième balise recherchée.<br />" +
+							"<br /><i>Astuces : </i><br />- Pour rechercher toutes les routes qui contiennent une balise commençant par OM, mettre OM*." +
+							"<br />- Pour rechercher les routes contenant un travers BALISE, taper BALISE/" +
+							"<br />- Pour chercher uniquement les routes contenant une balise non travers, taper BALISE\\</html>");
+					searchField2.setToolTipText("<html>Deuxième balise recherchée.</html>");
+				} else if(item.equals("connexion")){
+					searchField1.setToolTipText("<html>Première balise recherchée.<br />" +
+							"<br /><i>Astuces : </i><br />- Pour rechercher toutes les connexions qui contiennent une balise commençant par OM, mettre OM*." +
+							"<br />- Pour rechercher les connexions contenant un travers BALISE, taper BALISE/" +
+							"<br />- Pour chercher uniquement les connexions contenant une balise non travers, taper BALISE\\</html>");
 					searchField2.setToolTipText("<html>Deuxième balise recherchée.</html>");
 				}
 			}
