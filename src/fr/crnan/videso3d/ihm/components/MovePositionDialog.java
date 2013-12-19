@@ -75,12 +75,12 @@ public class MovePositionDialog extends JDialog {
 		double lon = this.pos.getLongitude().degrees;
 		
 		this.latDeg = Math.abs((int)lat);
-		this.latMin = Math.abs((int)((lat-latDeg)*60));
-		this.latSec = Math.abs((int)(((lat-latDeg)*60-latMin)*60));
+		this.latMin = (int)((Math.abs(lat)-latDeg)*60);
+		this.latSec = (int)(((Math.abs(lat)-latDeg)*60-latMin)*60);
 		
 		this.lonDeg = Math.abs((int)lon);
-		this.lonMin = Math.abs((int)((lon-lonDeg)*60));
-		this.lonSec = Math.abs((int)(((lon-lonDeg)*60-lonMin)*60));
+		this.lonMin = (int)((Math.abs(lon)-lonDeg)*60);
+		this.lonSec = (int)(((Math.abs(lon)-lonDeg)*60-lonMin)*60);
 		
 		JPanel content = new JPanel();
 		content.setBorder(new EmptyBorder(10, 0, 0, 0));
