@@ -50,7 +50,7 @@ import java.util.List;
  * GridPointAttributes are used.
  *
  * @author dcollins
- * @version $Id: AnalyticSurface.java 1171 2013-02-11 21:45:02Z dcollins $
+ * @version $Id: AnalyticSurface.java 1676 2013-10-21 18:32:30Z dcollins $
  */
 public class AnalyticSurface implements Renderable, PreRenderable
 {
@@ -1233,13 +1233,15 @@ public class AnalyticSurface implements Renderable, PreRenderable
 
         public void drawInterior(DrawContext dc)
         {
-            dc.getGL().glDrawElements(GL.GL_TRIANGLE_STRIP, this.interiorIndexBuffer.remaining(), GL.GL_UNSIGNED_INT,
+            GL2 gl = dc.getGL().getGL2(); // GL initialization checks for GL2 compatibility.
+            gl.glDrawElements(GL.GL_TRIANGLE_STRIP, this.interiorIndexBuffer.remaining(), GL.GL_UNSIGNED_INT,
                 this.interiorIndexBuffer);
         }
 
         public void drawOutline(DrawContext dc)
         {
-            dc.getGL().glDrawElements(GL.GL_LINE_LOOP, this.outlineIndexBuffer.remaining(), GL.GL_UNSIGNED_INT,
+            GL2 gl = dc.getGL().getGL2(); // GL initialization checks for GL2 compatibility.
+            gl.glDrawElements(GL.GL_LINE_LOOP, this.outlineIndexBuffer.remaining(), GL.GL_UNSIGNED_INT,
                 this.outlineIndexBuffer);
         }
     }
