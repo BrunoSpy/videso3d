@@ -24,8 +24,6 @@ import java.util.List;
 import javax.swing.SwingWorker;
 import javax.swing.event.EventListenerList;
 
-import fr.crnan.videso3d.DatasManager.Type;
-
 
 /**
  * Importe les données de fichiers et les stocke en base de données
@@ -118,5 +116,5 @@ public abstract class FileParser extends SwingWorker<Integer, String>{
 	 * @return Liste des fichiers utiles et quiil faudra copier à l'import.<br /> Renvoie <code>null</code> si tous les fichiers doivent être copiés.
 	 */
 	public abstract List<String> getRelevantFileNames();
-	
+
 }
