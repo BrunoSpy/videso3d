@@ -1,0 +1,234 @@
+(version 2.3)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "ROUTE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+  (id_atc_preactif "ROUTE_PREACTIVE")
+  (id_atc_predorm "ROUTE_PREACTIVE")
+)
+(id_atc
+  (name "ROUTE_PREACTIVE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 52)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "FOND PUITS 2")
+  (line_width 1)
+  (line_style "SingleLineDashed")
+  (priority 5)
+  (text_font "1")
+  (fill_visibility 1)
+  (designabilite 0)
+  (foreground_color "Gris")
+)
+(map
+  (name "ROU")
+  (number 3)
+  (comment "")
+  (date 10 05 2004)
+  (heure 11 38 21)
+  (ref_point
+    (name "ROU")
+    (comment "")
+    (value
+      (nautical_mile 64 3211 64 9502)
+    )
+  )
+  (ref_point
+    (name "ROU2")
+    (comment "")
+    (value
+      (nautical_mile 64 3171 64 9951)
+    )
+  )
+  (ref_point
+    (name "ROU3")
+    (comment "")
+    (value
+      (nautical_mile 64 3176 64 10009)
+    )
+  )
+  (ref_point
+    (name "ROU4")
+    (comment "")
+    (value
+      (nautical_mile 64 3204 64 10063)
+    )
+  )
+  (ref_point
+    (name "ROU5")
+    (comment "")
+    (value
+      (nautical_mile 64 3254 64 10104)
+    )
+  )
+  (ref_point
+    (name "ROU6")
+    (comment "")
+    (value
+      (nautical_mile 64 3317 64 10122)
+    )
+  )
+  (ref_point
+    (name "ROU7")
+    (comment "")
+    (value
+      (nautical_mile 64 3390 64 10110)
+    )
+  )
+  (ref_point
+    (name "ROU8")
+    (comment "")
+    (value
+      (nautical_mile 64 3440 64 10076)
+    )
+  )
+  (ref_point
+    (name "ROU9")
+    (comment "")
+    (value
+      (nautical_mile 64 3475 64 10024)
+    )
+  )
+  (ref_point
+    (name "ROU10")
+    (comment "")
+    (value
+      (nautical_mile 64 3486 64 9979)
+    )
+  )
+  (ref_point
+    (name "ROU11")
+    (comment "")
+    (value
+      (nautical_mile 64 3525 64 9531)
+    )
+  )
+  (ref_point
+    (name "ROU12")
+    (comment "")
+    (value
+      (nautical_mile 64 3519 64 9471)
+    )
+  )
+  (ref_point
+    (name "ROU13")
+    (comment "")
+    (value
+      (nautical_mile 64 3490 64 9418)
+    )
+  )
+  (ref_point
+    (name "ROU14")
+    (comment "")
+    (value
+      (nautical_mile 64 3451 64 9383)
+    )
+  )
+  (ref_point
+    (name "ROU15")
+    (comment "")
+    (value
+      (nautical_mile 64 3381 64 9359)
+    )
+  )
+  (ref_point
+    (name "ROU16")
+    (comment "")
+    (value
+      (nautical_mile 64 3326 64 9365)
+    )
+  )
+  (ref_point
+    (name "ROU17")
+    (comment "")
+    (value
+      (nautical_mile 64 3274 64 9390)
+    )
+  )
+  (ref_point
+    (name "ROU18")
+    (comment "")
+    (value
+      (nautical_mile 64 3234 64 9432)
+    )
+  )
+  (submap
+    (number 1)
+    (name "")
+    (submap_type 3)
+    (keyboard 3)
+    (entity
+      (name "1")
+      (id_atc "ROUTE_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "ROU")
+        (point "ROU2")
+        (point "ROU3")
+        (point "ROU4")
+        (point "ROU5")
+        (point "ROU6")
+        (point "ROU7")
+        (point "ROU8")
+        (point "ROU9")
+        (point "ROU10")
+        (point "ROU11")
+        (point "ROU12")
+        (point "ROU13")
+        (point "ROU14")
+        (point "ROU15")
+        (point "ROU16")
+        (point "ROU17")
+        (point "ROU18")
+      )
+      (polygone 1)
+    )
+  )
+)

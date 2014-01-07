@@ -1,0 +1,3642 @@
+
+                    **********************                                  
+                    * POSITIONS LOGIQUES *                                  
+                    **********************  28-11-2006
+
+
+                                      
+       *** 60 = LIMITATION V19 EN NOMBRE DE POSITION LOGIQUES
+       *** SUPPORTANT DES LISTES 
+       *** POS LOG DE TYPE 11 : 1,2,10,11,12
+       
+       **** FAMILLE DE POSITION 1 = SECTEUR ACTIF
+                                                                            
+CONF 11     1 PTN    PARI                                                                                                     
+CONF 11     1 PUT    PARI                                                   
+CONF 11     1 PTL    PARI                                                   
+CONF 11     1 PTE    PARI                                                   
+CONF 11     1 PTB    PARI                                                   
+CONF 11     1 PAO    PARI
+CONF 11     1 PAP    PARI                                                  
+CONF 11     1 PAR    PARI                                                   
+CONF 11     1 PIF    PARI                                                                                                     
+CONF 11     1 PUZ    PARI                                                   
+CONF 11     1 PUJ    PARI                                                   
+CONF 11     1 PUP    PARI
+CONF 11     1 PS     PARI
+CONF 11     1 PSU    PARI
+CONF 11     1 PSI    PARI
+CONF 11     1 PSJ    PARI
+CONF 11     1 PSK    PARI
+CONF 11     1 PTM    PARI                                                   
+CONF 11     1 PTP    PARI                                                   
+CONF 11     1 PTH    PARI                                                   
+CONF 11     1 PDO    PARI                                                   
+CONF 11     1 PDG    PARI                                                   
+CONF 11     1 POM    PARI
+
+CONF 11     1 POG    PARI                                                   
+CONF 11     1 POT    PARI                                                   
+CONF 11     1 PRT    PARI 
+CONF 11     1 PPU    PARI                                                      
+
+CONF 11     1 P1V    PARI                                                   
+CONF 11     1 P4V    PARI                                                      
+   
+
+CONF 11     1 PCE    PARI             NVISU
+CONF 11     1 PDM    PARI             NVISU
+CONF 11     1 PCS    PARI             NVISU
+CONF 11     1 PMO    PARI             NVISU
+CONF 11     1 PXD    PARI
+
+            *** FAMILLE 3 : SUPERVISION
+            
+CONF 11     3 PMAE                                                                                                                  
+CONF 11     3 PSSP
+CONF 11     3 PCDSW                                                         
+CONF 11     3 PCDSE                                                         
+CONF 11     3 PDMC                                                          
+CONF 11     3 PSAG1 
+CONF 11     3 PSAG2
+CONF 11     3 PSAG3
+CONF 11     3 PSAG4
+CONF 11     3 PSAG5
+CONF 11     3 PSAG6
+CONF 11     3 PSAG7
+CONF 11     3 PGDSR
+CONF 11     3 PSPO1
+CONF 11     3 PSPO2
+CONF 11     3 PSTIO
+CONF 11     3 PSAQQ
+
+              *** : FAMILLE 4 : INTERCENTRE
+              *** D≈claration Pos PYEVAL Hydres EVAL en ICOM-HYDRES
+              *** Pour la fonction EVAL, la premi…re d≈claration 
+              *** est prise en compte
+              
+CONF 11     4 PEVAL             EVAL  
+CONF 11     4 PYEVAL            EVAL
+                                        
+CONF 11     4 PEVAL2            EVAL2
+CONF 11     4 PPARI
+                                                         
+              *** D≈claration Pos PYSEC Hydres SEC en ICOM-HYDRES
+CONF 11     4 PYSEC                                                 
+                                                              
+CONF 11     4 PXLOND                              RSYST                     
+CONF 11     4 PXGNEV                              RSYST       EHRTB   
+CONF 11     4 PXBRUX                              RSYST       EHRTB ADRNS
+CONF 11     4 PXLUXE                              RSYST       EHRTB ADRNS   
+CONF 11     4 PXMAAS                              RSYST       EHRTB ADRNS
+
+
+CONF 11     4 PXSTIP
+CONF 11     4 PXBRST
+CONF 11     4 PXREIM
+CONF 11     4 PXAIX
+CONF 11     4 PXBORD
+             
+             *** FAMILLE 5 : STR
+             
+CONF 11     5 PYSTR1 PARI                       1                           
+CONF 11     5 PYSTR2 PARI                       2                           
+CONF 11     5 PYSTR3 PARI                       3                           
+CONF 11     5 PYSTR4 PARI                       4                           
+CONF 11     5 PXTRG1 CDG                        1                           
+CONF 11     5 PXTRG2 CDG                        2                           
+CONF 11     5 PXTRG3 CDG                        3                           
+CONF 11     5 PXTRG4 CDG                        4
+CONF 11     5 PXTRO1 ORL                        1                           
+CONF 11     5 PXTRO2 ORL                        2                           
+CONF 11     5 PXTRO3 ORL                        3
+CONF 11     5 PXTRO4 ORL                        4
+ 
+            *** FAMILLE 6 : STRIDA
+            
+CONF 11     6 PXRBRT 
+CONF 11S      PXRBRT S1
+CONF 11T      PXRBRT LY 
+CONF 11     6 PXRIES 
+CONF 11S      PXRIES S1
+CONF 11T      PXRIES DR
+CONF 11     6 PXRAKI 
+CONF 11S      PXRAKI S1
+CONF 11T      PXRAKI TO
+
+            *** FAMILLE 7 : RSFTA
+            
+CONF 11     7 PXAIDA                                                        
+            
+            *** FAMILLE 8 : DISPATCH
+                                                                            
+                                                    
+     11     8 PMIL   CDG                                                    
+            *** FAMILLE 9 : IMPRIMANTE RAPIDE
+                                                                            
+CONF 11     9 PIMP                                                          
+            
+            *** FAMILLE 10 : SECTEUR D'APPROCHE
+                                                                            
+CONF 11    10 POD    ORL                                                    
+CONF 11    10 POA    ORL                                                    
+CONF 11    10 POR    ORL                                                    
+            *** FAMILLE 11 : VIGIE DEPART
+            
+CONF 11    11 PVD    ORL                                                    
+            *** FAMILLE 12 : VIGIE ARRIVEE
+            
+CONF 11    12 PVR    ORL                                                    
+CONF 11    12 PVA    ORL                                                    
+
+CONF 11    10 PK1    CDG                                                    
+CONF 11    10 PK2    CDG                                                    
+CONF 11    10 PK3    CDG                                                    
+CONF 11    10 PK4    CDG
+CONF 11    10 PRA    CDG
+CONF 11    10 PRB    CDG
+CONF 11    10 PDC    CDG                                                    
+CONF 11    10 PAC    CDG                                                    
+
+CONF 11    11 PGD    CDG                                                    
+CONF 11    11 PBD    CDG                                                    
+                                                                                                                               
+CONF 11    12 PGG    CDG                                                    
+CONF 11    12 PGA    CDG
+CONF 11    12 PGE    CDG
+CONF 11    12 PGF    CDG
+CONF 11    12 PGW    CDG
+CONF 11    12 PBA    CDG                                                    
+CONF 11    12 PGS    CDG                                                                                         
+CONF 11    12 PRE    CDG
+CONF 11    12 PRS    CDG
+CONF 11    12 PRI    CDG
+            
+            ***FAMILLE 13 : SOL
+            
+         
+CONF 11    13 PME    CDG
+CONF 11    13 PMF    CDG
+CONF 11    13 PMG    CDG
+CONF 11    13 PMW    CDG
+CONF 11    13 PNE    CDG
+CONF 11    13 PNW    CDG
+CONF 11    13 PNS    CDG
+CONF 11    13 PSE    CDG
+CONF 11    13 PSW    CDG
+CONF 11    13 PV1    CDG
+CONF 11    13 PV2    CDG
+CONF 11    13 PV3    CDG
+CONF 11    13 PV4    CDG
+CONF 11    13 PV5    CDG
+CONF 11    13 PV6    CDG
+CONF 11    13 PVI    CDG
+
+CONF 11    11 PLD    LILE                                                   
+
+           *** FAMILLE 14 : MAESTRO
+           
+CONF 11    14 PMTO                                                          
+CONF 11    14 PMTG
+
+           *** FAMILLE 15 : SIGMA
+           
+CONF 11    15 PSIGMO
+CONF 11    15 PSIGMG
+           
+           *** FAMILLE 16 : LDAS
+            
+CONF 11    16 PLDAS
+
+
+                    ****************************                            
+                    * DEFINITION DES           *                            
+                    *  ENTITES OPERATIONNELLES *                            
+                    ****************************  
+             
+             
+                  AP  =  position nuit OUEST et TM  = position nuit EST
+                  1P et OM sont des ol fictifs
+
+CONF 12     1 1P          PAP         R1P         1P
+CONF 12     1 OM          POM         ROM         OM 
+
+CONF 12     1 AP          PAP         RAP         AP
+CONF 12     1 LN          PAP         RLN         LN
+CONF 12     1 TB          PAP         RTB         TB                        
+CONF 12     1 TE          PAP         RTE         TE                        
+CONF 12     1 TH          PAP         RTH         TH                        
+CONF 12     1 TN          PAP         RTN         TN                        
+CONF 12     1 TP          PAP         RTP         TP                                               
+CONF 12     1 UK          PAP         RUK         UK                                             
+CONF 12     1 OG          PAP         ROG         OG                        
+CONF 12     1 OT          PAP         ROT         OT
+CONF 12     1 OY          PAP         ROY         OY
+CONF 12     1 RT          PAP         RRT         RT   
+CONF 12     1 UZ          PAP         RUZ         UZ                        
+CONF 12     1 SK          PAP         RSK         SK                        
+
+CONF 12     1 AO          PTM         RAO         AO                       
+CONF 12     1 AR          PTM         RAR         AR                        
+CONF 12     1 DS          PTM         RDS         DS                        
+CONF 12     1 S           PTM         RS          S                         
+CONF 12     1 SO          PTM         RSO         SO
+CONF 12     1 SJ          PTM         RSJ         SJ
+CONF 12     1 SL          PTM         RSL         SL
+CONF 12     1 SR          PTM         RSR         SR
+CONF 12     1 SU          PTM         RSU         SU
+CONF 12     1 TL          PTM         RTL         TL                        
+CONF 12     1 TM          PTM         RTM         TM                        
+CONF 12     1 TU          PTM         RTU         TU                        
+CONF 12     1 UJ          PTM         RUJ         UJ
+CONF 12     1 UP          PTM         RUP         UP
+CONF 12     1 US          PTM         RUS         US
+CONF 12     1 PU          PTM         RPU         PU                        
+CONF 12     1 UT          PTM         RUT         UT
+CONF 12     1 DO          PTM         RDO         DO
+CONF 12     1 DG          PTM         RDG         DG
+CONF 12     1 HP          PTM         RHP         HP
+
+CONF 12     1 FI          PIF         RFI         FI                        
+CONF 12     1 FC          PCS         RFC         FC
+CONF 12     1 FD          PDM         RFD         FD
+CONF 12     1 FR          PCE         RFR         FR
+CONF 12     1 FS          PMO         RFS         FS
+
+
+CONF 12     2 R1P         PAP         1P
+CONF 12     2 ROM         POM         OM
+
+CONF 12     2 RAP         PAP         AP
+CONF 12     2 RLN         PAP         LN
+CONF 12     2 RTB         PAP         TB                                    
+CONF 12     2 RTE         PAP         TE                                    
+CONF 12     2 RTH         PAP         TH                                    
+CONF 12     2 RTN         PAP         TN                                                                                                               
+CONF 12     2 RTP         PAP         TP                                    
+CONF 12     2 RUK         PAP         UK                                    
+CONF 12     2 RUZ         PAP         UZ                                    
+CONF 12     2 ROG         PAP         OG                                    
+CONF 12     2 ROT         PAP         OT
+CONF 12     2 ROY         PAP         OY
+CONF 12     2 RRT         PAP         RT  
+CONF 12     2 RSK         PAP         SK  
+
+CONF 12     2 RAO         PTM         AO                                    
+CONF 12     2 RAR         PTM         AR                                    
+CONF 12     2 RDS         PTM         DS                                    
+CONF 12     2 RS          PTM         S                                     
+CONF 12     2 RSO         PTM         SO
+CONF 12     2 RSJ         PTM         SJ
+CONF 12     2 RSL         PTM         SL
+CONF 12     2 RSR         PTM         SR
+CONF 12     2 RSU         PTM         SU
+CONF 12     2 RTL         PTM         TL                                    
+CONF 12     2 RTM         PTM         TM                                    
+CONF 12     2 RTU         PTM         TU                                    
+CONF 12     2 RUJ         PTM         UJ
+CONF 12     2 RUP         PTM         UP
+CONF 12     2 RUS         PTM         US
+CONF 12     2 RPU         PTM         PU
+CONF 12     2 RUT         PTM         UT                                    
+CONF 12     2 RDO         PTM         DO  
+CONF 12     2 RDG         PTM         DG  
+CONF 12     2 RHP         PTM         HP  
+
+CONF 12     2 RFI         PIF         FI                                    
+CONF 12     2 RFC         PCS         FC                                    
+CONF 12     2 RFD         PDM         FD                                    
+CONF 12     2 RFR         PCE         FR                                    
+CONF 12     2 RFS         PMO         FS
+
+                                                                            
+CONF 12     3 MAE         PMAE  SUPEVA                  PARI                
+CONF 12S MAE    S2COC  111111111111111111111111111111111111111111111111     
+CONF 12S MAE    S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T MAE    S2COD  1111111111111111
+CONF 12S MAE    S2COFP 111111111111111111111111111111111111111111111111     
+CONF 12S MAE    S2COTP 111111111111111111111111111111111111111111111111     
+
+
+CONF 12     3 CDSW        PCDSW                         PARI                
+CONF 12S CDSW   S2COC  111100111010001000000000110000010000000001000000     
+CONF 12S CDSW   S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T CDSW   S2COD  1110111011111110
+CONF 12S CDSW   S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S CDSW   S2COTP 000000000000001100000000000000000000000000000000     
+                                                                            
+CONF 12     3 CDSE        PCDSE                         PARI                
+CONF 12S CDSE   S2COC  111100111010001000000000110000010000000001000000     
+CONF 12S CDSE   S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T CDSE   S2COD  1110111011111110
+CONF 12S CDSE   S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S CDSE   S2COTP 000000000000001100000000000000000000000000000000     
+                                                                            
+CONF 12     3 DMC         PDMC                          PARI                
+CONF 12S DMC    S2COC  010100011000001000000000000000000000000000000000     
+CONF 12S DMC    S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T DMC    S2COD  1111111111111111
+CONF 12S DMC    S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S DMC    S2COTP 000000000000000000000000000000000000000000000000     
+
+CONF 12     3 SSP         PSSP                                     
+CONF 12S SSP    S2COC  111111111111111111111111111111111111111111111111     
+CONF 12S SSP    S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T SSP    S2COD  1111111111111111
+CONF 12S SSP    S2COFP 111111111111111111111111111111111111111111111111     
+CONF 12S SSP    S2COTP 111111111111111111111111111111111111111111111111     
+
+                                                                            
+CONF 12     3 SUPSEC      PMAE  SUPSEC                                 
+CONF 12S SUPSEC S2COC  111111111111111111111111111111111111111111111111     
+CONF 12S SUPSEC S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T SUPSEC S2COD  1111111111111111
+CONF 12S SUPSEC S2COFP 111111111111111111111111111111111111111111111111     
+CONF 12S SUPSEC S2COTP 111111111111111111111111111111111111111111111111     
+
+CONF 12     3 SAG1        PSAG1                         CDG                 
+CONF 12S SAG1   S2COC  111100111010001001111111111100111100000111000000
+CONF 12S SAG1   S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T SAG1   S2COD  1110111011111111
+CONF 12S SAG1   S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S SAG1   S2COTP 000001000000011100000000000000000000000000000000     
+
+CONF 12     3 SAG2        PSAG2                         CDG                 
+CONF 12S SAG2   S2COC  111100111010001001111111111100111100000111000000
+CONF 12S SAG2   S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T SAG2   S2COD  1110111011111111
+CONF 12S SAG2   S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S SAG2   S2COTP 000001000000011100000000000000000000000000000000     
+
+CONF 12     3 SAG3        PSAG3                         CDG                 
+CONF 12S SAG3   S2COC  111100111010001001111111111100111100000111000000
+CONF 12S SAG3   S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T SAG3   S2COD  1110111011111111
+CONF 12S SAG3   S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S SAG3   S2COTP 000001000000011100000000000000000000000000000000     
+
+CONF 12     3 SAG4        PSAG4                         CDG                 
+CONF 12S SAG4   S2COC  111100111010001001111111111100111100000111000000
+CONF 12S SAG4   S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T SAG4   S2COD  1110111011111111
+CONF 12S SAG4   S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S SAG4   S2COTP 000001000000011100000000000000000000000000000000     
+
+CONF 12     3 SAG5        PSAG5                         CDG                 
+CONF 12S SAG5   S2COC  111100111010001001111111111100111100000111000000
+CONF 12S SAG5   S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T SAG5   S2COD  1110111011111111
+CONF 12S SAG5   S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S SAG5   S2COTP 000001000000011100000000000000000000000000000000     
+
+CONF 12     3 SAG6        PSAG6                         CDG                 
+CONF 12S SAG6   S2COC  111100111010001001111111111100111100000111000000
+CONF 12S SAG6   S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T SAG6   S2COD  1110111011111111
+CONF 12S SAG6   S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S SAG6   S2COTP 000001000000011100000000000000000000000000000000     
+
+CONF 12     3 SAG7        PSAG7                                          
+CONF 12S SAG7   S2COC  000100111010001001111111111100111100000111000000
+CONF 12S SAG7   S2COD  000111111111111111111111111111111111111111111111     
+CONF 12T SAG7   S2COD  1110111011111111
+CONF 12S SAG7   S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S SAG7   S2COTP 000001000000011100000000000000000000000000000000  
+
+CONF 12     3 GDSR        PGDSR                         CDG                 
+CONF 12S GDSR   S2COC  111100011110000001111111111111111111111111111111     
+CONF 12S GDSR   S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T GDSR   S2COD  1111111111111111
+CONF 12S GDSR   S2COFP 111111111111111111111111111111111111111111111111     
+CONF 12S GDSR   S2COTP 111111111111111111111111111111111111111111111111                                                                                 
+
+CONF 12     3 SPO1        PSPO1                         ORL                 
+CONF 12S SPO1   S2COC  111100111010001001111111111100111100000111000000
+CONF 12S SPO1   S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T SPO1   S2COD  1110111011111111
+CONF 12S SPO1   S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S SPO1   S2COTP 000001000000011100000000000000000000000000000000     
+
+CONF 12     3 SPO2        PSPO2                         ORL                 
+CONF 12S SPO2   S2COC  111100111010001001111111111100111100000111000000
+CONF 12S SPO2   S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T SPO2   S2COD  1110111011111111
+CONF 12S SPO2   S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S SPO2   S2COTP 000001000000011100000000000000000000000000000000     
+
+CONF 12     3 STIO        PSTIO                         ORL                 
+CONF 12S STIO   S2COC  111100011110000001111111111111111111111111111111     
+CONF 12S STIO   S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T STIO   S2COD  1111111111111111
+CONF 12S STIO   S2COFP 111111111111111111111111111111111111111111111111     
+CONF 12S STIO   S2COTP 111111111111111111111111111111111111111111111111
+
+CONF 12     3 SAQQ        PSAQQ                         PARI                 
+CONF 12S SAQQ   S2COC  111100111010001001111111111100111100000111000000
+CONF 12S SAQQ   S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T SAQQ   S2COD  1110111011111111
+CONF 12S SAQQ   S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S SAQQ   S2COTP 000001000000011100000000000000000000000000000000     
+
+                                                                            
+CONF 12     4 STIP        PXSTIP                  STIP                      
+CONF 12     4 AIX         PXAIX                   AIX                       
+CONF 12     4 REIM        PXREIM                  REIM                      
+CONF 12     4 BORD        PXBORD                  BORD                      
+CONF 12     4 BRST        PXBRST                  BRST                      
+CONF 12     4 PARI        PPARI                   PARI                      
+CONF 12     4 ORL         PPARI                   ORL                       
+CONF 12     4 CDG         PPARI                   CDG                       
+CONF 12     4 LILE        PPARI                   LILE                      
+CONF 12     4 LOND        PXLOND                  EGGG                      
+CONF 12     4 GNEV        PXGNEV                  GNEV     
+CONF 12     4 BRUX        PXBRUX                  EBBR
+CONF 12     4 LUXE        PXLUXE                  ELLX
+CONF 12     4 MAAS        PXMAAS                  EDDY
+CONF 12     4 BALE        PXREIM                  BALE
+CONF 12     4 LYON        PXAIX                   LYON
+CONF 12     4 MARS        PXAIX                   MARS
+CONF 12     4 CORS        PXAIX                   CORS
+CONF 12     4 NICE        PXAIX                   NICE
+CONF 12     4 TOUL        PXBORD                  TOUL
+CONF 12     4 NANT        PXBRST                  NANT
+CONF 12     4 RENN        PXBRST                  RENN
+CONF 12     4 MERI        PXBORD                  MERI
+CONF 12     4 MONT        PXAIX                   MONT
+CONF 12     4 STBG        PXREIM                  STBG
+CONF 12     4 PYRN        PXBORD                  PYRN
+
+                                                                            
+CONF 12     5 STR1        PYSTR1               
+CONF 12     5 STR2        PYSTR2            
+CONF 12     5 STR3        PYSTR3           
+CONF 12     5 STR4        PYSTR4
+
+CONF 12     5 STRO1       PXTRO1                                            
+CONF 12     5 STRO2       PXTRO2                                            
+CONF 12     5 STRO3       PXTRO3                                            
+CONF 12     5 STRO4       PXTRO4
+CONF 12     5 STRG1       PXTRG1                                            
+CONF 12     5 STRG2       PXTRG2                                            
+CONF 12     5 STRG3       PXTRG3 
+CONF 12     5 STRG4       PXTRG4
+                                           
+            *** TO = RAKI Saint Mars La Pile
+            *** DK DR = RIESLING Drakenbronn 
+            *** LI = RAMBERT ou Mont Verdun                                                              
+CONF 12     6 MLI         PXRBRT                  LI                        
+CONF 12     6 MDK         PXRIES                  DK                        
+CONF 12     6 MDR         PXRIES                  DR                        
+CONF 12     6 MTO         PXRAKI                  TO                        
+CONF 12     6 MTR         PXRAKI                  TR                        
+
+CONF 12     7 RSFTA       PXAIDA                                           
+                                                                            
+     12     8 MIL         PMIL                                              
+                                              
+                                                                            
+            9 IMPS        PIMP              STRIP                           
+CONF 12     9 IMPM        PIMP              MSGES                           
+                                                                            
+CONF 12    10 OD          POD                     OD                        
+
+CONF 12    10 OA          POA                     OA                        
+
+CONF 12    10 RD          PK2                     RD                        
+CONF 12    10 RC          PK2                     RC                        
+CONF 12    10 RA          PRA                     RA
+CONF 12    10 RB          PRB                     RB
+CONF 12    10 AC          PAC                     AC                        
+CONF 12    10 DC          PK2                     DC                        
+CONF 12    10 DB          PBD                     DB                        
+                                                                            
+
+               *******************************************************
+               * Les EO de supervisions VD, GD et BD sont conserv≈es *
+               * pour des besoins de test CRNA/N : clavier/≈cran     *
+               * pour activer les vols au d≈part ORL, CDG et PB      *
+               *******************************************************
+
+CONF 12    11 VD          PVD                     LFPO  ORL                 
+CONF 12S VD     S2COC  111100111010000001111111111111111111111111111111     
+CONF 12S VD     S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T VD     S2COD  1111111111111111
+CONF 12S VD     S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S VD     S2COTP 000000001000001100000000000000000000000000000000     
+                                                                            
+CONF 12    11 GD          PGD                     LFPG              NSTVD   
+CONF 12S GD     S2COC  111100111000000001111111111100111111111111111111     
+CONF 12S GD     S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T GD     S2COD  1111111111111111
+CONF 12S GD     S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S GD     S2COTP 000000000000000000000000000000000000000000000000     
+                                                                            
+CONF 12    11 BD          PBD                     LFPB                   
+CONF 12S BD     S2COC  111100111000000001111111111111111111111111111111     
+CONF 12S BD     S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T BD     S2COD  1111111111111111
+CONF 12S BD     S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S BD     S2COTP 000000000000000000000000000000000000000000000000     
+
+CONF 12    11 LD          PLD                     LFQQ  PARI                
+CONF 12S LD     S2COC  111100111010000001111111111000110000010001000000     
+CONF 12S LD     S2COD  111111111111111111111111111111111111111111111111     
+CONF 12T LD     S2COD  1111111111111111
+CONF 12S LD     S2COFP 000000000000000000000000000000000000000000000000     
+CONF 12S LD     S2COTP 000000000000011000000000000000000000000000000000     
+
+
+                                                                        
+CONF 12    12 VA          PVA                     LFPO                      
+CONF 12    12 GA          PGA                     LFPG                      
+CONF 12    12 BA          PBD                     LFPB                      
+CONF 12    12 GS          PGS                     LFPG
+
+CONF 12    13 NE          PNE                     LFPG
+CONF 12    13 NW          PNW                     LFPG
+CONF 12    13 SW          PSW                     LFPG
+CONF 12    13 SE          PSE                     LFPG
+
+CONF 12    13 V1          PV1                     LFPG
+CONF 12    13 V2          PV2                     LFPG
+CONF 12    13 V3          PV3                     LFPG
+CONF 12    13 V4          PV4                     LFPG
+CONF 12    13 V6          PV6                     LFPG
+ 
+                  ***********************
+                  *   SLCT   LILLE      *
+                  ***********************   21-03-2005
+                  
+
+CONF 12    10 QE          PLD                     QE                        
+CONF 12    10 QW          PLD                     QW                        
+CONF 12    12 LA          PLD                     LFQQ                      
+
+                  ***************************************
+                  * MAESTRO, SIGMA, LDAS..              *
+                  *************************************** 22-10-2000
+                                                                            
+CONF 12    14 EMSTO       PMTO                    MSTO                      
+
+CONF 12    14 EMSTG       PMTG                    MSTG
+
+CONF 12    15 SIGMO       PSIGMO
+CONF 12G      SIGMO LFPO
+
+CONF 12    15 SIGMG       PSIGMG
+CONF 12G      SIGMG LFPG
+
+ 
+CONF 12    16 LDAS        PLDAS                   LFPO
+CONF 12L      LDAS  LFPG  LFPB  
+
+
+ 
+                   *************************************
+                   *        DOUBLEMENT DES STRIPS      *
+                   ************************************* 18/12/2008
+
+    * Attention les doublements d'une meme entite doivent etre consecutifs*
+    
+    
+ 
+        
+CONF 12D INHI AO    XX    AR          BRY   CLM     195   265
+CONF 12D INHI AO    XX    AR          DJL   OKRIX   270   320
+CONF 12D INHI AO    XX    DG          AMODO RESMI
+
+CONF 12D INHI AR    XX    TL          CAV   SOMDA   115   195
+CONF 12D INHI AR    XX    TL          DOUB1 PGSE
+CONF 12D INHI AR    XX    TL          ARSIL BAXIR
+CONF 12D      AR    XX    SR          OMAKO PBOMA   005   115
+
+CONF 12D      DC    R1    AC          ADG                                               
+CONF 12D      DC    R1    AC          LPT
+CONF 12D      DC    R1    AC          PT
+  
+CONF 12D INHI DG    XX    TH          CHW   TSU     200   245
+CONF 12D INHI DG    XX    TH          VANAD TSU     200   245
+CONF 12D INHI DG    XX    TH          KOVAK TSU
+CONF 12D INHI DG    XX    TL          EDG   ODEBU  
+CONF 12D INHI DG    XX    TL          EPB   ODEBU 
+CONF 12D INHI DG    XX    TL          EDG   PEKIM
+CONF 12D INHI DG    XX    TL          EPB   PEKIM
+
+CONF 12D INHI DO    XX    TL          EDG   ODEBU  
+CONF 12D INHI DO    XX    TL          EPB   ODEBU 
+CONF 12D INHI DO    XX    TL          EDG   PEKIM
+CONF 12D INHI DO    XX    TL          EPB   PEKIM
+
+
+CONF 12D      DS    S1    SJ          PTV   ABDOS   115   195      
+CONF 12D      DS    S3    SJ          PTV1  PTV     115   195      
+CONF 12D      DS    S4    SJ          OD04P PTV     115   195
+
+CONF 12D      OA    O1    OD          BALOD ZOA      
+CONF 12D      OA    O2    OD          ZOA   PBOMA
+
+CONF 12D      OD    O3    OA          BALOD ZOA2
+CONF 12D      OD    O4    OA          ZOA2  PBOMA
+
+CONF 12D INHI OG    XX    OY          VANAD AMB     265   285
+
+CONF 12D INHI OT    XX    DO          VAORL ODRAN
+CONF 12D      OT    S2    SK          ODRAN         000   080
+
+CONF 12D      QW    L5    TN          ABY   BANGI
+CONF 12D      QW    L5    TN          BANGI XORBI
+
+CONF 12D      RB    R2    RD          VELER ZOA                             
+CONF 12D      RB    R2    RC          VELER ZOA                             
+
+CONF 12D INHI RT    XX    OG          BENAR VANAD   195   245
+CONF 12D INHI RT    XX    OT          BENAR VANAD   195   245
+CONF 12D INHI RT    XX    OT          VANAD VADOM   195   245
+CONF 12D INHI RT    XX    OG          VANAD BENAR   195   245
+CONF 12D INHI RT    XX    OT          VANAD BENAR   195   245
+CONF 12D INHI RT    XX    TH          VANAD TSU
+CONF 12D      RT    S6    SK          BALOD         000   090
+
+CONF 12D INHI S     S7    DO          MOTAL
+CONF 12D      S     S5    SJ          MOTAL AV      115   195
+
+CONF 12D INHI SO    S8    AO          OKRIX MOLEK   000   115
+CONF 12D      SO    S9    SJ          MOLEK PO      000   055
+CONF 12D      SO    SA    SJ          BRY   MV      000   055
+
+CONF 12D INHI SK    XX    OT          TUR   KOVAK
+CONF 12D INHI SK    XX    OT          TUR   VANAD
+
+CONF 12D INHI SR    XX    AR          TRO   ARSIL    85   115
+CONF 12D INHI SR    XX    AR          ARSIL TRO     000   115
+CONF 12D INHI SR    XX    AR          INKAK OMAKO   000   115
+CONF 12D INHI SR    XX    S           OSKIN LFOA          
+CONF 12D INHI SR    XX    TL          BAXIR CAV
+CONF 12D INHI SR    XX    TL          DORDI CAV
+         
+
+CONF 12D      TB    L1    QW          PERON LFAG
+CONF 12D INHI TB    XX    TN          SOMIL BELDI   195   265
+CONF 12D INHI TB    XX    TN          BAMES MTD     195   265
+CONF 12D INHI TB    XX    TN          EPO   NURMO
+CONF 12D INHI TB    XX    TN          WPO   NURMO
+CONF 12D INHI TB    XX    TL          KOVIN RESMI   195   265 
+CONF 12D      TB    L2    QE          ARVOL CIV
+
+
+CONF 12D INHI TE    XX    TL          BSN   PON     
+
+
+      
+      *c* CLS du 06/09/2007 ≈v≈nement RYR4984 et BER480C
+CONF 12D INHI TE    XX    TM          LORTA
+      *c* CLS du 06/09/2007 ≈v≈nement RYR4984 et BER480C
+CONF 12D INHI TE    XX    TM          VELER
+
+
+CONF 12D INHI TH    XX    TL          EDG   KELUD     
+CONF 12D INHI TH    XX    TL          EPB   KELUD 
+CONF 12D INHI TH    XX    DG          EPO   Z26
+CONF 12D INHI TH    XX    DG          EDG   LGL     120   265   195   265
+CONF 12D INHI TH    XX    DG          EPB   LGL     120   265   195   265
+CONF 12D INHI TH    XX    DG          EPV   LGL     120   265   195   265
+CONF 12D INHI TH    XX    TP          BVP   LGL                
+CONF 12D INHI TH    XX    TP          BVP   EVX
+CONF 12D INHI TH    XX    RT          EPO            90   200         
+
+CONF 12D      TL    XX    TM          CLM   KOPOR                      
+CONF 12D INHI TL    XX    TM          BSN   CLM                      
+CONF 12D INHI TL    XX    TM          LAURA LASIV                      
+CONF 12D INHI TL    XX    TB          CLM   KOPOR   195   265
+
+CONF 12D INHI TM    XX    TE          IDOSA MMD                             
+CONF 12D INHI TM    XX    TE          DEREM DIKOL
+CONF 12D INHI TM    XX    TE          DEREM SUIPE
+CONF 12D INHI TM    XX    TE          MMD   TILVI
+CONF 12D      TM    XX    SL          DEREM DIKOL
+
+CONF 12D      TN    L3    QE          LOB                             
+CONF 12D      TN    L4    QE          CMB   BVS 
+CONF 12D INHI TN    XX    TB          CLM   KOPOR
+CONF 12D INHI TN    XX    TB          NURMO VESAN   195   265                             
+CONF 12D INHI TN    XX    TB          BSN   NITAR   195   265
+
+
+CONF 12D INHI TP    XX    TH          DPE   CAN     145   195
+CONF 12D INHI TP    XX    LN          MOKNO
+
+CONF 12D INHI UK    XX    OG          OBATO RONAX   195   265
+
+CONF 12D INHI UP    XX    DO          OKEPI LAKOB   195   265
+
+CONF 12D INHI US    XX    AR          DJL   OKRIX   280   320
+
+CONF 12D INHI UZ    XX    TP          BAMES ABUDA   245   285
+CONF 12D INHI UZ    XX    OG          BENAR AMB     195   265
+
+
+
+
+                    *************************                               
+                    * DECLARATION DES TYPES *                               
+                    *   DE PERIPHERIQUES    *                               
+                    *************************  02-01-2002
+                                        
+                   DIGITATRONS                                              
+CONF 13    01             MAE   SSP   GDSR  STIO
+CONF 131   01 VERS1    03    15     3                                       
+CONF 132   01 VERS1 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO3 RNPA3 RNRO3         
+
+                   IMPRIMANTES DE STRIPS IS1501                             
+CONF 13    02             MAE   SSP   GDSR  STIO
+CONF 131   02 VERS1    01    15     3                                       
+CONF 132   02 VERS1 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+                                                                            
+                   CLAVIER ECRAN                                            
+CONF 13    03             MAE   SSP   GDSR  STIO
+CONF 131   03 VERS1    03    15     3                                       
+CONF 132   03 VERS1 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+
+                   RSFTA                                                    
+CONF 13    04             MAE   SSP
+CONF 131   04 VERS1    03    15     3                                       
+CONF 132   04 VERS1 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+
+                   INTER-CENTRE                                             
+CONF 13    05             MAE   SSP 
+CONF 131   05 VERS1    05    03     3                                       
+CONF 132   05 VERS1 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+
+                   STR                                                      
+CONF 13    06             MAE   SSP   GDSR  STIO
+CONF 131   06 VERS1    03    03    03                                       
+CONF 132   06 VERS1 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+
+                   STRIDAS                                                  
+CONF 131   06 VERS2                                                         
+CONF 132   06 VERS2 MARC3 ARRT3 PANN3 ROTO3 R1PA3 R1RO3 RNPA3 RNRO3         
+                                                                            
+                   LONDRES                                         
+CONF 131   06 VERS3    02    15    03                                       
+CONF 132   06 VERS3 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+
+                   HORLOGE EXTERNE                                          
+CONF 13    07             MAE   SSP                             
+CONF 131   07 VERS1    03    60     1                                       
+CONF 132   07 VERS1 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+
+                   CONCENTRATEURS                                           
+CONF 13    08             MAE   SSP   GDSR  STIO
+CONF 131   08 VERS1    03    15     1                                       
+CONF 132   08 VERS1 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3 
+        
+                   IMPRIMANTE RAPIDE                                        
+CONF 13    09             MAE   SSP                  
+CONF 131   09 VERS1                                                         
+CONF 132   09 VERS1 MARC3 ARRT3 PANN1 ROTO1 R1PA3 R1RO3 RNPA3 RNRO3         
+
+                   MACHINE A ECRIRE                                         
+CONF 13    10             SSP   
+CONF 131   10 VERS1    03    10     3                                       
+CONF 132   10 VERS1 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+
+                   INTER CENTRE en SGT                     
+CONF 13    11             MAE   SSP 
+CONF 131   11 VERS1    03    10     3                                       
+CONF 132   11 VERS1 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+CONF 133   11 VERS1 ATT3  R1AT1 RNAT1                                       
+
+                   STR en SGT                     
+CONF 131   11 VERS2    03    10     3                                       
+CONF 132   11 VERS2 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+CONF 133   11 VERS2 ATT3  R1AT1 RNAT1                                       
+
+                   Centres Etrangers en SGT                     
+CONF 131   11 VERS3    03    10     3                                       
+CONF 132   11 VERS3 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+CONF 133   11 VERS3 ATT3  R1AT1 RNAT1                                       
+ 
+                   MAESTRO en SGT                     
+CONF 131   11 VERS4    03    10     3                                       
+CONF 132   11 VERS4 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+CONF 133   11 VERS4 ATT3  R1AT1 RNAT1                                       
+
+                   STRIDA en SGT                     
+CONF 131   11 VERS5                                          
+CONF 132   11 VERS5 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+CONF 133   11 VERS5 ATT3  R1AT1 RNAT1                                       
+
+                   INTER CENTRE sous HYDRES                                                   
+CONF 13    12             MAE   SSP   
+CONF 131   12 VERS1    03    10     3                                       
+CONF 132   12 VERS1 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+                                                                             
+                   STR sous HYDRES                                                   
+CONF 131   12 VERS2    03    10     3                                       
+CONF 132   12 VERS2 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+                                                                            
+                   Supervision sous HYDRES                                                   
+CONF 131   12 VERS3    03    10     3                                       
+CONF 132   12 VERS3 MARC3 ARRT3 PANN1 ROTO3 R1PA3 R1RO1 RNPA3 RNRO3         
+
+                       **************************                           
+                       * DECLARATION TYPES D'OL *                           
+                       ************************** 11-01-2002          
+                                                                            
+CONF 14       OLCAC       MAE   SSP
+CONF 14       OLSTR       MAE   SSP   GDSR
+CONF 14       OLSDA       MAE   SSP
+CONF 14       OLMAS       MAE   SSP   STIO
+CONF 14       OLETG       MAE   SSP
+CONF 14       OLSGM       MAE   SSP   GDSR  STIO
+CONF 14       OLISA       MAE   SSP   GDSR  STIO
+CONF 14       OLLDS       MAE   SSP   GDSR  STIO
+CONF 14       OLPHI       MAE   SSP
+CONF 14       OLSUP       MAE   SSP   GDSR  STIO
+CONF 14       OLRSF       MAE   SSP
+              *** D≈claration OL Calc » Calc sous Hydres
+CONF 14T      OLCAC       MAE   SSP   
+CONF 14T      OLSTR       MAE   SSP  
+CONF 14T      OLPHI       MAE   SSP
+CONF 14T      OLSUP       MAE   SSP  
+                                                                            
+                    ********************                                    
+                    * DECLARATION DES  *                                    
+                    *     CONSTITUANTS *                                    
+                    ********************  31-08-2006                          
+                                                                            
+CONF 15 AR          MAE   SSP        
+CONF 15 BX          MAE 
+CONF 15 CSE         MAE
+CONF 15 DE          MAE   SSP   GDSR  STIO
+CONF 15 FF          MAE                                             
+CONF 15 FT          MAE      
+CONF 15 HR          MAE 
+CONF 15 HYA         MAE   
+CONF 15 HYB         MAE   
+CONF 15 HYT         MAE   SSP
+CONF 15 IR          MAE   SSP   LD    GDSR  STIO
+CONF 15 JR          MAE   
+CONF 15 MR          MAE                                               
+CONF 15 MTB         MAE                     
+CONF 15 MTI         MAE             
+CONF 15 NQ1         MAE                                                     
+CONF 15 PCA         MAE
+CONF 15 PCI         MAE   
+CONF 15 PCO         MAE 
+CONF 15 PD          MAE                                                     
+CONF 15 PDA         MAE                                                     
+          ***** PG = Messages SIGMA inhib≈s
+        PG          MAE
+CONF 15 PL          MAE  
+          ***** PM = Messages MAESTRO inhib≈s 
+        PM          MAE
+CONF 15 PR          MAE                         
+CONF 15 PT          MAE                                                     
+CONF 15 RA          MAE   SSP   GDSR  STIO
+CONF 15 SAP         MAE                                                     
+CONF 15 SAT         MAE                                                     
+CONF 15 SC          MAE                                                   
+CONF 15 SE          MAE                                                
+CONF 15 SF          MAE   SSP      
+CONF 15 SFR         MAE             
+CONF 15 SIC         MAE   
+CONF 15 SIE         MAE                                                
+CONF 15 SIP         MAE                                                       
+CONF 15 SIS         MAE                                                
+CONF 15 SM          MAE                                                     
+CONF 15 SR          MAE                                                     
+CONF 15 ST          MAE  
+CONF 15 SU          MAE   SSP  
+CONF 15 SX          MAE   SSP   CDSE  CDSW  SPO1  SPO2
+CONF 15 SX          SAG1  SAG2  SAG3  SAG4  SAG5  SAG6  SAG7
+CONF 15 TC          MAE
+CONF 15 TCL         MAE 
+CONF 15 TL          MAE  
+CONF 15 TO          MAE      
+CONF 15 TP          MAE  
+CONF 15 TPC         MAE   
+CONF 15 TS          MAE     
+                                                                            
+                    ***********************                                 
+                    * FICHIERS PERMANENTS *                                 
+                    ***********************  29-09-98                       
+                                                                            
+CONF 16 OPE:VIAC                              256   500    16
+CONF 16 OPE:VPLN                             3072  8192    16
+CONF 16 OPE:VVENT                             256     1    16
+CONF 16 OPE:VSSR                              512   512    16
+CONF 16 OPE:VIND                              256   200    16
+CONF 16 OPE:VALCRI                            512     1    16
+CONF 16 OPE:VPTGEO                          24576     1    16
+CONF 16 OPE:VSIGNP                            256     2    16
+CONF 16 OPE:VBVCE                            1024    30    16
+CONF 16 OPE:VTRAV                            1024   200    16
+CONF 16 FA:VFAE                             16384   500    16
+CONF 16SFA:VFAE                                50    75   200    20
+CONF 16 FA:VFTSEC                            4096   500    16
+
+                    *************************                               
+                    * RELATIONS             *                               
+                    *   COMMANDES-POSTES DE *                               
+                    *          SUPERVISION  *                               
+                    *************************  19-04-2004                   
+            MESSAGES XEDI                                                   
+CONF 17PMAE
+                                                     
+            MESSAGES XENG                                                   
+CONF 17EMAE
+                                                     
+            MESSAGES XFON                                                   
+CONF 17FMAE
+                                                     
+            MESSAGES XTRAN                                                  
+CONF 17TMAE   BD    LD    SAG1  SAG2  SAG3  SAG4  SAG5  SAG6  SPO1  SPO2  SAQQ
+
+            MESSAGES XCON                                                   
+CONF 17CMAE   SAG1  SAG2  SAG3  SAG4  SAG5  SAG6  SPO1  SPO2  LD    SAQQ
+          
+            MESSAGE XCAD                                                    
+CONF 17KMAE   SAG1  SAG2  SAG3  SAG4  SAG5  SAG6  SAG7  SPO1  SPO2 
+
+                     **************************                             
+                     * AIGUILLAGE R‹PONSES    *
+                     * AUX COMMANDES XPIST    *                             
+                     **************************  27-10-2005
+
+
+
+                                                                                                               
+CONF 18I      LFPG  MAE   GD    BD    CDSE  CDSW  DMC   SAG1  SAG2 
+CONF 18I      LFPG  SAG3  SAG5  SAG6  SAG7  SPO1  SPO2  VD
+CONF 18I      LFPO  MAE   GD    BD    CDSE  CDSW  DMC   SAG1  SAG2 
+CONF 18I      LFPO  SAG3  SAG5  SAG6  SAG7  SPO1  SPO2  VD   
+CONF 18I      LFPB  MAE   GD    BD    CDSE  CDSW  DMC   SAG1  SAG2
+CONF 18I      LFPB  SAG3  SAG5  SAG6  SAG7  SPO1  SPO2  VD
+CONF 18I      LFPV  MAE   GD    BD    CDSE  CDSW  DMC   SAG1  SAG2 
+CONF 18I      LFPV  SAG3  SAG5  SAG6  SAG7  SPO1  SPO2  VD
+CONF 18I      LFQQ  MAE   LD    SAQQ
+                                                                          
+CONF 18E      LFPG  REIM  BRST  BORD                                        
+CONF 18E      LFPO  REIM  BRST  BORD                                        
+CONF 18E      LFPB  REIM  BORD                                              
+CONF 18E      LFPV  REIM  BORD         
+                                     
+                    ******************************                          
+                    * CARACTERISTIQUES ABSOLUES  *                          
+                    * DES ENTITES DE SUPERVISION *                          
+                    ****************************** 14-06-2004
+                                                                            
+CONF 19 PEPAR1         01 STIP                                              
+CONF 19 PEPAR2         02 STIP                                              
+CONF 19 PEPAR3         03 STIP                                              
+CONF 19 PEPAR4         04 STIP                                              
+CONF 19 PEAIXE         06 AIX
+CONF 191      STR   PARI                                                    
+CONF 19S      S2CXC    110000011000000000000000000000000000000000000000
+
+CONF 19 PELPO          07 PARI  VD                                          
+CONF 19 PELPB          09 PARI  BD                                          
+CONF 19 PELLVD         0A AIX                                               
+CONF 19 PEAIXP         0B AIX                                               
+CONF 19S      S2CXC    000000000000000000000000000000000001000000000000     
+
+CONF 19 PEBDXP         0C BORD                                              
+CONF 19S      S2CXC    000000000000000000000000000000000001000000000000     
+
+CONF 19 PELPG          0E PARI  GD  
+CONF 19 PEDMCN         0F PARI  DMC                                         
+CONF 19 PEMLVD         12 AIX                                               
+CONF 19 PEMNVD         14 AIX
+CONF 19 PEAIXC         18 AIX
+CONF 19 PEBDXC         19 BORD                                              
+
+CONF 19 PEBDXT         1A BORD                                              
+CONF 19S      S2CXC    000000000000000000000000000000000001000000000000     
+
+CONF 19 PEXSA2         1B BORD                                              
+CONF 191      STR   PARI                                                    
+CONF 19S      S2CXC    110000011000000000000000000000000000000000000000    
+
+CONF 19 GENEVE         20 GNEV                                              
+CONF 19 ZURICH         21 ZURI                                              
+CONF 19 EGGAYF         24 EGGG                                              
+CONF 19 PEPARS         26 PARI  MAE                                         
+CONF 19 PEDMCO         2A BRST                                              
+CONF 19 GDSPAR         2B PARI  SSP                                     
+CONF 19 PEAGEL         2E AIX                                               
+CONF 19 PEMARS         2F BORD                                              
+
+CONF 19 PEBRTC         31 BRST                                              
+CONF 191      STR   PARI                                                    
+CONF 19S      S2CXC    110000011000000000000000000000000000000000000000     
+
+CONF 19 PECDSE         32 PARI  CDSE                                        
+CONF 19 PESAQ1         33 LILE  SAQQ  
+
+CONF 19 PEMVDN         34 AIX                                               
+CONF 191      STR   PARI                                                    
+CONF 19S      S2CXC    110000011000000000000000000000000000000000000000     
+
+CONF 19 PECDSW         36 PARI  CDSW                                        
+
+CONF 19 PEAIXT         3B AIX                                               
+CONF 19S      S2CXC    000000000000000000000000000000000001000000000000     
+
+CONF 19 PEBRTT         40 BRST                                              
+CONF 19S      S2CXC    000000000000000000000000000000000001000000000000     
+
+CONF 19 PEAIXS         42 AIX                                               
+
+CONF 19 PEREIA         43 REIM                                              
+CONF 191      STR   PARI                                                    
+CONF 19S      S2CXC    110000011000000000000000000000000000000000000000     
+
+CONF 19 PEREIC         44 REIM                                              
+CONF 191      STR   PARI                                                    
+CONF 19S      S2CXC    110000011000000000000000000000000000000000000000     
+
+CONF 19 PEREIT         45 REIM                                              
+CONF 19S      S2CXC    000000000000000000000000000000000001000000000000     
+CONF 19 PEDMCE         46 REIM                                              
+CONF 19 PESTIP         47 STIP                                              
+CONF 19 PEDMCB         48 BORD                                              
+CONF 19 CANAC          4B EBBR
+
+CONF 19 PEREIP         4D REIM                                              
+CONF 19S      S2CXC    000000000000000000000000000000000001000000000000     
+
+CONF 19 PEBRTP         4E BRST                                              
+CONF 19S      S2CXC    000000000000000000000000000000000001000000000000     
+
+CONF 19 PELVG          59 PARI  LD
+CONF 19 PESAG1         6C PARI  SAG1
+CONF 19 PETO           6D BRST                                              
+CONF 191      STR   PARI                                                    
+CONF 19S      S2CXC    110000011000000000000000000000000000000000000000     
+
+CONF 19 PESAG2         6E PARI  SAG2  
+CONF 19 PESPO1         6F PARI  SPO1
+CONF 19 PESTIO         70 PARI  STIO
+CONF 19 PESPO2         71 PARI  SPO2
+
+CONF 19 PESAG3         77 PARI  SAG3
+CONF 19 PEGDSR         78 PARI  GDSR
+CONF 19 PESAG4         79 PARI  SAG4
+CONF 19 PESAG5         7A PARI  SAG5
+CONF 19 PESAG6         7B PARI  SAG6
+CONF 19 PESAG7         7C PARI  SAG7
+                                                                         
+                     ********************                                   
+                     * LISTES DEST.     *                                   
+                     ********************                                   
+                                                                            
+CONF 20 LISTA       GDSPAR                                                  
+
+                    *******************                                     
+                    * DECLARATION DES *                                     
+                    *   ADAPTATEURS   *                                     
+                    *******************  28-11-2006                           
+                                                                            
+CONF 21       30          SYNCH   030                         AIGUE                                       
+CONF 21       31          SYNCH   031                         AIGUE              
+CONF 21       32          SYNCH   032                                       
+CONF 21       33          SYNCH   033                                       
+CONF 21       34          SYNCH   034                                       
+CONF 21       35          SYNCH   035                                       
+CONF 21       36          SYNCH   036                                       
+CONF 21       38          SYNCH   038                                       
+CONF 21       39          SYNCH   039                                       
+CONF 21       40          SYNCH   040                                       
+CONF 21       41          SYNCH   041                                       
+CONF 21       42          SYNCH   042                                       
+CONF 21       43          SYNCH   043                                       
+CONF 21       44          SYNCH   044                                       
+CONF 21       45          SYNCH   045                                       
+CONF 21       80          ASYNC   080                     200               
+CONF 21       82          ASYNC   082                     200               
+CONF 21       48          SYNCH   048                                       
+CONF 21       49          SYNCH   049                                       
+CONF 21       50          SYNCH   050                                       
+CONF 21       51          SYNCH   051                                       
+CONF 21       52          SYNCH   052                                       
+CONF 21       53          SYNCH   053                                       
+CONF 21       54          SYNCH   054                                       
+CONF 21       58          SYNCH   058                                       
+CONF 21       59          SYNCH   059                                       
+CONF 21       60          SYNCH   060                                       
+CONF 21       61          SYNCH   061                                       
+CONF 21       62          SYNCH   062                                       
+CONF 21       63          SYNCH   063                                       
+CONF 21       64          SYNCH   064                                       
+CONF 21       65          SYNCH   065                                       
+CONF 21       67          SYNCH   067                                       
+CONF 21       68          SYNCH   068                                       
+CONF 21       69          SYNCH   069  
+
+CONF 21       06          X25     106     1                                 
+CONF 21       07          X25     107     1                                 
+CONF 21       08          X25     108     1                                 
+CONF 21       09          X25     109     1                                 
+CONF 21       10          X25     110     1                                 
+CONF 21       11          X25     111     1                                 
+CONF 21       12          X25     112     1                                 
+                                                                            
+            ******************************************                      
+            * DESTINATION COMMANDES DE SUPERVISION   *                      
+            * EXTERNE                                *                      
+            ******************************************  19-05-00
+                        
+CONF 22 AIX                                                                
+CONF 22 REIM                                                                
+CONF 22 BRST                                                                
+CONF 22 BORD                                                                
+CONF 22 BBP   BORD  BRST  PARI                                              
+CONF 22 BRP   BRST  PARI                                                    
+CONF 22 BOP   BORD  PARI                                                    
+CONF 22 RP    REIM  PARI                                                    
+CONF 22 PBRR  PARI  BRST  REIM
+CONF 22 PBBR  PARI  BRST  BORD  REIM
+
+                 *************************************
+                 *     PARKINGS GERES PAR L'EO SOL   *
+                 *************************************   03-01-2007
+
+CONF 23 NW    I     S     T     U     V     W     X     Y     Z
+CONF 23 NE    Q     R     H
+CONF 23 SE    A     B     C     D     E     F     K     L
+CONF 23 SW    A     B     C     D     E     F     G     M     N     P
+
+CONF 23 V1    B     D
+CONF 23 V2    F
+CONF 23 V3    A     C     E
+CONF 23 V4    J
+CONF 23 V6    K     L
+
+                 *************************************
+                 *     QFU      GERES PAR L'EO SOL   *
+                 *************************************   27-11-2000
+
+CONF 24 NE    09R   27L   09L   27R
+CONF 24 NW    09R   27R   09L   27L
+
+CONF 24 SE    08R   26R
+CONF 24 SW    26L   08L   26R
+
+CONF 24AGA    09R   27L   09L   27R
+CONF 24AGS    08R   26L   08L   26R
+
+            *****************************************
+           Sol, D≈colage, nouveau roulage 03/01/07
+          
+          *****************************************
+          
+CONF 25 LFPG  A     08L   V3    SW
+CONF 25 LFPG  A     08R   V3    SW
+CONF 25 LFPG  A     09L   V3    SW    NE    NW
+CONF 25 LFPG  A     09R   V3    SW    NE    NW
+CONF 25 LFPG  A     26L   V3    SW    SE
+CONF 25 LFPG  A     26R   V3    SW    SE
+CONF 25 LFPG  A     27L   V3    SW    NE
+CONF 25 LFPG  A     27R   V3    SW    NE
+CONF 25 LFPG  B     08L   V1    SW
+CONF 25 LFPG  B     08R   V1    SW
+CONF 25 LFPG  B     09L   V1    SW    NE    NW
+CONF 25 LFPG  B     09R   V1    SW    NE    NW
+CONF 25 LFPG  B     26L   V1    SW    SE
+CONF 25 LFPG  B     26R   V1    SW    SE
+CONF 25 LFPG  B     27L   V1    SW    NE
+CONF 25 LFPG  B     27R   V1    SW    NE
+CONF 25 LFPG  C     08L   V3    SW
+CONF 25 LFPG  C     08R   V3    SW
+CONF 25 LFPG  C     09L   V3    SW    NE    NW
+CONF 25 LFPG  C     09R   V3    SW    NE    NW
+CONF 25 LFPG  C     26L   V3    SW    SE
+CONF 25 LFPG  C     26R   V3    SW    SE
+CONF 25 LFPG  C     27L   V3    SW    NE
+CONF 25 LFPG  C     27R   V3    SW    NE
+CONF 25 LFPG  D     08L   V1    SW
+CONF 25 LFPG  D     08R   V1    SW
+CONF 25 LFPG  D     09L   V1    SW    NE    NW
+CONF 25 LFPG  D     09R   V1    SW    NE    NW
+CONF 25 LFPG  D     26L   V1    SW    SE
+CONF 25 LFPG  D     26R   V1    SW    SE
+CONF 25 LFPG  D     27L   V1    SW    NE
+CONF 25 LFPG  D     27R   V1    SW    NE
+CONF 25 LFPG  E     08L   V3    SE    SW
+CONF 25 LFPG  E     08R   V3    SE    SW
+CONF 25 LFPG  E     09L   V3    SE    NE    NW
+CONF 25 LFPG  E     09R   V3    SE    NE    NW
+CONF 25 LFPG  E     26L   V3    SE
+CONF 25 LFPG  E     26R   V3    SE
+CONF 25 LFPG  E     27L   V3    SE    NE
+CONF 25 LFPG  E     27R   V3    SE    NE
+CONF 25 LFPG  F     08L   V2    SE    SW
+CONF 25 LFPG  F     08R   V2    SE    SW
+CONF 25 LFPG  F     09L   V2    SE    SW    NE    NW
+CONF 25 LFPG  F     09R   V2    SE    SW    NE    NW
+CONF 25 LFPG  F     26L   V2    SE
+CONF 25 LFPG  F     26R   V2    SE
+CONF 25 LFPG  F     27L   V2    SE    NE
+CONF 25 LFPG  F     27R   V2    SE    NE
+CONF 25 LFPG  G     08L   SW
+CONF 25 LFPG  G     08R   SW
+CONF 25 LFPG  G     09L   SW    NE    NW
+CONF 25 LFPG  G     09R   SW    NE    NW
+CONF 25 LFPG  G     26L   SW    SE
+CONF 25 LFPG  G     26R   SW    SE
+CONF 25 LFPG  G     27L   SW    NE
+CONF 25 LFPG  G     27R   SW    NE
+CONF 25 LFPG  H     08L   NE    SE    SW
+CONF 25 LFPG  H     08R   NE    SE    SW
+CONF 25 LFPG  H     09L   NE    NW
+CONF 25 LFPG  H     09R   NE    NW
+CONF 25 LFPG  H     26L   NE    SE
+CONF 25 LFPG  H     26R   NE    SE
+CONF 25 LFPG  H     27L   NE
+CONF 25 LFPG  H     27R   NE
+CONF 25 LFPG  I     08L   NW    NE    SW
+CONF 25 LFPG  I     08R   NW    NE    SW
+CONF 25 LFPG  I     09L   NW
+CONF 25 LFPG  I     09R   NW
+CONF 25 LFPG  I     26L   NW    NE    SW    SE
+CONF 25 LFPG  I     26R   NW    NE    SW    SE
+CONF 25 LFPG  I     27L   NW    NE
+CONF 25 LFPG  I     27R   NW    NE
+CONF 25 LFPG  J     08L   V4    SE    SW
+CONF 25 LFPG  J     08R   V4    SE    SW
+CONF 25 LFPG  J     09L   V4    SE    NE    NW
+CONF 25 LFPG  J     09R   V4    SE    NE    NW
+CONF 25 LFPG  J     26L   V4    SE
+CONF 25 LFPG  J     26R   V4    SE
+CONF 25 LFPG  J     27L   V4    SE    NE
+CONF 25 LFPG  J     27R   V4    SE    NE
+CONF 25 LFPG  K     08L   V6    SE    SW
+CONF 25 LFPG  K     08R   V6    SE    SW
+CONF 25 LFPG  K     09L   V6    SE    NE    NW
+CONF 25 LFPG  K     09R   V6    SE    NE    NW
+CONF 25 LFPG  K     26L   V6    SE
+CONF 25 LFPG  K     26R   V6    SE
+CONF 25 LFPG  K     27L   V6    SE    NE
+CONF 25 LFPG  K     27R   V6    SE    NE
+CONF 25 LFPG  L     08L   V6    SE    SW
+CONF 25 LFPG  L     08R   V6    SE    SW
+CONF 25 LFPG  L     09L   V6    SE    NE    NW
+CONF 25 LFPG  L     09R   V6    SE    NE    NW
+CONF 25 LFPG  L     26L   V6    SE
+CONF 25 LFPG  L     26R   V6    SE
+CONF 25 LFPG  L     27L   V6    SE    NE
+CONF 25 LFPG  L     27R   V6    SE    NE
+CONF 25 LFPG  M     08L   SW
+CONF 25 LFPG  M     08R   SW
+CONF 25 LFPG  M     09L   SW    NE    NW
+CONF 25 LFPG  M     09R   SW    NE    NW
+CONF 25 LFPG  M     26L   SW    SE
+CONF 25 LFPG  M     26R   SW    SE
+CONF 25 LFPG  M     27L   SW    NE
+CONF 25 LFPG  M     27R   SW    NE
+CONF 25 LFPG  N     08L   SW
+CONF 25 LFPG  N     08R   SW
+CONF 25 LFPG  N     09L   SW    NE    NW
+CONF 25 LFPG  N     09R   SW    NE    NW
+CONF 25 LFPG  N     26L   SW    SE
+CONF 25 LFPG  N     26R   SW    SE
+CONF 25 LFPG  N     27L   SW    NE
+CONF 25 LFPG  N     27R   SW    NE
+CONF 25 LFPG  P     08L   SW
+CONF 25 LFPG  P     08R   SW
+CONF 25 LFPG  P     09L   SW    NE    NW
+CONF 25 LFPG  P     09R   SW    NE    NW
+CONF 25 LFPG  P     26L   SW    SE
+CONF 25 LFPG  P     26R   SW    SE
+CONF 25 LFPG  P     27L   SW    NE
+CONF 25 LFPG  P     27R   SW    NE
+CONF 25 LFPG  Q     08L   NE    SW
+CONF 25 LFPG  Q     08R   NE    SW
+CONF 25 LFPG  Q     09L   NE    NW
+CONF 25 LFPG  Q     09R   NE    NW
+CONF 25 LFPG  Q     26L   NE    SW    SE
+CONF 25 LFPG  Q     26R   NE    SW    SE
+CONF 25 LFPG  Q     27L   NE
+CONF 25 LFPG  Q     27R   NE
+CONF 25 LFPG  R     08L   NE    SW
+CONF 25 LFPG  R     08R   NE    SW
+CONF 25 LFPG  R     09L   NE    NW
+CONF 25 LFPG  R     09R   NE    NW
+CONF 25 LFPG  R     26L   NE    SW    SE
+CONF 25 LFPG  R     26R   NE    SW    SE
+CONF 25 LFPG  R     27L   NE
+CONF 25 LFPG  R     27R   NE
+CONF 25 LFPG  S     08L   NW    NE    SW
+CONF 25 LFPG  S     08R   NW    NE    SW
+CONF 25 LFPG  S     09L   NW
+CONF 25 LFPG  S     09R   NW
+CONF 25 LFPG  S     26L   NW    NE    SW    SE
+CONF 25 LFPG  S     26R   NW    NE    SW    SE
+CONF 25 LFPG  S     27L   NW    NE
+CONF 25 LFPG  S     27R   NW    NE
+CONF 25 LFPG  T     08L   NW    NE    SW
+CONF 25 LFPG  T     08R   NW    NE    SW
+CONF 25 LFPG  T     09L   NW
+CONF 25 LFPG  T     09R   NW
+CONF 25 LFPG  T     26L   NW    NE    SW    SE
+CONF 25 LFPG  T     26R   NW    NE    SW    SE
+CONF 25 LFPG  T     27L   NW    NE
+CONF 25 LFPG  T     27R   NW    NE
+CONF 25 LFPG  U     08L   NW    NE    SW
+CONF 25 LFPG  U     08R   NW    NE    SW
+CONF 25 LFPG  U     09L   NW
+CONF 25 LFPG  U     09R   NW
+CONF 25 LFPG  U     26L   NW    NE    SW    SE
+CONF 25 LFPG  U     26R   NW    NE    SW    SE
+CONF 25 LFPG  U     27L   NW    NE
+CONF 25 LFPG  U     27R   NW    NE
+CONF 25 LFPG  V     08L   NW    NE    SW
+CONF 25 LFPG  V     08R   NW    NE    SW
+CONF 25 LFPG  V     09L   NW
+CONF 25 LFPG  V     09R   NW
+CONF 25 LFPG  V     26L   NW    NE    SW    SE
+CONF 25 LFPG  V     26R   NW    NE    SW    SE
+CONF 25 LFPG  V     27L   NW    NE
+CONF 25 LFPG  V     27R   NW    NE
+CONF 25 LFPG  W     08L   NW    NE    SW
+CONF 25 LFPG  W     08R   NW    NE    SW
+CONF 25 LFPG  W     09L   NW
+CONF 25 LFPG  W     09R   NW
+CONF 25 LFPG  W     26L   NW    NE    SW    SE
+CONF 25 LFPG  W     26R   NW    NE    SW    SE
+CONF 25 LFPG  W     27L   NW    NE
+CONF 25 LFPG  W     27R   NW    NE
+CONF 25 LFPG  X     08L   NW    NE    SW
+CONF 25 LFPG  X     08R   NW    NE    SW
+CONF 25 LFPG  X     09L   NW
+CONF 25 LFPG  X     09R   NW
+CONF 25 LFPG  X     26L   NW    NE    SW    SE
+CONF 25 LFPG  X     26R   NW    NE    SW    SE
+CONF 25 LFPG  X     27L   NW    NE
+CONF 25 LFPG  X     27R   NW    NE
+CONF 25 LFPG  Y     08L   NW    NE    SW
+CONF 25 LFPG  Y     08R   NW    NE    SW
+CONF 25 LFPG  Y     09L   NW
+CONF 25 LFPG  Y     09R   NW
+CONF 25 LFPG  Y     26L   NW    NE    SW    SE
+CONF 25 LFPG  Y     26R   NW    NE    SW    SE
+CONF 25 LFPG  Y     27L   NW    NE
+CONF 25 LFPG  Y     27R   NW    NE
+CONF 25 LFPG  Z     08L   NW    NE    SW
+CONF 25 LFPG  Z     08R   NW    NE    SW
+CONF 25 LFPG  Z     09L   NW
+CONF 25 LFPG  Z     09R   NW
+CONF 25 LFPG  Z     26L   NW    NE    SW    SE
+CONF 25 LFPG  Z     26R   NW    NE    SW    SE
+CONF 25 LFPG  Z     27L   NW    NE
+CONF 25 LFPG  Z     27R   NW    NE
+
+          *****************************************
+          * EO SOL ARRIVEE  FONCTION PARKING/QFU   *
+          *****************************************    22/11/2006
+          
+CONF 26 LFPG  A     08L   SE    V3
+CONF 26 LFPG  A     08R   SE    V3
+CONF 26 LFPG  A     09L   NE    SE    SW    V3
+CONF 26 LFPG  A     09R   NE    SE    SW    V3
+CONF 26 LFPG  A     26L   SW    V3
+CONF 26 LFPG  A     26R   SW    V3
+CONF 26 LFPG  A     27L   NW    NE    SW    V3
+CONF 26 LFPG  A     27R   NW    NE    SW    V3
+CONF 26 LFPG  B     08L   SE    V1
+CONF 26 LFPG  B     08R   SE    V1
+CONF 26 LFPG  B     09L   NE    SE    V1
+CONF 26 LFPG  B     09R   NE    SE    V1
+CONF 26 LFPG  B     26L   SW    V1
+CONF 26 LFPG  B     26R   SW    V1
+CONF 26 LFPG  B     27L   NW    NE    SW    V1
+CONF 26 LFPG  B     27R   NW    NE    SW    V1
+CONF 26 LFPG  C     08L   SE    V3
+CONF 26 LFPG  C     08R   SE    V3
+CONF 26 LFPG  C     09L   NE    SE    SW    V3
+CONF 26 LFPG  C     09R   NE    SE    SW    V3
+CONF 26 LFPG  C     26L   SW    V3
+CONF 26 LFPG  C     26R   SW    V3
+CONF 26 LFPG  C     27L   NW    NE    SW    V3
+CONF 26 LFPG  C     27R   NW    NE    SW    V3
+CONF 26 LFPG  D     08L   SE    V1
+CONF 26 LFPG  D     08R   SE    V1
+CONF 26 LFPG  D     09L   NE    SE    V1
+CONF 26 LFPG  D     09R   NE    SE    V1
+CONF 26 LFPG  D     26L   SW    V1
+CONF 26 LFPG  D     26R   SW    V1
+CONF 26 LFPG  D     27L   NW    NE    SW    V1
+CONF 26 LFPG  D     27R   NW    NE    SW    V1
+CONF 26 LFPG  E     08L   SE    V3 
+CONF 26 LFPG  E     08R   SE    V3
+CONF 26 LFPG  E     09L   NE    SE    V3
+CONF 26 LFPG  E     09R   NE    SE    V3
+CONF 26 LFPG  E     26L   SW    SE    V3
+CONF 26 LFPG  E     26R   SW    SE    V3
+CONF 26 LFPG  E     27L   NW    NE    SW    SE    V3
+CONF 26 LFPG  E     27R   NW    NE    SW    SE    V3
+CONF 26 LFPG  F     08L   SE    V2
+CONF 26 LFPG  F     08R   SE    V2
+CONF 26 LFPG  F     09L   NE    SE    V2
+CONF 26 LFPG  F     09R   NE    SE    V2
+CONF 26 LFPG  F     26L   SW    SE    V2
+CONF 26 LFPG  F     26R   SW    SE    V2
+CONF 26 LFPG  F     27L   NW    NE    SW    SE    V2
+CONF 26 LFPG  F     27R   NW    NE    SW    SE    V2
+CONF 26 LFPG  G     08L   SE    SW
+CONF 26 LFPG  G     08R   SE    SW
+CONF 26 LFPG  G     09L   NE    SW
+CONF 26 LFPG  G     09R   NE    SW
+CONF 26 LFPG  G     26L   SW
+CONF 26 LFPG  G     26R   SW
+CONF 26 LFPG  G     27L   NW    NE    SW
+CONF 26 LFPG  G     27R   NW    NE    SW
+CONF 26 LFPG  H     08L   SE    NE
+CONF 26 LFPG  H     08R   SE    NE
+CONF 26 LFPG  H     09L   NE
+CONF 26 LFPG  H     09R   NE
+CONF 26 LFPG  H     26L   SW    SE    NE
+CONF 26 LFPG  H     26R   SW    SE    NE
+CONF 26 LFPG  H     27L   NW    NE
+CONF 26 LFPG  H     27R   NW    NE
+CONF 26 LFPG  I     08L   SE    NE    NW
+CONF 26 LFPG  I     08R   SE    NE    NW
+CONF 26 LFPG  I     09L   NE    NW
+CONF 26 LFPG  I     09R   NE    NW
+CONF 26 LFPG  I     26L   SW    NE    NW
+CONF 26 LFPG  I     26R   SW    NE    NW
+CONF 26 LFPG  I     27L   NW
+CONF 26 LFPG  I     27R   NW
+CONF 26 LFPG  J     08L   SE    V4
+CONF 26 LFPG  J     08R   SE    V4
+CONF 26 LFPG  J     09L   NE    SE    V4
+CONF 26 LFPG  J     09R   NE    SE    V4
+CONF 26 LFPG  J     26L   SW    SE    V4
+CONF 26 LFPG  J     26R   SW    SE    V4
+CONF 26 LFPG  J     27L   NW    NE    SW    SE    V4
+CONF 26 LFPG  J     27R   NW    NE    SW    SE    V4
+CONF 26 LFPG  K     08L   SE    V6
+CONF 26 LFPG  K     08R   SE    V6
+CONF 26 LFPG  K     09L   NE    SE    V6
+CONF 26 LFPG  K     09R   NE    SE    V6
+CONF 26 LFPG  K     26L   SW    SE    V6
+CONF 26 LFPG  K     26R   SW    SE    V6
+CONF 26 LFPG  K     27L   NW    NE    SW    SE    V6
+CONF 26 LFPG  K     27R   NW    NE    SW    SE    V6
+CONF 26 LFPG  L     08L   SE    V6
+CONF 26 LFPG  L     08R   SE    V6
+CONF 26 LFPG  L     09L   NE    SE    V6
+CONF 26 LFPG  L     09R   NE    SE    V6
+CONF 26 LFPG  L     26L   SW    SE    V6
+CONF 26 LFPG  L     26R   SW    SE    V6
+CONF 26 LFPG  L     27L   NW    NE    SW    SE    V6
+CONF 26 LFPG  L     27R   NW    NE    SW    SE    V6
+CONF 26 LFPG  M     08L   SE    SW
+CONF 26 LFPG  M     08R   SE    SW
+CONF 26 LFPG  M     09L   NE    SW
+CONF 26 LFPG  M     09R   NE    SW
+CONF 26 LFPG  M     26L   SW
+CONF 26 LFPG  M     26R   SW
+CONF 26 LFPG  M     27L   NW    NE    SW
+CONF 26 LFPG  M     27R   NW    NE    SW
+CONF 26 LFPG  N     08L   SE    SW
+CONF 26 LFPG  N     08R   SE    SW
+CONF 26 LFPG  N     09L   NE    SW
+CONF 26 LFPG  N     09R   NE    SW
+CONF 26 LFPG  N     26L   SW
+CONF 26 LFPG  N     26R   SW
+CONF 26 LFPG  N     27L   NW    NE    SW
+CONF 26 LFPG  N     27R   NW    NE    SW
+CONF 26 LFPG  P     08L   SE    SW
+CONF 26 LFPG  P     08R   SE    SW
+CONF 26 LFPG  P     09L   NE    SW
+CONF 26 LFPG  P     09R   NE    SW
+CONF 26 LFPG  P     26L   SW
+CONF 26 LFPG  P     26R   SW
+CONF 26 LFPG  P     27L   NW    NE    SW
+CONF 26 LFPG  P     27R   NW    NE    SW
+CONF 26 LFPG  Q     08L   SE    NE
+CONF 26 LFPG  Q     08R   SE    NE
+CONF 26 LFPG  Q     09L   NE
+CONF 26 LFPG  Q     09R   NE
+CONF 26 LFPG  Q     26L   SW    NE
+CONF 26 LFPG  Q     26R   SW    NE
+CONF 26 LFPG  Q     27L   NW    NE 
+CONF 26 LFPG  Q     27R   NW    NE
+CONF 26 LFPG  R     08L   SE    NE
+CONF 26 LFPG  R     08R   SE    NE
+CONF 26 LFPG  R     09L   NE
+CONF 26 LFPG  R     09R   NE
+CONF 26 LFPG  R     26L   SW    NE
+CONF 26 LFPG  R     26R   SW    NE
+CONF 26 LFPG  R     27L   NW    NE 
+CONF 26 LFPG  R     27R   NW    NE
+CONF 26 LFPG  S     08L   SE    NE    NW
+CONF 26 LFPG  S     08R   SE    NE    NW
+CONF 26 LFPG  S     09L   NE    NW
+CONF 26 LFPG  S     09R   NE    NW
+CONF 26 LFPG  S     26L   SW    NE    NW
+CONF 26 LFPG  S     26R   SW    NE    NW
+CONF 26 LFPG  S     27L   NW
+CONF 26 LFPG  S     27R   NW
+CONF 26 LFPG  T     08L   SE    NE    NW
+CONF 26 LFPG  T     08R   SE    NE    NW
+CONF 26 LFPG  T     09L   NE    NW
+CONF 26 LFPG  T     09R   NE    NW
+CONF 26 LFPG  T     26L   SW    NE    NW
+CONF 26 LFPG  T     26R   SW    NE    NW
+CONF 26 LFPG  T     27L   NW
+CONF 26 LFPG  T     27R   NW                                                               
+CONF 26 LFPG  U     08L   SE    NE    NW
+CONF 26 LFPG  U     08R   SE    NE    NW
+CONF 26 LFPG  U     09L   NE    NW
+CONF 26 LFPG  U     09R   NE    NW
+CONF 26 LFPG  U     26L   SW    NE    NW
+CONF 26 LFPG  U     26R   SW    NE    NW
+CONF 26 LFPG  U     27L   NW
+CONF 26 LFPG  U     27R   NW                                                                            
+CONF 26 LFPG  V     08L   SE    NE    NW
+CONF 26 LFPG  V     08R   SE    NE    NW
+CONF 26 LFPG  V     09L   NE    NW
+CONF 26 LFPG  V     09R   NE    NW
+CONF 26 LFPG  V     26L   SW    NE    NW
+CONF 26 LFPG  V     26R   SW    NE    NW
+CONF 26 LFPG  V     27L   NW
+CONF 26 LFPG  V     27R   NW                   
+CONF 26 LFPG  W     08L   SE    NE    NW
+CONF 26 LFPG  W     08R   SE    NE    NW
+CONF 26 LFPG  W     09L   NE    NW
+CONF 26 LFPG  W     09R   NE    NW
+CONF 26 LFPG  W     26L   SW    NE    NW
+CONF 26 LFPG  W     26R   SW    NE    NW
+CONF 26 LFPG  W     27L   NW
+CONF 26 LFPG  W     27R   NW
+CONF 26 LFPG  X     08L   SE    NE    NW
+CONF 26 LFPG  X     08R   SE    NE    NW
+CONF 26 LFPG  X     09L   NE    NW
+CONF 26 LFPG  X     09R   NE    NW
+CONF 26 LFPG  X     26L   SW    NE    NW
+CONF 26 LFPG  X     26R   SW    NE    NW
+CONF 26 LFPG  X     27L   NW
+CONF 26 LFPG  X     27R   NW
+CONF 26 LFPG  Y     08L   SE    NE    NW
+CONF 26 LFPG  Y     08R   SE    NE    NW
+CONF 26 LFPG  Y     09L   NE    NW
+CONF 26 LFPG  Y     09R   NE    NW
+CONF 26 LFPG  Y     26L   SW    NE    NW
+CONF 26 LFPG  Y     26R   SW    NE    NW
+CONF 26 LFPG  Y     27L   NW
+CONF 26 LFPG  Y     27R   NW
+CONF 26 LFPG  Z     08L   SE    NE    NW
+CONF 26 LFPG  Z     08R   SE    NE    NW
+CONF 26 LFPG  Z     09L   NE    NW
+CONF 26 LFPG  Z     09R   NE    NW
+CONF 26 LFPG  Z     26L   SW    NE    NW
+CONF 26 LFPG  Z     26R   SW    NE    NW
+CONF 26 LFPG  Z     27L   NW
+CONF 26 LFPG  Z     27R   NW
+                                                                                                            
+                    *******************                                     
+                    * DECLARATION DES *                                     
+                    *    CHAINES      *                                     
+                    *******************  28-11-2006
+
+          ***********************************************
+          *        NOMBRE MAXIMUM D'ADAPTATEUR          *
+          * POUR DIGIT ET CONCENTRATEUR = 32 POUR V18   *
+          ***********************************************
+
+
+
+CONF 31       DGCHML      VERS1 36
+CONF 31       DGCHME      VERS1 30
+CONF 31       DGCHXD      VERS1 
+
+CONF 31       DGCHG1      VERS1 69
+CONF 31       DGCHG2      VERS1 44              
+
+CONF 31       IDCH10      VERS1 59             40
+CONF 31       IDCH11      VERS1 58             41
+CONF 31       IDCH12      VERS1 60             42
+CONF 31       IDCH13      VERS1 60             43
+CONF 31       IDCH14      VERS1 59             44
+CONF 31       IDCH15      VERS1 58             45
+CONF 31       IDCH16      VERS1 60             46
+CONF 31       IDCH17      VERS1 59             47
+CONF 31       IDCH18      VERS1 58             48                           
+
+CONF 31       IDCHIF      VERS1                3E                           
+
+CONF 31       IDCHEV      VERS1                3B                           
+
+CONF 31       IDCHML      VERS1 36             31
+CONF 31       IDCHME      VERS1 30             31
+CONF 31       IDCHXD      VERS1                32
+
+CONF 31       IDCHPO      VERS1 49             39                           
+
+CONF 31       IDCHG1      VERS1 38             3A
+CONF 31       IDCHG2      VERS1 38             3C
+CONF 31       IDCHG3      VERS1 38             39                           
+CONF 31       IDCHG4      VERS1 45             30                           
+CONF 31       IDCHG5      VERS1 45             36                           
+CONF 31       IDCHG6      VERS1 45             33                           
+CONF 31       IDCHG7      VERS1 52             BF                           
+CONF 31       IDCHG8      VERS1 52             35                           
+
+CONF 31       IDCHLI      VERS1                35
+
+                    *******************                                     
+                    * DECLARATION DES *                                     
+                    *  CONCENTRATEURS *                                     
+                    *******************  04-09-2006                           
+                                                                            
+
+CONF 41       CCTPG VERS1       NONIT 44       7F                           
+
+                    
+                    *******************                                     
+                    * DECLARATION DES *                                     
+                    *   DIGITATRONS   *                                    
+                    *******************  14-08-2007
+
+CONF 51 DGSI        VERS1       DGCHML   5C
+CONF 51 DGSJ        VERS1       DGCHML   5E
+CONF 51 DGSK        VERS1       DGCHML   5D
+
+CONF 51 DGXD        VERS1       DGCHXD   5D
+                                                                            
+CONF 51 DGRB        VERS1       DGCHG1   5B       CCTPG    07
+CONF 51 DGMIL       VERS1       DGCHG1   CE       CCTPG    02               
+CONF 51 DGK1        VERS1       DGCHG1   5D       CCTPG    05
+
+CONF 51 DGK2        VERS1       DGCHG2   FE       CCTPG    03               
+CONF 51 DGRA        VERS1       DGCHG2   FB       CCTPG    06
+
+
+                    *******************                                     
+                    * DECLARATION DES *                                     
+                    * IMP.DE STRIPS   *                                     
+                    *******************  28-11-2006
+                    DE PREFERENCE METTRE LES IMPRIMANTES
+                    LES PLUS SOLLICITEES EN RANG 0
+
+
+CONF 53 IDB14       VERS1       IDCH10      ESD             0               
+CONF 53 IDA05       VERS1       IDCH10      ESD             1               
+CONF 53 IDC17       VERS1       IDCH10      ESD             2               
+
+CONF 53 IDB11       VERS1       IDCH11      ESD             0               
+CONF 53 IDB02       VERS1       IDCH11      ESD             1               
+CONF 53 IDC14       VERS1       IDCH11      ESD             2               
+
+CONF 53 IDA17       VERS1       IDCH12      ESD             0               
+CONF 53 IDA08       VERS1       IDCH12      ESD             1               
+
+CONF 53 IDB08       VERS1       IDCH13      ESD             0               
+CONF 53 IDB17       VERS1       IDCH13      ESD             1               
+
+CONF 53 IDB05       VERS1       IDCH14      ESD             0               
+CONF 53 IDA14       VERS1       IDCH14      ESD             1               
+
+CONF 53 IDA11       VERS1       IDCH15      ESD             0               
+CONF 53 IDA02       VERS1       IDCH15      ESD             1               
+
+CONF 53 IDD08       VERS1       IDCH16      ESD             0               
+CONF 53 IDD17       VERS1       IDCH16      ESD             1               
+
+CONF 53 IDD05       VERS1       IDCH17      ESD             0               
+CONF 53 IDD14       VERS1       IDCH17      ESD             1               
+CONF 53 IDC02       VERS1       IDCH17      ESD             2               
+
+CONF 53 IDD11       VERS1       IDCH18      ESD             0               
+CONF 53 IDD02       VERS1       IDCH18      ESD             1               
+CONF 53 IDC05       VERS1       IDCH18      ESD             2               
+
+CONF 53 IDIF        VERS1       IDCHIF      ESD             0               
+
+                   ***** Imprimante Phibase P1V
+CONF 53 IDV01       VERS1       IDCHEV      ESD             0               
+
+                   ***** Imprimante Phimat  EVATHIS
+CONF 53 IDV04       VERS1       IDCHEV      ESD             1               
+
+
+
+CONF 53 IDOR        VERS1       IDCHPO      ESD             0               
+CONF 53 IDOA        VERS1       IDCHPO      ESD             1               
+CONF 53 IDOD        VERS1       IDCHPO      ESD             2               
+CONF 53 IDVD        VERS1       IDCHPO      ESD             3               
+CONF 53 IDVA        VERS1       IDCHPO      ESD             4               
+CONF 53 IDVR        VERS1       IDCHPO      ESD             5               
+        
+CONF 53 IDMG        VERS1       IDCHG1      ESD             0
+CONF 53 IDDC        VERS1       IDCHG1      ESD             1
+CONF 53 IDK1        VERS1       IDCHG1      ESD             2
+CONF 53 IDV5        VERS1       IDCHG1      ESD             3
+
+CONF 53 IDRB        VERS1       IDCHG2      ESD             0               
+CONF 53 IDRI        VERS1       IDCHG2      ESD             1 
+CONF 53 IDV1        VERS1       IDCHG2      ESD             2 
+
+CONF 53 IDME        VERS1       IDCHG3      ESD             0               
+CONF 53 IDGA        VERS1       IDCHG3      ESD             1
+CONF 53 IDSW        VERS1       IDCHG3      ESD             2                                                                                                                                                                   
+
+CONF 53 IDRA        VERS1       IDCHG4      ESD             0
+CONF 53 IDAC        VERS1       IDCHG4      ESD             1
+CONF 53 IDGS        VERS1       IDCHG4      ESD             2
+CONF 53 IDV6        VERS1       IDCHG4      ESD             3 
+
+CONF 53 IDK2        VERS1       IDCHG5      ESD             0
+CONF 53 IDV2        VERS1       IDCHG5      ESD             1 
+CONF 53 IDNS        VERS1       IDCHG5      ESD             2 
+
+CONF 53 IDMF        VERS1       IDCHG6      ESD             0
+CONF 53 IDSE        VERS1       IDCHG6      ESD             1
+CONF 53 IDV3        VERS1       IDCHG6      ESD             2
+
+CONF 53 IDMW        VERS1       IDCHG7      ESD             0
+CONF 53 IDBA        VERS1       IDCHG7      ESD             1
+CONF 53 IDNW        VERS1       IDCHG7      ESD             2 
+CONF 53 IDK3        VERS1       IDCHG7      ESD             3
+
+CONF 53 IDBD        VERS1       IDCHG8      ESD             0
+CONF 53 IDNE        VERS1       IDCHG8      ESD             1
+CONF 53 IDK4        VERS1       IDCHG8      ESD             2                                                                           
+CONF 53 IDV4        VERS1       IDCHG8      ESD             3                                                                            
+
+CONF 53 IDSI        VERS1       IDCHML      ESD             0
+CONF 53 IDSJ        VERS1       IDCHML      ESD             1
+CONF 53 IDSK        VERS1       IDCHML      ESD             2
+
+CONF 53 IDXD        VERS1       IDCHXD      ESD             0
+
+CONF 53 IDLD        VERS1       IDCHLI      ESD             0
+                                                                            
+                    ****************************                            
+                    * DECLARATION DES          *                            
+                    *    CLAVIER  ECRAN        *                            
+                    ****************************  21-03-2005                  
+                                                                            
+CONF 54 CEDMC       VERS1           0 53       33
+ 
+                         CLAVIER-ECRANS CONSERV‹S POUR DES BESOINS DE TEST
+
+CONF 54 CELPO       VERS1           0          37                           
+CONF 54 CELPG       VERS1           0          38                           
+CONF 54 CELPB       VERS1           0          39                           
+CONF 54 CELID       VERS1           0          26                           
+
+
+                     *********************************                       
+                    * DECLARATION DES LIGNES GLT     *                       
+                    * STPV-STR/STRIDA                *                       
+                    **********************************   2-3-2001
+         
+         Ad Patres depuis le 2 mars 2001, mais il est n≈cessaire de garder
+         une ligne pour que le GBDS fonctionne
+                  
+
+CONF 56 STR1        VERS1 MAITR STR            38                           
+      
+                                                                                
+                    ***************************
+                    * POINT D'ACCES LOCAL *
+                    ***************************   14-06-2004
+       
+
+CONF 58 ECAC  SYM
+CONF 58 ESTR  SERV
+CONF 58 EPH2  SERV
+CONF 58 GDSR  CLIEN
+CONF 58 XSAN  CLIEN
+CONF 58 STI   CLIEN
+                                                                  
+                    *******************                                     
+                    * DECLARATION DES *                                     
+                    * MAE-IMP-RSFTA   *                                     
+                    *******************  05-03-91                           
+         
+         Il est n≈cessaire de garder une garde CONF 59 pour RS1
+         pour que le GBDS fonctionne
+                                                                            
+CONF 59 MAE   MAE   VERS1          04                                       
+CONF 59 IMP   IMPRA VERS1          08                                       
+CONF 59SCOC
+                                                                            
+                    **********************************                      
+                    * SIGNALISATION PERIODIQUE OL    *             
+                    **********************************  09-01-2001
+
+CONF 60 OLCAC SIGNA    04    03    03                                       
+CONF 60SOLCAC NDSE3 INAC1 ENAT3 RELA3 NDSN3 INAN1 ENAN1 RELN1               
+CONF 60 OLSTR SIGNA    04    03    03                                       
+CONF 60SOLSTR NDSE3 INAC1 ENAT3 RELA3 NDSN3 INAN1 ENAN1 RELN1               
+CONF 60 OLSDA SIGNA    04    03    03                                       
+CONF 60SOLSDA NDSE3 INAC1 ENAT3 RELA3 NDSN3 INAN1 ENAN1 RELN1               
+CONF 60 OLETG SIGNA    04    03    03                                       
+CONF 60SOLETG NDSE3 INAC1 ENAT3 RELA3 NDSN3 INAN1 ENAN1 RELN1               
+CONF 60 OLMAS SIGNA    04    03    03                                       
+CONF 60SOLMAS NDSE3 INAC1 ENAT3 RELA3 NDSN3 INAN1 ENAN1 RELN1               
+CONF 60 OLSGM SIGNA    04    03    03                                       
+CONF 60SOLSGM NDSE3 INAC1 ENAT3 RELA3 NDSN3 INAN1 ENAN1 RELN1               
+CONF 60 OLISA SIGNA    04    03    03                                       
+CONF 60SOLISA NDSE3 INAC1 ENAT3 RELA3 NDSN3 INAN1 ENAN1 RELN1               
+CONF 60 OLLDS SIGNA    04    03    03   
+CONF 60SOLLDS NDSE3 INAC1 ENAT3 RELA3 NDSN3 INAN1 ENAN1 RELN1  
+CONF 60 OLSUP SIGNA    04    03    03   
+CONF 60SOLSUP NDSE3 INAC1 ENAT3 RELA3 NDSN3 INAN1 ENAN1 RELN1
+CONF 60 OLRSF SIGNA    04    03    03   
+CONF 60SOLRSF NDSE3 INAC1 ENAT3 RELA3 NDSN3 INAN1 ENAN1 RELN1
+  
+        **** Signalisation OL Hydres
+CONF 60TOLSUP SIGNA    04    03    03
+CONF 60UOLSUP NDSE3 ENAT3 NDSN3 ENAN1
+CONF 60TOLCAC SIGNA    04    03    03
+CONF 60UOLCAC NDSE3 ENAT3 NDSN3 ENAN1
+CONF 60TOLPHI SIGNA    04    03    03   
+CONF 60UOLPHI NDSE3 ENAT3 NDSN3 ENAN1
+CONF 60TOLSTR SIGNA    04    03    03                                       
+CONF 60UOLSTR NDSE3 ENAT3 NDSN3 ENAN1                
+                                                                          
+                     
+                                                                            
+                      *********************                                 
+                      * O.L DIGITS ROISSY *                                 
+                      *********************                                 
+                                                                            
+CONF 61 DGK1        PK1   K1    NORMA     1 FPAP                            
+CONF 62 DGK1        DGK1                                                    
+                                                                            
+CONF 61 DGK2        PK2   K2    NORMA     1 FPAP                            
+CONF 62 DGK2        DGK2
+
+CONF 61 DGRA        PRA   RA    NORMA     1 FPAP                            
+CONF 62 DGRA        DGRA                
+                                                            
+CONF 61 DGRB        PRB   RB    NORMA     1 FPAP                            
+CONF 62 DGRB        DGRB                                                    
+
+CONF 61 DGMIL       PAC   MIL   NORMA     1 FPAP                            
+CONF 62 DGMIL       DGMIL                                                   
+
+                        ***************************
+                        *                         *
+                        *  OL DIGITS  MELUN       *
+                        *                         *
+                        *************************** 28/11/06
+
+CONF 61 DGSIR       PSI   SIR   NORMA     1 DGRAD                           
+CONF 62 DGSIR       DGSI                                                   
+
+CONF 61 DGSKR       PSK   SKR   NORMA     1 DGRAD                           
+CONF 62 DGSKR       DGSK                                                   
+
+CONF 61 DGSJR       PSJ   SJR   NORMA     1 DGRAD                           
+CONF 62 DGSJR       DGSJ 
+
+CONF 61 DGXD        PXD   XDR   NORMA     1 DGRAD                           
+CONF 62 DGXD        DGXD                             
+                      
+                                                  
+                        ***************************                         
+                        * O.L. IMPRIMANTES STRIPS *
+                        ***************************  20-11-2008   
+                                    
+CONF 61 IDA02       PTN         SCOUR     3 IDS             1               
+CONF 62 IDA02       IDA02 IDA05 IDA08                   SIGSECSIGNDE        
+CONF 63 IDA02 FA:VIDA02                               1    20     2 REPRI
+
+CONF 61 IDA05       PTB         SCOUR     3 IDS             1               
+CONF 62 IDA05       IDA05 IDA08 IDA02                   SIGSECSIGNDE        
+CONF 63 IDA05 FA:VIDA05                               1    20     2 REPRI
+
+CONF 61 IDA08       PTE         SCOUR     3 IDS             1               
+CONF 62 IDA08       IDA08 IDA11 IDA05                   SIGSECSIGNDE        
+CONF 63 IDA08 FA:VIDA08                               1    20     2 REPRI
+
+CONF 61 IDA11       PAP         SCOUR     3 IDS             1               
+CONF 62 IDA11       IDA11 IDA08 IDA14                   SIGSECSIGNDE        
+CONF 63 IDA11 FA:VIDA11                               1    20     2 REPRI
+
+CONF 61 IDA14       PTM         SCOUR     3 IDS             1               
+CONF 62 IDA14       IDA14 IDA17 IDA11                   SIGSECSIGNDE        
+CONF 63 IDA14 FA:VIDA14                               1    20     2 REPRI
+
+CONF 61 IDA17       PTL         SCOUR     3 IDS             1               
+CONF 62 IDA17       IDA17 IDA14 IDA11                   SIGSECSIGNDE        
+CONF 63 IDA17 FA:VIDA17                               1    20     2 REPRI
+
+
+CONF 61 IDB02       PPU         SCOUR     3 IDS             1               
+CONF 62 IDB02       IDB02 IDB05 IDB08                   SIGSECSIGNDE        
+CONF 63 IDB02 FA:VIDB02                               1    20     2 REPRI
+
+CONF 61 IDB05       PUT         SCOUR     3 IDS             1               
+CONF 62 IDB05       IDB05 IDB02 IDB08                   SIGSECSIGNDE        
+CONF 63 IDB05 FA:VIDB05                               1    20     2 REPRI
+
+CONF 61 IDB08       PUJ         SCOUR     3 IDS             1               
+CONF 62 IDB08       IDB08 IDB11 IDB05                   SIGSECSIGNDE        
+CONF 63 IDB08 FA:VIDB08                               1    20     2 REPRI
+
+CONF 61 IDB11       PAR         SCOUR     3 IDS             1               
+CONF 62 IDB11       IDB11 IDB08 IDB14                   SIGSECSIGNDE        
+CONF 63 IDB11 FA:VIDB11                               1    20     2 REPRI
+
+CONF 61 IDB14       PAO         SCOUR     3 IDS             1               
+CONF 62 IDB14       IDB14 IDB11 IDB02                   SIGSECSIGNDE        
+CONF 63 IDB14 FA:VIDB14                               1    20     2 REPRI
+
+CONF 61 IDB17       PSU         SCOUR     3 IDS             1               
+CONF 62 IDB17       IDB17 IDB14 IDB11                   SIGSECSIGNDE        
+CONF 63 IDB17 FA:VIDB17                               1    20     2 REPRI
+
+CONF 61 IDC02       PDO         SCOUR     3 IDS             1               
+CONF 62 IDC02       IDC02 IDC05 IDC17                   SIGSECSIGNDE        
+CONF 63 IDC02 FA:VIDC02                               1    20     2 REPRI
+
+CONF 61 IDC05       PDG         SCOUR     3 IDS             1               
+CONF 62 IDC05       IDC05 IDC02 IDC17                   SIGSECSIGNDE        
+CONF 63 IDC05 FA:VIDC05                               1    20     2 REPRI
+
+CONF 61 IDC14       PS          SCOUR     2 IDS             1               
+CONF 62 IDC14       IDC14 IDC17                         SIGSECSIGNDE        
+CONF 63 IDC14 FA:VIDC14                               1    20     2 REPRI
+
+CONF 61 IDC17       PUP         SCOUR     3 IDS             1               
+CONF 62 IDC17       IDC17 IDC14 IDC02                   SIGSECSIGNDE        
+CONF 63 IDC17 FA:VIDC17                               1    20     2 REPRI
+
+CONF 61 IDD02       PUZ         SCOUR     3 IDS             1               
+CONF 62 IDD02       IDD02 IDD05 IDD17                   SIGSECSIGNDE        
+CONF 63 IDD02 FA:VIDD02                               1    20     2 REPRI
+
+CONF 61 IDD05       POG         SCOUR     3 IDS             1               
+CONF 62 IDD05       IDD05 IDD02 IDD08                   SIGSECSIGNDE        
+CONF 63 IDD05 FA:VIDD05                               1    20     2 REPRI
+
+CONF 61 IDD08       PRT         SCOUR     3 IDS             1               
+CONF 62 IDD08       IDD08 IDD11 IDD05                   SIGSECSIGNDE        
+CONF 63 IDD08 FA:VIDD08                               1    20     2 REPRI
+
+CONF 61 IDD11       POT         SCOUR     3 IDS             1               
+CONF 62 IDD11       IDD11 IDD08 IDD14                   SIGSECSIGNDE        
+CONF 63 IDD11 FA:VIDD11                               1    20     2 REPRI
+
+CONF 61 IDD14       PTP         SCOUR     3 IDS             1               
+CONF 62 IDD14       IDD14 IDD17 IDD11                   SIGSECSIGNDE        
+CONF 63 IDD14 FA:VIDD14                               1    20     2 REPRI
+
+CONF 61 IDD17       PTH         SCOUR     3 IDS             1               
+CONF 62 IDD17       IDD17 IDD14 IDD02                   SIGSECSIGNDE        
+CONF 63 IDD17 FA:VIDD17                               1    20     2 REPRI
+
+CONF 61 IDIF        PIF         SCOUR     2 IDS             1
+CONF 62 IDIF        IDIF  IDB14                         SIGSECSIGNDE
+CONF 63 IDIF  FA:VIDIF                                1    20     2 REPRI
+
+CONF 61 IDV01       P1V         SCOUR     2 IDS             1               
+CONF 62 IDV01       IDV01 IDV04                         SIGSECSIGNDE        
+CONF 63 IDV01 FA:VIDV01                               1    20     2 REPRI
+
+CONF 61 IDV04       P4V         SCOUR     2 IDS             1               
+CONF 62 IDV04       IDV04 IDV01                         SIGSECSIGNDE        
+CONF 63 IDV04 FA:VIDV04                               1    20     2 REPRI
+
+CONF 61 IDVFC       PCS         SCOUR     1 IDS             1               
+CONF 62 IDVFC             IDIF                          SIGSECSIGNDE        
+CONF 63 IDVFC FA:VIDVFC                               1    20     2 REPRI
+
+CONF 61 IDVFD       PDM         SCOUR     1 IDS             1               
+CONF 62 IDVFD             IDIF                          SIGSECSIGNDE        
+CONF 63 IDVFD FA:VIDVFD                               1    20     2 REPRI
+
+CONF 61 IDVFR       PCE         SCOUR     1 IDS             1               
+CONF 62 IDVFR             IDIF                          SIGSECSIGNDE        
+CONF 63 IDVFR FA:VIDVFR                               1    20     2 REPRI
+
+CONF 61 IDVFS       PMO         SCOUR     1 IDS             1               
+CONF 62 IDVFS             IDIF                          SIGSECSIGNDE        
+CONF 63 IDVFS FA:VIDVFS                               1    20     2 REPRI
+
+                    ******** imprimante fictive  *********
+                    ******* secteur delestage    *********
+                    ******* liste eveil UZ       *********
+CONF 61 IDVFF       POM         SCOUR     1 IDS             1               
+CONF 62 IDVFF             IDIF                          SIGSECSIGNDE        
+CONF 63 IDVFF FA:VIDVFF                               1    20     2 REPRI
+                                                                            
+                    *********************                                   
+                    * O.L IMP  ORLY     *                                   
+                    ********************* 5-01-2000                          
+                                                                            
+CONF 61 IDVDP       PVD         SCOUR     4 ISVD            1               
+CONF 62 IDVDP       IDVD  IDVR  IDVA  IDOD              SIGSECSIGNDE        
+CONF 63 IDVDP FA:VIDVDP                               1    20     2 REPRI
+                                                                            
+CONF 61 IDVDS       PVD         SCOUR     3 ISCT            1               
+CONF 62 IDVDS             IDVA  IDVR  IDVD              SIGSECSIGNDE        
+CONF 63 IDVDS FA:VIDVDS                               1    20     2 REPRI
+                                                                            
+CONF 61 IDVA        PVA         SCOUR     4 ISCT            1               
+CONF 62 IDVA        IDVA  IDVR  IDVD  IDOA              SIGSECSIGNDE        
+CONF 63 IDVA  FA:VIDVA                                1    20     2 REPRI
+                                                                            
+CONF 61 IDVR        PVR         SCOUR     4 ISCT            1               
+CONF 62 IDVR        IDVR  IDVA  IDVD  IDOD              SIGSECSIGNDE        
+CONF 63 IDVR  FA:VIDVR                                1    20     2 REPRI
+                                                                            
+CONF 61 IDOD        POD         SCOUR     4 ISCT            1               
+CONF 62 IDOD        IDOD  IDOA  IDOR  IDVR              SIGSECSIGNDE        
+CONF 63 IDOD  FA:VIDOD                                1    20     2 REPRI
+                                                                            
+CONF 61 IDOA        POA         SCOUR     4 ISCT            1               
+CONF 62 IDOA        IDOA  IDOR  IDOD  IDVA              SIGSECSIGNDE        
+CONF 63 IDOA  FA:VIDOA                                1    20     2 REPRI
+                                                                            
+CONF 61 IDOR        POR         SCOUR     4 ISCT            1               
+CONF 62 IDOR        IDOR  IDOA  IDOD  IDVA              SIGSECSIGNDE        
+CONF 63 IDOR  FA:VIDOR                                1    20     2 REPRI
+                                                                          
+                   ************************                                 
+                   * O.L IMP ROISSY       *                                 
+                   ************************  21-05-06
+                                          
+                                                                            
+CONF 61 IDGDP       PGD         SCOUR     3 ISVD            1               
+CONF 62 IDGDP             IDME  IDMF  IDNW              SIGSECSIGNDE        
+CONF 63 IDGDP FA:VIDGDP                               1    20     2 REPRI
+                                                                            
+CONF 61 IDGDS       PGD         SCOUR     3 ISCT            1               
+CONF 62 IDGDS             IDME  IDMF  IDNW              SIGSECSIGNDE        
+CONF 63 IDGDS FA:VIDGDS                               1    20     2 REPRI
+                                                                            
+CONF 61 IDGG        PGG         SCOUR     3 ISCT            1               
+CONF 62 IDGG              IDMG  IDMF  IDME              SIGSECSIGNDE        
+CONF 63 IDGG  FA:VIDGG                                1    20     2 REPRI
+
+CONF 61 IDGE        PGE         SCOUR     3 ISCT            1               
+CONF 62 IDGE              IDME  IDMW  IDMF              SIGSECSIGNDE        
+CONF 63 IDGE  FA:VIDGE                                1    20     2 REPRI
+
+CONF 61 IDGF        PGF         SCOUR     3 ISCT            1               
+CONF 62 IDGF              IDMF  IDME  IDMG              SIGSECSIGNDE        
+CONF 63 IDGF  FA:VIDGF                                1    20     2 REPRI
+
+CONF 61 IDGW        PGW         SCOUR     3 ISCT            1               
+CONF 62 IDGW              IDMW  IDME  IDMF              SIGSECSIGNDE        
+CONF 63 IDGW  FA:VIDGW                                1    20     2 REPRI
+
+CONF 61 IDK1        PK1         SCOUR     4 ISCT            1               
+CONF 62 IDK1        IDK1  IDK2  IDK3  IDK4              SIGSECSIGNDE        
+CONF 63 IDK1  FA:VIDK1                                1    20     2 REPRI
+
+CONF 61 IDK2        PK2         SCOUR     5 ISCT            1               
+CONF 62 IDK2        IDK2  IDK3  IDK1  IDRB  IDRA        SIGSECSIGNDE        
+CONF 63 IDK2  FA:VIDK2                                1    20     2 REPRI
+
+CONF 61 IDK3        PK3         SCOUR     4 ISCT            1               
+CONF 62 IDK3        IDK3  IDK2  IDK4  IDK1              SIGSECSIGNDE        
+CONF 63 IDK3  FA:VIDK3                                1    20     2 REPRI
+
+CONF 61 IDK4        PK4         SCOUR     4 ISCT            1               
+CONF 62 IDK4        IDK4  IDK3  IDK2  IDK1              SIGSECSIGNDE        
+CONF 63 IDK4  FA:VIDK4                                1    20     2 REPRI
+
+CONF 61 IDRA        PRA         SCOUR     4 ISCT            1               
+CONF 62 IDRA        IDRA  IDRB  IDAC  IDK4              SIGSECSIGNDE        
+CONF 63 IDRA  FA:VIDRA                                1    20     2 REPRI
+
+CONF 61 IDRB        PRB         SCOUR     3 ISCT            1               
+CONF 62 IDRB        IDRB  IDRA  IDAC                    SIGSECSIGNDE        
+CONF 63 IDRB  FA:VIDRB                                1    20     2 REPRI
+
+CONF 61 IDRI        PRI         NORMA     1 ISCT            1               
+CONF 62 IDRI        IDRI                                      SIGNDE        
+CONF 63 IDRI  FA:VIDRI                                1    20     2 REPRI
+
+CONF 61 IDVI        PVI         SCOUR     1 ISVD            1               
+CONF 62 IDVI              IDRI                                SIGNDE        
+CONF 63 IDVI  FA:VIDVI                                1    20     2 REPRI
+
+CONF 61 IDDC        PDC         SCOUR     3 ISCT            1               
+CONF 62 IDDC        IDDC  IDAC  IDK4                    SIGSECSIGNDE        
+CONF 63 IDDC  FA:VIDDC                                1    20     2 REPRI
+                                                                            
+CONF 61 IDAC        PAC         SCOUR     3 ISCT            1               
+CONF 62 IDAC        IDAC  IDDC  IDK4                    SIGSECSIGNDE        
+CONF 63 IDAC  FA:VIDAC                                1    20     2 REPRI
+                                                                            
+CONF 61 IDMW        PMW         SCOUR     4 ISVD            1               
+CONF 62 IDMW        IDMW  IDME  IDMG  IDMF              SIGSECSIGNDE        
+CONF 63 IDMW  FA:VIDMW                                1    20     2 REPRI
+                               
+CONF 61 IDMG        PMG         SCOUR     4 ISVD            1               
+CONF 62 IDMG        IDMG  IDMF  IDME  IDMW              SIGSECSIGNDE        
+CONF 63 IDMG  FA:VIDMG                                1    20     2 REPRI
+                              
+CONF 61 IDME        PME         SCOUR     4 ISVD            1               
+CONF 62 IDME        IDME  IDMW  IDMG  IDMF              SIGSECSIGNDE        
+CONF 63 IDME  FA:VIDME                                1    20     2 REPRI
+                              
+CONF 61 IDMF        PMF         SCOUR     4 ISVD            1               
+CONF 62 IDMF        IDMF  IDME  IDMG  IDMW              SIGSECSIGNDE        
+CONF 63 IDMF  FA:VIDMF                                1    20     2 REPRI
+
+CONF 61 IDSW        PSW         SCOUR     3 ISVD            1               
+CONF 62 IDSW        IDSW  IDSE  IDGS                    SIGSECSIGNDE
+CONF 63 IDSW  FA:VIDSW                                1    20     2 REPRI
+
+CONF 61 IDSE        PSE         SCOUR     3 ISVD            1               
+CONF 62 IDSE        IDSE  IDSW  IDGS                    SIGSECSIGNDE
+CONF 63 IDSE  FA:VIDSE                                1    20     2 REPRI
+
+CONF 61 IDGS        PGS         SCOUR     3 ISCT            1               
+CONF 62 IDGS        IDGS  IDSW  IDSE                    SIGSECSIGNDE
+CONF 63 IDGS  FA:VIDGS                                1    20     2 REPRI   
+
+CONF 61 IDGA        PGA         SCOUR     4 ISCT            1               
+CONF 62 IDGA        IDGA  IDNW  IDNE  IDNS              SIGSECSIGNDE        
+CONF 63 IDGA  FA:VIDGA                                1    20     2 REPRI
+
+CONF 61 IDV1        PV1         SCOUR     3 ISVD            1               
+CONF 62 IDV1        IDV1  IDV2  IDV3                    SIGSECSIGNDE
+CONF 63 IDV1  FA:VIDV1                                1    20     2 REPRI  
+
+CONF 61 IDV2        PV2         SCOUR     3 ISVD            1               
+CONF 62 IDV2        IDV2  IDV1  IDV3                    SIGSECSIGNDE
+CONF 63 IDV2  FA:VIDV2                                1    20     2 REPRI  
+
+CONF 61 IDV3        PV3         SCOUR     3 ISVD            1               
+CONF 62 IDV3        IDV3  IDV2  IDV1                    SIGSECSIGNDE
+CONF 63 IDV3  FA:VIDV3                                1    20     2 REPRI  
+
+CONF 61 IDV4        PV4         SCOUR     3 ISVD            1               
+CONF 62 IDV4        IDV4  IDV5  IDV6                    SIGSECSIGNDE
+CONF 63 IDV4  FA:VIDV4                                1    20     2 REPRI  
+
+CONF 61 IDV5        PV5         SCOUR     3 ISVD            1               
+CONF 62 IDV5        IDV5  IDV4  IDV6                    SIGSECSIGNDE
+CONF 63 IDV5  FA:VIDV5                                1    20     2 REPRI  
+
+CONF 61 IDV6        PV6         SCOUR     3 ISVD            1               
+CONF 62 IDV6        IDV6  IDV5  IDV4                    SIGSECSIGNDE
+CONF 63 IDV6  FA:VIDV6                                1    20     2 REPRI    
+
+CONF 61 IDNS        PNS         SCOUR     4 ISVD            1               
+CONF 62 IDNS        IDNS  IDNE  IDGA  IDNW              SIGSECSIGNDE        
+CONF 63 IDNS  FA:VIDNS                                1    20     2 REPRI
+
+CONF 61 IDNW        PNW         SCOUR     4 ISVD            1               
+CONF 62 IDNW        IDNW  IDNE  IDGA  IDNS              SIGSECSIGNDE        
+CONF 63 IDNW  FA:VIDNW                                1    20     2 REPRI
+
+CONF 61 IDNE        PNE         SCOUR     4 ISVD            1               
+CONF 62 IDNE        IDNE  IDNW  IDGA  IDNS              SIGSECSIGNDE        
+CONF 63 IDNE  FA:VIDNE                                1    20     2 REPRI
+
+CONF 61 IDRE2       PRE         SCOUR     4 ISCT            1               
+CONF 62 IDRE2             IDNE  IDNW  IDGA  IDNS        SIGSECSIGNDE
+CONF 63 IDRE2 FA:VIDRE2                               1    20     2 REPRI  
+
+CONF 61 IDRS2       PRS         SCOUR     4 ISCT            1               
+CONF 62 IDRS2             IDNS  IDNE  IDGA  IDNW        SIGSECSIGNDE
+CONF 63 IDRS2 FA:VIDRS2                               1    20     2 REPRI  
+
+                    ****************************                            
+                    * IMPRIMANTES LE BOURGET   *                            
+                    ****************************  04-12-93                  
+                                                                            
+CONF 61 IDBDP       PBD         SCOUR     2 ISVD            1               
+CONF 62 IDBDP       IDBD  IDBA                          SIGSECSIGNDE        
+CONF 63 IDBDP FA:VIDBDP                               1    20     2 REPRI
+                                                                            
+CONF 61 IDBDS       PBD         SCOUR     2 ISCT            1               
+CONF 62 IDBDS             IDBA  IDBD                    SIGSECSIGNDE        
+CONF 63 IDBDS FA:VIDBDS                               1    20     2 REPRI
+                                                                            
+CONF 61 IDBA        PBA         SCOUR     2 ISCT            1               
+CONF 62 IDBA        IDBA  IDBD                          SIGSECSIGNDE        
+CONF 63 IDBA  FA:VIDBA                                1    20     2 REPRI
+                                                                            
+                                                                            
+                    ****************************                            
+                    * IMPRIMANTES     MELUN    *                            
+                    ****************************  28-11-2006                  
+                                                                            
+CONF 61 IDSI        PSI         SCOUR     3 IDS             1               
+CONF 62 IDSI        IDSI  IDSJ  IDSK                    SIGSECSIGNDE        
+CONF 63 IDSI  FA:VIDSI                                1    20     2 REPRI
+
+CONF 61 IDSJ        PSJ         SCOUR     3 IDS             1               
+CONF 62 IDSJ        IDSJ  IDSI  IDSK                    SIGSECSIGNDE        
+CONF 63 IDSJ  FA:VIDSJ                                1    20     2 REPRI
+
+CONF 61 IDSK        PSK         SCOUR     3 IDS             1               
+CONF 62 IDSK        IDSK  IDSI  IDSJ                    SIGSECSIGNDE        
+CONF 63 IDSK  FA:VIDSK                                1    20     2 REPRI
+
+CONF 61 IDXD        PXD         NORMA     1 IDS             1               
+CONF 62 IDXD        IDXD                                SIGSECSIGNDE        
+CONF 63 IDXD  FA:VIDXD                                1    20     2 REPRI
+
+
+                    ****************************                            
+                    * IMPRIMANTES     LILLE    *
+                    *  FICTIVES OBLIGATOIRES   *                        
+                    ****************************  21-03-2005                  
+
+CONF 61 IDLDP       PLD         NORMA     1 ISVD            1
+CONF 62 IDLDP       IDLD                                SIGSECSIGNDE
+CONF 63 IDLDP FA:VIDLDP                               1    20     2 REPRI
+
+CONF 61 IDLDS       PLD         SCOUR     1 ISCT            1
+CONF 62 IDLDS             IDLD                          SIGSECSIGNDE
+CONF 63 IDLDS FA:VIDLDS                               1    20     2 REPRI
+
+
+
+
+
+
+                      ***********************************                            
+                      * O.L. PHI-BASE E2=EVAL PHIDIAS   *                            
+                      ***********************************   13-09-2006
+
+        *****  CONTEXTE CHAMP 14 COL 73/74
+        ****1  : CONTEXTE OPP OPEPAL
+        ****2  : CONTEXTE OPS OPESOS
+        ****3  : CONTEXTE TOP TSTOPEPAL
+        ****4  : CONTEXTE TOS TSTOPESOS
+        ****5  : CONTEXTE EVP EVALPAL
+        ****6  : CONTEXTE EVS EVALSOS
+        ****7  : CONTEXTE E2P EVAL2PAL
+        ****8  : CONTEXTE E2S EVAL2SOS
+        ****9  : CONTEXTE TEP TSTEVALPAL
+        ****10 : CONTEXTE TES TSTEVALSOS
+
+CONF 61 OYPAP       PAP         HYDRE       PHID                  1
+CONF 61SOYPAP     1     2     3     5     7     8    32    49
+CONF 62 OYPAP
+CONF 65 OYPAP PARI.PAP_OP_PR                                  PLN       1
+CONF 65 OYPAP PARI.PAP_E2_PR                                  PLN       3
+CONF 65 OYPAP PARI.PAP_E2_PR                                  PLN       5
+CONF 65SOYPAP CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPTN       PTN         HYDRE       PHID                  1
+CONF 61SOYPTN     1     2     3     5     8    32    49
+CONF 62 OYPTN
+CONF 65 OYPTN PARI.PTN_OP_PR                                  PLN       1
+CONF 65 OYPTN PARI.PTN_E2_PR                                  PLN       3
+CONF 65 OYPTN PARI.PTN_E2_PR                                  PLN       5
+CONF 65SOYPTN CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPOT       POT         HYDRE       PHID                  1
+CONF 61SOYPOT     1     2     3     5     8    32    49
+CONF 62 OYPOT
+CONF 65 OYPOT PARI.POT_OP_PR                                  PLN       1
+CONF 65 OYPOT PARI.POT_E2_PR                                  PLN       3
+CONF 65 OYPOT PARI.POT_E2_PR                                  PLN       5
+CONF 65SOYPOT CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPRT       PRT         HYDRE       PHID                  1
+CONF 61SOYPRT     1     2     3     5     8    32    49
+CONF 62 OYPRT
+CONF 65 OYPRT PARI.PRT_OP_PR                                  PLN       1
+CONF 65 OYPRT PARI.PRT_E2_PR                                  PLN       3
+CONF 65 OYPRT PARI.PRT_E2_PR                                  PLN       5
+CONF 65SOYPRT CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPOG       POG         HYDRE       PHID                  1
+CONF 61SOYPOG     1     2     3     5     8    32    49
+CONF 62 OYPOG
+CONF 65 OYPOG PARI.POG_OP_PR                                  PLN       1
+CONF 65 OYPOG PARI.POG_E2_PR                                  PLN       3
+CONF 65 OYPOG PARI.POG_E2_PR                                  PLN       5
+CONF 65SOYPOG CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPDO       PDO         HYDRE       PHID                  1
+CONF 61SOYPDO     1     2     3     5     8    32    49
+CONF 62 OYPDO
+CONF 65 OYPDO PARI.PDO_OP_PR                                  PLN       1
+CONF 65 OYPDO PARI.PDO_E2_PR                                  PLN       3
+CONF 65 OYPDO PARI.PDO_E2_PR                                  PLN       5
+CONF 65SOYPDO CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPDG       PDG         HYDRE       PHID                  1
+CONF 61SOYPDG     1     2     3     5     8    32    49
+CONF 62 OYPDG
+CONF 65 OYPDG PARI.PDG_OP_PR                                  PLN       1
+CONF 65 OYPDG PARI.PDG_E2_PR                                  PLN       3
+CONF 65 OYPDG PARI.PDG_E2_PR                                  PLN       5
+CONF 65SOYPDG CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPS        PS          HYDRE       PHID                  1
+CONF 61SOYPS      1     2     3     5     8    32    49
+CONF 62 OYPS 
+CONF 65 OYPS  PARI.PS_OP_PR                                   PLN       1
+CONF 65 OYPS  PARI.PS_E2_PR                                   PLN       3
+CONF 65 OYPS  PARI.PS_E2_PR                                   PLN       5
+CONF 65SOYPS  CNX         BIDON EPH2        AUTO
+
+
+CONF 61 OYPUT       PUT         HYDRE       PHID                  1
+CONF 61SOYPUT     1     2     3     5     8    32    49
+CONF 62 OYPUT
+CONF 65 OYPUT PARI.PUT_OP_PR                                  PLN       1
+CONF 65 OYPUT PARI.PUT_E2_PR                                  PLN       3
+CONF 65 OYPUT PARI.PUT_E2_PR                                  PLN       5
+CONF 65SOYPUT CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPTL       PTL         HYDRE       PHID                  1
+CONF 61SOYPTL     1     2     3     5     8    32    49                      
+CONF 62 OYPTL
+CONF 65 OYPTL PARI.PTL_OP_PR                                  PLN       1
+CONF 65 OYPTL PARI.PTL_E2_PR                                  PLN       3
+CONF 65 OYPTL PARI.PTL_E2_PR                                  PLN       5
+CONF 65SOYPTL CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPTE       PTE         HYDRE       PHID                  1
+CONF 61SOYPTE     1     2     3     5     8    32    49
+CONF 62 OYPTE
+CONF 65 OYPTE PARI.PTE_OP_PR                                  PLN       1
+CONF 65 OYPTE PARI.PTE_E2_PR                                  PLN       3
+CONF 65 OYPTE PARI.PTE_E2_PR                                  PLN       5
+CONF 65SOYPTE CNX         BIDON EPH2        AUTO
+
+
+CONF 61 OYPTB       PTB         HYDRE       PHID                  1
+CONF 61SOYPTB     1     2     3     5     8    32    49
+CONF 62 OYPTB
+CONF 65 OYPTB PARI.PTB_OP_PR                                  PLN       1
+CONF 65 OYPTB PARI.PTB_E2_PR                                  PLN       3
+CONF 65 OYPTB PARI.PTB_E2_PR                                  PLN       5
+CONF 65SOYPTB CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPAO       PAO         HYDRE       PHID                  1
+CONF 61SOYPAO     1     2     3     5     8    32    49
+CONF 62 OYPAO
+CONF 65 OYPAO PARI.PAO_OP_PR                                  PLN       1
+CONF 65 OYPAO PARI.PAO_E2_PR                                  PLN       3
+CONF 65 OYPAO PARI.PAO_E2_PR                                  PLN       5
+CONF 65SOYPAO CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPAR       PAR         HYDRE       PHID                  1
+CONF 61SOYPAR     1     2     3     5     8    32    49
+CONF 62 OYPAR
+CONF 65 OYPAR PARI.PAR_OP_PR                                  PLN       1
+CONF 65 OYPAR PARI.PAR_E2_PR                                  PLN       3
+CONF 65 OYPAR PARI.PAR_E2_PR                                  PLN       5
+CONF 65SOYPAR CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPIF       PIF         HYDRE       PHID                  1
+CONF 61SOYPIF     1     2     3     5     8    32    49
+CONF 62 OYPIF
+CONF 65 OYPIF PARI.PIF_OP_PR                                  PLN       1
+CONF 65 OYPIF PARI.PIF_E2_PR                                  PLN       3
+CONF 65 OYPIF PARI.PIF_E2_PR                                  PLN       5
+CONF 65SOYPIF CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPUZ       PUZ         HYDRE       PHID                  1
+CONF 61SOYPUZ     1     2     3     5     8    32    49
+CONF 62 OYPUZ
+CONF 65 OYPUZ PARI.PUZ_OP_PR                                  PLN       1
+CONF 65 OYPUZ PARI.PUZ_E2_PR                                  PLN       3
+CONF 65 OYPUZ PARI.PUZ_E2_PR                                  PLN       5
+CONF 65SOYPUZ CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPUJ       PUJ         HYDRE       PHID                  1
+CONF 61SOYPUJ     1     2     3     5     8    32    49
+CONF 62 OYPUJ
+CONF 65 OYPUJ PARI.PUJ_OP_PR                                  PLN       1
+CONF 65 OYPUJ PARI.PUJ_E2_PR                                  PLN       3
+CONF 65 OYPUJ PARI.PUJ_E2_PR                                  PLN       5
+CONF 65SOYPUJ CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPUP       PUP         HYDRE       PHID                  1
+CONF 61SOYPUP     1     2     3     5     8    32    49
+CONF 62 OYPUP
+CONF 65 OYPUP PARI.PUP_OP_PR                                  PLN       1
+CONF 65 OYPUP PARI.PUP_E2_PR                                  PLN       3
+CONF 65 OYPUP PARI.PUP_E2_PR                                  PLN       5
+CONF 65SOYPUP CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPSU       PSU         HYDRE       PHID                  1
+CONF 61SOYPSU     1     2     3     5     8    32    49
+CONF 62 OYPSU
+CONF 65 OYPSU PARI.PSU_OP_PR                                  PLN       1
+CONF 65 OYPSU PARI.PSU_E2_PR                                  PLN       3
+CONF 65 OYPSU PARI.PSU_E2_PR                                  PLN       5
+CONF 65SOYPSU CNX         BIDON EPH2        AUTO
+ 
+CONF 61 OYPTH       PTH         HYDRE       PHID                  1
+CONF 61SOYPTH     1     2     3     5     8    32    49
+CONF 62 OYPTH
+CONF 65 OYPTH PARI.PTH_OP_PR                                  PLN       1
+CONF 65 OYPTH PARI.PTH_E2_PR                                  PLN       3
+CONF 65 OYPTH PARI.PTH_E2_PR                                  PLN       5
+CONF 65SOYPTH CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPTM       PTM         HYDRE       PHID                  1
+CONF 61SOYPTM     1     2     3     5     8    32    49
+CONF 62 OYPTM
+CONF 65 OYPTM PARI.PTM_OP_PR                                  PLN       1
+CONF 65 OYPTM PARI.PTM_E2_PR                                  PLN       3
+CONF 65 OYPTM PARI.PTM_E2_PR                                  PLN       5
+CONF 65SOYPTM CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPTP       PTP         HYDRE       PHID                  1
+CONF 61SOYPTP     1     2     3     5     8    32    49
+CONF 62 OYPTP
+CONF 65 OYPTP PARI.PTP_OP_PR                                  PLN       1
+CONF 65 OYPTP PARI.PTP_E2_PR                                  PLN       3
+CONF 65 OYPTP PARI.PTP_E2_PR                                  PLN       5
+CONF 65SOYPTP CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPPU       PPU         HYDRE       PHID                  1
+CONF 61SOYPPU     1     2     3     5     8    32    49
+CONF 62 OYPPU
+CONF 65 OYPPU PARI.PPU_OP_PR                                  PLN       1
+CONF 65 OYPPU PARI.PPU_E2_PR                                  PLN       3
+CONF 65 OYPPU PARI.PPU_E2_PR                                  PLN       5
+CONF 65SOYPPU CNX         BIDON EPH2        AUTO
+
+CONF 61 OYP1V       P1V         HYDRE       PHID                  1
+CONF 61SOYP1V     1     2     3     5     8    32    49
+CONF 62 OYP1V
+CONF 65 OYP1V PARI.P1V_OP_PR                                  PLN       1
+CONF 65 OYP1V PARI.P1V_E2_PR                                  PLN       3
+CONF 65 OYP1V PARI.P1V_E2_PR                                  PLN       5
+CONF 65SOYP1V             BIDON EPH2        AUTO
+
+CONF 61 OYP4V       P4V         HYDRE       PHID                  1
+CONF 61SOYP4V     1     2     3     5     8    32    49
+CONF 62 OYP4V
+CONF 65 OYP4V PARI.P4V_OP_PR                                  PLN       1
+CONF 65 OYP4V PARI.P4V_E2_PR                                  PLN       3
+CONF 65 OYP4V PARI.P4V_E2_PR                                  PLN       5
+CONF 65SOYP4V             BIDON EPH2        AUTO
+
+CONF 61 OYPCE       PCE         HYDRE       PHID                  1
+CONF 61SOYPCE     1     2     3     5     7     8    32    49
+CONF 62 OYPCE
+CONF 65 OYPCE PARI.PCE_OP_PR                                  PLN       1
+CONF 65 OYPCE PARI.PCE_E2_PR                                  PLN       3
+CONF 65 OYPCE PARI.PCE_E2_PR                                  PLN       5
+CONF 65SOYPCE CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPDM       PDM         HYDRE       PHID                  1
+CONF 61SOYPDM     1     2     3     5     8    32    49
+CONF 62 OYPDM
+CONF 65 OYPDM PARI.PDM_OP_PR                                  PLN       1
+CONF 65 OYPDM PARI.PDM_E2_PR                                  PLN       3
+CONF 65 OYPDM PARI.PDM_E2_PR                                  PLN       5
+CONF 65SOYPDM CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPCS       PCS         HYDRE       PHID                  1
+CONF 61SOYPCS     1     2     3     5     8    32    49
+CONF 62 OYPCS
+CONF 65 OYPCS PARI.PCS_OP_PR                                  PLN       1
+CONF 65 OYPCS PARI.PCS_E2_PR                                  PLN       3
+CONF 65 OYPCS PARI.PCS_E2_PR                                  PLN       5
+CONF 65SOYPCS CNX         BIDON EPH2        AUTO
+
+CONF 61 OYPMO       PMO         HYDRE       PHID                  1
+CONF 61SOYPMO     1     2     3     5     8    32    49
+CONF 62 OYPMO
+CONF 65 OYPMO PARI.PMO_OP_PR                                  PLN       1
+CONF 65 OYPMO PARI.PMO_E2_PR                                  PLN       3
+CONF 65 OYPMO PARI.PMO_E2_PR                                  PLN       5
+CONF 65SOYPMO CNX         BIDON EPH2        AUTO
+
+
+                      *********************************
+                      * O.L. Hydres inter calculateur *                            
+                      ********************************* 01-10-2000
+
+        *****  CONTEXTE CHAMP 14 COL 73/74
+        ****1  : CONTEXTE OPP (15-19)   OPEPAL
+        ****2  : CONTEXTE OPS (21-25)   OPESOS
+        ****3  : CONTEXTE TOP (27-31)   TSTOPEPAL
+        ****4  : CONTEXTE TOS (33-37)   TSTOPESOS
+        ****5  : CONTEXTE EVP (39-43)   EVALPAL
+        ****6  : CONTEXTE EVS (45-49)   EVALSOS
+        ****7  : CONTEXTE E2P (51-55)   EVAL2PAL
+        ****8  : CONTEXTE E2S (57-61)   EVAL2SOS
+        ****9  : CONTEXTE TEP (63-67)   TSTEVALPAL
+        ****10 : CONTEXTE TES (69-73)   TSTEVALSOS
+
+                                                 
+CONF 61 OYEVAL      PYEVAL      HYDRE       IN              1     0
+CONF 62 OYEVAL
+CONF 63 OYEVALFA:VYEVAL                               1   100     5 REPRI
+CONF 65 OYEVALPARI.STPV_EV_PR                                 ECAC      1
+CONF 65 OYEVALPARI.STPV_TE_PR                                 ECAC      3
+CONF 65 OYEVALPARI.STPV_OP_PR                                 ECAC      5
+CONF 65 OYEVALPARI.STPV_TO_PR                                 ECAC      9
+CONF 65SOYEVAL            BIDON ECAC        AUTO
+
+CONF 61 OYSEC       PYSEC       HYDRE       IN    SEC1      1     0
+CONF 62 OYSEC
+CONF 63 OYSEC FA:VYSEC                                1   500     5 REPRI
+CONF 65 OYSEC PARI.STPV_OP_SE                                 ECAC      1
+CONF 65 OYSEC PARI.STPV_OP_PR                                 ECAC      2
+CONF 65 OYSEC PARI.STPV_TO_SE                                 ECAC      3
+CONF 65 OYSEC PARI.STPV_TO_PR                                 ECAC      4
+CONF 65 OYSEC PARI.STPV_EV_SE                                 ECAC      5
+CONF 65 OYSEC PARI.STPV_EV_PR                                 ECAC      6
+CONF 65 OYSEC PARI.STPV_E2_SE                                 ECAC      7
+CONF 65 OYSEC PARI.STPV_E2_PR                                 ECAC      8
+CONF 65 OYSEC PARI.STPV_TE_SE                                 ECAC      9
+CONF 65 OYSEC PARI.STPV_TE_PR                                 ECAC     10
+CONF 65SOYSEC CNX         BIDON ECAC        AUTO
+
+CONF 61 OYSTR1      PYSTR1      HYDRE       STR                   4
+CONF 62 OYSTR1
+CONF 65 OYSTR1EXSA_OP_1                                       PLN1      1
+CONF 65 OYSTR1EXSA_EV_1                                       PLN1      3
+CONF 65 OYSTR1EXSA_EV_1                                       PLN1      5
+CONF 65 OYSTR1EXSA_EV_1                                       PLN1      7
+CONF 65 OYSTR1EXSA_EV_1                                       PLN1      9
+CONF 65SOYSTR1CNX         RPARI ESTR        AUTO
+
+CONF 61 OYSTR2      PYSTR2      HYDRE       STR                   4
+CONF 62 OYSTR2
+CONF 65 OYSTR2EXSA_OP_2                                       PLN2      1
+CONF 65 OYSTR2EXSA_EV_2                                       PLN2      3
+CONF 65 OYSTR2EXSA_EV_2                                       PLN2      5
+CONF 65 OYSTR2EXSA_EV_2                                       PLN2      7
+CONF 65 OYSTR2EXSA_EV_2                                       PLN2      9
+CONF 65SOYSTR2CNX         RPARI ESTR        AUTO
+
+CONF 61 OYSTR3      PYSTR3      HYDRE       STR                   4
+CONF 62 OYSTR3
+CONF 65 OYSTR3EXSA_OP_3                                       PLN3      1
+CONF 65 OYSTR3EXSA_EV_3                                       PLN3      3
+CONF 65 OYSTR3EXSA_EV_3                                       PLN3      5
+CONF 65 OYSTR3EXSA_EV_3                                       PLN3      7
+CONF 65 OYSTR3EXSA_EV_3                                       PLN3      9
+CONF 65SOYSTR3CNX         RPARI ESTR        AUTO
+
+CONF 61 OYSTR4      PYSTR4      HYDRE       STR                   4
+CONF 62 OYSTR4
+CONF 65 OYSTR4EXSA_OP_4                                       PLN4      1
+CONF 65 OYSTR4EXSA_EV_4                                       PLN4      3
+CONF 65 OYSTR4EXSA_EV_4                                       PLN4      5
+CONF 65 OYSTR4EXSA_EV_4                                       PLN4      7
+CONF 65 OYSTR4EXSA_EV_4                                       PLN4      9
+CONF 65SOYSTR4CNX         RPARI ESTR        AUTO
+
+
+                    *************************                               
+                    * POSTES DE SUPERVISION *                               
+                    *************************  07-07-2005
+   
+        *****  CONTEXTE CHAMP 14 COL 73/74
+        ****1  : CONTEXTE OPP (15-19)   OPEPAL
+        ****2  : CONTEXTE OPS (21-25)   OPESOS
+        ****3  : CONTEXTE TOP (27-31)   TSTOPEPAL
+        ****4  : CONTEXTE TOS (33-37)   TSTOPESOS
+        ****5  : CONTEXTE EVP (39-43)   EVALPAL
+        ****6  : CONTEXTE EVS (45-49)   EVALSOS
+        ****7  : CONTEXTE E2P (51-55)   EVAL2PAL
+        ****8  : CONTEXTE E2S (57-61)   EVAL2SOS
+        ****9  : CONTEXTE TEP (63-67)   TSTEVALPAL
+        ****10 : CONTEXTE TES (69-73)   TSTEVALSOS
+          
+                                       
+                                                                            
+CONF 61 OPMAE1      PMAE        NORMA     1 PE              0     1               
+CONF 62 OPMAE1      MAE                                                     
+
+                                                                            
+CONF 61 OYSSP       PSSP        HYDRE       PE              0     1               
+CONF 62 OYSSP       
+CONF 65 OYSSP PARI.GDS5_OP_PR                                 GDS       1
+CONF 65 OYSSP PARI.GDS5_OP_PR                                 GDS       2
+CONF 65 OYSSP PARI.GDS5_OP_PR                                 GDS       3
+CONF 65 OYSSP PARI.GDS5_OP_PR                                 GDS       5
+CONF 65 OYSSP PARI.GDS5_OP_PR                                 GDS       6
+CONF 65 OYSSP PARI.GDS5_OP_PR                                 GDS       7
+CONF 65 OYSSP PARI.GDS5_OP_PR                                 GDS       9
+CONF 65SOYSSP CNX         BIDON GDSR        AUTO
+                                                                            
+CONF 61 OYCDSW      PCDSW       HYDRE       PE              0     1               
+CONF 62 OYCDSW      
+CONF 65 OYCDSWPARI.CDSW_OP_PR                                 CDS       1
+CONF 65 OYCDSWPARI.CDSW_OP_PR                                 CDS       3
+CONF 65 OYCDSWPARI.CDSW_OP_PR                                 CDS       5
+CONF 65 OYCDSWPARI.CDSW_OP_PR                                 CDS       7
+CONF 65 OYCDSWPARI.CDSW_OP_PR                                 CDS       9
+CONF 65SOYCDSWCNX         BIDON XSAN        AUTO
+
+CONF 61 OYCDSE      PCDSE       HYDRE       PE              0     1               
+CONF 62 OYCDSE      
+CONF 65 OYCDSEPARI.CDSE_OP_PR                                 CDS       1
+CONF 65 OYCDSEPARI.CDSE_OP_PR                                 CDS       3
+CONF 65 OYCDSEPARI.CDSE_OP_PR                                 CDS       5
+CONF 65 OYCDSEPARI.CDSE_OP_PR                                 CDS       7
+CONF 65 OYCDSEPARI.CDSE_OP_PR                                 CDS       9
+CONF 65SOYCDSECNX         BIDON XSAN        AUTO
+                                                                            
+CONF 61 PEDMC       PDMC        NORMA     1 PE              0     1               
+CONF 62 PEDMC       CEDMC                                                   
+                                                                            
+CONF 61 PELPO       PVD   VDCE  NORMA     1 VDPS            1     1         
+CONF 62 PELPO       CELPO                                                   
+CONF 63 PELPO FA:VLPO                                 1    30     3 REPRI
+                                                                            
+CONF 61 PELPG       PGD   GDCE  NORMA     1 VDPS            1     1         
+CONF 62 PELPG       CELPG                                                   
+CONF 63 PELPG FA:VLPG                                 1    30     3 REPRI
+                                                                            
+CONF 61 PELPB       PBD   BDCE  NORMA     1 VDPS            1     1         
+CONF 62 PELPB       CELPB                                                   
+CONF 63 PELPB FA:VLPB                                 1    30     3 REPRI
+                                                                            
+CONF 61 OXSAG1      PSAG1       SGT         PE              0     1              
+CONF 62 OXSAG1                                                         
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXSAG1  124         124         124         124
+CONF 64SOXSAG1      CNX
+
+CONF 61 OXSAG2      PSAG2       SGT         PE              0     1              
+CONF 62 OXSAG2                                                         
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXSAG2  125         125         125         125
+CONF 64SOXSAG2      CNX
+
+CONF 61 OXSAG3      PSAG3       SGT         PE              0     1              
+CONF 62 OXSAG3                                                         
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXSAG3  126         126         126         126
+CONF 64SOXSAG3      CNX
+
+CONF 61 OXSAG4      PSAG4       SGT         PE              0     1              
+CONF 62 OXSAG4                                                         
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXSAG4  127         127         127         127
+CONF 64SOXSAG4      CNX      
+
+CONF 61 OXSAG5      PSAG5       SGT         PE              0     1              
+CONF 62 OXSAG5                                                         
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXSAG5  128         128         128         128
+CONF 64SOXSAG5      CNX
+
+CONF 61 OXSAG6      PSAG6       SGT         PE              0     1              
+CONF 62 OXSAG6                                                         
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXSAG6  129         129         129         129
+CONF 64SOXSAG6      CNX
+
+CONF 61 OXSAG7      PSAG7       SGT         PE              0     1              
+CONF 62 OXSAG7                                                         
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXSAG7  240         240         240         240
+CONF 64SOXSAG7      CNX
+
+CONF 61 OXSPO1      PSPO1       SGT         PE              0     1              
+CONF 62 OXSPO1                                                        
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXSPO1  100         100         100         100
+CONF 64SOXSPO1      CNX
+
+CONF 61 OXSPO2      PSPO2       SGT         PE              0     1              
+CONF 62 OXSPO2                                                        
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXSPO2  101         101         101         101
+CONF 64SOXSPO2      CNX
+
+CONF 61 OXSAQQ      PSAQQ       SGT         PE              0     1              
+CONF 62 OXSAQQ                                                         
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXSAQQ  209         209         209         209
+CONF 64SOXSAQQ      CNX
+
+CONF 61 OYSTIO      PSTIO       HYDRE       PE              0     1              
+CONF 62 OYSTIO
+CONF 65 OYSTIOPARI.STIO_OP_PR                                 STI       1
+CONF 65 OYSTIOPARI.STIO_OP_PR                                 STI       5
+CONF 65SOYSTIOCNX         BIDON STI         AUTO
+
+CONF 61 OXGDSR      PGDSR       SGT         PE              0     1              
+CONF 62 OXGDSR                                                        
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXGDSR  130         130         130         130
+CONF 64SOXGDSR      CNX      
+
+                        ********************************
+                        * OL CLAVIER ECRAN SLCT LILLE  *
+                        ********************************  21-03-2005
+                                                                            
+CONF 61 PELVG       PLD   OLIVG NORMA     1 VDPS            1     1         
+CONF 62 PELVG       CELID                                                   
+CONF 63 PELVG FA:VLVG                                 1    30     3 REPRI
+
+                    *******************************                         
+                    * LIAISONS INTER-CALCULATEURS *                         
+                    *******************************  08-06-2006
+      L'OL STIP DOIT ETRE DEFINIE EN 1ER DS CONF 61 PR LA PROCECEDURE       
+      DE CREATION AUTOMATIQUE DE FICHIER 'GETFIC'
+                                 
+        *****  CONTEXTE CHAMP 14 COL 73/74
+        ****1  : CONTEXTE OPP (15-19)   OPEPAL
+        ****2  : CONTEXTE OPS (21-25)   OPESOS
+        ****3  : CONTEXTE TOP (27-31)   TSTOPEPAL
+        ****4  : CONTEXTE TOS (33-37)   TSTOPESOS
+        ****5  : CONTEXTE EVP (39-43)   EVALPAL
+        ****6  : CONTEXTE EVS (45-49)   EVALSOS
+        ****7  : CONTEXTE E2P (51-55)   EVAL2PAL
+        ****8  : CONTEXTE E2S (57-61)   EVAL2SOS
+        ****9  : CONTEXTE TEP (63-67)   TSTEVALPAL
+        ****10 : CONTEXTE TES (69-73)   TSTEVALSOS
+
+
+CONF 61 OXSTIP      PXSTIP      SGT         IN              1     0
+CONF 62 OXSTIP
+CONF 63 OXSTIPFA:VXSTIP                               1    40     2 REPRI
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXSTIP   40          43          42          42
+CONF 64SOXSTIP      CNX
+                                                                        
+CONF 61 OXBRST      PXBRST      SGT         IN              1     0
+CONF 62 OXBRST
+CONF 63 OXBRSTFA:VXBRST                               1    20     2 REPRI
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXBRST   61          67          63          65
+CONF 64SOXBRST      CNX
+
+CONF 61 OXREIM      PXREIM      SGT         IN              1     0
+CONF 62 OXREIM
+CONF 63 OXREIMFA:VXREIM                               1    20     2 REPRI
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXREIM   74          80          76          78
+CONF 64SOXREIM      CNX                                         
+
+CONF 61 OXAIX       PXAIX       SGT         IN              1     0
+CONF 62 OXAIX
+CONF 63 OXAIX FA:VXAIX                                1    20     2 REPRI
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXAIX     4          10           6           8
+CONF 64SOXAIX       CNX
+
+CONF 61 OXBORD      PXBORD      SGT         IN              1     0
+CONF 62 OXBORD
+CONF 63 OXBORDFA:VXBORD                               1    20     2 REPRI
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXBORD   30          36          32          34
+CONF 64SOXBORD      CNX
+
+CONF 61 OXRSF       PXAIDA      SGT         RS              1     0
+CONF 62 OXRSF 
+CONF 63 OXRSF FA:VXRSF                                1   100     2 REPRI
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXRSF    51          55          55          55
+CONF 64SOXRSF       CNX
+                                                                            
+CONF 61 OXTRG1      PXTRG1      SGT         STR                   3
+CONF 62 OXTRG1
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXTRG1  106                     106         106
+CONF 64SOXTRG1      CNX
+                                                                            
+CONF 61 OXTRG2      PXTRG2      SGT         STR                   3
+CONF 62 OXTRG2
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXTRG2  107                     107         107
+CONF 64SOXTRG2      CNX
+
+CONF 61 OXTRG3      PXTRG3      SGT         STR                   3
+CONF 62 OXTRG3
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXTRG3  108                     108         108
+CONF 64SOXTRG3      CNX
+
+CONF 61 OXTRG4      PXTRG4      SGT         STR                   3
+CONF 62 OXTRG4
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXTRG4  109                     109         109
+CONF 64SOXTRG4      CNX    
+
+CONF 61 OXTRO1      PXTRO1      SGT         STR                   3
+CONF 62 OXTRO1
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXTRO1   85                      85          85
+CONF 64SOXTRO1      CNX
+                                                                            
+CONF 61 OXTRO2      PXTRO2      SGT         STR                   3
+CONF 62 OXTRO2
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXTRO2   86                      86          86
+CONF 64SOXTRO2      CNX
+
+CONF 61 OXTRO3      PXTRO3      SGT         STR                   3
+CONF 62 OXTRO3      
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXTRO3   87                      87          87
+CONF 64SOXTRO3      CNX  
+
+CONF 61 OXTRO4      PXTRO4      SGT         STR                   3
+CONF 62 OXTRO4
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXTRO4   88                      88          88
+CONF 64SOXTRO4      CNX  
+
+CONF 61 OXRBRT      PXRBRT      SGT         STA             2     0
+CONF 62 OXRBRT
+CONF 63 OXRBRTFA:VXRBRT                               1    20     4 REPRI
+CONF 63 OXRBRTFA:VZRBRT                               2    20     1 REPRI
+
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXRBRT  139         139         139         139
+CONF 64SOXRBRT      CNX      
+
+CONF 61 OXRIES      PXRIES      SGT         STA             2     0
+CONF 62 OXRIES
+CONF 63 OXRIESFA:VXRIES                               1    20     4 REPRI
+CONF 63 OXRIESFA:VZRIES                               2    20     1 REPRI
+
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXRIES  136         136         136         136
+CONF 64SOXRIES      CNX
+
+CONF 61 OXRAKI      PXRAKI      SGT         STA             2     0
+CONF 62 OXRAKI
+CONF 63 OXRAKIFA:VXRAKI                               1    20     4 REPRI
+CONF 63 OXRAKIFA:VZRAKI                               2    20     1 REPRI
+
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXRAKI  146         146         146         146
+CONF 64SOXRAKI      CNX
+
+
+                                                                            
+                    ***************************                             
+                    * RSFTA-IMPRIMANTE  -EVAL *                             
+                    *     SPECIAL ET SECOURS  *                             
+                    ***************************  20-03-2001                   
+                    
+        *****  CONTEXTE CHAMP 14 COL 73/74
+        ****1  : CONTEXTE OPP (15-19)   OPEPAL
+        ****2  : CONTEXTE OPS (21-25)   OPESOS
+        ****3  : CONTEXTE TOP (27-31)   TSTOPEPAL
+        ****4  : CONTEXTE TOS (33-37)   TSTOPESOS
+        ****5  : CONTEXTE EVP (39-43)   EVALPAL
+        ****6  : CONTEXTE EVS (45-49)   EVALSOS
+        ****7  : CONTEXTE E2P (51-55)   EVAL2PAL
+        ****8  : CONTEXTE E2S (57-61)   EVAL2SOS
+        ****9  : CONTEXTE TEP (63-67)   TSTEVALPAL
+        ****10 : CONTEXTE TES (69-73)   TSTEVALSOS
+
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+                                                                                                                                                        
+CONF 61 OLICR1      PIMP        NORMA     1 IDR             1               
+CONF 62 OLICR1      IMP                                                     
+CONF 63 OLICR1FA:VIMP                                 1    20     2 REPRI
+                                                                            
+CONF 61 OXEVAL      PEVAL       SGT         IN              1     0         
+CONF 62 OXEVAL                                                              
+CONF 63 OXEVALFA:VXEVAL                               1   100     5 REPRI
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OXEVAL   19                      17
+CONF 64SOXEVAL
+ 
+CONF 61 OXEVA2      PEVAL2      SGT         IN              1     0         
+CONF 62 OXEVA2                                                              
+CONF 63 OXEVA2FA:VXEVA2                               1   100     5 REPRI
+CONF 64 OXEVA2   21                                  17
+CONF 64SOXEVA2
+                                                                                                                                                        
+CONF 61 OSPEC       PPARI       SPECI     0 IN              1               
+CONF 62 OSPEC                                                               
+CONF 63 OSPEC FA:VSPECI                               1    40     2 REPRI
+CONF 64 OSPEC    17    18    23    24    19    20    21    22    25    26
+CONF 64SOSPEC                                                                           
+                                                                      
+                     ***********************
+                     * CENTRES   ETRANGERS *                     
+                     *********************** 20-03-2001
+                     
+        ****1  : CONTEXTE OPP (15-19)   OPEPAL
+        ****2  : CONTEXTE OPS (21-25)   OPESOS
+        ****3  : CONTEXTE TOP (27-31)   TSTOPEPAL
+        ****4  : CONTEXTE TOS (33-37)   TSTOPESOS
+        ****5  : CONTEXTE EVP (39-43)   EVALPAL
+        ****6  : CONTEXTE EVS (45-49)   EVALSOS
+        ****7  : CONTEXTE E2P (51-55)   EVAL2PAL
+        ****8  : CONTEXTE E2S (57-61)   EVAL2SOS
+        ****9  : CONTEXTE TEP (63-67)   TSTEVALPAL
+        ****10 : CONTEXTE TES (69-73)   TSTEVALSOS
+         
+                                                                  
+CONF 61 OXLOND      PXLOND      SGT         ETG             1
+CONF 62 OXLOND
+CONF 63 OXLONDFA:VXLOND                               1    20     1 REPRI
+CONF 64 OXLOND  159         160         160
+CONF 64SOXLOND      CNX
+
+CONF 61 OXGNEV      PXGNEV      SGT         ETG             1
+CONF 62 OXGNEV
+CONF 63 OXGNEVFA:VXGNEV                               1    20     1 REPRI
+CONF 64 OXGNEV  151         152         152
+CONF 64SOXGNEV      CNX
+
+CONF 61 OXBRUX      PXBRUX      SGT         ETG             1
+CONF 62 OXBRUX
+CONF 63 OXBRUXFA:VXBRUX                               1    20     1 REPRI
+CONF 64 OXBRUX  149         150         150
+CONF 64SOXBRUX      CNX
+
+CONF 61 OXLUXE      PXLUXE      SGT         ETG             1
+CONF 62 OXLUXE
+CONF 63 OXLUXEFA:VXLUXE                               1    20     1 REPRI
+CONF 64 OXLUXE  161         162         162
+CONF 64SOXLUXE      CNX
+
+CONF 61 OXMAAS      PXMAAS      SGT         ETG             1
+CONF 62 OXMAAS
+CONF 63 OXMAASFA:VXMAAS                               1    20     1 REPRI
+CONF 64 OXMAAS  163         164         164
+CONF 64SOXMAAS      CNX
+
+                    ***********                                             
+                    * MAESTRO *                                             
+                    *********** 20-03-2001
+
+        ****1  : CONTEXTE OPP (15-19)   OPEPAL
+        ****2  : CONTEXTE OPS (21-25)   OPESOS
+        ****3  : CONTEXTE TOP (27-31)   TSTOPEPAL
+        ****4  : CONTEXTE TOS (33-37)   TSTOPESOS
+        ****5  : CONTEXTE EVP (39-43)   EVALPAL
+        ****6  : CONTEXTE EVS (45-49)   EVALSOS
+        ****7  : CONTEXTE E2P (51-55)   EVAL2PAL
+        ****8  : CONTEXTE E2S (57-61)   EVAL2SOS
+        ****9  : CONTEXTE TEP (63-67)   TSTEVALPAL
+        ****10 : CONTEXTE TES (69-73)   TSTEVALSOS
+                                                                            
+
+CONF 61 OLXMTO      PMTO        SGT         GOT             1               
+CONF 62 OLXMTO                                                        
+CONF 63 OLXMTOFA:VMTO                                 1    60     1 REPRI
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OLXMTO   94                      94                      
+CONF 64SOLXMTO      CNX
+                                                                           
+CONF 61 OLXMTG      PMTG        SGT         GOT             1               
+CONF 62 OLXMTG                                                              
+CONF 63 OLXMTGFA:VMTG                                 1    60     1 REPRI
+                OPP   OPS   TOP   TOS   EVP   EVS   E2P   E2S   TEP   TES
+CONF 64 OLXMTG  115                     115                      
+CONF 64SOLXMTG      CNX
+                                                                            
+                                                                            
+                    ***********                                             
+                    * SIGMA   *                                             
+                    *********** 20-03-2001
+        
+        ****1  : CONTEXTE OPP (15-19)   OPEPAL
+        ****2  : CONTEXTE OPS (21-25)   OPESOS
+        ****3  : CONTEXTE TOP (27-31)   TSTOPEPAL
+        ****4  : CONTEXTE TOS (33-37)   TSTOPESOS
+        ****5  : CONTEXTE EVP (39-43)   EVALPAL
+        ****6  : CONTEXTE EVS (45-49)   EVALSOS
+        ****7  : CONTEXTE E2P (51-55)   EVAL2PAL
+        ****8  : CONTEXTE E2S (57-61)   EVAL2SOS
+        ****9  : CONTEXTE TEP (63-67)   TSTEVALPAL
+        ****10 : CONTEXTE TES (69-73)   TSTEVALSOS
+                    
+
+CONF 61 OLSIGO      PSIGMO      SGT         SIGMA           1     0         
+CONF 62 OLSIGO                                                              
+CONF 63 OLSIGOFA:VSIGMO                               1    20     1 REPRI
+CONF 64 OLSIGO   97          97          97
+CONF 64SOLSIGO      CNX
+
+
+CONF 61 OLSIGG      PSIGMG      SGT         SIGMA           1     0         
+CONF 62 OLSIGG                                                              
+CONF 63 OLSIGGFA:VSIGMG                               1    20     1 REPRI
+CONF 64 OLSIGG  118         118         118
+CONF 64SOLSIGG      CNX                                         
+
+                                                                            
+                    *****************                                       
+                    * TERMINAUX ISA *                                       
+                    ***************** 08-06-06
+                    
+        ****1  : CONTEXTE OPP (15-19)   OPEPAL
+        ****2  : CONTEXTE OPS (21-25)   OPESOS
+        ****3  : CONTEXTE TOP (27-31)   TSTOPEPAL
+        ****4  : CONTEXTE TOS (33-37)   TSTOPESOS
+        ****5  : CONTEXTE EVP (39-43)   EVALPAL
+        ****6  : CONTEXTE EVS (45-49)   EVALSOS
+        ****7  : CONTEXTE E2P (51-55)   EVAL2PAL
+        ****8  : CONTEXTE E2S (57-61)   EVAL2SOS
+        ****9  : CONTEXTE TEP (63-67)   TSTEVALPAL
+        ****10 : CONTEXTE TES (69-73)   TSTEVALSOS
+
+        *****
+        *****  ATTENTION LES NUM‹ROS OL POUR ISAPG1 ET PG2
+        *****  CORRESPONDENT AUX PERIPHERIQUES DISCUS1 ET 2
+        *****  DU FICHIER SGT
+        *****
+                                                                                 
+CONF 61 ISAPG1      PGD         SGT         ISA1                  1         
+CONF 62 ISAPG1
+CONF 64 ISAPG1  119         119         119
+CONF 64SISAPG1      CNX 
+
+CONF 61 ISAPG2      PGD         SGT         ISA2                  1         
+CONF 62 ISAPG2
+CONF 64 ISAPG2  120         120         120
+CONF 64SISAPG2      CNX
+
+CONF 61 ISAPB1      PBD         SGT         ISA1                  1       
+CONF 62 ISAPB1               
+CONF 64 ISAPB1  204         204         204
+CONF 64SISAPB1      CNX
+
+CONF 61 ISAPB2      PBD         SGT         ISA2                  1         
+CONF 62 ISAPB2
+CONF 64 ISAPB2  205         205         205
+CONF 64SISAPB2      CNX
+
+CONF 61 ISAVD1      PVD         SGT         ISA1                  1       
+CONF 62 ISAVD1
+CONF 64 ISAVD1   98          98          98
+CONF 64SISAVD1      CNX    
+
+CONF 61 ISAVD2      PVD         SGT         ISA2                  1         
+CONF 62 ISAVD2
+CONF 64 ISAVD2   99          99          99
+CONF 64SISAVD2      CNX
+
+CONF 61 ISAOD       POD         SGT         ISA1                  1       
+CONF 62 ISAOD 
+CONF 64 ISAOD   237         237         237
+CONF 64SISAOD       CNX
+
+CONF 61 ISAVR       PVR         SGT         ISA1                  1         
+CONF 62 ISAVR  
+CONF 64 ISAVR   238         238         238
+CONF 64SISAVR       CNX
+
+CONF 61 ISAOA       POA         SGT         ISA1                  1         
+CONF 62 ISAOA 
+CONF 64 ISAOA   239         239         239
+CONF 64SISAOA       CNX
+
+CONF 61 ISAQQ1      PLD         SGT         ISA1                  1       
+CONF 62 ISAQQ1
+CONF 64 ISAQQ1  207         207         207
+CONF 64SISAQQ1      CNX
+
+CONF 61 ISAQQ2      PLD         SGT         ISA2                  1         
+CONF 62 ISAQQ2
+CONF 64 ISAQQ2  208         208         208
+CONF 64SISAQQ2      CNX
+     
+                    ***********                                             
+                    * LDAS    *                                             
+                    *********** 20-03-2001
+  
+        ****1  : CONTEXTE OPP (15-19)   OPEPAL
+        ****2  : CONTEXTE OPS (21-25)   OPESOS
+        ****3  : CONTEXTE TOP (27-31)   TSTOPEPAL
+        ****4  : CONTEXTE TOS (33-37)   TSTOPESOS
+        ****5  : CONTEXTE EVP (39-43)   EVALPAL
+        ****6  : CONTEXTE EVS (45-49)   EVALSOS
+        ****7  : CONTEXTE E2P (51-55)   EVAL2PAL
+        ****8  : CONTEXTE E2S (57-61)   EVAL2SOS
+        ****9  : CONTEXTE TEP (63-67)   TSTEVALPAL
+        ****10 : CONTEXTE TES (69-73)   TSTEVALSOS
+
+     
+ 
+CONF 61 OXLDAS      PLDAS       SGT         LDAS            1          
+CONF 62 OXLDAS
+CONF 63 OXLDASFA:VLDAS                                1    40     1 REPRI
+CONF 64 OXLDAS   27          27          27
+CONF 64SOXLDAS      CNX     
+                                                                           
+               *******************************************                  
+               *  PRIORITE DES FAMILLES DE PERIPHERIQUES *                  
+               ******************************************* 21-04-92         
+                                                                            
+CONF 69 DGORG       PRIO                                                    
+CONF 69 FPAP        PRIO                                                    
+CONF 69 ETG         PRIO                                                    
+CONF 69 DGRAD       NPRIO                                                   
+CONF 69 DGDPH       NPRIO                                                   
+CONF 69 IN          NPRIO                                                   
+CONF 69 STA         NPRIO                                                   
+CONF 69 STR         NPRIO                                                   
+CONF 69 RS          NPRIO                                                   
+CONF 69 IDR         NPRIO                                                   
+CONF 69 GOT         NPRIO                                                   
+CONF 69 VDPS        NPRIO                                                   
+                                                                            
+                                                                            
+                    ******************                                      
+                    * MITRA UTILISES *                                      
+                    ******************  26-04-95                            
+                                                                            
+CONF 70 HREXT                                                               
+                                                                            
+                    ******************                                      
+                    * INITIALISATION *                                      
+                    *   DU SYSTEME   * 27-03_2002
+                    ******************                                      
+                                                                            
+CONF 71 PLATIN      MODMT    30       
+
+CONF 71SPHMOD    20
+CONF 71SDGMOD    20
+CONF 71SACTAU    20
+CONF 71SSYST     20
+
+CONF 71T  320    20
+                                                                            
+                    ******************************                          
+                    * CONFIGURATIONS PREETABLIES *                          
+                    ******************************           07/11/2008
+                                     
+                             
+CONF 81 NUITTM      TM          PTM         PTM                             
+CONF 81 NUITTM      S           PTM         PTM                             
+CONF 81 NUITTM      DO          PTM         PTM
+CONF 81 NUITTM      OM          POM         POM
+CONF 81 NUITTM      DG          PTM         PTM                            
+CONF 81 NUITTM      TL          PTM         PTM                             
+CONF 81 NUITTM      UT          PTM         PTM                             
+CONF 81 NUITTM      UJ          PTM         PTM
+CONF 81 NUITTM      US          PTM         PTM
+CONF 81 NUITTM      TU          PTM         PTM                             
+CONF 81 NUITTM      AO          PTM         PTM                             
+CONF 81 NUITTM      AR          PTM         PTM                             
+CONF 81 NUITTM      DS          PTM         PTM                             
+CONF 81 NUITTM      UP          PTM         PTM                             
+CONF 81 NUITTM      SU          PTM         PTM
+CONF 81 NUITTM      SO          PTM         PTM
+CONF 81 NUITTM      SR          PTM         PTM
+CONF 81 NUITTM      SL          PTM         PTM
+CONF 81 NUITTM      SJ          PTM         PTM
+CONF 81 NUITTM      PU          PTM         PTM
+CONF 81 NUITTM      HP          PTM         PTM
+
+CONF 81 NUITAP      1P          PAP         PAP
+CONF 81 NUITAP      AP          PAP         PAP
+CONF 81 NUITAP      TE          PAP         PAP                             
+CONF 81 NUITAP      OT          PAP         PAP                             
+CONF 81 NUITAP      TH          PAP         PAP                             
+CONF 81 NUITAP      TN          PAP         PAP                             
+CONF 81 NUITAP      RT          PAP         PAP                             
+CONF 81 NUITAP      UZ          PAP         PAP                             
+CONF 81 NUITAP      UK          PAP         PAP                             
+CONF 81 NUITAP      TP          PAP         PAP                             
+CONF 81 NUITAP      TB          PAP         PAP                             
+CONF 81 NUITAP      OY          PAP         PAP
+CONF 81 NUITAP      LN          PAP         PAP
+CONF 81 NUITAP      OG          PAP         PAP
+CONF 81 NUITAP      SK          PAP         PAP
+
+
+CONF 81 NUITTE      1P          PTE         PTE
+CONF 81 NUITTE      AP          PTE         PTE
+CONF 81 NUITTE      TE          PTE         PTE                             
+CONF 81 NUITTE      OT          PTE         PTE                             
+CONF 81 NUITTE      TH          PTE         PTE                             
+CONF 81 NUITTE      TN          PTE         PTE                             
+CONF 81 NUITTE      RT          PTE         PTE                             
+CONF 81 NUITTE      UZ          PTE         PTE                             
+CONF 81 NUITTE      UK          PTE         PTE                             
+CONF 81 NUITTE      TP          PTE         PTE                             
+CONF 81 NUITTE      TB          PTE         PTE                             
+CONF 81 NUITTE      OY          PTE         PTE
+CONF 81 NUITTE      LN          PTE         PTE
+CONF 81 NUITTE      OG          PTE         PTE
+CONF 81 NUITTE      SK          PTE         PTE
+
+
+CONF 81 NUITTL      TM          PTL         PTL                             
+CONF 81 NUITTL      S           PTL         PTL                             
+CONF 81 NUITTL      DO          PTL         PTL                             
+CONF 81 NUITTL      OM          POM         POM
+CONF 81 NUITTL      DG          PTL         PTL 
+CONF 81 NUITTL      TL          PTL         PTL                             
+CONF 81 NUITTL      UT          PTL         PTL                             
+CONF 81 NUITTL      UJ          PTL         PTL
+CONF 81 NUITTL      US          PTL         PTL
+CONF 81 NUITTL      TU          PTL         PTL                             
+CONF 81 NUITTL      AO          PTL         PTL                             
+CONF 81 NUITTL      AR          PTL         PTL                             
+CONF 81 NUITTL      DS          PTL         PTL                             
+CONF 81 NUITTL      UP          PTL         PTL                             
+CONF 81 NUITTL      SU          PTL         PTL
+CONF 81 NUITTL      SO          PTL         PTL
+CONF 81 NUITTL      SR          PTL         PTL
+CONF 81 NUITTL      SL          PTL         PTL
+CONF 81 NUITTL      SJ          PTL         PTL
+CONF 81 NUITTL      PU          PTL         PTL
+CONF 81 NUITTL      HP          PTL         PTL
+        
+
+CONF 81 JOURE       TM          PTL         PTL                             
+CONF 81 JOURE       TL          PTL         PTL                             
+CONF 81 JOURE       S           PS          PS
+CONF 81 JOURE       DS          PDO         PDO                             
+CONF 81 JOURE       DO          PDO         PDO
+CONF 81 JOURE       OM          POM         POM
+CONF 81 JOURE       DG          PDG         PDG                             
+CONF 81 JOURE       UT          PUT         PUT                             
+CONF 81 JOURE       TU          PPU         PPU                             
+CONF 81 JOURE       UP          PUT         PUT                             
+CONF 81 JOURE       UJ          PUJ         PUJ
+CONF 81 JOURE       AO          PAO         PAO                             
+CONF 81 JOURE       SU          PAO         PAO
+CONF 81 JOURE       US          PAO         PAO
+CONF 81 JOURE       AR          PAR         PAR                             
+CONF 81 JOURE       SO          PSI         PSI
+CONF 81 JOURE       SR          PSI         PSI
+CONF 81 JOURE       SL          PSI         PSI
+CONF 81 JOURE       SJ          PSJ         PSJ
+CONF 81 JOURE       PU          PPU         PPU
+CONF 81 JOURE       HP          PPU         PPU
+
+CONF 81 JOURW       1P          PAP         PAP
+CONF 81 JOURW       AP          PAP         PAP
+CONF 81 JOURW       TE          PTE         PTE
+CONF 81 JOURW       LN          PTH         PTH
+CONF 81 JOURW       TH          PTH         PTH                             
+CONF 81 JOURW       TP          PTP         PTP                             
+CONF 81 JOURW       TB          PTB         PTB                             
+CONF 81 JOURW       TN          PTB         PTB                             
+CONF 81 JOURW       UK          PUZ         PUZ                             
+CONF 81 JOURW       UZ          PUZ         PUZ                             
+CONF 81 JOURW       OG          POG         POG                             
+CONF 81 JOURW       RT          PRT         PRT                             
+CONF 81 JOURW       OT          POT         POT                             
+CONF 81 JOURW       OY          POG         POG                             
+CONF 81 JOURW       SK          PSK         PSK                             
+
+        *****  CONFIGURATIONS  ORLY
+                                                                            
+CONF 81 ORY1        VD          PVD                                         
+CONF 81 ORY1        VA          PVA                                         
+CONF 81 ORY1        OD          POD                                         
+CONF 81 ORY1        OA          POA                                         
+                                                                            
+CONF 81 ORY2        VD          PVD                                         
+CONF 81 ORY2        VA          PVA                                         
+CONF 81 ORY2        OD          PVR                                         
+CONF 81 ORY2        OA          POA                                         
+                                                                            
+CONF 81 ORY3        VD          PVD                                         
+CONF 81 ORY3        OD          PVD                                         
+CONF 81 ORY3        OA          PVR                                         
+CONF 81 ORY3        VA          PVR                                         
+
+
+        ****** CONFIGURATIONS ROISSY
+
+CONF 81 RW2INI      RD          PK2                                         
+CONF 81 RW2INI      RC          PK2                                         
+CONF 81 RW2INI      DC          PK2                                         
+CONF 81 RW2INI      RA          PRA                                         
+CONF 81 RW2INI      AC          PAC                                         
+CONF 81 RW2INI      RB          PRB
+
+CONF 81 RE2INI      RD          PK2                                         
+CONF 81 RE2INI      RC          PK2                                         
+CONF 81 RE2INI      RA          PRA                                         
+CONF 81 RE2INI      DC          PRB                                         
+CONF 81 RE2INI      AC          PAC                                         
+CONF 81 RE2INI      RB          PRB
+
+CONF 81 RW1INI      RD          PK2                                         
+CONF 81 RW1INI      RC          PK2                                         
+CONF 81 RW1INI      DC          PK2                                         
+CONF 81 RW1INI      AC          PAC                                         
+CONF 81 RW1INI      RA          PRB                                         
+CONF 81 RW1INI      RB          PRB
+
+CONF 81 RE1INI      RD          PK2                                         
+CONF 81 RE1INI      RC          PK2                                         
+CONF 81 RE1INI      AC          PAC                                         
+CONF 81 RE1INI      RA          PRB                                         
+CONF 81 RE1INI      RB          PRB
+CONF 81 RE1INI      DC          PRB                                         
+
+CONF 81 RIFRM       GD          PGD
+CONF 81 RIFRM       RD          PGD
+CONF 81 RIFRM       RC          PGD
+CONF 81 RIFRM       DC          PGD
+CONF 81 RIFRM       AC          PGD
+CONF 81 RIFRM       RA          PGF
+CONF 81 RIFRM       RB          PGF
+
+CONF 81 RIFRMC      GD          PGD
+CONF 81 RIFRMC      RD          PGD
+CONF 81 RIFRMC      RC          PGD
+CONF 81 RIFRMC      DC          PGD
+CONF 81 RIFRMC      AC          PAC
+CONF 81 RIFRMC      RA          PGF
+CONF 81 RIFRMC      RB          PGF
+             
+CONF 81 RIFRN       GD          PGD
+CONF 81 RIFRN       RD          PGD
+CONF 81 RIFRN       RC          PGD
+CONF 81 RIFRN       DC          PGD
+CONF 81 RIFRN       AC          PGD
+CONF 81 RIFRN       RA          PRS
+CONF 81 RIFRN       RB          PRS
+
+CONF 81 RIFRNC      GD          PGD
+CONF 81 RIFRNC      RD          PGD
+CONF 81 RIFRNC      RC          PGD
+CONF 81 RIFRNC      DC          PGD
+CONF 81 RIFRNC      AC          PAC
+CONF 81 RIFRNC      RA          PRS
+CONF 81 RIFRNC      RB          PRS
+
+CONF 81 RTOUMG      SE          PMG
+CONF 81 RTOUMG      SW          PMG
+CONF 81 RTOUMG      NE          PMG
+CONF 81 RTOUMG      NW          PMG
+
+CONF 81 RTOUMF      SE          PMF
+CONF 81 RTOUMF      SW          PMF
+CONF 81 RTOUMF      NE          PMF
+CONF 81 RTOUMF      NW          PMF
+
+CONF 81 RTOUNS      SE          PNS
+CONF 81 RTOUNS      SW          PNS
+CONF 81 RTOUNS      NE          PNS
+CONF 81 RTOUNS      NW          PNS
+
+CONF 81 RTOUNW      SE          PNW
+CONF 81 RTOUNW      SW          PNW
+CONF 81 RTOUNW      NE          PNW
+CONF 81 RTOUNW      NW          PNW
+
+CONF 81 RTOUMW      SE          PMW
+CONF 81 RTOUMW      SW          PMW
+CONF 81 RTOUMW      NE          PMW
+CONF 81 RTOUMW      NW          PMW
+
+CONF 81 RTOUNE      SE          PNE
+CONF 81 RTOUNE      SW          PNE
+CONF 81 RTOUNE      NE          PNE
+CONF 81 RTOUNE      NW          PNE
+
+CONF 81 RTOUME      SE          PME
+CONF 81 RTOUME      SW          PME
+CONF 81 RTOUME      NE          PME
+CONF 81 RTOUME      NW          PME
+
+CONF 81 RVTSGD      V1          PGD
+CONF 81 RVTSGD      V2          PGD
+CONF 81 RVTSGD      V3          PGD
+
+CONF 81 RVTSMG      V1          PMG
+CONF 81 RVTSMG      V2          PMG
+CONF 81 RVTSMG      V3          PMG
+
+CONF 81 RVTSNW      V1          PNW
+CONF 81 RVTSNW      V2          PNW
+CONF 81 RVTSNW      V3          PNW
+
+CONF 81 RVTSMW      V1          PMW
+CONF 81 RVTSMW      V2          PMW
+CONF 81 RVTSMW      V3          PMW
+
+CONF 81 RVTSNE      V1          PNE
+CONF 81 RVTSNE      V2          PNE
+CONF 81 RVTSNE      V3          PNE
+
+CONF 81 RVTSME      V1          PME
+CONF 81 RVTSME      V2          PME
+CONF 81 RVTSME      V3          PME
+
+CONF 81 RVTSNS      V1          PNS
+CONF 81 RVTSNS      V2          PNS
+CONF 81 RVTSNS      V3          PNS
+
+CONF 81 RVTSSW      V1          PSW
+CONF 81 RVTSSW      V2          PSW
+CONF 81 RVTSSW      V3          PSW
+
+CONF 81 RVTSSE      V1          PSE
+CONF 81 RVTSSE      V2          PSE
+CONF 81 RVTSSE      V3          PSE
+
+CONF 81 RVTEGD      V4          PGD
+CONF 81 RVTEGD      V6          PGD
+
+CONF 81 REPLI       NE          PVI
+CONF 81 REPLI       NW          PVI
+CONF 81 REPLI       SE          PVI
+CONF 81 REPLI       SW          PVI
+CONF 81 REPLI       V1          PVI
+CONF 81 REPLI       V2          PVI
+CONF 81 REPLI       V3          PVI
+CONF 81 REPLI       V4          PVI
+CONF 81 REPLI       V6          PVI
+CONF 81 REPLI       GA          PRI
+CONF 81 REPLI       GS          PRI
+
+CONF 81 LB1         BD          PBD                                         
+CONF 81 LB1         BA          PBA                                         
+CONF 81 LB1         DB          PBD                                         
+                                                                            
+CONF 81 LB2         BD          PBD                                         
+CONF 81 LB2         BA          PBD                                         
+CONF 81 LB2         DB          PBD                                         
+
+        ****** CONFIGURATION POSITIONS EVAL
+
+CONF 81 ESS         1P          P1V         P1V
+CONF 81 ESS         AP          P1V         P1V 
+CONF 81 ESS         TE          P1V         P1V                             
+CONF 81 ESS         TN          P1V         P1V                             
+CONF 81 ESS         TB          P1V         P1V                             
+CONF 81 ESS         TP          P1V         P1V                             
+CONF 81 ESS         TH          P1V         P1V
+CONF 81 ESS         LN          P1V         P1V                             
+CONF 81 ESS         UK          P1V         P1V                             
+CONF 81 ESS         UZ          P1V         P1V                             
+CONF 81 ESS         OT          P1V         P1V                             
+CONF 81 ESS         RT          P1V         P1V                             
+CONF 81 ESS         OY          P1V         P1V                             
+CONF 81 ESS         OG          P1V         P1V                             
+
+CONF 81 ESS         S           P4V         P4V                             
+CONF 81 ESS         DS          P4V         P4V                             
+CONF 81 ESS         DO          P4V         P4V
+CONF 81 ESS         DG          P4V         P4V                             
+CONF 81 ESS         UP          P4V         P4V
+CONF 81 ESS         UJ          P4V         P4V
+CONF 81 ESS         US          P4V         P4V
+CONF 81 ESS         UT          P4V         P4V                             
+CONF 81 ESS         TU          P4V         P4V
+CONF 81 ESS         AO          P4V         P4V
+CONF 81 ESS         SU          P4V         P4V
+CONF 81 ESS         AR          P4V         P4V                             
+CONF 81 ESS         TM          P4V         P4V                             
+CONF 81 ESS         TL          P4V         P4V                             
+CONF 81 ESS         PU          P4V         P4V                             
+CONF 81 ESS         HP          P4V         P4V                             
+                                                                                                      
+CONF 81 ESS         OM          POM         POM
+
+
+        ******   CONFIGURATIONS STRIDA ****  17-01-2008
+
+CONF 81 A1          MTO         PXRAKI                                        
+CONF 81 A1          MTR         PXRAKI                                        
+CONF 81 A1          MLI         PXRBRT                   
+CONF 81 A1          MDK         PXRIES                                        
+CONF 81 A1          MDR         PXRIES                                        
+
+CONF 81 A2          MTO         PXRAKI                        
+CONF 81 A2          MTR         PXRAKI                                        
+CONF 81 A2          MLI         PXRBRT                
+CONF 81 A2          MDK         PXRBRT                    
+CONF 81 A2          MDR         PXRBRT                 
+
+CONF 81 A3          MTO         PXRAKI                                        
+CONF 81 A3          MTR         PXRAKI                                        
+CONF 81 A3          MLI         PXRIES                                        
+CONF 81 A3          MDK         PXRIES                                        
+CONF 81 A3          MDR         PXRIES                                        
+
+CONF 81 A4          MTO         PXRAKI                                        
+CONF 81 A4          MTR         PXRAKI                                        
+CONF 81 A4          MLI         PXRBRT                                        
+CONF 81 A4          MDK         PXRAKI                                        
+CONF 81 A4          MDR         PXRAKI                                        
+                               
+CONF 81 A5          MTO         PXRIES                                        
+CONF 81 A5          MTR         PXRIES                                        
+CONF 81 A5          MLI         PXRBRT                                        
+CONF 81 A5          MDK         PXRIES                                        
+CONF 81 A5          MDR         PXRIES                                        
+
+CONF 81 A6          MTO         PXRAKI                                         
+CONF 81 A6          MTR         PXRAKI                                         
+CONF 81 A6          MLI         PXRBRT                                        
+CONF 81 A6          MDK         PXRAKI                                        
+CONF 81 A6          MDR         PXRBRT                                        
+
+CONF 81 A7          MTO         PXRAKI                                         
+CONF 81 A7          MTR         PXRAKI                                         
+CONF 81 A7          MLI         PXRIES                                        
+CONF 81 A7          MDK         PXRAKI                                       
+CONF 81 A7          MDR         PXRIES
+
+CONF 81 A8          MTO         PXRAKI                                         
+CONF 81 A8          MTR         PXRAKI                                         
+CONF 81 A8          MLI         PXRBRT                                        
+CONF 81 A8          MDK         PXRAKI                                        
+CONF 81 A8          MDR         PXRIES
+                                        
+CONF 81 A9          MTO         PXRAKI                                         
+CONF 81 A9          MTR         PXRAKI                                         
+CONF 81 A9          MLI         PXRAKI                                        
+CONF 81 A9          MDK         PXRAKI                                        
+CONF 81 A9          MDR         PXRAKI
+                                                                            
+CONF 81 A10         MTO         PXRAKI                                         
+CONF 81 A10         MTR         PXRIES                                         
+CONF 81 A10         MLI         PXRBRT                                        
+CONF 81 A10         MDK         PXRIES                                        
+CONF 81 A10         MDR         PXRIES
+
+CONF 81 A11         MTO         PXRAKI                                         
+CONF 81 A11         MTR         PXRIES                                         
+CONF 81 A11         MLI         PXRIES                                        
+CONF 81 A11         MDK         PXRIES                                        
+CONF 81 A11         MDR         PXRIES
+
+CONF 81 A12         MTO         PXRBRT                                         
+CONF 81 A12         MTR         PXRIES                                         
+CONF 81 A12         MLI         PXRBRT                                        
+CONF 81 A12         MDK         PXRIES                                        
+CONF 81 A12         MDR         PXRIES
+
+CONF 81 A13         MTO         PXRIES                                         
+CONF 81 A13         MTR         PXRIES                                         
+CONF 81 A13         MLI         PXRIES                                        
+CONF 81 A13         MDK         PXRIES                                        
+CONF 81 A13         MDR         PXRIES
+
+CONF 81 A14         MTO         PXRAKI                        
+CONF 81 A14         MTR         PXRBRT                          
+CONF 81 A14         MLI         PXRBRT                    
+CONF 81 A14         MDK         PXRBRT                    
+CONF 81 A14         MDR         PXRBRT
+                   
+                    ******************************                          
+                    * CONFIGURATIONS PREETABLIES *                          
+                    * DES MOYENS DE TRANSMISSION *                          
+                    ****************************** 20-03-2003               
+
+CONF 84 OYEVA       PYEVAL                                                                            
+
+CONF 84 OXEVA       PEVAL
+
+
+                    ***************************                             
+                    * CONFIGURATIONS SIMULEES *                             
+                    ***************************  19-04-2005
+                                                                            
+CONF 85 STR   PXTRO1PXTRO2PXTRO3PXTRO4PXTRG1PXTRG2PXTRG3PXTRG4
+CONF 85 STR   PYSTR1PYSTR2PYSTR3PYSTR4
+                                                                            
+CONF 85 RSFTA PXAIDA                                                        
+                                                                            
+CONF 85 STRID PXRBRTPXRIESPXRAKI
+
+        *******************************************************
+        * CONF. PREETABLIES FREQ. RADIO - SECTEURS OU TERRAINS* 20-03-2003
+        *******************************************************
+
+CONF 86 LISTAPP     LFLN  123.400     LFOA  119.700     LFOB  119.900
+CONF 86 LISTAPP     LFOC  123.200     LFOE  118.125     LFOJ  122.700
+CONF 86 LISTAPP     LFOP  118.575     LFOT  121.000     LFQI  119.700
+CONF 86 LISTAPP     LFRM  125.900     LFSF  119.125     LFSI  127.250
+CONF 86 LISTAPP     LFSR  119.800     LFJR  119.000
+
+CONF 86 LFRGAPP     LFRG  120.350     LFOH  120.350     LFRK  120.350
+
+CONF 86 LFRGINFO    LFRG  118.3       LFOH  135.2
+                                                                            
+                    ***************                                         
+                    * STRIPS INFO *                                         
+                    *************** 21-05-2007
+                                                                            
+CONF 90 PARIS TN    TP    DO    TU    UK    TL    TE    S     DS    SU  
+CONF 90SPARIS TB    FI    UZ    UT    AO    AR    TH    UP    UJ    PU  
+CONF 90SPARIS LN    OY    OT    RT    OG    US    DG    OM    HP    AP
+CONF 90SPARIS 1P
+CONF 90 ARDEP AO    AR    TH    TL    TE    TP    TN    DO    DS    TB
+CONF 90SARDEP DG 
+                                                                            
+CONF 90 ROISS RD    RC    RA    AC    DC    GD    GA    RB    GS              
+                                                                            
+CONF 90 ORLY  OD    OA    VD    VA                                          
+
+CONF 90 EST   S     DS    DO    AO    SU    AR    TM    TL    UP    PU    US
+CONF 90SEST   UT    TU    UJ    DG    HP
+
+CONF 90 OUEST TE    TN    TB    TP    TH    LN    UK    UZ    OG    RT
+CONF 90SOUEST OY    OT    OM    AP    1P
+
+CONF 90 SEINE SO    SR    SL    SK    SJ
+
+CONF 91                                                                     
+                                                                            

@@ -1,0 +1,188 @@
+SECT 3  DB        1 
+SECT 5  LM        1 127.675  
+SECT 3  OM        6
+SECT 5  L1        6 133.105
+SECT 3  SL        1
+SECT 8  SL          120.325
+SECT 3  FS        7
+SECT 3  SR        1
+SECT 8  SR          120.325
+SECT 3  SO        1
+SECT 8  SO          120.325
+SECT 3  LN        1
+SECT 8  LN          124.850 
+SECT 3  TR        7 STRID LFXOZQZX                               20
+SECT 4  TR    PARI  ORL   CDG
+SECT 5  T1        2 123.630
+SECT 5  LO        1 123.8 
+SECT 5  LE        1 126.7 
+SECT 5  KF        6 132.280
+SECT 5  T2        4 133.465
+SECT 5  Y2        6 128.780
+SECT 3  TU        6         
+SECT 8  TU          132.885
+SECT 3  DC        1 
+SECT 3  AC        1 
+SECT 5  EG        7 
+SECT 5  EY        7 
+SECT 3  TN        3 
+SECT 6  TN    ORL  
+SECT 6  TN    CDG  
+SECT 8  TN          133.925
+SECT 3  TP        7  
+SECT 6  TP    ORL     
+SECT 6  TP    CDG     
+SECT 8  TP          128.875
+SECT 5  GV        7      
+SECT 5  G1        6 135.405
+SECT 3  UK        7          
+SECT 8  UK          129.0
+SECT 5  NS        6 127.860   
+SECT 5  NU        4          
+SECT 5  JS        6 132.765    
+SECT 3  TM        3             
+SECT 6  TM    ORL                
+SECT 6  TM    CDG                 
+SECT 8  TM          131.175
+SECT 3  TE        3     
+SECT 6  TE    ORL      
+SECT 6  TE    CDG       
+SECT 8  TE          128.1
+SECT 5  E         1 128.3 
+SECT 5  BR        1   
+SECT 3  S         1     
+SECT 6  S     ORL       
+SECT 6  S     CDG         
+SECT 8  S           125.450
+SECT 3  SJ        1
+SECT 8  SJ          118.050
+SECT 5  IN        1 118.025 
+SECT 3  TB        3 
+SECT 8  TB          128.275 
+SECT 5  SE        1 124.950
+SECT 5  ID        1 125.5
+SECT 3  AO        6           
+SECT 8  AO          125.075
+SECT 5  UF        6 134.960
+SECT 5  XU        6 133.240
+SECT 5  UN        4 133.255
+SECT 5  UH        2 134.405       
+SECT 5  IG        5 134.025
+SECT 3  UZ        6          
+SECT 8  UZ          131.255
+SECT 3  UT        6            
+SECT 8  UT          133.505
+SECT 5  UR        6 135.505
+SECT 3  TH        3      
+SECT 6  TH    ORL        
+SECT 6  TH    CDG         
+SECT 8  TH          124.850
+SECT 5  UE        2 127.555
+SECT 3  OD        1     
+SECT 8  OD          127.750
+SECT 3  OA        1     
+SECT 8  OA          123.875
+SECT 3  RA        1   
+SECT 8  RA          125.825
+SECT 3  RD        1  
+SECT 5  ZS        6 132.210
+SECT 5  NA        1 130.275
+SECT 5  ZU        6 132.830
+SECT 5  P3        4 122.535
+SECT 3  AR        6       
+SECT 8  AR          132.1
+SECT 3  RC        1  
+SECT 3  TO        7 STRID LFXOZQZX                               20
+SECT 4  TO    PARI  ORL   CDG   
+SECT 3  FI        1                              
+SECT 5  KR        4 126.285
+SECT 3  SU        6
+SECT 8  SU          135.305
+SECT 3  DR        7 STRID LFYAYWYX                               30  
+SECT 4  DR    PARI  ORL   CDG                                  
+SECT 3  RB        1
+SECT 8  RB          121.150 
+SECT 5  G2        4
+SECT 3  UP        6
+SECT 6  UP    ORL
+SECT 6  UP    CDG
+SECT 8  UP          118.230
+SECT 3  QE        1
+SECT 8  QE          126.475
+SECT 3  QW        1
+SECT 8  QW          120.275
+SECT 5  CF        1 128.625
+SECT 3  UJ        6
+SECT 8  UJ          132.380
+SECT 5  RN        1
+SECT 3  DK        7 STRID LFXDYWYX                               30  
+SECT 4  DK    PARI  ORL   CDG                                  
+SECT 5  XS        6 125.965
+SECT 5  XH        6
+SECT 5  L2        6 135.240
+SECT 5  XR        6 132.785
+SECT 3  TL        3
+SECT 6  TL    ORL
+SECT 6  TL    CDG
+SECT 8  TL          120.950
+SECT 5  LX        1  
+SECT 5  ZI        6 118.885
+SECT 3  PU        6
+SECT 8  PU          132.740
+SECT 3  FD        7  
+SECT 3  FR        7 
+SECT 5  R1        6 132.430
+SECT 5  R2        6 133.580
+SECT 3  OG        6   
+SECT 6  OG    ORL     
+SECT 6  OG    CDG      
+SECT 8  OG          127.305
+SECT 3  OY        6   
+SECT 6  OY    ORL     
+SECT 6  OY    CDG      
+SECT 8  OY          132.265
+SECT 3  OT        3   
+SECT 6  OT    ORL     
+SECT 6  OT    CDG      
+SECT 8  OT          118.725
+SECT 3  RT        3   
+SECT 6  RT    ORL     
+SECT 6  RT    CDG      
+SECT 8  RT          122.575
+SECT 5  1K        4 133.690
+SECT 5  G3        4
+SECT 3  LI        7 STRID LFXVYWYX                               15
+SECT 4  LI    PARI                                      
+SECT 7  LI    GNEV                                             
+SECT 5  BL        1 124.050  
+SECT 5  BI        1 130.9  
+SECT 3  FC        7  
+SECT 5  2K        4 132.315
+SECT 5  3K        4 134.315
+SECT 5  4K        4 133.630
+SECT 5  P2        6 133.960
+SECT 3  DS        1   
+SECT 6  DS    ORL     
+SECT 6  DS    CDG      
+SECT 8  DS          127.075
+SECT 3  DG        3   
+SECT 6  DG    ORL     
+SECT 6  DG    CDG      
+SECT 8  DG          124.625
+SECT 3  DO        3   
+SECT 6  DO    ORL     
+SECT 6  DO    CDG      
+SECT 8  DO          124.0
+SECT 5  P1        6 132.180
+SECT 5  HR        4 132.630
+SECT 5  KH        6
+SECT 3  US        6
+SECT 8  US          128.140
+SECT 3  HP        6   
+SECT 8  HP          122.615
+SECT 3  SK        6  
+SECT 8  SK          134.875
+SECT 5  UB        4 133.005
+SECT 3  AP        6
+SECT 8  AP          131.065
+SECT 3  1P        6

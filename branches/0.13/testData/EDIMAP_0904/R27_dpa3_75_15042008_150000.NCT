@@ -1,0 +1,478 @@
+(version 2.4)
+(font
+  (name "1")
+  (value "phidias-etiquette")
+)
+(linestyle
+  (name "SingleLine")
+  (value "SingleLine")
+)
+(linestyle
+  (name "DoubleLine")
+  (value "DoubleLine")
+)
+(linestyle
+  (name "SingleLineDotted")
+  (value "SingleLineDotted")
+)
+(linestyle
+  (name "DoubleLineDotted")
+  (value "DoubleLineDotted")
+)
+(linestyle
+  (name "SingleLineDashed")
+  (value "SingleLineDashed")
+)
+(linestyle
+  (name "DoubleLineDashed")
+  (value "DoubleLineDashed")
+)
+(linestyle
+  (name "SingleLineMixed")
+  (value "SingleLineMixed")
+)
+(linestyle
+  (name "DoubleLineMixed")
+  (value "DoubleLineMixed")
+)
+(id_atc
+  (name "SYMBOLE R120")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 22)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Vert salle de bain")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLine")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "TEXTE ZONE MILITAIRE")
+  (line_width 1)
+  (line_style "SingleLine")
+  (priority 57)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+)
+(id_atc
+  (name "BORD_ZONE_MILITAIRE_FIR_2")
+  (line_width 2)
+  (line_style "SingleLineDashed")
+  (priority 42)
+  (text_font "1")
+  (fill_visibility 0)
+  (designabilite 0)
+  (foreground_color "Gris kaki")
+  (id_atc_preactif "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+  (id_atc_predorm "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+)
+(map
+  (name "R27")
+  (number 75)
+  (comment "CTL importe de VIDEOMAP")
+  (date 15 04 2008)
+  (heure 15 00 00)
+  (ref_point
+    (name "R270")
+    (comment "")
+    (value
+      (nautical_mile 64 12894 64 9296)
+    )
+  )
+  (ref_point
+    (name "R271")
+    (comment "")
+    (value
+      (nautical_mile 64 14681 64 9137)
+    )
+  )
+  (ref_point
+    (name "R272")
+    (comment "")
+    (value
+      (nautical_mile 64 14748 64 8242)
+    )
+  )
+  (ref_point
+    (name "R273")
+    (comment "")
+    (value
+      (nautical_mile 64 13691 64 7579)
+    )
+  )
+  (ref_point
+    (name "R274")
+    (comment "")
+    (value
+      (nautical_mile 64 13895 64 4657)
+    )
+  )
+  (ref_point
+    (name "R275")
+    (comment "")
+    (value
+      (nautical_mile 64 13571 64 4374)
+    )
+  )
+  (ref_point
+    (name "R276")
+    (comment "")
+    (value
+      (nautical_mile 64 10618 64 7303)
+    )
+  )
+  (ref_point
+    (name "R277")
+    (comment "")
+    (value
+      (nautical_mile 64 10548 64 8105)
+    )
+  )
+  (ref_point
+    (name "R278")
+    (comment "")
+    (value
+      (nautical_mile 64 11251 64 8144)
+    )
+  )
+  (ref_point
+    (name "LFSI05")
+    (comment "TMA LFSI 1.1")
+    (value
+      (nautical_mile 64 12500 64 6673)
+    )
+  )
+  (ref_point
+    (name "LFSI01")
+    (comment "TMA LFSI 1.1")
+    (value
+      (nautical_mile 64 13248 64 7047)
+    )
+  )
+  (ref_point
+    (name "LFSI04")
+    (comment "TMA LFSI 1.1")
+    (value
+      (nautical_mile 64 13147 64 6145)
+    )
+  )
+  (ref_point
+    (name "LFSI02")
+    (comment "TMA LFSI 1.1")
+    (value
+      (nautical_mile 64 13740 64 6878)
+    )
+  )
+  (ref_point
+    (name "LFSI03")
+    (comment "TMA LFSI 1.1")
+    (value
+      (nautical_mile 64 13788 64 6190)
+    )
+  )
+  (ref_point
+    (name "LFSI18")
+    (comment "TMA LFSI 1.2")
+    (value
+      (nautical_mile 64 12500 64 6673)
+    )
+  )
+  (ref_point
+    (name "LFSI17")
+    (comment "TMA LFSI 1.2")
+    (value
+      (nautical_mile 64 13147 64 6145)
+    )
+  )
+  (ref_point
+    (name "LFSI16")
+    (comment "TMA LFSI 1.2")
+    (value
+      (nautical_mile 64 12874 64 5929)
+    )
+  )
+  (ref_point
+    (name "LFSI10")
+    (comment "TMA LFSI 1.2")
+    (value
+      (nautical_mile 64 13788 64 6190)
+    )
+  )
+  (ref_point
+    (name "LFSI11")
+    (comment "TMA LFSI 1.2")
+    (value
+      (nautical_mile 64 13806 64 5929)
+    )
+  )
+  (ref_point
+    (name "LFSI12")
+    (comment "TMA LFSI 1.2")
+    (value
+      (nautical_mile 64 13539 64 5873)
+    )
+  )
+  (ref_point
+    (name "LFSI13")
+    (comment "TMA LFSI 1.2")
+    (value
+      (nautical_mile 64 13233 64 5861)
+    )
+  )
+  (ref_point
+    (name "LFSI14")
+    (comment "TMA LFSI 1.2")
+    (value
+      (nautical_mile 64 12937 64 5623)
+    )
+  )
+  (ref_point
+    (name "LFSI15")
+    (comment "TMA LFSI 1.2")
+    (value
+      (nautical_mile 64 12683 64 5997)
+    )
+  )
+  (ref_point
+    (name "LFSI27")
+    (comment "TMA LFSI 2")
+    (value
+      (nautical_mile 64 12500 64 6673)
+    )
+  )
+  (ref_point
+    (name "LFSI22")
+    (comment "TMA LFSI 2")
+    (value
+      (nautical_mile 64 11823 64 6304)
+    )
+  )
+  (ref_point
+    (name "LFSI21")
+    (comment "TMA LFSI 2")
+    (value
+      (nautical_mile 64 12216 64 7389)
+    )
+  )
+  (ref_point
+    (name "LFSI20")
+    (comment "TMA LFSI 2")
+    (value
+      (nautical_mile 64 11803 64 7513)
+    )
+  )
+  (ref_point
+    (name "LFSI23")
+    (comment "TMA LFSI 2")
+    (value
+      (nautical_mile 64 11636 64 6293)
+    )
+  )
+  (ref_point
+    (name "LFSI24")
+    (comment "TMA LFSI 2")
+    (value
+      (nautical_mile 64 11550 64 6804)
+    )
+  )
+  (ref_point
+    (name "LFSI25")
+    (comment "TMA LFSI 2")
+    (value
+      (nautical_mile 64 11608 64 7372)
+    )
+  )
+  (ref_point
+    (name "LFSI26")
+    (comment "TMA LFSI 2")
+    (value
+      (nautical_mile 64 11803 64 7513)
+    )
+  )
+  (submap
+    (number 1)
+    (name "R27")
+    (submap_type 3)
+    (keyboard 3)
+    (entity
+      (name "415")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "R270")
+        (point "R271")
+        (point "R272")
+        (point "R273")
+        (point "R274")
+        (point "R275")
+        (point "R276")
+        (point "R277")
+        (point "R278")
+        (point "R270")
+      )
+      (polygone 1)
+    )
+    (entity
+      (name "13")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "LFSI05")
+        (azimuth 100 0)
+        (distance 64 836)
+        (distance 64 836)
+        (angle 100 23078)
+        (angle 100 29656)
+      )
+      (construction
+        (type 1)
+        (point "LFSI01")
+        (point "LFSI04")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "9")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "LFSI01")
+        (point "LFSI02")
+        (point "LFSI03")
+      )
+    )
+    (entity
+      (name "14")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "LFSI03")
+        (point "LFSI04")
+      )
+    )
+    (entity
+      (name "15")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "LFSI18")
+        (azimuth 100 0)
+        (distance 64 835)
+        (distance 64 835)
+        (angle 100 20668)
+        (angle 100 23078)
+      )
+      (construction
+        (type 1)
+        (point "LFSI17")
+        (point "LFSI16")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "16")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "LFSI10")
+        (point "LFSI11")
+        (point "LFSI12")
+        (point "LFSI13")
+        (point "LFSI14")
+        (point "LFSI15")
+        (point "LFSI16")
+      )
+    )
+    (entity
+      (name "10")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "EllipseEntity")
+      (geometry
+        (point "LFSI27")
+        (azimuth 100 0)
+        (distance 64 771)
+        (distance 64 771)
+        (angle 100 2163)
+        (angle 100 11859)
+      )
+      (construction
+        (type 1)
+        (point "LFSI22")
+        (point "LFSI21")
+        (orientation 0)
+      )
+    )
+    (entity
+      (name "17")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "LFSI20")
+        (point "LFSI21")
+      )
+    )
+    (entity
+      (name "18")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_PREACTIVE")
+      (shape "PolylineEntity")
+      (geometry
+        (point "LFSI22")
+        (point "LFSI23")
+        (point "LFSI24")
+        (point "LFSI25")
+        (point "LFSI26")
+      )
+    )
+    (entity
+      (name "19")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "LFSI01")
+        (point "LFSI21")
+      )
+    )
+    (entity
+      (name "20")
+      (id_atc "BORD_ZONE_MILITAIRE_FIR_2_PREACTIVE")
+      (shape "LineEntity")
+      (geometry
+        (point "LFSI22")
+        (point "LFSI15")
+      )
+    )
+  )
+)
