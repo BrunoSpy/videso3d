@@ -87,10 +87,6 @@ public final class DatabaseManager {
 	 */
 	private Connection currentODS;
 	/**
-	 * Base couvertures radios sélectionnée
-	 */
-	private Connection currentRadioCov;	
-	/**
 	 * Base SkyView
 	 */
 	private Connection currentSkyView;
@@ -229,18 +225,7 @@ public final class DatabaseManager {
 					instance.currentPays = DriverManager.getConnection("jdbc:sqlite:"+name);
 				}
 			}
-			return instance.currentPays;
-		case RadioCov:
-			if(instance.currentRadioCov == null) {
-				instance.currentRadioCov = DriverManager.getConnection("jdbc:sqlite:"+name);
-			} else {
-				if(!instance.currentRadioCov.getMetaData().getURL().equals("jdbc:sqlite:"+name)){
-					//changement de base de données
-					instance.currentRadioCov.close();
-					instance.currentRadioCov = DriverManager.getConnection("jdbc:sqlite:"+name);
-				}
-			}
-			return instance.currentRadioCov;		
+			return instance.currentPays;	
 		case Databases:
 			if(instance.databases == null) {
 				instance.databases = DriverManager.getConnection("jdbc:sqlite:"+name);
@@ -933,63 +918,6 @@ public final class DatabaseManager {
 		DatabaseManager.addDatabase(name, DatasManager.Type.PAYS, new SimpleDateFormat().format(new Date()));
 		
 	}
-
-	/**
-	 * Cree la structure des tables d'une base Couvertures Radios
-	 * @param name Nom de la base recevant les tables
-	 * @throws SQLException 
-	 */
-	public static void createRadioCov(String name, String path) throws SQLException {
-		Statement st = DatabaseManager.selectDB(DatasManager.Type.RadioCov, name).createStatement();
-		/*
-		st.executeUpdate("create table radio (id integer primary key autoincrement," +
-				"name varchar(32), " +
-				"type varchar(16), " +
-				"path varchar(64)" +
-		")");
-		*/
-		st.executeUpdate("create table radio (id integer primary key autoincrement," +
-				"databaseId integer, " +				
-				"path varchar(64)" +
-		")");
-		st.close();
-
-		/*
-		PreparedStatement insertClef = DatabaseManager.selectDB(Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
-		insertClef.setString(1, "path");
-		insertClef.setString(2, name);
-		insertClef.setString(3, path);
-		insertClef.executeUpdate();
-		insertClef.close();
-		DatabaseManager.addDatabase(name, Type.RadioCov, new SimpleDateFormat().format(new Date()));
-		 */
-	}
-	
-	public static void insertRadioCov(String name, String path) throws SQLException {
-			
-		String date = new SimpleDateFormat().format(new Date());
-		int databaseId = 0;
-		
-		PreparedStatement insertClef = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").prepareStatement("insert into clefs (name, type, value) values (?, ?, ?)");
-		insertClef.setString(1, "path");
-		insertClef.setString(2, name);
-		insertClef.setString(3, path);
-		insertClef.executeUpdate();
-		insertClef.close();
-		DatabaseManager.addDatabase(name, DatasManager.Type.RadioCov, date);
-		
-		Statement st = DatabaseManager.selectDB(DatasManager.Type.Databases, "databases").createStatement();
-		ResultSet rs = st.executeQuery("select id from databases where name = '"+name+"'");				
-		 rs.next();
-		 databaseId = rs.getInt(1);			
-		
-		PreparedStatement insertRadio = DatabaseManager.selectDB(DatasManager.Type.RadioCov, "radio").prepareStatement("insert into radio(databaseId,path) values (?,?)");
-		insertRadio.setInt(1, databaseId);
-		
-		insertRadio.setString(2,path);
-		insertRadio.executeUpdate();
-		insertRadio.close();		
-	}
 	
 	/**
 	 * Cree la structure des tables pour les données AIP
@@ -1127,12 +1055,6 @@ public final class DatabaseManager {
 				instance.currentPays = null;
 			}
 			break;
-		case RadioCov:
-			if (instance.currentRadioCov != null && instance.currentRadioCov.getMetaData().getURL().equals("jdbc:sqlite:"+name)) {
-				instance.currentRadioCov.close();
-				instance.currentRadioCov = null;
-			}
-			break;	
 		case SkyView:
 			String path = getSkyViewPath(name);
 			if(path != null){
@@ -1438,30 +1360,6 @@ public final class DatabaseManager {
 	public static Statement getCurrentEdimap() throws SQLException {
 		return DatabaseManager.getCurrent(DatasManager.Type.Edimap);
 	}
-
-	/**
-	 * Renvoit une connection vers la base de donnees des couvertures radios selectionnee
-	 * @return {@link Statement}
-	 * @throws SQLException 
-	 */
-	public static Statement getCurrentRadioCov() throws SQLException {
-		return DatabaseManager.getCurrent(DatasManager.Type.RadioCov);
-	}
-	
-	/**
-	 * Renvoit la liste des path des donnees de couvertures radio selectionnes
-	 * @return liste des chemin vers les couvertures radios
-	 * @throws SQLException
-	 */
-	public static ArrayList<String> getCurrentRadioCovPath() throws SQLException {
-		ArrayList <String> pathTab = new ArrayList<String>();
-		Statement st = DatabaseManager.getCurrentRadioCov();
-		ResultSet rs = st.executeQuery("select radio.path from radio");
-		while (rs.next()) {
-		    pathTab.add(rs.getString(1));
-		}
-		return pathTab;
-	}
 	
 	/**
 	 * Renvoit une connection vers la base SkyView sélectionnée
@@ -1498,7 +1396,6 @@ public final class DatabaseManager {
 				if(instance.currentStpv != null) { instance.currentStpv.close();instance.currentStpv= null;}
 				if(instance.currentEdimap != null) { instance.currentEdimap.close();instance.currentEdimap= null;}
 				if(instance.currentODS != null) { instance.currentODS.close();instance.currentODS = null;}
-				if(instance.currentRadioCov != null) { instance.currentRadioCov.close();instance.currentRadioCov = null;}
 				if(instance.currentSkyView != null) {instance.currentSkyView.close(); instance.currentSkyView = null;}
 				if(instance.currentAIP!=null) {instance.currentAIP.close(); instance.currentAIP = null;}
 				if(instance.currentTerrainsOACI!=null) {instance.currentTerrainsOACI.close(); instance.currentTerrainsOACI = null;}
@@ -1543,8 +1440,6 @@ public final class DatabaseManager {
 			return DatasManager.Type.Edimap;
 		} else if(type.equalsIgnoreCase("Ods")){
 			return DatasManager.Type.Ods;
-		} else if(type.equalsIgnoreCase("RadioCov")){
-			return DatasManager.Type.RadioCov;
 		} else if(type.equalsIgnoreCase("SkyView")){
 			return DatasManager.Type.SkyView;
 		} else if(type.equalsIgnoreCase("AIP")){
