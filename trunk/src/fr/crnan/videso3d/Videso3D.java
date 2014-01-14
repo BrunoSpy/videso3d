@@ -35,7 +35,7 @@ import gov.nasa.worldwind.util.Logging;
  */
 public class Videso3D {
 
-	public static final String VERSION = "0.13.0";
+	public static final String VERSION = "0.14.0 Dev Edition";
 	
 	public static void main(final String[] args)
 	{
