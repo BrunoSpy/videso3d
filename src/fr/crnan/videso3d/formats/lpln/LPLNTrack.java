@@ -122,7 +122,12 @@ public class LPLNTrack implements VidesoTrack {
 	public Integer getModeA() {
 		return null;
 	}
-		
+	
+	@Override
+	public String getFirstHour() {
+		return null;
+	}
+	
 	@Override
 	public boolean isFieldAvailable(int field) {
 		switch (field) {
@@ -138,10 +143,11 @@ public class LPLNTrack implements VidesoTrack {
 			return true;
 		case TracksModel.FIELD_MODE_A:
 			return false;
+		case TracksModel.FIELD_FIRST_HOUR:
+			return false;
 		default:
 			return false;
 		}
 	}
-
 
 }
