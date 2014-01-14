@@ -123,6 +123,12 @@ public class PLNSTrack implements VidesoTrack {
 	}
 	
 	@Override
+	public String getFirstHour() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public boolean isFieldAvailable(int field) {
 		switch (field) {
 		case TracksModel.FIELD_ADEP:

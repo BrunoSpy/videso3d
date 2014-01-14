@@ -111,7 +111,12 @@ public class OPASTrack implements VidesoTrack{
 	public Integer getModeA() {
 		return null;
 	}
-		
+	
+	@Override
+	public String getFirstHour() {
+		return null;
+	}
+	
 	@Override
 	public boolean isFieldAvailable(int field) {
 		switch (field) {
@@ -129,6 +134,8 @@ public class OPASTrack implements VidesoTrack{
 			return false;
 		}
 	}
+
+
 
 
 
