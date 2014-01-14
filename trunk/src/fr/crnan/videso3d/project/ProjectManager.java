@@ -43,6 +43,7 @@ import java.util.Set;
 import fr.crnan.videso3d.CompatibilityVersionException;
 import fr.crnan.videso3d.DatasManager;
 import fr.crnan.videso3d.DatasManager.Type;
+import fr.crnan.videso3d.Couple;
 import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.ProgressSupport;
 import fr.crnan.videso3d.Triplet;
@@ -91,7 +92,7 @@ import gov.nasa.worldwind.layers.Layer;
  * <li>
  * </ul>
  * @author Bruno Spyckerelle
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class ProjectManager extends ProgressSupport {
 
@@ -334,6 +335,19 @@ public class ProjectManager extends ProgressSupport {
 					if(oos != null)
 						oos.close();
 				}
+				//multicolors
+				try {
+					oos = new ObjectOutputStream(new FileOutputStream(new File(trajectoDir.getAbsolutePath(), l.getName()+"_multicolors")));
+					Couple<Integer, Couple<Double[], Color[]>> params = new Couple<Integer, Couple<Double[],Color[]>>();
+					params.setFirst(((TrajectoriesLayer)l).getParamColor());
+					params.setSecond(((TrajectoriesLayer)l).getMultiColors());
+					oos.writeObject(params);
+				} catch(IOException e){
+					e.printStackTrace();
+				} finally {
+					if(oos != null)
+						oos.close();
+				}
 				//filtres
 				try{
 					oos = new ObjectOutputStream(new FileOutputStream(new File(trajectoDir.getAbsolutePath(), l.getName()+"_filters")));
@@ -454,18 +468,31 @@ public class ProjectManager extends ProgressSupport {
 		//import databases
 		final File databases = new File(path, "databases");
 		if(databases.exists()){
-			for(File f : databases.listFiles()){
-				if(f.isDirectory())//only files
-					continue;
-				this.fireTaskProgress(progress++);
-				this.fireTaskInfo(f.getName());
-				int index = f.getName().lastIndexOf(".");
-				final String suffix = index == -1 ? "" : f.getName().substring(index+1);
-				final String name = index == -1 ? f.getName() : f.getName().substring(0, index);
-				final DatasManager.Type type = DatabaseManager.stringToType(index == -1 ? name : suffix);
-				if(!suffix.isEmpty() && type != null) { //base de données existantes
+			for(final DatasManager.Type t : DatasManager.Type.values()){
+				boolean found = false;
+				File[] db = databases.listFiles(new FilenameFilter() {
+					@Override
+					public boolean accept(File dir, String name) {
+						return name.endsWith("."+t);
+					}
+				});
+				File[] links = databases.listFiles(new FilenameFilter() {
+					@Override
+					public boolean accept(File dir, String name) {
+						return name.equals(t);
+					}
+				});
+				
+				//first check if a full db is present
+				if(db.length == 1){
+					File f = db[0];
+					int index = f.getName().lastIndexOf(".");
+					final String suffix = index == -1 ? "" : f.getName().substring(index+1);
+					final String name = index == -1 ? f.getName() : f.getName().substring(0, index);
+					final DatasManager.Type type = DatabaseManager.stringToType(index == -1 ? name : suffix);
+					//in that case, import db
 					try {
-						if(!DatabaseManager.databaseExists(type, name)) {
+						if(!DatabaseManager.databaseExists(t, name)) {
 							//sqlite database
 							FileManager.copyFileAs(f.getAbsolutePath(), name);
 							//associated files
@@ -498,48 +525,45 @@ public class ProjectManager extends ProgressSupport {
 						}
 						DatabaseManager.addDatabase(name, type);
 						DatabaseManager.fireBaseSelected(type);
+						found = true;
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
-
-
-				} else if(suffix.isEmpty() && type != null){ //only links to objects, without databases
-
-					if(databases.listFiles(new FilenameFilter() {//verify that there's no database of this type
-
-						@Override
-						public boolean accept(File dir, String name) {
-							return name.endsWith("."+type);
-						}
-					}).length ==0){
-						if(DatasManager.getController(type) == null) {
-							//ask the DatabaseManager to select a base
-							try {
-								if(DatabaseManager.selectDatabase(type)){
-									DatabaseManager.fireBaseSelected(type);
-								} else {
-									//TODO informer d'une erreur
-								}
-							} catch (SQLException e) {
-								e.printStackTrace();
+				} else if(links.length == 1){
+					//if there's no database, check if there's a link file
+					//in that case, try to select the database
+					if(DatasManager.getController(t) == null) {
+						//ask the DatabaseManager to select a base
+						try {
+							if(DatabaseManager.selectDatabase(t)){
+								DatabaseManager.fireBaseSelected(t);
+								found = true;
+							} else {
+								//TODO informer d'une erreur
 							}
-						} else {
-							selectObjectWithController(databases, name, type);
+						} catch (SQLException e) {
+							e.printStackTrace();
 						}
-
+					} else {
+						//if a database is already selected, no event is fired
+						//force selection of objects
+						selectObjectWithController(databases, t);
 					}
+					
 				}
-				//Once the database is selected and the controller created, check the objects
-				DatasManager.addPropertyChangeListener("done", new PropertyChangeListener() {
-
-					@Override
-					public void propertyChange(PropertyChangeEvent evt) {
-						selectObjectWithController(databases, suffix.isEmpty() ? name : suffix, type);
-						DatasManager.removePropertyChangeListener("done", this); //ensure this is just done once
-					}
-				});
+				if(found){
+					//Once the database is selected and the controller created, check the objects
+					DatasManager.addPropertyChangeListener("done", new PropertyChangeListener() {
+						@Override
+						public void propertyChange(PropertyChangeEvent evt) {
+							selectObjectWithController(databases, t);
+							DatasManager.removePropertyChangeListener("done", this); //ensure this is just done once
+						}
+					});
+				}
 			}
 		}
+		
 		//import xml files
 		File xmlDir = new File(path, "xml");
 		if(xmlDir.exists() && xmlDir.isDirectory()){
@@ -592,7 +616,7 @@ public class ProjectManager extends ProgressSupport {
 		if(trajectoDir.exists() && trajectoDir.isDirectory()){
 			for(final File t : trajectoDir.listFiles()){
 				this.fireTaskProgress(progress++);
-				if(t.getName().endsWith("Geo")){
+				if(t.getName().toLowerCase().endsWith(".geo")){
 					DatasManager.addPropertyChangeListener("new trajectory view", new PropertyChangeListener() {
 
 						@Override
@@ -608,6 +632,24 @@ public class ProjectManager extends ProgressSupport {
 									view.setColorFilters(colorsProperties);
 								}
 							
+							} catch(IOException | ClassNotFoundException e){
+								e.printStackTrace();
+							} finally{
+								if(ois != null)
+									try {
+										ois.close();
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+							}
+							//multicolors
+							propFile = new File(trajectoDir, t.getName()+"_multicolors");
+							try {
+								ois = new ObjectInputStream(new FileInputStream(propFile));
+								Couple<Integer, Couple<Double[], Color[]>> multiColors = (Couple<Integer, Couple<Double[], Color[]>>) ois.readObject();
+								if(multiColors != null){
+									view.getLayer().setMultiColors(multiColors.getFirst(), multiColors.getSecond().getFirst(), multiColors.getSecond().getSecond());
+								}
 							} catch(IOException | ClassNotFoundException e){
 								e.printStackTrace();
 							} finally{
@@ -695,8 +737,8 @@ public class ProjectManager extends ProgressSupport {
 		return project;
 	}
 
-	private void selectObjectWithController(File databases, String suffix, DatasManager.Type type){
-		File objectsFile = new File(databases, suffix);
+	private void selectObjectWithController(File databases, DatasManager.Type type){
+		File objectsFile = new File(databases, type.toString());
 		ObjectInputStream ois = null;
 		try {
 			if(objectsFile.exists()){
