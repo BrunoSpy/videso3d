@@ -34,6 +34,7 @@ public class GEOTrack implements VidesoTrack {
 	private String type;
 	private Integer numTraj;
 	private Integer modeA = 0;
+	private String firstHour = "Inconnue";
 	
 	private List<GEOTrackPoint> trackPoints = new ArrayList<GEOTrackPoint>();
 	
@@ -46,6 +47,18 @@ public class GEOTrack implements VidesoTrack {
 		if(words.length > 17 ) this.arrivee = words[17].trim();
 		this.numTraj = new Integer(words[1]);
 		if(this.indicatif.isEmpty()) this.indicatif = "N/A "+this.numTraj;
+		this.setFirstHour(new Double(words[3]));
+	}
+	
+	/**
+	 * Store the first hour of the track in a readable string
+	 * @param decimalsecond
+	 */
+	public void setFirstHour(Double decimalsecond){
+		int hour = (int) (decimalsecond / 3600);
+		int minute = (int) ((decimalsecond / 3600 - hour) * 60);
+		int seconde = (int) (((decimalsecond / 3600 - hour) * 60 - minute) * 60 );
+		this.firstHour = String.format("%02d", hour) + ":" + String.format("%02d", minute) + ":" + String.format("%02d", seconde);
 	}
 	
 	@Override
@@ -116,7 +129,12 @@ public class GEOTrack implements VidesoTrack {
 	public Integer getModeA() {
 		return this.modeA;
 	}
-
+	
+	@Override
+	public String getFirstHour() {
+		return this.firstHour;
+	}
+	
 	@Override
 	public boolean isFieldAvailable(int field) {
 		switch (field) {
@@ -132,11 +150,11 @@ public class GEOTrack implements VidesoTrack {
 			return true;
 		case TracksModel.FIELD_MODE_A:
 			return true;
+		case TracksModel.FIELD_FIRST_HOUR:
+			return true;
 		default:
 			return false;
 		}
 	}
-
-
 	
 }

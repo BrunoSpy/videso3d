@@ -25,7 +25,7 @@ import java.util.List;
  * 
  * @author Adrien Vidal
  * @author Bruno Spyckerelle
- * @version 0.4.0
+ * @version 0.5.0
  */
 public interface VidesoTrack extends Track{
 
@@ -44,6 +44,8 @@ public interface VidesoTrack extends Track{
 	public String getIaf();
 	
 	public Integer getModeA();
+	
+	public String getFirstHour();
 	
 	/**
 	 * Returns true if the field is supported by the track.<br />

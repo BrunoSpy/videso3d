@@ -26,7 +26,7 @@ import gov.nasa.worldwind.util.Logging;
 /**
  * Represents a set of tracks
  * @author Bruno Spyckerelle
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class TracksModel extends AbstractTableModel {
 
@@ -42,6 +42,7 @@ public class TracksModel extends AbstractTableModel {
 	public static final int FIELD_TIME_BEGIN = 7;
 	public static final int FIELD_TIME_END= 8;
 	public static final int FIELD_POLYGON = 0;
+	public static final int FIELD_FIRST_HOUR = 9;
 	
 	private String[] columnNames = {"Indicatif", "Départ", "Arrivée", "IAF", "Type", "Mode A", "Affiché"};
 
@@ -900,6 +901,8 @@ public class TracksModel extends AbstractTableModel {
 			return FIELD_TYPE_AVION;
 		} else if("Mode A".equals(type)){
 			return FIELD_MODE_A;
+		} else if("Heure".equals(type)){
+			return FIELD_FIRST_HOUR;
 		}
 		return 0;
 	}
@@ -917,6 +920,8 @@ public class TracksModel extends AbstractTableModel {
 			return "Type avion";
 		} else if(type == FIELD_MODE_A){
 			return "Mode A";
+		} else if(type == FIELD_FIRST_HOUR){
+			return "Heure";
 		}
 		return null;
 	}
