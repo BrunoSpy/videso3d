@@ -297,7 +297,8 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 				line.setAnnotation("<b>"+track.getIndicatif()+"</b><br /><b>Type avion : </b>"+track.getType()+"<br/>" +
 						"<b>Adep : </b>"+track.getDepart()+"<br />" +
 						"<b>Adest : </b>"+track.getArrivee()+"<br />" +
-						"<b>Mode A : </b>"+track.getModeA());
+						"<b>Mode A : </b>"+track.getModeA()+"<br />"+
+						"<b>Heure début : </b>"+track.getFirstHour());
 				line.setOutlinePickWidth(20);
 				line.setAttributes(normal);
 				line.setHighlightAttributes(highlight);

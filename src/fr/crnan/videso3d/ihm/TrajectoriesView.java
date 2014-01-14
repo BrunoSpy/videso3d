@@ -84,12 +84,11 @@ import fr.crnan.videso3d.trajectography.TrackContext;
 import fr.crnan.videso3d.trajectography.TracksModel;
 import fr.crnan.videso3d.trajectography.TracksModelListener;
 import gov.nasa.worldwind.avlist.AVKey;
-import gov.nasa.worldwind.layers.Layer;
 
 /**
  * Panel de sélection des trajectoires affichées
  * @author Bruno Spyckerelle
- * @version 0.5.2
+ * @version 0.5.3
  */
 public class TrajectoriesView extends JPanel {
 
@@ -1081,7 +1080,7 @@ public class TrajectoriesView extends JPanel {
 		this.wwd.getModel().getLayers().remove(layer);
 	}
 	
-	public Layer getLayer(){
+	public TrajectoriesLayer getLayer(){
 		return this.layer;
 	}
 	
