@@ -22,18 +22,25 @@ import fr.crnan.videso3d.Configuration;
 /**
  * Sélecteur de fichier avec un comportement plus ergonomique
  * @author Bruno Spyckerelle
- * @version 0.1
+ * @version 0.1.1
  */
 public class VFileChooser extends JFileChooser {
 
+	private String defaultrep;
+	
 	public VFileChooser(){
 		super(Configuration.getProperty(Configuration.DEFAULT_REP, System.getProperty("user.dir")));
+	}
+	
+	public VFileChooser(String defaultrep){
+		super(Configuration.getProperty(defaultrep, System.getProperty("user.dir")));
+		this.defaultrep = defaultrep;
 	}
 
 	@Override
 	public void approveSelection() {
 		super.approveSelection();
-		Configuration.setProperty(Configuration.DEFAULT_REP, this.getSelectedFile().getAbsolutePath());
+		Configuration.setProperty((this.defaultrep != null ? this.defaultrep : Configuration.DEFAULT_REP), this.getSelectedFile().getAbsolutePath());
 	}
 	
 	
