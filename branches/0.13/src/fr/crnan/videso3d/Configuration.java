@@ -42,7 +42,7 @@ public final class Configuration {
 	public static final String NETWORK_PROXY_HOST = "fr.crnan.videso3d.network.proxy_host";
 	public static final String NETWORK_PROXY_PORT = "fr.crnan.videso3d.network.proxy_port";
 	public static final String DEFAULT_REP = "fr.crnan.videso3d.files.defaultrep";
-	
+	public static final String DEFAULT_REP_TRAJ = "fr.crnan.videso3d.files.defaultreptraj";
 	/**
 	 * Un dépôt SVN est décrit par son URL, son identifiant et son mot de passe. 
 	 * Ces chaînes de caractères doivent être séparées par des points-virgules. 
