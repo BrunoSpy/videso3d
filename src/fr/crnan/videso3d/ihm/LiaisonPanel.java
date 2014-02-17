@@ -35,12 +35,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 import fr.crnan.videso3d.DatasManager;
-import fr.crnan.videso3d.DatasManager.Type;
+import fr.crnan.videso3d.FileManager;
 import fr.crnan.videso3d.databases.DatabaseManager;
 /**
  * Panel de résultats des liaisons privilégiées
  * @author Adrien Vidal
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class LiaisonPanel extends ResultPanel implements ActionListener{
 
@@ -60,7 +60,7 @@ public class LiaisonPanel extends ResultPanel implements ActionListener{
 			return;
 		}
 		try {
-			f = new File(DatabaseManager.getCurrentName(DatasManager.Type.STPV)+"_files","CODE");
+			f = new File(FileManager.getFile(DatabaseManager.getCurrentName(DatasManager.Type.STPV)+"_files/CODE"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
