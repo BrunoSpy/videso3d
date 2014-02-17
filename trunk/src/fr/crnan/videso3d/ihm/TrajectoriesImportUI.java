@@ -26,9 +26,9 @@ import java.util.List;
 
 import javax.swing.JDialog;
 import javax.swing.JPanel;
-
 import javax.swing.BoxLayout;
 
+import fr.crnan.videso3d.Configuration;
 import fr.crnan.videso3d.VidesoGLCanvas;
 import fr.crnan.videso3d.formats.fpl.FPLFileFilter;
 import fr.crnan.videso3d.formats.geo.GEOFileFilter;
@@ -567,7 +567,7 @@ public class TrajectoriesImportUI extends JDialog {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				final VFileChooser fileChooser = new VFileChooser();
+				final VFileChooser fileChooser = new VFileChooser(Configuration.DEFAULT_REP_TRAJ);
 				fileChooser.setFileSelectionMode(VFileChooser.FILES_ONLY);
 				fileChooser.setMultiSelectionEnabled(true);
 				fileChooser.addChoosableFileFilter(new OPASFileFilter());
