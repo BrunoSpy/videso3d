@@ -84,7 +84,7 @@ public class TrajectoriesMenu extends JMenu {
 		if(invisibles.size() > 0)
 			this.add(display);
 		
-		JMenuItem hide =new JMenuItem("Cacher");
+		JMenuItem hide = new JMenuItem("Cacher ("+visibles.size()+")");
 		hide.addActionListener(new ActionListener() {
 			
 			@Override
