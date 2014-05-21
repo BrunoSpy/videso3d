@@ -56,7 +56,7 @@ public class MultipleSelectionMenu extends JMenu{
 		
 		allMenu.add(copy);
 		
-		JMenuItem delete = new JMenuItem("Supprimer tout ("+objects.size()+" objets)");
+		JMenuItem delete = new JMenuItem("Supprimer/cacher tout ("+objects.size()+" objets)");
 		delete.addActionListener(new ActionListener() {
 			
 			@Override
