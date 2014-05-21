@@ -249,7 +249,20 @@ public class GEOTracksLayer extends TrajectoriesLayer implements AltitudeFiltera
 						
 						@Override
 						public Color getColor(Position position, int ordinal) {
-							double value = getParamColor() == TrajectoriesLayer.PARAM_SPEED ? ((VPosition) position).getSpeed() : position.getElevation();
+							double value = 0;
+							switch (getParamColor()) {
+							case TrajectoriesLayer.PARAM_SPEED:
+								value = ((VPosition) position).getSpeed();
+								break;
+							case TrajectoriesLayer.PARAM_ALTITUDE:
+								value = position.getElevation();
+								break;
+							case TrajectoriesLayer.PARAM_VZ:
+								value = ((VPosition) position).getVz();
+								break;
+							default:
+								break;
+							}
 							if(value < altitudes[0])
 								return multicolors[0];
 							for(int i = 0; i< multicolors.length;i++){

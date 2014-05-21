@@ -59,6 +59,7 @@ public abstract class TrajectoriesLayer extends LayerSet {
 		
 	public final static int PARAM_SPEED = 10;
 	public final static int PARAM_ALTITUDE = 11;
+	public final static int PARAM_VZ = 12;
 	
 	public TrajectoriesLayer(TracksModel model){
 		super();
