@@ -561,25 +561,33 @@ public class TrajectoriesView extends JPanel {
 		
 		/******** Paramètre pour la couleur *******/
 		
-		final JRadioButton speed = new JRadioButton("Vitesse (kt)");
+		final JComboBox<String> params = new JComboBox<String>();
+		params.addItem("Altitude");
+		params.addItem("Vitesse (kt)");
+		params.addItem("Vz");
 		if(styles.getSelectedItem().equals("Fil de fer dégradé") ||
 				styles.getSelectedItem().equals("Fil de fer multicolor")){
-			JRadioButton altitude = new JRadioButton("Altitude (FL)");
-			ButtonGroup btnGroup = new ButtonGroup();
-			btnGroup.add(altitude);
-			btnGroup.add(speed);
-
-			speed.setSelected(layer.getParamColor() == TrajectoriesLayer.PARAM_SPEED);
-			altitude.setSelected(layer.getParamColor() == TrajectoriesLayer.PARAM_ALTITUDE);
+			
+			switch (layer.getParamColor()) {
+			case TrajectoriesLayer.PARAM_SPEED:
+				params.setSelectedItem("Vitesse (kt)");
+				break;
+			case TrajectoriesLayer.PARAM_ALTITUDE:
+				params.setSelectedItem("Altitude");
+				break;
+			case TrajectoriesLayer.PARAM_VZ:
+				params.setSelectedItem("Vz");
+				break;
+			default:
+				break;
+			}
 			
 			i++;
 			c.gridx = 0 ;
 			c.gridy = i;
 			stylePane.add(new JLabel("Paramètre : "),c);
 			c.gridx = 1;
-			stylePane.add(speed, c);
-			c.gridx = 2;
-			stylePane.add(altitude, c);
+			stylePane.add(params, c);
 		}
 		
 		
@@ -655,14 +663,15 @@ public class TrajectoriesView extends JPanel {
 				}
 			});
 
-			if(speed.isSelected()){
-				minAltitude.setText(""+layer.getMinValue());
-
-				maxAltitude.setText(""+layer.getMaxValue());
-			} else {
+			
+			if(params.getSelectedItem() == "Altitude"){
 				minAltitude.setText(""+layer.getMinValue()/30.47);
 
 				maxAltitude.setText(""+layer.getMaxValue()/30.47);
+			} else {
+				minAltitude.setText(""+layer.getMinValue());
+
+				maxAltitude.setText(""+layer.getMaxValue());
 			}
 
 			if(styles.getSelectedItem().equals("Fil de fer dégradé")) {
@@ -709,16 +718,16 @@ public class TrajectoriesView extends JPanel {
 						}
 					});
 					colorButtons.add(button);
-					if(layer.getParamColor() == TrajectoriesLayer.PARAM_SPEED){
-						altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[j]));
-					} else {
+					if(layer.getParamColor() == TrajectoriesLayer.PARAM_ALTITUDE){
 						altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[j]/30.47));
+					} else {
+						altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[j]));
 					}
 				}
-				if(layer.getParamColor() == TrajectoriesLayer.PARAM_SPEED){
-					altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[layer.getMultiColors().getFirst().length-1]));
-				} else {
+				if(layer.getParamColor() == TrajectoriesLayer.PARAM_ALTITUDE){
 					altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[layer.getMultiColors().getFirst().length-1]/30.47));
+				} else {
+					altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[layer.getMultiColors().getFirst().length-1]));
 				}
 			}
 			if(styles.getSelectedItem().equals("Fil de fer multicolor")) {
@@ -755,10 +764,10 @@ public class TrajectoriesView extends JPanel {
 							}
 						});
 						colorButtons.add(button);
-						if(layer.getParamColor() == TrajectoriesLayer.PARAM_SPEED){
-							altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[layer.getMultiColors().getFirst().length-1]));
-						} else {
+						if(layer.getParamColor() == TrajectoriesLayer.PARAM_ALTITUDE){
 							altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[layer.getMultiColors().getFirst().length-1]/30.47));
+						} else {
+							altitudeFields.add(new JTextField(""+layer.getMultiColors().getFirst()[layer.getMultiColors().getFirst().length-1]));
 						}
 						updateStylePane(styles, stylePane, colorButtons, altitudeFields);
 					}
@@ -868,19 +877,33 @@ public class TrajectoriesView extends JPanel {
 					layer.setDefaultOpacity(Double.parseDouble(opacity.getText())/100.0);
 				}
 				if(layer.getStylesAvailable().contains(TrajectoriesLayer.STYLE_SHADED)){
-					layer.setShadedColors(
-							speed.isSelected() ? TrajectoriesLayer.PARAM_SPEED : TrajectoriesLayer.PARAM_ALTITUDE,
-							speed.isSelected() ? Double.parseDouble(minAltitude.getText()) : Double.parseDouble(minAltitude.getText())*30.47,
-							speed.isSelected() ? Double.parseDouble(maxAltitude.getText()) : Double.parseDouble(maxAltitude.getText())*30.47,
-							minColor.getBackground(), maxColor.getBackground());
+					if(params.getSelectedItem() == "Altitude"){
+						layer.setShadedColors(TrajectoriesLayer.PARAM_ALTITUDE,
+												Double.parseDouble(minAltitude.getText())*30.47,
+												Double.parseDouble(maxAltitude.getText())*30.47,
+												minColor.getBackground(),
+												maxColor.getBackground());
+					} else if(params.getSelectedItem() == "Vitesse (kt)"){
+						layer.setShadedColors(TrajectoriesLayer.PARAM_SPEED,
+								Double.parseDouble(minAltitude.getText()),
+								Double.parseDouble(maxAltitude.getText()),
+								minColor.getBackground(),
+								maxColor.getBackground());
+					} else if(params.getSelectedItem() == "Vz"){
+						layer.setShadedColors(TrajectoriesLayer.PARAM_VZ,
+								Double.parseDouble(minAltitude.getText()),
+								Double.parseDouble(maxAltitude.getText()),
+								minColor.getBackground(),
+								maxColor.getBackground());
+					}
 				}
 				if(altitudeFields != null){
 					ArrayList<Double> values = new ArrayList<Double>();
 					for(JTextField field : altitudeFields){
-						if(speed.isSelected()){
-							values.add(Double.parseDouble(field.getText()));
-						} else {
+						if(params.getSelectedItem() == "Altitude"){
 							values.add(Double.parseDouble(field.getText())*30.47);
+						} else {
+							values.add(Double.parseDouble(field.getText()));
 						}
 					}
 					ArrayList<Color> colors = new ArrayList<Color>();
@@ -889,7 +912,14 @@ public class TrajectoriesView extends JPanel {
 					}
 					
 					//enregistrement des paramètres dans le fichier de conf
-					Configuration.setProperty(Configuration.TRAJECTOGRAPHIE_MULTICOLOR_PARAM, speed.isSelected() ? TrajectoriesLayer.PARAM_SPEED+"" : TrajectoriesLayer.PARAM_ALTITUDE+"");
+					if(params.getSelectedItem() == "Altitude"){
+						Configuration.setProperty(Configuration.TRAJECTOGRAPHIE_MULTICOLOR_PARAM, TrajectoriesLayer.PARAM_ALTITUDE+"");
+					} else if(params.getSelectedItem() == "Vitesse (kt)"){
+						Configuration.setProperty(Configuration.TRAJECTOGRAPHIE_MULTICOLOR_PARAM, TrajectoriesLayer.PARAM_SPEED+"");
+					} else if(params.getSelectedItem() == "Vz"){
+						Configuration.setProperty(Configuration.TRAJECTOGRAPHIE_MULTICOLOR_PARAM, TrajectoriesLayer.PARAM_VZ+"");
+					}
+					
 					StringBuffer colorsString = new StringBuffer();
 					for(Color c : colors){
 						colorsString.append(c.getRGB()+"/");
@@ -901,9 +931,20 @@ public class TrajectoriesView extends JPanel {
 					}
 					Configuration.setProperty(Configuration.TRAJECTOGRAPHIE_MULTICOLOR_VALUES, valuesString.toString());
 					
-					layer.setMultiColors(speed.isSelected() ? TrajectoriesLayer.PARAM_SPEED : TrajectoriesLayer.PARAM_ALTITUDE,
-									values.toArray(new Double[]{}),
-									colors.toArray(new Color[]{}));
+					if(params.getSelectedItem() == "Altitude"){
+						layer.setMultiColors(TrajectoriesLayer.PARAM_ALTITUDE,
+								values.toArray(new Double[]{}),
+								colors.toArray(new Color[]{}));
+					} else if(params.getSelectedItem() == "Vitesse (kt)"){
+						layer.setMultiColors(TrajectoriesLayer.PARAM_SPEED,
+								values.toArray(new Double[]{}),
+								colors.toArray(new Color[]{}));
+					} else if(params.getSelectedItem() == "Vz"){
+						layer.setMultiColors(TrajectoriesLayer.PARAM_VZ,
+								values.toArray(new Double[]{}),
+								colors.toArray(new Color[]{}));
+					}
+					
 				}
 				if(!widthAnalytic.getText().isEmpty()) layer.setAnalyticWidth(Integer.parseInt(widthAnalytic.getText()));
 				if(!heightAnalytic.getText().isEmpty()) layer.setAnalyticHeight(Integer.parseInt(heightAnalytic.getText()));
