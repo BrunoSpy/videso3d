@@ -108,7 +108,7 @@ public class GEOWriter {
     				point.getElevation()*3.28083+"\t"+
     				point.getVitesse()+"\t"+
     				"\t"+
-    				"\t"+
+    				point.getVz()+"\t"+
     				track.getModeA()+"\t"+
     				track.getIndicatif()+"\t"+
     				"\t"+

@@ -25,17 +25,20 @@ import gov.nasa.worldwind.geom.Position;
 public class VPosition extends Position {
 
 	
-	public static final VPosition ZERO = new VPosition(Angle.ZERO, Angle.ZERO, 0d, 0);
+	public static final VPosition ZERO = new VPosition(Angle.ZERO, Angle.ZERO, 0d, 0, 0);
 	
 	/**
 	 * Speed in knots
 	 */
 	private int speed = 0;
 	
-	public VPosition(Angle latitude, Angle longitude, double elevation, int speed)
+	private int vz = 0;
+	
+	public VPosition(Angle latitude, Angle longitude, double elevation, int speed, int vz)
     {
         super(latitude, longitude, elevation);
         this.speed = speed;
+        this.vz = vz;
     }
 
 	public VPosition(Position position, int speed) {
@@ -51,4 +54,11 @@ public class VPosition extends Position {
 		this.speed = speed;
 	}
 	
+	public void setVz(int vz){
+		this.vz = vz;
+	}
+	
+	public int getVz(){
+		return this.vz;
+	}
 }
