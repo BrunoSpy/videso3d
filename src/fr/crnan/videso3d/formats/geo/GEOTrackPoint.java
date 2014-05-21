@@ -31,6 +31,7 @@ public class GEOTrackPoint implements TrackPoint {
 	private String time;
 	private Double timeD;
 	private int vitesse;
+	private int vz;
 	
 	public GEOTrackPoint(String sentence){
 		String[] words = sentence.split("\t");
@@ -44,9 +45,10 @@ public class GEOTrackPoint implements TrackPoint {
 		}
 		
 		this.vitesse = new Integer(words[8]);
+		this.vz = new Integer(words[10]);
 		this.position = new VPosition(Angle.fromDegrees(new Double(words[4])),
 									Angle.fromDegrees(new Double(words[5])),
-									elev, this.vitesse);
+									elev, this.vitesse, this.vz);
 		this.timeD = new Double(words[3]);
 		Integer time = timeD.intValue();
 		int heure = time / 3600;
@@ -88,17 +90,17 @@ public class GEOTrackPoint implements TrackPoint {
 	
 	@Override
 	public void setElevation(double elevation) {
-		this.position = new VPosition(Angle.fromDegrees(this.getLatitude()), Angle.fromDegrees(this.getLongitude()), elevation, vitesse);
+		this.position = new VPosition(Angle.fromDegrees(this.getLatitude()), Angle.fromDegrees(this.getLongitude()), elevation, vitesse, vz);
 	}
 
 	@Override
 	public void setLatitude(double latitude) {
-		this.position = new VPosition(Angle.fromDegrees(latitude), Angle.fromDegrees(this.getLongitude()), this.getElevation(), vitesse);
+		this.position = new VPosition(Angle.fromDegrees(latitude), Angle.fromDegrees(this.getLongitude()), this.getElevation(), vitesse, vz);
 	}
 
 	@Override
 	public void setLongitude(double longitude) {
-		this.position = new VPosition(Angle.fromDegrees(this.getLatitude()), Angle.fromDegrees(longitude), this.getElevation(), vitesse);
+		this.position = new VPosition(Angle.fromDegrees(this.getLatitude()), Angle.fromDegrees(longitude), this.getElevation(), vitesse, vz);
 	}
 
 	@Override
@@ -113,6 +115,10 @@ public class GEOTrackPoint implements TrackPoint {
 
 	public Integer getVitesse() {
 		return vitesse;
+	}
+	
+	public Integer getVz() {
+		return vz;
 	}
 	
 }
