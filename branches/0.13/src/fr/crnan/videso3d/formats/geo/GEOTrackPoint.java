@@ -45,7 +45,11 @@ public class GEOTrackPoint implements TrackPoint {
 		}
 		
 		this.vitesse = new Integer(words[8]);
-		this.vz = new Integer(words[10]);
+		if(!"inv".equals(words[10])){
+			this.vz = new Integer(words[10]);
+		} else {
+			this.vz = 0;
+		}
 		this.position = new VPosition(Angle.fromDegrees(new Double(words[4])),
 									Angle.fromDegrees(new Double(words[5])),
 									elev, this.vitesse, this.vz);
