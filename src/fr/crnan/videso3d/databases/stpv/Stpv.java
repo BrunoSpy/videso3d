@@ -389,7 +389,7 @@ public class Stpv extends FileParser{
 			in = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
 			while (in.ready()){
 				String line = in.readLine();
-				if(line.startsWith("RADR 30")){
+				if(line.startsWith("RADR 30") && !line.startsWith("RADR 30S") ){
 					this.insertMosaique(line);
 				}
 			}
